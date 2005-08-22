@@ -11,6 +11,48 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="August 22, 2005 - Maintenance release Wicket 1.1-beta 3 Available">
+				<p>
+					Wicket 1.1-beta 3 is available for download and testing. This is a beta release, so
+					you may expect some API changes. Most notable features in this release are:
+				</p>
+				<ul>
+				<li>Component developers can now initialize resources when the app starts up</li>
+				<li>Added WebSession.getId() and WebRequestCycle.getWebSession()</li>
+				<li>Added AbstractReadOnlyModel Issue: 1250030. Thanks to Igor Vaynberg.</li>
+				<li>Fixed: AbstractDetachableModel doesn't propogate attach/detach, Thanks to Cameron Braid</li>
+				<li>Fixed: Can't have two FeedbackPanels, Thanks to Simon Berriman</li>
+				<li>Fixed: FeedbackPanel produces illegal HTML, Thanks to Gili Tzabari</li>
+				<li>Fixed: WicketServlet.doGet URI bug, Thanks to Jan Bares</li>
+				<li>Fixed: Classloading problems that caused problems loading markup/resources for components that were loaded by another classloader than the current one</li>
+				<li>Extended markup inheritance to support panels and borders</li>
+				<li>Made a significant reduction in the size of pages, especially big pages</li>
+				<li>Refactored feedback completely. The new code is smaller, more powerful and more elegant, but it will break clients.</li>
+				<li>Added automatic multiPart support to Form.</li>
+				</ul>
+				<p>
+					See the complete <a href="changes-report.html#1_1_b3">list of changes here</a>.
+				</p>
+			</subsection>
+			<subsection name="August 22, 2005 - Maintenance release Wicket 1.0.2 Available">
+				<p>
+					The Wicket development team has released the second maintenance release of the
+					Wicket 1.0 branch. This release fixes some bugs, and with that introduces one
+					<strong>API breaking change</strong>:
+					<ul>
+						<li>newChoiceItem does not use object parameter but selects directly from list Issue: 1263892. Thanks to Arjan Zwaan.</li>
+						<li>Backport: AbstractDetachableModel doesn't propogate attach/detach Issue: 1253113.</li>
+						<li>Backport: serialization bug in LocalizedImageResource</li>
+						<li>Backport: possible NullPointerException in DynamicImageResource.getResourceStream()</li>
+						<li>Backport: catch if session is saved to disk and reloaded again but locale is changed</li>
+						<li>fix for classloading problems that caused problems loading markup/resources for components that were loaded by another classloader than the current one.</li>
+						<li>Backport: closed FileOutputStream in wicket.util.file.Files in finally block</li>
+					</ul>
+					The API change involves the <code>IResourceStreamLocator</code> interface, where the
+					<code>locate</code> method now takes a <code>ClassLoader</code> as an extra parameter. 
+					Passing in <code>null</code> will use the context classloader.
+				</p>
+			</subsection>
 			<subsection name="August 1, 2005 - Wicket 1.1-beta 2 Available">
 				<p>
 					Wicket 1.1-beta 2 is available for download and testing. This is a beta release, so
