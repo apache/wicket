@@ -8,17 +8,24 @@
 	<body>
 		<section name="Welcome to Wicket">
 			<p>
-				Wicket is a Java web application framework that takes simplicity, separation of
-				concerns and ease of development to a whole new level. Wicket pages can be mocked
-				up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic
-				content processing and form handling is all handled in Java code using a first-class
-				component model backed by POJO data beans that can easily be persisted using your
-				favourite technology.
+				Wicket is a Java web application framework that takes
+				simplicity, separation of concerns and ease of
+				development to a whole new level. Wicket pages can be
+				mocked up, previewed and later revised using standard
+				WYSIWYG HTML design tools. Dynamic content processing
+				and form handling is all handled in Java code using a
+				first-class component model backed by POJO data beans
+				that can easily be persisted using your favourite
+				technology.
 			</p>
 			<p>
-				<strong>NB.</strong> this is the documentation of a fixed release. The latest and
-				greatest of Wicket can be found at our 
-				<a href="http://wicket.sourceforge.net">main project page</a>.
+				<strong>NB.</strong>
+				this is the documentation of a fixed release. The latest
+				and greatest of Wicket can be found at our
+				<a href="http://wicket.sourceforge.net">
+					main project page
+				</a>
+				.
 			</p>
 			<ul>
 				<li>
@@ -31,45 +38,125 @@
 				</li>
 				<li>
 					Find out
-					<a href="Introduction.html">why you should use Wicket</a>
+					<a href="Introduction.html">
+						why you should use Wicket
+					</a>
 				</li>
 				<li>
 					Check out
 					<a href="QuickTour.html">some examples</a>
 					and see them in
-					<a href="http://www.wicket-library.com/wicket-examples">live action</a>
+					<a
+						href="http://www.wicket-library.com/wicket-examples">
+						live action
+					</a>
 				</li>
 				<li>
 					Download
-					<a href="http://sourceforge.net/projects/wicket/files">Wicket</a>
+					<a
+						href="http://sourceforge.net/projects/wicket/files">
+						Wicket
+					</a>
 				</li>
 			</ul>
 		</section>
 		<section name="Latest News">
-			<subsection name="Juli 17, 2005 - Maintenance release Wicket 1.0.1 available">
+			<subsection
+				name="August 22, 2005 - Maintenance release Wicket 1.0.2 available">
 				<p>
-					The Wicket development team has released the first (and probably last)
-					maintenance release of Wicket 1.0. This release fixes some bugs and adds
-					some missing functionality:
+					The Wicket development team has released the second
+					maintenance release of the Wicket 1.0 branch. This
+					release fixes some bugs, and with that introduces
+					one <strong>API breaking change</strong>:
 					<ul>
-						<li>Only validate components that are visible</li>
-						<li>FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</li>
-						<li>fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</li>
-						<li>ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</li>
+						<li>
+							newChoiceItem does not use object parameter
+							but selects directly from list Issue:
+							1263892. Thanks to Arjan Zwaan.
+						</li>
+						<li>
+							Backport: AbstractDetachableModel doesn't
+							propogate attach/detach Issue: 1253113.
+						</li>
+						<li>
+							Backport: serialization bug in
+							LocalizedImageResource
+						</li>
+						<li>
+							Backport: possible NullPointerException in
+							DynamicImageResource.getResourceStream()
+						</li>
+						<li>
+							Backport: catch if session is saved to disk
+							and reloaded again but locale is changed
+						</li>
+						<li>
+							fix for classloading problems that caused
+							problems loading markup/ resources for
+							components that were loaded by another
+							classloader than the current one.
+						</li>
+						<li>
+							Backport: closed FileOutputStream in
+							wicket.util.file.Files in finally block
+						</li>
+					</ul>
+					The API change involves the <code>IResourceStreamLocator</code>
+					interface, where the <code>locate</code> method now takes a
+					<code>ClassLoader</code> as an extra parameter. Passing in <code>null</code>
+					will use the context classloader.
+				</p>
+				<p>
+					So while this is a maintenance release, <em>please make sure your code
+					still compiles with this release.</em>
+				</p>
+			</subsection>
+			<subsection
+				name="Juli 17, 2005 - Maintenance release Wicket 1.0.1 available">
+				<p>
+					The Wicket development team has released the first
+					(and probably last) maintenance release of Wicket
+					1.0. This release fixes some bugs and adds some
+					missing functionality:
+					<ul>
+						<li>
+							Only validate components that are visible
+						</li>
+						<li>
+							FeedbackPanel: made some methods that were
+							not meant for overriding final, and added
+							methods that make extending feedbackpanel
+							easier
+						</li>
+						<li>
+							fixed bug in AbstractPropertyModel which
+							gave problems using custom converters
+							(overriding getConverter for a component)
+							with compound property models
+						</li>
+						<li>
+							ComponentStringResourceLoader: resources are
+							now inherited from parent classes when
+							components have been subclassed
+						</li>
 					</ul>
 					Enjoy!
 				</p>
 			</subsection>
-			<subsection name="June 7, 2005 - Wicket 1.0 available for download">
+			<subsection
+				name="June 7, 2005 - Wicket 1.0 available for download">
 				<p>
-					The Wicket development team has made the 1.0 final release available for
-					immediate download. This release marks a huge milestone in the development
-					cycle of Wicket. Go to the <a href="Download.html">downloads page</a> to
-					download Wicket 1.0!
+					The Wicket development team has made the 1.0 final
+					release available for immediate download. This
+					release marks a huge milestone in the development
+					cycle of Wicket. Go to the
+					<a href="Download.html">downloads page</a>
+					to download Wicket 1.0!
 				</p>
 				<p>
-					We are preparing a media campaign for Wicket 1.0. So you may find us in
-					the media soon. Keep an eye out for Wicket!
+					We are preparing a media campaign for Wicket 1.0. So
+					you may find us in the media soon. Keep an eye out
+					for Wicket!
 				</p>
 			</subsection>
 			<p>
@@ -80,20 +167,25 @@
 		</section>
 		<section name="Special Thanks">
 			<p>
-				The Wicket development team would like to thank the following partners for
-				supporting Open Source in general and Wicket in particular.
+				The Wicket development team would like to thank the
+				following partners for supporting Open Source in general
+				and Wicket in particular.
 			</p>
-			<a href="http://www.topicus.nl" target="_blank" class="logoLink">
+			<a href="http://www.topicus.nl" target="_blank"
+				class="logoLink">
 				<img alt="Topicus B.V." src="images/topicus.gif" />
 			</a>
-			<a href="http://www.yourkit.com" target="_blank" class="logoLink">
+			<a href="http://www.yourkit.com" target="_blank"
+				class="logoLink">
 				<img alt="YourKit" src="images/yip_logo.gif" />
 			</a>
-			<a href="http://www.cenqua.com" target="_blank" class="logoLink">
+			<a href="http://www.cenqua.com" target="_blank"
+				class="logoLink">
 				<img alt="Clover"
 					src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif" />
 			</a>
-			<a href="http://www.sourceforge.net" target="_blank" class="logoLink">
+			<a href="http://www.sourceforge.net" target="_blank"
+				class="logoLink">
 				<img alt="SourceForge.net"
 					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
 			</a>
@@ -104,17 +196,23 @@
 				<script language="JavaScript" type="text/javascript"
 					src="http://m1.nedstatbasic.net/basic.js">
 				</script>
-				<script language="JavaScript" type="text/javascript" src="nedstat.js"></script>
+				<script language="JavaScript" type="text/javascript"
+					src="nedstat.js">
+				</script>
 				<noscript>
 					<a target="_blank"
 						href="http://www.nedstatbasic.net/stats?ADUqkAqz13yUdWzu82RZ+ob42qQg">
-						<img src="http://m1.nedstatbasic.net/n?id=ADUqkAqz13yUdWzu82RZ+ob42qQg"
+						<img
+							src="http://m1.nedstatbasic.net/n?id=ADUqkAqz13yUdWzu82RZ+ob42qQg"
 							border="0" width="18" height="18"
 							alt="Nedstat Basic - Free web site statistics
 Personal homepage website counter" />
 					</a>
 					<br />
-					<a target="_blank" href="http://www.nedstatbasic.net/">Free counter</a>
+					<a target="_blank"
+						href="http://www.nedstatbasic.net/">
+						Free counter
+					</a>
 				</noscript>
 				<!-- End Nedstat Basic code -->
 			</p>
