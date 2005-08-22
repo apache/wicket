@@ -1384,10 +1384,18 @@ public abstract class Component implements Serializable, IEventRequestListener
 		if (detailed)
 		{
 			final Page page = findPage();
-			return "[Component id = " + getId() + ", page = "
-					+ (page == null ? "<No Page>" : getPage().getClass().getName()) + ", path = "
+			if(page == null)
+			{
+				return "[Component id = " + getId() + ", page = <No Page>, path = "
+				+ getPath() + "." + Classes.name(getClass()) + "]";
+			}
+			else
+			{
+				return "[Component id = " + getId() + ", page = "
+					+ getPage().getClass().getName() + ", path = "
 					+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
 					+ ", isVersioned = " + isVersioned() + "]";
+			}
 		}
 		else
 		{
