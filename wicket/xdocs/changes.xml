@@ -7,7 +7,7 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.0.2" date="tbd" description="1.0.2">
+    <release version="1.0.2" date="2005-08-22" description="1.0.2">
       <action type="fix" dev="Martijn Dashorst" issue="1263892" due-to="Arjan Zwaan">newChoiceItem does not use object parameter but selects directly from list</action>
       <action type="fix" dev="Martijn Dashorst" issue="1253113">Backport: AbstractDetachableModel doesn't propogate attach/detach</action>
       <action type="fix" dev="Martijn Dashorst">Backport: serialization bug in LocalizedImageResource</action>
@@ -26,7 +26,7 @@
       <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1213229">Image didn't like webapps with urlpattern set to /*. It does now.</action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
       <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
       <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">Fixed converters once and for all. Null check results so that e.g., empty strings for numbers (e.g.) now return null instead of throwing a NPE</action>
       <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
