@@ -53,16 +53,24 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	{
 		final NumberFormat numberFormat = getNumberFormat(locale);
 		final Number number = (Number)parse(numberFormat, value);
+
+		if (number == null)
+		{
+			return null;
+		}
+
 		if (number.doubleValue() < min)
 		{
 			throw newConversionException("Value cannot be less than " + min, value,locale).setFormat(
 					numberFormat);
 		}
+
 		if (number.doubleValue() > max)
 		{
 			throw newConversionException("Value cannot be greater than " + max, value,locale).setFormat(
 					numberFormat);
 		}
+
 		return number;
 	}
 }

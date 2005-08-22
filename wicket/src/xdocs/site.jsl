@@ -53,10 +53,8 @@
         <j:set var="themeUrl" value="${maven.xdoc.theme.url}"/>
         <util:file var="projectCssFile" name="${maven.docs.src}/style/project.css"/>
         
-        <style type="text/css" media="all"><![CDATA[
-          @import url("${relativePath}/style/maven-base.css");
-          ]]>
-			    <j:if test="${!empty(themeUrl)}"><![CDATA[
+        <style type="text/css" media="all">
+        			<j:if test="${!empty(themeUrl)}"><![CDATA[
 				    @import url("${maven.xdoc.theme.url}");
 			    ]]></j:if>
 			    <j:if test="${empty(themeUrl)}"><![CDATA[

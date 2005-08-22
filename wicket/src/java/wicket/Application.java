@@ -148,7 +148,7 @@ public abstract class Application
 	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
-	private final ApplicationSettings settings = new ApplicationSettings(this);
+	private ApplicationSettings settings;
 	
 	/** Shared resources for the application */
 	private final SharedResources sharedResources = new SharedResources();
@@ -295,7 +295,7 @@ public abstract class Application
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
-					.getResourcePath());
+					.getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}
@@ -322,7 +322,20 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
+		if(settings == null)
+		{
+			settings = createApplicationSettings();
+		}
 		return settings;
+	}
+	
+	/**
+	 * Subclasses could override this to give there own implementation of ApplicaitonSettings
+	 * @return An instanceof an ApplicaitonSettings class.
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this);
 	}
 	
 	/**
@@ -422,8 +435,9 @@ public abstract class Application
 	 * method sets the resourceStreamLocator to null so it will get recreated
 	 * the next time it is accessed using the new source path.
 	 */
-	final void resourcePathChanged()
+	final void resourceFinderChanged()
 	{
 		this.resourceStreamLocator = null;
 	}
+
 }

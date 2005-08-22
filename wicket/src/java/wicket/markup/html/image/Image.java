@@ -17,9 +17,13 @@
  */
 package wicket.markup.html.image;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.ResourceReference;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -38,6 +42,8 @@ import wicket.model.Model;
  */
 public class Image extends WebComponent implements IResourceListener
 {
+	private static final Log log = LogFactory.getLog(Image.class);
+	
 	/** The image resource this image component references */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
@@ -183,6 +189,15 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected void onSessionAttach()
 	{
-		localizedImageResource.bind();
+		try
+		{
+			localizedImageResource.bind();
+		} 
+		catch(WicketRuntimeException wre)
+		{
+			// If this exceptions happens here then the locale is maybe changed
+			// and there is no image for that locale you are in now.
+			log.error("Localized Image Resource not found for the current locale " + getLocale(), wre);
+		}
 	}
 }

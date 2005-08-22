@@ -53,8 +53,7 @@ public class PageableListViewNavigator extends Panel
 		add(new PageableListViewNavigationLink("first", pageableListView, 0));
 		add(new PageableListViewNavigationIncrementLink("prev", pageableListView, -1));
 		add(new PageableListViewNavigationIncrementLink("next", pageableListView, 1));
-		add(new PageableListViewNavigationLink("last", pageableListView, pageableListView
-				.getPageCount() - 1));
+		add(new PageableListViewNavigationLink("last", pageableListView, -1));
 	}
 
 	/**

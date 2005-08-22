@@ -35,7 +35,7 @@ public abstract class PageableListView extends ListView
 	private int currentPage;
 
 	/** Number of rows per page of the list view. */
-	private final int rowsPerPage;
+	private int rowsPerPage;
 
 	/**
 	 * Constructor
@@ -98,13 +98,29 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Get the maximum number of rows on each page.
+	 * Gets the maximum number of rows on each page.
 	 * 
 	 * @return the maximum number of rows on each page.
 	 */
 	public final int getRowsPerPage()
 	{
 		return rowsPerPage;
+	}
+
+	/**
+	 * Sets the maximum number of rows on each page.
+	 * 
+	 * @param rowsPerPage the maximum number of rows on each page.
+	 */
+	public final void setRowsPerPage(int rowsPerPage)
+	{
+		if (rowsPerPage < 0)
+		{
+			rowsPerPage = 0;
+		}
+
+		addStateChange(new RowsPerPageChange(this.rowsPerPage));
+		this.rowsPerPage = rowsPerPage;
 	}
 
 	/**
@@ -135,10 +151,11 @@ public abstract class PageableListView extends ListView
 		}
 
 		int pageCount = getPageCount();
-		if (currentPage > 0 && (currentPage >= pageCount))
+		if ((currentPage > 0) && (currentPage >= pageCount))
 		{
-			currentPage = pageCount-1;
+			currentPage = pageCount - 1;
 		}
+		
 		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
 	}
@@ -194,6 +211,31 @@ public abstract class PageableListView extends ListView
 		public void undo()
 		{
 			setCurrentPage(currentPage);
+		}
+	}
+
+	/**
+	 * Records the changing of the nbr of rows per page.
+	 */
+	private class RowsPerPageChange extends Change
+	{
+		/** the former nbr of rows per page. */
+		private int rowsPerPage;
+
+		/**
+		 * Construct.
+		 * @param rowsPerPage the former nbr of rows per page
+		 */
+		RowsPerPageChange(int rowsPerPage)
+		{
+			this.rowsPerPage = rowsPerPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setRowsPerPage(rowsPerPage);
 		}
 	}
 }

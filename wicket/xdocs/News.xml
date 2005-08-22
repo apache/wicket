@@ -11,6 +11,57 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="June 7, 2005 - Wicket 1.0 available for download">
+				<p>
+					The Wicket development team has made the 1.0 final release available for
+					immediate download. This release marks a huge milestone in the development
+					cycle of Wicket. Go to the <a href="Download.html">downloads page</a> to
+					download Wicket 1.0!
+				</p>
+				<p>
+					We are preparing a media campaign for Wicket 1.0. So you may find us in
+					the media soon. Keep an eye out for Wicket!
+				</p>
+			</subsection>
+			<subsection name="May 28, 2005 - Wicket on JavaOne 2005 / San Francisco">
+				<p>
+					Come see Wicket on JavaOne this summer. Wicket is featured in two events:
+					<ul>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271617&amp;ilocation_id=93-1&amp;ilanguage=english" title="TS-8617">TS-8617 POJO Web Development With Wicket</a> - 
+					    hosted by <a href="http://www.miko.com">Miko Matsumura</a> and 
+					    <a href="http://www.jroller.com/page/dashorst">Martijn Dashorst</a></li>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271642&amp;ilocation_id=93-1&amp;ilanguage=english">TS-7642 Web Framework Smackdown</a> - 
+					    fought out by 
+					    		<a href="http://weblogs.java.net/blog/edburns/">Ed Burns</a>, 
+					    		<a href="http://howardlewisship.com/blog/">Howard Lewis Ship</a> and 
+					    		<a href="http://www.jroller.com/page/eelco12">Eelco Hillenius</a></li>
+					</ul>
+					We look forward to see you at JavaOne!
+				</p>
+			</subsection>
+			<subsection name="May 21, 2005 - 1.0 RC3 is out!">
+				<p>
+					Finally, after a month of some silence, we have produced our last release
+					candidate before we deploy 1.0. If all goes well, you will see the final
+					release within a week or two. The bug list now only contains an issue
+					relating to clustering. As such we advise you currently to not deploy your
+					application on a cluster, until the issues are resolved, or to be very thorough
+					in your clustering tests.
+				</p>
+				<p>
+					In this release you won't see major API changes, however the internals have
+					improved significantly. The request cycle has now correct semantics, we have
+					improved the redirect after post pattern, which now performs significantly
+					better than before, and allows you to do your request handling and rendering
+					in one pass, and then redirect to the rendered page. CompoundModel support has
+					improved and works with more components than before. We added support for 
+					redirecting to external url's (e.g. Google) directly by introducing RedirectPage.
+				</p>
+				<p>
+					For the complete list of fixes, updates and changes please see the 
+					<a href="/changes-report.html" title="Release History">release history</a>.
+				</p>
+			</subsection>
 			<subsection name="May 4, 2005 - Eclipse Live Demo available">
 				<p>
 					Using <a href="http://www.debugmode.com/wink/" title="Wink">Wink</a> we have
