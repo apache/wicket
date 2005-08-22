@@ -59,6 +59,11 @@
       <name>1.1-b2</name>
       <tag>WICKET_R_1_1_BETA2</tag>
     </version>
+    <version>
+      <id>1.1-b3</id>
+      <name>1.1-b3</name>
+      <tag>WICKET_R_1_1_BETA3</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
