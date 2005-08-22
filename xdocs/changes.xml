@@ -8,6 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    </release>
+    <release version="1.1-b3" date="tbd" description="1.1 Beta 3">
 	  <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
       <action type="add" dev="Martijn Dashorst" issue="1260304" due-to="Dariusz Wojtas">Added debug toString() methods to all models in wicket.model</action>
       <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel doesn't propogate attach/detach</action>
