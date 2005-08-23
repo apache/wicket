@@ -106,6 +106,9 @@ public abstract class Resource implements IResourceListener
 		// the client since the resource being requested has nothing to do with
 		// pages
 		cycle.setResponsePage((Page)null);
+		
+		// Reset parameters
+		parameters = null;
 
 		// Fetch resource from subclass if necessary
 		init();
