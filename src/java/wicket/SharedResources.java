@@ -17,8 +17,10 @@
  */
 package wicket;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -224,15 +226,23 @@ public class SharedResources
 	}
 
 	/**
-	 * 
+	 * @param newLocale The Locale where the user did switch to
+	 * @return A List of all the know current keys/paths of the resources for that locale 
 	 */
-	void localeChange()
+	List localeChange(Locale newLocale)
 	{
-		Iterator it = resourceMap.values().iterator();
+		String locale = "_" + newLocale.toString();
+		String onlyLanguage = "_" + new Locale(newLocale.getLanguage()).toString();
+		List lst = new ArrayList();
+		Iterator it = resourceMap.keySet().iterator();
 		while(it.hasNext())
 		{
-			Resource resource = (Resource)it.next();
-			resource.localeChange();
+			String path = (String)it.next();
+			if(path.indexOf(locale) != -1 || path.indexOf(onlyLanguage) != -1)
+			{
+				lst.add(path);
+			}
 		}
+		return lst;
 	}
 }
