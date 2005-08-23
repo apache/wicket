@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -54,22 +54,24 @@ import wicket.util.string.Strings;
  * non-bookmarkable component interfaces. The protected handleRender method is
  * the internal entrypoint which takes care of the details of rendering a
  * response to an HTTP request.
- * 
+ *
  * @see RequestCycle
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Gili Tzabari
  */
 public class WebRequestCycle extends RequestCycle
 {
 	/** Path prefix for shared resources */
 	public static final String resourceReferencePrefix = "/resources/";
-	
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
-	 * 
+	 *
 	 * @param session
 	 *            The session
 	 * @param request
@@ -105,7 +107,7 @@ public class WebRequestCycle extends RequestCycle
 	public WebSession getWebSession()
 	{
 		return (WebSession)session;
-	}	
+	}
 
 	/**
 	 * Parses a request. The following four steps are followed:
@@ -125,7 +127,7 @@ public class WebRequestCycle extends RequestCycle
 	 * <p>
 	 * If all four steps are executed and content cannot be found to satisfy the
 	 * request, then false is returned.
-	 * 
+	 *
 	 * @return True if a Page should be rendered back to the user
 	 */
 	protected final boolean parseRequest()
@@ -175,18 +177,18 @@ public class WebRequestCycle extends RequestCycle
 	 * setResponsePage instead. This method is part of Wicket's internal
 	 * behaviour and should only be used when you want to circumvent the normal
 	 * framework behaviour and issue the redirect directly.
-	 * 
+	 *
 	 * @param page
 	 *            The page to redirect to
-	 * @throws ServletException 
+	 * @throws ServletException
 	 */
 	protected void redirectTo(final Page page) throws ServletException
 	{
 		String redirectUrl = page.urlFor(page, IRedirectListener.class);
-		
+
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
-		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER) 
+		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		        && (application instanceof WebApplication))
 		{
 		    // remember the current response
@@ -195,9 +197,9 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// create the redirect response.
 				// override the encodeURL so that it will use the real once encoding.
-				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) 
+				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl)
 				{
-					public String encodeURL(String url) 
+					public String encodeURL(String url)
 					{
 						return currentResponse.encodeURL(url);
 					}
@@ -206,38 +208,38 @@ public class WebRequestCycle extends RequestCycle
 
 				// redirect the response to the buffer
 				setResponse(redirectResponse);
-				
+
 				// test if the invoker page was the same as the page that is going to be renderd
 				if (getInvokePage() == getResponsePage())
 				{
 					// set it to null because it is already ended in the page.doRender()
 					setInvokePage(null);
 				}
-				
+
 				// render the page into the buffer
 				page.doRender();
-				
+
 				// re-assign the original response
 				setResponse(currentResponse);
-				
+
 				final String responseRedirect = redirectResponse.getRedirectUrl();
 				if (redirectUrl != responseRedirect)
 				{
-					// if the redirectResponse has another redirect url set 
+					// if the redirectResponse has another redirect url set
 					// then the rendering of this page caused a redirect to something else.
 					// set this redirect then.
 					redirectUrl = redirectResponse.getRedirectUrl();
 				}
 				else if (redirectResponse.getContentLength() > 0)
 				{
-					// if no content is created then don't set it in the redirect buffer 
-				    // (maybe access failed). 
+					// if no content is created then don't set it in the redirect buffer
+				    // (maybe access failed).
 					// Set the encoding of the response (what the browser wants)
 					redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
-					
+
 					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
-					
+
 					((WebApplication)application).addRedirect(
 					        getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
@@ -252,14 +254,14 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
-			// redirect page can touch its models already (via for example the constructors) 
+			// redirect page can touch its models already (via for example the constructors)
 			page.internalEndRequest();
 		}
-		
+
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
-	
+
 	/**
 	 * Creates a prefix for a url.
 	 * @return Prefix for URLs including the context path and servlet path.
@@ -277,11 +279,11 @@ public class WebRequestCycle extends RequestCycle
 
 		return buffer;
 	}
-	
+
 
 	/**
 	 * Sets values for form components based on cookie values in the request.
-	 * 
+	 *
 	 * @param page
 	 *            the current page
 	 */
@@ -301,7 +303,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Activates a bookmarkable page if one was specified in the request.
-	 * 
+	 *
 	 * @return True if a bookmarkable page was created and returned for the
 	 *         request.
 	 * @throws WicketRuntimeException
@@ -327,9 +329,9 @@ public class WebRequestCycle extends RequestCycle
 					try
 					{
 						getWebResponse().getHttpServletResponse().sendError(
-						        HttpServletResponse.SC_NOT_FOUND, 
+						        HttpServletResponse.SC_NOT_FOUND,
 						        "Unable to load Bookmarkable Page");
-						
+
 						return true;
 					}
 					catch (IOException ex)
@@ -345,7 +347,7 @@ public class WebRequestCycle extends RequestCycle
 		    {
 				Page newPage = session.getPageFactory().newPage(pageClass,
 						new PageParameters(getRequest().getParameterMap()));
-				
+
 				// If response is set in the construtor of the bookmarkable page.
 				if(getResponsePage() == null)
 				{
@@ -356,7 +358,7 @@ public class WebRequestCycle extends RequestCycle
 		    }
 		    catch (RuntimeException e)
 		    {
-		        throw new WicketRuntimeException("Unable to instantiate Page class: " 
+		        throw new WicketRuntimeException("Unable to instantiate Page class: "
 		                + bookmarkableName + ". See below for details.", e);
 		    }
 		}
@@ -370,7 +372,7 @@ public class WebRequestCycle extends RequestCycle
 	 * (typically used for AJAX behaviour) are responsible for their own output (which
 	 * could be XML, javascript, HTML or whatever), and thus the current page should not
 	 * be rendered when this method returns true.
-	 * 
+	 *
 	 * @return True if the dispatched listener was successfully called
 	 * @throws WicketRuntimeException
 	 */
@@ -396,7 +398,7 @@ public class WebRequestCycle extends RequestCycle
 	 * by the 'interface' parameter of the request. The interface can only be
 	 * one of the interfaces listed in the secureInterfaceMethods map in the
 	 * RequestDispatcher implementation.
-	 * 
+	 *
 	 * @return True if the component listener was successfully called
 	 * @throws WicketRuntimeException
 	 */
@@ -414,7 +416,7 @@ public class WebRequestCycle extends RequestCycle
 
 			// Get page from path
 			final Page page = session.getPage(pageMapName, path, versionNumber);
-			
+
 			// Does page exist?
 			if (page != null)
 			{
@@ -442,7 +444,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * If no context path was provided, activates the home page.
-	 * 
+	 *
 	 * @return True if the home page was activated
 	 * @throws WicketRuntimeException
 	 */
@@ -463,7 +465,7 @@ public class WebRequestCycle extends RequestCycle
 				else
 				{
 					Page newPage = newPage(homePage);
-					
+
 					// check if the home page didn't set a page by itself
 					if(getResponsePage() == null)
 					{
@@ -474,7 +476,7 @@ public class WebRequestCycle extends RequestCycle
 							ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
 									.getSettings().getRenderStrategy();
 							boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
-									|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
+									|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
 							setRedirect(issueRedirect);
 						}
 						setResponsePage(newPage);
@@ -494,7 +496,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Invokes a given interface on a component.
-	 * 
+	 *
 	 * @param component
 	 *            The component
 	 * @param method
@@ -521,7 +523,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Invokes a given interface on a component on a given page
-	 * 
+	 *
 	 * @param page
 	 *            The page where the component is
 	 * @param path
@@ -540,7 +542,7 @@ public class WebRequestCycle extends RequestCycle
 			{
 				try
 				{
-					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_FORBIDDEN, 
+					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_FORBIDDEN,
 					        "Unable to execute this request");
 				}
 				catch (IOException ex)
@@ -559,19 +561,19 @@ public class WebRequestCycle extends RequestCycle
 				{
 					// Clear all feedback messages if it isn't a redirect
 					page.getFeedbackMessages().clear();
-	
+
 					// and see if we have to redirect the render part by default
 					ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
 							.getSettings().getRenderStrategy();
 					boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
 							|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
-	
+
 					setRedirect(issueRedirect);
 				}
-	
+
 				// Invoke interface on component
 				invokeInterface(component, method);
-	
+
 				// Set form component values from cookies
 				setFormComponentValuesFromCookies(page);
 			}
@@ -592,7 +594,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Creates a new page.
-	 * 
+	 *
 	 * @param pageClass
 	 *            The page class to instantiate
 	 * @return The page
@@ -616,37 +618,43 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Renders resource to user if URL matches resource pattern
-	 * 
-	 * @return True if the resource was found 
+	 *
+	 * @return True if the resource was found
 	 */
 	private boolean resourceReference()
 	{
 		final String path = request.getPath();
 		if (path.startsWith(resourceReferencePrefix))
 		{
-			final String resourceReferenceKey = path.substring(resourceReferencePrefix.length());
+			final String rawResourceKey = path.substring(resourceReferencePrefix.length());
 			Session session = Session.get();
 			Locale locale = session.getLocale();
-			String localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null); // no style because that is already in the key
-			Resource resource = getApplication().getSharedResources().get(localizedResourceReferenceKey);
+			String localizedResourceKey = SharedResources.path(rawResourceKey, locale, null); // no style because that is already in the key
+			String resourceKeyCandidate;
+
+			SharedResources sharedResources = getApplication().getSharedResources();
+			resourceKeyCandidate = localizedResourceKey;
+			Resource resource = sharedResources.get(resourceKeyCandidate);
 			if (resource == null)
 			{
 				if(locale != null && locale.getCountry() != null)
 				{
-					// try only language
+					// try only the language
 					locale = new Locale(locale.getLanguage());
-					localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null);
-					resource = getApplication().getSharedResources().get(localizedResourceReferenceKey);					
+					localizedResourceKey = SharedResources.path(rawResourceKey, locale, null);
+					resourceKeyCandidate = localizedResourceKey;
+					resource = sharedResources.get(resourceKeyCandidate);
 				}
 				// try it without any locale (plain url, could be different locale then the default)
 				if(resource == null)
 				{
-					resource = getApplication().getSharedResources().get(resourceReferenceKey);
+					resourceKeyCandidate = rawResourceKey;
+					resource = sharedResources.get(resourceKeyCandidate);
 				}
 				// if still null throw an exception
 				if(resource == null)
 				{
-					log.debug("Could not find resource referenced by key " + resourceReferenceKey);
+					log.debug("Could not find resource referenced by key " + resourceKeyCandidate);
 					try
 					{
 						getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -654,13 +662,14 @@ public class WebRequestCycle extends RequestCycle
 					catch (IOException ex)
 					{
 						log.error("error sending 404", ex);
-						throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey + 
+						throw new WicketRuntimeException("Could not find resource referenced by key " + resourceKeyCandidate +
 								" and send a 404", ex);
 					}
 					// do return true, the response is handled.
 					return true;
 				}
 			}
+			sharedResources.onResourceRequested(resourceKeyCandidate);
 			resource.onResourceRequested();
 			return true;
 		}

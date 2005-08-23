@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,6 +30,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
@@ -55,8 +56,9 @@ import wicket.util.time.Time;
  * The format of the image (and therefore the resource's extension) can be
  * specified with setFormat(String). The default format is "PNG" because JPEG is
  * lossy and makes generated images look bad and GIF has patent issues.
- * 
+ *
  * @author Jonathan Locke
+ * @author Gili Tzabari
  */
 public abstract class DynamicImageResource extends WebResource
 {
@@ -65,6 +67,9 @@ public abstract class DynamicImageResource extends WebResource
 
 	/** The time this image resource was last modified */
 	protected Time lastModifiedTime;
+
+	/** The maximum duration a resource can be idle before its cache is flushed */
+	protected Duration cacheTimeout = Duration.NONE;
 
 	/**
 	 * @return Returns the image format.
@@ -142,7 +147,7 @@ public abstract class DynamicImageResource extends WebResource
 
 	/**
 	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
-	 * 
+	 *
 	 * @param format
 	 *            The image format to set.
 	 */
@@ -152,10 +157,31 @@ public abstract class DynamicImageResource extends WebResource
 	}
 
 	/**
+	 * Set the maximum duration the resource can be idle before its cache is flushed.
+	 * The cache might get flushed sooner if the JVM is low on memory.
+	 * 
+	 * @param value The cache timout 
+	 */
+	public void setCacheTimeout(Duration value)
+	{
+		cacheTimeout = value;
+	}
+
+	/**
+	 * Returns the maximum duration the resource can be idle before its cache is flushed.
+	 * 
+	 * @return The cache timeout 
+	 */
+	public Duration getCacheTimeout()
+	{
+		return cacheTimeout;
+	}
+
+	/**
 	 * Get image data for our dynamic image resource. If the subclass
 	 * regenerates the data, it should set the lastModifiedTime when it does so.
 	 * This ensures that image caching works correctly.
-	 * 
+	 *
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
