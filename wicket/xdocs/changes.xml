@@ -9,6 +9,24 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
     <release version="1.1-b3" date="2005-08-22" description="1.1 Beta 3">
+ 		<action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
+ 		<action type="fix" dev="Johan Compagner" issue="1251385" due-to="Gili Tzabari">Consistent homepage URL with NO_REDIRECT</action>
+		<action type="fix" dev="Johan Compagner" issue="1265068" due-to="Gili Tzabari">
+		Links to resources won't append the current locale of the user anymore to there url. The locale binding is done on request and now with the proper fallback.
+		First the full locale is used. Then only the language and then no locale. If you set a different locale to a resource then the current locale then the locale is 
+		still appended to the url. So that one is forced to be used when the lookup occurs.
+		</action>
+	   <action type="update" dev="Johan Compagner" issue="1256084">
+	    Paging refactor, now the paging code is extraced from PageableListView and it is moved to there own package, wicket.markup.html.navigation.paging.
+	    It has 2 interfaces now: IPageable and IPagingLabelProvider.
+	    IPageable should be used by components that are pageable. They have to return the total pagecount and be able to set and get the current page what that they are displaying.
+	    The IPagingLabelProvider can be used to override the default link text of a page link. Default it is just the page number. But with a labelprovider you can set this 
+		 for example to  [1-10],[11-20],[21-24]. The PagingNavigator or the PagingNavigation both have constructors for a IPagingLabelProvider.
+      </action>
+      <action type="fix" dev="Johan Compagner" issue="1254857" due-to="Jan Bares">UrlResourceStream.length() of changed resources</action>
+ 	   <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
+      <action type="fix" dev="Johan Compagner" issue="1251853">Lot's of serialization fixes, also refactored Static->PackageResoures</action>
+      <action type="fix" dev="Johan Compagner" issue="1251710" due-to="Jan Bares" >Conent type of static resources is content/unknown</action>
       <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
       <action type="add" dev="Martijn Dashorst" issue="1260304" due-to="Dariusz Wojtas">Added debug toString() methods to all models in wicket.model</action>
       <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel doesn't propogate attach/detach</action>
