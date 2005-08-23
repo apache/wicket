@@ -24,10 +24,10 @@ import wicket.IInitializer;
 import wicket.markup.html.PackageResource;
 
 /**
- * Initializer class for shared resources in the images application.
+ * Initializer class for shared resources in the pub application.
  * 
  * See wicket.properties file in root of examples project to see how
- * this file gets invoked for the images application.
+ * this file gets invoked for the pub application.
  * 
  * @author Jonathan Locke
  */
