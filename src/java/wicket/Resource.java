@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.Map;
@@ -177,7 +178,19 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected void invalidate()
 	{
-		this.resourceStream = null;
+		if(this.resourceStream != null)
+		{
+			IResourceStream stream = this.resourceStream;
+			this.resourceStream = null;
+			try
+			{
+				stream.close();
+			}
+			catch (IOException ex)
+			{
+				log.debug("Error closing resourcestream", ex);
+			}
+		}
 	}
 
 	/**
