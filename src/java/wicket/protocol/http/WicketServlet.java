@@ -20,7 +20,6 @@ package wicket.protocol.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
