@@ -74,8 +74,8 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected Resource()
 	{
-		// By default, nothing is cacheable
-		cacheable = 0;
+		// By default all resources are cacheable
+		cacheable = 2;
 	}
 
 	/**
@@ -88,11 +88,6 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final boolean isCacheable()
 	{
-		if (cacheable == 2)
-		{
-			cacheable = 1;
-			return false;
-		}
 		return cacheable == 1;
 	}
 
@@ -141,17 +136,17 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final void setCacheable(boolean cacheable)
 	{
-		// Set first on 2 (means is cacheable but not the first time)
-		// so that this image will render once before a head/lastmodified
-		// request already says it is cachable
-		if (cacheable)
-		{
-			this.cacheable = 2;
-		}
-		else
-		{
-			this.cacheable = 0;
-		}
+		 if (cacheable)  
+       { 
+				// set first on 2 (means is cacheable but not the first time)
+				// so that this image will render once before a head/lastmodified request 
+				// already says it is cachable
+            this.cacheable = 2; 
+       } 
+       else 
+       { 
+            this.cacheable = 0; 
+       } 
 	}
 
 	/**
