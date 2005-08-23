@@ -122,8 +122,11 @@ public class SharedResources
 		final String key = path(application,scope, name, locale, style);
 		resourceMap.put(key, resource);
 
+		// shared resources CAN'T be cacheable by default.
+		// The resource itself should take care of this.. (so package resource can be cacheable by default but dynamic once not)
+		// this is up to the user
 		// Application shared resources are cacheable.
-		resource.setCacheable(true);
+		//resource.setCacheable(true);
 	}
 
 	/**
