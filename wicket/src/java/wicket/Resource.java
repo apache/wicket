@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
+import wicket.util.time.Duration;
 import wicket.util.time.Time;
 import wicket.util.value.ValueMap;
 
@@ -54,8 +55,10 @@ import wicket.util.value.ValueMap;
  * resource can be shared between components like this, the ImageButton
  * components in this example are like all other components in Wicket and cannot
  * be shared.
- * 
+ *
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Gili Tzabari
  */
 public abstract class Resource implements IResourceListener
 {
@@ -64,6 +67,9 @@ public abstract class Resource implements IResourceListener
 
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
+
+	/** The maximum duration a resource may be idle before it is removed */
+	private Duration idleTimeout = Duration.NONE;
 
 	/** True if this resource can be cached */
 	private boolean cacheable;
@@ -94,8 +100,28 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Sets the maximum time the resource may be idle before it is removed.
 	 * 
+	 * @param value The idle duration timeout
+	 */
+	public void setIdleTimeout(Duration value)
+	{
+		idleTimeout = value;
+	}
+
+	/**
+	 * Returns the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @return The idle duration timeout 
+	 */
+	public Duration getIdleTimeout()
+	{
+		return idleTimeout;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 *
 	 * Called when a resource is requested.
 	 */
 	public final void onResourceRequested()
@@ -107,7 +133,7 @@ public abstract class Resource implements IResourceListener
 		// the client since the resource being requested has nothing to do with
 		// pages
 		cycle.setResponsePage((Page)null);
-		
+
 		// Reset parameters
 		parameters = null;
 
@@ -139,18 +165,18 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * Should this resource be cacheable, so will it set the last modified and
 	 * the some cache headers in the response.
-	 * 
+	 *
 	 * @param cacheable
 	 *            boolean if the lastmodified and cache headers must be set.
 	 */
 	public final void setCacheable(boolean cacheable)
 	{
-		this.cacheable = cacheable; 
+		this.cacheable = cacheable;
 	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
