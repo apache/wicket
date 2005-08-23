@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -324,6 +325,7 @@ public class WicketServlet extends HttpServlet
 
 			Locale locale = servletRequest.getLocale();
 			WebSession session = webApplication.getSession(servletRequest, false);
+
 			if(session != null)
 			{
 				locale = session.getLocale();
@@ -344,32 +346,36 @@ public class WicketServlet extends HttpServlet
 				// try it without any locale (plain url, could be different locale then the default)
 				if(resource == null)
 				{
-					resource = webApplication.getSharedResources().get(resourceReferenceKey);
+					localizedResourceReferenceKey = resourceReferenceKey;
+					resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);
 				}
 			}
 			// If resource found and it is cacheable
 			if (resource != null && resource.isCacheable())
 			{
-				try
+				if(session == null || session.isResourceCacheable(localizedResourceReferenceKey))
 				{
-					Application.set(webApplication);
-					// Set parameters from servlet request
-					resource.setParameters(new WebRequest(servletRequest).getParameterMap());
-					
-	
-					// Get resource stream
-					IResourceStream stream = resource.getResourceStream();
-	
-					// First ask the length so the content is created/accessed
-					stream.length();
-	
-					// Get last modified time from stream
-					Time time = stream.lastModifiedTime();
-					return time != null ? time.getMilliseconds() : -1;
-				}
-				finally
-				{
-					Application.set(null);
+					try
+					{
+						Application.set(webApplication);
+						// Set parameters from servlet request
+						resource.setParameters(new WebRequest(servletRequest).getParameterMap());
+						
+		
+						// Get resource stream
+						IResourceStream stream = resource.getResourceStream();
+		
+						// First ask the length so the content is created/accessed
+						stream.length();
+		
+						// Get last modified time from stream
+						Time time = stream.lastModifiedTime();
+						return time != null ? time.getMilliseconds() : -1;
+					}
+					finally
+					{
+						Application.set(null);
+					}
 				}
 			}
 		}
