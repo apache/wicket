@@ -88,22 +88,14 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final boolean isCacheable()
 	{
-		if(cacheable == 2)
+		if (cacheable == 2)
 		{
 			cacheable = 1;
 			return false;
 		}
 		return cacheable == 1;
 	}
-	
-	void localeChange()
-	{
-		if(cacheable == 1)
-		{
-			cacheable = 2;
-		}
-	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -149,10 +141,17 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final void setCacheable(boolean cacheable)
 	{
-		// set first on 2 (means is cacheable but not the first time)
-		// so that this image will render once before a head/lastmodified request 
-		// already says it is cachable
-		this.cacheable = 2;
+		// Set first on 2 (means is cacheable but not the first time)
+		// so that this image will render once before a head/lastmodified
+		// request already says it is cachable
+		if (cacheable)
+		{
+			this.cacheable = 2;
+		}
+		else
+		{
+			this.cacheable = 0;
+		}
 	}
 
 	/**
@@ -188,6 +187,14 @@ public abstract class Resource implements IResourceListener
 		this.resourceStream = null;
 	}
 
+	void localeChange()
+	{
+		if (cacheable == 1)
+		{
+			cacheable = 2;
+		}
+	}
+
 	/**
 	 * Set resource field by calling subclass
 	 */
@@ -196,12 +203,14 @@ public abstract class Resource implements IResourceListener
 		if (this.resourceStream == null)
 		{
 			this.resourceStream = getResourceStream();
+			
 			if (this.resourceStream == null)
 			{
 				throw new WicketRuntimeException("Could not get resource stream");
 			}
-			// resource is served so if cacheable is wanted set the cache bit.
-			if(cacheable == 2)
+			
+			// Resource is served so if cacheable is wanted set the cache bit.
+			if (cacheable == 2)
 			{
 				cacheable = 1;
 			}
@@ -233,23 +242,28 @@ public abstract class Resource implements IResourceListener
 		{
 			Throwable throwable = e;
 			boolean ignoreException = false;
-			while (throwable!=null)
+			while (throwable != null)
 			{
 				if (throwable instanceof SocketException)
 				{
 					String message = throwable.getMessage();
-					ignoreException = message != null && (message.indexOf("Connection reset by peer") != -1 ||
-										message.indexOf("Software caused connection abort") != -1);
+					ignoreException = message != null
+							&& (message.indexOf("Connection reset by peer") != -1 || message
+									.indexOf("Software caused connection abort") != -1);
 				}
 				else
 				{
-					ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") != 0;
+					ignoreException = throwable.getClass().getName()
+							.indexOf("ClientAbortException") != 0;
 				}
 				if (ignoreException)
 				{
 					if (log.isDebugEnabled())
 					{
-						log.debug("Socket exception ignored for sending Resource response to client (ClientAbort)",e);
+						log
+								.debug(
+										"Socket exception ignored for sending Resource response to client (ClientAbort)",
+										e);
 					}
 					break;
 				}
@@ -257,7 +271,8 @@ public abstract class Resource implements IResourceListener
 			}
 			if (!ignoreException)
 			{
-				throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, e);
+				throw new WicketRuntimeException("Unable to render resource stream "
+						+ resourceStream, e);
 			}
 		}
 	}
