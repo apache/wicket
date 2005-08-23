@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
+import wicket.util.time.Time;
 import wicket.util.value.ValueMap;
 
 /**
@@ -121,6 +122,10 @@ public abstract class Resource implements IResourceListener
 			// Don't set this above setContentLength call above.
 			// The call above could create and set the last modified time.
 			response.setLastModifiedTime(resourceStream.lastModifiedTime());
+		}
+		else
+		{
+			response.setLastModifiedTime(Time.valueOf(-1));
 		}
 
 		// Respond with resource
