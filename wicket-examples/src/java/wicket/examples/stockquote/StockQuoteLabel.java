@@ -83,9 +83,13 @@ public class StockQuoteLabel extends WebComponent
 		String strReturn = "";
 		String strSOAPPacket = getSOAPQuote(symbol);
 
-		int nStart = strSOAPPacket.indexOf("<Result xsi:type='xsd:float'>") + 29;
+		int nStart = strSOAPPacket.indexOf("<Result xsi:type='xsd:float'>");
+		if (nStart == -1)
+		{
+		    return "(unknown)";
+		}
 		int nEnd = strSOAPPacket.indexOf("</Result>");
-		strReturn = strSOAPPacket.substring(nStart, nEnd);
+		strReturn = strSOAPPacket.substring(nStart + 29, nEnd);
 		return strReturn;
 	}
 
