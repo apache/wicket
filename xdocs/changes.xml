@@ -7,10 +7,12 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
-    <release version="1.1-b3" date="2005-08-22" description="1.1 Beta 3">
+    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+ 		<action type="fix" dev="Juergen Donnerstag" >´DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
  		<action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
  		<action type="fix" dev="Juergen Donnerstag" due-to="Gili Tzabari">Fixed autolink support for none-html files</action>
+    </release>
+    <release version="1.1-b3" date="2005-08-22" description="1.1 Beta 3">
  		<action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
  		<action type="fix" dev="Johan Compagner" issue="1251385" due-to="Gili Tzabari">Consistent homepage URL with NO_REDIRECT</action>
 		<action type="fix" dev="Johan Compagner" issue="1265068" due-to="Gili Tzabari">
