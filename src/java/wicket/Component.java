@@ -37,7 +37,6 @@ import wicket.markup.WicketTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
-import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -1088,17 +1087,18 @@ public abstract class Component implements Serializable, IEventRequestListener
 	public final void render()
 	{
 		// Determine if component is visible
-		final boolean isVisible = isVisible();
-
-		// Get request cycle to render to
-		final RequestCycle cycle = getRequestCycle();
-
-		// Save original Response
-		final Response originalResponse;
-
-		// If component is not visible, set response to NullResponse
-		if (isVisible)
+		if (!isVisible())
 		{
+			findMarkupStream().skipComponent();
+		}
+		else
+		{
+			// Get request cycle to render to
+			final RequestCycle cycle = getRequestCycle();
+	
+			// Save original Response
+			final Response originalResponse;
+	
 			// No response to restore
 			originalResponse = null;
 
@@ -1107,31 +1107,17 @@ public abstract class Component implements Serializable, IEventRequestListener
 			{
 				log.debug("Begin render " + this);
 			}
-		}
-		else
-		{
-			// Since component is invisible, pipe all output to NullResponse
-			originalResponse = cycle.getResponse();
-			cycle.setResponse(NullResponse.getInstance());
-		}
-
-		// Call implementation to render component
-		onRender();
-
-		// Component has been rendered
-		rendered();
-
-		// Restore original response if any
-		if (isVisible)
-		{
+	
+			// Call implementation to render component
+			onRender();
+	
+			// Component has been rendered
+			rendered();
+	
 			if (log.isDebugEnabled())
 			{
 				log.debug("End render " + this);
 			}
-		}
-		else
-		{
-			cycle.setResponse(originalResponse);
 		}
 	}
 
