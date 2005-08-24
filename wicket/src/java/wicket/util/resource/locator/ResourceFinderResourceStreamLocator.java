@@ -36,7 +36,7 @@ import wicket.util.resource.UrlResourceStream;
 public final class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
+	private static Log log = LogFactory.getLog(ResourceFinderResourceStreamLocator.class);
 
 	/** The finder to use to locate the resource stream */
 	private IResourceFinder finder;

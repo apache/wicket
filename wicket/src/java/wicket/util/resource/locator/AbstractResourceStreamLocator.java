@@ -23,7 +23,7 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
- * Base class for implementing IResourceLocators.
+ * Base class for implementing IResourceStreamLocators.
  * <p>
  * Contains the logic to locate a resource based on a path, a style (see
  * {@link wicket.Session}), a locale and an extension string. The full filename

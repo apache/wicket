@@ -51,6 +51,16 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
+	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF
+	 * 
+	 * @param locator
+	 */
+	protected void setResourceStreamLocator(final IResourceStreamLocator locator)
+	{
+		this.locator = locator;
+	}
+
+	/**
 	 * Locate a resource based on a class and an extension.
 	 * 
 	 * @param c
@@ -70,7 +80,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param c
 	 *            Class next to which the resource should be found
 	 * @param style
-	 *            Any resource style, such as a skin style (see {@link wicket.Session})
+	 *            Any resource style, such as a skin style (see
+	 *            {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
@@ -80,18 +91,21 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(final Class c, final String style, final Locale locale,
 			final String extension)
 	{
-		return locate(c.getClassLoader(), c.getName().replace('.','/'), style, locale, extension);
+		return locate(c.getClassLoader(), c.getName().replace('.', '/'), style, locale, extension);
 	}
 
 	/**
 	 * Convenience method to load a resource. If no extension is specified, this
 	 * convenience method will extract the extension from the path. If the
 	 * extension does not start with a dot, one will be added automatically.
-	 * @param loader class loader
+	 * 
+	 * @param loader
+	 *            class loader
 	 * @param path
 	 *            The path of the resource
 	 * @param style
-	 *            Any resource style, such as a skin style (see {@link wicket.Session})
+	 *            Any resource style, such as a skin style (see
+	 *            {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
