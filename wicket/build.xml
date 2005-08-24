@@ -144,7 +144,7 @@
     </property>
     <property name="title" value="Wicket SNAPSHOT API">
     </property>
-    <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="com.voicetribe.*">
+    <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="wicket.*">
       <classpath>
         <path refid="build.classpath">
         </path>
