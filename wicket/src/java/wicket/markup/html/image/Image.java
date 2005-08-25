@@ -48,6 +48,10 @@ public class Image extends WebComponent implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
+	 * This constructor can be used if you have a img tag that has a src that points to a 
+	 * PackageResource  (which will be created and bind to the shared resources)
+	 * Or if you have a value attribute in youre tag for which the image factory can make an image.
+	 * 
 	 * @see wicket.Component#Component(String)
 	 */
 	public Image(final String id)
@@ -56,7 +60,15 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * Constructs an image directly from an image resource.
+	 * Constructs an image from an image resourcereference.
+	 * That resource reference will bind its resource to the current SharedResources.
+	 * 
+	 * If you are using non sticky clustering and the resource reference
+	 * is pointing to a Resource that isn't guarenteed to be on every server,
+	 * for example a dynamic image or resources that aren't added with a IInitializer
+	 * at application startup. Then if only that resource is requested from another
+	 * server, without the rendering of the page, the image won't be there and will 
+	 * result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -71,6 +83,9 @@ public class Image extends WebComponent implements IResourceListener
 
 	/**
 	 * Constructs an image directly from an image resource.
+	 * 
+	 * This constructor is non sticky clustering save. 
+	 * But will result in a non stable url and that url will have request parameters. 
 	 * 
 	 * @param id
 	 *            See Component
