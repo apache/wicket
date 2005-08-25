@@ -63,12 +63,12 @@ public class Image extends WebComponent implements IResourceListener
 	 * Constructs an image from an image resourcereference.
 	 * That resource reference will bind its resource to the current SharedResources.
 	 * 
-	 * If you are using non sticky clustering and the resource reference
-	 * is pointing to a Resource that isn't guarenteed to be on every server,
-	 * for example a dynamic image or resources that aren't added with a IInitializer
-	 * at application startup. Then if only that resource is requested from another
-	 * server, without the rendering of the page, the image won't be there and will 
-	 * result in a broken link.
+	 * If you are using non sticky session clustering and the resource reference
+     * is pointing to a Resource that isn't guaranteed to be on every server,
+     * for example a dynamic image or resources that aren't added with a IInitializer
+     * at application startup. Then if only that resource is requested from another
+     * server, without the rendering of the page, the image won't be there and will
+     * result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -84,8 +84,9 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Constructs an image directly from an image resource.
 	 * 
-	 * This constructor is non sticky clustering save. 
-	 * But will result in a non stable url and that url will have request parameters. 
+	 * This one doesn't have the 'non sticky session clustering' problem that the 
+	 * ResourceReference constructor has.
+	 * But this will result in a non 'stable' url and the url will have request parameters. 
 	 * 
 	 * @param id
 	 *            See Component
