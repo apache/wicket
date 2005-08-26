@@ -8,7 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
- 		<action type="fix" dev="Juergen Donnerstag" >´DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
+    	<action type="fix" dev="Eelco Hillenius" issue="1273827">Default date parsing is now in non-lenient mode, which means that it will fail fast.</action>
+ 		<action type="fix" dev="Juergen Donnerstag">DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
  		<action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
  		<action type="fix" dev="Juergen Donnerstag" due-to="Gili Tzabari">Fixed autolink support for none-html files</action>
  		<action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
