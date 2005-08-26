@@ -908,14 +908,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
-						// If auto component or not invisible ...
-						if (component.isAuto() || !component.isVisibleInHierarchy())
+						// If auto component ...
+						if (component.isAuto())
 						{
 							// Add to list of unrendered auto components to
 							// delete below
 							unrenderedAutoComponents.add(component);
 						}
-						else
+						else if (component.isVisibleInHierarchy())
 						{
 							// Increase number of unrendered components
 							unrenderedComponents.increment();
