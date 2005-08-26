@@ -11,6 +11,30 @@ import wicket.util.string.StringValueConversionException;
 public class BytesTest extends TestCase
 {
 	/**
+	 * Backup of the default locale.
+	 */
+	private Locale defaultLocale = null;
+
+	/**
+	 * Save the default locale.
+	 */
+	public void setUp()
+	{
+		defaultLocale = Locale.getDefault();
+
+		// these tests run in US locale.
+		Locale.setDefault(Locale.US);
+	}
+
+	/**
+	 * Restore the default locale.
+	 */
+	public void tearDown()
+	{
+		Locale.setDefault(defaultLocale);
+	}
+
+	/**
 	 * Tests the values.
 	 */
 	public void testTeraBytes()
