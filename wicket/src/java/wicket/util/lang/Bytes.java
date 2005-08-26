@@ -385,7 +385,7 @@ public final class Bytes extends LongValue
 		{
 			if (terabytes() >= 1.0)
 			{
-				return unitString(gigabytes(), "T", locale);
+				return unitString(terabytes(), "T", locale);
 			}
 
 			if (gigabytes() >= 1.0)
