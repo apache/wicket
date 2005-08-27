@@ -8,6 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    	<action type="fix" dev="Juergen Donnerstag" issue="1272174">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
+    	<action type="fix" dev="Juergen Donnerstag" issue="1272174">Child and Extend tags are no longer appearing in HTML when strip=true.</action>
     	<action type="fix" dev="Eelco Hillenius" issue="1273827">Default date parsing is now in non-lenient mode, which means that it will fail fast.</action>
  		<action type="fix" dev="Juergen Donnerstag">DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
  		<action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
