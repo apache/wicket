@@ -18,6 +18,7 @@
  */
 package wicket.examples.displaytag.list;
 
+import java.io.Serializable;
 import java.util.List;
 
 import wicket.MarkupContainer;
@@ -33,7 +34,7 @@ import wicket.util.collections.MicroMap;
  * @see SortableListViewHeaders
  * @author Juergen Donnerstag
  */
-public class SortableListViewHeaderGroup
+public class SortableListViewHeaderGroup implements Serializable
 {
 	/** contains the name of SortableTableHeader to be sorted */
 	final private MicroMap sorted = new MicroMap();
