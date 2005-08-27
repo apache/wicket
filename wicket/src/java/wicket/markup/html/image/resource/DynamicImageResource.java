@@ -18,20 +18,14 @@
 package wicket.markup.html.image.resource;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
-import wicket.markup.html.WebResource;
-import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.time.Duration;
-import wicket.util.time.Time;
+import wicket.resource.DynamicByteArrayResource;
 
 /**
  * An ImageResource subclass for dynamic images (images created
@@ -60,17 +54,21 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  * @author Gili Tzabari
  */
-public abstract class DynamicImageResource extends WebResource
+public abstract class DynamicImageResource extends DynamicByteArrayResource
 {
 	/** The image type */
 	private String format = "png";
 
-	/** The time this image resource was last modified */
-	protected Time lastModifiedTime;
 
-	/** The maximum duration a resource can be idle before its cache is flushed */
-	protected Duration cacheTimeout = Duration.NONE;
+	/**
+	 * default constructor
+	 */
+	public DynamicImageResource()
+	{
+		super("image/png");
+	}
 
+	
 	/**
 	 * @return Returns the image format.
 	 */
@@ -79,72 +77,7 @@ public abstract class DynamicImageResource extends WebResource
 		return format;
 	}
 
-	/**
-	 * @return Gets the image resource to attach to the component.
-	 */
-	public IResourceStream getResourceStream()
-	{
-		return new IResourceStream()
-		{
-			/** Transient input stream to resource */
-			private transient InputStream inputStream = null;
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#close()
-			 */
-			public void close() throws IOException
-			{
-				if (inputStream != null)
-				{
-					inputStream.close();
-					inputStream = null;
-				}
-			}
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#getContentType()
-			 */
-			public String getContentType()
-			{
-				return "image/" + format;
-			}
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#getInputStream()
-			 */
-			public InputStream getInputStream() throws ResourceStreamNotFoundException
-			{
-				if (inputStream == null)
-				{
-					inputStream = new ByteArrayInputStream(getImageData());
-				}
-				return inputStream;
-			}
-
-			/**
-			 * @see wicket.util.watch.IModifiable#lastModifiedTime()
-			 */
-			public Time lastModifiedTime()
-			{
-				return DynamicImageResource.this.lastModifiedTime();
-			}
-
-			public long length()
-			{
-				byte[] imageData = DynamicImageResource.this.getImageData();
-				return (imageData != null) ? imageData.length : 0;
-			}
-		};
-	}
-
-	/**
-	 * @return The last time this image resource was modified
-	 */
-	public Time lastModifiedTime()
-	{
-		return lastModifiedTime;
-	}
-
+	
 	/**
 	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
 	 *
@@ -154,28 +87,17 @@ public abstract class DynamicImageResource extends WebResource
 	public void setFormat(String format)
 	{
 		this.format = format;
+		setContentType("image/" + format);
 	}
-
+	
 	/**
-	 * Set the maximum duration the resource can be idle before its cache is flushed.
-	 * The cache might get flushed sooner if the JVM is low on memory.
-	 * 
-	 * @param value The cache timout 
+	 * @see wicket.resource.DynamicByteArrayResource#getData()
 	 */
-	public void setCacheTimeout(Duration value)
+	protected byte[] getData()
 	{
-		cacheTimeout = value;
+		return getImageData();
 	}
-
-	/**
-	 * Returns the maximum duration the resource can be idle before its cache is flushed.
-	 * 
-	 * @return The cache timeout 
-	 */
-	public Duration getCacheTimeout()
-	{
-		return cacheTimeout;
-	}
+	
 
 	/**
 	 * Get image data for our dynamic image resource. If the subclass
@@ -185,7 +107,7 @@ public abstract class DynamicImageResource extends WebResource
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
-
+	
 	/**
 	 * @param image
 	 *            The image to turn into data

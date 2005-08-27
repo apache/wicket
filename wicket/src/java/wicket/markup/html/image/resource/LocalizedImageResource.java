@@ -348,7 +348,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			if (!Strings.isEmpty(imageReferenceName))
 			{
 				// Is resource already available via the application?
-				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style) == null)
+				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application

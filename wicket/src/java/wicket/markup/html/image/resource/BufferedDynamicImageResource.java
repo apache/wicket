@@ -47,7 +47,7 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	public void setImage(final BufferedImage image)
 	{
 		imageData = toImageData(image);
-		lastModifiedTime = Time.now();
+		setLastModifiedTime(Time.now());
 	}
 
 	/**

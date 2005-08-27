@@ -151,7 +151,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 			{
 				imageData = new SoftReference(data);
 			}
-			lastModifiedTime = Time.now();
+			setLastModifiedTime(Time.now());
 		}
 		return data;
 	}
