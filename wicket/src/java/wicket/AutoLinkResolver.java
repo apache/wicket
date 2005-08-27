@@ -200,15 +200,9 @@ public final class AutoLinkResolver implements IComponentResolver
 				// has been added to (e.g. the Page). What we need however, is
 				// the component (e.g. a Panel) which contributed it.
 				Component relevantContainer = container;
-				while (relevantContainer instanceof HtmlHeaderContainer)
+				while (relevantContainer instanceof IComponentResolver)
 				{
 					relevantContainer = relevantContainer.getParent(); 
-				}
-
-				// BodyOnLoadContainers are "transparent" as well
-				while (relevantContainer instanceof BodyOnLoadContainer)
-				{
-					relevantContainer = relevantContainer.getParent();
 				}
 
 				// Create the component implementing the link
