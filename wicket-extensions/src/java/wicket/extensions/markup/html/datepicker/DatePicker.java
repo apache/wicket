@@ -37,16 +37,20 @@ import wicket.model.Model;
  * </p>
  * <p>
  * (Java)
+ * 
  * <pre>
- * TextField dateField = new TextField("dateField", Date.class);
+ * TextField dateField = new TextField(&quot;dateField&quot;, Date.class);
  * add(dateField);
- * add(new DatePicker("dateFieldPicker", dateField));
+ * add(new DatePicker(&quot;dateFieldPicker&quot;, dateField));
  * </pre>
+ * 
  * (html)
+ * 
  * <pre>
- * &lt;input type="text" wicket:id="dateField" size="10" /&gt;
- * &lt;span wicket:id="dateFieldPicker" /&gt;
+ *    &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *    &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
+ * 
  * </p>
  * <p>
  * Your target doesn't have to be a text field however, attach to any tag that is
@@ -57,46 +61,40 @@ import wicket.model.Model;
  * {@link wicket.extensions.markup.html.datepicker.DatePickerSettings} object.
  * </p>
  * <p>
- * This component is based on Dynarch's JSCalendar component, which can be found
- * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
+ * This component is based on Dynarch's JSCalendar component, which can be found at <a
+ * href="http://www.dynarch.com/">the Dynarch site</a>.
  * </p>
- *
  * @see wicket.extensions.markup.html.datepicker.DatePickerSettings
- *
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
  */
 public class DatePicker extends Panel
 {
 	/**
-	 * Attribute modifier that modifies/ adds an id attribute with value of the
-	 * given component's path.
+	 * Attribute modifier that modifies/ adds an attribute with value of the given
+	 * component's path.
 	 */
-	private final static class IdAttributeModifier extends AttributeModifier
+	private final static class PathAttributeModifier extends AttributeModifier
 	{
-
-		/** model for substituting the id attribute of a component based on the component id. */
-		private final static class IdModel extends Model
-		{
-			/**
-			 * @see wicket.model.IModel#getObject(wicket.Component)
-			 */
-			public Object getObject(Component component)
-			{
-				return component.getPath();
-			}
-		}
-
 		/** target component. */
 		private final Component component;
 
 		/**
 		 * Construct.
+		 * @param attribute the attribute to modify
 		 * @param component the target component
 		 */
-		public IdAttributeModifier(Component component)
+		public PathAttributeModifier(String attribute, Component component)
 		{
-			super("id", true, new IdModel());
+			super(attribute, true, new Model()
+			{
+				public Object getObject(Component component)
+				{
+					// do this lazily, so we know for sure we have the whole
+					// path including the page etc.
+					return component.getPath();
+				}
+			});
 			this.component = component;
 		}
 	}
@@ -114,7 +112,7 @@ public class DatePicker extends Panel
 		public TriggerButton(final String id, final wicket.ResourceReference resourceReference)
 		{
 			super(id);
-			add(new IdAttributeModifier(this));
+			add(new PathAttributeModifier("id", this));
 			IModel srcReplacement = new Model()
 			{
 				public Object getObject(Component component)
@@ -142,9 +140,11 @@ public class DatePicker extends Panel
 		}
 
 		/**
-		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+		 *      wicket.markup.ComponentTag)
 		 */
-		protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+		protected void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, getInitScript());
 		}
@@ -169,6 +169,17 @@ public class DatePicker extends Panel
 		this(id, target, new DatePickerSettings());
 	}
 
+	/**
+	 * Construct with a default button and style.
+	 * @param id the component id
+	 * @param label the label for target component.
+	 * @param target the receiving component
+	 */
+	public DatePicker(String id, Component label, Component target)
+	{
+		this(id, target, new DatePickerSettings());
+	}
+
 
 	/**
 	 * Construct.
@@ -180,19 +191,19 @@ public class DatePicker extends Panel
 	{
 		super(id);
 
-		if(settings == null)
+		if (settings == null)
 		{
 			throw new NullPointerException("settings must be non null when using this constructor");
 		}
 
 		this.settings = settings;
-		
+
 		if (target == null)
 		{
 			throw new NullPointerException("targetTextField must be not null");
 		}
 
-		target.add(new IdAttributeModifier(target));
+		target.add(new PathAttributeModifier("id", target));
 		this.target = target;
 
 		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
@@ -215,8 +226,9 @@ public class DatePicker extends Panel
 	 */
 	private String getInitScript()
 	{
+		String targetId = target.getPath();
 		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
-		b.append("\n\t\tinputField : \"").append(target.getPath()).append("\",");
+		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
 		b.append(settings.toScript(getLocale()));
 		b.append("\n});");
