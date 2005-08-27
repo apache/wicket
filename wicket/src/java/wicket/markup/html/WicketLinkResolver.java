@@ -15,30 +15,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.html;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
+import wicket.IComponentResolver;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.WebMarkupContainer;
 
 /**
- * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
- * which are silently ignored, because they have already been processed.
+ * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
+ * autolinks are already detected and handled, the only task of this
+ * resolver will be to add a "transparent" WebMarkupContainer to 
+ * transparently handling child components. 
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupInheritanceResolver implements IComponentResolver
+public class WicketLinkResolver implements IComponentResolver
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(MarkupInheritanceResolver.class);
+	private static Log log = LogFactory.getLog(WicketLinkResolver.class);
 
 	/**
-	 * @see wicket.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
+	 * Try to resolve the tag, then create a component, add it to the container
+	 * and render it.
+	 * 
+	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+	 *      ComponentTag)
+	 * 
 	 * @param container
 	 *            The container parsing its markup
 	 * @param markupStream
@@ -50,26 +58,22 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <wicket:...>
+		// It must be <body onLoad>
 		if (tag instanceof WicketTag)
 		{
-			final WicketTag wicketTag = (WicketTag)tag;
-			
-			// It must be <wicket:extend...>
-			if (wicketTag.isExtendTag())
+			WicketTag wtag = (WicketTag) tag;
+			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				container.autoAdd(new TransparentWebMarkupContainer("_extend"));
-			    return true;
-			}
-			
-			// It must be <wicket:child...>
-			if (wicketTag.isChildTag())
-			{
-				container.autoAdd(new TransparentWebMarkupContainer("_child"));
-			    return true;
+				Component component = new TransparentWebMarkupContainer(
+						"_link_" + container.getPage().getAutoIndex());
+				container.autoAdd(component);
+	
+				// Yes, we handled the tag
+				return true;
 			}
 		}
-		// We were not able to handle the componentId
+
+		// We were not able to handle the tag
 		return false;
 	}
 
@@ -116,4 +120,5 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			return true;
 		}
 	}
+	
 }

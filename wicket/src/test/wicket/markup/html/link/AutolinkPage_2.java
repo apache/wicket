@@ -28,13 +28,13 @@ import wicket.markup.html.basic.Label;
  *
  * @author Chris Turner
  */
-public class AutolinkPage extends WebPage 
+public class AutolinkPage_2 extends WebPage 
 {
 	/**
 	 * Construct.
 	 * @param parameters
 	 */
-	public AutolinkPage(final PageParameters parameters) 
+	public AutolinkPage_2(final PageParameters parameters) 
 	{
 	    add(new Label("myLabel", "Home"));
     }
