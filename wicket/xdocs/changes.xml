@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+ 	   <action type="add" dev="Johan Compagner" issue="1271523" due-to="Ralf Ebert">ByteArrayResource and DynamicByteArrayResource classes</action>
+	   <action type="update" dev="Johan Compagner" issue="1271510" due-to="Ralf Ebert">ResourceLink and Resources</action>
+ 		<action type="update" dev="Johan Compagner" issue="1260087" due-to="Gili Tzabari">Document lifecycle of resources (idle/cache Timers on resources)</action>
     	<action type="fix" dev="Eelco Hillenius" due-to="Jan Bares">You can now provide a label component to synchronize ids with the datepicker component</action>
     	<action type="update" dev="Eelco Hillenius">improvements: newValue is now called if the replacement value is null, allowing to supply new values just by subclassing. ReplaceModel can now be null.</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1272174">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
