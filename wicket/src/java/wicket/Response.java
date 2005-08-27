@@ -149,7 +149,14 @@ public abstract class Response
 	 */
 	public String getCharacterEncoding()
 	{
-	    return this.defaultEncoding;
+		if (this.defaultEncoding == null)
+		{
+			return Application.get().getSettings().getResponseRequestEncoding();
+		}
+		else
+		{
+			return this.defaultEncoding;
+		}
 	}
 	
 	/**

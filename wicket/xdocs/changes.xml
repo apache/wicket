@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    	<action type="fix" dev="Juergen Donnerstag" issue="1267120">fixed bug where response encoding was null</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1274320">wicket:link tag now gets removed as well if setStripWicketTag(true)</action>
     	<action type="fix" dev="Juergen Donnerstag">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
  	    <action type="add" dev="Johan Compagner" issue="1271523" due-to="Ralf Ebert">ByteArrayResource and DynamicByteArrayResource classes</action>
