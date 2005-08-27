@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
@@ -57,22 +58,62 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-			    container.getResponse().write(wicketTag);
-			    markupStream.next();
-			    
+				container.autoAdd(new TransparentWebMarkupContainer("_extend"));
 			    return true;
 			}
 			
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-			    container.getResponse().write(wicketTag);
-			    markupStream.next();
-			    
+				container.autoAdd(new TransparentWebMarkupContainer("_child"));
 			    return true;
 			}
 		}
 		// We were not able to handle the componentId
 		return false;
+	}
+
+	/**
+	 * This is a WebMarkupException, except that it is transparent for
+	 * it child components.
+	 */
+	public class TransparentWebMarkupContainer extends WebMarkupContainer
+		implements
+			IComponentResolver
+	{
+		/**
+		 * @param id
+		 */
+		public TransparentWebMarkupContainer(final String id)
+		{
+			super(id);
+		}
+
+		/**
+		 * Because the autolink component is not able to resolve any inner
+		 * component, it'll passed it down to its parent.
+		 * 
+		 * @param container
+		 *            The container parsing its markup
+		 * @param markupStream
+		 *            The current markupStream
+		 * @param tag
+		 *            The current component tag while parsing the markup
+		 * @return True if componentId was handled by the resolver, false
+		 *         otherwise.
+		 */
+		public final boolean resolve(final MarkupContainer container,
+				final MarkupStream markupStream, final ComponentTag tag)
+		{
+			// Delegate the request to the parent component
+			final Component component = this.getParent().get(tag.getId());
+			if (component == null)
+			{
+				return false;
+			}
+
+			component.render();
+			return true;
+		}
 	}
 }
