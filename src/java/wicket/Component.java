@@ -774,7 +774,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	public final Resource getResource()
 	{
 		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(),
-				getStyle());
+				getStyle(), false);
 	}
 
 	/**
