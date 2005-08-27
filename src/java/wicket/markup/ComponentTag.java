@@ -367,7 +367,14 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean requiresCloseTag()
 	{
-		return HtmlHandler.requiresCloseTag(this.getName());
+		if (getNamespace() == null)
+		{
+			return HtmlHandler.requiresCloseTag(getName());
+		}
+		else
+		{
+			return HtmlHandler.requiresCloseTag(getNamespace() + ":" + getName());
+		}
 	}
 
 	/**

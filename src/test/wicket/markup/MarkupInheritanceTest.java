@@ -18,22 +18,18 @@
  */
 package wicket.markup;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
 
 /**
  */
-public class MarkupInheritanceTest extends TestCase
+public class MarkupInheritanceTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(MarkupInheritanceTest.class);
-
-	private MockWebApplication application;
 
 	/**
 	 * Create the test.
@@ -44,11 +40,6 @@ public class MarkupInheritanceTest extends TestCase
 	public MarkupInheritanceTest(String name)
 	{
 		super(name);
-	}
-
-	protected void setUp() throws Exception
-	{
-		application = new MockWebApplication(null);
 	}
 	
 	/**
@@ -72,30 +63,7 @@ public class MarkupInheritanceTest extends TestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    // Inherit from a inherited component is currently not supported
 	    executeTest(MarkupInheritanceExtension_3.class, "MarkupInheritanceExpectedResult_3.html");
-	}
-
-	/**
-	 * @param pageClass
-	 * @param filename
-	 * @throws Exception
-	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
-	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-		
-		application.getPages().setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		assertEquals(pageClass, application.getLastRenderedPage().getClass());
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 
 	/**

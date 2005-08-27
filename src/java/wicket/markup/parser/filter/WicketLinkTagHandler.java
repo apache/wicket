@@ -149,7 +149,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
 				}
 
-				return nextTag();
+				return wtag;
 			}
 		}
 
