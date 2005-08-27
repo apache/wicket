@@ -108,18 +108,12 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param page
-	 *            The page to add
-	 * @return Any Page that got bumped out of the map
+	 * @return The next id for this pagemap
 	 */
-	final Page add(final Page page)
+	final int getNextId()
 	{
-		// Give page a new id
-		page.setId(this.pageId++);
 		session.dirty();
-
-		// Add to map
-		return put(page);
+		return this.pageId++;
 	}
 
 	/**
