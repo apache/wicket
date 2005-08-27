@@ -140,7 +140,7 @@ public abstract class Session implements Serializable
 	private transient IPageFactory pageFactory;
 
 	/** Maps from name to page map */
-	private final Map pageMapForName = new HashMap();
+	private final Map pageMapForName = new HashMap(3);
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -569,30 +569,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Adds page to session if not already added.
-	 * 
-	 * @param page
-	 *            Page to add to this session
-	 */
-	protected final void add(final Page page)
-	{
-		// Set page map for page. If cycle is null, we may be being called from
-		// some kind of test harness, so we will just use the default page map
-		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
-				.getParameter("pagemap");
-		page.setPageMap(pageMapName);
-
-		// Add to page local transient page map
-		final Page removedPage = page.getPageMap().add(page);
-
-		// Get any page that was removed
-		if (removedPage != null)
-		{
-			removeAttribute(removedPage.getId());
-		}
-	}
-	
-	/**
 	 * Any detach logic for session subclasses.
 	 */
 	protected void detach()
@@ -719,7 +695,11 @@ public abstract class Session implements Serializable
 
 				// Add to page map specified in page state info
 				attach(page);
-				getPageMap(pageState.pageMapName).put(page);
+				Page removed = getPageMap(pageState.pageMapName).put(page);
+				if(removed != null)
+				{
+					removeAttribute(removed.getId());
+				}
 
 				// Page has been added to session now
 				pageState.addedToSession = true;
@@ -776,6 +756,9 @@ public abstract class Session implements Serializable
 		final PageState pageState = newPageState(page);
 		//pageState.addedToSession = true;
 		pageState.pageMapName = page.getPageMap().getName();
+		
+		// For this session the page is in the pagemap.
+		pageState.addedToSession = true;
 
 		// Set HttpSession attribute for new PageState
 		setAttribute(page.getId(), pageState);
@@ -806,5 +789,26 @@ public abstract class Session implements Serializable
 				return 0;
 			}
 		});
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * The page will be 'touched' in the session.
+	 * If it wasn't added yet to the pagemap, it will be added
+	 * to the page map else it will set this page to the front.
+	 * 
+	 * If another page was removed because of this it will be cleaned up.
+	 * 
+	 * @param page
+	 */
+	public void touch(Page page)
+	{
+		// touch the page in its pagemap.
+		Page removedPage = page.getPageMap().put(page);
+		if(removedPage != null)
+		{
+			removeAttribute(removedPage.getId());
+		}
 	}
 }
