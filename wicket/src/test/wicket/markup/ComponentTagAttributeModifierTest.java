@@ -71,11 +71,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		try
 		{
 			new AttributeModifier("test", null);
-			Assert.fail("IllegalArgumentException should be thrown on null replace model");
 		}
 		catch (IllegalArgumentException e)
 		{
-			// Expected result
+			Assert.fail("IllegalArgumentException should not be thrown on null replace model");
 		}
 	}
 
