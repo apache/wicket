@@ -85,7 +85,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			final BufferedImage image = getScaledImageInstance();
 			thumbnail = toImageData(image);
-			lastModifiedTime = Time.now();
+			setLastModifiedTime(Time.now());
 		} 
 		return thumbnail;
 	}
