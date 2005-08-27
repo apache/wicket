@@ -47,8 +47,8 @@ import wicket.model.Model;
  * (html)
  * 
  * <pre>
- *    &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *    &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *     &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *     &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -76,15 +76,12 @@ public class DatePicker extends Panel
 	 */
 	private final static class PathAttributeModifier extends AttributeModifier
 	{
-		/** target component. */
-		private final Component component;
-
 		/**
 		 * Construct.
 		 * @param attribute the attribute to modify
-		 * @param component the target component
+		 * @param pathProvider the component that provides the path
 		 */
-		public PathAttributeModifier(String attribute, Component component)
+		public PathAttributeModifier(String attribute, final Component pathProvider)
 		{
 			super(attribute, true, new Model()
 			{
@@ -92,10 +89,9 @@ public class DatePicker extends Panel
 				{
 					// do this lazily, so we know for sure we have the whole
 					// path including the page etc.
-					return component.getPath();
+					return pathProvider.getPath();
 				}
 			});
-			this.component = component;
 		}
 	}
 
@@ -150,6 +146,9 @@ public class DatePicker extends Panel
 		}
 	}
 
+	/** any label component. */
+	private final Component label;
+
 	/** the receiving component. */
 	private final Component target;
 
@@ -177,9 +176,8 @@ public class DatePicker extends Panel
 	 */
 	public DatePicker(String id, Component label, Component target)
 	{
-		this(id, target, new DatePickerSettings());
+		this(id, label, target, new DatePickerSettings());
 	}
-
 
 	/**
 	 * Construct.
@@ -188,6 +186,19 @@ public class DatePicker extends Panel
 	 * @param settings datepicker properties
 	 */
 	public DatePicker(final String id, final Component target, final DatePickerSettings settings)
+	{
+		this(id, null, target, settings);
+	}
+
+	/**
+	 * Construct.
+	 * @param id the component id
+	 * @param label the label component (may be null)
+	 * @param target the receiving component
+	 * @param settings datepicker properties
+	 */
+	public DatePicker(final String id, final Component label, final Component target,
+			final DatePickerSettings settings)
 	{
 		super(id);
 
@@ -205,6 +216,12 @@ public class DatePicker extends Panel
 
 		target.add(new PathAttributeModifier("id", target));
 		this.target = target;
+
+		if (label != null)
+		{
+			label.add(new PathAttributeModifier("for", target));
+		}
+		this.label = label;
 
 		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
 		add(new InitScript("script"));

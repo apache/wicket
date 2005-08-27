@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.ajax.dojo.ValidationEventRequestHandler;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.ChoiceRenderer;
@@ -122,9 +123,14 @@ public class FormInput extends WicketExamplePage
 			integerTextField.add(new ValidationEventRequestHandler("onchange"));
 			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
+			// we have a component attached to the label here, as we want to synchronize the
+			// id's of the label, textfield and datepicker. Note that you can perfectly
+			// do without labels
+			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
+			add(dateLabel);
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
-			add(new DatePicker("datePicker", datePropertyTextField));
+			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
 			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
