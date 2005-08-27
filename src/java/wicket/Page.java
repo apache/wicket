@@ -219,6 +219,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// if false in onRender then checkRendering below fails anyway!!
 		if (checkAccess())
 		{
+			// Add/touch the response page in the session (its pagemap).
+			session.touch(this);
+			
 			try
 			{
 				// We have to initialize the page's request now
@@ -979,14 +982,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// All Pages are born dirty so they get clustered right away
 		setDirty(true);
 
-		// Get session
-		final Session session = getSession();
-
-		// Add page to session
-		session.add(this);
-
+		// set the pagemap
+		setPageMap(getRequestCycle() != null? getRequestCycle().getRequest().getParameter("pagemap"):null);
+		
+		setId(getPageMap().getNextId());
+		
 		// Set versioning of page based on default
-		setVersioned(session.getApplication().getSettings().getVersionPagesByDefault());
+		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
 
 		// Loop through the PageSet objects for this Page
 		for (final Iterator iterator = getPageSets(); iterator.hasNext();)
