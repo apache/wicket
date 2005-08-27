@@ -46,6 +46,11 @@ public class MarkupInheritanceTest extends TestCase
 		super(name);
 	}
 
+	protected void setUp() throws Exception
+	{
+		application = new MockWebApplication(null);
+	}
+	
 	/**
 	 * @throws Exception
 	 */
@@ -80,7 +85,6 @@ public class MarkupInheritanceTest extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
-		application = new MockWebApplication(null);
 		application.getPages().setHomePage(pageClass);
 
 		// Do the processing
@@ -101,7 +105,6 @@ public class MarkupInheritanceTest extends TestCase
 	{
 		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
 		
-		application = new MockWebApplication(null);
 		application.getPages().setHomePage(MarkupInheritanceExtension_4.class);
 
 		// Do the processing
@@ -140,5 +143,22 @@ public class MarkupInheritanceTest extends TestCase
 	public void testRenderHomePage_6() throws Exception
 	{
 	    executeTest(MarkupInheritancePage_6.class, "MarkupInheritanceExpectedResult_6.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_7() throws Exception
+	{
+	    executeTest(MarkupInheritanceExtension_7.class, "MarkupInheritanceExpectedResult_7.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_8() throws Exception
+	{
+		application.getSettings().setStripWicketTags(true);
+	    executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
 }

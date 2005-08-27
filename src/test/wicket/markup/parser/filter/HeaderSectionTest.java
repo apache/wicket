@@ -38,6 +38,11 @@ public class HeaderSectionTest extends TestCase
 
 	private MockWebApplication application;
 
+	protected void setUp() throws Exception
+	{
+		application = new MockWebApplication(null);
+	}
+	
 	/**
 	 * Create the test.
 	 * 
@@ -146,7 +151,6 @@ public class HeaderSectionTest extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
-		application = new MockWebApplication(null);
 		application.getPages().setHomePage(pageClass);
 
 		// Do the processing

@@ -115,9 +115,12 @@ public class InheritedMarkupMerger
 						            copy = false;
 						            break;
 						        }
+						        
+						        continue;
 						    }
 			            }
-					    else if (copy == true)
+					    
+			            if (copy == true)
 					    {
 					        markupElements.add(elem);
 					    }
@@ -157,9 +160,12 @@ public class InheritedMarkupMerger
 						            copy = false;
 						            break;
 						        }
+						        
+						        continue;
 						    }
 			            }
-					    else if (copy == true)
+			            
+					    if (copy == true)
 					    {
 					        markupElements.add(elem);
 					    }
