@@ -259,9 +259,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 		// Test if the response page is set by the checkAccess and render that
 		// one.
-		else if (getRequestCycle().getResponsePage() != this)
+		else
 		{
-			getRequestCycle().getResponsePage().doRender();
+			final RequestCycle requestCycle = getRequestCycle();
+			final Page responsePage = requestCycle.getResponsePage();
+			if (responsePage != null && responsePage != this)
+			{
+				responsePage.doRender();
+			}
+			else
+			{
+				final Class pageClass = requestCycle.getResponsePageClass();
+				if (pageClass != null)
+				{
+					final PageParameters pageParameters = requestCycle.getResponsePagePageParameters();
+					String redirectUrl = requestCycle.urlFor(pageClass, pageParameters);
+					getResponse().redirect(redirectUrl);
+				}
+			}
 		}
 	}
 
