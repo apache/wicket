@@ -278,10 +278,13 @@ public class SharedResources
 	 *            The locale of the resource
 	 * @param style
 	 *            The resource style (see {@link wicket.Session})
+	 * @param exact
+	 *			  If true then only return the resource that is registerd for the given locale and style.
+	 *  
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
-			final String style)
+			final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
@@ -292,6 +295,7 @@ public class SharedResources
 			{
 				return resource;
 			}
+			if(exact) return null;
 		}
 
 		// 2. Look for entry without style
@@ -303,6 +307,7 @@ public class SharedResources
 			{
 				return resource;
 			}
+			if(exact) return null;
 		}
 
 		// 3. Look for entry without locale
@@ -314,6 +319,7 @@ public class SharedResources
 			{
 				return resource;
 			}
+			if(exact) return null;
 		}
 
 		// 4. Look for base name with no locale or style

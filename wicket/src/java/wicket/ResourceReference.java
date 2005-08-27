@@ -107,7 +107,7 @@ public class ResourceReference implements Serializable
 		if (resource == null)
 		{
 			// Try to get resource from Application repository
-			resource = application.getSharedResources().get(scope, name, locale, style);
+			resource = application.getSharedResources().get(scope, name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -118,7 +118,7 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, null, null);
+					resource = application.getSharedResources().get(scope, name, locale, style, false);
 					if (resource == null)
 					{
 						throw new WicketRuntimeException("Unable to resolve shared resource "

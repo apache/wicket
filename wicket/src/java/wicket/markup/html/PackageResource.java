@@ -77,7 +77,7 @@ public class PackageResource extends WebResource
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale, String style)
 	{
-		Resource resource = application.getSharedResources().get(scope, name, locale, style);
+		Resource resource = application.getSharedResources().get(scope, name, locale, style, true);
 		// Not available yet?
 		if (resource == null)
 		{
