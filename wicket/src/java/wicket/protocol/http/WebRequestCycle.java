@@ -254,6 +254,7 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
+			session.touch(page);
 			// redirect page can touch its models already (via for example the constructors)
 			page.internalEndRequest();
 		}
