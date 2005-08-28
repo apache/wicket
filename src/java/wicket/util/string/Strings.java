@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  */
 public final class Strings
 {
-    private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
 
 	/**
 	 * @param s
@@ -61,7 +61,7 @@ public final class Strings
 	 */
 	public static String afterFirst(final String s, final char c)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return null;
 		}
@@ -95,7 +95,7 @@ public final class Strings
 
 	/**
 	 * Returns everything after the last occurence of the given character in s.
-	 *
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -105,7 +105,7 @@ public final class Strings
 	 */
 	public static String afterLast(final String s, final char c)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return null;
 		}
@@ -129,7 +129,7 @@ public final class Strings
 	 */
 	public static String beforeFirst(final String s, final char c)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return null;
 		}
@@ -153,7 +153,7 @@ public final class Strings
 	 */
 	public static String beforeLast(final String s, final char c)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return null;
 		}
@@ -194,7 +194,7 @@ public final class Strings
 	 */
 	public static String capitalize(final String s)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return null;
 		}
@@ -255,8 +255,8 @@ public final class Strings
 	 *            True to convert non-7 bit characters to unicode HTML (&#...)
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s,
-			final boolean escapeSpaces, final boolean convertToHtmlUnicodeEscapes)
+	public static String escapeMarkup(final String s, final boolean escapeSpaces,
+			final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
 		{
@@ -305,46 +305,46 @@ public final class Strings
 						buffer.append("&gt;");
 						break;
 
-					case '&':
+					case '&' :
 
 						// if this is an entity (&#), then do not convert
 						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
-					    {
+						{
 							buffer.append(c);
-							
-					    }
+
+						}
 						else
 						{
 							// it is not an entity, so convert it to &amp;
 							buffer.append("&amp;");
 						}
-					    break;
+						break;
 
-					case '"':
-					    buffer.append("&quot;");
-					    break;
+					case '"' :
+						buffer.append("&quot;");
+						break;
 
-					case '\'':
-					    buffer.append("&#039;");
-					    break;
+					case '\'' :
+						buffer.append("&#039;");
+						break;
 
 					default :
 
 						if (convertToHtmlUnicodeEscapes)
 						{
-			                int ci = 0xffff & c;
-			                if (ci < 160 )
-							{   
+							int ci = 0xffff & c;
+							if (ci < 160)
+							{
 								// nothing special only 7 Bit
 								buffer.append(c);
 							}
 							else
 							{
-			                    // Not 7 Bit use the unicode system
+								// Not 7 Bit use the unicode system
 								buffer.append("&#");
 								buffer.append(new Integer(ci).toString());
 								buffer.append(';');
-			                }
+							}
 						}
 						else
 						{
@@ -362,23 +362,28 @@ public final class Strings
 	/**
 	 * Replace HTML numbers like &#20540 by the appropriate character.
 	 * 
-	 * @param str The text to be evaluated
+	 * @param str
+	 *            The text to be evaluated
 	 * @return The text with "numbers" replaced
 	 */
 	public static String replaceHtmlEscapeNumber(String str)
 	{
+		if (str == null)
+		{
+			return null;
+		}
 		Matcher matcher = htmlNumber.matcher(str);
 		while (matcher.find())
 		{
-		    int pos = matcher.start();
-		    int end = matcher.end();
-		    int number = Integer.parseInt(str.substring(pos+2, end-1));
-		    char ch = (char)number;
-		    str = str.substring(0, pos) + ch + str.substring(end);
+			int pos = matcher.start();
+			int end = matcher.end();
+			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
+			char ch = (char)number;
+			str = str.substring(0, pos) + ch + str.substring(end);
 			matcher = htmlNumber.matcher(str);
 		}
-		
-	    return str;
+
+		return str;
 	}
 
 	/**
@@ -397,6 +402,10 @@ public final class Strings
 	 */
 	public static String firstPathComponent(final String path, final char separator)
 	{
+		if (path == null)
+		{
+			return null;
+		}
 		final int index = path.indexOf(separator);
 
 		if (index == -1)
@@ -408,6 +417,11 @@ public final class Strings
 	}
 
 	/**
+	 * Checks whether the <code>string</code> is considered empty. Empty means
+	 * that the string may contain whitespace, but no visible characters.
+	 * 
+	 * "\n\t " is considered empty, while " a" is not.
+	 * 
 	 * @param string
 	 *            The string
 	 * @return True if the string is null or ""
@@ -418,10 +432,20 @@ public final class Strings
 	}
 
 	/**
+	 * Converts the text in <code>s</code> to a corresponding boolean. On,
+	 * yes, y, true and 1 are converted to <code>true</code>. Off, no, n,
+	 * false and 0 (zero) are converted to <code>false</code>. An empty
+	 * string is converted to <code>false</code>. Conversion is
+	 * case-insensitive, and does <em>not</em> take internationalization into
+	 * account.
+	 * 
+	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Boolean value
+	 *            the value to convert into a boolean
+	 * @return Boolean the converted value of <code>s</code>
 	 * @throws StringValueConversionException
+	 *             when the value of <code>s</code> is not recognized.
 	 */
 	public static boolean isTrue(final String s) throws StringValueConversionException
 	{
@@ -487,7 +511,7 @@ public final class Strings
 	}
 
 	/**
-	 * Replace all occurrences of one string replaceWith another string
+	 * Replace all occurrences of one string replaceWith another string.
 	 * 
 	 * @param s
 	 *            The string to process
@@ -497,8 +521,27 @@ public final class Strings
 	 *            The value to searchFor replaceWith
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
-	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
+	public static String replaceAll(final String s, final String searchFor, String replaceWith)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// if searchFor is null or the empty string, then there is nothing to
+		// replace, so returning s is the only option here.
+		if (searchFor == null || "".equals(searchFor))
+		{
+			return s;
+		}
+
+		// if replaceWith is null, then the searchFor should be replaced with
+		// nothing,
+		// which can be seen as the empty string.
+		if (replaceWith == null)
+		{
+			replaceWith = "";
+		}
 		// Look for first occurrence of searchFor
 		int matchIndex = s.indexOf(searchFor);
 		if (matchIndex == -1)
@@ -554,6 +597,10 @@ public final class Strings
 	 */
 	public static String[] split(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return new String[0];
+		}
 		final List strings = new ArrayList();
 		int pos = 0;
 		while (true)
