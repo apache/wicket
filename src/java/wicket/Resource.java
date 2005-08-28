@@ -104,9 +104,10 @@ public abstract class Resource implements IResourceListener
 	 * 
 	 * @param value The idle duration timeout
 	 */
-	public void setIdleTimeout(Duration value)
+	public Resource setIdleTimeout(Duration value)
 	{
 		idleTimeout = value;
+		return this;
 	}
 
 	/**
@@ -169,9 +170,10 @@ public abstract class Resource implements IResourceListener
 	 * @param cacheable
 	 *            boolean if the lastmodified and cache headers must be set.
 	 */
-	public final void setCacheable(boolean cacheable)
+	public final Resource setCacheable(boolean cacheable)
 	{
 		this.cacheable = cacheable;
+		return this;
 	}
 
 	/**
