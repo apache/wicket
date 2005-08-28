@@ -175,11 +175,10 @@ public class WicketServlet extends HttpServlet
 			}
 		}
 
-		// Get session for request
-		final WebSession session = webApplication.getSession(servletRequest, true);
-
 		// create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
+		// Get session for request
+		final WebSession session = webApplication.getSession(request, true);
 
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
@@ -253,6 +252,15 @@ public class WicketServlet extends HttpServlet
 	}
 
 	/**
+	 * Servlet cleanup.
+	 */
+	public void destroy()
+	{
+		this.webApplication.internalDestroy();
+		this.webApplication = null;
+	}
+
+	/**
 	 * Creates the web application factory instance.
 	 * 
 	 * If no APP_FACT_PARAM is specified in web.xml
@@ -321,7 +329,8 @@ public class WicketServlet extends HttpServlet
 					.substring(WebRequestCycle.resourceReferencePrefix.length());
 
 			Locale locale = servletRequest.getLocale();
-			WebSession session = webApplication.getSession(servletRequest, false);
+			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
+			final WebSession session = webApplication.getSession(webRequest, false);
 
 			if (session != null)
 			{
@@ -358,7 +367,7 @@ public class WicketServlet extends HttpServlet
 						Application.set(webApplication);
 						
 						// Set parameters from servlet request
-						resource.setParameters(new WebRequest(servletRequest).getParameterMap());
+						resource.setParameters(webRequest.getParameterMap());
 		
 						// Get resource stream
 						IResourceStream stream = resource.getResourceStream();

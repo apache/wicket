@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Session;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
@@ -38,7 +39,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class WebRequestWithCryptedUrl extends WebRequest
+public class WebRequestWithCryptedUrl extends ServletWebRequest
 {
 	/** URL querystring decoded */
 	private final String queryString;

@@ -19,27 +19,25 @@ package wicket.markup.html.form;
 
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
-import wicket.markup.html.form.upload.MultipartWebRequest;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
+import wicket.util.upload.FileUploadException;
+import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 
 /**
  * Base class for forms. To implement a form, subclass this class, add
@@ -619,15 +617,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
-			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
 			try
 			{
-				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(
-						this.maxSize, request);
+				final WebRequest multipartWebRequest = ((WebRequest)getRequest()).newMultipartWebRequest(this.maxSize);
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
-			catch (FileUploadException e)
+			catch (WicketRuntimeException wre)
 			{
+				if ( wre.getCause() == null || !(wre.getCause() instanceof FileUploadException) )
+				{
+					throw wre;
+				}
+				
+				FileUploadException e = (FileUploadException)wre.getCause();
 				// Create model with exception and maximum size values
 				final HashMap model = new HashMap();
 				model.put("exception", e);

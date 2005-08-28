@@ -31,6 +31,9 @@ public class PrimitivesTest extends TestCase
 			this.value = value;
 		}
 
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
 		public int hashCode()
 		{
 			return Primitives.hashCode(value);
