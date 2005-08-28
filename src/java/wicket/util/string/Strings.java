@@ -52,6 +52,9 @@ public final class Strings
 	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
 
 	/**
+	 * Returns everything after the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -120,6 +123,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -144,6 +150,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the last occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -186,7 +195,7 @@ public final class Strings
 	}
 
 	/**
-	 * Capitalizes a string
+	 * Capitalizes a string.
 	 * 
 	 * @param s
 	 *            The string
@@ -587,7 +596,7 @@ public final class Strings
 
 	/**
 	 * Simpler, faster version of String.split() for splitting on a simple
-	 * character
+	 * character.
 	 * 
 	 * @param s
 	 *            The string to split
@@ -623,6 +632,8 @@ public final class Strings
 	}
 
 	/**
+	 * Strips the ending from the string <code>s</code>.
+	 * 
 	 * @param s
 	 *            The string to strip
 	 * @param ending
@@ -632,8 +643,28 @@ public final class Strings
 	 */
 	public static String stripEnding(final String s, final String ending)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// Stripping a null or empty string from the end returns the
+		// original string.
+		if (ending == null || "".equals(ending))
+		{
+			return s;
+		}
+		final int endingLength = ending.length();
+		final int sLength = s.length();
+
+		// When the length of the ending string is larger
+		// than the original string, the original string is returned.
+		if (endingLength > sLength)
+		{
+			return s;
+		}
 		final int index = s.lastIndexOf(ending);
-		final int endpos = s.length() - ending.length();
+		final int endpos = sLength - endingLength;
 
 		if (index == endpos)
 		{
@@ -645,10 +676,15 @@ public final class Strings
 
 
 	/**
+	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
+	 * values of s.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Boolean value
+	 *            The string to convert.
+	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
 	 * @throws StringValueConversionException
+	 *             when s is not a valid value
+	 * @see #isTrue(String)
 	 */
 	public static Boolean toBoolean(final String s) throws StringValueConversionException
 	{
@@ -656,10 +692,14 @@ public final class Strings
 	}
 
 	/**
+	 * Converts the 1 character string s to a character.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Character value
+	 *            The 1 character string to convert to a char.
+	 * @return Character value to convert
 	 * @throws StringValueConversionException
+	 *             when the string is longer or shorter than 1 character, or
+	 *             <code>null</code>.
 	 */
 	public static char toChar(final String s) throws StringValueConversionException
 	{
@@ -681,17 +721,22 @@ public final class Strings
 
 	/**
 	 * Converts a String to multiline HTML markup by replacing newlines with
-	 * line break entities (&lt;br&gt;) and multiple occurrences of newline with
-	 * paragraph break entities (&lt;p&gt;).
+	 * line break entities (&lt;br /&gt;) and multiple occurrences of newline
+	 * with paragraph break entities (&lt;p&gt;).
 	 * 
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br&gt; and all multiple occurrences of newline replaced with
-	 *         &lt;p&gt;.
+	 *         &lt;br /&gt; and all multiple occurrences of newline replaced
+	 *         with &lt;p&gt;.
+	 * @todo TODO make paragraphs xhtml compliant.
 	 */
 	public static String toMultilineMarkup(final String s)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final StringBuffer buffer = new StringBuffer();
 		int newlineCount = 0;
 
@@ -711,7 +756,7 @@ public final class Strings
 				default :
 					if (newlineCount == 1)
 					{
-						buffer.append("<br>");
+						buffer.append("<br />");
 					}
 					else if (newlineCount > 1)
 					{
@@ -728,7 +773,7 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string
+	 * Converts the given object to a string.
 	 * 
 	 * @param object
 	 *            The object
@@ -751,7 +796,7 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Throwable to a string
+	 * Converts a Throwable to a string.
 	 * 
 	 * @param throwable
 	 *            The throwable
@@ -772,7 +817,7 @@ public final class Strings
 	}
 
 	/**
-	 * Private constructor prevents construction
+	 * Private constructor prevents construction.
 	 */
 	private Strings()
 	{
