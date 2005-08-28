@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import wicket.Session;
+import wicket.Application;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.IStringIterator;
@@ -65,7 +65,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 		if ((secureParam != null) && (secureParam.length() > 0))
 		{
 			// Get the crypt implementation from the application
-			ICrypt urlCrypt = Session.get().getApplication().newCrypt();
+			ICrypt urlCrypt = Application.get().newCrypt();
 		    // Decrypt the query string
 			final String queryString = urlCrypt.decrypt(secureParam);
 			

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Session;
+import wicket.Application;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.Strings;
 
@@ -63,7 +63,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	public String encodeURL(String url)
 	{
 	    // Get the crypt implementation from the application
-		ICrypt urlCrypt = Session.get().getApplication().newCrypt();
+		ICrypt urlCrypt = Application.get().newCrypt();
 		if (urlCrypt != null)
 		{
 		    // The url must have a query string, otherwise keep the url unchanged
