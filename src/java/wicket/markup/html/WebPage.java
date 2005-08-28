@@ -267,7 +267,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 * @return Prefix for URLs including the context path and servlet path.
 	 */
 	private StringBuffer urlPrefix(final WebRequestCycle cycle)
-	{
+	{	
 		final StringBuffer buffer = new StringBuffer();
 		final WebRequest request = cycle.getWebRequest();
 		if (request != null)

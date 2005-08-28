@@ -43,6 +43,7 @@ import wicket.Session;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
 import wicket.util.string.Strings;
@@ -240,8 +241,9 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
 
+          // TODO adouma: no Portlets support yet so typecasted for Servlet env.
 					((WebApplication)application).addRedirect(
-					        getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+					        ((ServletWebRequest)getWebRequest()).getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
 			catch (RuntimeException ex)

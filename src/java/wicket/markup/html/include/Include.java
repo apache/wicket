@@ -29,7 +29,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.resource.UrlResourceStream;
 
 /**
@@ -194,7 +194,8 @@ public class Include extends WebComponent
 	private String importRelativeUrl(String url)
 	{
 		// make the url absolute
-		HttpServletRequest req = ((WebRequest)getRequest()).getHttpServletRequest();
+		// TODO adouma: no support for Portlets yet
+		HttpServletRequest req = ((ServletWebRequest)getRequest()).getHttpServletRequest();
 		StringBuffer buildUrl = new StringBuffer();
 		String scheme = req.getScheme();
 		int port = req.getServerPort();

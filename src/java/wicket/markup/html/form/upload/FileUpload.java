@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import org.apache.commons.fileupload.FileItem;
 
 import wicket.util.file.Files;
+import wicket.util.upload.FileItem;
 
 /**
  * Model for file uploads.

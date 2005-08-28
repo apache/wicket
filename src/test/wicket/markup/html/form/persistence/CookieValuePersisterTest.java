@@ -29,9 +29,9 @@ import wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm
 import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * How to test CookieValuePersister. Problem: CookieValuePersister relies on
@@ -158,13 +158,15 @@ public class CookieValuePersisterTest extends TestCase
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
 	{
-		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest())
+		// TODO adouma: no Portlet support yet
+		((MockHttpServletRequest)((ServletWebRequest)cycle.getRequest()).getHttpServletRequest())
 				.addCookie((Cookie)getResponseCookies(cycle).get(0));
 	}
 
 	private Cookie[] getRequestCookies(final RequestCycle cycle)
 	{
-		return ((WebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
+		// TODO adouma: no Portlet support yet
+		return ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
 	}
 
 	private List getResponseCookies(final RequestCycle cycle)

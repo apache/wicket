@@ -1,6 +1,5 @@
 /*
  * $Id$
- * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.upload;
+package wicket.protocol.http.servlet;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -24,24 +23,25 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadException;
 
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.MultipartWebRequest;
 import wicket.util.lang.Bytes;
+import wicket.util.upload.DiskFileItemFactory;
+import wicket.util.upload.FileItem;
+import wicket.util.upload.FileUploadException;
+import wicket.util.upload.ServletFileUpload;
 import wicket.util.value.ValueMap;
 
 /**
- * WebRequest subclass for multipart content uploads.
+ * Servlet specific WebRequest subclass for multipart content uploads.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Cameron Braid
+ * @author Ate Douma
  */
-public class MultipartWebRequest extends WebRequest
+public class MultipartServletWebRequest extends ServletWebRequest implements MultipartWebRequest
 {
 	/** Map of file items. */
 	private final ValueMap files = new ValueMap();
@@ -53,37 +53,38 @@ public class MultipartWebRequest extends WebRequest
 	 * Constructor
 	 * 
 	 * @param maxSize the maximum size this request may be
-	 * @param httpServletRequest
-	 *            The servlet request
+	 * @param request the servlet request
 	 * @throws FileUploadException Thrown if something goes wrong with upload
 	 */
-	public MultipartWebRequest(Bytes maxSize, final HttpServletRequest httpServletRequest) throws FileUploadException
+	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize) throws FileUploadException
 	{
-		super(httpServletRequest);
-
+		super(request);
+		
 		// Check that request is multipart
-		final boolean isMultipart = FileUpload.isMultipartContent(httpServletRequest);
+		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipart)
 		{
-			throw new IllegalStateException("Request does not contain multipart content");
+			throw new IllegalStateException("ServletRequest does not contain multipart content");
 		}
 
+		DiskFileItemFactory factory = new DiskFileItemFactory();		
+
+        // Configure the factory here, if desired.
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        
         // The encoding that will be used to decode the string parameters
         // It should NOT be null at this point, but it may be 
         // if the older Servlet API 2.2 is used
-        String encoding = httpServletRequest.getCharacterEncoding();
-
-		// Parse multipart request into items
-		final DiskFileUpload diskFileUpload = new DiskFileUpload();
+        String encoding = request.getCharacterEncoding();
 
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{
-			diskFileUpload.setHeaderEncoding(encoding);
+			upload.setHeaderEncoding(encoding);
 		}
 
-		diskFileUpload.setSizeMax(maxSize.bytes());
-		final List items = diskFileUpload.parseRequest(httpServletRequest);
+		upload.setSizeMax(maxSize.bytes());
+		final List items = upload.parseRequest(request);
 
 		// Loop through items
 		for (Iterator i = items.iterator(); i.hasNext();)

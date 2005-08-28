@@ -171,6 +171,18 @@
       <roles/>
     </developer>
   </developers>
+    <developer>
+      <name>Ate Douma</name>
+      <id>adouma</id>
+      <email>adouma at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Jan Blok</name>
+      <id>jan_blok</id>
+      <email>jan_blok at users.sourceforge.net</email>
+      <roles/>
+    </developer>
   <contributors>
     <contributor>
       <name>Wouter de Jong</name>
@@ -305,17 +317,6 @@
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/fileupload/</url>
-      <properties>
-        <wicket.group>optional</wicket.group>
-        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>

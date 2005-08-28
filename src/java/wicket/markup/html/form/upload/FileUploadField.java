@@ -17,19 +17,20 @@
  */
 package wicket.markup.html.form.upload;
 
-import org.apache.commons.fileupload.FileItem;
 
 import wicket.Component;
 import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
+import wicket.protocol.http.MultipartWebRequest;
+import wicket.util.upload.FileItem;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
  * {@link wicket.markup.html.form.Form}, that has multipart == true, its model
- * is updated with the {@link org.apache.commons.fileupload.FileItem}for this
+ * is updated with the {@link wicket.util.upload.FileItem}for this
  * component.
  * 
  * @author Eelco Hillenius

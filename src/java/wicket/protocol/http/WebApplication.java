@@ -36,6 +36,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -179,7 +180,7 @@ public abstract class WebApplication extends Application
 	 * configuration is specified and a "sourceFolder" init parameter is also
 	 * set, then resources in that folder will be polled for changes.
 	 */
-	protected final void internalInit()
+	protected void internalInit()
 	{
 		super.internalInit();
 		final WicketServlet servlet = getWicketServlet();
@@ -188,6 +189,13 @@ public abstract class WebApplication extends Application
 		{
 			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	protected void internalDestroy()
+	{
 	}
 
 	/**
@@ -200,10 +208,10 @@ public abstract class WebApplication extends Application
 	 * 			  Should the session be created if not there.
 	 * @return The session object
 	 */
-	final WebSession getSession(final HttpServletRequest request, boolean create)
+	final WebSession getSession(final WebRequest request, boolean create)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getSession(create);
+		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest().getSession(true);
 		if(!create && httpSession == null) return null;
 
 		// Namespacing for session attributes is provided by adding the servlet
@@ -256,7 +264,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
 	{
-		return new WebRequest(servletRequest);
+		return new ServletWebRequest(servletRequest);
 	}
 
 	/**

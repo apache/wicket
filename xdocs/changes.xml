@@ -8,6 +8,18 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    	<action type="update" dev="Eelco Hillenius">Factored out the commons-fileupload dependency. As for portlets we would need the development
+    	version of that lib, but the last release was in december 2004, I have no trust in how this library will be maintained. Also, the development
+    	version introduces a new dependency, commons-io, for just one concrete class. I lifted out the classes we use, put it in Wicket specific packages
+    	and cleaned up the deprecations.
+    	</action>
+    	<action type="update" dev="Eelco Hillenius" due-to="Ate Douma">
+    	Implemented the basic changes that are needed support other kind of webapplications, such as portlets. The main change in this is that
+    	WebRequest is now abstract, and that in a servlet environment ServletWebRequest is the concrete implementation. The changes are mostly internals;
+    	the only break (actually for clients that depended on internals anyway) is that instead of doing:
+    	        javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle.getRequest()).getHttpServletRequest(); to get the servlet http request,
+    	you should now do: javax.servlet.http.HttpServletRequest httpRequest = ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest();
+    	</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1266090" due-to="Ralf Ebert">Exception when replacing non-existent components</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1259548" due-to="Seth Ladd">More explicit exceptions with WicketServlet</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1267120">fixed bug where response encoding was null</action>
