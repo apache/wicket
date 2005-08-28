@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    	<action type="fix" dev="Martijn Dashorst" issue="1267370" due-to="Stephen Bate">Incorrect 1.1-b3 examples documentation</action>
     	<action type="update" dev="Eelco Hillenius">Factored out the commons-fileupload dependency. As for portlets we would need the development
     	version of that lib, but the last release was in december 2004, I have no trust in how this library will be maintained. Also, the development
     	version introduces a new dependency, commons-io, for just one concrete class. I lifted out the classes we use, put it in Wicket specific packages
