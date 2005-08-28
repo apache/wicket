@@ -144,6 +144,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 			final IResourceStream resource = locate(classLoader, path + '_' + locale.toString() + extension);
 			if (resource != null)
 			{
+				resource.setLocale(locale);
 				return resource;
 			}
 		}
@@ -159,6 +160,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 					+ extension);
 			if (resource != null)
 			{
+				resource.setLocale(new Locale(language,country));
 				return resource;
 			}
 		}
@@ -169,6 +171,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 			final IResourceStream resource = locate(classLoader, path + '_' + language + extension);
 			if (resource != null)
 			{
+				resource.setLocale(new Locale(language));
 				return resource;
 			}
 		}
