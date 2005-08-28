@@ -119,6 +119,9 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		// first, set the webapplication for this thread
+		Application.set(webApplication);
+
 		// try to see if there is a redirect stored
 		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
@@ -187,7 +190,6 @@ public class WicketServlet extends HttpServlet
 
 		try
 		{
-			Application.set(webApplication);
 			// create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
@@ -198,6 +200,7 @@ public class WicketServlet extends HttpServlet
 		{
 			// Close response
 			response.close();
+			// clean up thread local
 			Application.set(null);
 		}
 	}
