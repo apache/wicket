@@ -6,6 +6,7 @@ package wicket.resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
@@ -20,6 +21,7 @@ public class ByteArrayResource extends WebResource
 {
 	private final String contentType;
 	private final byte[] array;
+	private final Locale locale;
 	private final Time lastModified = Time.now();
 
 	/**
@@ -30,6 +32,19 @@ public class ByteArrayResource extends WebResource
 	{
 		this.contentType = contentType;
 		this.array = array;
+		this.locale = null;
+	}
+
+	/**
+	 * @param contentType
+	 * @param array
+	 * @param locale 
+	 */
+	public ByteArrayResource(String contentType, byte[] array, Locale locale)
+	{
+		this.contentType = contentType;
+		this.array = array;
+		this.locale = locale;
 	}
 
 	/**
@@ -84,6 +99,16 @@ public class ByteArrayResource extends WebResource
 			public long length()
 			{
 				return array.length;
+			}
+			
+			public Locale getLocale()
+			{
+				return locale;
+			}
+			
+			public void setLocale(Locale locale)
+			{
+				// ignore  
 			}
 		};
 	}
