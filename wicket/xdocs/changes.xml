@@ -19,6 +19,9 @@
     	the only break (actually for clients that depended on internals anyway) is that instead of doing:
     	        javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle.getRequest()).getHttpServletRequest(); to get the servlet http request,
     	you should now do: javax.servlet.http.HttpServletRequest httpRequest = ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest();
+    	NOTE: As a consequence of this and other changes, it is now possible to have requests that do not live in a session, or that the session is
+    	created after the request. This should never get you in trouble actually, except when you do:
+    	Session.get().getApplication() in a constructor of a wicket.Request subclass. Replace this with Application.get() (which was a better idea anyway).
     	</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1266090" due-to="Ralf Ebert">Exception when replacing non-existent components</action>
     	<action type="fix" dev="Juergen Donnerstag" issue="1259548" due-to="Seth Ladd">More explicit exceptions with WicketServlet</action>
