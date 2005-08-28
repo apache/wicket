@@ -130,9 +130,6 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** A list where the resource paths are in when a locale change happens */
-	private List localeChangeResources;
-	
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
 
@@ -416,27 +413,6 @@ public abstract class Session implements Serializable
 		});
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * @param resourceKey The key of the resource
-	 * @return a boolean if the resource is cacheable.
-	 */
-	public boolean isResourceCacheable(String resourceKey)
-	{
-		if(localeChangeResources != null && localeChangeResources.remove(resourceKey))
-		{
-			if(localeChangeResources.size() == 0)
-			{
-				localeChangeResources = null;
-			}
-			// TODO should dirty be called here?
-			// because this method is called from a HEAD request (last modified check) 
-			dirty();
-			return false;
-		}
-		return true;
-	}
 	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -459,14 +435,6 @@ public abstract class Session implements Serializable
 	 */
 	public final void setLocale(final Locale locale)
 	{
-		if(this.locale != null && !this.locale.equals(locale))
-		{
-			List resources = application.getSharedResources().localeChange(locale);
-			if(resources.size() > 0)
-			{
-				localeChangeResources = resources;
-			}
-		}
 		this.locale = locale;
 		this.converter = null;
 		dirty();
