@@ -108,8 +108,6 @@ public class MockWebApplication extends WebApplication
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
-        // TODO adouma: check if the next line can be replaced by the following two        
-        // wicketSession = getSession(servletRequest);
 		wicketRequest = newWebRequest(servletRequest);
         wicketSession = getSession(wicketRequest, true);
         ApplicationSettings settings = getSettings();
