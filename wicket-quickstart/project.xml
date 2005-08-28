@@ -5,7 +5,7 @@
   <groupId>wicket-stuff</groupId>
   <id>wicket-kickstart</id>
   <name>Kick start</name>
-  <currentVersion>1.0.1</currentVersion>
+  <currentVersion>1.1-b3-SNAPSHOT</currentVersion>
   <organization>
     <name>Wicket Stuff</name>
     <url>http://wicket-stuff.sourceforge.net</url>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.0.1</version>
+      <version>1.1-b3</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
