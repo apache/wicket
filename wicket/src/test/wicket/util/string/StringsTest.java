@@ -138,12 +138,14 @@ public final class StringsTest extends TestCase
 		assertEquals("&amp;", Strings.escapeMarkup("&"));
 		assertEquals("&#", Strings.escapeMarkup("&#"));
 		assertEquals("&#0000;", Strings.escapeMarkup("&#0000;"));
-		
+
 		assertEquals("&amp;amp;", Strings.escapeMarkup("&amp;"));
-		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`"));
-		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`", true));
+		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings
+				.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`"));
+		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
+				"< >&\"'?:;{}[]-_+=()*^%$#@!~`", true));
 	}
-	
+
 	/**
 	 * Tests the escapeMarkup method with whitespace.
 	 */
@@ -151,7 +153,7 @@ public final class StringsTest extends TestCase
 	{
 		assertNull(Strings.escapeMarkup(null, true));
 		assertEquals("", Strings.escapeMarkup("", true));
-		
+
 		assertEquals("\n \t", Strings.escapeMarkup("\n \t", false));
 		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true));
 		assertEquals("  ", Strings.escapeMarkup("  ", false));
@@ -166,10 +168,173 @@ public final class StringsTest extends TestCase
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true));
 
-		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", 
-				Strings.escapeMarkup("Çüéâäàåçêë", false, true));
+		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
+				.escapeMarkup("Çüéâäàåçêë", false, true));
 
 		assertEquals("\n \t&#233;", Strings.escapeMarkup("\n \té", false, true));
 		assertEquals("\n \té", Strings.escapeMarkup("\n \té", false, false));
+	}
+
+	/**
+	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
+	 */
+	public void testReplaceHtmlEscapeNumber()
+	{
+		assertNull(Strings.replaceHtmlEscapeNumber(null));
+		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
+		assertEquals("abcdefghijklmë", Strings.replaceHtmlEscapeNumber("abcdefghijklmë"));
+		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
+		assertEquals(
+				"Çüéâäàåçêë",
+				Strings
+						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+	}
+
+	/**
+	 * Tests the <code>firstPathComponent</code> method.
+	 */
+	public void testFirstPathComponent()
+	{
+		assertNull(Strings.firstPathComponent(null, '.'));
+		assertEquals("", Strings.firstPathComponent("", '.'));
+		assertEquals("foo", Strings.firstPathComponent("foo", '.'));
+		assertEquals("foo", Strings.firstPathComponent("foo.bar", '.'));
+		assertEquals("foo bar", Strings.firstPathComponent("foo bar", '.'));
+	}
+
+	/**
+	 * Tests the <code>isEmpty</code> method.
+	 */
+	public void testIsEmpty()
+	{
+		assertTrue(Strings.isEmpty(null));
+		assertTrue(Strings.isEmpty(""));
+		assertTrue(Strings.isEmpty(" "));
+		assertTrue(Strings.isEmpty("           "));
+		assertTrue(Strings.isEmpty(" \n\t"));
+		assertFalse(Strings.isEmpty("a"));
+		assertFalse(Strings.isEmpty(" a"));
+	}
+
+	/**
+	 * Tests the <code>isTrue</code> method.
+	 * 
+	 * @throws StringValueConversionException
+	 */
+	public void testIsTrue() throws StringValueConversionException
+	{
+		assertFalse(Strings.isTrue(null));
+		assertFalse(Strings.isTrue(""));
+		assertFalse(Strings.isTrue(" \n \t"));
+
+		assertFalse(Strings.isTrue("no"));
+		assertFalse(Strings.isTrue("n"));
+		assertFalse(Strings.isTrue("false"));
+		assertFalse(Strings.isTrue("nO"));
+		assertFalse(Strings.isTrue("N"));
+		assertFalse(Strings.isTrue("fAlSe"));
+		assertFalse(Strings.isTrue("0"));
+
+		assertTrue(Strings.isTrue("yes"));
+		assertTrue(Strings.isTrue("y"));
+		assertTrue(Strings.isTrue("true"));
+		assertTrue(Strings.isTrue("1"));
+		assertTrue(Strings.isTrue("YeS"));
+		assertTrue(Strings.isTrue("Y"));
+		assertTrue(Strings.isTrue("tRuE"));
+		assertTrue(Strings.isTrue("1"));
+
+		try
+		{
+			Strings.isTrue("foo");
+			fail("Exception expected");
+		}
+		catch (StringValueConversionException e)
+		{
+			assertTrue(true);
+		}
+	}
+
+	/**
+	 * Tests the <code>replaceAll</code> method.
+	 */
+	public void testReplaceAll()
+	{
+		assertNull(Strings.replaceAll(null, null, null));
+		assertNull(Strings.replaceAll(null, "", null));
+		assertNull(Strings.replaceAll(null, null, ""));
+		assertNull(Strings.replaceAll(null, "", ""));
+
+		assertEquals("", Strings.replaceAll("", null, null));
+		assertEquals("", Strings.replaceAll("", "", null));
+		assertEquals("", Strings.replaceAll("", null, ""));
+		assertEquals("", Strings.replaceAll("", "", ""));
+		assertEquals("", Strings.replaceAll("", "", "abc"));
+		assertEquals("", Strings.replaceAll("", "abc", "def"));
+		assertEquals("", Strings.replaceAll("abc", "abc", ""));
+
+		assertEquals("abc", Strings.replaceAll("abc", "", ""));
+		assertEquals("abc", Strings.replaceAll("abc", "abc", "abc"));
+		assertEquals("def", Strings.replaceAll("abc", "abc", "def"));
+		assertEquals("abc", Strings.replaceAll("abc", "ABC", ""));
+
+		assertEquals("abc", Strings.replaceAll("abc", "d", null));
+		assertEquals("ab", Strings.replaceAll("abc", "c", null));
+		assertEquals("bc", Strings.replaceAll("abc", "a", null));
+
+		assertEquals("aaaa", Strings.replaceAll("aa", "a", "aa"));
+	}
+
+	/**
+	 * Tests the <code>split</code> method.
+	 */
+	public void testSplit()
+	{
+		assertEquals(new String[0], Strings.split(null, '.'));
+		assertEquals(new String[0], Strings.split("", '.'));
+		assertEquals(new String[] { "", "" }, Strings.split(".", '.'));
+		assertEquals(new String[] { "a", "" }, Strings.split("a.", '.'));
+		assertEquals(new String[] { "a", "b" }, Strings.split("a.b", '.'));
+		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
+		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
+		assertEquals(new String[] { "abc" }, Strings.split("abc", ' '));
+	}
+
+	/**
+	 * Asserts that both string arrays are equal.
+	 * 
+	 * @param expected
+	 *            the expected value
+	 * @param actual
+	 *            the actual value
+	 */
+	private void assertEquals(String[] expected, String[] actual)
+	{
+		if (expected == null)
+		{
+			assertNull(actual);
+		}
+		assertEquals(stringValue(expected), stringValue(actual));
+	}
+
+	/**
+	 * Converts an array of strings to a String. {"a", "b"} becomes: "{a,b}"
+	 * 
+	 * @param arrayOfStrings
+	 *            the array to convert
+	 * @return the array as a string.
+	 */
+	private String stringValue(String[] arrayOfStrings)
+	{
+		StringBuffer sb = new StringBuffer("{");
+		String komma = "";
+		for (int i = 0; i < arrayOfStrings.length; i++)
+		{
+			sb.append(komma);
+			sb.append(arrayOfStrings[i]);
+			komma = ",";
+		}
+		sb.append("}");
+		return sb.toString();
 	}
 }
