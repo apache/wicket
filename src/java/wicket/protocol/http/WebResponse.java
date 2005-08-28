@@ -187,7 +187,7 @@ public class WebResponse extends Response
 	 */
 	public void setLastModifiedTime(Time time)
 	{
-		if (time != null)
+		if (time != null && time.getMilliseconds() != -1)
 		{
 			// If time is set also set cache headers.
 			httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
