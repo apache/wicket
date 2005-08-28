@@ -52,7 +52,7 @@ import java.io.Serializable;
 public class ResourceReference implements Serializable
 {
 	/** The locale of the resource */
-	private Locale locale;
+	protected Locale locale;
 
 	/** The name of the resource */
 	private final String name;
@@ -157,15 +157,7 @@ public class ResourceReference implements Serializable
 		bind(application);
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		Locale currentLocale = Session.get().getLocale();
-		if(locale != null && !locale.equals(currentLocale))
-		{
-			buffer.append(SharedResources.path(application, scope, name, locale, style));
-		}
-		else
-		{
-			buffer.append(SharedResources.path(application, scope, name, null, style));
-		}
+		buffer.append(SharedResources.path(application, scope, name, locale, style));
 		return buffer.toString();
 	}
 
