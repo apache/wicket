@@ -689,7 +689,7 @@ public abstract class RequestCycle
 			throws ServletException
 	{
 		// Let client handle any specifics and possibly return a page to redirect to
-		final Page redirectTo = onRuntimeException(page, e);
+		final Page redirectTo = application.onRuntimeException(page, e);
 
 		// Always log as error
 		log.error("Unexpected runtime exception [page = " + page + "]", e);
@@ -744,21 +744,6 @@ public abstract class RequestCycle
 	 */
 	protected void onEndRequest()
 	{
-	}
-
-	/**
-	 * Template method that is called when a runtime exception is thrown, just
-	 * before the actual handling of the runtime exception.
-	 * 
-	 * @param page
-	 *            Any page context where the exception was thrown
-	 * @param e
-	 *            The exception
-	 * @return Any error page to redirect to
-	 */
-	protected Page onRuntimeException(final Page page, final RuntimeException e)
-	{
-		return null;
 	}
 
 	/**
