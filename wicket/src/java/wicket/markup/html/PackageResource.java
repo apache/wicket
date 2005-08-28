@@ -52,7 +52,7 @@ public class PackageResource extends WebResource
 	final String absolutePath;
 
 	/** The resource's locale */
-	final Locale locale;
+	private Locale locale;
 
 	/** The resource's style */
 	final String style;
@@ -83,7 +83,7 @@ public class PackageResource extends WebResource
 		{
 			// Share through application
 			resource = get(scope, name, locale, style);
-			application.getSharedResources().add(scope, name, locale, style, resource);
+			application.getSharedResources().add(scope, name, ((PackageResource)resource).locale, style, resource);
 		}
 	}
 
@@ -173,6 +173,14 @@ public class PackageResource extends WebResource
 		this.absolutePath = Packages.absolutePath(scope.getPackage(), path);
 		this.locale = locale;
 		this.style = style;
+		
+		if(locale != null)
+		{
+			// get the resource stream so that the real locale that could be resolved is set.
+			getResourceStream();
+			// invalidate it again so that it won't hold up resources
+			invalidate();
+		}
 	}
 
 	/**
@@ -192,7 +200,16 @@ public class PackageResource extends WebResource
 				throw new WicketRuntimeException("Unable to find package resource [path = "
 						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 			}
+			this.locale = resourceStream.getLocale();
 		}
 		return resourceStream;
+	}
+
+	/**
+	 * @return The Locale of this package resource 
+	 */
+	public Locale getLocale()
+	{
+		return locale;
 	}
 }
