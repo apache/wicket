@@ -24,9 +24,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * Test cases for this object
+ * Test cases for the <code>Strings</code> class.
  * 
  * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public final class StringsTest extends TestCase
 {
@@ -298,6 +299,122 @@ public final class StringsTest extends TestCase
 		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
 		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
 		assertEquals(new String[] { "abc" }, Strings.split("abc", ' '));
+	}
+
+	/**
+	 * Tests the <code>stripEnding</code> method.
+	 */
+	public void testStripEnding()
+	{
+		assertNull(Strings.stripEnding(null, null));
+		assertEquals("", Strings.stripEnding("", null));
+		assertEquals("", Strings.stripEnding("", ""));
+		assertEquals("a", Strings.stripEnding("a", ""));
+		assertEquals("", Strings.stripEnding("a", "a"));
+		assertEquals("a", Strings.stripEnding("a", "aa"));
+	}
+
+	/**
+	 * Tests the <code>toBoolean</code> method.
+	 * 
+	 * @throws StringValueConversionException
+	 */
+	public void testToBoolean() throws StringValueConversionException
+	{
+		assertEquals(Boolean.FALSE, Strings.toBoolean(null));
+		assertEquals(Boolean.FALSE, Strings.toBoolean("off"));
+		assertEquals(Boolean.FALSE, Strings.toBoolean("no"));
+		assertEquals(Boolean.FALSE, Strings.toBoolean("n"));
+		assertEquals(Boolean.FALSE, Strings.toBoolean("false"));
+		assertEquals(Boolean.FALSE, Strings.toBoolean("0"));
+
+		assertEquals(Boolean.TRUE, Strings.toBoolean("on"));
+		assertEquals(Boolean.TRUE, Strings.toBoolean("yes"));
+		assertEquals(Boolean.TRUE, Strings.toBoolean("y"));
+		assertEquals(Boolean.TRUE, Strings.toBoolean("true"));
+		assertEquals(Boolean.TRUE, Strings.toBoolean("1"));
+
+		try
+		{
+			Strings.toBoolean("waar");
+			fail("Exception expected");
+		}
+		catch (StringValueConversionException e)
+		{
+			assertTrue(true);
+		}
+	}
+
+	/**
+	 * Tests the <code>toChar</code> method.
+	 * 
+	 * @throws StringValueConversionException
+	 */
+	public void testToChar() throws StringValueConversionException
+	{
+		assertEquals(' ', Strings.toChar(" "));
+		assertEquals('a', Strings.toChar("a"));
+
+		try
+		{
+			Strings.toChar("");
+			fail("Exception expected");
+		}
+		catch (StringValueConversionException e)
+		{
+		}
+		try
+		{
+			Strings.toChar(null);
+			fail("Exception expected");
+		}
+		catch (StringValueConversionException e)
+		{
+		}
+		try
+		{
+			Strings.toChar("aa");
+			fail("Exception expected");
+		}
+		catch (StringValueConversionException e)
+		{
+		}
+	}
+
+	/**
+	 * Tests the <code>toMultilineMarkup</code> method.
+	 * 
+	 * @todo TODO make paragraphs xhtml compliant.
+	 */
+	public void testToMultilineMarkup()
+	{
+		assertNull(Strings.toMultilineMarkup(null));
+		assertEquals("", Strings.toMultilineMarkup(""));
+		assertEquals("abc", Strings.toMultilineMarkup("abc"));
+		assertEquals("abc", Strings.toMultilineMarkup("abc\n"));
+		assertEquals("abc<br />def", Strings.toMultilineMarkup("abc\ndef"));
+		assertEquals("abc<br />def<br />ghi", Strings.toMultilineMarkup("abc\ndef\nghi"));
+
+		assertEquals("abc<p>def<p>ghi", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
+	}
+
+	/**
+	 * Tests the <code>toString</code> method.
+	 */
+	public void testToString()
+	{
+		assertNull(Strings.toString((Object)null));
+		assertEquals("", Strings.toString(""));
+
+		try
+		{
+			throw new IllegalArgumentException("Foo");
+		}
+		catch (IllegalArgumentException e)
+		{
+			final String toString = Strings.toString((Object)e);
+			assertEquals("java.lang.IllegalArgumentException: Foo", Strings.beforeFirst(toString, '\n').trim());
+		}
 	}
 
 	/**
