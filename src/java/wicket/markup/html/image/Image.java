@@ -27,7 +27,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
-import wicket.markup.html.WebResource;
 import wicket.markup.html.image.resource.LocalizedImageResource;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -94,7 +93,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public Image(final String id, final WebResource imageResource)
+	public Image(final String id, final Resource imageResource)
 	{
 		super(id);
 		setImageResource(imageResource);
@@ -132,7 +131,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param imageResource
 	 *            The new ImageResource to set.
 	 */
-	public void setImageResource(final WebResource imageResource)
+	public void setImageResource(final Resource imageResource)
 	{
 		this.localizedImageResource.setResource(imageResource);
 	}
