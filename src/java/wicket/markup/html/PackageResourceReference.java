@@ -99,6 +99,8 @@ public class PackageResourceReference extends ResourceReference
 	 */
 	protected Resource newResource()
 	{
-		return PackageResource.get(getScope(), getName(), getLocale(), getStyle());
+		PackageResource pr = PackageResource.get(getScope(), getName(), getLocale(), getStyle());
+		locale = pr.getLocale();
+		return pr;
 	}
 }

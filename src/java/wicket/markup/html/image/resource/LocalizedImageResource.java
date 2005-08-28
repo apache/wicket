@@ -317,7 +317,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			 */
 			protected Resource newResource()
 			{
-				return PackageResource.get(getScope(), getName(), locale, style);
+				PackageResource pr = PackageResource.get(getScope(), getName(), LocalizedImageResource.this.locale, style);
+				locale = pr.getLocale();
+				return pr;
 			}
 		};
 		resourceReference.setLocale(locale);
