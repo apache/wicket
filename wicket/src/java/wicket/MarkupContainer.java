@@ -1138,7 +1138,9 @@ public abstract class MarkupContainer extends Component
 
 				// No one was able to handle the component id
 				markupStream.throwMarkupException("Unable to find component with id '" + id
-						+ "' in " + this);
+						+ "' in " + this + ". This means that you declared wicket:id=" + id
+						+ " in your markup, but that you either did not add the "
+						+ "component to your page at all, or that the hierarchy does not match.");
 			}
 		}
 		else
