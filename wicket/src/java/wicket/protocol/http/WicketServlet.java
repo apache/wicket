@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.ApplicationFactoryCreationException;
 import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
@@ -240,6 +241,7 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			Application.set(webApplication);
+			
 			// Call init method of web application
 			this.webApplication.internalInit();
 			this.webApplication.init();
@@ -290,23 +292,19 @@ public class WicketServlet extends HttpServlet
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new WicketRuntimeException("Unable to create application factory of class "
-						+ appFactoryClassName, e);
+				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (InstantiationException e)
 			{
-				throw new WicketRuntimeException("Unable to create application factory of class "
-						+ appFactoryClassName, e);
+				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (IllegalAccessException e)
 			{
-				throw new WicketRuntimeException("Unable to create application factory of class "
-						+ appFactoryClassName, e);
+				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (SecurityException e)
 			{
-				throw new WicketRuntimeException("Unable to create application factory of class "
-						+ appFactoryClassName, e);
+				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 		}
 	}
@@ -325,7 +323,7 @@ public class WicketServlet extends HttpServlet
 			Locale locale = servletRequest.getLocale();
 			WebSession session = webApplication.getSession(servletRequest, false);
 
-			if(session != null)
+			if (session != null)
 			{
 				locale = session.getLocale();
 			}
@@ -335,7 +333,7 @@ public class WicketServlet extends HttpServlet
 			Resource resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);
 			if (resource == null)
 			{
-				if(locale != null && locale.getCountry() != null)
+				if ((locale != null) && (locale.getCountry() != null))
 				{
 					// try only language
 					locale = new Locale(locale.getLanguage());
@@ -343,23 +341,24 @@ public class WicketServlet extends HttpServlet
 					resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);					
 				}
 				// try it without any locale (plain url, could be different locale then the default)
-				if(resource == null)
+				if (resource == null)
 				{
 					localizedResourceReferenceKey = resourceReferenceKey;
 					resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);
 				}
 			}
+			
 			// If resource found and it is cacheable
-			if (resource != null && resource.isCacheable())
+			if ((resource != null) && resource.isCacheable())
 			{
-				if(session == null || session.isResourceCacheable(localizedResourceReferenceKey))
+				if ((session == null) || session.isResourceCacheable(localizedResourceReferenceKey))
 				{
 					try
 					{
 						Application.set(webApplication);
+						
 						// Set parameters from servlet request
 						resource.setParameters(new WebRequest(servletRequest).getParameterMap());
-						
 		
 						// Get resource stream
 						IResourceStream stream = resource.getResourceStream();
