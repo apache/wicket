@@ -18,6 +18,7 @@
 package wicket;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -501,10 +502,20 @@ public abstract class Application
 			for (Enumeration e = getClass().getClassLoader().getResources(
 					"wicket.properties"); e.hasMoreElements();)
 			{
-				final URL url = (URL)e.nextElement();
-				final Properties properties = new Properties();
-				properties.load(url.openStream());
-				initializeComponents(properties);
+				InputStream is = null;
+				try
+				{
+					final URL url = (URL)e.nextElement();
+					final Properties properties = new Properties();
+					is = url.openStream();
+					properties.load(is);
+					initializeComponents(properties);
+				} 
+				finally
+				{
+					log.info("closing input");
+					if(is != null) is.close();
+				}
 			}
 		}
 		catch (IOException e)
