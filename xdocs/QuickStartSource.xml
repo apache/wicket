@@ -65,7 +65,7 @@
 			</subsection>
 			<subsection name="Running the Examples">
 				<p>
-					Try to find the <code>wicket.examples.WicketExampleApplication</code> class in your IDE.
+					Try to find the <code>wicket.examples.Start</code> class in your IDE.
 					This class has a <code>main()</code> method which starts the embedded server. Run this
 					class.
 				</p>
