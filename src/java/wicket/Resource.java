@@ -103,6 +103,7 @@ public abstract class Resource implements IResourceListener
 	 * Sets the maximum time the resource may be idle before it is removed.
 	 * 
 	 * @param value The idle duration timeout
+	 * @return this
 	 */
 	public Resource setIdleTimeout(Duration value)
 	{
@@ -169,6 +170,7 @@ public abstract class Resource implements IResourceListener
 	 *
 	 * @param cacheable
 	 *            boolean if the lastmodified and cache headers must be set.
+	 * @return this            
 	 */
 	public final Resource setCacheable(boolean cacheable)
 	{
