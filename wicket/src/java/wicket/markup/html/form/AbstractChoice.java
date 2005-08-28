@@ -43,7 +43,7 @@ abstract class AbstractChoice extends FormComponent
 	private IChoiceRenderer renderer;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param id
 	 *            See Component
@@ -55,6 +55,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param choices
@@ -67,6 +69,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param renderer
@@ -81,6 +85,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -95,6 +101,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -111,6 +119,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param choices
@@ -123,6 +133,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param renderer
@@ -139,6 +151,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -153,6 +167,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
