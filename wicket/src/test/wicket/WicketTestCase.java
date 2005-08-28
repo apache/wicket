@@ -30,7 +30,7 @@ import wicket.protocol.http.MockWebApplication;
  * Base class for tests which require comparing wicket response
  * with a file
  */
-public class WicketTestCase extends TestCase
+public abstract class WicketTestCase extends TestCase
 {
 	private static Log log = LogFactory.getLog(WicketTestCase.class);
 
