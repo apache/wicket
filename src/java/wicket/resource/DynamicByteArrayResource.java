@@ -6,6 +6,7 @@ package wicket.resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
@@ -28,12 +29,24 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/** The content type of this byte array */
 	private String contentType;
 	
+	private Locale locale;
+	
 	/**
 	 * @param contentType
 	 */
 	public DynamicByteArrayResource(String contentType)
 	{
 		this.contentType = contentType;
+	}
+
+	/**
+	 * @param contentType The Content type of this resource.
+	 * @param locale  The Locale for which this resource is meant for.
+	 */
+	public DynamicByteArrayResource(String contentType, Locale locale)
+	{
+		this.contentType = contentType;
+		this.locale = locale;
 	}
 	
 	/**
@@ -101,6 +114,16 @@ public abstract class DynamicByteArrayResource extends WebResource
 					data = getData();
 				}
 				return (data != null) ? data.length : 0;
+			}
+			
+			public Locale getLocale()
+			{
+				return locale;
+			}
+			
+			public void setLocale(Locale loc)
+			{
+				DynamicByteArrayResource.this.locale = loc;
 			}
 		};
 	}
