@@ -61,6 +61,10 @@ public final class Strings
 	 */
 	public static String afterFirst(final String s, final char c)
 	{
+		if(s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -90,6 +94,8 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything after the last occurence of the given character in s.
+	 *
 	 * @param s
 	 *            The string
 	 * @param c
@@ -99,6 +105,10 @@ public final class Strings
 	 */
 	public static String afterLast(final String s, final char c)
 	{
+		if(s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -119,6 +129,10 @@ public final class Strings
 	 */
 	public static String beforeFirst(final String s, final char c)
 	{
+		if(s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -139,6 +153,10 @@ public final class Strings
 	 */
 	public static String beforeLast(final String s, final char c)
 	{
+		if(s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -176,6 +194,10 @@ public final class Strings
 	 */
 	public static String capitalize(final String s)
 	{
+		if(s == null)
+		{
+			return null;
+		}
 		final char[] chars = s.toCharArray();
 
 		if (chars.length > 0)
