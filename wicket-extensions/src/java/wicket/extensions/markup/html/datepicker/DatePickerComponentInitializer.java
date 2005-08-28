@@ -43,7 +43,7 @@ public class DatePickerComponentInitializer implements IInitializer
 	private static String LANGUAGE_CS = "lang/calendar-cs-utf8.js";
 	private static String LANGUAGE_DA = "lang/calendar-da.js";
 	private static String LANGUAGE_DE = "lang/calendar-de.js";
-	private static String LANGUAGE_EL = "lang/calendar-el-utf8.js";
+	private static String LANGUAGE_EL = "lang/calendar-el.js";
 	private static String LANGUAGE_EN = "lang/calendar-en.js";
 	private static String LANGUAGE_ES = "lang/calendar-es.js";
 	private static String LANGUAGE_EU = "lang/calendar-eu.js";
@@ -65,7 +65,7 @@ public class DatePickerComponentInitializer implements IInitializer
 	private static String LANGUAGE_SI = "lang/calendar-si-utf8.js";
 	private static String LANGUAGE_SK = "lang/calendar-sk-utf8.js";
 	private static String LANGUAGE_SR = "lang/calendar-sr-utf8.js";
-	private static String LANGUAGE_SV = "lang/calendar-sv-utf8-utf8.js";
+	private static String LANGUAGE_SV = "lang/calendar-sv-utf8.js";
 	private static String LANGUAGE_TR = "lang/calendar-tr.js";
 	private static String LANGUAGE_ZH = "lang/calendar-zh-utf8.js";
 
@@ -157,8 +157,8 @@ public class DatePickerComponentInitializer implements IInitializer
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-green.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-system.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-tas.css");
-		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-1.css");
+		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-2.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/aqua/theme.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
