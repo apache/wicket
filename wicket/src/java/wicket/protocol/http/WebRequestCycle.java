@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -39,7 +38,6 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
-import wicket.Session;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
@@ -630,49 +628,26 @@ public class WebRequestCycle extends RequestCycle
 		if (path.startsWith(resourceReferencePrefix))
 		{
 			final String rawResourceKey = path.substring(resourceReferencePrefix.length());
-			Session session = Session.get();
-			Locale locale = session.getLocale();
-			String localizedResourceKey = SharedResources.path(rawResourceKey, locale, null); // no style because that is already in the key
-			String resourceKeyCandidate;
 
 			SharedResources sharedResources = getApplication().getSharedResources();
-			resourceKeyCandidate = localizedResourceKey;
-			Resource resource = sharedResources.get(resourceKeyCandidate);
+			Resource resource = sharedResources.get(rawResourceKey);
 			if (resource == null)
 			{
-				if(locale != null && locale.getCountry() != null)
+				log.debug("Could not find resource referenced by key " + rawResourceKey);
+				try
 				{
-					// try only the language
-					locale = new Locale(locale.getLanguage());
-					localizedResourceKey = SharedResources.path(rawResourceKey, locale, null);
-					resourceKeyCandidate = localizedResourceKey;
-					resource = sharedResources.get(resourceKeyCandidate);
+					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
-				// try it without any locale (plain url, could be different locale then the default)
-				if(resource == null)
+				catch (IOException ex)
 				{
-					resourceKeyCandidate = rawResourceKey;
-					resource = sharedResources.get(resourceKeyCandidate);
+					log.error("error sending 404", ex);
+					throw new WicketRuntimeException("Could not find resource referenced by key " + rawResourceKey +
+							" and send a 404", ex);
 				}
-				// if still null throw an exception
-				if(resource == null)
-				{
-					log.debug("Could not find resource referenced by key " + resourceKeyCandidate);
-					try
-					{
-						getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);
-					}
-					catch (IOException ex)
-					{
-						log.error("error sending 404", ex);
-						throw new WicketRuntimeException("Could not find resource referenced by key " + resourceKeyCandidate +
-								" and send a 404", ex);
-					}
-					// do return true, the response is handled.
-					return true;
-				}
+				// do return true, the response is handled.
+				return true;
 			}
-			sharedResources.onResourceRequested(resourceKeyCandidate);
+			sharedResources.onResourceRequested(rawResourceKey);
 			resource.onResourceRequested();
 			return true;
 		}
