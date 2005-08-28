@@ -312,6 +312,7 @@ public final class StringsTest extends TestCase
 		assertEquals("a", Strings.stripEnding("a", ""));
 		assertEquals("", Strings.stripEnding("a", "a"));
 		assertEquals("a", Strings.stripEnding("a", "aa"));
+		assertEquals("abc", Strings.stripEnding("abc", "ab"));
 	}
 
 	/**
@@ -393,9 +394,11 @@ public final class StringsTest extends TestCase
 		assertEquals("abc", Strings.toMultilineMarkup("abc"));
 		assertEquals("abc", Strings.toMultilineMarkup("abc\n"));
 		assertEquals("abc<br />def", Strings.toMultilineMarkup("abc\ndef"));
+		assertEquals("abc<br />def", Strings.toMultilineMarkup("abc\r\ndef"));
 		assertEquals("abc<br />def<br />ghi", Strings.toMultilineMarkup("abc\ndef\nghi"));
 
 		assertEquals("abc<p>def<p>ghi", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
+		assertEquals("abc<p>def<p>ghi", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
 	}
 
 	/**
@@ -405,7 +408,8 @@ public final class StringsTest extends TestCase
 	{
 		assertNull(Strings.toString((Object)null));
 		assertEquals("", Strings.toString(""));
-
+		
+		assertEquals("<Null Throwable>", Strings.toString((Throwable)null));
 		try
 		{
 			throw new IllegalArgumentException("Foo");
