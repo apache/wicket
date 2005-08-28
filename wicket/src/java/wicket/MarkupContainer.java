@@ -479,15 +479,16 @@ public abstract class MarkupContainer extends Component
 			// Add to map
 			final Component replaced = put(child);
 			addedComponent(child);
-			removedComponent(replaced);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
 			{
-				throw new IllegalArgumentException(
-						exceptionMessage("A child component with the id '" + child.getId()
-								+ "' didn't exist"));
+				throw new WicketRuntimeException(exceptionMessage(
+						"Cannot replace a component which has not been added: id='" 
+						+ child.getId() + "'"));
 			}
+
+			removedComponent(replaced);
 		}
 
 		return this;
