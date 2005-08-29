@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.IEventRequestListener;
+import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.form.FormComponent;
@@ -31,6 +32,9 @@ import wicket.util.resource.StringBufferResourceStream;
 import wicket.util.value.ValueMap;
 
 /**
+ * WORK IN PROGRESS; DO NOT USE THIS CLASS YET!
+ * TODO finish it.
+ *
  * Handles event requests, like AJAX (XmlHttp) requests.
  *
  * @author Eelco Hillenius
@@ -137,17 +141,33 @@ public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 
 		formComponent.validate();
 
-		// there's a lot that should happen here. For starters, we need to update all components
-		// that are affected by feedback messages (like FeedbackPanel and FormComponentFeedbackBorder,
-		// but it might actually be anything custom too
+		// When validation failed...
+		if (!formComponent.isValid())
+		{
+			// The plan here is the visit all feedback components, re-render them, and
+			// return the render results to the browser with the components (top level)
+			// ids attached. We could then use this information to replace the dom
+			// elements in the browser
 
-		// So, for an ajax handler like this it pays of to have a generic ajax rendering cycle,
-		// though for some other cases, that might just be too much.
+			// We need a couple of things for this to work first:
+			// 1) The ability to let a component render on its' own
+			// 2) Trap that render result somewhere. Either by setting the response to
+			//			render to on that component, or passing a response as a parameter
+			//			of the render call
+			// Furthermore, we need to have the javascript side covered. That could
+			// be tricky too, but the cool thing about that is that if we would fix
+			// that in a generic fashion, our ajax support would be pretty usable at once
 
-//		if (!formComponent.isValid())
-//		{
-//			s.append(formComponent.getFeedbackMessage().getMessage());
-//		}
+			formComponent.getPage().visitChildren(IFeedback.class, new Component.IVisitor()
+			{
+				public Object component(Component component)
+				{
+					// this doesn't work yet.
+					//component.render();
+					return Component.IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+		}
 
 		// for now, just display a simple message
 		s.append("ajax validation executed");
