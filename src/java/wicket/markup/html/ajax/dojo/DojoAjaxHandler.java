@@ -62,7 +62,7 @@ public abstract class DojoAjaxHandler
 
 	/**
 	 * Let this handler print out the needed header contributions.
-	 * @param container
+	 * @param container the header container
 	 */
 	public final void printHeadInitContribution(HtmlHeaderContainer container)
 	{
