@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.IEventRequestHandler;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
@@ -30,6 +29,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.ajax.IAjaxHandler;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
 
@@ -107,7 +107,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		}
 
 		// get head and body contributions in one loop
-		IEventRequestHandler[] handlers = getEventRequestHandlers();
+		IAjaxHandler[] handlers = getEventRequestHandlers();
 		if (handlers != null)
 		{
 			for (int i = 0; i < handlers.length; i++)

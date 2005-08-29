@@ -21,11 +21,11 @@ import java.util.Iterator;
 
 import wicket.ApplicationPages;
 import wicket.Component;
-import wicket.IEventRequestListener;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
@@ -177,7 +177,7 @@ public class WebPage extends Page implements IHeaderRenderer
 		}
 
 		// add an extra parameter for regconition in case we are targetting a dispatched handler
-		if (IEventRequestListener.class.isAssignableFrom(listenerInterface))
+		if (IAjaxListener.class.isAssignableFrom(listenerInterface))
 		{
 			buffer.append("&dispatched=true");
 		}

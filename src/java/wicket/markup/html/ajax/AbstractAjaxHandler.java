@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IEventRequestHandler;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -38,16 +37,17 @@ import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
 /**
- * Handles event requests, like AJAX (XmlHttp) requests.
+ * Abstract class for handling Ajax roundtrips. This class serves as a base for
+ * javascript specific implementations, like ones based on Dojo or Scriptaculous.
  *
  * @author Eelco Hillenius
  */
 //TODO should we support other callbacks, like onComponentBody?
-public abstract class AbstractEventRequestHandler
-	implements Serializable, IEventRequestHandler, IHeaderContributor, IBodyOnloadContributor
+public abstract class AbstractAjaxHandler
+	implements Serializable, IAjaxHandler, IHeaderContributor, IBodyOnloadContributor
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(AbstractEventRequestHandler.class);
+	private static Log log = LogFactory.getLog(AbstractAjaxHandler.class);
 
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
@@ -64,12 +64,12 @@ public abstract class AbstractEventRequestHandler
 	/**
 	 * Construct.
 	 */
-	public AbstractEventRequestHandler()
+	public AbstractAjaxHandler()
 	{
 	}
 
 	/**
-	 * @see wicket.IEventRequestHandler#getId()
+	 * @see wicket.markup.html.ajax.IAjaxHandler#getId()
 	 */
 	public String getId()
 	{
@@ -145,17 +145,17 @@ public abstract class AbstractEventRequestHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.AbstractEventRequestHandler#onEventRequest()
+	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#onRequest()
 	 */
-	public void onEventRequest()
+	public void onRequest()
 	{
 		respond();
 	}
 
 	/**
-	 * @see wicket.IEventRequestHandler#rendered(wicket.Component)
+	 * @see wicket.markup.html.ajax.IAjaxHandler#onComponentRendered(wicket.Component)
 	 */
-	public void rendered(Component component)
+	public void onComponentRendered(Component component)
 	{
 		bodyOnloadContribHolder.set(null);
 		headContribHolder.set(null);

@@ -18,8 +18,8 @@
 package wicket;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.ajax.dojo.DojoEventRequestHandler;
-import wicket.markup.html.ajax.scriptaculous.ScriptaculousEventRequestHandler;
+import wicket.markup.html.ajax.dojo.DojoAjaxHandler;
+import wicket.markup.html.ajax.scriptaculous.ScriptaculousAjaxHandler;
 import wicket.markup.html.tree.TreeComponentInitializer;
 import wicket.util.resource.IResourceStream;
 
@@ -39,7 +39,7 @@ public class Initializer implements IInitializer
 		new TreeComponentInitializer().init(application);
 
 		// implement the ajax handlers using dummy implementations
-		new DojoEventRequestHandler()
+		new DojoAjaxHandler()
 		{
 			protected IResourceStream getResponse()
 			{
@@ -54,7 +54,7 @@ public class Initializer implements IInitializer
 			{
 			}
 		}.init(application);
-		new ScriptaculousEventRequestHandler()
+		new ScriptaculousAjaxHandler()
 		{
 			protected IResourceStream getResponse()
 			{
