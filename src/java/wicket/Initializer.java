@@ -17,7 +17,11 @@
  */
 package wicket;
 
+import wicket.markup.ComponentTag;
+import wicket.markup.html.ajax.dojo.DojoEventRequestHandler;
+import wicket.markup.html.ajax.scriptaculous.ScriptaculousEventRequestHandler;
 import wicket.markup.html.tree.TreeComponentInitializer;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Initializer for components in wicket core library.
@@ -31,6 +35,39 @@ public class Initializer implements IInitializer
 	 */
 	public void init(Application application)
 	{
+		// initialize the tree component
 		new TreeComponentInitializer().init(application);
+
+		// implement the ajax handlers using dummy implementations
+		new DojoEventRequestHandler()
+		{
+			protected IResourceStream getResponse()
+			{
+				return null;
+			}
+
+			public void bind(Component component)
+			{
+			}
+
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+			}
+		}.init(application);
+		new ScriptaculousEventRequestHandler()
+		{
+			protected IResourceStream getResponse()
+			{
+				return null;
+			}
+
+			public void bind(Component component)
+			{
+			}
+
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+			}
+		}.init(application);
 	}
 }
