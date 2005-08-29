@@ -163,6 +163,7 @@ public final class StringsTest extends TestCase
 
 	/**
 	 * Tests the escapeMarkup method with unicode escapes.
+	 * @throws UnsupportedEncodingException 
 	 */
 	public void testEscapeMarkupUnicode() throws UnsupportedEncodingException
 	{
@@ -180,6 +181,7 @@ public final class StringsTest extends TestCase
 
 	/**
 	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
+	 * @throws UnsupportedEncodingException 
 	 */
 	public void testReplaceHtmlEscapeNumber() throws UnsupportedEncodingException
 	{
@@ -397,15 +399,21 @@ public final class StringsTest extends TestCase
 	public void testToMultilineMarkup()
 	{
 		assertNull(Strings.toMultilineMarkup(null));
-		assertEquals("", Strings.toMultilineMarkup(""));
-		assertEquals("abc", Strings.toMultilineMarkup("abc"));
-		assertEquals("abc", Strings.toMultilineMarkup("abc\n"));
-		assertEquals("abc<br />def", Strings.toMultilineMarkup("abc\ndef"));
-		assertEquals("abc<br />def", Strings.toMultilineMarkup("abc\r\ndef"));
-		assertEquals("abc<br />def<br />ghi", Strings.toMultilineMarkup("abc\ndef\nghi"));
+		assertEquals("<p></p>", Strings.toMultilineMarkup(""));
+		assertEquals("<p></p><p></p>", Strings.toMultilineMarkup("\n\n"));
+		assertEquals("<p><br /></p>", Strings.toMultilineMarkup("\n"));
+		assertEquals("<p>abc</p>", Strings.toMultilineMarkup("abc"));
+		assertEquals("<p>abc<br /></p>", Strings.toMultilineMarkup("abc\n"));
+		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\ndef"));
+		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\r\ndef"));
+		assertEquals("<p>abc<br />def<br />ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi"));
 
-		assertEquals("abc<p>def<p>ghi", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
-		assertEquals("abc<p>def<p>ghi", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n"));
+		
+		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n"));
+		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc"));
 	}
 
 	/**
