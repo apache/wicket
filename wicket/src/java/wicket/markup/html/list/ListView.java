@@ -313,7 +313,7 @@ public abstract class ListView extends WebMarkupContainer
 				// Remove item and invalidate listView
 				getList().remove(item.getModelObject());
 
-				item.modelChanged();
+				ListView.this.modelChanged();
 			}
 		};
 	}
