@@ -8,7 +8,7 @@
   </properties>
   <body>
     <release version="1.0.3" date="2005-08-28" description="1.0.3">
-      <action type="fix" dev="Martijn Dashorst" issue="1275981">PageableListViewNavigation doesn't shrink pagecount</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1275981">PageableListViewNavigation doesn't shrink pagecount when the list changes size.</action>
     </release>
     <release version="1.0.2" date="2005-08-22" description="1.0.2">
       <action type="fix" dev="Martijn Dashorst" issue="1263892" due-to="Arjan Zwaan">newChoiceItem does not use object parameter but selects directly from list</action>
