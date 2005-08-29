@@ -530,7 +530,6 @@ public abstract class Application
 				} 
 				finally
 				{
-					log.info("closing input");
 					if(is != null) is.close();
 				}
 			}
