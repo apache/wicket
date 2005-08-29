@@ -18,10 +18,10 @@
  */
 package wicket.util.string;
 
-import wicket.util.string.Strings;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Test cases for the <code>Strings</code> class.
@@ -164,31 +164,38 @@ public final class StringsTest extends TestCase
 	/**
 	 * Tests the escapeMarkup method with unicode escapes.
 	 */
-	public void testEscapeMarkupUnicode()
+	public void testEscapeMarkupUnicode() throws UnsupportedEncodingException
 	{
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true));
 
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
-				.escapeMarkup("Çüéâäàåçêë", false, true));
+				.escapeMarkup(convertNonASCIIString("Çüéâäàåçêë"), false, true));
 
-		assertEquals("\n \t&#233;", Strings.escapeMarkup("\n \té", false, true));
-		assertEquals("\n \té", Strings.escapeMarkup("\n \té", false, false));
+		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \té"), false,
+				true));
+		assertEquals(convertNonASCIIString("\n \té"), Strings.escapeMarkup(
+				convertNonASCIIString("\n \té"), false, false));
 	}
 
 	/**
 	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
 	 */
-	public void testReplaceHtmlEscapeNumber()
+	public void testReplaceHtmlEscapeNumber() throws UnsupportedEncodingException
 	{
 		assertNull(Strings.replaceHtmlEscapeNumber(null));
 		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
 		assertEquals("abcdefghijklmë", Strings.replaceHtmlEscapeNumber("abcdefghijklmë"));
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
-				"Çüéâäàåçêë",
+				convertNonASCIIString("Çüéâäàåçêë"),
 				Strings
 						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+	}
+
+	private String convertNonASCIIString(String str) throws UnsupportedEncodingException
+	{
+		return new String(str.getBytes(), "iso-8859-1");
 	}
 
 	/**
@@ -408,8 +415,8 @@ public final class StringsTest extends TestCase
 	{
 		assertNull(Strings.toString((Object)null));
 		assertEquals("", Strings.toString(""));
-		
-		assertEquals("<Null Throwable>", Strings.toString((Throwable)null));
+
+		assertEquals("<Null Throwable>", Strings.toString(null));
 		try
 		{
 			throw new IllegalArgumentException("Foo");
@@ -417,7 +424,8 @@ public final class StringsTest extends TestCase
 		catch (IllegalArgumentException e)
 		{
 			final String toString = Strings.toString((Object)e);
-			assertEquals("java.lang.IllegalArgumentException: Foo", Strings.beforeFirst(toString, '\n').trim());
+			assertEquals("java.lang.IllegalArgumentException: Foo", Strings.beforeFirst(toString,
+					'\n').trim());
 		}
 	}
 
