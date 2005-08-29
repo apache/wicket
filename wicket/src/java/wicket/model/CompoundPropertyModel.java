@@ -30,7 +30,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel extends AbstractPropertyModel
+public class CompoundPropertyModel extends AbstractPropertyModel implements ICompoundModel
 {
 	/**
 	 * Constructor
