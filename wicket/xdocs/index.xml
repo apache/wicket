@@ -62,6 +62,19 @@
 		</section>
 		<section name="Latest News">
 			<subsection
+				name="August 29, 2005 - Maintenance release Wicket 1.0.3 available">
+				<p>
+					A minor bugfix release has been issued for PageableListViewNavigation.
+					The 1.0.3 version doesn't have any other improvements or fixes.
+				</p>
+				<p>
+					If you are using Wicket 1.0 and use the <code>PageableListViewNavigation</code> or
+					the <code>PageableListViewNavigator</code>, then we advise you to upgrade to this
+					version. Note that when you upgrade from 1.0.1, you may experience some backwards
+					incompatibilities, as outlined in the 1.0.2 release notes.
+				</p>
+			</subsection>
+			<subsection
 				name="August 22, 2005 - Maintenance release Wicket 1.0.2 available">
 				<p>
 					The Wicket development team has released the second
