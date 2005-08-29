@@ -737,9 +737,11 @@ public final class Strings
 		{
 			return null;
 		}
+		
 		final StringBuffer buffer = new StringBuffer();
 		int newlineCount = 0;
 
+		buffer.append("<p>");
 		for (int i = 0; i < s.length(); i++)
 		{
 			final char c = s.charAt(i);
@@ -760,7 +762,7 @@ public final class Strings
 					}
 					else if (newlineCount > 1)
 					{
-						buffer.append("<p>");
+						buffer.append("</p><p>");
 					}
 
 					buffer.append(c);
@@ -768,7 +770,15 @@ public final class Strings
 					break;
 			}
 		}
-
+		if (newlineCount == 1)
+		{
+			buffer.append("<br />");
+		}
+		else if (newlineCount > 1)
+		{
+			buffer.append("</p><p>");
+		}
+		buffer.append("</p>");
 		return buffer.toString();
 	}
 
