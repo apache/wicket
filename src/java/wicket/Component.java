@@ -38,6 +38,7 @@ import wicket.markup.html.ajax.IAjaxHandler;
 import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.parser.XmlTag;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
@@ -211,6 +212,18 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IAjaxListener
 {
+	private static final IComponentValueComparator comparator = new IComponentValueComparator()
+	{
+		public boolean compareValue(Component component, Object newObject)
+		{
+			IModel model = component.getModel();
+			Object previous = model.getObject(component);
+			if(newObject == null && previous == null) return true;
+			if(newObject == null || previous == null) return false;
+			return newObject.equals(previous);
+		}
+	};
+	
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
@@ -1241,7 +1254,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		final IModel model = getModel();
 		if (model != null)
 		{
-			if (model.getObject(this) != object)
+			if (!getComparator().compareValue(this, object))
 			{
 				modelChanging();
 				model.setObject(this, object);
@@ -1255,6 +1268,10 @@ public abstract class Component implements Serializable, IAjaxListener
 		return this;
 	}
 
+	protected IComponentValueComparator getComparator()
+	{
+		return comparator;
+	}
 	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
@@ -1592,7 +1609,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		{
 			// Get model
 			final IModel model = current.getModel();
-			if (model instanceof CompoundPropertyModel)
+			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another component
 				// that is the owner of the model (that component has to decide
