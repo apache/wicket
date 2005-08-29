@@ -33,6 +33,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IBodyOnloadContributor;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.PackageResourceReference;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
@@ -195,6 +196,30 @@ public abstract class AbstractEventRequestHandler
 	 * @return the response to render to the requester
 	 */
 	protected abstract IResourceStream getResponse();
+
+	/**
+	 * Convenience method to add a javascript reference.
+	 * @param container the header container
+	 * @param ref reference to add
+	 */
+	protected void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
+	{
+		String url = container.getPage().urlFor(ref.getPath());
+		String s = 
+			"\t<script language=\"JavaScript\" type=\"text/javascript\" " +
+			"src=\"" + url + "\"></script>\n";
+		write(container, s);
+	}
+
+	/**
+	 * Writes the given string to the header container.
+	 * @param container the header container
+	 * @param s the string to write
+	 */
+	private void write(HtmlHeaderContainer container, String s)
+	{
+		container.getResponse().write(s);
+	}
 
 	/**
 	 * Responds on the event request.

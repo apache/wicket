@@ -22,25 +22,42 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.IInitializer;
 import wicket.markup.html.HtmlHeaderContainer;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.AbstractEventRequestHandler;
 
 /**
  * Handles event requests using Dojo.
- *
+ * <p>
+ * This class is mainly here to automatically add the javascript files you need. As
+ * header contributions are done once per class, you can have multiple instances/
+ * subclasses without having duplicate header contributions.
+ * </p>
+ * @see <a href="http://dojotoolkit.org/">Dojo</a>
  * @author Eelco Hillenius
  */
-public abstract class DojoEventRequestHandler extends AbstractEventRequestHandler
+public abstract class DojoEventRequestHandler
+	extends AbstractEventRequestHandler implements IInitializer
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(DojoEventRequestHandler.class);
-	
+
 	/**
 	 * Construct.
 	 */
 	public DojoEventRequestHandler()
 	{
+	}
+
+	/**
+	 * Register packaged javascript files.
+	 * @param application The application
+	 */
+	public void init(Application application)
+	{
+		PackageResource.bind(application, DojoEventRequestHandler.class, "dojo.js");
 	}
 
 	/**
@@ -51,30 +68,6 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 	{
 		// add our basic javascript needs to the header
 		addJsReference(container, new PackageResourceReference(
-				Application.get(), DojoEventRequestHandler.class, "dojo-io-20050628.js"));
-	}
-
-	/**
-	 * Adds a javascript reference.
-	 * @param container the header container
-	 * @param ref reference to add
-	 */
-	private void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
-	{
-		String url = container.getPage().urlFor(ref.getPath());
-		String s = 
-			"\t<script language=\"JavaScript\" type=\"text/javascript\" " +
-			"src=\"" + url + "\"></script>\n";
-		write(container, s);
-	}
-
-	/**
-	 * Writes the given string to the header container.
-	 * @param container the header container
-	 * @param s the string to write
-	 */
-	private void write(HtmlHeaderContainer container, String s)
-	{
-		container.getResponse().write(s);
+				Application.get(), DojoEventRequestHandler.class, "dojo.js"));
 	}
 }
