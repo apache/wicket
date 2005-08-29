@@ -16,16 +16,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.html.ajax;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
- * Handles event requests, like AJAX (XmlHttp) requests.
+ * Interface for handling Ajax roundtrips. Using Ajax, you can have browser-server
+ * roundtrips without reloading the whole page.
  *
  * @author Eelco Hillenius
  */
-public interface IEventRequestHandler
+public interface IAjaxHandler
 {
 	/**
 	 * gets the id of this handler. defaults to the objects' hashcode.
@@ -53,10 +55,10 @@ public interface IEventRequestHandler
 	 * Use this method to do any cleaning up of temporary state
 	 * @param component the component
 	 */
-	void rendered(Component component);
+	void onComponentRendered(Component component);
 
 	/**
-	 * Called when a event request (e.g. XmlHttpRequest) was received.
+	 * Called when an Ajax request is to be handled.
 	 */
-	void onEventRequest();
+	void onRequest();
 }

@@ -19,7 +19,7 @@ package wicket.markup.html;
 
 
 /**
- * An interface to be implemented by {@link wicket.IEventRequestHandler}s to
+ * An interface to be implemented by {@link wicket.markup.html.ajax.IAjaxHandler}s to
  * contribute statements to the onload hander of the &lt;body... tag.
  * 
  * @author Eelco Hillenius

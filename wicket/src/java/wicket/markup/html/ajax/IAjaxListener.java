@@ -16,19 +16,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.html.ajax;
+
+import wicket.IRequestListener;
 
 /**
  * THIS INTERFACE IS FOR INTERNAL USE ONLY. DO NOT USE IT.
  *
- * Listens for event requests, like AJAX (XmlHttp) requests.
+ * Listens for Ajax requests.
  *
  * @author Eelco Hillenius
  */
-public interface IEventRequestListener extends IRequestListener
+public interface IAjaxListener extends IRequestListener
 {
 	/**
-	 * Called when a event request (e.g. XmlHttpRequest) was received.
+	 * Called when an Ajax request is received.
 	 */
-	void onEventRequest();
+	void onRequest();
 }

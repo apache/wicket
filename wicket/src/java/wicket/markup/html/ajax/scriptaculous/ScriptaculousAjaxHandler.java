@@ -26,7 +26,7 @@ import wicket.IInitializer;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.AbstractEventRequestHandler;
+import wicket.markup.html.ajax.AbstractAjaxHandler;
 
 /**
  * Handles event requests using 'script.aculo.us'.
@@ -38,16 +38,16 @@ import wicket.markup.html.ajax.AbstractEventRequestHandler;
  * @see <a href="http://script.aculo.us/">script.aculo.us</a>
  * @author Eelco Hillenius
  */
-public abstract class ScriptaculousEventRequestHandler
-	extends AbstractEventRequestHandler implements IInitializer
+public abstract class ScriptaculousAjaxHandler
+	extends AbstractAjaxHandler implements IInitializer
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(ScriptaculousEventRequestHandler.class);
+	private static Log log = LogFactory.getLog(ScriptaculousAjaxHandler.class);
 
 	/**
 	 * Construct.
 	 */
-	public ScriptaculousEventRequestHandler()
+	public ScriptaculousAjaxHandler()
 	{
 	}
 
@@ -57,11 +57,11 @@ public abstract class ScriptaculousEventRequestHandler
 	 */
 	public void init(Application application)
 	{
-		PackageResource.bind(application, ScriptaculousEventRequestHandler.class, "prototype.js");
-		PackageResource.bind(application, ScriptaculousEventRequestHandler.class, "controls.js");
-		PackageResource.bind(application, ScriptaculousEventRequestHandler.class, "dragdrop.js");
-		PackageResource.bind(application, ScriptaculousEventRequestHandler.class, "effects.js");
-		PackageResource.bind(application, ScriptaculousEventRequestHandler.class, "scriptaculous.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "prototype.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "controls.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "dragdrop.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "effects.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "scriptaculous.js");
 	}
 
 	/**
@@ -73,14 +73,14 @@ public abstract class ScriptaculousEventRequestHandler
 		// add our basic javascript needs to the header
 		Application application = Application.get();
 		addJsReference(container, new PackageResourceReference(application,
-				ScriptaculousEventRequestHandler.class, "prototype.js"));
+				ScriptaculousAjaxHandler.class, "prototype.js"));
 		addJsReference(container, new PackageResourceReference(application,
-				ScriptaculousEventRequestHandler.class, "controls.js"));
+				ScriptaculousAjaxHandler.class, "controls.js"));
 		addJsReference(container, new PackageResourceReference(application,
-				ScriptaculousEventRequestHandler.class, "dragdrop.js"));
+				ScriptaculousAjaxHandler.class, "dragdrop.js"));
 		addJsReference(container, new PackageResourceReference(application,
-				ScriptaculousEventRequestHandler.class, "effects.js"));
+				ScriptaculousAjaxHandler.class, "effects.js"));
 		addJsReference(container, new PackageResourceReference(application,
-				ScriptaculousEventRequestHandler.class, "scriptaculous.js"));
+				ScriptaculousAjaxHandler.class, "scriptaculous.js"));
 	}
 }

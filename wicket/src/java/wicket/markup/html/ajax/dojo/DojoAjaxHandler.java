@@ -26,7 +26,7 @@ import wicket.IInitializer;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.AbstractEventRequestHandler;
+import wicket.markup.html.ajax.AbstractAjaxHandler;
 
 /**
  * Handles event requests using Dojo.
@@ -38,16 +38,16 @@ import wicket.markup.html.ajax.AbstractEventRequestHandler;
  * @see <a href="http://dojotoolkit.org/">Dojo</a>
  * @author Eelco Hillenius
  */
-public abstract class DojoEventRequestHandler
-	extends AbstractEventRequestHandler implements IInitializer
+public abstract class DojoAjaxHandler
+	extends AbstractAjaxHandler implements IInitializer
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(DojoEventRequestHandler.class);
+	private static Log log = LogFactory.getLog(DojoAjaxHandler.class);
 
 	/**
 	 * Construct.
 	 */
-	public DojoEventRequestHandler()
+	public DojoAjaxHandler()
 	{
 	}
 
@@ -57,7 +57,7 @@ public abstract class DojoEventRequestHandler
 	 */
 	public void init(Application application)
 	{
-		PackageResource.bind(application, DojoEventRequestHandler.class, "dojo.js");
+		PackageResource.bind(application, DojoAjaxHandler.class, "dojo.js");
 	}
 
 	/**
@@ -68,6 +68,6 @@ public abstract class DojoEventRequestHandler
 	{
 		// add our basic javascript needs to the header
 		addJsReference(container, new PackageResourceReference(
-				Application.get(), DojoEventRequestHandler.class, "dojo.js"));
+				Application.get(), DojoAjaxHandler.class, "dojo.js"));
 	}
 }

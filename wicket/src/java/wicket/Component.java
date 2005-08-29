@@ -34,6 +34,8 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.ajax.IAjaxHandler;
+import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.parser.XmlTag;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
@@ -207,7 +209,7 @@ import wicket.version.undo.Change;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Component implements Serializable, IEventRequestListener
+public abstract class Component implements Serializable, IAjaxListener
 {
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
@@ -396,7 +398,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * Registers a handler for an event request.
 	 * @param eventRequestHandler handler
 	 */
-	public final void add(IEventRequestHandler eventRequestHandler)
+	public final void add(IAjaxHandler eventRequestHandler)
 	{
 		if (eventRequestHandler == null)
 		{
@@ -1054,9 +1056,9 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
-	 * @see wicket.IEventRequestListener#onEventRequest()
+	 * @see wicket.markup.html.ajax.IAjaxListener#onRequest()
 	 */
-	public void onEventRequest()
+	public void onRequest()
 	{
 		String id = getRequest().getParameter("id");
 
@@ -1065,14 +1067,14 @@ public abstract class Component implements Serializable, IEventRequestListener
 			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
 		}
 
-		IEventRequestHandler eventRequestHandler = (IEventRequestHandler)eventRequestHandlers.get(id);
+		IAjaxHandler eventRequestHandler = (IAjaxHandler)eventRequestHandlers.get(id);
 
 		if (eventRequestHandler == null)
 		{
 			throw new WicketRuntimeException("no handler found with id " + id);
 		}
 
-		eventRequestHandler.onEventRequest();
+		eventRequestHandler.onRequest();
 	}
 
 	/**
@@ -1142,8 +1144,8 @@ public abstract class Component implements Serializable, IEventRequestListener
 		{
 			for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
 			{
-				IEventRequestHandler handler = (IEventRequestHandler)i.next();
-				handler.rendered(this);
+				IAjaxHandler handler = (IAjaxHandler)i.next();
+				handler.onComponentRendered(this);
 			}
 		}
 	}
@@ -1540,12 +1542,12 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * Gets an array with registered event request handlers or null.
 	 * @return an array with registered event request handlers, null if none are registered
 	 */
-	protected final IEventRequestHandler[] getEventRequestHandlers()
+	protected final IAjaxHandler[] getEventRequestHandlers()
 	{
 		if (eventRequestHandlers != null)
 		{
 			Collection handlers = eventRequestHandlers.values();
-			return (IEventRequestHandler[])handlers.toArray(new IEventRequestHandler[handlers.size()]);
+			return (IAjaxHandler[])handlers.toArray(new IAjaxHandler[handlers.size()]);
 		}
 		return null;
 	}
@@ -1828,7 +1830,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 			{
 				for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
 				{
-					IEventRequestHandler handler = (IEventRequestHandler)i.next();
+					IAjaxHandler handler = (IAjaxHandler)i.next();
 					handler.onComponentTag(this, tag);
 				}
 			}

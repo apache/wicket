@@ -22,10 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IEventRequestListener;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
+import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
@@ -39,10 +39,10 @@ import wicket.util.value.ValueMap;
  *
  * @author Eelco Hillenius
  */
-public final class ValidationEventRequestHandler extends DojoEventRequestHandler
+public final class ValidationAjaxHandler extends DojoAjaxHandler
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(ValidationEventRequestHandler.class);
+	private static Log log = LogFactory.getLog(ValidationAjaxHandler.class);
 
 	/** name event, like onblur. */
 	private final String eventName;
@@ -54,7 +54,7 @@ public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 	 * Construct.
 	 * @param eventName name of the event to attach to, e.g. 'onchange'
 	 */
-	public ValidationEventRequestHandler(String eventName)
+	public ValidationAjaxHandler(String eventName)
 	{
 		this.eventName = eventName;
 	}
@@ -69,7 +69,7 @@ public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.AbstractEventRequestHandler#doPrintHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#doPrintHead(wicket.markup.html.HtmlHeaderContainer)
 	 */
 	public final void doPrintHead(HtmlHeaderContainer container)
 	{
@@ -91,7 +91,7 @@ public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.AbstractEventRequestHandler#bind(wicket.Component)
+	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#bind(wicket.Component)
 	 */
 	public void bind(Component component)
 	{
@@ -122,7 +122,7 @@ public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		final ValueMap attributes = tag.getAttributes();
-		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + getId();
+		final String url = formComponent.urlFor(IAjaxListener.class) + "&id=" + getId();
 		final String attributeValue =
 			"javascript:validate('" + url + "', '" + formComponent.getPath() + "', this);";
 		attributes.put(getEventName(), attributeValue);
