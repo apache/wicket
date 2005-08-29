@@ -289,6 +289,9 @@ public abstract class Component implements Serializable
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -910,6 +913,23 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Checks if the component itself and all its parents are visible.
+	 * 
+	 * @return true if the component and all its parents are visible.
+	 */
+	public final boolean isVisibleInHierarchy()
+	{
+		Component component = this;
+		while(component != null)
+		{
+			if(!component.isVisible()) return false;
+			component = component.getParent();
+		}
+		return true;
+	}
+
+
+	/**
 	 * Gets whether this component and any children are visible.
 	 * 
 	 * @return True if component and any children are visible
@@ -1148,6 +1168,30 @@ public abstract class Component implements Serializable
 		getRequestCycle().setRedirect(redirect);
 	}
 
+	/**
+	 * If false the component's tag will be printed as well as its
+	 * body (which is default). If true only the body will be printed,
+	 * but not the component's tag.
+	 * 
+	 * @param renderTag If true, the component tag will not be printed
+	 */
+	public final void setRenderBodyOnly(final boolean renderTag)
+	{
+	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
+	}
+
+	/**
+	 * If false the component's tag will be printed as well as its
+	 * body (which is default). If true only the body will be printed,
+	 * but not the component's tag.
+	 * 
+	 * @return If true, the component tag will not be printed
+	 */
+	protected final boolean getRenderBodyOnly()
+	{
+	    return getFlag(FLAG_RENDER_BODY_ONLY);
+	}
+	
 	/**
 	 * Sets the page that will respond to this request
 	 * 
@@ -1554,7 +1598,11 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Redirects browser to the given page
+	 * Redirects browser to the given page.
+	 * NOTE: Usually, you should never call this method directly, but work with
+	 * setResponsePage instead. This method is part of Wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
 	 * 
 	 * @param page
 	 *            The page to redirect to
@@ -1599,7 +1647,10 @@ public abstract class Component implements Serializable
 		}
 
 		// Render open tag
-		renderComponentTag(tag);
+		if (getRenderBodyOnly() == false)
+		{
+		    renderComponentTag(tag);
+		}
 		markupStream.next();
 
 		// Render the body only if open-body-close. Do not render if open-close.
@@ -1612,7 +1663,7 @@ public abstract class Component implements Serializable
 		// Render close tag
 		if (tag.isOpen())
 		{
-			renderClosingComponentTag(markupStream, tag);
+			renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
 		}
 	}
 
@@ -1777,8 +1828,11 @@ public abstract class Component implements Serializable
 	 *            the markup stream
 	 * @param openTag
 	 *            the tag to render
+	 * @param renderTagOnly
+	 *            if true, the tag will not be written to the output
 	 */
-	final void renderClosingComponentTag(final MarkupStream markupStream, final ComponentTag openTag)
+	final void renderClosingComponentTag(final MarkupStream markupStream, 
+	        final ComponentTag openTag, final boolean renderTagOnly)
 	{
 		// Tag should be open tag and not openclose tag
 		if (openTag.isOpen())
@@ -1798,7 +1852,10 @@ public abstract class Component implements Serializable
 				}
 
 				// Render the close tag
-				renderComponentTag(closeTag);
+				if (renderTagOnly == false)
+				{
+				    renderComponentTag(closeTag);
+				}
 				markupStream.next();
 			}
 			else
@@ -1809,11 +1866,6 @@ public abstract class Component implements Serializable
 					markupStream.throwMarkupException("Expected close tag for " + openTag);
 				}
 			}
-		}
-		else if (openTag.isOpenClose())
-		{
-			// Write synthetic close tag
-			getResponse().write(openTag.syntheticCloseTagString());
 		}
 	}
 

@@ -17,6 +17,8 @@
  */
 package wicket.util.file;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +30,7 @@ import wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public final class Path
+public final class Path implements IResourcePath
 {
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
@@ -68,9 +70,8 @@ public final class Path
 	/**
 	 * @param folder
 	 *            Folder to add to path
-	 * @return The path, for invocation chaining
 	 */
-	public Path add(final Folder folder)
+	public void add(final Folder folder)
 	{
 		if (!folder.exists())
 		{
@@ -78,8 +79,16 @@ public final class Path
 		}
 
 		folders.add(folder);
+	}
 
-		return this;
+	/**
+	 * @param path
+	 *            Folder to add to path
+	 * @see wicket.util.file.IResourcePath#add(java.lang.String)
+	 */
+	public void add(final String path)
+	{
+		add(new Folder(path));
 	}
 
 	/**
@@ -87,9 +96,9 @@ public final class Path
 	 * 
 	 * @param pathname
 	 *            The filename with possible path
-	 * @return The file located on the path
+	 * @return The url located on the path
 	 */
-	public File find(final String pathname)
+	public URL find(final String pathname)
 	{
 		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
 		{
@@ -98,7 +107,14 @@ public final class Path
 
 			if (file.exists())
 			{
-				return file;
+				try
+				{
+					return file.toURI().toURL();
+				}
+				catch (MalformedURLException ex)
+				{
+					// ignore
+				}
 			}
 		}
 

@@ -306,12 +306,13 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * The default panel for a tree node.
-	 * <p>
-	 * You can provide an alternative panel by overriding Tree.newNodePanel
+	 * A panel for a tree node. You can provide an alternative panel by
+	 * overriding Tree.newNodePanel. Extend this class if you want to provide other components
+	 * than the default. If you just want to provide different markup, you should consider
+	 * extending DefaultNodePanel
 	 * </p>
 	 */
-	private final class NodePanel extends Panel
+	protected abstract class NodePanel extends Panel
 	{
 		/**
 		 * Construct.
@@ -321,11 +322,23 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		public NodePanel(final String id, final DefaultMutableTreeNode node)
 		{
 			super(id);
+		}
+	}
 
+	/**
+	 * The default node panel. If you provide your own panel by overriding Tree.newNodePanel,
+	 * but only want to override the markup, not the components that are added, extend this class.
+	 * If you want to use other components than the default, extend NodePanel directly.
+	 * instead.
+	 */
+	protected class DefaultNodePanel extends NodePanel
+	{
+		DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
+		{
+			super(panelId, node);
 			// create a link for expanding and collapsing the node
 			Link expandCollapsLink = Tree.this.createJunctionLink(node);
 			add(expandCollapsLink);
-
 			// create a link for selecting a node
 			Link selectLink = Tree.this.createNodeLink(node);
 			add(selectLink);
@@ -484,13 +497,18 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * </pre>
 	 * 
 	 * </p>
+	 * <p>
+	 * You can choose to either let your own panel extend from DefaultNodePanel when you just
+	 * want to provide different markup but want to reuse the default components on this panel,
+	 * or extend from NodePanel directly, and provide any component structure you like.
+	 * </p>
 	 * @param panelId the id that the panel MUST use
 	 * @param node the tree node for the panel
 	 * @return a new Panel
 	 */
 	protected NodePanel newNodePanel(String panelId, DefaultMutableTreeNode node)
 	{
-		return new NodePanel(panelId, node);
+		return new DefaultNodePanel(panelId, node);
 	}
 
 	/**
@@ -559,7 +577,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return new Image(JUNCTION_IMAGE_NAME, BLANK);
+		return new Image(NODE_IMAGE_NAME, BLANK);
 	}
 
 	/**

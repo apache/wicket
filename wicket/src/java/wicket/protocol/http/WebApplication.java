@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
+import wicket.ApplicationSettings;
 import wicket.AutoLinkResolver;
 import wicket.ISessionFactory;
 import wicket.Session;
@@ -36,6 +37,10 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.response.BufferedResponse;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.WebApplicationPath;
+import wicket.util.time.Duration;
+import wicket.util.time.Time;
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -54,13 +59,15 @@ import wicket.response.BufferedResponse;
  * init() method. For example:
  * 
  * <pre>
- *      public void init()
- *      {
- *          String webXMLParameter = getWicketServlet()
- *              .getInitParameter(&quot;myWebXMLParameter&quot;);
- *          URL schedulersConfig = getWicketServlet().getServletContext()
- *              .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *          ...
+ * 
+ *       public void init()
+ *       {
+ *           String webXMLParameter = getWicketServlet()
+ *               .getInitParameter(&quot;myWebXMLParameter&quot;);
+ *           URL schedulersConfig = getWicketServlet().getServletContext()
+ *               .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *           ...
+ *  
  * </pre>
  * 
  * @see WicketServlet
@@ -83,6 +90,7 @@ public abstract class WebApplication extends Application
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
+	/** Map of redirects in progress per session */
 	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
 	/**
@@ -103,11 +111,18 @@ public abstract class WebApplication extends Application
 	 */
 	public final WicketServlet getWicketServlet()
 	{
+		if(wicketServlet == null)
+		{
+			throw new IllegalStateException("wicketServlet is not set yet. Any code in your" +
+					" Application object that uses the wicketServlet instance should be put" +
+					" in the init() method instead of your constructor");
+		}
 		return wicketServlet;
 	}
-	
+
 	/**
-	 * @param sessionFactory The session factory to use
+	 * @param sessionFactory
+	 *            The session factory to use
 	 */
 	public final void setSessionFactory(final ISessionFactory sessionFactory)
 	{
@@ -187,10 +202,12 @@ public abstract class WebApplication extends Application
 		// Get session, creating if it doesn't exist
 		final HttpSession httpSession = request.getSession(true);
 
-		// Namespacing for session attributes is provided by adding the servlet path
+		// Namespacing for session attributes is provided by adding the servlet
+		// path
 		final String sessionAttributePrefix = "wicket-" + request.getServletPath();
 
-		// The actual attribute for the session is "wicket-<servlet-path>-session"
+		// The actual attribute for the session is
+		// "wicket-<servlet-path>-session"
 		final String sessionAttribute = sessionAttributePrefix + "-" + Session.sessionAttributeName;
 
 		// Get Session abstraction from httpSession attribute
@@ -218,17 +235,16 @@ public abstract class WebApplication extends Application
 
 		// Set application on session
 		webSession.setApplication(this);
-		
+
 		// Set session attribute name and attach/reattach http servlet session
 		webSession.init(httpSession, sessionAttributePrefix);
 
 		return webSession;
 	}
-	
+
 	/**
-	 * Create a new WebRequest. Subclasses of WebRequest could e.g.
-	 * decode and obfuscated URL which has been encoded by an
-	 * appropriate WebResponse.
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
+	 * obfuscated URL which has been encoded by an appropriate WebResponse.
 	 * 
 	 * @param servletRequest
 	 * @return a WebRequest object
@@ -237,65 +253,66 @@ public abstract class WebApplication extends Application
 	{
 		return new WebRequest(servletRequest);
 	}
-	
+
 	/**
-	 * Create a WebResponse. Subclasses of WebRequest could e.g.
-	 * encode wicket's default URL and hide the details from the user.
-	 * A appropriate WebRequest must be implemented and configured to
-	 * decode the encoded URL.
+	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's
+	 * default URL and hide the details from the user. A appropriate WebRequest
+	 * must be implemented and configured to decode the encoded URL.
 	 * 
 	 * @param servletResponse
 	 * @return a WebResponse object
 	 * @throws IOException
 	 */
 	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-		throws IOException
+			throws IOException
 	{
 		return (getSettings().getBufferResponse()
-					? new BufferedWebResponse(servletResponse)
-			        : new WebResponse(servletResponse));
+				? new BufferedWebResponse(servletResponse)
+				: new WebResponse(servletResponse));
 	}
 
 	/**
 	 * Returns the redirect map where the buffered render pages are stored in.
+	 * 
 	 * @param request
-	 * @param requestUri 
+	 * @param requestUri
 	 * @return The Redirect map or null when there are no redirects.
 	 */
 	public BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
 	{
 		String sessionId = request.getSession(true).getId();
 		Map sessionMap = (Map)redirectMap.get(sessionId);
-		if(sessionMap != null)
+		if (sessionMap != null)
 		{
-			sessionMap.put("last-time-used", new Long(System.currentTimeMillis()));
+			sessionMap.put("last-time-used", Time.now());
 			return (BufferedResponse)sessionMap.remove(requestUri);
 		}
 		return null;
 	}
-	
+
 	/**
-	 * @param request 
-	 * @param requestUri 
+	 * @param request
+	 * @param requestUri
 	 * @param renderedResponse
 	 */
-	public void addRedirect(HttpServletRequest request, String requestUri, BufferedResponse renderedResponse)
+	public void addRedirect(HttpServletRequest request, String requestUri,
+			BufferedResponse renderedResponse)
 	{
 		String sessionId = request.getSession(true).getId();
 		Map sessionMap = (Map)redirectMap.get(sessionId);
-		if(sessionMap == null)
+		if (sessionMap == null)
 		{
-			long currentTime = System.currentTimeMillis();
 			sessionMap = new HashMap(4);
-			sessionMap.put("last-time-used", new Long(currentTime));
+			final Time now = Time.now();
+			sessionMap.put("last-time-used", now);
 			synchronized (redirectMap)
 			{
 				Iterator it = redirectMap.entrySet().iterator();
-				while(it.hasNext())
+				while (it.hasNext())
 				{
 					Map.Entry entry = (Entry)it.next();
-					Long time = (Long)((Map)entry.getValue()).get("last-time-used");
-					if( (currentTime - time.longValue()) > 5*60*1000) // 5 minutes
+					final Time lastTimeUsed = (Time)((Map)entry.getValue()).get("last-time-used");
+					if (now.subtract(lastTimeUsed).greaterThan(Duration.minutes(5)))
 					{
 						it.remove();
 					}
@@ -304,5 +321,23 @@ public abstract class WebApplication extends Application
 			}
 		}
 		sessionMap.put(requestUri, renderedResponse);
+	}
+	
+	
+	/**
+	 * @see wicket.Application#createApplicationSettings()
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this) 
+		{	
+			/**
+			 * @see wicket.ApplicationSettings#newResourceFinder()
+			 */
+			public IResourceFinder newResourceFinder()
+			{
+				return new WebApplicationPath(getWicketServlet().getServletContext());
+			}
+		};
 	}
 }

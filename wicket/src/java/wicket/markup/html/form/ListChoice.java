@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.util.Collection;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 
 /**
@@ -76,6 +77,14 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
+	 */
+	public ListChoice(final String id, final IChoiceList values)
+	{
+		super(id, values);
+	}
+
+	/**
 	 * @param id
 	 *			  See Component
 	 * @param model
@@ -96,11 +105,42 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param values
 	 *			  The collection of values in the list
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 */
+	public ListChoice(final String id, final IModel model, final IChoiceList values)
+	{
+		this(id, model, values, defaultMaxRows);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param values
+	 *			  The collection of values in the list
 	 * @param maxRows
 	 *			  Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
 	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
+	{
+		super(id, model, values);
+		this.maxRows = maxRows;
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param values
+	 *			  The collection of values in the list
+	 * @param maxRows
+	 *			  Maximum number of rows to show
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 */
+	public ListChoice(final String id, final IModel model, final IChoiceList values, final int maxRows)
 	{
 		super(id, model, values);
 		this.maxRows = maxRows;

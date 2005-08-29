@@ -97,7 +97,15 @@ public class Files
 	public static final void writeTo(final java.io.File file, final InputStream input)
 			throws IOException
 	{
-		Streams.copy(input, new FileOutputStream(file));
+		FileOutputStream fos = new FileOutputStream(file);
+		try
+		{
+			Streams.copy(input, fos);
+		}
+		finally
+		{
+			fos.close();
+		}
 	}
 
 	/**

@@ -145,7 +145,7 @@ public class WebResponse extends Response
 			{
 				if (httpServletResponse.isCommitted())
 				{
-					log.error("Unable to redirect. HTTP Response has already been committed.");
+					log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
 				}
 
 				if (log.isDebugEnabled())
