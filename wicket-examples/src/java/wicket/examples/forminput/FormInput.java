@@ -26,7 +26,6 @@ import java.util.Locale;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.ajax.dojo.ValidationEventRequestHandler;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
@@ -120,7 +119,6 @@ public class FormInput extends WicketExamplePage
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			add(stringTextField);
 			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
-			integerTextField.add(new ValidationEventRequestHandler("onchange"));
 			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
 			// we have a component attached to the label here, as we want to synchronize the
