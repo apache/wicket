@@ -7,73 +7,42 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
-    </release>
-    <release version="1.1-b4" date="tbd" description="Wicket 1.1 Beta 4">
+    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+    <release version="1.1-b4" date="2005-08-30" description="Wicket 1.1 Beta 4">
       <action type="add" dev="Johan Compagner" issue="1276126" due-to="Gwyn Evans">CheckBoxMultipleChoice code submission</action>
       <action type="fix" dev="Johan Compagner" issue="1275263" due-to="Martijn Dashorst">Strings.toMultilineMarkup doesn't generate valid xhtml</action>
       <action type="add" dev="Johan Compagner">ICompoundModel for compound models as an interface instead of a hard check for CompoundPropertyModel</action>
       <action type="add" dev="Johan Compagner">IComponentValueComparator for comparing current model data and new value</action>
-    	<action type="fix" dev="Eelco Hillenius">Renamed Ajax stuff:
-    	IEventRequestListener -> IAjaxListener,
-		IEventRequestHandler -> IAjaxHandler,
-		AbstractEventRequestHandler -> AbstractAjaxHandler,
-		DojoEventRequestHandler -> DojoAjaxHandler,
-		ValidationEventRequestHandler -> ValidationAjaxHandler.
-		Also renamed onEventRequest -> onRequest and rendered -> onComponentRendered.
-    	</action>
-    	<action type="fix" dev="Eelco Hillenius" issue="1267247" due-to="Oliver Schoenherr">ListView removeLink notified only ListItem over model changes. It now notifies the ListView instead.</action>
-    	<action type="update" dev="Eelco Hillenius">AJAX: removed Rico ajax support. Added script.aculo.us support. Fixed javascript registrations using the Wicket initializer.</action>
-    	<action type="fix" dev="Martijn Dashorst" issue="1267370" due-to="Stephen Bate">Incorrect 1.1-b3 examples documentation</action>
-    	<action type="update" dev="Eelco Hillenius">Factored out the commons-fileupload dependency. As for portlets we would need the development
-    	version of that lib, but the last release was in december 2004, I have no trust in how this library will be maintained. Also, the development
-    	version introduces a new dependency, commons-io, for just one concrete class. I lifted out the classes we use, put it in Wicket specific packages
-    	and cleaned up the deprecations.
-    	</action>
-    	<action type="update" dev="Eelco Hillenius" due-to="Ate Douma">
-    	Implemented the basic changes that are needed support other kind of webapplications, such as portlets. The main change in this is that
-    	WebRequest is now abstract, and that in a servlet environment ServletWebRequest is the concrete implementation. The changes are mostly internals;
-    	the only break (actually for clients that depended on internals anyway) is that instead of doing:
-    	        javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle.getRequest()).getHttpServletRequest(); to get the servlet http request,
-    	you should now do: javax.servlet.http.HttpServletRequest httpRequest = ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest();
-    	NOTE: As a consequence of this and other changes, it is now possible to have requests that do not live in a session, or that the session is
-    	created after the request. This should never get you in trouble actually, except when you do:
-    	Session.get().getApplication() in a constructor of a wicket.Request subclass. Replace this with Application.get() (which was a better idea anyway).
-    	</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1266090" due-to="Ralf Ebert">Exception when replacing non-existent components</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1259548" due-to="Seth Ladd">More explicit exceptions with WicketServlet</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1267120">fixed bug where response encoding was null</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1274320">wicket:link tag now gets removed as well if setStripWicketTag(true)</action>
-    	<action type="fix" dev="Juergen Donnerstag">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
- 	    <action type="add" dev="Johan Compagner" issue="1271523" due-to="Ralf Ebert">ByteArrayResource and DynamicByteArrayResource classes</action>
-	    <action type="update" dev="Johan Compagner" issue="1271510" due-to="Ralf Ebert">ResourceLink and Resources</action>
- 		<action type="update" dev="Johan Compagner" issue="1260087" due-to="Gili Tzabari">Document lifecycle of resources (idle/cache Timers on resources)</action>
-    	<action type="fix" dev="Eelco Hillenius" due-to="Jan Bares">You can now provide a label component to synchronize ids with the datepicker component</action>
-    	<action type="update" dev="Eelco Hillenius">improvements: newValue is now called if the replacement value is null, allowing to supply new values just by subclassing. ReplaceModel can now be null.</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1272174">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
-    	<action type="fix" dev="Juergen Donnerstag" issue="1272174">Child and Extend tags are no longer appearing in HTML when strip=true.</action>
-    	<action type="fix" dev="Eelco Hillenius" issue="1273827">Default date parsing is now in non-lenient mode, which means that it will fail fast.</action>
- 		<action type="fix" dev="Juergen Donnerstag">DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
- 		<action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
- 		<action type="fix" dev="Juergen Donnerstag" due-to="Gili Tzabari">Fixed autolink support for none-html files</action>
- 		<action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
- 		<action type="fix" dev="Johan Compagner" issue="1251385" due-to="Gili Tzabari">Consistent homepage URL with NO_REDIRECT</action>
-		<action type="fix" dev="Johan Compagner" issue="1265068" due-to="Gili Tzabari">
-		Links to resources won't append the current locale of the user anymore to there url. The locale binding is done on request and now with the proper fallback.
-		First the full locale is used. Then only the language and then no locale. If you set a different locale to a resource then the current locale then the locale is 
-		still appended to the url. So that one is forced to be used when the lookup occurs.
-		</action>
-	   <action type="update" dev="Johan Compagner" issue="1256084">
-	    Paging refactor, now the paging code is extraced from PageableListView and it is moved to there own package, wicket.markup.html.navigation.paging.
-	    It has 2 interfaces now: IPageable and IPagingLabelProvider.
-	    IPageable should be used by components that are pageable. They have to return the total pagecount and be able to set and get the current page what that they are displaying.
-	    The IPagingLabelProvider can be used to override the default link text of a page link. Default it is just the page number. But with a labelprovider you can set this 
-		 for example to  [1-10],[11-20],[21-24]. The PagingNavigator or the PagingNavigation both have constructors for a IPagingLabelProvider.
-      </action>
+      <action type="fix" dev="Eelco Hillenius">Renamed Ajax stuff: IEventRequestListener -&gt; IAjaxListener, IEventRequestHandler -&gt; IAjaxHandler, AbstractEventRequestHandler -&gt; AbstractAjaxHandler, DojoEventRequestHandler -&gt; DojoAjaxHandler, ValidationEventRequestHandler -&gt; ValidationAjaxHandler. Also renamed onEventRequest -&gt; onRequest and rendered -&gt; onComponentRendered.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1267247" due-to="Oliver Schoenherr">ListView removeLink notified only ListItem over model changes. It now notifies the ListView instead.</action>
+      <action type="update" dev="Eelco Hillenius">AJAX: removed Rico ajax support. Added script.aculo.us support. Fixed javascript registrations using the Wicket initializer.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1267370" due-to="Stephen Bate">Incorrect 1.1-b3 examples documentation</action>
+      <action type="update" dev="Eelco Hillenius">Factored out the commons-fileupload dependency. As for portlets we would need the development version of that lib, but the last release was in december 2004, I have no trust in how this library will be maintained. Also, the development version introduces a new dependency, commons-io, for just one concrete class. I lifted out the classes we use, put it in Wicket specific packages and cleaned up the deprecations.</action>
+      <action type="update" dev="Eelco Hillenius" due-to="Ate Douma">Implemented the basic changes that are needed support other kind of webapplications, such as portlets. The main change in this is that WebRequest is now abstract, and that in a servlet environment ServletWebRequest is the concrete implementation. The changes are mostly internals; the only break (actually for clients that depended on internals anyway) is that instead of doing: javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle.getRequest()).getHttpServletRequest(); to get the servlet http request, you should now do: javax.servlet.http.HttpServletRequest httpRequest = ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest(); NOTE: As a consequence of this and other changes, it is now possible to have requests that do not live in a session, or that the session is created after the request. This should never get you in trouble actually, except when you do: Session.get().getApplication() in a constructor of a wicket.Request subclass. Replace this with Application.get() (which was a better idea anyway).</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1266090" due-to="Ralf Ebert">Exception when replacing non-existent components</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1259548" due-to="Seth Ladd">More explicit exceptions with WicketServlet</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1267120">fixed bug where response encoding was null</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1274320">wicket:link tag now gets removed as well if setStripWicketTag(true)</action>
+      <action type="fix" dev="Juergen Donnerstag">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
+      <action type="add" dev="Johan Compagner" issue="1271523" due-to="Ralf Ebert">ByteArrayResource and DynamicByteArrayResource classes</action>
+      <action type="update" dev="Johan Compagner" issue="1271510" due-to="Ralf Ebert">ResourceLink and Resources</action>
+      <action type="update" dev="Johan Compagner" issue="1260087" due-to="Gili Tzabari">Document lifecycle of resources (idle/cache Timers on resources)</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Jan Bares">You can now provide a label component to synchronize ids with the datepicker component</action>
+      <action type="update" dev="Eelco Hillenius">improvements: newValue is now called if the replacement value is null, allowing to supply new values just by subclassing. ReplaceModel can now be null.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1272174">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1272174">Child and Extend tags are no longer appearing in HTML when strip=true.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1273827">Default date parsing is now in non-lenient mode, which means that it will fail fast.</action>
+      <action type="fix" dev="Juergen Donnerstag">DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
+      <action type="fix" dev="Juergen Donnerstag" due-to="Gili Tzabari">Fixed autolink support for none-html files</action>
+      <action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
+      <action type="fix" dev="Johan Compagner" issue="1251385" due-to="Gili Tzabari">Consistent homepage URL with NO_REDIRECT</action>
+      <action type="fix" dev="Johan Compagner" issue="1265068" due-to="Gili Tzabari">Links to resources won't append the current locale of the user anymore to there url. The locale binding is done on request and now with the proper fallback. First the full locale is used. Then only the language and then no locale. If you set a different locale to a resource then the current locale then the locale is still appended to the url. So that one is forced to be used when the lookup occurs.</action>
+      <action type="update" dev="Johan Compagner" issue="1256084">Paging refactor, now the paging code is extraced from PageableListView and it is moved to there own package, wicket.markup.html.navigation.paging. It has 2 interfaces now: IPageable and IPagingLabelProvider. IPageable should be used by components that are pageable. They have to return the total pagecount and be able to set and get the current page what that they are displaying. The IPagingLabelProvider can be used to override the default link text of a page link. Default it is just the page number. But with a labelprovider you can set this for example to [1-10],[11-20],[21-24]. The PagingNavigator or the PagingNavigation both have constructors for a IPagingLabelProvider.</action>
       <action type="fix" dev="Johan Compagner" issue="1254857" due-to="Jan Bares">UrlResourceStream.length() of changed resources</action>
- 	   <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
-      <action type="fix" dev="Johan Compagner" issue="1251853">Lot's of serialization fixes, also refactored Static->PackageResoures</action>
-      <action type="fix" dev="Johan Compagner" issue="1251710" due-to="Jan Bares" >Conent type of static resources is content/unknown</action>
+      <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
+      <action type="fix" dev="Johan Compagner" issue="1251853">Lot's of serialization fixes, also refactored Static-&gt;PackageResoures</action>
+      <action type="fix" dev="Johan Compagner" issue="1251710" due-to="Jan Bares">Conent type of static resources is content/unknown</action>
     </release>
     <release version="1.1-b3" date="2005-08-22" description="1.1 Beta 3">
       <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
