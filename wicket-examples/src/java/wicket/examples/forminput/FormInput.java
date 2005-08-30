@@ -132,13 +132,7 @@ public class FormInput extends WicketExamplePage
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
 			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
-			add(new RadioChoice("numberRadioChoice", NUMBERS)
-			{
-				protected String getSuffix()
-				{
-					return "";
-				}
-			});
+			add(new RadioChoice("numberRadioChoice", NUMBERS).setSuffix(""));
 			add(new ListMultipleChoice("siteSelection", SITES));
 
 			// as an example, we use a custom converter here.
