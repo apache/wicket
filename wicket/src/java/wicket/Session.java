@@ -46,7 +46,7 @@ import wicket.util.string.Strings;
  * does not itself have a reference to the session that contains it. However,
  * the Page component at the root of the containment hierarchy does have a
  * reference to the Session that holds the Page. So
- * {@link Component#getSession()}traverses the component hierarchy to the root
+ * {@link Component#getSession()} traverses the component hierarchy to the root
  * Page and then calls {@link Page#getSession()}.
  * 
  * <li><b>Access via Thread Local </b>- In the odd case where neither a
@@ -84,7 +84,7 @@ import wicket.util.string.Strings;
  * <li><b>Session Properties </b>- Arbitrary objects can be attached to a
  * Session by installing a session factory on your Application class which
  * creates custom Session subclasses that have typesafe properties specific to
- * the application (see {@link Application}for details). To discourage
+ * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
  * method is provided.
  * 

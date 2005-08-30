@@ -57,7 +57,7 @@ import wicket.version.undo.Change;
  * <li><b>Hierarchy </b>- A component has a parent which can be retrieved with
  * getParent(). If a component is an instance of MarkupContainer, it may have
  * children. In this way it has a place in the hierarchy of components contained
- * on a given page. The {@link Component#isAncestorOf(Component)}method returns
+ * on a given page. The {@link Component#isAncestorOf(Component)} method returns
  * true if this Component is an ancestor of the given Component.
  * 
  * <li><b>Component Paths </b>- The path from the Page at the root of the
@@ -80,16 +80,16 @@ import wicket.version.undo.Change;
  * 
  * <li><b>Cluster Attachment </b>- When a Component is freshly replicated in a
  * clustered environment, it may need to initialize transient state. This is
- * possible by overriding the {@link Component#onSessionAttach()}method.
+ * possible by overriding the {@link Component#onSessionAttach()} method.
  * 
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol
  * request handler such as WicketServlet. An associated Application object
  * creates Session, Request and Response objects for use by a given Component in
  * updating its model and rendering a response. These objects are stored inside
- * a container called {@link RequestCycle}which is accessible via
+ * a container called {@link RequestCycle} which is accessible via
  * {@link Component#getRequestCycle()}. The convenience methods
- * {@link Component#getRequest()},{@link Component#getResponse()}and
- * {@link Component#getSession()}provide easy access to the contents of this
+ * {@link Component#getRequest()}, {@link Component#getResponse()} and
+ * {@link Component#getSession()} provide easy access to the contents of this
  * container.
  * 
  * <li><b>Listener Invocation </b>- If the request references a listener on an
@@ -100,7 +100,7 @@ import wicket.version.undo.Change;
  * listener interface directly is highly discouraged. Instead, calls to
  * listeners are routed through logic specific to the event, resulting in calls
  * to user code through other overridable methods. For example, the
- * {@link wicket.markup.html.form.IFormSubmitListener#onFormSubmitted()}method
+ * {@link wicket.markup.html.form.IFormSubmitListener#onFormSubmitted()} method
  * implemented by the Form class is really a private implementation detail of
  * the Form class that is not designed to be overridden (although unfortunately,
  * it must be public since all interface methods in Java must be public).
@@ -108,7 +108,7 @@ import wicket.version.undo.Change;
  * onValidate(), onSubmit() and onError() (although only the latter two are
  * likely to be overridden in practice).
  * 
- * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()}method is
+ * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()} method is
  * called.
  * 
  * <li><b>Form Submit </b>- If a Form has been submitted and the Component is a
@@ -125,18 +125,18 @@ import wicket.version.undo.Change;
  * Component becomes immutable. Attempts to alter the Component will result in a
  * WicketRuntimeException.
  * 
- * <li><b>onEndRequest </b>() - The {@link Component#onEndRequest()}method is
+ * <li><b>onEndRequest </b>() - The {@link Component#onEndRequest()} method is
  * called.
  * </ul>
  * 
  * <li><b>Component Models </b>- The primary responsibility of a component is
  * to use its model (an object that implements IModel), which can be set via
- * {@link Component#setModel(IModel model)}and retrieved via
+ * {@link Component#setModel(IModel model)} and retrieved via
  * {@link Component#getModel()}, to render a response in an appropriate markup
  * language, such as HTML. In addition, form components know how to update their
  * models based on request information. Since the IModel interface is a wrapper
  * around an actual model object, a convenience method
- * {@link Component#getModelObject()}is provided to retrieve the model Object
+ * {@link Component#getModelObject()} is provided to retrieve the model Object
  * from its IModel wrapper. A further convenience method,
  * {@link Component#getModelObjectAsString()}, is provided for the very common
  * operation of converting the wrapped model Object to a String.
@@ -148,7 +148,7 @@ import wicket.version.undo.Change;
  * <li><b>Page </b>- The Page containing any given Component can be retrieved
  * by calling {@link Component#getPage()}. If the Component is not attached to
  * a Page, an IllegalStateException will be thrown. An equivalent method,
- * {@link Component#findPage()}is available for special circumstances where it
+ * {@link Component#findPage()} is available for special circumstances where it
  * might be desirable to get a null reference back instead.
  * 
  * <li><b>Session </b>- The Page for a Component points back to the Session
@@ -162,8 +162,8 @@ import wicket.version.undo.Change;
  * <li><b>String Resources </b>- Components can have associated String
  * resources via the Application's Localizer, which is available through the
  * method {@link Component#getLocalizer()}. The convenience methods
- * {@link Component#getString(String key)}and
- * {@link Component#getString(String key, IModel model)}wrap the identical
+ * {@link Component#getString(String key)} and
+ * {@link Component#getString(String key, IModel model)} wrap the identical
  * methods on the Application Localizer for easy access in Components.
  * 
  * <li><b>Style </b>- The style ("skin") for a component is available through
@@ -187,20 +187,20 @@ import wicket.version.undo.Change;
  * getApplicationPages is equivalent to getApplication().getPages().
  * 
  * <li><b>Feedback Messages </b>- The {@link Component#debug(String)},
- * {@link Component#info(String)},{@link Component#warn(String)},
- * {@link Component#error(String)}and {@link Component#fatal(String)}methods
+ * {@link Component#info(String)}, {@link Component#warn(String)},
+ * {@link Component#error(String)} and {@link Component#fatal(String)} methods
  * associate feedback messages with a Component. It is generally not necessary
  * to use these methods directly since Wicket validators automatically register
  * feedback messages on Components. Any feedback message for a given Component
  * can be retrieved with {@link Component#getFeedbackMessage}.
  * 
  * <li><b>Page Factory </b>- It is possible to change the way that Pages are
- * constructed by overriding the {@link Component#getPageFactory()}method,
+ * constructed by overriding the {@link Component#getPageFactory()} method,
  * returning your own implementation of {@link wicket.IPageFactory}.
  * 
  * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but
  * fine-grained control of which Components should participate in versioning is
- * possible via the {@link Component#setVersioned(boolean)}method. The
+ * possible via the {@link Component#setVersioned(boolean)} method. The
  * versioning participation of a given Component can be retrieved with
  * {@link Component#isVersioned()}.
  * 
