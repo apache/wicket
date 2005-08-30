@@ -115,7 +115,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * used to allow a user to authenticate themselves if they were denied access.
  * 
  * <li><b>Clustering </b>- The newPageState() method provides a convenient way
- * for a Page to create a {@link PageState}record that reconstitutes the Page
+ * for a Page to create a {@link PageState} record that reconstitutes the Page
  * when replicated in a cluster.
  * 
  * @see wicket.markup.html.WebPage
