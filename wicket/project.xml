@@ -108,16 +108,22 @@
   </versions>
   <mailingLists>
     <mailingList>
-      <name>${pom.name} Dev List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+      <name>${pom.name} Announcements List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-announce</archive>
     </mailingList>
     <mailingList>
       <name>${pom.name} User List</name>
       <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
       <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} Development List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
     </mailingList>
     <mailingList>
       <name>${pom.name} CVS commit List</name>
