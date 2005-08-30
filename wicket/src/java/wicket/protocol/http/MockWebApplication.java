@@ -24,7 +24,9 @@ import javax.servlet.ServletException;
 
 import wicket.Application;
 import wicket.ApplicationSettings;
+import wicket.DefaultPageFactory;
 import wicket.Page;
+import wicket.Session;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -230,7 +232,7 @@ public class MockWebApplication extends WebApplication
         
         if (httpResponse.isRedirect())
         {
-            lastRenderedPage = cycle.getResponsePage();
+            generateLastRenderedPage(cycle);
             
             final MockHttpServletRequest httpRequest = 
                 	(MockHttpServletRequest)((ServletWebRequest)cycle.getWebRequest()).getHttpServletRequest();
@@ -242,8 +244,22 @@ public class MockWebApplication extends WebApplication
             new WebRequestCycle(wicketSession, wicketRequest,
                     wicketResponse).request();
         }
-        lastRenderedPage = cycle.getResponsePage();
+        generateLastRenderedPage(cycle);
     }
+
+	private void generateLastRenderedPage(WebRequestCycle cycle)
+	{
+		lastRenderedPage = cycle.getResponsePage();
+		if(lastRenderedPage == null)
+		{
+			Class responseClass = cycle.getResponsePageClass();
+			if(responseClass != null)
+			{
+				Session.set(cycle.getSession());
+				lastRenderedPage = new DefaultPageFactory().newPage(responseClass, cycle.getResponsePagePageParameters());
+			}
+		}
+	}
 
     /**
      * Create and process the request cycle using the current request and
