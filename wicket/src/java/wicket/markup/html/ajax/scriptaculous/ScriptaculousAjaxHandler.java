@@ -62,6 +62,7 @@ public abstract class ScriptaculousAjaxHandler
 		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "dragdrop.js");
 		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "effects.js");
 		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "scriptaculous.js");
+		PackageResource.bind(application, ScriptaculousAjaxHandler.class, "util.js");
 	}
 
 	/**
@@ -82,5 +83,7 @@ public abstract class ScriptaculousAjaxHandler
 				ScriptaculousAjaxHandler.class, "effects.js"));
 		addJsReference(container, new PackageResourceReference(application,
 				ScriptaculousAjaxHandler.class, "scriptaculous.js"));
+		addJsReference(container, new PackageResourceReference(application,
+				ScriptaculousAjaxHandler.class, "util.js"));
 	}
 }
