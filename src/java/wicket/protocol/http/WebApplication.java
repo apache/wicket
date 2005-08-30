@@ -336,8 +336,13 @@ public abstract class WebApplication extends Application
 		sessionMap.put(requestUri, renderedResponse);
 	}
 	
-	
 	/**
+	 * Subclasses could override this to give there own implementation of
+	 * ApplicationSettings.
+	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
+	 * 
+	 * @return An instanceof an ApplicaitonSettings class
+	 *
 	 * @see wicket.Application#createApplicationSettings()
 	 */
 	public ApplicationSettings createApplicationSettings()
