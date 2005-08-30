@@ -19,10 +19,12 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
+import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * A choice subclass that shows choices in radio style.
@@ -52,6 +54,46 @@ import wicket.util.string.Strings;
  */
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
+	private class SuffixChange extends Change
+	{
+		final String prevSuffix;
+		
+		SuffixChange(String prevSuffix)
+		{
+			this.prevSuffix = prevSuffix;
+		}
+		
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setSuffix(prevSuffix);
+		}
+	}
+
+	private class PrefixChange extends Change
+	{
+		final String prevPrefix;
+		
+		PrefixChange(String prevSuffix)
+		{
+			this.prevPrefix = prevSuffix;
+		}
+		
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setPrefix(prevPrefix);
+		}
+	}
+	
+	
+	private String prefix = "";
+	private String suffix = "<br />\n";
+	
 	/**
 	 * Constructor
 	 * 
@@ -244,17 +286,51 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @return Prefix to use before choice
 	 */
-	protected String getPrefix()
+	public final String getPrefix()
 	{
-		return "";
+		return prefix;
+	}
+	
+	/**
+	 * @param prefix Prefix to use before choice
+	 * @return this
+	 */
+	public final RadioChoice setPrefix(String prefix)
+	{
+		// Tell the page that this component's prefix was changed
+		final Page page = findPage();
+		if (page != null)
+		{
+			addStateChange(new PrefixChange(this.prefix));
+		}
+		
+		this.prefix = prefix;
+		return this;
 	}
 
 	/**
 	 * @return Separator to use between radio options
 	 */
-	protected String getSuffix()
+	public  final String getSuffix()
 	{
-		return "<br/>\n";
+		return suffix;
+	}
+
+	/**
+	 * @param suffix Separator to use between radio options
+	 * @return this
+	 */
+	public  final RadioChoice setSuffix(String suffix)
+	{
+		// Tell the page that this component's suffix was changed
+		final Page page = findPage();
+		if (page != null)
+		{
+			addStateChange(new SuffixChange(this.suffix));
+		}
+		
+		this.suffix = suffix;
+		return this;
 	}
 
 	/**
