@@ -60,9 +60,27 @@ import wicket.model.Model;
  * 	}
  * });
  * </pre>
+ * <p>
+ * WARNING: though you can nest ListViews within Forms, you HAVE to set the
+ * optimizeItemRemoval property to true in order to have validation work properly.
+ * By default, optimizeItemRemoval is false, which has the effect that
+ * ListView replaces all child components by new instances. The idea
+ * behind this, is that you allways render the fresh data, and as people
+ * usually use ListViews for displaying read-only lists (at least, that's
+ * what we think), this is good default behaviour.
+ * <br />
+ * However, as the components are replaced before the rendering starts, the
+ * search for specific messages for these components fail as they are replace
+ * with other instances. Another problem is that 'wrong' user input is kept
+ * as (temporary) instance data of the components. And as these components
+ * are replaced by new ones, your user will never see the wrong data when
+ * optimizeItemRemoval is false.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public abstract class ListView extends WebMarkupContainer
 {
@@ -77,6 +95,8 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
 	 */
 	private boolean optimizeItemRemoval = false;
 
@@ -143,6 +163,8 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
 	 * 
 	 * @return Returns the optimizeItemRemoval.
 	 */
@@ -319,7 +341,13 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see #getOptimizeItemRemoval()
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
+	 *
 	 * @param optimizeItemRemoval
 	 *            The optimizeItemRemoval to set.
 	 */
