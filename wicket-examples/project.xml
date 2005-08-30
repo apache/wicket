@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.1-b3</currentVersion>
+  <currentVersion>1.1-b4</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -18,9 +18,9 @@
   <siteAddress>shell.sourceforge.net</siteAddress>
   <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
   <repository>
-    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
-    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket-examples</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket-examples</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples</url>
   </repository>
   <versions>
     <version>
@@ -132,7 +132,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1-b3</version>
+      <version>1.1-b4</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.1-b3</version>
+      <version>1.1-b4</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -209,17 +209,6 @@
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/fileupload/</url>
-      <properties>
-        <wicket.group>optional</wicket.group>
-        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
