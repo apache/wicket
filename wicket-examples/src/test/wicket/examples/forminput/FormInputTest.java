@@ -50,9 +50,8 @@ public class FormInputTest extends WebTestCase
      * Test page.
      */
     public void testHome() {
-        // TODO currently disabled because of javascript errors while executing the test
-//        beginAt("/forminput");
-//        assertTitleEquals("Wicket Examples - forminput");
+        beginAt("/forminput");
+        assertTitleEquals("Wicket Examples - forminput");
     }
 
 	/**
