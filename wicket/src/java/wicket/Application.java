@@ -370,7 +370,8 @@ public abstract class Application
 
 	/**
 	 * Subclasses could override this to give there own implementation of
-	 * ApplicaitonSettings
+	 * ApplicationSettings.
+	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
 	 * 
 	 * @return An instanceof an ApplicaitonSettings class.
 	 */
