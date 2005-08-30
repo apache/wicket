@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 /**
  * Renders one choice. Seperates the 'id' values used for internal representation from
- * 'display values' which are the values show to the user of components that use this renderer.
+ * 'display values' which are the values shown to the user of components that use this renderer.
  *
  * @author jcompagner
  */
@@ -39,7 +39,7 @@ public interface IChoiceRenderer extends Serializable
 	
 	/**
 	 * This method is called to get the id value of an object (used as the value attribute of a choice element)
-	 * The id can be extracted from the object like a primairy key, or if the list is stable you could just return 
+	 * The id can be extracted from the object like a primary key, or if the list is stable you could just return
 	 * a toString of the index.
 	 * 
 	 * @param object The object for which the id should be generated
