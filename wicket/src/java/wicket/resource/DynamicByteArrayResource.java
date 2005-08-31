@@ -26,26 +26,20 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/** The maximum duration a resource can be idle before its cache is flushed */
 	private Duration cacheTimeout = Duration.NONE;
 
-	/** The content type of this byte array */
-	private String contentType;
-	
 	private Locale locale;
 	
 	/**
-	 * @param contentType
+	 * defaut constructor
 	 */
-	public DynamicByteArrayResource(String contentType)
+	public DynamicByteArrayResource()
 	{
-		this.contentType = contentType;
 	}
 
 	/**
-	 * @param contentType The Content type of this resource.
 	 * @param locale  The Locale for which this resource is meant for.
 	 */
-	public DynamicByteArrayResource(String contentType, Locale locale)
+	public DynamicByteArrayResource(Locale locale)
 	{
-		this.contentType = contentType;
 		this.locale = locale;
 	}
 	
@@ -80,7 +74,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public String getContentType()
 			{
-				return contentType;
+				return DynamicByteArrayResource.this.getContentType();
 			}
 
 			/**
@@ -148,20 +142,8 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/**
 	 * @return The content type of the byte array
 	 */
-	public final String getContentType()
-	{
-		return this.contentType;
-	}
+	public abstract String getContentType();
 
-	/**
-	 * @param contentType The content type of the byte array
-	 */
-	public final void setContentType(String contentType)
-	{
-		this.contentType = contentType;
-	}
-	
-	
 	/**
 	 * Set the maximum duration the resource can be idle before its cache is flushed.
 	 * The cache might get flushed sooner if the JVM is low on memory.

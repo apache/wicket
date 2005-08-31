@@ -65,7 +65,7 @@ public abstract class DynamicImageResource extends DynamicByteArrayResource
 	 */
 	public DynamicImageResource()
 	{
-		super("image/png");
+		super();
 	}
 
 	
@@ -87,7 +87,6 @@ public abstract class DynamicImageResource extends DynamicByteArrayResource
 	public void setFormat(String format)
 	{
 		this.format = format;
-		setContentType("image/" + format);
 	}
 	
 	/**
@@ -98,6 +97,13 @@ public abstract class DynamicImageResource extends DynamicByteArrayResource
 		return getImageData();
 	}
 	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#getContentType()
+	 */
+	public String getContentType()
+	{
+		return "image/" + format;
+	}
 
 	/**
 	 * Get image data for our dynamic image resource. If the subclass
