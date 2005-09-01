@@ -74,6 +74,10 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public String getContentType()
 			{
+				if(data == null)
+				{
+					data = getData();
+				}
 				return DynamicByteArrayResource.this.getContentType();
 			}
 
@@ -98,6 +102,10 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public Time lastModifiedTime()
 			{
+				if(data == null)
+				{
+					data = getData();
+				}
 				return DynamicByteArrayResource.this.lastModifiedTime();
 			}
 
