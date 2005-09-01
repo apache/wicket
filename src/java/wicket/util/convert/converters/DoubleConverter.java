@@ -40,7 +40,7 @@ public final class DoubleConverter extends AbstractDecimalConverter
 	public Object convert(final Object value, Locale locale)
 	{
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Double.MAX_VALUE*-1, Double.MAX_VALUE,locale);
+                -Double.MAX_VALUE, Double.MAX_VALUE,locale);
         //Double.MIN is the smallest nonzero positive number, not the largest negative number
 
         if (number == null)
