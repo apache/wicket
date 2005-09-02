@@ -160,7 +160,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets the name of the tag, for example the tag <b>'s name would be 'b'.
+	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s name would be 'b'.
 	 * 
 	 * @return The tag's name
 	 */
