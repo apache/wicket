@@ -275,7 +275,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private static final class AutolinkExternalLink extends ExternalLink
+	private final class AutolinkExternalLink extends ExternalLink
 			implements
 				IComponentResolver
 	{
