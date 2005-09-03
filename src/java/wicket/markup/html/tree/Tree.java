@@ -392,7 +392,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		};
 		WebMarkupContainer css = new WebMarkupContainer("css");
 		css.add(new AttributeModifier("href", true, hrefReplacement));
-		addToHeader(css);
+		add(css);
 	}
 
 	/**

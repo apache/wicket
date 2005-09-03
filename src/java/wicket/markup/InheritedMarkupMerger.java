@@ -39,10 +39,11 @@ public class InheritedMarkupMerger
 	}
 
 	/**
-	 * Merge inherited and base markup. <p/>Note: There is no new Markup object
-	 * created. Instead the list of markup elements contained in the inherited
-	 * markup gets replaced. Thus, the 'markup' parameter and the return value
-	 * are the same and the content of parameter 'markup' gets modified.
+	 * Merge inherited and base markup. <p/>
+	 * Note: There is no new Markup object created. Instead the list of markup 
+	 * elements contained in the inherited markup gets replaced. Thus, the 
+	 * 'markup' parameter and the return value are the same and the content 
+	 * of parameter 'markup' gets modified.
 	 * 
 	 * @param markup
 	 *            The inherited markup
@@ -129,7 +130,7 @@ public class InheritedMarkupMerger
 			}
 
 			// If element in base markup is </head>, scan the derived
-			// markup for <head> and add all elements of that tag body
+			// markup for <wicket:head> and add all elements of that tag body
 			// the new markup list. 
 			if ((headProcessed == false) && (element instanceof ComponentTag))
 			{
@@ -138,17 +139,17 @@ public class InheritedMarkupMerger
 			    if (tag.isClose() && "head".equalsIgnoreCase(tag.getName()) 
 			            && (tag.getNamespace() == null))
 			    {
-			        // Before close the tag, add the <head> body from the 
+			        // Before close the tag, add the <wicket:head> body from the 
 			        // derived markup
 			        boolean copy = false;
 			        for (int i=0; i < extendIndex; i++)
 			        {
 			            MarkupElement elem = (MarkupElement) markup.get(i);
-			            if (elem instanceof ComponentTag)
+			            if (elem instanceof WicketTag)
 			            {
-			                ComponentTag etag = (ComponentTag) elem;
+			                WicketTag etag = (WicketTag) elem;
 						    if ("head".equalsIgnoreCase(etag.getName()) 
-						            && (etag.getNamespace() == null))
+						            && (etag.getNamespace() != null))
 						    {
 						        if (etag.isOpen())
 						        {
@@ -164,8 +165,8 @@ public class InheritedMarkupMerger
 						        continue;
 						    }
 			            }
-			            
-					    if (copy == true)
+					    
+			            if (copy == true)
 					    {
 					        markupElements.add(elem);
 					    }

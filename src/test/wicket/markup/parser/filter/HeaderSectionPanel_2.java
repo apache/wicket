@@ -36,6 +36,6 @@ public class HeaderSectionPanel_2 extends Panel
 	public HeaderSectionPanel_2(final String id) 
 	{
 	    super(id);
-	    addToHeader(new ExternalLink("cssHref", "myStyle.css"));
+	    add(new ExternalLink("cssHref", "myStyle.css"));
     }
 }
