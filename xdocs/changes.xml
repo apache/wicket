@@ -8,6 +8,11 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+	  <action type="fix" dev="Juergen Donnerstag">&lt;wicket:head&gt; behaviour slighty changed to be more intuitiv.</action>
+	  <action type="fix" dev="Juergen Donnerstag">addToHeader() is nor longer required. Just use add() to add components which are inside a head section</action>
+	  <action type="fix" dev="Juergen Donnerstag" issue="1276640" due-to="Simon Berriman">xmlns:wicket="http:/..." is now removed from markup as well if setStripWicketTag(true)</action>
+	  <action type="fix" dev="Juergen Donnerstag" issue="1243152" due-to="Eelco Hillenius">&lt;select .../&gt; is now allowed and will automatically be converted into a open-body-close tag</action>
+	  <action type="fix" dev="Juergen Donnerstag" issue="1275726" due-to="Ingram Chen">Fixed wrong implementation off getParameters() in WebRequestWithCryptedUrl</action>
 	  <action type="fix" dev="Gwyn Evans" issue="1280468" due-to="Simon Berriman">Unescaped &lt;b&gt; tag in XmlTag Javadoc</action>
     <release version="1.1-b4" date="2005-08-30" description="Wicket 1.1 Beta 4">
       <action type="add" dev="Johan Compagner" issue="1276126" due-to="Gwyn Evans">CheckBoxMultipleChoice code submission</action>
