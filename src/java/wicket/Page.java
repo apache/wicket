@@ -832,7 +832,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
-		if (getSession().getApplication().getSettings().getComponentUseCheck())
+		if (Application.get().getSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
@@ -914,7 +914,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		final ApplicationSettings settings = Application.get().getSettings();
 		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
