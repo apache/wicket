@@ -14,6 +14,7 @@
 	  <action type="fix" dev="Juergen Donnerstag" issue="1243152" due-to="Eelco Hillenius">&lt;select .../&gt; is now allowed and will automatically be converted into a open-body-close tag</action>
 	  <action type="fix" dev="Juergen Donnerstag" issue="1275726" due-to="Ingram Chen">Fixed wrong implementation off getParameters() in WebRequestWithCryptedUrl</action>
 	  <action type="fix" dev="Gwyn Evans" issue="1280468" due-to="Simon Berriman">Unescaped &lt;b&gt; tag in XmlTag Javadoc</action>
+    </release>
     <release version="1.1-b4" date="2005-08-30" description="Wicket 1.1 Beta 4">
       <action type="add" dev="Johan Compagner" issue="1276126" due-to="Gwyn Evans">CheckBoxMultipleChoice code submission</action>
       <action type="fix" dev="Johan Compagner" issue="1275263" due-to="Martijn Dashorst">Strings.toMultilineMarkup doesn't generate valid xhtml</action>
