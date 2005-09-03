@@ -194,7 +194,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 */
 	public String[] getParameters(final String key)
 	{
-		return (String[])parameters.keySet().toArray();
+		return (String[])this.parameters.get(key);
 	}
 
 	/**
