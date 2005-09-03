@@ -1111,15 +1111,6 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 		else
 		{
-			// Get request cycle to render to
-			final RequestCycle cycle = getRequestCycle();
-	
-			// Save original Response
-			final Response originalResponse;
-	
-			// No response to restore
-			originalResponse = null;
-
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
@@ -1773,6 +1764,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * <p>
 	 * Renders the component at the current position in the given markup stream.
 	 * The method onComponentTag() is called to allow the component to mutate
 	 * the start tag. The method onComponentTagBody() is then called to permit
@@ -1781,7 +1774,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	protected final void renderComponent(final MarkupStream markupStream)
+	public final void renderComponent(final MarkupStream markupStream)
 	{
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();

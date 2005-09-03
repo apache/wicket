@@ -17,16 +17,12 @@
  */
 package wicket.markup.html;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import wicket.Component;
+import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.ajax.IAjaxHandler;
@@ -42,8 +38,6 @@ import wicket.util.lang.Classes;
  */
 public class WebMarkupContainer extends MarkupContainer implements IHeaderContributor
 {
-	private List headerComponents;
-
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -233,33 +227,14 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 					final String headerId = "_" + Classes.name(this.getClass())+ this.getVariation() + "Header";
 					
 					// Create the header container and associate the markup with it
-					WebMarkupContainer headerContainer = new WebMarkupContainer(headerId);
+					WebMarkupContainer headerContainer = new TransparentWebMarkupContainer(headerId, this);
 					headerContainer.setMarkupStream(associatedMarkupStream);
 					headerContainer.setRenderBodyOnly(true);
-					
-					// In case components are part of the region, the user must 
-					// have provided the component objects by means of addToHeader().
-					// All the component provided by the user, must now be added
-					// to the newly created header container.
-					if (this.headerComponents != null)
-					{
-						for (Iterator iter = headerComponents.iterator(); iter.hasNext();)
-						{
-					        headerContainer.add((Component)iter.next());
-						}
-					}
 					
 					// The container does have a header component
 					return headerContainer;
 				}
 			}
-		}
-
-		if (this.headerComponents != null)
-		{
-			throw new MarkupException(
-					"You have added header components but did not specify a <wicket:head> region in your Page markup: "
-							+ this.toString());
 		}
 		
 		// Though the container does have markup, it does not have a 
@@ -268,19 +243,65 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 
 	/**
-	 * Components which are part of a wicket header region, must be added by
-	 * means of addToHeader() instead of add().
-	 * 
-	 * @param child
-	 *            The component to be added to the header region.
+	 * Autolink component delegate component resolution to their parent
+	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
+	 * know where to add the component to.
 	 */
-	public final void addToHeader(final Component child)
+	private final class TransparentWebMarkupContainer extends WebMarkupContainer
+		implements
+			IComponentResolver
 	{
-		if (this.headerComponents == null)
+		private final MarkupContainer container;
+		
+		/**
+		 * @param id
+		 * @param container
+		 */
+		public TransparentWebMarkupContainer(final String id, final MarkupContainer container)
 		{
-			this.headerComponents = new ArrayList();
+			super(id);
+			this.container = container;
 		}
 
-		this.headerComponents.add(child);
+		/**
+		 * Because the autolink component is not able to resolve any inner
+		 * component, it'll passed it down to its parent.
+		 * 
+		 * @param container
+		 *            The container parsing its markup
+		 * @param markupStream
+		 *            The current markupStream
+		 * @param tag
+		 *            The current component tag while parsing the markup
+		 * @return True if componentId was handled by the resolver, false
+		 *         otherwise.
+		 */
+		public final boolean resolve(final MarkupContainer container,
+				final MarkupStream markupStream, final ComponentTag tag)
+		{
+			Component component = this.container.get(tag.getId());
+			if (component != null)
+			{
+				component.renderComponent(markupStream);
+				component.rendered();
+				return true;
+			}
+			
+			// Delegate the request to the parent component
+			final MarkupContainer parent = getParent();
+			component = parent.get(tag.getId());
+			if (component != null)
+			{
+				component.render();
+				return true;
+			}
+
+			if (parent instanceof IComponentResolver)
+			{
+				return ((IComponentResolver)parent).resolve(container, markupStream, tag);
+			}
+			
+			return false;
+		}
 	}
 }

@@ -44,6 +44,8 @@ import wicket.markup.html.form.Form;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 import wicket.util.string.Strings;
 
 /**
@@ -132,7 +134,6 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-
 		if (callDispatchedComponentListener())
 		{
 			// if it is, we don't need to update the cluster, etc, and return false
@@ -143,11 +144,24 @@ public class WebRequestCycle extends RequestCycle
 			// Returning a page
 			return true;
 		}
-		else
+		// If it's not a resource reference or static content
+		else if (resourceReference() || staticContent())
+	    {
+			// if it is, we don't need to update the cluster, etc, and return false
+	    }
+		else 
 		{
-			// If it's not a resource reference or static content
-			if (!resourceReference() && !staticContent())
-			{
+		    int rtn = doParseRequest();
+		    if (rtn == 1)
+		    {
+		        return true;
+		    }
+		    else if (rtn == 2)
+		    {
+				// if it is, we don't need to update the cluster, etc, and return false
+		    }
+		    else
+		    {
 				// not found... send 404 to client indicating that no resource was found
 				// for the request uri
 				WebResponse webResponse = (WebResponse)getResponse();
@@ -161,7 +175,7 @@ public class WebRequestCycle extends RequestCycle
 					// that seems unlikely... anyway, log exception and forget about it
 					log.error("unable to send 404 for " + getRequest() + ", cause: " + e.getMessage(), e);
 				}
-			}
+		    }
 		}
 
 		// Don't update the cluster, not returning a page
@@ -170,6 +184,43 @@ public class WebRequestCycle extends RequestCycle
 		return false;
 	}
 
+	/**
+	 * Subclasses may implement there own strategies to return static content.
+	 * The default implementation only returns css and js files matching the url 
+	 * path and found by the class loader.
+	 * 
+	 * @return 1 - returning a page; 2 - static content (no Page); else - not found
+	 */
+	protected int doParseRequest()
+	{
+		final String path = Strings.beforeLast(request.getPath(), '.').substring(1);
+		final String extension = '.' + Strings.afterLast(request.getPath(), '.');
+		if (".css".equalsIgnoreCase(extension) || ".js".equalsIgnoreCase(extension))
+		{
+		    final IResourceStream stream = new ClassLoaderResourceStreamLocator().locate(
+		            getClass().getClassLoader(), path, session.getStyle(), session.getLocale(), 
+		            extension);
+		    
+			if (stream != null)
+			{
+				final Resource resource = new Resource()
+				{
+					public IResourceStream getResourceStream()
+					{
+						return stream;
+					}
+				};
+				resource.onResourceRequested();
+				
+				// Found static resource
+				return 2;
+			}
+		}
+		
+		// Did not found the resource
+		return 0;
+	}
+	
 	/**
 	 * Redirects browser to the given page.
 	 * NOTE: Usually, you should never call this method directly, but work with

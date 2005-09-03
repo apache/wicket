@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.MarkupContainer;
 import wicket.Page;
@@ -36,6 +37,7 @@ import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.TagTypeHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
@@ -150,7 +152,7 @@ public class MarkupParser
         this.detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
-                new HtmlHandler(detectWicketComponents));
+                new HtmlHandler(new TagTypeHandler(detectWicketComponents)));
         wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
         
         final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
@@ -280,9 +282,18 @@ public class MarkupParser
             }
             
             // Determine wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net">
+            RawMarkup replaceTag = null;
 			if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
 			{
-			    determineWicketNamespace(tag);
+				// if add already true, do not make it false
+			    add |= determineWicketNamespace(tag);
+			    
+			    // If add and tag has no wicket:id, than
+			    if ((add == true) && (tag.getId() == null))
+			    {
+			    	// Replace the current tag
+			    	replaceTag = new RawMarkup(tag.toString());
+			    }
 			}
 
             // Add tag to list?
@@ -310,7 +321,6 @@ public class MarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
-
                 if ((add == false) && (autoAddList.size() > 0))
                 {
                     xmlParser.setPositionMarker(tag.getPos());
@@ -325,7 +335,14 @@ public class MarkupParser
                 // Add to list unless preview component tag remover flagged as removed
                 if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
                 {
-	                list.add(tag);
+                	if (replaceTag != null)
+                	{
+                		list.add(replaceTag);
+                	}
+                	else
+                	{
+                		list.add(tag);
+                	}
                 }
                 
                 xmlParser.setPositionMarker();
@@ -363,9 +380,11 @@ public class MarkupParser
      * xmlns:wicket="http://wicket.sourceforge.net"
      * 
      * @param tag
+     * @return true, if tag has been modified
      */
-    private void determineWicketNamespace(final ComponentTag tag)
+    private boolean determineWicketNamespace(final ComponentTag tag)
     {
+    	String attrValue = null;
         final ValueMap attributes = tag.getAttributes();
         final Iterator it = attributes.keySet().iterator();
         while (it.hasNext())
@@ -379,8 +398,20 @@ public class MarkupParser
                 {
                     this.wicketNamespace = attributeName.substring(6);
                     this.detectWicketComponents.setWicketNamespace(this.wicketNamespace);
+                    attrValue = attributeName;
                 }
             }
         }
+        
+        // Note: <html ...> are usually no wicket tags and thus treated as raw 
+        // markup and thus removing xmlns:wicket from markup does not have any 
+        // effect. The solution approach does not work.
+        if ((attrValue != null) && Application.get().getSettings().getStripWicketTags())
+        {
+        	attributes.remove(attrValue);
+        	return true;
+        }
+        
+        return false;
     }
 }

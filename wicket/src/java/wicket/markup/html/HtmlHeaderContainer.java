@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,6 +41,23 @@ import wicket.response.StringResponse;
  * <p>
  * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.
+ * <p>
+ * <ul>
+ * <li> &lt;head&gt; will be inserted in output automatically if required</li>
+ * <li> &lt;head&gt; is <b>not</b> a wicket specific tag and you must use add()
+ * to add components referenced in body of the head tag</li>
+ * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but
+ * is <b>not</b> copied to the output. They are for previewability only (except
+ * on Pages)</li>
+ * <li> &lt;wicket:head&gt; does not make sense in page markup (but does in
+ * inherited page markup)</li>
+ * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup
+ * (of Panels, Borders and Pages)</li>
+ * <li> components within &lt;wicket:head&gt; must be added by means of add(),
+ * like allways with Wicket. No difference.</li>
+ * <li> &lt;wicket:head&gt; and it's content is copied into the output.
+ * Component contained in &lt;wicket.head&gt; are rendered as usual</li>
+ * </ul>
  * 
  * @author Juergen Donnerstag
  */
@@ -54,14 +71,14 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	public HtmlHeaderContainer(final String id)
 	{
 		super(id);
-		
+
 		// We will render the tags manually, because if no component asked to
 		// contribute to the header, the tags will not be printed either.
 		// No contribution usually only happens if none of the components
 		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
 	}
-	
+
 	/**
 	 * First render the body of the component. And if it is the header component
 	 * of a Page (compared to a Panel or Border), than get the header sections
@@ -113,30 +130,30 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 			{
 				if (output.charAt(0) == '\r')
 				{
-					for (int i=2; i < output.length(); i += 2)
+					for (int i = 2; i < output.length(); i += 2)
 					{
-					    char ch = output.charAt(i);
-					    if (ch != '\r')
-					    {
+						char ch = output.charAt(i);
+						if (ch != '\r')
+						{
 							output = output.substring(i - 2);
-					        break;
-					    }
+							break;
+						}
 					}
 				}
 				else if (output.charAt(0) == '\n')
 				{
-					for (int i=1; i < output.length(); i++)
+					for (int i = 1; i < output.length(); i++)
 					{
-					    char ch = output.charAt(i);
-					    if (ch != '\n')
-					    {
+						char ch = output.charAt(i);
+						if (ch != '\n')
+						{
 							output = output.substring(i - 1);
-					        break;
-					    }
+							break;
+						}
 					}
 				}
 			}
-			
+
 			if (output.length() > 0)
 			{
 				webResponse.write("<head>");
@@ -152,32 +169,38 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	}
 
 	/**
-	 * HtmlHeaderContainer has been autoAdded, it has been injected similiar
-	 * to an AOP interceptor. Thus it must forward any request to find a 
-	 * component based on an ID to its parent container.
-	 *  
-	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 * HtmlHeaderContainer has been autoAdded, it has been injected similiar to
+	 * an AOP interceptor. Thus it must forward any request to find a component
+	 * based on an ID to its parent container.
+	 * 
+	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer,
+	 *      wicket.markup.MarkupStream, wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-	    // Try to find the component with the parent component.
+		// Try to find the component with the parent component.
 		MarkupContainer parent = getParent();
 		if (parent != null)
 		{
-		    if (parent.getId().equals(tag.getId()))
-		    {
-		        parent.render();
-		        return true;
-		    }
-		    
-		    Component component = parent.get(tag.getId());
-		    if (component != null)
-		    {
-		        component.render();
-		        return true;
-		    }
+			if (parent.getId().equals(tag.getId()))
+			{
+				parent.render();
+				return true;
+			}
+
+			Component component = parent.get(tag.getId());
+			if (component != null)
+			{
+				component.render();
+				return true;
+			}
+
+			if (parent instanceof IComponentResolver)
+			{
+				return ((IComponentResolver)parent).resolve(container, markupStream, tag);
+			}
 		}
-		
+
 		return false;
 	}
 }
