@@ -261,6 +261,17 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * Compare tag name including namespace
+	 * 
+	 * @param tag
+	 * @return true if name and namespace are equal 
+	 */
+	public boolean hasEqualTagName(final ComponentTag tag)
+	{
+		return xmlTag.hasEqualTagName(tag.getXmlTag());
+	}
+
+	/**
 	 * Makes this tag object immutable by making the attribute map unmodifiable.
 	 * Immutable tags cannot be made mutable again. They can only be copied into
 	 * new mutable tag objects.

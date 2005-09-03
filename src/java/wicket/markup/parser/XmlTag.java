@@ -271,6 +271,32 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Compare tag name including namespace
+	 * 
+	 * @param tag
+	 * @return true if name and namespace are equal 
+	 */
+	public boolean hasEqualTagName(final XmlTag tag)
+	{
+		if (!getName().equalsIgnoreCase(tag.getName()))
+		{
+			return false;
+		}
+		
+		if ((getNamespace() == null) && (tag.getNamespace() == null))
+		{
+			return true;
+		}
+		
+		if ((getNamespace() != null) && (tag.getNamespace() != null))
+		{
+			return getNamespace().equalsIgnoreCase(tag.getNamespace());
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Makes this tag object immutable by making the attribute map unmodifiable.
 	 * Immutable tags cannot be made mutable again. They can only be copied into
 	 * new mutable tag objects.
@@ -427,6 +453,25 @@ public class XmlTag extends MarkupElement
 		else
 		{
 			throw new UnsupportedOperationException("Attempt to set name of immutable tag");
+		}
+	}
+
+	/**
+	 * Sets the tag namespace.
+	 * 
+	 * @param namespace
+	 *			  New tag name
+	 */
+	public void setNamespace(final String namespace)
+	{
+		if (isMutable)
+		{
+			this.namespace = namespace;
+			this.nameChanged = true;
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Attempt to set namespace of immutable tag");
 		}
 	}
 

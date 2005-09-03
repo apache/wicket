@@ -131,9 +131,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				ComponentTag top = (ComponentTag)stack.pop();
 
 				// If the name of the current close tag does not match the
-				// tag on the stack
-				// then we may have a mismatched close tag
-				boolean mismatch = !top.getName().equalsIgnoreCase(tag.getName());
+				// tag on the stack then we may have a mismatched close tag
+				boolean mismatch = !top.hasEqualTagName(tag);
 
 				if (mismatch)
 				{
@@ -144,7 +143,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						top = (ComponentTag)stack.pop();
 
 						// Does new top of stack mismatch too?
-						mismatch = !top.getName().equalsIgnoreCase(tag.getName());
+						mismatch = !top.hasEqualTagName(tag);
 					}
 
 					// If adjusting for simple tags did not fix the problem,
