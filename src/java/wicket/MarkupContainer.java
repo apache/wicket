@@ -1136,6 +1136,16 @@ public abstract class MarkupContainer extends Component
 					container = container.findParent(MarkupContainer.class);
 				}
 
+				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
+				{
+					// You can not render the base page of inherited markup as the 
+					// <wicket:child/> tag will not be found. You must use the 
+					// page (class) with the derived markup instead.
+					markupStream.throwMarkupException("Classes of base pages which "
+							+ "require inherited markup may not be used directly. "
+							+ "You must instantiate the child pages instead: " + this);
+				}
+				
 				// No one was able to handle the component id
 				markupStream.throwMarkupException("Unable to find component with id '" + id
 						+ "' in " + this + ". This means that you declared wicket:id=" + id
