@@ -220,7 +220,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private final class AutolinkBookmarkablePageLink extends BookmarkablePageLink
+	private final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
 			implements
 				IComponentResolver
 	{
@@ -275,7 +275,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private final class AutolinkExternalLink extends ExternalLink
+	private final static class AutolinkExternalLink extends ExternalLink
 			implements
 				IComponentResolver
 	{
@@ -323,7 +323,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
 	 */
-	private final class CssLink extends WebMarkupContainer
+	private final static class CssLink extends WebMarkupContainer
 		implements
 			IComponentResolver
 	{
