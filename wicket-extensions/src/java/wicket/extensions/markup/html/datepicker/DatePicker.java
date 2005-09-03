@@ -225,16 +225,16 @@ public class DatePicker extends Panel
 
 		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
 		add(new InitScript("script"));
-		addToHeader(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
-		addToHeader(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
-		addToHeader(new JavaScriptReference("calendarLanguage", new Model()
+		add(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
+		add(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
+		add(new JavaScriptReference("calendarLanguage", new Model()
 		{
 			public Object getObject(Component component)
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}
 		}));
-		addToHeader(new StyleSheetReference("calendarStyle", settings.getStyle()));
+		add(new StyleSheetReference("calendarStyle", settings.getStyle()));
 	}
 
 	/**
