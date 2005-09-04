@@ -145,7 +145,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * Called when the component was bound to it's host component. You can get the bound host component by calling getHostComponent.
+	 * Called when the component was bound to it's host component. You can get the bound host component by calling getComponent.
 	 */
 	protected void onBind()
 	{
