@@ -18,6 +18,7 @@
 				<item name="Hello World!" href="/ExampleHelloWorld.html" />
 				<item name="Navomatic" href="/ExampleNavomatic.html" />
 				<item name="GuestBook" href="/ExampleGuestBook.html" />
+				<item name="StockQuote" href="/ExampleStockQuote.html" />
 			</item>
 			<item name="QuickStart" href="/QuickStart.html" collapse="true">
 				<item name="Binary" href="/QuickStartBinary.html" />
