@@ -25,7 +25,6 @@ import wicket.Component;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
@@ -69,9 +68,9 @@ public final class ValidationAjaxHandler extends DojoAjaxHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#doPrintHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.AjaxHandler#renderHeadContribution(wicket.markup.html.HtmlHeaderContainer)
 	 */
-	public final void doPrintHead(HtmlHeaderContainer container)
+	public final void renderHeadContribution(HtmlHeaderContainer container)
 	{
 		String s =
 
@@ -91,40 +90,15 @@ public final class ValidationAjaxHandler extends DojoAjaxHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#bind(wicket.Component)
-	 */
-	public void bind(Component component)
-	{
-		if (!(component instanceof FormComponent))
-		{
-			throw new IllegalArgumentException("this handler can only be bound to form components");
-		}
-
-		if (formComponent != null)
-		{
-			throw new IllegalStateException("this kind of handler cannot be attached to " +
-					"multiple components; it is allready attached to component " + formComponent +
-					", but component " + component + " wants to be attached too");
-
-		}
-
-		this.formComponent = (FormComponent)component;
-	}
-
-	/**
 	 * Attaches the event handler for the given component to the given tag.
-	 * 
-	 * @param component
-	 *            The component
 	 * @param tag
 	 *            The tag to attache
 	 */
-	public final void onComponentTag(final Component component, final ComponentTag tag)
+	public final void onComponentTag(final ComponentTag tag)
 	{
 		final ValueMap attributes = tag.getAttributes();
-		final String url = formComponent.urlFor(IAjaxListener.class) + "&id=" + getId();
 		final String attributeValue =
-			"javascript:validate('" + url + "', '" + formComponent.getPath() + "', this);";
+			"javascript:validate('" + getCallbackUrl() + "', '" + formComponent.getPath() + "', this);";
 		attributes.put(getEventName(), attributeValue);
 	}
 
@@ -144,6 +118,7 @@ public final class ValidationAjaxHandler extends DojoAjaxHandler
 		// When validation failed...
 		if (!formComponent.isValid())
 		{
+			//TODO finish
 			// The plan here is the visit all feedback components, re-render them, and
 			// return the render results to the browser with the components (top level)
 			// ids attached. We could then use this information to replace the dom

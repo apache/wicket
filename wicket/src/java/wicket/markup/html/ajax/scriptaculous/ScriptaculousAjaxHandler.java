@@ -21,12 +21,12 @@ package wicket.markup.html.ajax.scriptaculous;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AjaxHandler;
 import wicket.Application;
 import wicket.IInitializer;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.AbstractAjaxHandler;
 
 /**
  * Handles event requests using 'script.aculo.us'.
@@ -39,7 +39,7 @@ import wicket.markup.html.ajax.AbstractAjaxHandler;
  * @author Eelco Hillenius
  */
 public abstract class ScriptaculousAjaxHandler
-	extends AbstractAjaxHandler implements IInitializer
+	extends AjaxHandler implements IInitializer
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(ScriptaculousAjaxHandler.class);
@@ -69,7 +69,7 @@ public abstract class ScriptaculousAjaxHandler
 	 * Let this handler print out the needed header contributions.
 	 * @param container
 	 */
-	public final void printHeadInitContribution(HtmlHeaderContainer container)
+	protected final void renderHeadInitContribution(HtmlHeaderContainer container)
 	{
 		// add our basic javascript needs to the header
 		Application application = Application.get();

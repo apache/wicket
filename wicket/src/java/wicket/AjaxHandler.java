@@ -16,23 +16,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.ajax;
+package wicket;
 
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.Component;
-import wicket.Page;
-import wicket.RequestCycle;
-import wicket.Response;
-import wicket.WicketRuntimeException;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.IBodyOnloadContributor;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
@@ -42,12 +35,11 @@ import wicket.util.resource.IResourceStream;
  *
  * @author Eelco Hillenius
  */
-//TODO should we support other callbacks, like onComponentBody?
-public abstract class AbstractAjaxHandler
-	implements Serializable, IAjaxHandler, IHeaderContributor, IBodyOnloadContributor
+public abstract class AjaxHandler
+	implements Serializable, IHeaderContributor, IBodyOnloadContributor
 {
-	/** log. */
-	private static Log log = LogFactory.getLog(AbstractAjaxHandler.class);
+	/** the component that this handler is bound to. */
+	private Component component;
 
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
@@ -64,20 +56,12 @@ public abstract class AbstractAjaxHandler
 	/**
 	 * Construct.
 	 */
-	public AbstractAjaxHandler()
+	public AjaxHandler()
 	{
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.IAjaxHandler#getId()
-	 */
-	public String getId()
-	{
-		return Integer.toString(hashCode());
-	}
-
-	/**
-	 * @see wicket.markup.html.IBodyOnloadContributor#getBodyOnload()
+	 * @see wicket.markup.html.ajax.IBodyOnloadContributor#getBodyOnload()
 	 */
 	public final String getBodyOnload()
 	{
@@ -87,7 +71,7 @@ public abstract class AbstractAjaxHandler
 			bodyOnloadContribHolder.set(dummy);
 			staticContrib = getBodyOnloadInitContribution();
 		}
-		String contrib = doGetBodyOnload();
+		String contrib = getBodyOnloadContribution();
 		if (staticContrib != null)
 		{
 			return (contrib != null) ? staticContrib + contrib : staticContrib;
@@ -103,9 +87,68 @@ public abstract class AbstractAjaxHandler
 		if (headContribHolder.get() == null)
 		{
 			headContribHolder.set(dummy);
-			printHeadInitContribution(container);
+			renderHeadInitContribution(container);
 		}
-		doPrintHead(container);
+		renderHeadContribution(container);
+	}
+
+	/**
+	 * Called any time a component that has this handler registered is rendering the component tag.
+	 * Use this method e.g. to bind to javascript event handlers of the tag
+	 * @param tag the tag that is rendered
+	 */
+	public void onComponentTag(ComponentTag tag)
+	{
+	}
+
+	/**
+	 * Gets the url that references this handler.
+	 * @return the url that references this handler
+	 */
+	public final String getCallbackUrl()
+	{
+		return component.urlFor(this);
+	}
+
+	/**
+	 * Gets the response to render to the requester.
+	 * @return the response to render to the requester
+	 */
+	protected abstract IResourceStream getResponse();
+
+	/**
+	 * Do a one time (per page) header contribution that is the same for all ajax variant
+	 * implementations (e.g. Dojo, Scriptaculous).
+	 * This implementation does nothing.
+	 * @param container head container
+	 */
+	protected void renderHeadInitContribution(HtmlHeaderContainer container)
+	{
+	}
+
+	/**
+	 * Let this handler print out the needed header contributions.
+	 * This implementation does nothing.
+	 * @param container head container
+	 */
+	protected void renderHeadContribution(HtmlHeaderContainer container)
+	{
+	}
+
+	/**
+	 * Gets  the component that this handler is bound to.
+	 * @return  the component that this handler is bound to
+	 */
+	protected final Component getComponent()
+	{
+		return component;
+	}
+
+	/**
+	 * Called when the component was bound to it's host component. You can get the bound host component by calling getHostComponent.
+	 */
+	protected void onBind()
+	{
 	}
 
 	/**
@@ -113,69 +156,35 @@ public abstract class AbstractAjaxHandler
 	 * implementations (e.g. Dojo, Rico, Qooxdoo).
 	 * @return the onload statement(s) for the body component
 	 */
-	public String getBodyOnloadInitContribution()
+	protected String getBodyOnloadInitContribution()
 	{
 		return null;
-	}
-
-	/**
-	 * One time (per page) header contribution that is the same for all ajax variant
-	 * implementations (e.g. Dojo, Rico, Qooxdoo).
-	 * @param container head container
-	 */
-	public void printHeadInitContribution(HtmlHeaderContainer container)
-	{
 	}
 
 	/**
 	 * Gets the onload statement(s) for the body component.
+	 * Override this method to provide custom contributions.
 	 * @return the onload statement(s) for the body component
 	 */
-	public String doGetBodyOnload()
+	protected String getBodyOnloadContribution()
 	{
 		return null;
-	}
-
-	/**
-	 * Let this handler print out the needed header contributions.
-	 * @param container head container
-	 */
-	public void doPrintHead(HtmlHeaderContainer container)
-	{
-	}
-
-	/**
-	 * @see wicket.markup.html.ajax.AbstractAjaxHandler#onRequest()
-	 */
-	public void onRequest()
-	{
-		respond();
-	}
-
-	/**
-	 * @see wicket.markup.html.ajax.IAjaxHandler#onComponentRendered(wicket.Component)
-	 */
-	public void onComponentRendered(Component component)
-	{
-		bodyOnloadContribHolder.set(null);
-		headContribHolder.set(null);
-		onRendered(component);
 	}
 
 	/**
 	 * Called to indicate that the component that has this handler registered has been rendered.
 	 * Use this method to do any cleaning up of temporary state
-	 * @param component the component
 	 */
-	protected void onRendered(Component component)
+	protected void onComponentRendered()
 	{
 	}
 
 	/**
 	 * Configures the response, default by setting the content type and length.
 	 * @param response the response
+	 * @param resourceStream the resource stream that will be rendered
 	 */
-	protected void configure(final Response response)
+	protected void configure(final Response response, final IResourceStream resourceStream)
 	{
 		// Configure response with content type of resource
 		response.setContentType(getResponseType());
@@ -192,12 +201,6 @@ public abstract class AbstractAjaxHandler
 	}
 
 	/**
-	 * Gets the response to render to the requester.
-	 * @return the response to render to the requester
-	 */
-	protected abstract IResourceStream getResponse();
-
-	/**
 	 * Convenience method to add a javascript reference.
 	 * @param container the header container
 	 * @param ref reference to add
@@ -212,11 +215,56 @@ public abstract class AbstractAjaxHandler
 	}
 
 	/**
+	 * Bind this handler to the given component.
+	 *
+	 * @param hostComponent the component to bind to
+	 */
+	final void bind(Component hostComponent)
+	{
+		if (hostComponent == null)
+		{
+			throw new NullPointerException("argument hostComponent must be not null");
+		}
+
+		if (this.component != null)
+		{
+			throw new IllegalStateException("this kind of handler cannot be attached to " +
+					"multiple components; it is allready attached to component " + this.component +
+					", but component " + hostComponent + " wants to be attached too");
+
+		}
+
+		this.component = hostComponent;
+
+		// call the calback
+		onBind();
+	}
+
+	/**
+	 * Called to indicate that the component that has this handler registered has been rendered.
+	 * Use this method to do any cleaning up of temporary state.
+	 */
+	final void internalOnComponentRendered()
+	{
+		bodyOnloadContribHolder.set(null);
+		headContribHolder.set(null);
+		onComponentRendered();
+	}
+
+	/**
+	 * Called when an Ajax request is to be handled.
+	 */
+	final void onRequest()
+	{
+		respond();
+	}
+
+	/**
 	 * Writes the given string to the header container.
 	 * @param container the header container
 	 * @param s the string to write
 	 */
-	private void write(HtmlHeaderContainer container, String s)
+	private final void write(HtmlHeaderContainer container, String s)
 	{
 		container.getResponse().write(s);
 	}
@@ -235,8 +283,8 @@ public abstract class AbstractAjaxHandler
 			// the client since the resource being requested has nothing to do with pages
 			cycle.setResponsePage((Page)null);
 
-			this.resourceStream = getResponse();
-			if (this.resourceStream == null)
+			resourceStream = getResponse();
+			if (resourceStream == null)
 			{
 				throw new WicketRuntimeException("Could not get resource stream");
 			}
@@ -244,7 +292,7 @@ public abstract class AbstractAjaxHandler
 			// Get servlet response to use when responding with resource
 			final Response response = cycle.getResponse();
 
-			configure(response);
+			configure(response, resourceStream);
 
 			// Respond with resource
 			respond(response);
