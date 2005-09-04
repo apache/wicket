@@ -15,6 +15,13 @@
 				<a href="ExampleHelloWorld.html">Hello, World example</a>
 				first.
 			</p>
+			<ul>
+			<li><a href="#Introduction">Introduction</a></li>
+			<li><a href="#POJO_Solution">POJO Solution</a></li>
+			<li><a href="#Reuse_Component_Solution">Reuse Component Solution</a></li>
+			<li><a href="#New_Component_Solution">New Component Solution</a></li>
+			<li><a href="#Discussion">Discussion</a></li>
+			</ul>
 			<subsection name="Introduction">
 				<p>
 					The Stock Quote component should take a symbol and display the value of the
