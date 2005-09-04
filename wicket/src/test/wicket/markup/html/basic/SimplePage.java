@@ -38,6 +38,8 @@ public class SimplePage extends WebPage
 	 */
 	public SimplePage(final PageParameters parameters) 
 	{
+		add(new Label("myLabel", "Test Label"));
+		
 	    WebMarkupContainer container = new WebMarkupContainer("test");
 	    container.setRenderBodyOnly(true);
 	    add(container);
