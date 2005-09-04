@@ -19,7 +19,6 @@
 package wicket.examples.wizard.framework;
 
 import wicket.AttributeModifier;
-import wicket.IFeedback;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -38,21 +37,10 @@ public class WizardPanel extends Panel
 	final WizardState state;
 
 	/**
-	 * Construct.
 	 * @param id component id
 	 * @param configuration wizard configuration object
 	 */
-	public WizardPanel(String id, WizardConfiguration configuration)
-	{
-		this(id, configuration, null);
-	}
-
-	/**
-	 * @param id component id
-	 * @param configuration wizard configuration object
-	 * @param feedback Interface to a component that can handle/display validation errors
-	 */
-	public WizardPanel(final String id, WizardConfiguration configuration, final IFeedback feedback)
+	public WizardPanel(final String id, WizardConfiguration configuration)
 	{
 		super(id);
 
@@ -63,7 +51,7 @@ public class WizardPanel extends Panel
 
 		this.state = configuration.begin();
 
-		WizardForm form = new WizardForm("form", feedback);
+		WizardForm form = new WizardForm("form");
 		add(form);
 	}
 
@@ -104,11 +92,10 @@ public class WizardPanel extends Panel
 		/**
 		 * Construct.
 		 * @param id component id
-		 * @param feedback feedback
 		 */
-		public WizardForm(String id, IFeedback feedback)
+		public WizardForm(String id)
 		{
-			super(id, feedback);
+			super(id);
 			Panel editor = newEditor("editor");
 			add(editor);
 

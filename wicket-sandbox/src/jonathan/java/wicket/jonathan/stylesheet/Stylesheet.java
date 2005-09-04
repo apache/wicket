@@ -20,6 +20,7 @@ package wicket.jonathan.stylesheet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Locale;
 
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
@@ -61,6 +62,8 @@ public class Stylesheet extends WebResource
 	{
 		return new IResourceStream()
 		{
+			private Locale locale;
+
 			public String getContentType()
 			{
 				return "text/css";
@@ -90,6 +93,16 @@ public class Stylesheet extends WebResource
 			public long length()
 			{
 				return buffer.length();
+			}
+
+			public Locale getLocale()
+			{
+				return locale;
+			}
+
+			public void setLocale(Locale locale)
+			{
+				this.locale = locale;
 			}			
 		};
 	}

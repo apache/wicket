@@ -40,6 +40,6 @@ public class Home extends WebPage
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
-		add(new WizardPanel("wizardPanel", prefWiz, feedbackPanel));
+		add(new WizardPanel("wizardPanel", prefWiz));
     }
 }
