@@ -18,13 +18,11 @@
  */
 package wicket.markup.html.basic;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketTestCase;
+import wicket.markup.html.panel.Panel;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -32,11 +30,9 @@ import wicket.protocol.http.MockWebApplication;
  * 
  * @author Chris Turner
  */
-public class SimplePageTest extends TestCase
+public class SimplePageTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(SimplePageTest.class);
-
-	private MockWebApplication application;
 
 	/**
 	 * Create the test.
@@ -58,25 +54,16 @@ public class SimplePageTest extends TestCase
 	}
 
 	/**
-	 * @param pageClass
-	 * @param filename
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
+	public void testRenderHomePage_2() throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-		
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	    executeTest(SimplePage.class, "SimplePageExpectedResult.html");
+	    
+	    Label label = (Label)application.getLastRenderedPage().get("myLabel");
+	    //label.renderComponent();
+	    
+	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
+	    //panel.renderComponent();
 	}
 }
