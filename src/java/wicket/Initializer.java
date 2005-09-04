@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import wicket.markup.ComponentTag;
 import wicket.markup.html.ajax.dojo.DojoAjaxHandler;
 import wicket.markup.html.ajax.scriptaculous.ScriptaculousAjaxHandler;
 import wicket.markup.html.tree.TreeComponentInitializer;
@@ -45,28 +44,12 @@ public class Initializer implements IInitializer
 			{
 				return null;
 			}
-
-			public void bind(Component component)
-			{
-			}
-
-			public void onComponentTag(Component component, ComponentTag tag)
-			{
-			}
 		}.init(application);
 		new ScriptaculousAjaxHandler()
 		{
 			protected IResourceStream getResponse()
 			{
 				return null;
-			}
-
-			public void bind(Component component)
-			{
-			}
-
-			public void onComponentTag(Component component, ComponentTag tag)
-			{
 			}
 		}.init(application);
 	}

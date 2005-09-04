@@ -17,8 +17,8 @@
  */
 package wicket.markup.html;
 
+import wicket.AjaxHandler;
 import wicket.Component;
-import wicket.markup.html.ajax.IAjaxHandler;
 import wicket.model.IModel;
 
 /**
@@ -57,7 +57,7 @@ public class WebComponent extends Component implements IHeaderContributor
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		IAjaxHandler[] handlers = getEventRequestHandlers();
+		AjaxHandler[] handlers = getAjaxHandlers();
 		if (handlers != null)
 		{
 			for (int i = 0; i < handlers.length; i++)

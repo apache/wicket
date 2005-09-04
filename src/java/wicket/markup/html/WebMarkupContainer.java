@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.AjaxHandler;
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
@@ -25,7 +26,7 @@ import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IAjaxHandler;
+import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
 
@@ -101,7 +102,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		}
 
 		// get head and body contributions in one loop
-		IAjaxHandler[] handlers = getEventRequestHandlers();
+		AjaxHandler[] handlers = getAjaxHandlers();
 		if (handlers != null)
 		{
 			for (int i = 0; i < handlers.length; i++)

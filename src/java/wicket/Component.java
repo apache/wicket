@@ -18,11 +18,10 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -34,7 +33,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IAjaxHandler;
 import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.parser.XmlTag;
 import wicket.model.CompoundPropertyModel;
@@ -261,7 +259,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	private AttributeModifier attributeModifiers = null;
 
 	/** possible list of handlers of event requests (eg XmlHttpRequests). */
-	private Map eventRequestHandlers;
+	private List ajaxHandlers;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
@@ -409,24 +407,26 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Registers a handler for an event request.
-	 * @param eventRequestHandler handler
+	 * @param ajaxHandler handler
 	 */
-	public final void add(IAjaxHandler eventRequestHandler)
+	public final void add(AjaxHandler ajaxHandler)
 	{
-		if (eventRequestHandler == null)
+		if (ajaxHandler == null)
 		{
 			throw new NullPointerException("argument may not be null");
 		}
 
 		// Lazy create
-		if (eventRequestHandlers == null)
+		if (ajaxHandlers == null)
 		{
-			eventRequestHandlers = new HashMap();
+			ajaxHandlers = new ArrayList(1);
 		}
-		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
+
+		int index = ajaxHandlers.size() - 1;
+		ajaxHandlers.add(index, ajaxHandler);
 
 		// Give handler the opportunity to bind this component
-		eventRequestHandler.bind(this);
+		ajaxHandler.bind(this);
 	}
 
 	/**
@@ -1080,14 +1080,15 @@ public abstract class Component implements Serializable, IAjaxListener
 			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
 		}
 
-		IAjaxHandler eventRequestHandler = (IAjaxHandler)eventRequestHandlers.get(id);
+		int IdAsInt = Integer.parseInt(id);
+		AjaxHandler ajaxHandler = (AjaxHandler)ajaxHandlers.get(IdAsInt);
 
-		if (eventRequestHandler == null)
+		if (ajaxHandler == null)
 		{
 			throw new WicketRuntimeException("no handler found with id " + id);
 		}
 
-		eventRequestHandler.onRequest();
+		ajaxHandler.onRequest();
 	}
 
 	/**
@@ -1144,12 +1145,12 @@ public abstract class Component implements Serializable, IAjaxListener
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 
-		if (eventRequestHandlers != null)
+		if (ajaxHandlers != null)
 		{
-			for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
+			for (Iterator i = ajaxHandlers.iterator(); i.hasNext();)
 			{
-				IAjaxHandler handler = (IAjaxHandler)i.next();
-				handler.onComponentRendered(this);
+				AjaxHandler handler = (AjaxHandler)i.next();
+				handler.internalOnComponentRendered();
 			}
 		}
 	}
@@ -1403,6 +1404,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * Gets the url for the listener interface (e.g. ILinkListener).
+	 *
 	 * @param listenerInterface
 	 *            The listener interface that the URL should call
 	 * @return The URL
@@ -1411,6 +1414,35 @@ public abstract class Component implements Serializable, IAjaxListener
 	public final String urlFor(final Class listenerInterface)
 	{
 		return getPage().urlFor(this, listenerInterface);
+	}
+
+	/**
+	 * Gets the url for the ajax handlers.
+	 *
+	 * @param ajaxHandler
+	 * @return The URL
+	 * @see Page#urlFor(Component, Class)
+	 */
+	public final String urlFor(final AjaxHandler ajaxHandler)
+	{
+		if (ajaxHandler == null)
+		{
+			throw new NullPointerException("argument ajaxHandler must be not null");
+		}
+
+		if (ajaxHandlers == null)
+		{
+			throw new IllegalStateException("no ajax handlers are registered with " + this);
+		}
+
+		int index = ajaxHandlers.indexOf(ajaxHandler);
+		if (index == -1)
+		{
+			throw new IllegalArgumentException("ajaxHandler " + ajaxHandler
+					+ " was not registered with this component");
+		}
+
+		return urlFor(IAjaxListener.class) + "&id=" + index;
 	}
 
 	/**
@@ -1550,12 +1582,11 @@ public abstract class Component implements Serializable, IAjaxListener
 	 * Gets an array with registered event request handlers or null.
 	 * @return an array with registered event request handlers, null if none are registered
 	 */
-	protected final IAjaxHandler[] getEventRequestHandlers()
+	protected final AjaxHandler[] getAjaxHandlers()
 	{
-		if (eventRequestHandlers != null)
+		if (ajaxHandlers != null)
 		{
-			Collection handlers = eventRequestHandlers.values();
-			return (IAjaxHandler[])handlers.toArray(new IAjaxHandler[handlers.size()]);
+			return (AjaxHandler[])ajaxHandlers.toArray(new AjaxHandler[ajaxHandlers.size()]);
 		}
 		return null;
 	}
@@ -1836,12 +1867,12 @@ public abstract class Component implements Serializable, IAjaxListener
 				}
 			}
 
-			if (eventRequestHandlers != null)
+			if (ajaxHandlers != null)
 			{
-				for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
+				for (Iterator i = ajaxHandlers.iterator(); i.hasNext();)
 				{
-					IAjaxHandler handler = (IAjaxHandler)i.next();
-					handler.onComponentTag(this, tag);
+					AjaxHandler handler = (AjaxHandler)i.next();
+					handler.onComponentTag(tag);
 				}
 			}
 
