@@ -244,7 +244,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	/**
 	 * @return Prefix to use before choice
 	 */
-	public final String getPrefix()
+	public String getPrefix()
 	{
 		return prefix;
 	}
@@ -269,7 +269,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	/**
 	 * @return Separator to use between radio options
 	 */
-	public final String getSuffix()
+	public String getSuffix()
 	{
 		return suffix;
 	}
