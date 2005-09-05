@@ -141,7 +141,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return The value in the request for this component
 	 */
-	public final String getInput()
+	public String getInput()
 	{
 		return getRequest().getParameter(getPath());
 	}
