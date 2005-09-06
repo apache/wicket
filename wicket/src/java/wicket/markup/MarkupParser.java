@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.MarkupContainer;
 import wicket.Page;
@@ -406,7 +405,7 @@ public class MarkupParser
         // Note: <html ...> are usually no wicket tags and thus treated as raw 
         // markup and thus removing xmlns:wicket from markup does not have any 
         // effect. The solution approach does not work.
-        if ((attrValue != null) && Application.get().getSettings().getStripWicketTags())
+        if ((attrValue != null) && stripWicketTag)
         {
         	attributes.remove(attrValue);
         	return true;
