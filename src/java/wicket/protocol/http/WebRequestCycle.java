@@ -183,8 +183,8 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	protected void redirectTo(final Page page) throws ServletException
 	{
-		String redirectUrl = page.urlFor(page, IRedirectListener.class);
-
+		String redirectUrl = null;
+		
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
 		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
@@ -196,7 +196,7 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// create the redirect response.
 				// override the encodeURL so that it will use the real once encoding.
-				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl)
+				final BufferedResponse redirectResponse = new BufferedResponse()
 				{
 					public String encodeURL(String url)
 					{
@@ -222,12 +222,12 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(currentResponse);
 
 				final String responseRedirect = redirectResponse.getRedirectUrl();
-				if (redirectUrl != responseRedirect)
+				if (responseRedirect != null)
 				{
 					// if the redirectResponse has another redirect url set
 					// then the rendering of this page caused a redirect to something else.
 					// set this redirect then.
-					redirectUrl = redirectResponse.getRedirectUrl();
+					redirectUrl = responseRedirect;
 				}
 				else if (redirectResponse.getContentLength() > 0)
 				{
@@ -239,6 +239,7 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
 
+					redirectUrl = page.urlFor(page, IRedirectListener.class);
           // TODO adouma: no Portlets support yet so typecasted for Servlet env.
 					((WebApplication)application).addRedirect(
 					        ((ServletWebRequest)getWebRequest()).getHttpServletRequest(), redirectUrl, redirectResponse);
@@ -259,6 +260,10 @@ public class WebRequestCycle extends RequestCycle
 			page.internalEndRequest();
 		}
 
+		if(redirectUrl == null)
+		{
+			redirectUrl = page.urlFor(page, IRedirectListener.class);
+		}
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}

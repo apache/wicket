@@ -139,27 +139,34 @@ public class WebResponse extends Response
 	 */
 	public void redirect(final String url)
 	{
-		if (httpServletResponse != null)
+		if(!redirect)
 		{
-			try
+			if (httpServletResponse != null)
 			{
-				if (httpServletResponse.isCommitted())
+				try
 				{
-					log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+					if (httpServletResponse.isCommitted())
+					{
+						log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+					}
+	
+					if (log.isDebugEnabled())
+					{
+						log.debug("Redirecting to " + url);
+					}
+	
+					httpServletResponse.sendRedirect(url);
+					redirect = true;
 				}
-
-				if (log.isDebugEnabled())
+				catch (IOException e)
 				{
-					log.debug("Redirecting to " + url);
+					throw new WicketRuntimeException("Redirect failed", e);
 				}
-
-				httpServletResponse.sendRedirect(url);
-				redirect = true;
 			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Redirect failed", e);
-			}
+		}
+		else
+		{
+			log.info("Already redirecting to an url current one ignored: " + url);
 		}
 	}
 
