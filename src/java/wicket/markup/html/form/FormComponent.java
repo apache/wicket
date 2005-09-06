@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -143,9 +144,26 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public String getInput()
 	{
-		return getRequest().getParameter(getPath());
+		return getRequest().getParameter(getInputName());
 	}
 
+	protected String getInputName()
+	{
+		final ArrayList al = new ArrayList(4);
+		for (Component c = this; c != null && !(c instanceof Form); c = c.getParent())
+		{
+			al.add(c);
+		}
+		final StringBuffer buffer = new StringBuffer();
+		for (int i = al.size(); --i >= 0;)
+		{
+			Component c = (Component)al.get(i);
+			buffer.append(c.getId());
+			buffer.append(':');
+		}
+		buffer.setLength(buffer.length()-1);
+		return buffer.toString();		
+	}
 	/**
 	 * Gets the type for any TypeValidator assigned to this component.
 	 * 
@@ -393,7 +411,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected final String[] inputAsStringArray()
 	{
-		return getRequest().getParameters(getPath());
+		return getRequest().getParameters(getInputName());
 	}
 
 	/**
@@ -405,7 +423,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		tag.put("name", getPath());
+		tag.put("name", getInputName());
 		super.onComponentTag(tag);
 	}
 
