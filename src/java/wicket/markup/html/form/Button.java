@@ -39,7 +39,7 @@ import wicket.version.undo.Change;
  * </p>
  * <p>
  * One other option you should know of is the 'defaultFormProcessing' property
- * of Button components. When you set this to true (default is false), all
+ * of Button components. When you set this to false (default is true), all
  * validation and formupdating is bypassed and the onSubmit method of that
  * button is called directly, and the onSubmit method of the parent form is not
  * called. A common use for this is to create a cancel button.
@@ -65,7 +65,7 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * Gets the defaultFormProcessing property. When true (default is true),
+	 * Gets the defaultFormProcessing property. When false (default is true),
 	 * all validation and formupdating is bypassed and the onSubmit method of
 	 * that button is called directly, and the onSubmit method of the parent
 	 * form is not called. A common use for this is to create a cancel button.
