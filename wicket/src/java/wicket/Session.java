@@ -537,6 +537,13 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Any attach logic for session subclasses.
+	 */
+	protected void attach()
+	{
+	}
+	
+	/**
 	 * Any detach logic for session subclasses.
 	 */
 	protected void detach()
