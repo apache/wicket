@@ -367,7 +367,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
 				// Add radio tag
-				buffer.append("<input name=\"" + getPath() + "\"" + " type=\"radio\""
+				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
 						+ (isSelected(choice,index) ? " checked" : "") + " value=\"" + id
 						+ "\"");
 				

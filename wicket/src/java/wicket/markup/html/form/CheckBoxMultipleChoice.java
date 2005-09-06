@@ -322,8 +322,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
-				// Add radio tag
-				buffer.append("<input name=\"" + getPath() + "\"" + " type=\"checkbox\""
+				// Add checkbox element
+				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"checkbox\""
 						+ (isSelected(choice,index) ? " checked" : "") + " value=\"" + id
 						+ "\">");
 
