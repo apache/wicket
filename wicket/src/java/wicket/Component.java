@@ -422,8 +422,7 @@ public abstract class Component implements Serializable, IAjaxListener
 			ajaxHandlers = new ArrayList(1);
 		}
 
-		int index = ajaxHandlers.size() - 1;
-		ajaxHandlers.add(index, ajaxHandler);
+		ajaxHandlers.add(ajaxHandler);
 
 		// Give handler the opportunity to bind this component
 		ajaxHandler.bind(this);
