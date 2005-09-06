@@ -147,7 +147,15 @@ public abstract class FormComponent extends WebMarkupContainer
 		return getRequest().getParameter(getInputName());
 	}
 
-	protected String getInputName()
+    /**
+     * Gets the string to be used for the <tt>name</tt> attribute of the form element.
+     * Generated using the path from the form to the component, excluding the form itself.
+     * Override it if you want even a smaller name. E.g. if you know for sure that the id
+     * is unique within a form.
+     *
+     * @return The string to use as the form element's name attribute
+     */
+    protected String getInputName()
 	{
 		final ArrayList al = new ArrayList(4);
 		for (Component c = this; c != null && !(c instanceof Form); c = c.getParent())
@@ -164,6 +172,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		buffer.setLength(buffer.length()-1);
 		return buffer.toString();		
 	}
+
 	/**
 	 * Gets the type for any TypeValidator assigned to this component.
 	 * 
@@ -407,7 +416,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Gets the request parameters for this component as strings.
 	 * 
-	 * @return The valuess in the request for this component
+	 * @return The values in the request for this component
 	 */
 	protected final String[] inputAsStringArray()
 	{
