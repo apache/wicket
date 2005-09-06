@@ -116,7 +116,7 @@ public class WebSession extends Session
 			super.updateCluster();
 		}
 	}
-
+	
 	/**
 	 * @see wicket.Session#detach()
 	 */
@@ -210,5 +210,7 @@ public class WebSession extends Session
 
 		// Set the current session
 		set(this);
+		
+		attach();
 	}
 }
