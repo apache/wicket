@@ -91,11 +91,10 @@ public class BufferedWebResponse extends WebResponse
 	 */
 	public final void redirect(final String url)
 	{
-        if (redirect)
+        if (redirectURL != null)
         {
         	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
         }
-		super.redirect = true;
 		this.redirectURL = url;
 	}
 

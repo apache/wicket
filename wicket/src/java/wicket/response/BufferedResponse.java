@@ -66,14 +66,9 @@ public class BufferedResponse extends Response
 	/**
 	 * Construct.
 	 * 
-	 * @param redirectUrl
-	 *            The url to be used to issue a client side redirect request;
-	 *            when a request to the url comes in, this buffered response is
-	 *            streamed to the browser.
 	 */
-	public BufferedResponse(final String redirectUrl)
+	public BufferedResponse()
 	{
-		this.redirectUrl = redirectUrl;
 		this.stringBuffer = new StringBuffer();
 	}
 
