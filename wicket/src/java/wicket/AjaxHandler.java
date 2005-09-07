@@ -20,6 +20,8 @@ package wicket;
 
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
@@ -50,9 +52,6 @@ public abstract class AjaxHandler
 	/** thread local for head contributions. */
 	private static final ThreadLocal headContribHolder = new ThreadLocal();
 
-	/** we just need one simple indicator object to put in our thread locals. */
-	private static final Object dummy = new Object();
-
 	/**
 	 * Construct.
 	 */
@@ -66,11 +65,26 @@ public abstract class AjaxHandler
 	public final String getBodyOnload()
 	{
 		String staticContrib = null;
-		if (bodyOnloadContribHolder.get() == null)
+		Set contributors = (Set)bodyOnloadContribHolder.get();
+
+		// were any contributors set?
+		if (contributors == null)
 		{
-			bodyOnloadContribHolder.set(dummy);
-			staticContrib = getBodyOnloadInitContribution();
+			contributors = new HashSet(1);
+			bodyOnloadContribHolder.set(contributors);
 		}
+
+		// get the id of the implementation; we need this trick to be
+		// able to support multiple implementations
+		String implementationId = getImplementationId();
+
+		// was a contribution for this specific implementation done yet?
+		if(!contributors.contains(implementationId))
+		{
+			staticContrib = getBodyOnloadInitContribution();
+			contributors.add(implementationId);
+		}
+
 		String contrib = getBodyOnloadContribution();
 		if (staticContrib != null)
 		{
@@ -84,11 +98,26 @@ public abstract class AjaxHandler
 	 */
 	public final void renderHead(HtmlHeaderContainer container)
 	{
-		if (headContribHolder.get() == null)
+		Set contributors = (Set)headContribHolder.get();
+
+		//	were any contributors set?
+		if (contributors == null)
 		{
-			headContribHolder.set(dummy);
-			renderHeadInitContribution(container);
+			contributors = new HashSet(1);
+			headContribHolder.set(contributors);
 		}
+
+		// get the id of the implementation; we need this trick to be
+		// able to support multiple implementations
+		String implementationId = getImplementationId();
+
+		// was a contribution for this specific implementation done yet?
+		if(!contributors.contains(implementationId))
+		{
+			renderHeadInitContribution(container);
+			contributors.add(implementationId);
+		}
+
 		renderHeadContribution(container);
 	}
 
@@ -109,6 +138,16 @@ public abstract class AjaxHandler
 	{
 		return component.urlFor(this);
 	}
+
+	/**
+	 * Gets the unique id of an ajax implementation. This should be implemented by
+	 * base classes only - like the dojo or scriptaculous implementation - to provide
+	 * a means to differentiate between implementations while not going to the level
+	 * of concrete implementations. It is used to ensure 'static' header contributions
+	 * are done only once per implementation.
+	 * @return unique id of an ajax implementation
+	 */
+	protected abstract String getImplementationId();
 
 	/**
 	 * Gets the response to render to the requester.

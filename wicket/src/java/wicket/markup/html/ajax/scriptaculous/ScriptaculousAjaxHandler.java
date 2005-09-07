@@ -86,4 +86,12 @@ public abstract class ScriptaculousAjaxHandler
 		addJsReference(container, new PackageResourceReference(application,
 				ScriptaculousAjaxHandler.class, "util.js"));
 	}
+
+	/**
+	 * @see AjaxHandler#getImplementationId()
+	 */
+	protected final String getImplementationId()
+	{
+		return "ScriptaculousImpl";
+	}
 }

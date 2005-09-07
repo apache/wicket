@@ -70,4 +70,12 @@ public abstract class DojoAjaxHandler
 		addJsReference(container, new PackageResourceReference(
 				Application.get(), DojoAjaxHandler.class, "dojo.js"));
 	}
+
+	/**
+	 * @see AjaxHandler#getImplementationId()
+	 */
+	protected final String getImplementationId()
+	{
+		return "DojoImpl";
+	}
 }
