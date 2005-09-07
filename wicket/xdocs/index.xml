@@ -46,6 +46,17 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="September 6, 2005 - Site Adjustments">
+				<p>
+					A new example has been added to the examples section: 
+					<a href="ExampleStockQuote.html">StockQuote Example</a>. This example is also available
+					in the examples download.
+				</p>
+				<p>
+					Due to unwarranted advertisements by our old page counter service, we have moved to another
+					ad-free statistics engine by <a href="http://www.onestat.com">onestat.com</a>.
+				</p>
+			</subsection>
 			<subsection name="August 30, 2005 - Wicket 1.1-beta 4 Available">
 				<p>
 					Wicket 1.1-beta 4 is available for download and testing. This is a beta release, so
@@ -197,25 +208,50 @@
 					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
 			</a>
 			<p>
-				<!-- Begin Nedstat Basic code -->
-				<!-- Title: Wicket - Home -->
-				<!-- URL: http://wicket.sourceforge.net/ -->
-				<script language="JavaScript" type="text/javascript"
-					src="http://m1.nedstatbasic.net/basic.js">
-				</script>
-				<script language="JavaScript" type="text/javascript" src="nedstat.js"></script>
-				<noscript>
-					<a target="_blank"
-						href="http://www.nedstatbasic.net/stats?ADUqkAqz13yUdWzu82RZ+ob42qQg">
-						<img src="http://m1.nedstatbasic.net/n?id=ADUqkAqz13yUdWzu82RZ+ob42qQg"
-							border="0" width="18" height="18"
-							alt="Nedstat Basic - Free web site statistics
-Personal homepage website counter" />
-					</a>
-					<br />
-					<a target="_blank" href="http://www.nedstatbasic.net/">Free counter</a>
-				</noscript>
-				<!-- End Nedstat Basic code -->
+<!--ONESTAT SCRIPTCODE START-->
+<!--
+// Het wijzigen van deze code is niet toegestaan en zal uw account definitief blokkeren!
+// Account ID : 239584
+// Website URL: http://wicket.sourceforge.net
+// Copyright (C) 2002-2005 OneStat.com All Rights Reserved
+-->
+<div id="OneStatTag"><table border='0' cellpadding='0' cellspacing='0'><tr><td align='center'>
+<script type="text/javascript">
+<!--
+function OneStat_Pageview()
+{
+    var d=document;
+    var sid="239584";
+    var CONTENTSECTION="";
+    var CUSTOMDATA="";
+    var osp_URL=d.URL;
+    var osp_Title=d.title;
+    var t=new Date();
+    var p="http"+(d.URL.indexOf('https:')==0?'s':'')+"://stat.onestat.com/stat.aspx?tagver=2&sid="+sid;
+    p+="&url="+escape(osp_URL);
+    p+="&ti="+escape(osp_Title);
+    p+="&section="+escape(CONTENTSECTION);
+    p+="&custom="+escape(CUSTOMDATA);
+    p+="&rf="+escape(parent==self?window.document.referrer:top.document.referrer);
+    p+="&tz="+escape(t.getTimezoneOffset());
+    p+="&ch="+escape(t.getHours());
+    p+="&js=1";
+    p+="&ul="+escape(navigator.appName=="Netscape"?navigator.language:navigator.userLanguage);
+    if(typeof(screen)=="object"){
+       p+="&sr="+screen.width+"x"+screen.height;p+="&cd="+screen.colorDepth;
+       p+="&jo="+(navigator.javaEnabled()?"Yes":"No");
+    }
+    d.write('<a href="http://www.onestat.com/aspx/login.aspx?sid='+sid+'" target=_blank><img id="ONESTAT_TAG" border="0" src="'+p+'" alt="This site tracked by OneStat.com. Get your own free web site counter."></'+'a>');
+}
+
+OneStat_Pageview();
+//-->
+</script>
+<noscript>
+<a href="http://www.onestat.com"><img border="0" src="http://stat.onestat.com/stat.aspx?tagver=2&amp;sid=239584&amp;js=No&amp;" ALT="online web site analyser" /></a><br /><a href="http://www.onestat.com">online web site analyser</a>
+</noscript>
+</td></tr><tr><td align='center'><div style="DISPLAY: none; FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: black; FONT-FAMILY: 'Verdana'; HEIGHT: 15px"><a href="http://www.onestat.com" style="text-decoration:none; COLOR: black;" target="_blank">webtraffic analysis</a></div></td></tr></table></div>
+<!--ONESTAT SCRIPTCODE END-->
 			</p>
 		</section>
 	</body>
