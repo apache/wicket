@@ -350,10 +350,12 @@ public abstract class ListView extends WebMarkupContainer
 	 *
 	 * @param optimizeItemRemoval
 	 *            The optimizeItemRemoval to set.
+	 * @return this
 	 */
-	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
+	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		this.optimizeItemRemoval = optimizeItemRemoval;
+		return this;
 	}
 
 	/**
