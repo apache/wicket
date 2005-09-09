@@ -56,9 +56,15 @@ public class LinkPage extends WicketExamplePage
 		add(link1);
 
 		// add a counter label to the link so that we can display it in the body of the link
-		link1.add(new ClickCountLabel("label1", count1));
+        link1.add(new Label("label1", new Model()
+        {
+            public Object getObject(Component component)
+            {
+                return Integer.toString(count1.clicks);
+            }
+        }));
 
-		// we can attach Link components to any HTML tag we want. If it is an anchor (<a href...),
+        // we can attach Link components to any HTML tag we want. If it is an anchor (<a href...),
 		// the url to this component is put in the href attribute. For other components, a
 		// onclick javascript event handler is created that triggers the round trip
 
@@ -152,4 +158,35 @@ public class LinkPage extends WicketExamplePage
 			});
 		}
 	}
+
+    //----------
+
+    final ClickCount count1 = new ClickCount(); // simple counter object
+    Link link1 = new Link("link1") {
+        public void onClick() {
+            count1.clicks++;
+        }
+    };
+
+    /**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<a href=\"#\" wicket:id=\"link1\">this link is clicked <span wicket:id=\"label1\">n</span> times</a>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final ClickCount count1 = new ClickCount(); // simple counter object\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link link1 = new Link(\"link1\") {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public void onClick() {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count1.clicks++;\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link1.add(new Label(\"label1\", new Model() {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject(Component component) {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Integer.toString(count1.clicks);\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
+		add(new ExplainPanel(html, code));
+
+	}
+
 }

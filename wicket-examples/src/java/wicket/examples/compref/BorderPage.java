@@ -38,4 +38,23 @@ public class BorderPage extends WicketExamplePage
 		border.add(label);
 		add(border);
 	}
+
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<span wicket:id=\"border\" class=\"mark\">\n"
+				+ "<span wicket:id=\"label\" class=\"mark\">label contents here</span>\n"
+				+ "</span>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public BorderPage()\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label label = new Label(\"label\", \"I am the label\");\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBorder border = new MyBorder(\"border\");\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border.add(label);\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(border);\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
+		add(new ExplainPanel(html, code));
+
+	}
+
 }

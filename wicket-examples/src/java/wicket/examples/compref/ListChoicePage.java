@@ -36,7 +36,7 @@ import wicket.model.CompoundPropertyModel;
 public class ListChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { 
+	private static final List SITES = Arrays.asList(new String[] {
 	        "The Server Side", "Java Lobby", "Java.Net" });
 
 	/**
@@ -82,4 +82,24 @@ public class ListChoicePage extends WicketExamplePage
 			return "site = '" + site + "'";
 		}
 	}
+
+    /**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<select wicket:id=\"site\">\n"
+                + "    <option>site 1</option>\n"
+                + "    <option>site 2</option>\n"
+                + "</select>";
+		String code = "private static final List SITES = Arrays.asList(new String[] { \"The Server Side\", \"Java Lobby\", \"Java.Net\" });\n" 
+                + "...\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;// Add a list choice component that uses the model object's 'site' property to designate the\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;ListChoice listChoice = new ListChoice(\"site\", SITES);\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;listChoice.setMaxRows(4);\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(listChoice);";
+		add(new ExplainPanel(html, code));
+
+	}
+
 }

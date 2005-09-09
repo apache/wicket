@@ -73,4 +73,14 @@ public class TextAreaPage extends WicketExamplePage
 			return "text = '" + text + "'";
 		}
 	}
+    /**
+    	 * Override base method to provide an explanation
+    	 */
+    	protected void explain() {
+    		String html = "<textarea wicket:id=\"text\" rows=\"6\" cols=\"20\">Input comes here</textarea>";
+    		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a text area component that uses the model object's 'text' property.\n"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextArea(\"text\"));";
+    		add(new ExplainPanel(html, code));
+    	}
+
 }

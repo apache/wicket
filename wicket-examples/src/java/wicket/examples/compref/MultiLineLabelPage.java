@@ -26,18 +26,32 @@ import wicket.markup.html.basic.MultiLineLabel;
  *
  * @author Eelco Hillenius
  */
-public class MultiLineLabelPage extends WicketExamplePage
-{
+public class MultiLineLabelPage extends WicketExamplePage {
 	/**
 	 * Constructor
 	 */
-	public MultiLineLabelPage()
-	{
+	public MultiLineLabelPage() {
 		String text =
-			"\nThis is a line.\n" +
-			"And this is another line.\n" +
-			"End of lines.\n";
+				"\nThis is a line.\n" +
+						"And this is another line.\n" +
+						"End of lines.\n";
 
 		add(new MultiLineLabel("multiLineLabel", text));
+	}
+
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<span wicket:id=\"multiLineLabel\" class=\"mark\">this text will be replaced</span>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public MultiLineLabelPage() {\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String text =\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"\\nThis is a line.\\n\" +\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"And this is another line.\\n\" +\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"End of lines.\\n\";\n"
+				+ "\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MultiLineLabel(\"multiLineLabel\", text));\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
+		add(new ExplainPanel(html, code));
 	}
 }

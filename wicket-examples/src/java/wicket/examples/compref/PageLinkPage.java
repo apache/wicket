@@ -70,4 +70,22 @@ public class PageLinkPage extends WicketExamplePage
 		//	  }
 		//  });
 	}
+
+    /**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<a wicket:id=\"pageLink\">go to our private/ non bookmarkable page</a>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;add(new PageLink(\"pageLink\", new IPageLink() {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Page getPage() {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return new NonBookmarkablePage(PageLinkPage.this);\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Class getPageIdentity() {\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return NonBookmarkablePage.class;\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;}));";
+		add(new ExplainPanel(html, code));
+
+	}
+
 }

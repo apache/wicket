@@ -57,7 +57,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
-		// Add a form with an onSumbit implementation that sets a message
+		// Add a form with an onSubmit implementation that sets a message
 		Form form = new Form("form")
 		{
 			protected void onSubmit()
@@ -67,10 +67,9 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		};
 		add(form);
 
-		// Add a multiple list choice component that uses Input's 'site'
-		// property to designate the
-		// current selection, and that uses the SITES list for the available
-		// options.
+		// Add a multiple list choice component that uses the model object's 'site'
+		// property to designate the current selection, and that uses the SITES
+        // list for the available options.
 		// Note that our model here holds a Collection, as we need to store
 		// multiple values too
 		ListMultipleChoice listChoice = new ListMultipleChoice("sites", SITES);
@@ -115,4 +114,31 @@ public class ListMultipleChoicePage extends WicketExamplePage
 			return b.toString();
 		}
 	}
+
+    /**
+     * Override base method to provide an explanation
+     */
+    protected void explain() {
+        String html = "<select wicket:id=\"sites\">\n"
+                + "    <option>site 1</option>\n"
+                + "    <option>site 2</option>\n"
+                + "</select>\n"
+                + "<select wicket:id=\"choices\">\n"
+                + "    <option>choice 1</option>\n"
+                + "    <option>choice 2</option>\n"
+                + "</select>";
+        String code =
+                "&nbsp;&nbsp;&nbsp;&nbsp;// Add a multiple list choice component that uses the model object's 'site'\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;// property to designate the current selection, and that uses the SITES\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;// list for the available options.\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;// Note that our model here holds a Collection, as we need to store\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;// multiple values too\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice siteChoice = new ListMultipleChoice(\"sites\", SITES);\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(siteChoice);\n"
+                        + "\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
+                        + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
+        add(new ExplainPanel(html, code));
+
+    }
 }

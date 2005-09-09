@@ -69,4 +69,16 @@ public class LabelPage extends WicketExamplePage
 		markupLabel.setEscapeModelStrings(false);
 		add(markupLabel);
     }
+
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<span wicket:id=\"markupLabel\" class=\"mark\">this text will be replaced</span>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label markupLabel = new Label(\"markupLabel\", \"now &lt;i&gt;that&lt;/i&gt; is a pretty &lt;b&gt;bold&lt;/b&gt; statement!\");\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;markupLabel.setEscapeModelStrings(false);\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(markupLabel);";
+		add(new ExplainPanel(html, code));
+
+	}
 }

@@ -33,4 +33,13 @@ public class PanelPage extends WicketExamplePage
 	{
 		add(new MyPanel("panel"));
 	}
+
+	protected void explain() {
+		String html = "<span wicket:id=\"panel\">panel contents come here</span>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public PanelPage()\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MyPanel(\"panel\"));\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
+		add(new ExplainPanel(html, code));
+	}
 }

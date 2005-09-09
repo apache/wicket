@@ -13,7 +13,7 @@
 	<p>
 	The basic PageLink component allows you to navigate to other pages. It uses the
 	application scope configured IPageFactory to create a new page instance.<br />
-	<i>NOTE: using PageLink is a style thing. You can just as easy create a normal link and set the
+	<i>NOTE: using PageLink is a style thing. You can just as easily create a normal link and set the
 	response page in the onClick handler. One extra here is that PageLink tries to detect
 	whether the link points to the same page you are in, and if you are, it will disable
 	the link.</i>
@@ -22,6 +22,6 @@
 	<p>
 	<a wicket:id="pageLink">go to our private/ non bookmarkable page</a>
 	</p>
-
+    <span wicket:id="explainPanel">panel contents come here</span>
 </body>
 </html>

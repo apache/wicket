@@ -38,4 +38,13 @@ public class ExternalLinkPage extends WicketExamplePage
 		// add a link that goes to the server side
 		add(new ExternalLink("externalLink2", "http://www.theserverside.com", "To The Server Side"));
 	}
+
+    /**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<a href=\"#\" target=\"_new\" wicket:id=\"externalLink1\">this body will be replaced</a>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;add(new ExternalLink(\"externalLink1\", \"http://www.javalobby.org\", \"To JavaLobby\"));";
+		add(new ExplainPanel(html, code));
+	}
 }

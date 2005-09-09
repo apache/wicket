@@ -62,7 +62,7 @@ public class CheckBoxPage extends WicketExamplePage
 		};
 		add(form);
 
-		// add a check box component that uses Input's 'bool' property.
+		// add a check box component that uses the model object's 'bool' property.
 		form.add(new CheckBox("bool"));
 	}
 
@@ -80,4 +80,15 @@ public class CheckBoxPage extends WicketExamplePage
 			return "bool = '" + bool + "'";
 		}
 	}
+/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {
+		String html = "<input type=\"checkbox\" wicket:id=\"bool\" />";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a check box component that uses the model object's 'bool' property.\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new CheckBox(\"bool\"));";
+		add(new ExplainPanel(html, code));
+
+	}
+
 }
