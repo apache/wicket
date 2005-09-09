@@ -79,4 +79,13 @@ class ChangeList implements Serializable
 			((Change)changes.get(i)).undo();
 		}
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return changes.toString();
+	}
+	
 }

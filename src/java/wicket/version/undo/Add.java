@@ -40,4 +40,12 @@ class Add extends Change
 	{
 		component.remove();
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Add[component: " + component.getId() + ", parent: " + component.getParent().getId() + "]";
+	}
 }

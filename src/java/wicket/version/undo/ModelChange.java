@@ -99,4 +99,12 @@ class ModelChange extends Change
 	{
 		component.setModel(originalModel);
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "ModelChange[component: " + component.getId() + ", model: " + originalModel + "]";
+	}
 }
