@@ -50,4 +50,13 @@ class Remove extends Change
 	{
 		container.internalAdd(component);
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Remove[component: " + component.getId() + ", parent: " + container.getId() + "]";
+	}
+	
 }
