@@ -35,6 +35,7 @@ import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * A MarkupContainer holds a map of child components.
@@ -419,7 +420,18 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
-		this.children = null;
+		if(children != null)
+		{
+			addStateChange(new Change()
+			{
+				final Object removedChildren = MarkupContainer.this.children;
+				public void undo()
+				{
+					MarkupContainer.this.children = removedChildren;
+				}
+			});
+			this.children = null;
+		}
 	}
 
 	/**
