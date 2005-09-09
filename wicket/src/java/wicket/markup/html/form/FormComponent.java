@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.Component;
+import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -157,20 +158,21 @@ public abstract class FormComponent extends WebMarkupContainer
      */
     protected String getInputName()
 	{
-		final ArrayList al = new ArrayList(4);
-		for (Component c = this; c != null && !(c instanceof Form); c = c.getParent())
-		{
-			al.add(c);
-		}
-		final StringBuffer buffer = new StringBuffer();
-		for (int i = al.size(); --i >= 0;)
-		{
-			Component c = (Component)al.get(i);
-			buffer.append(c.getId());
-			buffer.append(':');
-		}
-		buffer.setLength(buffer.length()-1);
-		return buffer.toString();		
+    	String id = getId();
+    	final StringBuffer inputName = new StringBuffer(id.length());
+    	Component c = this;
+    	while (true)
+    	{
+			inputName.insert(0, id);
+			c = c.getParent();
+			if (c == null || c instanceof Form || c instanceof Page)
+			{
+				break;
+			}
+			inputName.insert(0, ':');
+			id = c.getId();
+    	}
+		return inputName.toString();		
 	}
 
 	/**
