@@ -29,6 +29,13 @@ import wicket.model.IModel;
 public class PopupCloseLink extends Link
 {
 	/**
+	 * ClosePopupPage closes the popup window.
+	 */
+	private static final class ClosePopupPage extends WebPage
+	{
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param id
@@ -58,6 +65,6 @@ public class PopupCloseLink extends Link
 		getPage().getPageMap().remove();
 
 		// Web page closes window using javascript code in PopupCloseLink$1.html
-		setResponsePage(new WebPage(){});
+		setResponsePage(new ClosePopupPage());
 	}
 }
