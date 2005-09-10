@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
+import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * A factory that constructs Pages.

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Stack;
 
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,6 +33,7 @@ import wicket.Page;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
+import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
