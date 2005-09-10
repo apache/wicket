@@ -43,7 +43,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * Base class for forms. To implement a form, subclass this class, add
  * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
  * You can nest multiple buttons if you want to vary submit behaviour. However,
- * it is not nescesarry to use Wicket's button class, just putting e.g.
+ * it is not necessary to use Wicket's button class, just putting e.g.
  * &lt;input type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
