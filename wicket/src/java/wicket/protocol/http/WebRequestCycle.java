@@ -280,7 +280,9 @@ public class WebRequestCycle extends RequestCycle
 		{
 			final String contextPath = request.getContextPath();
 			buffer.append(contextPath);
-			buffer.append(((WebRequest)request).getServletPath());
+			String path = ((WebRequest)request).getServletPath();
+			if(path == null || "".equals(path)) path = "/";
+			buffer.append(path);			
 		}
 
 		return buffer;
