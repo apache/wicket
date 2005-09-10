@@ -55,7 +55,7 @@ import wicket.util.string.Strings;
  */
 public class WebPage extends Page implements IHeaderRenderer
 {
-    /** Components contribution to <body onLoad="..." */
+    /** Components contribution to <body onload="..." */
     private String bodyOnLoad;
     
 	/**
@@ -327,9 +327,9 @@ public class WebPage extends Page implements IHeaderRenderer
 	/**
 	 * THIS IS NOT PART OF THE PUBLIC API.
 	 *
-	 * Get what will be appended to the page markup's body onLoad attribute
+	 * Get what will be appended to the page markup's body onload attribute
 	 *
-	 * @return The onLoad attribute
+	 * @return The onload attribute
 	 */
 	public String getBodyOnLoad()
 	{
@@ -339,7 +339,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	/**
 	 * THIS IS NOT PART OF THE PUBLIC API. 
 	 * 
-	 * Append string to body onLoad attribute
+	 * Append string to body onload attribute
 	 * 
 	 * @param onLoad Attribute value to be appended
 	 */

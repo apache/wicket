@@ -24,7 +24,7 @@ import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.LowerCaseKeyValueMap;
+import wicket.util.value.AttributeMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -44,7 +44,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private LowerCaseKeyValueMap attributes = new LowerCaseKeyValueMap();
+	private AttributeMap attributes = new AttributeMap();
 
 	/** Column number. */
 	int columnNumber;
@@ -124,7 +124,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public LowerCaseKeyValueMap getAttributes()
+	public AttributeMap getAttributes()
 	{
 		return attributes;
 	}
@@ -332,7 +332,7 @@ public class XmlTag extends MarkupElement
 			tag.pos = pos;
 			tag.length = length;
 			tag.text = text;
-			tag.attributes = new LowerCaseKeyValueMap(attributes);
+			tag.attributes = new AttributeMap(attributes);
 			tag.type = type;
 			tag.isMutable = true;
 			tag.closes = closes;

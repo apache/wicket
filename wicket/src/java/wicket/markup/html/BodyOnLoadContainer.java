@@ -27,7 +27,7 @@ import wicket.model.Model;
 
 /**
  * Handle &lt;body&gt; tags. The reason why this is a component is because
- * of JavaScript and CSS support which requires to append body onLoad 
+ * of JavaScript and CSS support which requires to append body onload 
  * attributes from child component markup to the page's body tag.
  * 
  * @author Juergen Donnerstag
@@ -46,8 +46,8 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	}
 
 	/**
-	 * If parent is WebPage append onLoad attribute values from all components
-	 * in the hierarchie with onLoad attribute in there own markup.
+	 * If parent is WebPage append onload attribute values from all components
+	 * in the hierarchie with onload attribute in there own markup.
 	 *  
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
@@ -57,7 +57,7 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	    // If not WebPage, than just be a WebMarkupContainer
 	    if (getParent() instanceof WebPage)
 	    {
-	        // The consolidated onLoad of all child components
+	        // The consolidated onload of all child components
 	        String onLoad = ((WebPage)this.getPage()).getBodyOnLoad();
 	        
 	        // Get the page's onLoad attribute value. Null if not given
@@ -71,7 +71,7 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	        
             if (onLoad != null)
             {
-		        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
+		        add(new AttributeModifier("onload", true, new Model(onLoad)));
             }
 	    }
 	    

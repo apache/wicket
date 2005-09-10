@@ -23,7 +23,7 @@ import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.StringValue;
-import wicket.util.value.LowerCaseKeyValueMap;
+import wicket.util.value.AttributeMap;
 import wicket.util.value.ValueMap;
 
 /**
@@ -60,7 +60,7 @@ public class ComponentTag extends MarkupElement
 	private String id;
 	
 	/** Additional attributes map. Attributes contributed by <wicket:param> */
-	private LowerCaseKeyValueMap additionalAttributes;
+	private AttributeMap additionalAttributes;
 
 	/**
 	 * Construct.
@@ -499,11 +499,11 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return additional attributes
 	 */
-	public final LowerCaseKeyValueMap getAdditionalAttributes()
+	public final AttributeMap getAdditionalAttributes()
 	{
 	    if (this.additionalAttributes == null)
 	    {
-	        this.additionalAttributes = new LowerCaseKeyValueMap();  
+	        this.additionalAttributes = new AttributeMap();  
 	    }
 	    
 	    return this.additionalAttributes;

@@ -96,7 +96,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		{
 			container.autoAdd(headerPart);
 			
-			// Check if the component requires some <body onLoad="..">
+			// Check if the component requires some <body onload="..">
 			// attribute to be copied to the page's body tag. 
 			checkBodyOnLoad();
 		}
@@ -124,7 +124,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 	
 	/**
-	 * Check if the component requires some <body onLoad=".."> attribute to 
+	 * Check if the component requires some <body onload=".."> attribute to 
 	 * be copied to the page's body tag.
 	 */
 	private void checkBodyOnLoad()
@@ -149,7 +149,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		    // Start at the beginning
 		    associatedMarkupStream.setCurrentIndex(0);
 		    
-			// Iterate the markup and find <body onLoad="...">
+			// Iterate the markup and find <body onload="...">
 			do
 			{
 				final MarkupElement element = associatedMarkupStream.get();
