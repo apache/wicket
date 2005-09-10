@@ -363,7 +363,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 				// Check for button-name or button-name.x request string
 				if (!Strings.isEmpty(button.getInput())
-						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
+						|| !Strings.isEmpty(getRequest().getParameter(button.getInputName() + ".x")))
 				{
 					return button;
 				}

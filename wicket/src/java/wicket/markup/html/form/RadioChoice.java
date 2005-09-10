@@ -377,7 +377,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 					final String url = urlFor(IOnChangeListener.class);
 
 					// NOTE: do not encode the url as that would give invalid JavaScript
-					buffer.append(" onclick=\"location.href='" + url + "&" + getPath()
+					buffer.append(" onclick=\"location.href='" + url + "&" + getInputName()
 							+ "=" + id + "';\"");
 				}
 

@@ -75,7 +75,7 @@ public class FileUploadField extends FormComponent
 		if (request instanceof MultipartWebRequest)
 		{
 			// Get the item for the path
-			final FileItem item = ((MultipartWebRequest)request).getFile(getPath());
+			final FileItem item = ((MultipartWebRequest)request).getFile(getInputName());
 
 			// Only update the model when there is a file (larger than zero
 			// bytes)
