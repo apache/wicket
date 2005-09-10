@@ -150,7 +150,7 @@ public class Button extends FormComponent
 			String value = getValue();
 			if(value != null)
 			{
-				tag.put("value", getValue());
+				tag.put("value", value);
 			}
 		} 
 		catch(Exception e) 
