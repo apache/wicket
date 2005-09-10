@@ -256,7 +256,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** List of AttributeModifiers to be applied for this Component */
-	private AttributeModifier attributeModifiers = null;
+	private Object attributeModifiers = null;
 
 	/** possible list of handlers of event requests (eg XmlHttpRequests). */
 	private List ajaxHandlers;
@@ -400,8 +400,32 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public final Component add(final AttributeModifier modifier)
 	{
-		modifier.next = attributeModifiers;
-		attributeModifiers = modifier;
+		if(attributeModifiers == null)
+		{
+			attributeModifiers = modifier;
+		}
+		else
+		{
+			if(attributeModifiers instanceof Object[])
+			{
+				Object[] tmp = (Object[])attributeModifiers;
+				for (int i = 0; i < tmp.length; i++)
+				{
+					if(tmp[i] == modifier) return this;
+				}
+				Object[] newArray = new Object[tmp.length+1];
+				System.arraycopy(tmp, 0, newArray, 0, tmp.length);
+				newArray[tmp.length] = modifier;
+				attributeModifiers = newArray;
+			}
+			else if(attributeModifiers != modifier)
+			{
+				Object[] tmp = new Object[2];
+				tmp[0] = attributeModifiers;
+				tmp[1] = modifier;
+				attributeModifiers = tmp;
+			}
+		}
 		return this;
 	}
 
@@ -1860,10 +1884,19 @@ public abstract class Component implements Serializable, IAjaxListener
 			if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
 			{
 				tag = tag.mutable();
-				for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
+				
+				if (attributeModifiers instanceof AttributeModifier)
 				{
-					current.replaceAttibuteValue(this, tag);
+					((AttributeModifier)attributeModifiers).replaceAttibuteValue(this, tag);
 				}
+				else if(attributeModifiers instanceof Object[])
+				{
+					Object[] array = (Object[])attributeModifiers ;
+					for (int i = 0; i < array.length; i++)
+					{
+						((AttributeModifier)array[i]).replaceAttibuteValue(this, tag);
+					}
+				}				
 			}
 
 			if (ajaxHandlers != null)
@@ -1982,11 +2015,16 @@ public abstract class Component implements Serializable, IAjaxListener
 		detachModel();
 
 		// Also detach models from any contained attribute modifiers
-		if (attributeModifiers != null)
+		if (attributeModifiers instanceof AttributeModifier)
 		{
-			for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
+			((AttributeModifier)attributeModifiers).detachModel();
+		}
+		else if(attributeModifiers instanceof Object[])
+		{
+			Object[] array = (Object[])attributeModifiers ;
+			for (int i = 0; i < array.length; i++)
 			{
-				current.detachModel();
+				((AttributeModifier)array[i]).detachModel();
 			}
 		}
 	}
