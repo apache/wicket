@@ -26,7 +26,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
 /**
- * This is a tag resolver which handles &lt;body onLoad=".."&gt; tags. 
+ * This is a tag resolver which handles &lt;body onload=".."&gt; tags. 
  * 
  * @author Juergen Donnerstag
  */
@@ -53,7 +53,7 @@ public class BodyOnLoadResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <body onLoad>
+		// It must be <body onload>
 		if ((tag instanceof ComponentTag) && "body".equalsIgnoreCase(tag.getName()) 
 		        && (tag.getNamespace() == null))
 		{

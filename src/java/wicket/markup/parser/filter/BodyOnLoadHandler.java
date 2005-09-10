@@ -28,9 +28,9 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
 /**
- * This is a markup inline filter. It detects &t;body&gt; tags with onLoad
- * attribute. The onLoad attribute must be copied from the component's markup to
- * the Page's markup. In case onLoad loads and runs a javascript, it must either
+ * This is a markup inline filter. It detects &t;body&gt; tags with onload
+ * attribute. The onload attribute must be copied from the component's markup to
+ * the Page's markup. In case onload loads and runs a javascript, it must either
  * be referenced by file or included in &lt;wicket:head&gt;.
  * 
  * @author Juergen Donnerstag

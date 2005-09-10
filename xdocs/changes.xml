@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Eelco Hillenius" due-to="Cameron Braid" issue="1286616">Attributes should preserve case. Before this fix, attributes were converted to lower case. Not anymore now.</action>
       <action type="fix" dev="Johan Compagner" due-to="Kenneth Foo Chuan Khit" issue="1284498">Internal Error when using back buttons and Links in ListView</action>
       <action type="add" dev="Johan Compagner">Buttons can have a model now, for the buttons value attribute</action>
       <action type="fix" dev="Johan Compagner" due-to="Gwyn Evans" issue="1284029">Odd behaviour when Wicket is the "root" (/*) servlet</action>
