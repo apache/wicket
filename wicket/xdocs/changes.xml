@@ -8,11 +8,12 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
-     <action type="fix" dev="Eelco Hillenius" due-to="Matej Knop" issue="1284508">null values in PageParameters are now ignored totally when generating urls, instead of resulting in 'x=null'.</action>
-     <action type="fix" dev="Eelco Hillenius" due-to="Arto Arffman">fix: now allow multiple ajax handler implementations to contribute to the page's header</action>
-     <action type="fix" dev="Johan Compagner">Redirect url generating issues. The url was generated before Component.onInternalBeginRequest() and that method can generate another version.</action>    
-     <action type="add" dev="Johan Compagner">added protected method Session.attach() that is called right before a session is used for a request</action>    
-     <action type="add" dev="Johan Compagner">Added FormComponent.getInputName() that by default generates a name from the Form (not included) to the component for better/smaller input names</action>
+      <action type="remove" dev="Martijn Dashorst" issue="1283301">Integrated classes from concurrent.jar into wicket.util, removing the need for concurrent.jar</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Matej Knop" issue="1284508">null values in PageParameters are now ignored totally when generating urls, instead of resulting in 'x=null'.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Arto Arffman">fix: now allow multiple ajax handler implementations to contribute to the page's header</action>
+      <action type="fix" dev="Johan Compagner">Redirect url generating issues. The url was generated before Component.onInternalBeginRequest() and that method can generate another version.</action>    
+      <action type="add" dev="Johan Compagner">added protected method Session.attach() that is called right before a session is used for a request</action>    
+      <action type="add" dev="Johan Compagner">Added FormComponent.getInputName() that by default generates a name from the Form (not included) to the component for better/smaller input names</action>
 	  <action type="fix" dev="Juergen Donnerstag" issue="1255061" due-to="Gili Tzabari">Clearer message when trying to render abstract Page.</action>
 	  <action type="fix" dev="Juergen Donnerstag">&lt;wicket:head&gt; behaviour slighty changed to be more intuitiv.</action>
 	  <action type="fix" dev="Juergen Donnerstag">addToHeader() is nor longer required. Just use add() to add components which are inside a head section</action>

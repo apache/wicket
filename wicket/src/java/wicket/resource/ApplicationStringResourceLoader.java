@@ -29,10 +29,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
+import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
 /**
  * This string resource loader attempts to find a single resource bundle that
