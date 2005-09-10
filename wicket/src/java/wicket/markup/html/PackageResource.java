@@ -188,20 +188,17 @@ public class PackageResource extends WebResource
 	 */
 	public IResourceStream getResourceStream()
 	{
+		// Locate resource
+		IResourceStream resourceStream = Application.get().getResourceStreamLocator().locate(
+				scope.getClassLoader(), absolutePath, style, locale, null);
+
+		// Check that resource was found
 		if (resourceStream == null)
 		{
-			// Locate resource
-			this.resourceStream = Application.get().getResourceStreamLocator().locate(
-					scope.getClassLoader(), absolutePath, style, locale, null);
-
-			// Check that resource was found
-			if (this.resourceStream == null)
-			{
-				throw new WicketRuntimeException("Unable to find package resource [path = "
-						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
-			}
-			this.locale = resourceStream.getLocale();
+			throw new WicketRuntimeException("Unable to find package resource [path = "
+					+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 		}
+		this.locale = resourceStream.getLocale();
 		return resourceStream;
 	}
 
