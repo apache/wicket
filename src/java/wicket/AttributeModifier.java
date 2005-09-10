@@ -67,9 +67,6 @@ import wicket.util.value.ValueMap;
  */
 public class AttributeModifier implements Serializable
 {
-	/** The next attribute modifier in any chain */
-	AttributeModifier next;
-
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
 
