@@ -39,7 +39,7 @@ import javax.swing.tree.TreeSelectionModel;
  * {@link javax.swing.tree.FixedHeightLayoutCache}from JDK 1.5_01. Using that
  * class or {@link javax.swing.tree.VariableHeightLayoutCache}gave problems
  * when working in clustered environments. Hence, for this class most of the
- * usefull workings of FixedHeightLayoutCache were copied, while everything that
+ * useful workings of FixedHeightLayoutCache were copied, while everything that
  * is Swing/paint specific was removed.
  * 
  * @author Eelco Hillenius

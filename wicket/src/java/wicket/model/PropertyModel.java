@@ -68,10 +68,10 @@ import wicket.Component;
  * To force Ognl to convert to a specific type, you can provide constructor
  * argument 'propertyType'.if that is set, that type is used for conversion
  * instead of the type that is figured out by Ognl. This can be especially
- * usefull for when you have a generic property (like Serializable myProp) that
+ * useful for when you have a generic property (like Serializable myProp) that
  * you want to be converted to a narrower type (e.g. an Integer). Ognl sees an
  * incomming string being compatible with the target property, and will then
- * bypass the converter. Hence, to force myProp being converted to and from and
+ * bypass the converter. Hence, to force myProp being converted to and from an
  * integer, propertyType should be set to Integer.
  * </p>
  * 
@@ -90,11 +90,11 @@ public class PropertyModel extends AbstractPropertyModel
 
 	/**
 	 * If this is set, this type is used for conversion instead of the type that
-	 * is figured out by Ognl. This can be especially usefull for when you have
+	 * is figured out by Ognl. This can be especially useful for when you have
 	 * a generic property (like Serializable myProp) that you want to be
 	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
 	 * string being compatible with the target property, and will then bypass
-	 * the converter. Hence, to force myProp being converted to and from and
+	 * the converter. Hence, to force myProp being converted to and from an
 	 * integer, propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
@@ -125,12 +125,12 @@ public class PropertyModel extends AbstractPropertyModel
 	 *            Ognl expression for property access
 	 * @param propertyType
 	 *            The type to be used for conversion instead of the type that is
-	 *            figured out by Ognl. This can be especially usefull for when
+	 *            figured out by Ognl. This can be especially useful for when
 	 *            you have a generic property (like Serializable myProp) that
 	 *            you want to be converted to a narrower type (e.g. an Integer).
 	 *            Ognl sees an incoming string being compatible with the target
 	 *            property, and will then bypass the converter. Hence, to force
-	 *            myProp being converted to and from and integer, propertyType
+	 *            myProp being converted to and from an integer, propertyType
 	 *            should be set to Integer.
 	 */
 	public PropertyModel(final Object modelObject, final String expression, Class propertyType)
