@@ -20,13 +20,13 @@ package wicket.extensions.markup.html.datepicker;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.resources.JavaScriptReference;
-import wicket.extensions.markup.html.resources.StyleSheetReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.resources.JavaScriptReference;
+import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
 import wicket.model.Model;
 

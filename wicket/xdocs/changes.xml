@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="update" dev="Martijn Dashorst" due-to="Gili Tzabari" issue="1255188">Moved resource reference classes from extensions into core</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Johan Compagner" issue="1263833">StaticFileResource wasn't used and seemed to be a relic that was refactored to PackageResource. StaticFileResource is removed from Wicket.</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Cameron Braid" issue="1286616">Attributes should preserve case. Before this fix, attributes were converted to lower case. Not anymore now.</action>
       <action type="fix" dev="Johan Compagner" due-to="Kenneth Foo Chuan Khit" issue="1284498">Internal Error when using back buttons and Links in ListView</action>

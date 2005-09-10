@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.markup.html.resources;
+package wicket.markup.html.resources;
 
 import wicket.Application;
 import wicket.AttributeModifier;
