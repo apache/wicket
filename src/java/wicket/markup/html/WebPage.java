@@ -124,11 +124,15 @@ public class WebPage extends Page implements IHeaderRenderer
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
-				final String value = Strings.escapeMarkup(parameters.getString(key));
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(value);
+				final String value = parameters.getString(key);
+				if (value != null)
+				{
+					final String escapedValue = Strings.escapeMarkup(value);
+					buffer.append('&');
+					buffer.append(key);
+					buffer.append('=');
+					buffer.append(escapedValue);
+				}
 			}
 		}
 		if (buffer.charAt(buffer.length()-1)=='?')

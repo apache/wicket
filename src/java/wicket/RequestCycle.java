@@ -612,10 +612,15 @@ public abstract class RequestCycle
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(parameters.getString(key));
+				final String value = parameters.getString(key);
+				if (value != null)
+				{
+					final String escapedValue = Strings.escapeMarkup(value);
+					buffer.append('&');
+					buffer.append(key);
+					buffer.append('=');
+					buffer.append(escapedValue);
+				}
 			}
 		}
 		return getResponse().encodeURL(buffer.toString());
