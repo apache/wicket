@@ -80,7 +80,7 @@ import wicket.util.watch.ModificationWatcher;
  * instance held by each referee) and will yield a stable URL, permitting
  * efficient browser caching of the resource (even if the resource is
  * dynamically generated). Resources shared in this manner may also be
- * localized. See {@link wicket.ResourceReference}for more details.
+ * localized. See {@link wicket.ResourceReference} for more details.
  * 
  * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
  * can provide your own factory which creates locale sensitive Converter
@@ -88,7 +88,7 @@ import wicket.util.watch.ModificationWatcher;
  * 
  * <li><b>A ResourceStreamLocator </b>- An Application's ResourceStreamLocator
  * is used to find resources such as images or markup files. You can supply your
- * own ResourceStreamLocator if your prefer to store your applicaiton's
+ * own ResourceStreamLocator if your prefer to store your application's
  * resources in a non-standard location (such as a different filesystem
  * location, a particular JAR file or even a database) by overriding the
  * getResourceLocator() method.
@@ -104,7 +104,7 @@ import wicket.util.watch.ModificationWatcher;
  * encapsulating all of the functionality required to access localized
  * resources. For many localization problems, even this will not be required, as
  * there are convenience methods available to all components:
- * {@link wicket.Component#getString(String key)}and
+ * {@link wicket.Component#getString(String key)} and
  * {@link wicket.Component#getString(String key, IModel model)}.
  * 
  * <li><b>A Session Factory </b>- The Application subclass WebApplication
@@ -373,7 +373,7 @@ public abstract class Application
 	 * ApplicationSettings.
 	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
 	 * 
-	 * @return An instanceof an ApplicaitonSettings class.
+	 * @return An instanceof an ApplicationSettings class.
 	 */
 	public ApplicationSettings createApplicationSettings()
 	{
