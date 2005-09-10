@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.Map;
@@ -64,9 +63,6 @@ public abstract class Resource implements IResourceListener
 {
 	/** Logger */
 	private static Log log = LogFactory.getLog(Resource.class);
-
-	/** The actual raw resource this class is rendering */
-	protected IResourceStream resourceStream;
 
 	/** The maximum duration a resource may be idle before it is removed */
 	private Duration idleTimeout = Duration.NONE;
@@ -140,7 +136,7 @@ public abstract class Resource implements IResourceListener
 		parameters = null;
 
 		// Fetch resource from subclass if necessary
-		init();
+		IResourceStream resourceStream = init();
 
 		// Get servlet response to use when responding with resource
 		final Response response = cycle.getResponse();
@@ -161,7 +157,7 @@ public abstract class Resource implements IResourceListener
 		}
 
 		// Respond with resource
-		respond(response);
+		respond(resourceStream, response);
 	}
 
 	/**
@@ -208,44 +204,32 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected void invalidate()
 	{
-		if(this.resourceStream != null)
-		{
-			IResourceStream stream = this.resourceStream;
-			this.resourceStream = null;
-			try
-			{
-				stream.close();
-			}
-			catch (IOException ex)
-			{
-				log.debug("Error closing resourcestream", ex);
-			}
-		}
 	}
 
 	/**
 	 * Set resource field by calling subclass
+	 * @return The resource stream for the current request
 	 */
-	private final void init()
+	private final IResourceStream init()
 	{
-		if (this.resourceStream == null)
+		IResourceStream stream = getResourceStream();
+		
+		if (stream == null)
 		{
-			this.resourceStream = getResourceStream();
-			
-			if (this.resourceStream == null)
-			{
-				throw new WicketRuntimeException("Could not get resource stream");
-			}
+			throw new WicketRuntimeException("Could not get resource stream");
 		}
+		return stream;
 	}
 
 	/**
 	 * Respond with resource
 	 * 
+	 * @param resourceStream 
+	 *            The current resourcestream of the resource 
 	 * @param response
 	 *            The response to write to
 	 */
-	private final void respond(final Response response)
+	private final void respond(final IResourceStream resourceStream, final Response response)
 	{
 		try
 		{
