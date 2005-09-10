@@ -63,6 +63,15 @@ public class Button extends FormComponent
 	{
 		super(id);
 	}
+	
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public Button(final String id, final IModel object)
+	{
+		super(id, object);
+	}
+	
 
 	/**
 	 * Gets the defaultFormProcessing property. When false (default is true),
@@ -122,16 +131,6 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		// Buttons don't have models and so we don't want
-		// Component.initModel() to try to attach one automatically.
-		return null;
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -146,6 +145,19 @@ public class Button extends FormComponent
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
+		try
+		{
+			String value = getValue();
+			if(value != null)
+			{
+				tag.put("value", getValue());
+			}
+		} 
+		catch(Exception e) 
+		{
+			// ignore.
+		}
+		
 		// If the subclass specified javascript, use that
 		final String onClickJavaScript = getOnClickScript();
 		if (onClickJavaScript != null)
