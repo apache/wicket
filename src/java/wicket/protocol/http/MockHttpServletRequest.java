@@ -952,7 +952,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					String value = (String)values.get(component);
 					if (value != null)
 					{
-						parameters.put(component.getPath(), values.get(component));
+						parameters.put(((FormComponent)component).getInputName(), values.get(component));
 					}
 				}
 				return CONTINUE_TRAVERSAL;

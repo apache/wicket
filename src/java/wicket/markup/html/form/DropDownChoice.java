@@ -157,7 +157,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			final String url = urlFor(IOnChangeListener.class);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onChange", "location.href='" + url + "&" + getPath()
+			tag.put("onChange", "location.href='" + url + "&" + getInputName()
 					+ "=' + this.options[this.selectedIndex].value;");
 		}
 

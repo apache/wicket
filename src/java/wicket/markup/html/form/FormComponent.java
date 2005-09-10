@@ -156,7 +156,7 @@ public abstract class FormComponent extends WebMarkupContainer
      *
      * @return The string to use as the form element's name attribute
      */
-    protected String getInputName()
+    public String getInputName()
 	{
     	String id = getId();
     	final StringBuffer inputName = new StringBuffer(id.length());
