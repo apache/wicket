@@ -11,6 +11,39 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="September 11, 2005 - Wicket 1.1-rc1 Available">
+				<p>
+					The first release candidate for Wicket 1.1 is available for download and testing.
+					We have started the countdown to Wicket 1.1 final, and expect to release 1.1 in
+					two to three weeks. This release fixes several bugs, a full listing can be found
+					<a href="changes-report.html#1_1-rc1">here</a>. Here is a list of most notable
+					changes and fixes:
+				</p>
+				<ul>
+					<li>Moved resource reference classes from extensions into core</li>
+					<li>Infinite loop when adding attributemodifier twice</li>
+					<li>Buttons can have a model now, for the buttons value attribute</li>
+					<li>Odd behaviour when Wicket is the "root" (/*) servlet</li>
+					<li>Removed dependency on concurrent.jar</li>
+					<li>Now allow multiple ajax handler implementations to contribute to the page's header</li>
+				</ul>
+				<p>
+					Please 
+					<a href="https://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482&amp;release_id=355763">download this release</a> 
+					and give us feedback.
+				</p>
+			</subsection>
+			<subsection name="September 6, 2005 - Site Adjustments">
+				<p>
+					A new example has been added to the examples section: 
+					<a href="ExampleStockQuote.html">StockQuote Example</a>. This example is also available
+					in the examples download.
+				</p>
+				<p>
+					Due to unwarranted advertisements by our old page counter service, we have moved to another
+					ad-free statistics engine by <a href="http://www.onestat.com">onestat.com</a>.
+				</p>
+			</subsection>
 			<subsection name="August 30, 2005 - Wicket 1.1-beta 4 Available">
 				<p>
 					Wicket 1.1-beta 4 is available for download and testing. This is a beta release, so
