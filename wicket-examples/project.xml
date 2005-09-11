@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.1-b4</currentVersion>
+  <currentVersion>1.1-rc1</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -137,8 +137,10 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1-b4</version>
+      <version>1.1-rc1</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>The Wicket core classes</wicket.description>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
@@ -146,8 +148,10 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.1-b4</version>
+      <version>1.1-rc1</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>The Wicket extensions classes</wicket.description>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
@@ -223,7 +227,9 @@
       <artifactId>commons-collections</artifactId>
       <version>2.1</version>
       <properties>
+        <wicket.group>required</wicket.group>
         <war.bundle>true</war.bundle>
+        <wicket.description>Required for extensions</wicket.description>
       </properties>
     </dependency>
     <dependency>
@@ -231,15 +237,8 @@
       <artifactId>commons-lang</artifactId>
       <version>2.0</version>
       <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/beanutils/</url>
-      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description></wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
@@ -249,6 +248,8 @@
       <version>1.6</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -258,6 +259,8 @@
       <version>1.2</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -267,6 +270,8 @@
       <version>4.2.22</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -276,6 +281,8 @@
       <version>0.9.5</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -285,6 +292,8 @@
       <version>1.6R1</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -294,6 +303,8 @@
       <version>4.1.30</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -303,6 +314,8 @@
       <version>4.1.30</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -312,6 +325,8 @@
       <version>2.6.2</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
@@ -321,6 +336,8 @@
       <version>1.0.b2</version>
       <type>jar</type>
       <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Required for jwebunit tests</wicket.description>
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
