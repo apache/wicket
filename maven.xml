@@ -55,4 +55,7 @@
         <ant:copy todir="${maven.dist.bin.assembly.dir}" file="build.xml" />
         <ant:copy todir="${maven.dist.bin.assembly.dir}" file="LICENSE.txt" />
     </postGoal>
+    
+    <goal name="dist:prepare-src-filesystem" />
+    <goal name="dist:build-src" />
 </project>
