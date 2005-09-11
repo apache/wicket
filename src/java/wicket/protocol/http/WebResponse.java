@@ -196,9 +196,6 @@ public class WebResponse extends Response
 	{
 		if (time != null && time.getMilliseconds() != -1)
 		{
-			// If time is set also set cache headers.
-			httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			httpServletResponse.setHeader("Cache-Control", "max-age=" + 3600);
 			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
 		}
 	}
@@ -236,5 +233,28 @@ public class WebResponse extends Response
 		{
 			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
 		}
+	}
+
+	/**
+	 * Set a header to the date value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param date
+	 */
+	public void setDateHeader(String header, long date)
+	{
+		httpServletResponse.setDateHeader(header, date);
+	}
+	
+
+	/**
+	 * Set a header to the string value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param value
+	 */
+	public void setHeader(String header, String value)
+	{
+		httpServletResponse.setHeader(header, value);
 	}
 }
