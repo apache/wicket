@@ -35,7 +35,10 @@ public abstract class WebResource extends Resource
 	 */
 	protected final void configureResponse(final Response response)
 	{
-		setHeaders((WebResponse)response);
+		if (response instanceof WebResponse)
+		{
+			setHeaders((WebResponse)response);
+		}
 	}
 
 	/**
