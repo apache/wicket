@@ -73,6 +73,11 @@
       <name>1.1-b4</name>
       <tag>WICKET_R_1_1_BETA4</tag>
     </version>
+    <version>
+      <id>1.1-rc1</id>
+      <name>1.1-rc1</name>
+      <tag>WICKET_R_1_1_RC1</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
@@ -238,7 +243,7 @@
       <version>2.0</version>
       <properties>
         <wicket.group>required</wicket.group>
-        <wicket.description></wicket.description>
+        <wicket.description/>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
