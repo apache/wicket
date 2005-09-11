@@ -24,7 +24,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Duration;
@@ -55,7 +54,7 @@ import wicket.util.value.ValueMap;
  * resource can be shared between components like this, the ImageButton
  * components in this example are like all other components in Wicket and cannot
  * be shared.
- *
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
@@ -99,7 +98,8 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * Sets the maximum time the resource may be idle before it is removed.
 	 * 
-	 * @param value The idle duration timeout
+	 * @param value
+	 *            The idle duration timeout
 	 * @return this
 	 */
 	public Resource setIdleTimeout(Duration value)
@@ -111,7 +111,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * Returns the maximum time the resource may be idle before it is removed.
 	 * 
-	 * @return The idle duration timeout 
+	 * @return The idle duration timeout
 	 */
 	public Duration getIdleTimeout()
 	{
@@ -119,32 +119,8 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Subclasses can override this to set there headers when the resource is being served.
-	 * By default 2 headers will be set if the Resource is cacheable
-	 * <pre>
-	 * response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-	 * response.setHeader("Cache-Control", "max-age=" + 3600);
-	 * </pre>
-	 * So if a resource wants to control this or doesn't want to set this info it should 
-	 * override this method and don't call super.
-	 * 
-	 * @param response The WebResponse where set(Date)Header can be called on.
-	 * @return this
-	 */
-	protected Resource setHeaders(WebResponse response)
-	{
-		if(isCacheable())
-		{
-			// If time is set also set cache headers.
-			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			response.setHeader("Cache-Control", "max-age=" + 3600);
-		}
-		return this;
-	}
-	
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 *
+	 * 
 	 * Called when a resource is requested.
 	 */
 	public final void onResourceRequested()
@@ -180,24 +156,30 @@ public abstract class Resource implements IResourceListener
 		{
 			response.setLastModifiedTime(Time.valueOf(-1));
 		}
-		// this should be done in WebResource. Maybe much more should be moved to WebResource/WebRespone
-		// like cacheable/lastmodified.
-		if(response instanceof WebResponse)
-		{
-			setHeaders((WebResponse)response);
-		}
+		configureResponse(response);
 
 		// Respond with resource
 		respond(resourceStream, response);
 	}
 
 	/**
+	 * Allows implementations to do configure the response, like setting headers
+	 * etc.
+	 * 
+	 * @param response
+	 *            the respone
+	 */
+	protected void configureResponse(final Response response)
+	{
+	}
+
+	/**
 	 * Should this resource be cacheable, so will it set the last modified and
 	 * the some cache headers in the response.
-	 *
+	 * 
 	 * @param cacheable
 	 *            boolean if the lastmodified and cache headers must be set.
-	 * @return this            
+	 * @return this
 	 */
 	public final Resource setCacheable(boolean cacheable)
 	{
@@ -207,7 +189,7 @@ public abstract class Resource implements IResourceListener
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 *
+	 * 
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
@@ -239,12 +221,13 @@ public abstract class Resource implements IResourceListener
 
 	/**
 	 * Set resource field by calling subclass
+	 * 
 	 * @return The resource stream for the current request
 	 */
 	private final IResourceStream init()
 	{
 		IResourceStream stream = getResourceStream();
-		
+
 		if (stream == null)
 		{
 			throw new WicketRuntimeException("Could not get resource stream");
@@ -255,8 +238,8 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * Respond with resource
 	 * 
-	 * @param resourceStream 
-	 *            The current resourcestream of the resource 
+	 * @param resourceStream
+	 *            The current resourcestream of the resource
 	 * @param response
 	 *            The response to write to
 	 */
@@ -297,10 +280,8 @@ public abstract class Resource implements IResourceListener
 				{
 					if (log.isDebugEnabled())
 					{
-						log
-								.debug(
-										"Socket exception ignored for sending Resource response to client (ClientAbort)",
-										e);
+						log.debug("Socket exception ignored for sending Resource "
+								+ "response to client (ClientAbort)", e);
 					}
 					break;
 				}

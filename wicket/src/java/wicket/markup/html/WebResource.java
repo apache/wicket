@@ -18,6 +18,8 @@
 package wicket.markup.html;
 
 import wicket.Resource;
+import wicket.Response;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Base class for web resources. See the base class {@link wicket.Resource} for
@@ -28,4 +30,33 @@ import wicket.Resource;
  */
 public abstract class WebResource extends Resource
 {
+	/**
+	 * @see wicket.Resource#configureResponse(wicket.Response)
+	 */
+	protected final void configureResponse(final Response response)
+	{
+		setHeaders((WebResponse)response);
+	}
+
+	/**
+	 * Subclasses can override this to set there headers when the resource is being served.
+	 * By default 2 headers will be set if the Resource is cacheable
+	 * <pre>
+	 * response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
+	 * response.setHeader("Cache-Control", "max-age=" + 3600);
+	 * </pre>
+	 * So if a resource wants to control this or doesn't want to set this info it should 
+	 * override this method and don't call super.
+	 * 
+	 * @param response The WebResponse where set(Date)Header can be called on.
+	 */
+	protected void setHeaders(WebResponse response)
+	{
+		if(isCacheable())
+		{
+			// If time is set also set cache headers.
+			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
+			response.setHeader("Cache-Control", "max-age=" + 3600);
+		}
+	}
 }
