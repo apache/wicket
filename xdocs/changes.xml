@@ -7,9 +7,8 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
-    </release>
-    <release version="1.1-rc1" date="tbd" description="Current CVS HEAD development">
+    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+    <release version="1.1-rc1" date="2005-09-11" description="Current CVS HEAD development">
       <action type="add" dev="Johan Compagner" issue="1286190,1221732">Resource.setHeaders(WebResponse response) so that users can add any header they want (cacheable/content disposition) when the resource is served</action>
       <action type="fix" dev="Johan Compagner" issue="1286620">AttributeModifer can't be shared between components</action>
       <action type="fix" dev="Johan Compagner" issue="1286607">Infinite loop when adding attributemodifier twice</action>
@@ -22,16 +21,16 @@
       <action type="remove" dev="Martijn Dashorst" issue="1283301">Integrated classes from concurrent.jar into wicket.util, removing the need for concurrent.jar</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Matej Knop" issue="1284508">null values in PageParameters are now ignored totally when generating urls, instead of resulting in 'x=null'.</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Arto Arffman">fix: now allow multiple ajax handler implementations to contribute to the page's header</action>
-      <action type="fix" dev="Johan Compagner">Redirect url generating issues. The url was generated before Component.onInternalBeginRequest() and that method can generate another version.</action>    
-      <action type="add" dev="Johan Compagner">added protected method Session.attach() that is called right before a session is used for a request</action>    
+      <action type="fix" dev="Johan Compagner">Redirect url generating issues. The url was generated before Component.onInternalBeginRequest() and that method can generate another version.</action>
+      <action type="add" dev="Johan Compagner">added protected method Session.attach() that is called right before a session is used for a request</action>
       <action type="add" dev="Johan Compagner">Added FormComponent.getInputName() that by default generates a name from the Form (not included) to the component for better/smaller input names</action>
-	  <action type="fix" dev="Juergen Donnerstag" issue="1255061" due-to="Gili Tzabari">Clearer message when trying to render abstract Page.</action>
-	  <action type="fix" dev="Juergen Donnerstag">&lt;wicket:head&gt; behaviour slighty changed to be more intuitiv.</action>
-	  <action type="fix" dev="Juergen Donnerstag">addToHeader() is nor longer required. Just use add() to add components which are inside a head section</action>
-	  <action type="fix" dev="Juergen Donnerstag" issue="1276640" due-to="Simon Berriman">xmlns:wicket="http:/..." is now removed from markup as well if setStripWicketTag(true)</action>
-	  <action type="fix" dev="Juergen Donnerstag" issue="1243152" due-to="Eelco Hillenius">&lt;select .../&gt; is now allowed and will automatically be converted into a open-body-close tag</action>
-	  <action type="fix" dev="Juergen Donnerstag" issue="1275726" due-to="Ingram Chen">Fixed wrong implementation off getParameters() in WebRequestWithCryptedUrl</action>
-	  <action type="fix" dev="Gwyn Evans" issue="1280468" due-to="Simon Berriman">Unescaped &lt;b&gt; tag in XmlTag Javadoc</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1255061" due-to="Gili Tzabari">Clearer message when trying to render abstract Page.</action>
+      <action type="fix" dev="Juergen Donnerstag">&lt;wicket:head&gt; behaviour slighty changed to be more intuitiv.</action>
+      <action type="fix" dev="Juergen Donnerstag">addToHeader() is nor longer required. Just use add() to add components which are inside a head section</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1276640" due-to="Simon Berriman">xmlns:wicket="http:/..." is now removed from markup as well if setStripWicketTag(true)</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1243152" due-to="Eelco Hillenius">&lt;select .../&gt; is now allowed and will automatically be converted into a open-body-close tag</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1275726" due-to="Ingram Chen">Fixed wrong implementation off getParameters() in WebRequestWithCryptedUrl</action>
+      <action type="fix" dev="Gwyn Evans" issue="1280468" due-to="Simon Berriman">Unescaped &lt;b&gt; tag in XmlTag Javadoc</action>
     </release>
     <release version="1.1-b4" date="2005-08-30" description="Wicket 1.1 Beta 4">
       <action type="add" dev="Johan Compagner" issue="1276126" due-to="Gwyn Evans">CheckBoxMultipleChoice code submission</action>
