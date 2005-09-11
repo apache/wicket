@@ -109,6 +109,9 @@
     <groupId>wicket</groupId>
     <artifactId>wicket</artifactId>
     <version>${pom.currentVersion}</version>
+    <properties>
+    	<war.bundle>true</war.bundle>
+    </properties>
 </dependency>]]>
 <j:forEach var="lib" items="${pom.artifacts}"><j:set var="dep" value="${lib.dependency}" /> <j:if 
     test="${dep.getProperty('wicket.group')=='optional' or dep.getProperty('wicket.group')=='required'}">
@@ -116,6 +119,9 @@
     <groupId>${dep.groupId}</groupId>
     <artifactId>${dep.artifactId}</artifactId>
     <version>${dep.version}</version>
+    <properties>
+    	<war.bundle>${dep.getProperty('war.bundle')}</war.bundle>
+    </properties>
 </dependency>]]>
 </j:if>
 </j:forEach>
