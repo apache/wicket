@@ -164,7 +164,7 @@
       <properties>
         <wicket.group>test</wicket.group>
         <wicket.description>Used for testing Wicket</wicket.description>
-        <war.bundle>true</war.bundle>
+        <war.bundle>false</war.bundle>
       </properties>
     </dependency>
     <dependency>
