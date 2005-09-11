@@ -1,160 +1,119 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
+<project default="jar" name="wicket" basedir=".">
 
-<project default="jar" name="wicket:null" basedir=".">
-  <property name="defaulttargetdir" value="build">
-  </property>
-  <property name="libdir" value="lib">
-  </property>
-  <property name="classesdir" value="${defaulttargetdir}/classes">
-  </property>
-  <property name="testclassesdir" value="${defaulttargetdir}/test-classes">
-  </property>
-  <property name="testclassesdir" value="${defaulttargetdir}/test-classes">
-  </property>
-  <property name="testreportdir" value="${defaulttargetdir}/test-reports">
-  </property>
-  <property name="distdir" value="${defaulttargetdir}/dist">
-  </property>
-  <property name="javadocdir" value="${defaulttargetdir}dist/docs/api">
-  </property>
-  <property name="final.name" value="wicket-SNAPSHOT">
-  </property>
-  <path id="build.classpath">
-    <fileset dir="${libdir}">
-      <include name="**/*.jar">
-      </include>
-    </fileset>
-  </path>
-  <target name="init" description="o Initializes some properties">
-    <mkdir dir="${libdir}">
-    </mkdir>
-    <condition property="noget">
-      <equals arg2="only" arg1="${build.sysclasspath}">
-      </equals>
-    </condition>
-    <!--Test if JUNIT is present in ANT classpath-->
+	<property name="final.name" value="wicket" />
 
-    <available property="Junit.present" classname="junit.framework.Test">
-    </available>
-  </target>
-  <target name="compile" description="o Compile the code">
-    <mkdir dir="${classesdir}">
-    </mkdir>
-    <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
-      <src>
-        <pathelement location="src/java">
-        </pathelement>
-      </src>
-      <classpath refid="build.classpath">
-      </classpath>
-    </javac>
-    <copy todir="${classesdir}">
-        <fileset dir="src/java">
-            <include name="**/*.*" />
-            <exclude name="**/*.java" />
-            <exclude name="**/package.html"/>
-        </fileset>
-    </copy>
-  </target>
-  <target name="jar" description="o Create the jar" depends="compile,test">
-    <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
-    </jar>
-  </target>
-  <target name="clean" description="o Clean up the generated directories">
-    <delete dir="${defaulttargetdir}">
-    </delete>
-    <delete dir="${distdir}">
-    </delete>
-  </target>
-  <target name="dist" description="o Create a distribution" depends="jar, javadoc">
-    <mkdir dir="dist">
-    </mkdir>
-    <copy todir="dist">
-      <fileset dir="${defaulttargetdir}" includes="*.jar">
-      </fileset>
-      <fileset dir="${basedir}" includes="LICENSE*, README*">
-      </fileset>
-    </copy>
-  </target>
-  <target name="test" description="o Run the test cases" if="test.failure" depends="internal-test">
-    <fail message="There were test failures.">
-    </fail>
-  </target>
-  <target name="internal-test" if="Junit.present" depends="junit-present,compile-tests">
-    <mkdir dir="${testreportdir}">
-    </mkdir>
-    <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
-      <sysproperty key="basedir" value=".">
-      </sysproperty>
-      <formatter type="xml">
-      </formatter>
-      <formatter usefile="false" type="plain">
-      </formatter>
-      <classpath>
-        <path refid="build.classpath">
-        </path>
-        <pathelement path="${testclassesdir}">
-        </pathelement>
-        <pathelement path="${classesdir}">
-        </pathelement>
-      </classpath>
-      <batchtest todir="${testreportdir}">
-        <fileset dir="src/test">
-          <include name="**/*Test.java">
-          </include>
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-  <target name="junit-present" unless="Junit.present" depends="init">
-    <echo>================================= WARNING ================================</echo>
-    <echo>Junit isn't present in your ${ANT_HOME}/lib directory. Tests not executed.</echo>
-    <echo>==========================================================================</echo>
-  </target>
-  <target name="compile-tests" if="Junit.present" depends="junit-present,compile">
-    <mkdir dir="${testclassesdir}">
-    </mkdir>
-    <javac destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
-      <src>
-        <pathelement location="src/test">
-        </pathelement>
-      </src>
-      <classpath>
-        <path refid="build.classpath">
-        </path>
-        <pathelement path="${classesdir}">
-        </pathelement>
-      </classpath>
-    </javac>
-    <copy todir="${testclassesdir}">
-        <fileset dir="src/test">
-            <include name="**/*.*" />
-            <exclude name="**/*.java" />
-        </fileset>
-    </copy>
-  </target>
-  <target name="javadoc" description="o Generate javadoc">
-    <mkdir dir="${javadocdir}">
-    </mkdir>
-    <tstamp>
-      <format pattern="2004-yyyy" property="year">
-      </format>
-    </tstamp>
-    <property name="copyright" value="Copyright &amp;copy;  SourceForge. All Rights Reserved.">
-    </property>
-    <property name="title" value="Wicket SNAPSHOT API">
-    </property>
-    <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="wicket.*">
-      <classpath>
-        <path refid="build.classpath">
-        </path>
-      </classpath>
-    </javadoc>
-  </target>
-  <target name="install-maven">
-    <get dest="${user.home}/maven-install-latest.jar" usetimestamp="true" src="${repo}/maven/maven-install-latest.jar">
-    </get>
-    <unjar dest="${maven.home}" src="${user.home}/maven-install-latest.jar">
-    </unjar>
-  </target>
+	<property name="src.main.dir" value="src/java" />
+	<property name="src.test.dir" value="src/test" />
+	
+	<property name="lib.dir" value="lib" />
+
+	<property name="build.dir" value="target" />
+	<property name="build.main.classes" value="${build.dir}/classes" />
+	<property name="build.test.classes" value="${build.dir}/test-classes" />
+	<property name="build.test.reports" value="${build.dir}/test-reports" />
+	<property name="build.javadoc.dir" value="${build.dir}/docs/api" />
+
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"></include>
+		</fileset>
+	</path>
+
+	<target name="clean" description="o Cleans up the build artifacts">
+		<delete dir="${build.dir}" failonerror="false" />
+	</target>
+	
+	<target name="init" description="o Creates all directories for building">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="init" description="o Compiles the Java sources">
+		<mkdir dir="${build.main.classes}" />
+		<javac destdir="${build.main.classes}" 
+			target="1.4" 
+			debug="true"
+			deprecation="true"
+			optimize="false"
+			excludes="**/package.html"
+			srcdir="${src.main.dir}"
+			classpathref="build.classpath"
+			/>
+
+		<copy todir="${build.main.classes}">
+			<fileset dir="${src.main.dir}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test-compile" depends="compile" description="o Compiles the test sources">
+		<mkdir dir="${build.test.classes}" />
+		<javac destdir="${build.test.classes}" 
+			target="1.4" 
+			debug="true"
+			deprecation="true"
+			optimize="false"
+			excludes="**/package.html"
+			srcdir="${src.test.dir}"
+		>
+			<classpath>
+				<path refid="build.classpath"></path>
+				<pathelement path="${build.main.classes}"></pathelement>
+			</classpath>
+
+		</javac>
+		<copy todir="${build.test.classes}">
+			<fileset dir="${src.test.dir}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test" depends="test-compile" description="o Runs the unit tests">
+		<mkdir dir="${build.test.reports}" />
+
+		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+			<sysproperty key="basedir" value="."></sysproperty>
+			<formatter type="xml" />
+			<formatter type="plain" usefile="false" />
+			<classpath>
+				<path refid="build.classpath"></path>
+				<pathelement path="${build.main.classes}" />
+				<pathelement path="${build.test.classes}" />
+			</classpath>
+			<batchtest todir="${build.test.reports}">
+				<fileset dir="${src.test.dir}">
+					<include name="**/*Test.java"></include>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="javadoc" depends="init" description="o Creates the javadoc documentation">
+		<mkdir dir="${build.javadoc.dir}" />
+		<tstamp>
+			<format pattern="2004-yyyy" property="year"></format>
+		</tstamp>
+		<property name="copyright" value="Copyright &amp;copy; Wicket Developers. All Rights Reserved." />
+		<property name="title" value="Wicket API" />
+		<javadoc 
+			use="true" 
+			private="true" 
+			destdir="${build.javadoc.dir}" 
+			author="true" 
+			version="true"
+			sourcepath="${src.main.dir}" 
+			packagenames="wicket.*"
+			classpathref="build.classpath"
+			/>
+	</target>
+
+	<target name="jar" depends="test" description="o Creates a JAR file for this package">
+		<jar jarfile="${final.name}.jar" 
+			excludes="**/package.html" 
+			basedir="${build.main.classes}"/>
+	</target>
 </project>
