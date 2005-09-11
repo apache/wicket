@@ -28,8 +28,8 @@
         <th>Description</th>
     </tr>
     <tr>
-        <td>wicket-${pom.currentVersion}.jar</td>
-        <td>The main Wicket classes</td>
+        <td>wicket-extensions-${pom.currentVersion}.jar</td>
+        <td>The Wicket extensions classes</td>
     </tr>
 <j:forEach var="lib" items="${pom.artifacts}">
     <j:set var="dep" value="${lib.dependency}"/>
