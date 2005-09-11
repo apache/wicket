@@ -22,6 +22,7 @@
 
 	<target name="clean" description="o Cleans up the build artifacts">
 		<delete dir="${build.dir}" failonerror="false" />
+		<delete file="${final.name}.jar" failonerror="false" />
 	</target>
 	
 	<target name="init" description="o Creates all directories for building">
