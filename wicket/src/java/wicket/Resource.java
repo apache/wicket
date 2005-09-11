@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Duration;
@@ -118,6 +119,30 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
+	 * Subclasses can override this to set there headers when the resource is being served.
+	 * By default 2 headers will be set if the Resource is cacheable
+	 * <pre>
+	 * response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
+	 * response.setHeader("Cache-Control", "max-age=" + 3600);
+	 * </pre>
+	 * So if a resource wants to control this or doesn't want to set this info it should 
+	 * override this method and don't call super.
+	 * 
+	 * @param response The WebResponse where set(Date)Header can be called on.
+	 * @return this
+	 */
+	protected Resource setHeaders(WebResponse response)
+	{
+		if(isCacheable())
+		{
+			// If time is set also set cache headers.
+			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
+			response.setHeader("Cache-Control", "max-age=" + 3600);
+		}
+		return this;
+	}
+	
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 *
 	 * Called when a resource is requested.
@@ -154,6 +179,12 @@ public abstract class Resource implements IResourceListener
 		else
 		{
 			response.setLastModifiedTime(Time.valueOf(-1));
+		}
+		// this should be done in WebResource. Maybe much more should be moved to WebResource/WebRespone
+		// like cacheable/lastmodified.
+		if(response instanceof WebResponse)
+		{
+			setHeaders((WebResponse)response);
 		}
 
 		// Respond with resource
