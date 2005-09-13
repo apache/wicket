@@ -20,9 +20,11 @@ package wicket.examples.forminput;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,6 +33,54 @@ import java.util.Set;
  */
 public final class FormInputModel implements Serializable
 {
+	/**
+	 * Represents a line of text. Hack to get around the fact that strings are
+	 * immutable.
+	 */
+	public final class Line
+	{
+		private String text;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param text
+		 */
+		public Line(String text)
+		{
+			this.text = text;
+		}
+
+		/**
+		 * Gets text.
+		 * 
+		 * @return text
+		 */
+		public String getText()
+		{
+			return text;
+		}
+
+		/**
+		 * Sets text.
+		 * 
+		 * @param text
+		 *            text
+		 */
+		public void setText(String text)
+		{
+			this.text = text;
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return text;
+		}
+	}
+
 	private String stringProperty = "test";
 	private Integer integerProperty = new Integer(100);
 	private Double doubleProperty = new Double(20.5);
@@ -40,6 +90,7 @@ public final class FormInputModel implements Serializable
 	private URL urlProperty;
 	private String numberRadioChoice;
 	private Set siteSelection = new HashSet();
+	private List lines = new ArrayList();
 
 	/**
 	 * Construct.
@@ -54,6 +105,9 @@ public final class FormInputModel implements Serializable
 		{
 			e.printStackTrace();
 		}
+		lines.add(new Line("line one"));
+		lines.add(new Line("line two"));
+		lines.add(new Line("line three"));
 	}
 
 	/**
@@ -234,6 +288,24 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets lines.
+	 * @return lines
+	 */
+	public List getLines()
+	{
+		return lines;
+	}
+
+	/**
+	 * Sets lines.
+	 * @param lines lines
+	 */
+	public void setLines(List lines)
+	{
+		this.lines = lines;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
@@ -249,6 +321,13 @@ public final class FormInputModel implements Serializable
 		 .append(", numberRadioChoice = ").append(numberRadioChoice);
 		b.append(",selected sites {");
 		for(Iterator i = siteSelection.iterator(); i.hasNext();)
+		{
+			b.append(i.next());
+			if(i.hasNext()) b.append(",");
+		}
+		b.append("}");
+		b.append(",lines {");
+		for(Iterator i = lines.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
 			if(i.hasNext()) b.append(",");

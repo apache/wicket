@@ -38,6 +38,8 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.PropertyModel;
@@ -144,6 +146,9 @@ public class FormInput extends WicketExamplePage
 				}
 			});
 
+			// and this is to show we can nest ListViews in Forms too
+			add(new LinesListView("lines"));
+
 			add(new ImageButton("saveButton"));
 
 			add(new Link("resetButtonLink")
@@ -227,6 +232,28 @@ public class FormInput extends WicketExamplePage
 			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale()); 
 			return display;
+		}
+	}
+
+	/** list view to be nested in the form. */
+	private static final class LinesListView extends ListView
+	{
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
+		public LinesListView(String id)
+		{
+			super(id);
+		}
+
+		protected void populateItem(ListItem item)
+		{
+			// add a text field that works on each list item model (returns objects of
+			// type FormInputModel.Line) using property text.
+			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
 		}
 	}
 }
