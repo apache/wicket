@@ -36,7 +36,7 @@ import wicket.util.time.Time;
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class FileResourceStream extends AbstractResourceStream
+public class FileResourceStream extends AbstractResourceStream
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(FileResourceStream.class);
@@ -48,7 +48,7 @@ public final class FileResourceStream extends AbstractResourceStream
 	private transient InputStream inputStream;
 
 	/**
-	 * Private constructor to force use of static factory methods.
+	 * Constructor.
 	 * 
 	 * @param file
 	 *            File containing resource
