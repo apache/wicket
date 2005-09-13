@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+      <action type="add" dev="Eelco Hillenius">Made FileResourceStream non-final to support using custom content type schemas etc</action>
     <release version="1.1-rc1" date="2005-09-11" description="Current CVS HEAD development">
       <action type="add" dev="Johan Compagner" issue="1286190,1221732">Resource.setHeaders(WebResponse response) so that users can add any header they want (cacheable/content disposition) when the resource is served</action>
       <action type="fix" dev="Johan Compagner" issue="1286620">AttributeModifer can't be shared between components</action>
