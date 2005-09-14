@@ -37,7 +37,7 @@ public final class FormInputModel implements Serializable
 	 * Represents a line of text. Hack to get around the fact that strings are
 	 * immutable.
 	 */
-	public final class Line
+	public final class Line implements Serializable
 	{
 		private String text;
 
