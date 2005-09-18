@@ -40,5 +40,6 @@ public class SimplePage_3 extends SimplePage
 	    get("test").setVisible(false);
 	    get("myPanel").setVisible(false);
 	    get("myBorder").setVisible(false);
+	    get("myBorder2").setVisible(false);
     }
 }

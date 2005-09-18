@@ -216,8 +216,14 @@ public abstract class Component implements Serializable, IAjaxListener
 		{
 			IModel model = component.getModel();
 			Object previous = model.getObject(component);
-			if(newObject == null && previous == null) return true;
-			if(newObject == null || previous == null) return false;
+			if (newObject == null && previous == null)
+			{
+				return true;
+			}
+			if (newObject == null || previous == null) 
+			{
+				return false;
+			}
 			return newObject.equals(previous);
 		}
 	};
@@ -245,6 +251,9 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/** Render tag boolean */
 	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
 	/** Versioning boolean */
 	private static final short FLAG_VERSIONED = 0x0008;
@@ -1297,7 +1306,6 @@ public abstract class Component implements Serializable, IAjaxListener
 		getRequestCycle().setRedirect(redirect);
 	}
 	
-	
 	/**
 	 * If false the component's tag will be printed as well as its
 	 * body (which is default). If true only the body will be printed,
@@ -1309,6 +1317,18 @@ public abstract class Component implements Serializable, IAjaxListener
 	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
 	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
+	    return this;
+	}
+	
+	/**
+	 * If true, all attribute modifiers will be ignored
+	 * 
+	 * @param ignore If true, all attribute modifiers will be ignored
+	 * @return This
+	 */
+	protected final Component setIgnoreAttributeModifier(final boolean ignore)
+	{
+	    this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 	    return this;
 	}
 
@@ -1881,7 +1901,8 @@ public abstract class Component implements Serializable, IAjaxListener
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply attribute modifiers
-			if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
+			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE) 
+					&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) == false))
 			{
 				tag = tag.mutable();
 				
