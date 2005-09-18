@@ -283,8 +283,15 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			Component component = this.container.get(tag.getId());
 			if (component != null)
 			{
-				component.renderComponent(markupStream);
-				component.rendered();
+				if (component.isVisible() == true)
+				{
+					component.renderComponent(markupStream);
+					component.rendered();
+				}
+				else
+				{
+					findMarkupStream().skipComponent();
+				}
 				return true;
 			}
 			
