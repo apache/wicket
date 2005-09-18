@@ -463,11 +463,19 @@ public abstract class MarkupContainer extends Component
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
 
-		renderComponentTag(associatedMarkupOpenTag);
-		associatedMarkupStream.next();
-		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
-		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
-		setMarkupStream(originalMarkupStream);
+		try
+		{
+			setIgnoreAttributeModifier(true);
+			renderComponentTag(associatedMarkupOpenTag);
+			associatedMarkupStream.next();
+			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
+			setMarkupStream(originalMarkupStream);
+		}
+		finally
+		{
+			setIgnoreAttributeModifier(false);
+		}
 	}
 
 	/**

@@ -18,11 +18,13 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 
 
 /**
@@ -50,5 +52,10 @@ public class SimplePage extends WebPage
 
 	    Border border = new SimpleBorder("myBorder");
 	    add(border);
+
+	    Border border2 = new SimpleBorder("myBorder2");
+	    border2.setRenderBodyOnly(false);
+	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+	    add(border2);
     }
 }
