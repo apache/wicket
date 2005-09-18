@@ -66,4 +66,12 @@ public class SimplePageTest extends WicketTestCase
 	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
 	    //panel.renderComponent();
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+	    executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
+	}
 }
