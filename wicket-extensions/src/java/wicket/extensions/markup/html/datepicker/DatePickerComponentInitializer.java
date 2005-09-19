@@ -147,9 +147,9 @@ public class DatePickerComponentInitializer implements IInitializer
 		PackageResource.bind(application, DatePickerSettings.class, "style/menuarrow.gif");
 		PackageResource.bind(application, DatePickerSettings.class, "style/menuarrow2.gif");
 
-		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_1.jpg");
-		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_2.jpg");
-		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_3.jpg");
+		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_1.gif");
+		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_2.gif");
+		PackageResource.bind(application, DatePickerSettings.class, "calendar_icon_3.gif");
 		PackageResource.bind(application, DatePickerSettings.class, "style/aqua/theme.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-blue.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-blue2.css");

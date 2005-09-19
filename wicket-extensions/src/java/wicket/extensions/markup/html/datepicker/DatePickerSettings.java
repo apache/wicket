@@ -239,7 +239,7 @@ public class DatePickerSettings implements Serializable
 	 */
 	public final PackageResourceReference newButtonIconRed()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_1.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_1.gif");
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class DatePickerSettings implements Serializable
 	 */
 	public final PackageResourceReference newButtonIconPlain()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_2.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_2.gif");
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class DatePickerSettings implements Serializable
 	 */
 	public final PackageResourceReference newButtonIconBlue()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_3.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_3.gif");
 	}
 
 	/**
