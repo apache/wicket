@@ -21,6 +21,7 @@ import wicket.AjaxHandler;
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
@@ -28,6 +29,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.model.IModel;
+import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
 
 /**
@@ -99,6 +101,20 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			// Check if the component requires some <body onload="..">
 			// attribute to be copied to the page's body tag. 
 			checkBodyOnLoad();
+		}
+		else if(headerPart != null)
+		{
+			// already added but all the components in this header part must be touched (that they are rendered)
+			Response response = getRequestCycle().getResponse();
+			try
+			{
+				getRequestCycle().setResponse(NullResponse.getInstance());
+				container.autoAdd(headerPart);
+			} 
+			finally
+			{
+				getRequestCycle().setResponse(response);
+			}
 		}
 
 		// get head and body contributions in one loop
