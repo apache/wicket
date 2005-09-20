@@ -98,7 +98,7 @@ public final class ValidationAjaxHandler extends DojoAjaxHandler
 	{
 		final ValueMap attributes = tag.getAttributes();
 		final String attributeValue =
-			"javascript:validate('" + getCallbackUrl() + "', '" + formComponent.getInput() + "', this);";
+			"javascript:validate('" + getCallbackUrl() + "', '" + formComponent.getInputName() + "', this);";
 		attributes.put(getEventName(), attributeValue);
 	}
 
