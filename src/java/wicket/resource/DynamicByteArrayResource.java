@@ -74,10 +74,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public String getContentType()
 			{
-				if(data == null)
-				{
-					data = getData();
-				}
+				checkLoadData();
 				return DynamicByteArrayResource.this.getContentType();
 			}
 
@@ -86,10 +83,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
-				if(data == null)
-				{
-					data = getData();
-				}
+				checkLoadData();
 				if (inputStream == null)
 				{
 					inputStream = new ByteArrayInputStream(data);
@@ -102,30 +96,44 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			public Time lastModifiedTime()
 			{
-				if(data == null)
-				{
-					data = getData();
-				}
+				checkLoadData();
 				return DynamicByteArrayResource.this.lastModifiedTime();
 			}
 
+			/**
+			 * @see wicket.util.resource.IResourceStream#length()
+			 */
 			public long length()
 			{
-				if(data == null)
-				{
-					data = getData();
-				}
+				checkLoadData();
 				return (data != null) ? data.length : 0;
 			}
-			
+
+			/**
+			 * @see wicket.util.resource.IResourceStream#getLocale()
+			 */
 			public Locale getLocale()
 			{
 				return locale;
 			}
-			
+
+			/**
+			 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
+			 */
 			public void setLocale(Locale loc)
 			{
 				DynamicByteArrayResource.this.locale = loc;
+			}
+
+			/**
+			 * Check whether the data was loaded yet. If not, load it now.
+			 */
+			private void checkLoadData()
+			{
+				if(data == null)
+				{
+					data = getData();
+				}
 			}
 		};
 	}
