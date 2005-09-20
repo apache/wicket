@@ -450,6 +450,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			tag.put("enctype", "multipart/form-data");
 		}
+		else
+		{
+			// sanity check
+			String enctype = (String)tag.getAttributes().get("enctype");
+			if ("multipart/form-data".equalsIgnoreCase(enctype))
+			{
+				// though not set explicitly in Java, this is a multipart form
+				setMultiPart(true);
+			}
+		}
 	}
 
 	/**
