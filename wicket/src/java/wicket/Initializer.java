@@ -17,9 +17,7 @@
  */
 package wicket;
 
-import wicket.markup.html.ajax.dojo.DojoAjaxHandler;
 import wicket.markup.html.tree.TreeComponentInitializer;
-import wicket.util.resource.IResourceStream;
 
 /**
  * Initializer for components in wicket core library.
@@ -35,14 +33,5 @@ public class Initializer implements IInitializer
 	{
 		// initialize the tree component
 		new TreeComponentInitializer().init(application);
-
-		// implement the ajax handlers using dummy implementations
-		new DojoAjaxHandler()
-		{
-			protected IResourceStream getResponse()
-			{
-				return null;
-			}
-		}.init(application);
 	}
 }
