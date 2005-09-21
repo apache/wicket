@@ -1,3 +1,0 @@
-this package uses:
-	- nightly profile build of Dojo, from the 28th of august 2005
-		(http://archive.dojotoolkit.org/nightly-profiles/browserio-2005-08-29.tgz)
