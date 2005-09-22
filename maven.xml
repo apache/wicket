@@ -13,7 +13,9 @@
         <ant:delete>
             <fileset dir="${maven.build.dir}/docs/style" includes="**/maven*.css"/>
         </ant:delete>
+        <!-- 
         <ant:style force="true" style="src/xdocs/news.xsl" in="${maven.docs.src}/index.xml" out="${maven.docs.dest}/news.rss"/>
+         -->
     </postGoal>
 
     <postGoal name="dist:prepare-bin-filesystem" >
