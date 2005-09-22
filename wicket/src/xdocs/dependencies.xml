@@ -28,8 +28,8 @@
         <th>Description</th>
     </tr>
     <tr>
-        <td>wicket-${pom.currentVersion}.jar</td>
-        <td>The main Wicket classes</td>
+        <td>${pom.artifactId}-${pom.currentVersion}.jar</td>
+        <td>${pom.shortDescription}</td>
     </tr>
 <j:forEach var="lib" items="${pom.artifacts}">
     <j:set var="dep" value="${lib.dependency}"/>
@@ -106,8 +106,8 @@
 		modification.
 	</p>
     <source><![CDATA[<dependency>
-    <groupId>wicket</groupId>
-    <artifactId>wicket</artifactId>
+    <groupId>${pom.groupId}</groupId>
+    <artifactId>${pom.artifactId}</artifactId>
     <version>${pom.currentVersion}</version>
     <properties>
     	<war.bundle>true</war.bundle>
