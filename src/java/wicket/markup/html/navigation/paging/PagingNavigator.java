@@ -31,7 +31,7 @@ import wicket.markup.html.panel.Panel;
 public class PagingNavigator extends Panel
 {
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
-	private final PagingNavigation pageableListViewNavigation;
+	private final PagingNavigation pagingNavigation;
 
 	/**
 	 * Constructor.
@@ -61,8 +61,8 @@ public class PagingNavigator extends Panel
 
 		
 		// Get the navigation bar and add it to the hierarchy
-		this.pageableListViewNavigation = newNavigation(pageable, labelProvider);
-		add(pageableListViewNavigation);
+		this.pagingNavigation = newNavigation(pageable, labelProvider);
+		add(pagingNavigation);
 
 		// Add additional page links
 		add(new PagingNavigationLink("first", pageable, 0));
@@ -90,8 +90,8 @@ public class PagingNavigator extends Panel
 	 * Gets the pageable navigation component for configuration purposes.
 	 * @return the associated pageable navigation.
 	 */
-	public final PagingNavigation getPageableListViewNavigation()
+	public final PagingNavigation getPagingNavigation()
 	{
-		return pageableListViewNavigation;
+		return pagingNavigation;
 	}
 }
