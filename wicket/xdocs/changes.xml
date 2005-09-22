@@ -8,6 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Martijn Dashorst" issue="1298082">Moved Dojo and Scriptaculous dependencies out of core into contrib packages</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1288863">Renamed pageableListViewNavigation field and getter in PagingNavigator</action>
       <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1294381">Patch for error in javadoc in ApplicationPages</action>
       <action type="fix" dev="Eelco Hillenius">form now checks on enctype attribute. If the attribute is multipart, the multipart property of the form object will be set to that.</action>
       <action type="fix" dev="Martijn Dashorst" issue="1292416">AJAX component doesn't get correct request parameter path</action>
