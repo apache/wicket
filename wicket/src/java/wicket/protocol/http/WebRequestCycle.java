@@ -295,19 +295,19 @@ public class WebRequestCycle extends RequestCycle
 	 * @param page
 	 *            the current page
 	 */
-	final void setFormComponentValuesFromCookies(final Page page)
-	{
-		// Visit all Forms contained in the page
-		page.visitChildren(Form.class, new Component.IVisitor()
-		{
-			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
-			{
-				((Form)component).loadPersistentFormComponentValues();
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
+//	final void setFormComponentValuesFromCookies(final Page page)
+//	{
+//		// Visit all Forms contained in the page
+//		page.visitChildren(Form.class, new Component.IVisitor()
+//		{
+//			// For each FormComponent found on the Page (not Form)
+//			public Object component(final Component component)
+//			{
+//				((Form)component).loadPersistentFormComponentValues();
+//				return CONTINUE_TRAVERSAL;
+//			}
+//		});
+//	}
 
 	/**
 	 * Activates a bookmarkable page if one was specified in the request.
@@ -582,8 +582,8 @@ public class WebRequestCycle extends RequestCycle
 				// Invoke interface on component
 				invokeInterface(component, method);
 
-				// Set form component values from cookies
-				setFormComponentValuesFromCookies(page);
+//				// Set form component values from cookies
+//				setFormComponentValuesFromCookies(page);
 			}
 			else
 			{
