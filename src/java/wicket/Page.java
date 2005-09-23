@@ -210,6 +210,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return getPageMap().continueToOriginalDestination();
 	}
+	
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -222,6 +223,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		{
 			// Add/touch the response page in the session (its pagemap).
 			session.touch(this);
+			
+			// Set form component values from cookies
+			setFormComponentValuesFromCookies();
 			
 			try
 			{
@@ -293,6 +297,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return this.autoIndex++;
 	}
 
+	
+	/**
+	 * Sets values for form components based on cookie values in the request.
+	 *
+	 */
+	final void setFormComponentValuesFromCookies()
+	{
+		// Visit all Forms contained in the page
+		visitChildren(Form.class, new Component.IVisitor()
+		{
+			// For each FormComponent found on the Page (not Form)
+			public Object component(final Component component)
+			{
+				((Form)component).loadPersistentFormComponentValues();
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+	
 	/**
 	 * @return The current version number of this page. If the page has been
 	 *         changed once, the return value will be 1. If the page has not yet
