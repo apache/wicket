@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Johan Compagner" issue="1290352" due-to="Phil Kulak"> Models not detached when checkAccess() returns false.</action>
+      <action type="fix" dev="Johan Compagner" issue="1290843" due-to="Ralf Ebert">DatePicker fails when used multiple times in the same page</action>
+      <action type="fix" dev="Johan Compagner" issue="1298789">Buttons with empty valueare not found as submit button</action>
+      <action type="fix" dev="Johan Compagner" issue="1298795">Persisted form values not loaded for bookmarkable/redirect pages</action>
       <action type="fix" dev="Martijn Dashorst" issue="1298082">Moved Dojo and Scriptaculous dependencies out of core into contrib packages</action>
       <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1288863">Renamed pageableListViewNavigation field and getter in PagingNavigator</action>
       <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1294381">Patch for error in javadoc in ApplicationPages</action>
