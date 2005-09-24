@@ -282,6 +282,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					getResponse().redirect(redirectUrl);
 				}
 			}
+			// for this page the request is also over.
+			internalEndRequest();
 		}
 	}
 
