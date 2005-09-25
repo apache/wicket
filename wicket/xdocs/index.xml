@@ -46,6 +46,22 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="September 25, 2005 - Wicket On Tour">
+				<p>
+					If you're near the Netherlands around October 12th, you can see 'Component Based Web 
+					Development Using Wicket' on the fall conference 
+					<a href="http://www.nljug.org/pages/events/content/jfall_2005/">JFall 2005</a> organized
+					by the dutch Java User Group. Eelco Hillenius and Martijn Dashorst will be giving the
+					presentation, and we hope to see you there!
+				</p>
+				<p>
+					Wicket will also be featured at 
+					<a href="http://wiki.javapolis.com/confluence/display/JP05/JavaPolis+Conference">JavaPolis 2005</a> 
+					in Antwerp. Again, Eelco and Martijn will be presenting 
+					<a href="http://wiki.javapolis.com/confluence/display/JP05/Wicket">Wicket</a> on December 14, between 
+					18:00 and 19:00.
+				</p>
+			</subsection>
 			<subsection name="September 11, 2005 - Wicket 1.1-rc1 Available">
 				<p>
 					The first release candidate for Wicket 1.1 is available for download and testing.
