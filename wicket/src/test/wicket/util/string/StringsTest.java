@@ -393,8 +393,6 @@ public final class StringsTest extends TestCase
 
 	/**
 	 * Tests the <code>toMultilineMarkup</code> method.
-	 * 
-	 * @todo TODO make paragraphs xhtml compliant.
 	 */
 	public void testToMultilineMarkup()
 	{
