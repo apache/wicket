@@ -40,7 +40,6 @@ import wicket.Resource;
 import wicket.Response;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.form.Form;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;

@@ -189,6 +189,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 		/**
 		 * Get the count under synch.
+		 * @return count under sync
 		 */
 		protected synchronized int getCount()
 		{
@@ -266,6 +267,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * geometry", by Jurg Nievergelt and Klaus Hinrichs, Prentice Hall, 1993.
 	 * See also notes by Torsten Sillke at
 	 * http://www.mathematik.uni-bielefeld.de/~sillke/PROBLEMS/bitcount
+	 * @param w arg
+	 * @return number of set bits
 	 */
 	protected static int bitcount(int w)
 	{
@@ -280,6 +283,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Returns the appropriate capacity (power of two) for the specified initial
 	 * capacity argument.
+	 * @param initialCapacity the initial capacity
+	 * @return appropriate capacity
 	 */
 	private int p2capacity(int initialCapacity)
 	{
@@ -304,6 +309,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Return hash code for Object x. Since we are using power-of-two tables, it
 	 * is worth the effort to improve hashcode via the same multiplicative
 	 * scheme as used in IdentityHashMap.
+	 * @param x 
+	 * @return hash code
 	 */
 	protected static int hash(Object x)
 	{
@@ -317,13 +324,20 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Check for equality of non-null references x and y.
+	 * @param x ref
+	 * @param y ref
+	 * @return is equal
 	 */
 	protected boolean eq(Object x, Object y)
 	{
 		return x == y || x.equals(y);
 	}
 
-	/** Create table array and set the per-segment threshold * */
+	/**
+	 * Create table array and set the per-segment threshold * 
+	 * @param capacity 
+	 * @return table array
+	 */
 	protected Entry[] newTable(int capacity)
 	{
 		threshold = (int)(capacity * loadFactor / CONCURRENCY_LEVEL) + 1;
@@ -387,6 +401,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Constructs a new map with the same mappings as the given map. The map is
 	 * created with a capacity of twice the number of mappings in the given map
 	 * or 32 (whichever is greater), and a default load factor.
+	 * @param t map to copy
 	 */
 	public ConcurrentHashMap(Map t)
 	{
@@ -915,26 +930,41 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	private class KeySet extends AbstractSet
 	{
+		/**
+		 * @see java.util.Set#iterator()
+		 */
 		public Iterator iterator()
 		{
 			return new KeyIterator();
 		}
 
+		/**
+		 * @see java.util.Set#size()
+		 */
 		public int size()
 		{
 			return ConcurrentHashMap.this.size();
 		}
 
+		/**
+		 * @see java.util.Set#contains(java.lang.Object)
+		 */
 		public boolean contains(Object o)
 		{
 			return ConcurrentHashMap.this.containsKey(o);
 		}
 
+		/**
+		 * @see java.util.Set#remove(java.lang.Object)
+		 */
 		public boolean remove(Object o)
 		{
 			return ConcurrentHashMap.this.remove(o) != null;
 		}
 
+		/**
+		 * @see java.util.Set#clear()
+		 */
 		public void clear()
 		{
 			ConcurrentHashMap.this.clear();
@@ -962,21 +992,33 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	private class Values extends AbstractCollection
 	{
+		/**
+		 * @see java.util.AbstractCollection#iterator()
+		 */
 		public Iterator iterator()
 		{
 			return new ValueIterator();
 		}
 
+		/**
+		 * @see java.util.AbstractCollection#size()
+		 */
 		public int size()
 		{
 			return ConcurrentHashMap.this.size();
 		}
 
+		/**
+		 * @see java.util.AbstractCollection#contains(java.lang.Object)
+		 */
 		public boolean contains(Object o)
 		{
 			return ConcurrentHashMap.this.containsValue(o);
 		}
 
+		/**
+		 * @see java.util.AbstractCollection#clear()
+		 */
 		public void clear()
 		{
 			ConcurrentHashMap.this.clear();
@@ -1005,11 +1047,17 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	private class EntrySet extends AbstractSet
 	{
+		/**
+		 * @see java.util.Set#iterator()
+		 */
 		public Iterator iterator()
 		{
 			return new HashIterator();
 		}
 
+		/**
+		 * @see java.util.Set#contains(java.lang.Object)
+		 */
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Map.Entry))
@@ -1019,6 +1067,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return v != null && v.equals(entry.getValue());
 		}
 
+		/**
+		 * @see java.util.Set#remove(java.lang.Object)
+		 */
 		public boolean remove(Object o)
 		{
 			if (!(o instanceof Map.Entry))
@@ -1027,11 +1078,17 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return ConcurrentHashMap.this.remove(e.getKey(), e.getValue()) != null;
 		}
 
+		/**
+		 * @see java.util.Set#size()
+		 */
 		public int size()
 		{
 			return ConcurrentHashMap.this.size();
 		}
 
+		/**
+		 * @see java.util.Set#clear()
+		 */
 		public void clear()
 		{
 			ConcurrentHashMap.this.clear();
@@ -1095,6 +1152,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 		// Map.Entry Ops
 
+		/**
+		 * @see java.util.Map.Entry#getKey()
+		 */
 		public Object getKey()
 		{
 			return key;
@@ -1146,6 +1206,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return oldValue;
 		}
 
+		/**
+		 * @see java.util.Map.Entry#equals(java.lang.Object)
+		 */
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Map.Entry))
@@ -1154,11 +1217,17 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return (key.equals(e.getKey()) && value.equals(e.getValue()));
 		}
 
+		/**
+		 * @see java.util.Map.Entry#hashCode()
+		 */
 		public int hashCode()
 		{
 			return key.hashCode() ^ value.hashCode();
 		}
 
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		public String toString()
 		{
 			return key + "=" + value;
@@ -1187,16 +1256,25 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			index = tab.length - 1;
 		}
 
+		/**
+		 * @see java.util.Enumeration#hasMoreElements()
+		 */
 		public boolean hasMoreElements()
 		{
 			return hasNext();
 		}
 
+		/**
+		 * @see java.util.Enumeration#nextElement()
+		 */
 		public Object nextElement()
 		{
 			return next();
 		}
 
+		/**
+		 * @see java.util.Iterator#hasNext()
+		 */
 		public boolean hasNext()
 		{
 			/*
@@ -1237,6 +1315,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return entry;
 		}
 
+		/**
+		 * @see java.util.Iterator#next()
+		 */
 		public Object next()
 		{
 			if (currentKey == null && !hasNext())
@@ -1249,6 +1330,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return result;
 		}
 
+		/**
+		 * @see java.util.Iterator#remove()
+		 */
 		public void remove()
 		{
 			if (lastReturned == null)
@@ -1278,6 +1362,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Save the state of the <tt>ConcurrentHashMap</tt> instance to a stream
 	 * (i.e., serialize it).
+	 * @param s 
+	 * @throws IOException 
 	 * 
 	 * @serialData An estimate of the table size, followed by the key (Object)
 	 *             and value (Object) for each key-value mapping, followed by a
@@ -1327,6 +1413,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Reconstitute the <tt>ConcurrentHashMap</tt> instance from a stream
 	 * (i.e., deserialize it).
+	 * @param s 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
