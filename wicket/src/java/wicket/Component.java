@@ -441,8 +441,9 @@ public abstract class Component implements Serializable, IAjaxListener
 	/**
 	 * Registers a handler for an event request.
 	 * @param ajaxHandler handler
+	 * @return This for chaining
 	 */
-	public final void add(AjaxHandler ajaxHandler)
+	public final Component add(AjaxHandler ajaxHandler)
 	{
 		if (ajaxHandler == null)
 		{
@@ -459,6 +460,7 @@ public abstract class Component implements Serializable, IAjaxListener
 
 		// Give handler the opportunity to bind this component
 		ajaxHandler.bind(this);
+		return this;
 	}
 
 	/**
