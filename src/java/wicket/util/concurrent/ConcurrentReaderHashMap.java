@@ -185,6 +185,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Force a memory synchronization that will cause all readers to see table.
 	 * Call only when already holding main synch lock.
+	 * @param x 
 	 */
 	protected final void recordModification(Object x)
 	{
@@ -197,6 +198,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Get ref to table; the reference and the cells it accesses will be at
 	 * least as fresh as from last use of barrierLock
+	 * @return table cells
 	 */
 	protected final Entry[] getTableForReading()
 	{
@@ -259,6 +261,8 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Returns the appropriate capacity (power of two) for the specified initial
 	 * capacity argument.
+	 * @param initialCapacity
+	 * @return appropriate capacity
 	 */
 	private int p2capacity(int initialCapacity)
 	{
@@ -283,6 +287,8 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	 * Return hash code for Object x. Since we are using power-of-two tables, it
 	 * is worth the effort to improve hashcode via the same multiplicative
 	 * scheme as used in IdentityHashMap.
+	 * @param x 
+	 * @return hash code
 	 */
 	private static int hash(Object x)
 	{
@@ -295,6 +301,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 	/**
 	 * Check for equality of non-null references x and y.
+	 * @param x 
+	 * @param y 
+	 * @return equality
 	 */
 	protected boolean eq(Object x, Object y)
 	{
@@ -353,6 +362,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	 * Constructs a new map with the same mappings as the given map. The map is
 	 * created with a capacity of twice the number of mappings in the given map
 	 * or 16 (whichever is greater), and a default load factor.
+	 * @param t 
 	 */
 	public ConcurrentReaderHashMap(Map t)
 	{
@@ -539,6 +549,10 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Continuation of put(), called only when synch lock is held and
 	 * interference has been detected.
+	 * @param key 
+	 * @param value 
+	 * @param hash 
+	 * @return continuation object
 	 */
 	protected Object sput(Object key, Object value, int hash)
 	{
@@ -714,6 +728,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Continuation of remove(), called only when synch lock is held and
 	 * interference has been detected.
+	 * @param key 
+	 * @param hash 
+	 * @return continuation object
 	 */
 	protected Object sremove(Object key, int hash)
 	{
@@ -1068,6 +1085,8 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Helper method for entrySet.remove
 	 * 
+	 * @param entry
+	 * 
 	 * @return <code>true</code> when the element was found and removed.
 	 */
 	protected synchronized boolean findAndRemoveEntry(Map.Entry entry)
@@ -1343,6 +1362,8 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Save the state of the <tt>ConcurrentReaderHashMap</tt> instance to a
 	 * stream (i.e., serialize it).
+	 * @param s 
+	 * @throws IOException 
 	 * 
 	 * @serialData The <i>capacity</i> of the ConcurrentReaderHashMap (the
 	 *             length of the bucket array) is emitted (int), followed by the
@@ -1380,6 +1401,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/**
 	 * Reconstitute the <tt>ConcurrentReaderHashMap</tt> instance from a
 	 * stream (i.e., deserialize it).
+	 * @param s 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
 	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException,
 			ClassNotFoundException
@@ -1405,6 +1429,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 	/**
 	 * Return the number of slots in this table
+	 * @return number of slots in this table
 	 */
 	public synchronized int capacity()
 	{
@@ -1413,6 +1438,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 	/**
 	 * Return the load factor
+	 * @return the load factor
 	 */
 	public float loadFactor()
 	{
