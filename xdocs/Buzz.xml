@@ -16,6 +16,12 @@
 			</p>
 			<p class="quoteAttribution">- Comment on TheServerSide.com</p>
 			<p>
+				"Last week I wrote an article about Wicket and I spent some time discovering and taming 
+				it. And I have to confess this: I love it. <i>... snip ...</i> Wicket is 
+				not a framework, it's a candy bar. And everybody loves candy bars..."
+			</p>
+			<p class="quoteAttribution">- Comment made by <a href="http://weblogs.java.net/blog/gfx">Romain Guy</a></p>
+			<p>
 				The issue that impressed me in the Wicket model is that "Wicket does not mix markup 
 				with Java code and adds no special syntax to your markup files." You reference Wicket 
 				identities as HTML attributes and define component properties in Java, which allows 
@@ -40,6 +46,16 @@
 				by far the best..."
 			</p>
 			<p class="quoteAttribution">- Comment on Manageability.org</p>
+			<p>
+				"... Talk about a mind blowing experience, it literally took me ten minutes to have a 
+				sample application up and running! The Wicket API is very Swing like, which was a 
+				welcome change for me, and allowed for a very familiar development experience. There 
+				is even an extension that allows for direct use of a Swing TreeModel. There are so many 
+				things that I like about this framework ..."
+			</p>
+			<p class="quoteAttribution">- from a 
+				<a href="http://jroller.com/page/wireframe?entry=web_development_done_right">blog item</a> 
+				by the Code Poet</p>
 		</section>
 	</body>
 </document>
