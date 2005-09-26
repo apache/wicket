@@ -87,10 +87,14 @@ abstract class AbstractTextComponent extends FormComponent
 	public void updateModel()
 	{
 		String input = getInput();
-		if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+		// if input was null then value was not submitted (disabled field), ignore it
+		if(input != null)
 		{
-			input = null;
+			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+			{
+				input = null;
+			}
+			setModelObject(input);
 		}
-		setModelObject(input);
 	}
 }
