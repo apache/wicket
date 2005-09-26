@@ -272,39 +272,43 @@ public class ListMultipleChoice extends AbstractChoice
 	 */
 	public final void updateModel()
 	{
-		// Get the list of selected values
-		Collection selectedValues = (Collection)getModelObject();
-
-		if (selectedValues != null)
-		{
-			selectedValues.clear();
-		}
-		else
-		{
-			selectedValues = new ArrayList();
-			setModelObject(selectedValues);
-		}
-
-		// Get indices selected from request
 		final String[] ids = inputAsStringArray();
-
-		// If one or more ids is selected
-		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+		// if input was null then value was not submitted (disabled field), ignore it
+		if(ids != null)
 		{
-			// Get values that could be selected
-			final List choices = getChoices();
-
-			// Loop through selected indices
-			for (int i = 0; i < ids.length; i++)
+			// Get the list of selected values
+			Collection selectedValues = (Collection)getModelObject();
+	
+			if (selectedValues != null)
 			{
-				for (int index = 0; index < choices.size(); index++)
+				selectedValues.clear();
+			}
+			else
+			{
+				selectedValues = new ArrayList();
+				setModelObject(selectedValues);
+			}
+	
+			// Get indices selected from request
+	
+			// If one or more ids is selected
+			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+			{
+				// Get values that could be selected
+				final List choices = getChoices();
+	
+				// Loop through selected indices
+				for (int i = 0; i < ids.length; i++)
 				{
-					// Get next choice
-					final Object choice = choices.get(index);
-					if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+					for (int index = 0; index < choices.size(); index++)
 					{
-						selectedValues.add(choice);
-						break;
+						// Get next choice
+						final Object choice = choices.get(index);
+						if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+						{
+							selectedValues.add(choice);
+							break;
+						}
 					}
 				}
 			}

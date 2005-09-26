@@ -235,13 +235,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public final void updateModel()
 	{
 		final String id = getInput();
-		if (Strings.isEmpty(id))
+		// if input was null then value was not submitted (disabled field), ignore it
+		if(id != null)
 		{
-			setModelObject(null);
-		}
-		else
-		{
-			setModelValue(id);
+			if (Strings.isEmpty(id))
+			{
+				setModelObject(null);
+			}
+			else
+			{
+				setModelValue(id);
+			}
 		}
 	}
 }
