@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="add" dev="Eelco Hillenius">added class wicket.markup.html.image.resource.BlobImageResource to make working with images from databases easier.</action>
       <action type="update" dev="Eelco Hillenius">made Link.isEnabled non final so that users can more easily customize on/off behaviour.</action>
       <action type="fix" dev="Johan Compagner" issue="1290352" due-to="Phil Kulak"> Models not detached when checkAccess() returns false.</action>
       <action type="fix" dev="Johan Compagner" issue="1290843" due-to="Ralf Ebert">DatePicker fails when used multiple times in the same page</action>
