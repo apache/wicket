@@ -5,6 +5,7 @@
     <title>Wicket changes</title>
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
+    <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
