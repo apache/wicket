@@ -155,7 +155,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @return whether this link is enabled.
 	 */
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
 	}
@@ -315,7 +315,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		String url = getURL();
 
 		// If we're disabled
-		if (!enabled)
+		if (!isEnabled())
 		{
 			// if the tag is an anchor proper
 			if (tag.getName().equalsIgnoreCase("a"))
