@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.util.convert.IConverter;
+import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.Strings;
 
 /**
@@ -473,7 +474,7 @@ public abstract class Session implements Serializable
 		// If state is dirty
 		if (dirty)
 		{
-			log.debug("updateCluster(): Session is dirty.  Replicating.");
+			if(log.isDebugEnabled()) log.debug("updateCluster(): Session is dirty.  Replicating.");
 
 			// State is no longer dirty
 			this.dirty = false;
@@ -483,7 +484,10 @@ public abstract class Session implements Serializable
 		}
 		else
 		{
-			log.debug("updateCluster(): Session not dirty.");
+			if(log.isDebugEnabled())
+			{
+				log.debug("updateCluster(): Session not dirty.");
+			}
 		}
 
 		// Go through all pages in all page maps, replicating any dirty pages
@@ -513,18 +517,27 @@ public abstract class Session implements Serializable
 	public final void updateSession()
 	{
 		// Go through each page map in the session
-		log.debug("updateSession(): Updating session.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Updating session.");
+		}
 		visitPageMaps(new IVisitor()
 		{
 			public void pageMap(PageMap pageMap)
 			{
-				log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				if(log.isDebugEnabled())
+				{
+					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				}
 				pageMap.setSession(Session.this);
 			}
 		});
 
 		// Get PageStates from session attributes
-		log.debug("updateSession(): Getting PageState attributes.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Getting PageState attributes.");
+		}
 		final List pageStates = getPageStateAttributes();
 
 		// Sort page states so that they can be added in reverse order of
@@ -533,7 +546,10 @@ public abstract class Session implements Serializable
 
 		// Adds pages to session
 		addPages(pageStates);
-		log.debug("updateSession(): Done updating session.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Done updating session.");
+		}
 	}
 
 	/**
@@ -665,8 +681,11 @@ public abstract class Session implements Serializable
 			{
 				// Get page from page state
 				final Page page = pageState.getPage();
-				log.debug("addPages(): Adding replicated page state " + pageState
-						+ ", which produced page " + page);
+				if(log.isDebugEnabled())
+				{
+					log.debug("addPages(): Adding replicated page state " + pageState
+							+ ", which produced page " + page);
+				}
 
 				// Add to page map specified in page state info
 				attach(page);
@@ -729,7 +748,12 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-		//pageState.addedToSession = true;
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("replicated page state {size=" + ObjectProfiler.sizeof(pageState) + "}");
+		}
+		
 		pageState.pageMapName = page.getPageMap().getName();
 		
 		// For this session the page is in the pagemap.

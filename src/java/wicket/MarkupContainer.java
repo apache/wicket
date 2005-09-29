@@ -1176,7 +1176,10 @@ public abstract class MarkupContainer extends Component
 		else
 		{
 			// Render as raw markup
-			log.debug("Rendering raw markup");
+			if(log.isDebugEnabled())
+			{
+				log.debug("Rendering raw markup");
+			}
 			getResponse().write(element.toString());
 			markupStream.next();
 		}

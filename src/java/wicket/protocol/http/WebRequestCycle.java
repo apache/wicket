@@ -639,7 +639,10 @@ public class WebRequestCycle extends RequestCycle
 			Resource resource = sharedResources.get(rawResourceKey);
 			if (resource == null)
 			{
-				log.debug("Could not find resource referenced by key " + rawResourceKey);
+				if(log.isDebugEnabled())
+				{
+					log.debug("Could not find resource referenced by key " + rawResourceKey);
+				}
 				try
 				{
 					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);

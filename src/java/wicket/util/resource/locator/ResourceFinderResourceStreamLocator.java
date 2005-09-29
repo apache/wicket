@@ -58,7 +58,10 @@ public final class ResourceFinderResourceStreamLocator extends AbstractResourceS
 	protected IResourceStream locate(final ClassLoader classLoader, final String path)
 	{
 		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' on path " + finder);
+		if(log.isDebugEnabled())
+		{
+			log.debug("Attempting to locate resource '" + path + "' on path " + finder);
+		}
 
 		// Try to find file resource on the path supplied
 		final URL file = finder.find(path);
