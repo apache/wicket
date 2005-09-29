@@ -87,7 +87,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (Exception ex)
 			{
-				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
+				log.warn("cannot convert url: " + url + " to file (" + ex.getMessage() +
 						"), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
