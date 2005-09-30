@@ -31,7 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.util.convert.IConverter;
-import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.Strings;
 
 /**
@@ -748,11 +747,6 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("replicated page state {size=" + ObjectProfiler.sizeof(pageState) + "}");
-		}
 		
 		pageState.pageMapName = page.getPageMap().getName();
 		
