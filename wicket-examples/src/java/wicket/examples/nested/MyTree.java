@@ -38,9 +38,9 @@ import wicket.markup.html.tree.Tree;
  */
 public class MyTree extends Tree
 {
-	private static final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
-	private static final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
-	private static final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
+	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
+	private final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
+	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
 	
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
