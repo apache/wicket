@@ -17,12 +17,14 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 /**
  * Factory for creating request cycles for a session.
  * 
  * @author Jonathan Locke
  */
-public interface IRequestCycleFactory
+public interface IRequestCycleFactory extends Serializable
 {
 	/**
 	 * Creates a new RequestCycle object.
