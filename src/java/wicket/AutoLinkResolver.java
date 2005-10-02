@@ -237,6 +237,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				final PageParameters parameters)
 		{
 			super(id, pageClass, parameters);
+			setAutoEnable(true);
 		}
 
 		/**
