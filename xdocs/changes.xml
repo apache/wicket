@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="update" dev="Eelco Hillenius" issue="1284625" due-to="Gwyn Evans">Add WebPage(PageParameters) constructor (helps with your IDE's code completion features)</action>
       <action type="fix" dev="Eelco Hillenius" issue="1297446" due-to="Sven Meier">Link altered child visibility based on wicket id; hidden 'feature' is removed now.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1297449" due-to="Sven Meier">Improved hangman letter images to use just one image reference.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1287878" due-to="Leo West">doc fix for Button.setDefaultFormProcessing</action>
