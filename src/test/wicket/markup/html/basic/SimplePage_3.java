@@ -28,6 +28,8 @@ import wicket.PageParameters;
  */
 public class SimplePage_3 extends SimplePage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * @param parameters

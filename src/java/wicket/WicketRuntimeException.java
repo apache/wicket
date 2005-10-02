@@ -25,6 +25,8 @@ package wicket;
  */
 public class WicketRuntimeException extends RuntimeException
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
      * @see RuntimeException#RuntimeException()
      */

@@ -27,6 +27,8 @@ import wicket.markup.html.WebComponent;
  */
 public class MyLabel extends WebComponent
 {
+	private static final long serialVersionUID = 1L;
+	
     private String text = "";
     
     /**

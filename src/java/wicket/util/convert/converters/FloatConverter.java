@@ -29,6 +29,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public final class FloatConverter extends AbstractDecimalConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a float converter
 	 */

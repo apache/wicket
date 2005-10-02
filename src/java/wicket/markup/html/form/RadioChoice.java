@@ -54,8 +54,12 @@ import wicket.version.undo.Change;
  */
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	private class SuffixChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+
 		final String prevSuffix;
 		
 		SuffixChange(String prevSuffix)
@@ -74,6 +78,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 	private class PrefixChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+
 		final String prevPrefix;
 		
 		PrefixChange(String prevSuffix)

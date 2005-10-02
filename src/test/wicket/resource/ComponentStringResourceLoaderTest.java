@@ -56,6 +56,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	{
 		Component c = new DummyComponent("hello", application)
 		{
+			private static final long serialVersionUID = 1L;
 		};
 		DummyPage page = new DummyPage();
 		page.add(c);
@@ -80,6 +81,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	{
 		Component c = new DummyComponent("hello", application)
 		{
+			private static final long serialVersionUID = 1L;
 		};
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		try

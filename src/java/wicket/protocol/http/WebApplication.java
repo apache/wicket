@@ -82,6 +82,8 @@ public abstract class WebApplication extends Application
 	/** Session factory for this web application */
 	private ISessionFactory sessionFactory = new ISessionFactory()
 	{
+		private static final long serialVersionUID = 1L;
+
 		public Session newSession()
 		{
 			return new WebSession(WebApplication.this);

@@ -29,6 +29,8 @@ import wicket.Component;
  */
 public final class FeedbackMessage implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Constant for debug level. */
 	public static final int DEBUG = 1;
 

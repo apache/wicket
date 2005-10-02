@@ -67,6 +67,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		this.application = new DummyApplication();
 		Session.set(new Session(this.application)
 		{
+			private static final long serialVersionUID = 1L;
+
             public void invalidate()
             {
             }

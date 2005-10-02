@@ -130,6 +130,8 @@ public class ModelToStringTest extends TestCase
 	 */
 	private static class MyAbstractReadOnlyModel extends AbstractReadOnlyModel
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @see AbstractReadOnlyModel#getObject(Component)
 		 */
@@ -154,6 +156,8 @@ public class ModelToStringTest extends TestCase
 	 */
 	private static class MyAbstractReadOnlyDetachableModel extends AbstractReadOnlyDetachableModel
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @return <code>null</code>
 		 * @see Model#getNestedModel()
@@ -190,6 +194,8 @@ public class ModelToStringTest extends TestCase
 
 	private static final class MyLoadableDetachableModel extends LoadableDetachableModel
 	{
+		private static final long serialVersionUID = 1L;
+
 		protected Object load()
 		{
 			return "foo";

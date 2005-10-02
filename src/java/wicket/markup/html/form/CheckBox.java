@@ -45,6 +45,8 @@ import wicket.util.string.Strings;
  */
 public class CheckBox extends FormComponent implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */

@@ -33,6 +33,8 @@ import wicket.util.string.Strings;
  */
 public class IntegerValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Validator that ensures int value.
 	 */

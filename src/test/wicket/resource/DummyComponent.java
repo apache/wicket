@@ -27,6 +27,8 @@ import wicket.Component;
  */
 public class DummyComponent extends Component
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Create the component with the given name.
 	 * 

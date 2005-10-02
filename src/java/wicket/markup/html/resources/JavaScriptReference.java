@@ -30,6 +30,8 @@ import wicket.util.value.ValueMap;
  */
 public class JavaScriptReference extends PackagedResourceReference
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id component id

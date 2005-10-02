@@ -33,6 +33,8 @@ import wicket.util.upload.FileItem;
  */
 public class FileUpload implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	final FileItem item;
 
 	/**

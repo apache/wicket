@@ -38,6 +38,8 @@ import wicket.markup.html.link.Link;
  */
 public class PagingNavigationIncrementLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The increment. */
 	private final int increment;
 

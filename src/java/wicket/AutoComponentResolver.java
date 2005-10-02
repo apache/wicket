@@ -47,6 +47,8 @@ import wicket.util.lang.Classes;
  */
 public final class AutoComponentResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
     /** Logging */
     private static Log log = LogFactory.getLog(AutoComponentResolver.class);
 

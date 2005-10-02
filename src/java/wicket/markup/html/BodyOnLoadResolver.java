@@ -32,6 +32,8 @@ import wicket.markup.MarkupStream;
  */
 public class BodyOnLoadResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private static Log log = LogFactory.getLog(BodyOnLoadResolver.class);
 

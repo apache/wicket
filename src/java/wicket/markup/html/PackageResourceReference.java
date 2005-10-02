@@ -29,6 +29,8 @@ import wicket.ResourceReference;
  */
 public class PackageResourceReference extends ResourceReference
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constuctor to get a resource reference to a packaged resource.
 	 * It will bind itself directly to the given application object, so

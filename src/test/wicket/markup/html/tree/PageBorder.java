@@ -25,6 +25,7 @@ import wicket.markup.html.border.Border;
  */
 public final class PageBorder extends Border
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
 	 * @param id component naam

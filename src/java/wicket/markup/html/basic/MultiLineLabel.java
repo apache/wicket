@@ -36,6 +36,8 @@ import wicket.util.string.Strings;
  */
 public class MultiLineLabel extends WebComponent
 { 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor. Same as Label(String).
 	 * 

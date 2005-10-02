@@ -237,6 +237,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see wicket.Component#onBeginRequest()
 			 */
@@ -281,6 +283,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see wicket.Component#onBeginRequest()
 			 */
@@ -325,6 +329,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */

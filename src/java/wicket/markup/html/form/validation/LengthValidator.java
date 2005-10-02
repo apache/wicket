@@ -43,6 +43,8 @@ import wicket.util.string.Strings;
  */
 public class LengthValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** True if minimum bound should be checked. */
 	private final boolean checkMin;
 

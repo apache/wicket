@@ -47,6 +47,8 @@ import wicket.util.time.Time;
  */
 public class StringValue implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
 	

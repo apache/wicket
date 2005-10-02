@@ -99,6 +99,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class SelectedPathReplacementModel extends Model
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** the tree node. */
 		private final DefaultMutableTreeNode node;
 
@@ -136,6 +138,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class SpacerList extends Loop
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -160,6 +164,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class TreePathsListView extends ListView
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param name name of the component
@@ -188,6 +194,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			// it should be displayed or not
 			return new ListItem(index, listItemModel)
 			{
+				private static final long serialVersionUID = 1L;
+
 				public boolean isVisible()
 				{
 					TreeState treeState = getTreeState();
@@ -227,6 +235,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class TreePathsModel extends AbstractReadOnlyDetachableModel
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** whether this model is dirty. */
 		boolean dirty = true;
 
@@ -336,6 +346,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected class DefaultNodePanel extends NodePanel
 	{
+		private static final long serialVersionUID = 1L;
+
 		DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
 		{
 			super(panelId, node);
@@ -384,6 +396,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		IModel hrefReplacement = new Model()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Object getObject(Component component)
 			{
 				String url = getPage().urlFor(CSS.getPath());
@@ -602,6 +616,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			// we want the image to be dynamically, yet resolving to a static image.
 			return new Image(JUNCTION_IMAGE_NAME)
 			{
+				private static final long serialVersionUID = 1L;
+
 				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
@@ -673,6 +689,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		final Link junctionLink = new Link("junctionLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void onClick()
 			{
 				junctionLinkClicked(node);
@@ -691,6 +709,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		final Link nodeLink = new Link("nodeLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void onClick()
 			{
 				nodeLinkClicked(node);

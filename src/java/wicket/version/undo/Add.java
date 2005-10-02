@@ -26,6 +26,8 @@ import wicket.Component;
  */
 class Add extends Change
 {
+	private static final long serialVersionUID = 1L;
+	
 	private final Component component;
 	
 	Add(final Component component)

@@ -32,6 +32,8 @@ import wicket.model.Model;
  */
 public class CookieValuePersisterTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * 
@@ -52,6 +54,8 @@ public class CookieValuePersisterTestPage extends WebPage
 	 */
 	public final class TestForm extends Form
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Constructor
 		 * 

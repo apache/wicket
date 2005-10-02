@@ -36,6 +36,8 @@ import wicket.util.string.Strings;
  */
 public class ListMultipleChoice extends AbstractChoice
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
 

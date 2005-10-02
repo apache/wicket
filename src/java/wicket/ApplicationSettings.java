@@ -346,6 +346,8 @@ public class ApplicationSettings
 	 */
 	public static final class RenderStrategy extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
+		
 		RenderStrategy(final String name)
 		{
 			super(name);
@@ -357,6 +359,8 @@ public class ApplicationSettings
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
+		
 		UnexpectedExceptionDisplay(final String name)
 		{
 			super(name);

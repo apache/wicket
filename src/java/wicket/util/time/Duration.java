@@ -89,6 +89,8 @@ import wicket.util.thread.ICode;
  */
 public final class Duration extends AbstractTimeValue
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
 

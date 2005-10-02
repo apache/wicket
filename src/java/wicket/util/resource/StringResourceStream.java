@@ -29,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class StringResourceStream extends AbstractStringResourceStream
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Logging */
 	private static Log log = LogFactory.getLog(StringResourceStream.class);
 

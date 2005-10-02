@@ -30,6 +30,8 @@ import wicket.Component;
  */
 public class BoundCompoundPropertyModel extends CompoundPropertyModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * List of Bindings. Although a Map would be a more natural implementation
 	 * here, a List is much more compact in terms of space. Although it may take
@@ -46,6 +48,8 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 */
 	private class Binding implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final Component component;
 		private final String ognlExpression;
 		private final Class type;

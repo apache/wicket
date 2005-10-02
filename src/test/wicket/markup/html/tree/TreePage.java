@@ -23,6 +23,7 @@ import wicket.PageParameters;
  */
 public class TreePage extends AbstractTreePage
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
 	 * @param parameters Page parameters

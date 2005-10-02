@@ -39,6 +39,8 @@ import wicket.Session;
  */
 public class WebSession extends Session
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The underlying HttpSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
 
@@ -164,6 +166,8 @@ public class WebSession extends Session
 		{
 			this.requestCycleFactory = new IRequestCycleFactory()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public RequestCycle newRequestCycle(Session session, Request request,
 						Response response)
 				{

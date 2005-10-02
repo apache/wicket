@@ -31,6 +31,8 @@ import wicket.model.IModel;
  */
 public class WebComponent extends Component implements IHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see Component#Component(String)
 	 */

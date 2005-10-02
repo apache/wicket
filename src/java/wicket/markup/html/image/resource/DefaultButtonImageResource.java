@@ -31,6 +31,8 @@ import java.awt.RenderingHints;
  */
 public class DefaultButtonImageResource extends RenderedDynamicImageResource
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The default height for button images */
 	private static int defaultHeight = 26;
 

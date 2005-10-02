@@ -32,6 +32,8 @@ import wicket.model.IModel;
  */
 public class ListChoice extends DropDownChoice
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
 	

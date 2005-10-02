@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
  */
 public class EmailAddressPatternValidator extends PatternValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Singleton instance */
 	private static final EmailAddressPatternValidator instance = new EmailAddressPatternValidator();
 	

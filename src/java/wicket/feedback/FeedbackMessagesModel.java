@@ -32,6 +32,8 @@ import wicket.model.IModel;
  */
 public final class FeedbackMessagesModel extends AbstractDetachableModel
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Lazy loaded, temporary list. */
 	private transient List messages;
 

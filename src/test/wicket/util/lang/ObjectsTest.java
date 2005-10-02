@@ -88,6 +88,8 @@ public class ObjectsTest extends TestCase
 	 */
 	private static final class CloneObject implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * int for testing equality.
 		 */

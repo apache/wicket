@@ -26,6 +26,8 @@ import wicket.util.time.Time;
  */
 public class StringBufferResourceStream extends AbstractStringResourceStream
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Stylesheet information */
 	private StringBuffer buffer = new StringBuffer();
 

@@ -103,6 +103,8 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 

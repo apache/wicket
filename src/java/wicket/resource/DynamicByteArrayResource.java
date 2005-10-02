@@ -50,6 +50,8 @@ public abstract class DynamicByteArrayResource extends WebResource
 	{
 		return new IResourceStream()
 		{
+			private static final long serialVersionUID = 1L;
+
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
 			

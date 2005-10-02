@@ -32,6 +32,8 @@ import wicket.model.PropertyModel;
  */
 public class MockPage extends WebPage {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param parameters
@@ -39,6 +41,8 @@ public class MockPage extends WebPage {
 	public MockPage(final PageParameters parameters) {
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink") {
+			private static final long serialVersionUID = 1L;
+
 			public void onClick() {
                 linkClickCount++;
             }

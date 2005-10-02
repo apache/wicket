@@ -63,6 +63,8 @@ import wicket.response.StringResponse;
  */
 public class HtmlHeaderContainer extends WebMarkupContainer implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct
 	 * 

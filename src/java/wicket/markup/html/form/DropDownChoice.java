@@ -57,6 +57,8 @@ import wicket.model.IModel;
  */
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */

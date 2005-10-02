@@ -28,6 +28,8 @@ import wicket.model.IModel;
  */
 public class ListItemModel extends AbstractDetachableModel
 {
+	private static final long serialVersionUID = 1L;
+	
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
 	private transient Object object;

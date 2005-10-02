@@ -120,6 +120,7 @@ import java.util.Set;
 
 public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Serializable
 {
+	private static final long serialVersionUID = 1L;
 
 	/*
 	 * The basic strategy is an optimistic-style scheme based on the guarantee
@@ -181,6 +182,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 */
 	protected final static class Segment implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
 		/**
 		 * The number of elements in this segment's region. It is always updated
 		 * within synchronized blocks.

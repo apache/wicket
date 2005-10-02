@@ -8,6 +8,7 @@ package wicket;
  */
 public class ApplicationFactoryCreationException extends WicketRuntimeException
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor.

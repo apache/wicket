@@ -56,6 +56,8 @@ import wicket.util.io.FileCleaner;
 public class DiskFileItem
     implements FileItem {
 
+	private static final long serialVersionUID = 1L;
+
     // ----------------------------------------------------- Manifest constants
 
 

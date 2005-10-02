@@ -33,6 +33,7 @@ import wicket.markup.html.WebPage;
  */
 public class AbstractTreePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
 	 * @param parameters Page parameters

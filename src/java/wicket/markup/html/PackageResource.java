@@ -45,6 +45,8 @@ import wicket.util.resource.IResourceStream;
  */
 public class PackageResource extends WebResource
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Map from key to resource */
 	private static Map resourceMap = new HashMap();
 

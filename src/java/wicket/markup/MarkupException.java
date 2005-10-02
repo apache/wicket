@@ -27,6 +27,8 @@ import wicket.util.resource.IResourceStream;
  */
 public final class MarkupException extends WicketRuntimeException
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The markup stream that was being parsed when the exception was thrown */
 	private final MarkupStream markupStream;
 

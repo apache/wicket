@@ -145,6 +145,8 @@ import java.util.Set;
  */
 public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneable, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/*
 	 * The basic strategy is an optimistic-style scheme based on the guarantee
 	 * that the hash table and its lists are always kept in a consistent enough
@@ -170,6 +172,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	/** A Serializable class for barrier lock * */
 	protected static class BarrierLock implements java.io.Serializable
 	{
+		private static final long serialVersionUID = 1L;
 	}
 
 	/**

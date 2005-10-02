@@ -31,6 +31,8 @@ import wicket.model.Model;
  */
 public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id

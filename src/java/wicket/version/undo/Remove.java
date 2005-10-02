@@ -27,6 +27,8 @@ import wicket.MarkupContainer;
  */
 class Remove extends Change
 {
+	private static final long serialVersionUID = 1L;
+
 	/** subject. */
 	private final Component component;
 

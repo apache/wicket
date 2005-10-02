@@ -51,6 +51,8 @@ import wicket.util.string.Strings;
  */
 public final class WicketComponentTree extends Panel
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor.
 	 * 
@@ -84,6 +86,8 @@ public final class WicketComponentTree extends Panel
 		// Create the table containing the list the components
 		add(new ListView("components", data)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			/**
 			 * Populate the table with Wicket elements
 			 */
@@ -156,6 +160,8 @@ public final class WicketComponentTree extends Panel
 	 */
 	private class ComponentData implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** Component path. */
 		public String path;
 

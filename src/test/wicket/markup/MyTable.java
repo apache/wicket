@@ -33,6 +33,8 @@ import wicket.model.Model;
  */
 public class MyTable extends ListView
 {
+	private static final long serialVersionUID = 1L;
+	
     private int rows = 10;
     
     /**

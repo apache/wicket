@@ -19,6 +19,8 @@ import wicket.util.time.Time;
  */
 public class ByteArrayResource extends WebResource
 {
+	private static final long serialVersionUID = 1L;
+
 	private final String contentType;
 	private final byte[] array;
 	private final Locale locale;
@@ -54,6 +56,8 @@ public class ByteArrayResource extends WebResource
 	{
 		return new IResourceStream()
 		{
+			private static final long serialVersionUID = 1L;
+
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
 			

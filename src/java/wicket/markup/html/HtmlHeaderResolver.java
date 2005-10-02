@@ -45,6 +45,8 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
  */
 public class HtmlHeaderResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private static Log log = LogFactory.getLog(HtmlHeaderResolver.class);
 

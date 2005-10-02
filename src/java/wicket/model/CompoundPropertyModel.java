@@ -32,6 +32,8 @@ import wicket.markup.html.form.FormComponent;
  */
 public class CompoundPropertyModel extends AbstractPropertyModel implements ICompoundModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 

@@ -58,6 +58,8 @@ import wicket.util.lang.EnumeratedType;
  */
 public final class TimeOfDay extends AbstractTime
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Constant for AM time. */
 	public static final Meridian AM = new Meridian("AM");
 
@@ -73,6 +75,8 @@ public final class TimeOfDay extends AbstractTime
 	/** Typesafe AM/PM enumeration. */
 	public static final class Meridian extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 

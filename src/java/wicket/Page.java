@@ -472,6 +472,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return new PageState()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public Page getPage()
 			{
 				return Page.this;

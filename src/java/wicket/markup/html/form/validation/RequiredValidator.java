@@ -30,6 +30,8 @@ import wicket.util.string.Strings;
  */
 public class RequiredValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Singleton instance */
 	private static final RequiredValidator instance = new RequiredValidator();
 	

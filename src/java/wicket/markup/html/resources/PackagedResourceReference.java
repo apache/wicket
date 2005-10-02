@@ -35,6 +35,7 @@ import wicket.model.Model;
  */
 public class PackagedResourceReference extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Construct.
 	 * @param id component id
@@ -78,6 +79,8 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 		IModel srcReplacement = new Model()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Object getObject(Component component)
 			{
 				Object o = file.getObject(component);
@@ -139,6 +142,8 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 		IModel srcReplacement = new Model()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Object getObject(Component component)
 			{
 				Object o = resourceReference.getObject(component);

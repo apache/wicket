@@ -198,6 +198,8 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  */
 public class StringResourceModel extends AbstractReadOnlyDetachableModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The locale to use. */
 	private transient Locale locale;
 

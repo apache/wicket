@@ -52,6 +52,8 @@ import wicket.util.lang.Packages;
  */
 public final class AutoLinkResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private static Log log = LogFactory.getLog(AutoLinkResolver.class);
 
@@ -223,6 +225,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			implements
 				IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * Construct
 		 * 
@@ -279,6 +283,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			implements
 				IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * Construct
 		 * 
@@ -327,6 +333,8 @@ public final class AutoLinkResolver implements IComponentResolver
 		implements
 			IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** Resource reference */
 		private final ResourceReference resourceReference;
 

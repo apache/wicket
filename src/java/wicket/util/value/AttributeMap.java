@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public final class AttributeMap extends ValueMap
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs an empty map.
 	 */

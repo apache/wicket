@@ -45,6 +45,8 @@ import wicket.util.string.Strings;
  */
 public class PatternValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The regexp pattern. */
 	private final Pattern pattern;
 

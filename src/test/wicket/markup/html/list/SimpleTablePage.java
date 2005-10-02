@@ -33,6 +33,7 @@ import wicket.markup.html.list.ListView;
  */
 public class SimpleTablePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -47,6 +48,8 @@ public class SimpleTablePage extends WebPage
 		list.add("three");
 		add(new ListView("table", list)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

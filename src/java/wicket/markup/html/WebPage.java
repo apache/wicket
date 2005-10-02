@@ -55,6 +55,8 @@ import wicket.util.string.Strings;
  */
 public class WebPage extends Page implements IHeaderRenderer
 {
+	private static final long serialVersionUID = 1L;
+	
     /** Components contribution to <body onload="..." */
     private String bodyOnLoad;
     

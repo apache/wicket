@@ -37,6 +37,8 @@ import wicket.util.time.Time;
  */
 public class CookieValuePersister implements IValuePersister
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private final static Log log = LogFactory.getLog(CookieValuePersister.class);
 

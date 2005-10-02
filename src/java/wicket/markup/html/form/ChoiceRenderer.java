@@ -44,6 +44,8 @@ import wicket.WicketRuntimeException;
  */
 public class ChoiceRenderer implements IChoiceRenderer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** expression for getting the display value. */
 	private final String displayExpression;
 
