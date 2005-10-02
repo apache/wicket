@@ -32,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PropertyEditorFactory implements IPropertyEditorFactory
 {
+	private static final long serialVersionUID = 1L;
+
 	/** log. */
 	private static Log log = LogFactory.getLog(PropertyEditorFactory.class);
 
@@ -41,6 +43,8 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	/** default factory to be used when no registration was found for a certain class. */
 	private IPropertyEditorFactory defaultPropertyEditorFactory = new IPropertyEditorFactory()
 	{
+		private static final long serialVersionUID = 1L;
+
 		public BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
 				EditMode editMode)
 		{

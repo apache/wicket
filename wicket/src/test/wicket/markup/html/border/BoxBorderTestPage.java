@@ -29,6 +29,8 @@ import wicket.markup.html.WebPage;
  */
 public class BoxBorderTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * 

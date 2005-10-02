@@ -28,6 +28,8 @@ import wicket.ResourceReference;
  */
 public class ResourceLink extends Link implements IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The Resource reference */
 	private final ResourceReference resourceReference;
 	

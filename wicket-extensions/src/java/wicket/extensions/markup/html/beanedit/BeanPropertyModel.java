@@ -32,6 +32,8 @@ import wicket.model.IModel;
  */
 public class BeanPropertyModel implements IModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** property descriptor. */
 	private final PropertyMeta propertyMeta;
 

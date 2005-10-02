@@ -35,6 +35,8 @@ import wicket.model.StringResourceModel;
  */
 public class BeanFormPanel extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id component id
@@ -123,6 +125,8 @@ public class BeanFormPanel extends Panel
 	 */
 	private final class BeanForm extends Form
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -135,6 +139,8 @@ public class BeanFormPanel extends Panel
 
 			Button cancel = new Button("cancel")
 			{
+				private static final long serialVersionUID = 1L;
+
 				protected void onSubmit()
 				{
 					onCancel();
@@ -147,6 +153,8 @@ public class BeanFormPanel extends Panel
 
 			Button save = new Button("save")
 			{
+				private static final long serialVersionUID = 1L;
+
 				protected void onSubmit()
 				{
 					onSave();

@@ -42,6 +42,8 @@ import wicket.util.string.Strings;
  */
 public class TypeValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The locale to use */
 	private Locale locale = null;
 

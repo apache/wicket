@@ -14,6 +14,8 @@ import wicket.markup.html.resources.StyleSheetReference;
  */
 public class PanelWithHeaderPart extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @param id
 	 */

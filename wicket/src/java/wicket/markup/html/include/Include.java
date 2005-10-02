@@ -76,6 +76,8 @@ import wicket.util.resource.UrlResourceStream;
  */
 public class Include extends WebComponent
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * <p>
 	 * Valid characters in a scheme.

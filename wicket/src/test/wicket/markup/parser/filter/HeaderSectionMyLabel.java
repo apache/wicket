@@ -31,6 +31,8 @@ import wicket.model.Model;
  */
 public class HeaderSectionMyLabel extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id

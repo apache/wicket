@@ -37,6 +37,8 @@ import wicket.WicketRuntimeException;
  */
 public class Model extends AbstractModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Backing object. */
 	private Serializable object;
 

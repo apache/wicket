@@ -518,7 +518,10 @@ public abstract class FileUploadBase {
      */
     public static class InvalidContentTypeException
         extends FileUploadException {
-        /**
+
+    	private static final long serialVersionUID = 1L;
+
+    	/**
          * Constructs a <code>InvalidContentTypeException</code> with no
          * detail message.
          */
@@ -543,7 +546,10 @@ public abstract class FileUploadBase {
      */
     public static class UnknownSizeException
         extends FileUploadException {
-        /**
+
+    	private static final long serialVersionUID = 1L;
+
+    	/**
          * Constructs a <code>UnknownSizeException</code> with no
          * detail message.
          */
@@ -568,7 +574,10 @@ public abstract class FileUploadBase {
      */
     public static class SizeLimitExceededException
         extends FileUploadException {
-        /**
+    	
+    	private static final long serialVersionUID = 1L;
+
+    	/**
          * Constructs a <code>SizeExceededException</code> with no
          * detail message.
          */

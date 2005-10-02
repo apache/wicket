@@ -32,6 +32,8 @@ import wicket.model.IModel;
  */
 public class PasswordTextField extends TextField
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PasswordTextField.class);
 

@@ -70,12 +70,16 @@ import wicket.model.Model;
  */
 public class DatePicker extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Attribute modifier that modifies/ adds an attribute with value of the given
 	 * component's path.
 	 */
 	private final static class PathAttributeModifier extends AttributeModifier
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param attribute the attribute to modify
@@ -85,6 +89,8 @@ public class DatePicker extends Panel
 		{
 			super(attribute, true, new Model()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public Object getObject(Component component)
 				{
 					// do this lazily, so we know for sure we have the whole
@@ -100,6 +106,8 @@ public class DatePicker extends Panel
 	 */
 	private final static class TriggerButton extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -111,6 +119,8 @@ public class DatePicker extends Panel
 			add(new PathAttributeModifier("id", this));
 			IModel srcReplacement = new Model()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public Object getObject(Component component)
 				{
 					String url = getPage().urlFor(resourceReference.getPath());
@@ -126,6 +136,8 @@ public class DatePicker extends Panel
 	 */
 	private final class InitScript extends WebComponent
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -229,6 +241,8 @@ public class DatePicker extends Panel
 		add(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
 		add(new JavaScriptReference("calendarLanguage", new Model()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Object getObject(Component component)
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());

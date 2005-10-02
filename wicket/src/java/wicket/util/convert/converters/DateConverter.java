@@ -30,6 +30,8 @@ import java.util.Map;
  */
 public final class DateConverter extends AbstractConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The date format to use for the specific locales (used as the key)*/
 	private Map dateFormats = new HashMap();
 

@@ -209,6 +209,8 @@ abstract class AbstractChoice extends FormComponent
 			{
 				addStateChange(new Change()
 				{
+					private static final long serialVersionUID = 1L;
+					
 					final IModel oldList = AbstractChoice.this.choices;
 					public void undo()
 					{

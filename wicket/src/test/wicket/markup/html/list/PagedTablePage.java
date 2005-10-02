@@ -32,6 +32,7 @@ import wicket.markup.html.navigation.paging.PagingNavigation;
  */
 public class PagedTablePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -46,6 +47,8 @@ public class PagedTablePage extends WebPage
 		list.add("three");
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

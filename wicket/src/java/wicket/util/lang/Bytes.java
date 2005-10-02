@@ -91,6 +91,8 @@ import wicket.util.value.LongValue;
  */
 public final class Bytes extends LongValue
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Pattern for string parsing. */
 	private static final Pattern valuePattern = Pattern.compile(
 			"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);

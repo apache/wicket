@@ -47,6 +47,8 @@ import wicket.model.Model;
  */
 public class FeedbackPanel extends Panel implements IFeedback
 {
+	private static final long serialVersionUID = 1L;
+
 	/** whether model messages should be HTML escaped. Default is true. */
 	private boolean escapeMessages = true;
 
@@ -58,6 +60,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	private final class MessageListView extends ListView
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @see wicket.Component#Component(String)
 		 */
@@ -75,6 +79,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
 			final IModel replacementModel = new Model()
 			{
+				private static final long serialVersionUID = 1L;
+
 				/**
 				 * Returns feedbackPanel + the message level, eg
 				 * 'feedbackPanelERROR'. This is used as the class of the li /
@@ -105,6 +111,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 		super(id);
 		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public boolean isVisible()
 			{
 				return anyMessage();

@@ -34,6 +34,8 @@ import wicket.model.IModel;
  */
 public class BeanModel implements IModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** the java bean to edit. */
 	private final Serializable bean;
 

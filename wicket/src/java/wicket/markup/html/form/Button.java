@@ -50,6 +50,8 @@ import wicket.version.undo.Change;
  */
 public class Button extends FormComponent
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * If false, all standard processing like validating and model updating is
 	 * skipped.
@@ -102,6 +104,8 @@ public class Button extends FormComponent
 		{
 			addStateChange(new Change()
 			{
+				private static final long serialVersionUID = 1L;
+				
 				boolean formerValue = Button.this.defaultFormProcessing;
 
 				public void undo()

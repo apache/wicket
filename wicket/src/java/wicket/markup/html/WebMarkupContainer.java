@@ -41,6 +41,8 @@ import wicket.util.lang.Classes;
  */
 public class WebMarkupContainer extends MarkupContainer implements IHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -268,6 +270,8 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		implements
 			IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		private final MarkupContainer container;
 		
 		/**

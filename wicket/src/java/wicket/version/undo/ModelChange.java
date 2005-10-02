@@ -30,6 +30,8 @@ import wicket.util.lang.Objects;
  */
 class ModelChange extends Change
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** subject. */
 	private final Component component;
 

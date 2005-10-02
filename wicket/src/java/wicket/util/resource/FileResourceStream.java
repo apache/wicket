@@ -38,6 +38,8 @@ import wicket.util.time.Time;
  */
 public class FileResourceStream extends AbstractResourceStream
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Logging */
 	private static Log log = LogFactory.getLog(FileResourceStream.class);
 

@@ -25,6 +25,8 @@ import wicket.PageParameters;
  */
 public class MarkupInheritanceExtension_8 extends MarkupInheritanceBase_8
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * @param parameters

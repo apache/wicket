@@ -30,6 +30,8 @@ import wicket.markup.html.WebPage;
  */
 public class HeaderSectionPage_9a extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param parameters

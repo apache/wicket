@@ -91,6 +91,8 @@ import wicket.util.time.Time;
  */
 public class WicketServlet extends HttpServlet
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The name of the context parameter that specifies application factory
 	 * class

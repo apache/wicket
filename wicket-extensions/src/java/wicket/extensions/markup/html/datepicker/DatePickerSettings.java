@@ -38,6 +38,8 @@ import wicket.markup.html.PackageResourceReference;
  */
 public class DatePickerSettings implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** log. */
 	private static Log log = LogFactory.getLog(DatePickerSettings.class);
 

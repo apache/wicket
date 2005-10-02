@@ -33,6 +33,8 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public class MarkupInheritanceResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private static Log log = LogFactory.getLog(MarkupInheritanceResolver.class);
 
@@ -81,6 +83,8 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		implements
 			IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * @param id
 		 */

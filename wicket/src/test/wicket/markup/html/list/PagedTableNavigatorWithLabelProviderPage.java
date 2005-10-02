@@ -33,6 +33,7 @@ import wicket.markup.html.navigation.paging.PagingNavigator;
  */
 public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -40,7 +41,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 	 * @param parameters
 	 *            page parameters.
 	 */
-public PagedTableNavigatorWithLabelProviderPage(final PageParameters parameters)
+	public PagedTableNavigatorWithLabelProviderPage(final PageParameters parameters)
 	{
 		super();
 		List list = new ArrayList();
@@ -62,6 +63,8 @@ public PagedTableNavigatorWithLabelProviderPage(final PageParameters parameters)
 		final int pageSize = 2;
 		final PageableListView listview = new PageableListView("table", list, pageSize)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

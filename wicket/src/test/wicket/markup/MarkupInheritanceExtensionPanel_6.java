@@ -25,6 +25,8 @@ import wicket.markup.html.basic.Label;
  */
 public class MarkupInheritanceExtensionPanel_6 extends MarkupInheritanceBasePanel_6 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * @param id

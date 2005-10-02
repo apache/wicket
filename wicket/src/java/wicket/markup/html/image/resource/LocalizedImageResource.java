@@ -70,6 +70,8 @@ import wicket.util.string.Strings;
  */
 public final class LocalizedImageResource implements Serializable, IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** What kind of resource it is. TRUE==Resource is set, FALSE==ResourceReference is set, null none */
 	private Boolean resourceKind;
 	
@@ -312,6 +314,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		final Class scope = component.findParentWithAssociatedMarkup().getClass();
 		this.resourceReference = new ResourceReference(scope, path)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			/**
 			 * @see wicket.ResourceReference#newResource()
 			 */

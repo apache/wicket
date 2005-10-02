@@ -28,6 +28,7 @@ import wicket.markup.html.border.Border;
  */
 public class HeaderSectionBorder extends Border
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Construct.
 	 * @param id

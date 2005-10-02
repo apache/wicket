@@ -28,6 +28,8 @@ import wicket.model.Model;
  */
 public class MyComponent extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int intParam;
 	private Integer integerParam;
 	private long long1Param;

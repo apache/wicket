@@ -56,6 +56,8 @@ public class ApplicationPages
 	 */
 	public static final class HomePageRenderStrategy extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
+		
 		HomePageRenderStrategy(final String name)
 		{
 			super(name);

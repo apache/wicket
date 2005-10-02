@@ -51,6 +51,8 @@ import java.io.Serializable;
  */
 public class ResourceReference implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The locale of the resource */
 	protected Locale locale;
 

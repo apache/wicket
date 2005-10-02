@@ -87,6 +87,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public static final class Type extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
 		/**
 		 * Construct.
 		 * 

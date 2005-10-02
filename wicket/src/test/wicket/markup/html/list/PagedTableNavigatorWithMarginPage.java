@@ -35,6 +35,7 @@ import wicket.markup.html.navigation.paging.PagingNavigator;
  */
 public class PagedTableNavigatorWithMarginPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -61,6 +62,8 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -71,6 +74,8 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		add(table);
 		add(new PagingNavigator("navigator", table)
         {
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(wicket.markup.html.navigation.paging.IPageable, wicket.markup.html.navigation.paging.IPagingLabelProvider)
 			 */

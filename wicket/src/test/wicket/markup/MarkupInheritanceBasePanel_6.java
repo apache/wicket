@@ -26,6 +26,8 @@ import wicket.markup.html.panel.Panel;
  */
 public class MarkupInheritanceBasePanel_6 extends Panel 
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int counter = 0;
 
 	/**

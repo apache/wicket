@@ -30,6 +30,8 @@ import wicket.Component;
  */
 class ChangeList implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private List changes = new ArrayList();
 
 	/**

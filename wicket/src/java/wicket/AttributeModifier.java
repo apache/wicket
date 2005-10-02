@@ -67,6 +67,8 @@ import wicket.util.value.ValueMap;
  */
 public class AttributeModifier implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
 

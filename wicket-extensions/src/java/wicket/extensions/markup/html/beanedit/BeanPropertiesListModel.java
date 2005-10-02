@@ -34,6 +34,8 @@ import wicket.model.Model;
  */
 public final class BeanPropertiesListModel extends Model
 {
+	private static final long serialVersionUID = 1L;
+
 	/** the bean model. */
 	private final BeanModel beanModel;
 

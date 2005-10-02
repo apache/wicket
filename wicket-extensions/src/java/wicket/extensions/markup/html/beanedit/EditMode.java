@@ -29,6 +29,8 @@ import wicket.util.lang.EnumeratedType;
  */
 public class EditMode extends EnumeratedType
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Mode that indicates the subject or field is in read only mode. */
 	public static final EditMode READ_ONLY = new EditMode("read-only");
 

@@ -207,6 +207,8 @@ public class StringResourceModelTest extends TestCase
 	{
 		IModel wsDetachModel = new AbstractReadOnlyDetachableModel()
 		{
+			private static final long serialVersionUID = 1L;
+
 			private transient WeatherStation station;
 			
 			protected void onAttach()
@@ -248,6 +250,8 @@ public class StringResourceModelTest extends TestCase
 	 */
 	class WeatherStation implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 
 		private String currentStatus = "sunny";
 

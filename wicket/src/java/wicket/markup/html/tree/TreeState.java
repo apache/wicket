@@ -47,6 +47,8 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public final class TreeState implements Serializable, TreeModelListener, RowMapper
 {
+	private static final long serialVersionUID = 1L;
+
 	/** currently selected path. */
 	private TreePath selectedPath;
 
@@ -891,6 +893,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private final class TreeStateNode extends DefaultMutableTreeNode
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** Whether this node is expanded */
 		private boolean isExpanded;
 
@@ -1759,6 +1763,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private final class SearchInfo implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private TreeStateNode node;
 
 		private boolean isNodeParentNode;

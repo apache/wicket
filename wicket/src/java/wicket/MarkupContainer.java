@@ -424,6 +424,8 @@ public abstract class MarkupContainer extends Component
 		{
 			addStateChange(new Change()
 			{
+				private static final long serialVersionUID = 1L;
+				
 				final Object removedChildren = MarkupContainer.this.children;
 				public void undo()
 				{

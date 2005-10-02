@@ -32,6 +32,8 @@ import wicket.model.Model;
  */
 public class AttributeModifierComponentPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * 
@@ -53,6 +55,8 @@ public class AttributeModifierComponentPage extends WebPage
 		Label label3 = new Label("label3", new Model("Label 3"));
 		label3.add(new AttributeModifier("class", true, new AbstractDetachableModel()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			private transient String text = null;
 
 			public void onDetach()

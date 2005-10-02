@@ -33,6 +33,8 @@ import wicket.Page;
  */
 public class PageLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The delayed linking Page source. */
 	private final IPageLink pageLink;
 
@@ -57,6 +59,8 @@ public class PageLink extends Link
 
 		this.pageLink = new IPageLink()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public Page getPage()
 			{
 				// Create page using page factory
@@ -83,6 +87,8 @@ public class PageLink extends Link
 
 		this.pageLink = new IPageLink()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getPage()
 			{
 				// Create page using page factory

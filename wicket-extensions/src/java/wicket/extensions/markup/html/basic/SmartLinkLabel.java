@@ -42,6 +42,8 @@ import wicket.model.IModel;
  */
 public final class SmartLinkLabel extends Label
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Email address pattern */
 	private static final Pattern emailPattern = Pattern.compile("[\\w\\.-]+@[\\w\\.-]+",
 			Pattern.DOTALL);

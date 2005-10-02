@@ -37,6 +37,8 @@ import wicket.markup.WicketTag;
  */
 public class WicketLinkResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private static Log log = LogFactory.getLog(WicketLinkResolver.class);
 
@@ -85,6 +87,8 @@ public class WicketLinkResolver implements IComponentResolver
 		implements
 			IComponentResolver
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * @param id
 		 */

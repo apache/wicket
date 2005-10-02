@@ -36,6 +36,8 @@ import wicket.model.Model;
  */
 public final class EditModeReplacementModel extends Model
 {
+	private static final long serialVersionUID = 1L;
+
 	/** edit mode. */
 	private final EditMode editMode;
 

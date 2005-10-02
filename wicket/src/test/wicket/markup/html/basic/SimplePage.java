@@ -34,6 +34,8 @@ import wicket.model.Model;
  */
 public class SimplePage extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param parameters

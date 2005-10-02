@@ -31,6 +31,8 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class ListItemTest extends TestCase
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Use a mock application to handle Link-clicked event */
 	private static MockWebApplication application; // = new MockWebApplication(null);
 
@@ -58,6 +60,8 @@ public class ListItemTest extends TestCase
 
 		return new ListView("listView", new Model(modelList))
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
 				; // do nothing

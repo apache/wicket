@@ -12,6 +12,8 @@ import wicket.markup.html.basic.Label;
  */
 public class DoubleHeaderPartPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

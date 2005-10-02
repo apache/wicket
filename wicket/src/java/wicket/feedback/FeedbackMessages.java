@@ -38,6 +38,8 @@ import wicket.util.string.StringList;
  */
 public final class FeedbackMessages implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Log. */
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
 

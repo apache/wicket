@@ -34,6 +34,8 @@ import wicket.model.Model;
  */
 public class BodyOnLoadContainer extends WebMarkupContainer implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor used by BodyOnLoadContainer. The id is fix "_body"
 	 * and the markup stream will be provided by the parent component.

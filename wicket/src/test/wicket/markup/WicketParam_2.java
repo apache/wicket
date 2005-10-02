@@ -34,6 +34,8 @@ import wicket.markup.html.list.ListItem;
  */
 public class WicketParam_2 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * @param parameters
@@ -47,7 +49,9 @@ public class WicketParam_2 extends WebPage
 	    
 	    add(new WicketParamListView("list", data)
         {
-			protected void populateItem(ListItem item)
+	    	private static final long serialVersionUID = 1L;
+
+	    	protected void populateItem(ListItem item)
 			{
 				String txt = (String)item.getModelObject();
 				item.add(new Label("label", txt));

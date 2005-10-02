@@ -36,6 +36,8 @@ import wicket.PageParameters;
  */
 public class TreePageWithBorder extends BorderedPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 * @param parameters Page parameters

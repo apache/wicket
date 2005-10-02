@@ -44,6 +44,8 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	public static final class LoopItem extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** The iteration number */
 		private final int iteration;
 

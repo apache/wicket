@@ -41,6 +41,8 @@ import wicket.markup.html.panel.Panel;
  */
 public class BeanPanel extends AbstractBeanPanel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * factory for property editors. 
 	 */
@@ -253,6 +255,8 @@ public class BeanPanel extends AbstractBeanPanel
 	 */
 	private final class PropertyList extends ListView
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component name
@@ -285,6 +289,8 @@ public class BeanPanel extends AbstractBeanPanel
 	 */
 	static final class PropertyInput extends BeanPropertyEditor
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -309,6 +315,8 @@ public class BeanPanel extends AbstractBeanPanel
 	 */
 	static final class PropertyCheckBox extends BeanPropertyEditor
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -333,6 +341,8 @@ public class BeanPanel extends AbstractBeanPanel
 	 */
 	static final class ButtonToMoreDetails extends BeanPropertyEditor
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -343,6 +353,8 @@ public class BeanPanel extends AbstractBeanPanel
 			super(id, propertyMeta);
 			add(new Link("button")
 			{
+				private static final long serialVersionUID = 1L;
+
 				public void onClick()
 				{
 				}

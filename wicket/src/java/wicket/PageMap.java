@@ -31,6 +31,8 @@ import wicket.util.collections.MostRecentlyUsedMap;
  */
 public final class PageMap implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Default page map name */
 	public static final String defaultName = "main";
 

@@ -57,6 +57,8 @@ import wicket.util.time.Time;
  */
 public class ValueMap implements Map, Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 	

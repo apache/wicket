@@ -30,6 +30,8 @@ import wicket.markup.html.panel.Panel;
  */
 public class PagingNavigator extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
 	private final PagingNavigation pagingNavigation;
 

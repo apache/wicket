@@ -33,6 +33,8 @@ import wicket.Page;
  */
 public class UndoPageVersionManager implements IPageVersionManager
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The current list of changes */
 	private ChangeList changeList;
 
@@ -66,6 +68,8 @@ public class UndoPageVersionManager implements IPageVersionManager
 		// Create an insertion-ordered MRU map
 		this.appliedChangeListForVersionNumber = new LinkedHashMap()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected boolean removeEldestEntry(final Map.Entry ignored)
 			{
 				// Tell collections class to remove oldest entry if there are

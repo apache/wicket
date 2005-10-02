@@ -29,6 +29,8 @@ import wicket.model.PropertyModel;
  */
 public class MarkupInheritanceBase_4 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int counter = 0;
 
 	/**
@@ -40,6 +42,8 @@ public class MarkupInheritanceBase_4 extends WebPage
 		add(new Label("label1", new PropertyModel(this, "counter")));
 		add(new Link("link")
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public void onClick()
 			{
 				counter++;

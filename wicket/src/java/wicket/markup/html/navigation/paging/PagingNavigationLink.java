@@ -28,6 +28,8 @@ import wicket.markup.html.link.Link;
  */
 public final class PagingNavigationLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The pageable list view. */
 	private final IPageable pageable;
 

@@ -37,6 +37,8 @@ import wicket.util.time.Time;
  */
 public class BufferedDynamicImageResource extends DynamicImageResource
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The byte array holding the contents of the dynamic image */
 	private byte[] imageData;
 

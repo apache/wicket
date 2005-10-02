@@ -30,6 +30,8 @@ import wicket.util.string.Strings;
  */
 public class ExternalLink extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** the href attribute. */
 	final private String href;
 

@@ -28,6 +28,8 @@ import wicket.PageParameters;
  */
 public class Href_2 extends Href_1
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param parameters

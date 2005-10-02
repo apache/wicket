@@ -287,6 +287,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public class ComponentModelChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** former model. */
 		private IModel model;
 
@@ -342,6 +344,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	protected class VisibilityChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** subject. */
 		private final Component component;
 

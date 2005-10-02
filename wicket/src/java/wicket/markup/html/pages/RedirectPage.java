@@ -34,6 +34,8 @@ import wicket.model.Model;
  */
 public final class RedirectPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor. The page will immediately redirect to the given url.
 	 * 

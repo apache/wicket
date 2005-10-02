@@ -28,6 +28,8 @@ import java.io.Serializable;
  */
 public class PropertyMeta implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** model with the bean that owns the property. */
 	private final BeanModel beanModel;
 

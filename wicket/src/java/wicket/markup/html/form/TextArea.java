@@ -28,6 +28,8 @@ import wicket.model.IModel;
  */
 public class TextArea extends AbstractTextComponent
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */

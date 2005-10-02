@@ -113,12 +113,16 @@ import wicket.version.undo.Change;
  */
 public class PagingNavigation extends Loop
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Undo change for navigation start index. Makes certain that back button works
 	 * with paging in the navigator.
 	 */
 	private final class StartIndexChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+
 		private int startIndex;
 		
 		/**

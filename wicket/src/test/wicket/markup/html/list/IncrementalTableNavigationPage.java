@@ -32,6 +32,7 @@ import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
  */
 public class IncrementalTableNavigationPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -52,6 +53,8 @@ public class IncrementalTableNavigationPage extends WebPage
 
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

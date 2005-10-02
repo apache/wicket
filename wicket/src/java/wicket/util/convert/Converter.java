@@ -69,6 +69,8 @@ import wicket.util.convert.converters.StringConverter;
  */
 public final class Converter implements IConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
 
@@ -77,6 +79,8 @@ public final class Converter implements IConverter
 	 */
 	private IConverter defaultConverter = new IConverter()
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * Converts the given value object to class c using OgnlOps.
 		 * 

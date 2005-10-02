@@ -35,6 +35,8 @@ import java.util.Date;
  */
 public final class Time extends AbstractTime
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
 	public static final Time START_OF_UNIX_TIME = milliseconds(0);
 

@@ -28,11 +28,14 @@ import wicket.model.IModel;
  */
 public class PopupCloseLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * ClosePopupPage closes the popup window.
 	 */
 	private static final class ClosePopupPage extends WebPage
 	{
+		private static final long serialVersionUID = 1L;
 	}
 
 	/**
