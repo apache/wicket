@@ -55,7 +55,7 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 }
 
 #titleblock {
-	background: #DEDEDE;
+	background-color: #BBBBBB;
 	color: white;
 	font-weight: bold;
 	border-bottom: solid #E9601A;
