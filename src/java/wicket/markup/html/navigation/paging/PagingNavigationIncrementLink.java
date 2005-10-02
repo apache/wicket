@@ -58,7 +58,7 @@ public class PagingNavigationIncrementLink extends Link
 			final IPageable pageable, final int increment)
 	{
 		super(id);
-
+		setAutoEnable(true);
 		this.increment = increment;
 		this.pageable = pageable;
 	}

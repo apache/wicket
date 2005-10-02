@@ -49,7 +49,7 @@ public final class PagingNavigationLink extends Link
 			final IPageable pageable, final int pageNumber)
 	{
 		super(id);
-
+		setAutoEnable(true);
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;
 	}
