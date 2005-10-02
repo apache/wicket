@@ -51,8 +51,8 @@ import wicket.version.undo.Change;
 public class Button extends FormComponent
 {
 	/**
-	 * Indicates that this button should be called without any validation done.
-	 * By default, defaultFormProcessing is enabled.
+	 * If false, all standard processing like validating and model updating is
+	 * skipped.
 	 */
 	private boolean defaultFormProcessing = true;
 
@@ -63,7 +63,7 @@ public class Button extends FormComponent
 	{
 		super(id);
 	}
-	
+
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
@@ -71,7 +71,7 @@ public class Button extends FormComponent
 	{
 		super(id, object);
 	}
-	
+
 
 	/**
 	 * Gets the defaultFormProcessing property. When false (default is true),
@@ -87,7 +87,7 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * Sets the defaultFormProcessing property. When true (default is false),
+	 * Sets the defaultFormProcessing property. When false (default is true),
 	 * all validation and formupdating is bypassed and the onSubmit method of
 	 * that button is called directly, and the onSubmit method of the parent
 	 * form is not called. A common use for this is to create a cancel button.
@@ -148,16 +148,16 @@ public class Button extends FormComponent
 		try
 		{
 			String value = getValue();
-			if(value != null && !"".equals(value))
+			if (value != null && !"".equals(value))
 			{
 				tag.put("value", value);
 			}
-		} 
-		catch(Exception e) 
+		}
+		catch (Exception e)
 		{
 			// ignore.
 		}
-		
+
 		// If the subclass specified javascript, use that
 		final String onClickJavaScript = getOnClickScript();
 		if (onClickJavaScript != null)
