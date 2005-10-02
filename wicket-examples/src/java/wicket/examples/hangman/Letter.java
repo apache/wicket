@@ -33,7 +33,7 @@ import wicket.util.lang.Primitives;
 public class Letter implements Serializable
 {
 	/** True if the letter has been guessed */
-	private boolean isGuessed;
+	private boolean guessed;
 
 	/** The letter */
 	private char letter;
@@ -65,27 +65,24 @@ public class Letter implements Serializable
 		if (object instanceof Letter)
 		{
 			final Letter that = (Letter)object;
-			return that.letter == this.letter && that.isGuessed == this.isGuessed;
+			return that.letter == this.letter && that.guessed == this.guessed;
 		}
 		return false;
 	}
 
 	/**
-	 * @param enabled
-	 *            True to get the enabled resource, false to get the disabled
-	 *            resource
 	 * @return ResourceReference token for this letter
 	 */
-	public ResourceReference getSharedImageResource(final boolean enabled)
+	public ResourceReference getSharedImageResource()
 	{
-		return new ResourceReference(Letter.class, asString() + (enabled ? "_enabled" : "_disabled"))
+		return new ResourceReference(Letter.class, asString() + (isGuessed() ? "_enabled" : "_disabled"))
 		{
 			protected Resource newResource()
 			{
 				// Lazy loading of shared resource
 				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
 						asString());
-				if (!enabled)
+				if (!isGuessed())
 				{
 					buttonResource.setColor(Color.GRAY);
 				}
@@ -99,7 +96,7 @@ public class Letter implements Serializable
 	 */
 	public void guess()
 	{
-		this.isGuessed = true;
+		this.guessed = true;
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class Letter implements Serializable
 	 */
 	public int hashCode()
 	{
-		return Primitives.hashCode(letter << (isGuessed ? 1 : 0));
+		return Primitives.hashCode(letter << (guessed ? 1 : 0));
 	}
 
 	/**
@@ -115,7 +112,7 @@ public class Letter implements Serializable
 	 */
 	public boolean isGuessed()
 	{
-		return isGuessed;
+		return guessed;
 	}
 
 	/**
@@ -123,7 +120,7 @@ public class Letter implements Serializable
 	 */
 	public void reset()
 	{
-		this.isGuessed = false;
+		this.guessed = false;
 	}
 
 	/**
@@ -131,6 +128,6 @@ public class Letter implements Serializable
 	 */
 	public String toString()
 	{
-		return "[Letter letter = " + letter + ", guessed = " + isGuessed + "]";
+		return "[Letter letter = " + letter + ", guessed = " + guessed + "]";
 	}
 }
