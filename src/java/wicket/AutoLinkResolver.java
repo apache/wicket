@@ -29,6 +29,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
+import wicket.util.lang.Packages;
 
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
@@ -153,14 +154,14 @@ public final class AutoLinkResolver implements IComponentResolver
 			// Wicket will not throw an exception. It accepts it.
 			infoPath = Strings.replaceAll(infoPath, "/", ".");
 
+			final ApplicationSettings appSettings = page.getApplicationSettings();
+			final IClassResolver defaultClassResolver = appSettings.getDefaultClassResolver();
 			if (!infoPath.startsWith("."))
 			{
 				// Href is relative. Resolve the url given relative to the
 				// current page
-				final String className = page.getClass().getPackage().getName() + "." + infoPath;
-				final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
-						.resolveClass(className);
-
+				final String className = Packages.extractPackageName( page.getClass() ) + "." + infoPath;
+				final Class clazz = defaultClassResolver.resolveClass(className);
 				return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
 			}
 			else
@@ -170,9 +171,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				final String className = infoPath.substring(1);
 				try
 				{
-					final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
-							.resolveClass(className);
-
+					final Class clazz = defaultClassResolver.resolveClass(className);
 					return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
 				}
 				catch (WicketRuntimeException ex)

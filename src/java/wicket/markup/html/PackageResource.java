@@ -170,7 +170,7 @@ public class PackageResource extends WebResource
 	{
 		this.scope = scope;
 		// Convert resource path to absolute path relative to base package
-		this.absolutePath = Packages.absolutePath(scope.getPackage(), path);
+		this.absolutePath = Packages.absolutePath(scope, path);
 		this.locale = locale;
 		this.style = style;
 		

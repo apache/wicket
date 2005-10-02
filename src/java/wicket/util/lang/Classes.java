@@ -53,24 +53,24 @@ public final class Classes
 	}
 
 	/**
-	 * Takes a package and a relative path to a class and returns any class at
-	 * that relative path. For example, if the given package was java.lang and
+	 * Takes a Class and a relative path to a class and returns any class at
+	 * that relative path. For example, if the given Class was java.lang.System and
 	 * the relative path was "../util/List", then the java.util.List class would
 	 * be returned.
-	 * 
-	 * @param p
+	 *
+	 * @param scope
 	 *            The package to start at
 	 * @param path
 	 *            The relative path to the class
 	 * @return The class
 	 * @throws ClassNotFoundException
 	 */
-	public static Class relativeClass(final Package p, final String path)
+	public static Class relativeClass(final Class scope, final String path)
 			throws ClassNotFoundException
 	{
-		return Class.forName(Packages.absolutePath(p, path).replace('/', '.'));
+		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
 	}
-	
+
 	/**
 	 * Invoke the setter method for 'name' on object and provide the 'value'
 	 * 

@@ -19,12 +19,12 @@ package wicket.util.lang;
 
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
-import wicket.util.string.Strings;
 
 /**
  * Utilities for dealing with packages.
  * 
  * @author Jonathan Locke
+ * @author Niclas Hedhman
  */
 public final class Packages
 {
@@ -40,7 +40,42 @@ public final class Packages
 	 *            The relative path to the class
 	 * @return The absolute path
 	 */
+	public static String absolutePath(final Class p, final String relativePath)
+	{
+		String packName = extractPackageName(p);
+		return absolutePath(packName, relativePath);
+	}
+
+	/**
+	 * Takes a package and a relative path to a resource and returns an absolute
+	 * path to the resource. For example, if the given package was java.lang and
+	 * the relative path was "../util/List", then "java/util/List" would be
+	 * returned.
+	 * 
+	 * @param p
+	 *            The package to start at
+	 * @param relativePath
+	 *            The relative path to the class
+	 * @return The absolute path
+	 */
 	public static String absolutePath(final Package p, final String relativePath)
+	{
+		return absolutePath(p.getName(), relativePath);
+	}
+
+	/**
+	 * Takes a package and a relative path to a resource and returns an absolute
+	 * path to the resource. For example, if the given package was java.lang and
+	 * the relative path was "../util/List", then "java/util/List" would be
+	 * returned.
+	 * 
+	 * @param packageName
+	 *            The package to start at
+	 * @param relativePath
+	 *            The relative path to the class
+	 * @return The absolute path
+	 */
+	public static String absolutePath(final String packageName, final String relativePath)
 	{
 		// Is path already absolute?
 		if (relativePath.startsWith("/"))
@@ -50,7 +85,7 @@ public final class Packages
 		else
 		{
 			// Break package into list of package names
-			final StringList absolutePath = StringList.tokenize(p.getName(), ".");
+			final StringList absolutePath = StringList.tokenize(packageName, ".");
 
 			// Break path into folders
 			final StringList folders = StringList.tokenize(relativePath, "/\\");
@@ -62,7 +97,7 @@ public final class Packages
 				final String folder = iterator.next();
 
 				// Up one?
-				if (folder.equals(".."))
+				if ("..".equals(folder))
 				{
 					// Pop off stack
 					if (absolutePath.size() > 0)
@@ -87,23 +122,59 @@ public final class Packages
 	}
 
 	/**
-	 * @param p
-	 *            The Package
+	 * Determines the package name for the given class.
+	 * 
+	 * @param forClass
+	 *            the class
+	 * @return the package name
+	 */
+	public static String extractPackageName(final Class forClass)
+	{
+		String classname = forClass.getName();
+		String parent = parent(classname);
+		return parent;
+	}
+
+	/**
+	 * Gets the parent package name.
+	 * 
+	 * @param packageName
+	 *            The Package name
 	 * @return The parent Package
 	 */
-	public static Package parent(final Package p)
+	public static String parent(final String packageName)
 	{
-		final String packageName = p.getName();
-		if (packageName.indexOf('.') != -1)
+		int pos = packageName.lastIndexOf(".");
+		String parent;
+		if (pos < 0)
 		{
-			final String parentPackageName = Strings.beforeLast(packageName, '.');
-			return Package.getPackage(parentPackageName);
+			pos = packageName.lastIndexOf("/");
+			if (pos < 0)
+			{
+				pos = 0;
+			}
 		}
-		return null;
+		parent = packageName.substring(0, pos);
+		return parent;
 	}
-	
+
+
 	/**
-	 * Instantiation not allowed
+	 * Resolve scope for the given class by extracting it's package name and
+	 * converting all dots to slashes.
+	 * 
+	 * @param forClass
+	 *            the class
+	 * @return the scope string
+	 */
+	public static String resolveScope(final Class forClass)
+	{
+		String packName = extractPackageName(forClass);
+		return packName.replace('.', '/');
+	}
+
+	/**
+	 * Instantiation not allowed.
 	 */
 	private Packages()
 	{

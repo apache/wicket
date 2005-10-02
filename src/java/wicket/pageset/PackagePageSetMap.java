@@ -33,7 +33,7 @@ import wicket.util.lang.Packages;
 public class PackagePageSetMap extends PageSetMap
 {
 	/** Map from Package to PageSet */
-	private final Map packageToPageSet = new HashMap();
+	private final Map packageNameToPageSet = new HashMap();
 
 	/**
 	 * Adds a mapping from a given class to a given PageSet
@@ -46,7 +46,8 @@ public class PackagePageSetMap extends PageSetMap
 	public final void add(final Class pageClass, final PageSet pageSet)
 	{
 		checkPageClass(pageClass);
-		packageToPageSet.put(pageClass.getPackage(), pageSet);
+		String packageName = Packages.extractPackageName( pageClass );
+		packageNameToPageSet.put( packageName, pageSet );
 	}
 
 	/**
@@ -54,13 +55,15 @@ public class PackagePageSetMap extends PageSetMap
 	 */
 	public PageSet pageSet(final Page page)
 	{
-		for (Package p = page.getClass().getPackage(); p != null; p = Packages.parent(p))
+		String packageName = Packages.extractPackageName( page.getClass() );
+		while ( "".equals( packageName ) == false )
 		{
-			final PageSet pageSet = (PageSet)packageToPageSet.get(p);
+			final PageSet pageSet = (PageSet)packageNameToPageSet.get(packageName);
 			if (pageSet != null)
 			{
 				return pageSet;
 			}
+			packageName = Packages.parent(packageName);
 		}
 		return null;
 	}
