@@ -18,6 +18,8 @@
 package wicket.protocol.http;
 
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -88,23 +90,20 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 		
 		// If available, add POST parameters as well. They are not encrypted.
 		// The parameters from HttpRequest 
-		final Map params = super.getParameterMap();
-		if ((params != null) && !params.isEmpty())
-		{
-		    // For all parameters (POST + URL query string)
-		    final Iterator iter = params.entrySet().iterator();
-		    while (iter.hasNext())
-		    {
-		        final Map.Entry entry = (Map.Entry)iter.next();
-		        
-		        // Ignore the "x" parameter
-		        if (!"x".equalsIgnoreCase((String)entry.getKey()))
-		        {
-		            // add key/value to our parameter map
-		            this.parameters.put(entry.getKey(), entry.getValue());
-		        }
-		    }
-		}
+		final Enumeration paramNames = request.getParameterNames();
+	    // For all parameters (POST + URL query string)
+	    while (paramNames.hasMoreElements())
+	    {
+	       String paramName = (String)paramNames.nextElement();
+	        
+	        // Ignore the "x" parameter
+	        if (!"x".equalsIgnoreCase(paramName))
+	        {
+	 	       String[] values = request.getParameterValues(paramName);
+	            // add key/value to our parameter map
+	            this.parameters.put(paramName, values);
+	        }
+	    }
 	}
 
 	/**
@@ -148,15 +147,37 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			final int pos = pair.indexOf("=");
 			if (pos < 0)
 			{
-			    // Parameter without value
-				params.put(pair, null);
+				String[] prevValue = (String[])params.get(pair);
+				if(prevValue != null)
+				{
+					String[] newValue = new String[prevValue.length];
+					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
+					newValue[prevValue.length] = "";
+					params.put(pair,newValue);
+				}
+				else
+				{
+				    // Parameter without value
+					params.put(pair, new String[] {""});
+				}
 			}
 			else
 			{
 			    final String key = pair.substring(0, pos);
 			    final String value = pair.substring(pos + 1);
-			    
-				params.put(key, value);
+				String[] prevValue = (String[])params.get(key);
+				if(prevValue != null)
+				{
+					String[] newValue = new String[prevValue.length];
+					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
+					newValue[prevValue.length] = value;
+					params.put(key,newValue);
+				}
+				else
+				{
+				    // Parameter without value
+					params.put(key, new String[] {value});
+				}
 			}
 		}
 		
@@ -172,7 +193,10 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 */
 	public String getParameter(final String key)
 	{
-		return this.parameters.getString(key);
+		String[] value = (String[]) this.parameters.get(key);
+		if(value != null)
+			return value[0];
+		return null;
 	}
 
 	/**
@@ -182,7 +206,14 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 */
 	public Map getParameterMap()
 	{
-		return Collections.unmodifiableMap(parameters);
+		HashMap map = new HashMap(parameters.size(),1);
+		Iterator it = parameters.keySet().iterator();
+		while(it.hasNext())
+		{
+			String param = (String)it.next();
+			map.put(param, getParameter(param));
+		}
+		return Collections.unmodifiableMap(map);
 	}
 
 	/**
