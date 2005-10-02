@@ -9,6 +9,11 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Eelco Hillenius" issue="1287878" due-to="Leo West">doc fix for Button.setDefaultFormProcessing</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1266998" due-to="Johan Compagner">Call invalidate after each setXXX invocation on DefaultButtonImageResource to force re-rendering</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1267147" due-to="Jan Bares">Made WicketExampleHeader.html (X)HTML compliant</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1251658" due-to="Zhenbang Wei, Niclas Hedhman">Link.autoEnable is now false by default, and when setEnabled is called, autoEnable will be set to false too as calling setEnabled is a consious action that has no effect when autoEnable is true</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1240768" due-to="Gili Tzabari">Link.autoEnable is now false by default, and when setEnabled is called, autoEnable will be set to false too as calling setEnabled is a consious action that has no effect when autoEnable is true. CHECK YOUR CODE WHETHER THIS HAS CONSEQUENCES FOR YOU!</action>
       <action type="add" dev="Eelco Hillenius">added class wicket.markup.html.image.resource.BlobImageResource to make working with images from databases easier.</action>
       <action type="update" dev="Eelco Hillenius">made Link.isEnabled non final so that users can more easily customize on/off behaviour.</action>
       <action type="fix" dev="Johan Compagner" issue="1290352" due-to="Phil Kulak"> Models not detached when checkAccess() returns false.</action>
