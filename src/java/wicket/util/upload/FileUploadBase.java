@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -31,10 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * <p>This class handles multiple files per single HTML widget, sent using
  * <code>multipart/mixed</code> encoding type, as specified by
- * <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.  Use {@link
- * #parseRequest(HttpServletRequest)} to acquire a list of {@link
- * wicket.util.upload.FileItem}s associated with a given HTML
- * widget.</p>
+ * <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
  *
  * <p>How the data for individual parts is stored is determined by the factory
  * used to create them; a given part may be in memory, on disk, or somewhere
@@ -46,8 +42,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
- *
- * @version $Id$
  */
 public abstract class FileUploadBase {
 
@@ -217,26 +211,6 @@ public abstract class FileUploadBase {
 
 
     // --------------------------------------------------------- Public methods
-
-
-    /**
-     * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
-     * compliant <code>multipart/form-data</code> stream.
-     *
-     * @param req The servlet request to be parsed.
-     *
-     * @return A list of <code>FileItem</code> instances parsed from the
-     *         request, in the order that they were transmitted.
-     *
-     * @exception FileUploadException if there are problems reading/parsing
-     *                                the request or storing files.
-     *
-     * @deprecated Use the method in <code>ServletFileUpload</code> instead.
-     */
-    public List /* FileItem */ parseRequest(HttpServletRequest req)
-            throws FileUploadException {
-        return parseRequest(new ServletRequestContext(req));
-    }
 
     /**
      * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
