@@ -30,7 +30,6 @@ class ExplainPanel extends Panel {
 	/**
 	 * Construct.
 	 *
-	 * @param id   component id
 	 * @param html
 	 * @param code
 	 */
