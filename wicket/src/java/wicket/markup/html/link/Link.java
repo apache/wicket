@@ -36,25 +36,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *       add(new Link(&quot;myLink&quot;){
- *      
- *         public void onClick(RequestCycle cycle)
- *         {
- *            // do something here...  
- *         }
- *       );
+ *          add(new Link(&quot;myLink&quot;){
+ *         
+ *            public void onClick(RequestCycle cycle)
+ *            {
+ *               // do something here...  
+ *            }
+ *          );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *           &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *           &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -70,8 +70,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	private String afterDisabledLink;
 
-	/** True if link should automatically enable/disable based on current page. */
-	private boolean autoEnable = true;
+	/**
+	 * True if link should automatically enable/disable based on current page;
+	 * false by default.
+	 */
+	private boolean autoEnable = false;
 
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
@@ -81,7 +84,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 
 	/** True if this link is enabled. */
 	private boolean enabled = true;
-	
+
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
 	 * will be generated that opens a new window using the popup properties.
@@ -231,8 +234,8 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Sets link enabled state. Note that you have to setAutoEnable(false) 
-	 * as well in case you want to manually enable/disable the link.
+	 * Sets link enabled state. Note that if you call this method, auto enabling
+	 * of links will be turned off.
 	 * 
 	 * @param enabled
 	 *            The enabled to set.
@@ -305,7 +308,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		super.onComponentTag(tag);
 
 		// If we're auto-enabling
-		if (autoEnable)
+		if (getAutoEnable())
 		{
 			// the link is enabled if this link doesn't link to the current page
 			setEnabled(!linksTo(getPage()));
@@ -345,7 +348,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
 				// generate the href attribute
-				tag.put("href", Strings.replaceAll(url,"&", "&amp;"));
+				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
 
 				// Add any popup script
 				if (popupSettings != null)
@@ -379,7 +382,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			tag.put("onclick", onClickJavaScript);
 		}
 	}
-	
+
 	/**
 	 * @see wicket.Component#internalOnBeginRequest()
 	 */
@@ -403,7 +406,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		{
 			beforeDisabledLink = getApplicationSettings().getDefaultBeforeDisabledLink();
 			afterDisabledLink = getApplicationSettings().getDefaultAfterDisabledLink();
-		}		
+		}
 	}
 
 	/**
