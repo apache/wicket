@@ -379,6 +379,12 @@ public abstract class FileUploadBase {
                 fileName = (String) params.get("filename");
                 if (fileName != null) {
                     fileName = fileName.trim();
+                    int index = fileName.lastIndexOf('\\');
+                    if(index == -1) index = fileName.lastIndexOf('/');
+                    if(index != -1)
+                    {
+                    	fileName = fileName.substring(index+1);
+                    }
                 } else {
                     // Even if there is no value, the parameter is present, so
                     // we return an empty file name rather than no file name.
