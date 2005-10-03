@@ -184,6 +184,9 @@ public abstract class RequestCycle
 	/** The current response. */
 	protected Response response;
 
+	/** The original response the request cycle was created with */
+	private final Response originalResponse;  
+	
 	/** The session object. */
 	protected final Session session;
 
@@ -289,11 +292,25 @@ public abstract class RequestCycle
 		this.session = session;
 		this.request = request;
 		this.response = response;
+		this.originalResponse = response;
 
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
 	}
 
+	/**
+	 * Get the orignal respone the request was create with. Access may be
+	 * necessary with the response has temporarily being replaced but your
+	 * components requires access to lets say the cookie methods of a 
+	 * WebResponse.
+	 * 
+	 * @return The original response object.
+	 */
+	public final Response getOriginalResponse()
+	{
+		return this.originalResponse;
+	}
+	
 	/**
 	 * Gets the application object.
 	 * 
