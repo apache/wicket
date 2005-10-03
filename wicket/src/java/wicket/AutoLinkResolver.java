@@ -150,7 +150,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		// HTML hrefs are handled first
-		if ("html".equalsIgnoreCase(extension))
+		if ("html".equalsIgnoreCase(extension) || "xml".equalsIgnoreCase(extension))
 		{
 			// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 			// Wicket will not throw an exception. It accepts it.
@@ -158,28 +158,29 @@ public final class AutoLinkResolver implements IComponentResolver
 
 			final ApplicationSettings appSettings = page.getApplicationSettings();
 			final IClassResolver defaultClassResolver = appSettings.getDefaultClassResolver();
+			
+			final String className;
 			if (!infoPath.startsWith("."))
 			{
 				// Href is relative. Resolve the url given relative to the
 				// current page
-				final String className = Packages.extractPackageName( page.getClass() ) + "." + infoPath;
-				final Class clazz = defaultClassResolver.resolveClass(className);
-				return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
+				className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
 			}
 			else
 			{
 				// href is absolute. If class with the same absolute path
 				// exists, use it. Else don't change the href.
-				final String className = infoPath.substring(1);
-				try
-				{
-					final Class clazz = defaultClassResolver.resolveClass(className);
-					return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
-				}
-				catch (WicketRuntimeException ex)
-				{
-					; // fall through
-				}
+				className = infoPath.substring(1);
+			}
+			
+			try
+			{
+				final Class clazz = defaultClassResolver.resolveClass(className);
+				return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
+			}
+			catch (WicketRuntimeException ex)
+			{
+				; // fall through
 			}
 		}
 		// It is not "*.html". Create a static resource reference
