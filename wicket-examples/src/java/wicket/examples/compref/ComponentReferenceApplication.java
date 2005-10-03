@@ -18,21 +18,42 @@
  */
 package wicket.examples.compref;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wicket.examples.WicketExampleApplication;
 
 /**
  * Application class for the component reference.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class ComponentReferenceApplication extends WicketExampleApplication
 {
-    /**
-     * Constructor.
-     */
-    public ComponentReferenceApplication()
-    {
-        getPages().setHomePage(Index.class);
-        getSettings().setThrowExceptionOnMissingResource(false);
-     }
+	private static final List personsDB;
+	static
+	{
+		personsDB = new ArrayList();
+		personsDB.add(new Person("Fritz", "Fritzel"));
+		personsDB.add(new Person("Ghan", "Phariounimn"));
+		personsDB.add(new Person("Jan", "Klaasen"));
+		personsDB.add(new Person("Hank", "Plaindweller"));
+	}
+
+	/**
+	 * @return persons db
+	 */
+	public static final List getPersons()
+	{
+		return personsDB;
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public ComponentReferenceApplication()
+	{
+		getPages().setHomePage(Index.class);
+		getSettings().setThrowExceptionOnMissingResource(false);
+	}
 }
