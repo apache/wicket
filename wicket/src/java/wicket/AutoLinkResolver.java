@@ -199,7 +199,8 @@ public final class AutoLinkResolver implements IComponentResolver
 				// has been added to (e.g. the Page). What we need however, is
 				// the component (e.g. a Panel) which contributed it.
 				Component relevantContainer = container;
-				while (relevantContainer instanceof IComponentResolver)
+				while ((relevantContainer instanceof IComponentResolver) 
+						&& !(relevantContainer instanceof IComponentResolverMarker))
 				{
 					relevantContainer = relevantContainer.getParent(); 
 				}
