@@ -158,32 +158,33 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 */
 	private final void skipUntil() throws ParseException
 	{
-		// this is a script tag with script as body skip this until </script> is found.
+		// this is a tag with non-XHTML text as body - skip this until the skipUntilText is found.
 		final int startIndex = this.inputPosition;
 
+		int tagNameLen = skipUntilText.length();
 		int lastPos;
 		while (true)
 		{
 			this.inputPosition = input.indexOf("</", this.inputPosition);
-			
-			if ((this.inputPosition == -1) || ((this.inputPosition + 8) >= input.length()))
+
+			if ((this.inputPosition == -1) || ((this.inputPosition + (tagNameLen+2)) >= input.length()))
 			{
-				throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
-						+ columnNumber + ")", startIndex);							
+				throw new ParseException(skipUntilText + " tag not closed (line " + lineNumber + ", column "
+						+ columnNumber + ")", startIndex);
 			}
-			
+
 			lastPos = this.inputPosition + 2;
-			final String endTagText = input.substring(lastPos, lastPos + 6);
-			if (endTagText.toLowerCase().equals("script"))
+			final String endTagText = input.substring(lastPos, lastPos + tagNameLen);
+			if (endTagText.toLowerCase().equals(skipUntilText))
 			{
 				break;
 			}
-			
+
 			this.inputPosition = lastPos;
 		}
 		
 		// Get index of closing tag and advance past the tag
-		lastPos = input.indexOf('>', lastPos + 6);
+		lastPos = input.indexOf('>', lastPos + tagNameLen);
 		
 		if (lastPos == -1)
 		{
@@ -293,9 +294,17 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				{
 					String lowerCase = tagText.toLowerCase();
 					// TODO hard coded wicket:id check?? Can be othername??
-					if ((type == XmlTag.OPEN) && lowerCase.startsWith("script"))
+					// Often save a (longer) comparison at the expense of a extra shorter one for 's' tags
+					if ((type == XmlTag.OPEN) && lowerCase.startsWith("s"))
 					{
-					    this.skipUntilText = "script";
+						if (lowerCase.startsWith("script"))
+						{
+					    	this.skipUntilText = "script";
+						}
+						else if (lowerCase.startsWith("style"))
+						{
+							this.skipUntilText = "style";
+						}
 					}
 						
 					// Parse remaining tag text, obtaining a tag object or null

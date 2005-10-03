@@ -9,6 +9,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+[ 1287640 ] skip content of
+      <action type="fix" dev="Juergen Donnerstag" issue="1287640" due-to="Jan Bares">skip content of script tag. Treat it as raw markup</action>
       <action type="fix" dev="Johan Compagner" issue="1275726">Wrong impl. on getParameters() of WebRequestWithCryptedUrl</action>
       <action type="fix" dev="Johan Compagner" issue="1288373">Added serialversionuid to all the serialized wicket classes</action>
       <action type="update" dev="Eelco Hillenius" issue="1284625" due-to="Gwyn Evans">Add WebPage(PageParameters) constructor (helps with your IDE's code completion features)</action>
