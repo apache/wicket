@@ -51,7 +51,7 @@ public class PackageResource extends WebResource
 	private static Map resourceMap = new HashMap();
 
 	/** The path to the resource */
-	final String absolutePath;
+	public final String absolutePath;
 
 	/** The resource's locale */
 	private Locale locale;
@@ -210,5 +210,15 @@ public class PackageResource extends WebResource
 	public Locale getLocale()
 	{
 		return locale;
+	}
+	
+	/**
+	 * Get the absolute path of the resource
+	 * 
+	 * @return the resource path
+	 */
+	public String getAbsolutePath()
+	{
+		return absolutePath;
 	}
 }

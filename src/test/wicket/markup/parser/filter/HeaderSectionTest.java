@@ -23,8 +23,10 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -148,6 +150,20 @@ public class HeaderSectionTest extends TestCase
 	public void testRenderHomePage_11() throws Exception
 	{
 	    executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_12() throws Exception
+	{
+	    executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
+	    PackageResource res = (PackageResource) application.getSharedResources().get("wicket.Application/cborder.css");
+	    assertNotNull(res);
+	    String absPath = res.getAbsolutePath();
+	    assertNotNull(absPath);
+	    IResourceStream stream = res.getResourceStream();
+	    assertNotNull(stream);
 	}
 
 	/**
