@@ -27,9 +27,9 @@ import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
+import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
-import wicket.util.lang.Packages;
 
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
@@ -52,11 +52,25 @@ import wicket.util.lang.Packages;
  */
 public final class AutoLinkResolver implements IComponentResolver
 {
+	/** Logging */
+	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
+
 	private static final long serialVersionUID = 1L;
 	
-	/** Logging */
-	private static Log log = LogFactory.getLog(AutoLinkResolver.class);
-
+	/** List of all file name extensions which are supported by autolink */
+	private static final ValueMap supportedPageExtensions = new ValueMap();
+	
+	static
+	{
+		/** Initialize supported list of file name extension which'll create 
+		 * bookmarkable pages 
+		 */
+		supportedPageExtensions.put("html", null);
+		supportedPageExtensions.put("xml", null);
+		supportedPageExtensions.put("wml", null);
+		supportedPageExtensions.put("svg", null);
+	}
+	
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
@@ -150,7 +164,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		// HTML hrefs are handled first
-		if ("html".equalsIgnoreCase(extension) || "xml".equalsIgnoreCase(extension))
+		if (supportedPageExtensions.containsKey(extension.toLowerCase()))
 		{
 			// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 			// Wicket will not throw an exception. It accepts it.
