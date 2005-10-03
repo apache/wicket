@@ -142,7 +142,9 @@ public class WebPage extends Page implements IHeaderRenderer
 			buffer.append("bookmarkablePage=");
 			String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
 			if (pageReference == null)
+			{
 				pageReference = pageClass.getName();
+			}
 			buffer.append(pageReference);
 		}
 		if (parameters != null)
@@ -162,7 +164,9 @@ public class WebPage extends Page implements IHeaderRenderer
 			}
 		}
 		if (buffer.charAt(buffer.length() - 1) == '?')
+		{
 			buffer.deleteCharAt(buffer.length() - 1);
+		}
 		return cycle.getResponse().encodeURL(buffer.toString());
 	}
 

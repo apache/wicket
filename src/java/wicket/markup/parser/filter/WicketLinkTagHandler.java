@@ -172,16 +172,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 		if ((tag.getId() == null) && (href != null)
 				&& (href.indexOf(":") == -1))
 		{
-			if (href.endsWith(".html") || (href.indexOf(".html?") != -1))
-			{
-			    return true;
-			}
-
-			// All <head><link> which are used for referencing css and js file.
-			if ("link".equals(tag.getName()))
-			{
-			    return true;
-			}
+		    return true;
 		}
 		
 		return false;

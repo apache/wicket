@@ -61,4 +61,13 @@ public class AutolinkTest extends WicketTestCase
         application.getSettings().setStripWicketTags(true);
 	    executeTest(AutolinkPage_2.class, "AutolinkPageExpectedResult_2.html");
 	}
+    
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+        application.getSettings().setAutomaticLinking(true);
+	    executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
+	}
 }
