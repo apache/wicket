@@ -10,7 +10,7 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
     </release>
-    <release version="1.1-rc2" date="tbd" description="Current CVS HEAD development">
+    <release version="1.1-rc2" date="2005-10-04" description="Second release candidate for 1.1">
       <action type="fix" dev="Juergen Donnerstag" issue="1312787" due-to="Ari Suutari">Image components inside a border component are resolved by the parent of the border, thus keeping pre-viewability and componentization.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1289768" due-to="Jan Bares">Borders now treat autolinked resources within wicket:head tags correctly</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1287640" due-to="Jan Bares">skip content of script tag. Treat it as raw markup</action>
@@ -37,7 +37,7 @@
       <action type="fix" dev="Martijn Dashorst" issue="1292416">AJAX component doesn't get correct request parameter path</action>
       <action type="add" dev="Eelco Hillenius">Made FileResourceStream non-final to support using custom content type schemas etc</action>
     </release>
-    <release version="1.1-rc1" date="2005-09-11" description="Current CVS HEAD development">
+    <release version="1.1-rc1" date="2005-09-11" description="First release candidate for 1.1">
       <action type="add" dev="Johan Compagner" issue="1286190,1221732">Resource.setHeaders(WebResponse response) so that users can add any header they want (cacheable/content disposition) when the resource is served</action>
       <action type="fix" dev="Johan Compagner" issue="1286620">AttributeModifer can't be shared between components</action>
       <action type="fix" dev="Johan Compagner" issue="1286607">Infinite loop when adding attributemodifier twice</action>
