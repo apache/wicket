@@ -228,7 +228,9 @@ public class SharedResources
 			resourceState = (ResourceState)resourceMap.get(key);
 		}
 		if (resourceState == null)
+		{
 			resourceState = new ResourceState(key,resource);
+		}
 		synchronized (resourceMap)
 		{
 			resourceMap.put(key, resourceState);
@@ -292,7 +294,10 @@ public class SharedResources
 			{
 				return resource;
 			}
-			if(exact) return null;
+			if (exact)
+			{
+				return null;
+			}
 		}
 
 		// 2. Look for entry without style
@@ -304,7 +309,10 @@ public class SharedResources
 			{
 				return resource;
 			}
-			if(exact) return null;
+			if (exact) 
+			{
+				return null;
+			}
 		}
 
 		// 3. Look for entry without locale
@@ -316,7 +324,10 @@ public class SharedResources
 			{
 				return resource;
 			}
-			if(exact) return null;
+			if (exact) 
+			{
+				return null;
+			}
 		}
 
 		// 4. Look for base name with no locale or style
@@ -337,9 +348,13 @@ public class SharedResources
 		{
 			ResourceState resourceState = ((ResourceState)resourceMap.get(key));
 			if (resourceState != null)
+			{
 				return resourceState.resource;
+			}
 			else
+			{
 				return null;
+			}
 		}
 	}
 
@@ -356,7 +371,9 @@ public class SharedResources
 		{
 			state = (ResourceState)resourceMap.get(key);
 			if (state == null)
+			{
 				return;
+			}
 			resourceMap.remove(key);
 		}
 		state.cancel();
@@ -382,7 +399,9 @@ public class SharedResources
 			resourceState = (ResourceState)resourceMap.get(key);
 		}
 		if (resourceState == null)
+		{
 			throw new IllegalArgumentException("No resource associated with key " + key);
+		}
 		resourceState.touch(key);
 	}
 
