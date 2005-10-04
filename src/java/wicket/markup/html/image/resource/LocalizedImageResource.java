@@ -24,12 +24,14 @@ import wicket.Application;
 import wicket.Component;
 import wicket.IResourceFactory;
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebResource;
+import wicket.markup.html.border.Border;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -311,7 +313,12 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	private void loadStaticImage(final String path)
 	{
-		final Class scope = component.findParentWithAssociatedMarkup().getClass();
+		MarkupContainer parent = component.findParentWithAssociatedMarkup();
+		if (parent instanceof Border)
+		{
+			parent = parent.getParent();
+		}
+		final Class scope = parent.getClass();
 		this.resourceReference = new ResourceReference(scope, path)
 		{
 			private static final long serialVersionUID = 1L;

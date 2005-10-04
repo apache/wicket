@@ -247,11 +247,15 @@ public class ApplicationPages
 	public final String aliasForClass(final Class pageClass)
 	{
 		if (pageClass == null)
+		{
 			return null;
+		}
 
 		String alias = (String)classAliases.get(pageClass);
 		if (alias == null)
+		{
 			alias = pageClass.getName();
+		}
 		return alias;
 	}
 

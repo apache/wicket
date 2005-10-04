@@ -158,7 +158,7 @@ public class HeaderSectionTest extends TestCase
 	public void testRenderHomePage_12() throws Exception
 	{
 	    executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
-	    PackageResource res = (PackageResource) application.getSharedResources().get("wicket.Application/cborder.css");
+	    PackageResource res = (PackageResource) application.getSharedResources().get("wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
 	    assertNotNull(res);
 	    String absPath = res.getAbsolutePath();
 	    assertNotNull(absPath);
