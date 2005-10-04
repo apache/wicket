@@ -285,17 +285,16 @@ public class ListMultipleChoice extends AbstractChoice
 			{
 				selectedValues.clear();
 			}
-			else
-			{
-				selectedValues = new ArrayList();
-				setModelObject(selectedValues);
-			}
 	
 			// Get indices selected from request
 	
 			// If one or more ids is selected
-			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+			if (ids.length > 0 && !Strings.isEmpty(ids[0]))
 			{
+				if(selectedValues == null)
+				{
+					selectedValues = new ArrayList();
+				}
 				// Get values that could be selected
 				final List choices = getChoices();
 	
@@ -314,6 +313,7 @@ public class ListMultipleChoice extends AbstractChoice
 					}
 				}
 			}
+			setModelObject(selectedValues);
 		}
 	}
 }
