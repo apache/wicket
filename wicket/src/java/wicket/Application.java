@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.43 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,23 +17,36 @@
  */
 package wicket;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
-import wicket.markup.html.form.encryption.ICrypt;
+import wicket.markup.html.BodyOnLoadResolver;
+import wicket.markup.html.HtmlHeaderResolver;
+import wicket.markup.html.WicketLinkResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
+import wicket.util.crypt.ICrypt;
+import wicket.util.crypt.NoCrypt;
 import wicket.util.lang.Classes;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -67,7 +80,7 @@ import wicket.util.watch.ModificationWatcher;
  * instance held by each referee) and will yield a stable URL, permitting
  * efficient browser caching of the resource (even if the resource is
  * dynamically generated). Resources shared in this manner may also be
- * localized. See {@link wicket.ResourceReference}for more details.
+ * localized. See {@link wicket.ResourceReference} for more details.
  * 
  * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
  * can provide your own factory which creates locale sensitive Converter
@@ -75,7 +88,7 @@ import wicket.util.watch.ModificationWatcher;
  * 
  * <li><b>A ResourceStreamLocator </b>- An Application's ResourceStreamLocator
  * is used to find resources such as images or markup files. You can supply your
- * own ResourceStreamLocator if your prefer to store your applicaiton's
+ * own ResourceStreamLocator if your prefer to store your application's
  * resources in a non-standard location (such as a different filesystem
  * location, a particular JAR file or even a database) by overriding the
  * getResourceLocator() method.
@@ -91,7 +104,7 @@ import wicket.util.watch.ModificationWatcher;
  * encapsulating all of the functionality required to access localized
  * resources. For many localization problems, even this will not be required, as
  * there are convenience methods available to all components:
- * {@link wicket.Component#getString(String key)}and
+ * {@link wicket.Component#getString(String key)} and
  * {@link wicket.Component#getString(String key, IModel model)}.
  * 
  * <li><b>A Session Factory </b>- The Application subclass WebApplication
@@ -110,6 +123,9 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(Application.class);
+
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers = new ArrayList();
 
@@ -141,10 +157,36 @@ public abstract class Application
 	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
-	private final ApplicationSettings settings = new ApplicationSettings(this);
-	
+	private ApplicationSettings settings;
+
 	/** Shared resources for the application */
-	private final SharedResources sharedResources = new SharedResources();
+	private final SharedResources sharedResources;
+
+	/** cached encryption/decryption object. */
+	private ICrypt crypt;
+
+	private static ThreadLocal applicationObjects = new ThreadLocal();
+
+	/**
+	 * Get application for current session.
+	 * 
+	 * @return The current application
+	 */
+	public static Application get()
+	{
+		return (Application)applicationObjects.get();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * @param application
+	 *            The current application or null for this thread
+	 */
+	public static void set(Application application)
+	{
+		applicationObjects.set(application);
+	}
 
 	/**
 	 * Constructor
@@ -160,8 +202,15 @@ public abstract class Application
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
 
+		// Create shared resources repository
+		this.sharedResources = new SharedResources(this);
+
 		// Install default component resolvers
 		componentResolvers.add(new AutoComponentResolver());
+		componentResolvers.add(new MarkupInheritanceResolver());
+		componentResolvers.add(new HtmlHeaderResolver());
+		componentResolvers.add(new BodyOnLoadResolver());
+		componentResolvers.add(new WicketLinkResolver());
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
@@ -285,7 +334,7 @@ public abstract class Application
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
-					.getResourcePath());
+					.getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}
@@ -312,9 +361,25 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
+		if (settings == null)
+		{
+			settings = createApplicationSettings();
+		}
 		return settings;
 	}
-	
+
+	/**
+	 * Subclasses could override this to give there own implementation of
+	 * ApplicationSettings.
+	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
+	 * 
+	 * @return An instanceof an ApplicationSettings class.
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this);
+	}
+
 	/**
 	 * @return Returns the sharedResources.
 	 */
@@ -324,38 +389,67 @@ public abstract class Application
 	}
 
 	/**
-	 * Factory method that creates an instance of de-/encryption class.
+	 * Factory method that creates an instance of de-/encryption class. NOTE:
+	 * this implementation caches the crypt instance, so it has to be
+	 * Threadsafe. If you want other behaviour, or want to provide a custom
+	 * crypt class, you should override this method.
 	 * 
 	 * @return Instance of de-/encryption class
 	 */
-	public final ICrypt newCrypt()
+	public synchronized ICrypt newCrypt()
 	{
-		try
+		if (crypt == null)
 		{
-			final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
-			crypt.setKey(getSettings().getEncryptionKey());
-			return crypt;
+			Class cryptClass = getSettings().getCryptClass();
+			try
+			{
+				crypt = (ICrypt)cryptClass.newInstance();
+				log.info("using encryption/decryption object " + crypt);
+				crypt.setKey(getSettings().getEncryptionKey());
+				return crypt;
+			}
+			catch (Throwable e)
+			{
+				log.warn("************************** WARNING **************************");
+				log.warn("As the instantion of encryption/decryption class:");
+				log.warn("\t" + cryptClass);
+				log.warn("failed, Wicket will fallback on a dummy implementation");
+				log.warn("\t(" + NoCrypt.class.getName() + ")");
+				log.warn("This is not recommended for production systems.");
+				log.warn("Please override method wicket.Application.newCrypt()");
+				log.warn("to provide a custom encryption/decryption implementation");
+				log.warn("The cause of the instantion failure: ");
+				log.warn("\t" + e.getMessage());
+				if (log.isDebugEnabled())
+				{
+					log.debug("exception: ", e);
+				}
+				else
+				{
+					log.warn("set log level to DEBUG to display the stack trace.");
+				}
+				log.warn("*************************************************************");
+
+				// assign the dummy crypt implementation
+				crypt = new NoCrypt();
+			}
 		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
+
+		return crypt;
 	}
 
 	/**
 	 * Factory method that creates a markup parser.
 	 * 
+	 * @param container
+	 *            The wicket container requesting the markup
 	 * @return A new MarkupParser
 	 */
-	public final MarkupParser newMarkupParser()
+	public MarkupParser newMarkupParser(final MarkupContainer container)
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser());
+		final MarkupParser parser = new MarkupParser(container, new XmlPullParser(getSettings()
+				.getDefaultMarkupEncoding()));
+
 		parser.configure(getSettings());
 		return parser;
 	}
@@ -371,6 +465,23 @@ public abstract class Application
 	protected void init()
 	{
 	}
+	
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	protected Page onRuntimeException(final Page page, final RuntimeException e)
+	{
+		return null;
+	}
+
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
@@ -380,6 +491,11 @@ public abstract class Application
 	 */
 	protected void internalInit()
 	{
+		// We initialize components here rather than in the constructor because
+		// the Application constructor is run before the Application subclass'
+		// constructor and that subclass constructor may add class aliases that
+		// would be used in installing resources in the component.
+		initializeComponents();
 	}
 
 	/**
@@ -387,8 +503,85 @@ public abstract class Application
 	 * method sets the resourceStreamLocator to null so it will get recreated
 	 * the next time it is accessed using the new source path.
 	 */
-	final void resourcePathChanged()
+	final void resourceFinderChanged()
 	{
 		this.resourceStreamLocator = null;
+	}
+
+	/**
+	 * Initializes wicket components
+	 */
+	private final void initializeComponents()
+	{
+		// Load any wicket components we can find
+		try
+		{
+			// Load components used by all applications
+			for (Enumeration e = getClass().getClassLoader().getResources(
+					"wicket.properties"); e.hasMoreElements();)
+			{
+				InputStream is = null;
+				try
+				{
+					final URL url = (URL)e.nextElement();
+					final Properties properties = new Properties();
+					is = url.openStream();
+					properties.load(is);
+					initializeComponents(properties);
+				} 
+				finally
+				{
+					if(is != null) is.close();
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to load initializers file", e);
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties table with names of any library initializers in it
+	 */
+	private void initializeComponents(final Properties properties)
+	{
+		initialize(properties.getProperty("initializer"));
+		initialize(properties.getProperty(getName() + "-initializer"));
+	}
+
+	/**
+	 * Instantiate initializer with the given class name
+	 * 
+	 * @param className
+	 *            The name of the initializer class
+	 */
+	private void initialize(final String className)
+	{
+		if (!Strings.isEmpty(className))
+		{
+			try
+			{
+				Class c = getClass().getClassLoader().loadClass(className);
+				((IInitializer)c.newInstance()).init(this);
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+		}
 	}
 }

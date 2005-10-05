@@ -11,6 +11,293 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="October 4, 2005 - Wicket 1.1-rc2 Available">
+				<p>
+					The second release candidate for Wicket 1.1 is available for download and testing.
+					We expect this to be the last release candidate, but Murphy might think otherwise.
+					Most notable <a href="changes-report.html#1_1-rc2">changes</a> are:
+					<ul>
+					<li>moved script.aculo.us and dojo handlers to their own packages at <a href="http://wicket-stuff.sf.net">Wicket Stuff</a></li>
+					<li>added serialversionuid to all the serialized wicket classes</li>
+					<li>several fixes regarding resources (javascript)</li>
+					</ul>
+					See the complete list <a href="changes-report.html#1_1-rc2">here</a>.
+				</p>
+				<p>
+					The release can be downloaded from the <a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482">SourceForge download section</a>.
+				</p>
+			</subsection>
+			<subsection name="September 25, 2005 - Wicket On Tour">
+				<p>
+					If you're near the Netherlands around October 12th, you can see 'Component Based Web 
+					Development Using Wicket' on the fall conference 
+					<a href="http://www.nljug.org/pages/events/content/jfall_2005/">JFall 2005</a> organized
+					by the dutch Java User Group. Eelco Hillenius and Martijn Dashorst will be giving the
+					presentation, and we hope to see you there!
+				</p>
+				<p>
+					Wicket will also be featured at 
+					<a href="http://wiki.javapolis.com/confluence/display/JP05/JavaPolis+Conference">JavaPolis 2005</a> 
+					in Antwerp. Again, Eelco and Martijn will be presenting 
+					<a href="http://wiki.javapolis.com/confluence/display/JP05/Wicket">Wicket</a> on December 14, between 
+					18:00 and 19:00.
+				</p>
+			</subsection>
+			<subsection name="September 11, 2005 - Wicket 1.1-rc1 Available">
+				<p>
+					The first release candidate for Wicket 1.1 is available for download and testing.
+					We have started the countdown to Wicket 1.1 final, and expect to release 1.1 in
+					two to three weeks. This release fixes several bugs, a full listing can be found
+					<a href="changes-report.html#1_1-rc1">here</a>. Here is a list of most notable
+					changes and fixes:
+				</p>
+				<ul>
+					<li>Moved resource reference classes from extensions into core</li>
+					<li>Infinite loop when adding attributemodifier twice</li>
+					<li>Buttons can have a model now, for the buttons value attribute</li>
+					<li>Odd behaviour when Wicket is the "root" (/*) servlet</li>
+					<li>Removed dependency on concurrent.jar</li>
+					<li>Now allow multiple ajax handler implementations to contribute to the page's header</li>
+				</ul>
+				<p>
+					Please 
+					<a href="https://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482&amp;release_id=355763">download this release</a> 
+					and give us feedback.
+				</p>
+			</subsection>
+			<subsection name="September 6, 2005 - Site Adjustments">
+				<p>
+					A new example has been added to the examples section: 
+					<a href="ExampleStockQuote.html">StockQuote Example</a>. This example is also available
+					in the examples download.
+				</p>
+				<p>
+					Due to unwarranted advertisements by our old page counter service, we have moved to another
+					ad-free statistics engine by <a href="http://www.onestat.com">onestat.com</a>.
+				</p>
+			</subsection>
+			<subsection name="August 30, 2005 - Wicket 1.1-beta 4 Available">
+				<p>
+					Wicket 1.1-beta 4 is available for download and testing. This is a beta release, so
+					you may expect some API changes. We are busy in the end game before we freeze the API,
+					and running behind on our published schedule for 1.1 final. In order to be able to ship
+					1.1 final soon, we need your testing support!
+					Most notable features in this release are:
+				</p>
+				<ul>
+					<li>Removed the (optional) dependency on commons-fileupload, made the support internal for Wicket</li>
+					<li>Made the coupling of Wicket to the servlet spec more loose, enabling usage of Wicket on platforms outside a servlet container, such as portlets, or embedded servers</li>
+					<li>Stripping of markup in Wicket namespace (e.g. wicket:id, wicket:label) is almost complete with <code>setStripWicketTag(true)</code></li>
+					<li>Invisible components are not rendered any more</li>
+					<li>Added basic AJAX support: DOJO and script.aculo.us libraries are now available for experimentation.</li>
+				</ul>
+				<p>
+					See the complete <a href="changes-report.html#1_1-b4">list of changes here</a>.
+				</p>
+				<p>
+					Please download this release and give us feedback.
+				</p>
+			</subsection>
+			<subsection name="August 29, 2005 - Maintenance release Wicket 1.0.3 available">
+				<p>
+					A minor bugfix release has been issued for PageableListViewNavigation.
+					The 1.0.3 version doesn't have any other improvements or fixes.
+				</p>
+				<p>
+					If you are using Wicket 1.0 and use the <code>PageableListViewNavigation</code> or
+					the <code>PageableListViewNavigator</code>, then we advise you to upgrade to this
+					version. Note that when you upgrade from 1.0.1, you may experience some backwards
+					incompatibilities, as outlined in the 1.0.2 release notes.
+				</p>
+			</subsection>
+			<subsection name="August 22, 2005 - Wicket 1.1-beta 3 Available">
+				<p>
+					Wicket 1.1-beta 3 is available for download and testing. This is a beta release, so
+					you may expect some API changes. Most notable features in this release are:
+				</p>
+				<ul>
+				<li>Component developers can now initialize resources when the app starts up</li>
+				<li>Added WebSession.getId() and WebRequestCycle.getWebSession()</li>
+				<li>Added AbstractReadOnlyModel Issue: 1250030. Thanks to Igor Vaynberg.</li>
+				<li>Fixed: AbstractDetachableModel doesn't propogate attach/detach, Thanks to Cameron Braid</li>
+				<li>Fixed: Can't have two FeedbackPanels, Thanks to Simon Berriman</li>
+				<li>Fixed: FeedbackPanel produces illegal HTML, Thanks to Gili Tzabari</li>
+				<li>Fixed: WicketServlet.doGet URI bug, Thanks to Jan Bares</li>
+				<li>Fixed: Classloading problems that caused problems loading markup/resources for components that were loaded by another classloader than the current one</li>
+				<li>Extended markup inheritance to support panels and borders</li>
+				<li>Made a significant reduction in the size of pages, especially big pages</li>
+				<li>Refactored feedback completely. The new code is smaller, more powerful and more elegant, but it will break clients.</li>
+				<li>Added automatic multiPart support to Form.</li>
+				</ul>
+				<p>
+					See the complete <a href="changes-report.html#1_1-b3">list of changes here</a>.
+				</p>
+			</subsection>
+			<subsection name="August 22, 2005 - Maintenance release Wicket 1.0.2 Available">
+				<p>
+					The Wicket development team has released the second maintenance release of the
+					Wicket 1.0 branch. This release fixes some bugs, and with that introduces one
+					<strong>API breaking change</strong>:
+					<ul>
+						<li>newChoiceItem does not use object parameter but selects directly from list Issue: 1263892. Thanks to Arjan Zwaan.</li>
+						<li>Backport: AbstractDetachableModel doesn't propogate attach/detach Issue: 1253113.</li>
+						<li>Backport: serialization bug in LocalizedImageResource</li>
+						<li>Backport: possible NullPointerException in DynamicImageResource.getResourceStream()</li>
+						<li>Backport: catch if session is saved to disk and reloaded again but locale is changed</li>
+						<li>fix for classloading problems that caused problems loading markup/resources for components that were loaded by another classloader than the current one.</li>
+						<li>Backport: closed FileOutputStream in wicket.util.file.Files in finally block</li>
+					</ul>
+					The API change involves the <code>IResourceStreamLocator</code> interface, where the
+					<code>locate</code> method now takes a <code>ClassLoader</code> as an extra parameter. 
+					Passing in <code>null</code> will use the context classloader.
+				</p>
+			</subsection>
+			<subsection name="August 1, 2005 - Wicket 1.1-beta 2 Available">
+				<p>
+					Wicket 1.1-beta 2 is available for download and testing. This is a beta release, so
+					you may expect some API changes. Most notable features in this release are:
+					<ul>
+						<li>JavaScript support</li>
+						<li>CSS support</li>
+						<li>Markup inheritence</li>
+						<li>Experimental AJAX support</li>
+						<li>Improved URL handling</li>
+						<li>Include of external markup</li>
+						<li>Simplified Choice component</li>
+						<li>Improved Feedback support</li>
+						<li>Thread safe validation (bug fix)</li>
+						<li>Immediate button support for Forms</li>
+						<li>Panel support for TreeView</li>
+						<li>Date picker component</li>
+						<li>Component reference examples</li>
+						<li>Upgrade of the log4j and concurrent dependencies to their latest releases</li>
+					</ul>
+					Please download this release and give us feedback on how you like these new features. A final 1.1 release will be available around begin september, so we <em>need your feedback!</em>
+				</p>
+			</subsection>
+			<subsection name="July 24, 2005 - Wicket 1.1-beta 1 Avaliable">
+				<p>
+					Wicket 1.1-beta 1 is available for download and testing. This is a
+					beta release, which means that API's might change. Most notable features
+					in this release are:
+					<ul>
+						<li>JavaScript support - components can now contribute their own JavaScript to a page, opening up possibilities for very rich Wicket components.</li>
+						<li>CSS support - alongside with the JavaScript support, Wicket allows components to contribute their CSS to a page</li>
+						<li>Markup inheritence - Wicket pages were already able to inherit on the Java side, but now it is possible to 'constrain' the markup of sub pages to a certain place in the markup. If you thought that borders were difficult, this will make your life very easy!</li>
+						<li>Date picker - as a demonstrator for what you can do with our new JavaScript support, we have included a Date picker component in the <em>wicket extensions</em> package.</li>
+						<li>Component reference examples - an ongoing concern: documentation and component reference. We have started building small component examples in the Wicket examples project.</li>
+					</ul>
+					Please download this release and give us feedback on how you like these new features. A final 1.1 release will be available around begin september, so we <em>need your feedback!</em>
+				</p>
+			</subsection>
+			<subsection name="July 17, 2005 - NetBeans kickstart guide available">
+				<p>
+					Thanks to the writing talents of Geertjan Wielenga, the 
+					<a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/index.html">Wicket Kickstart</a>
+					project now hosts a guide for kickstarting you Wicket development using
+					<a href="http://www.netbeans.org">NetBeans</a>. The project has been updated
+					to incorporate the latests Wicket maintenance release.
+				</p>
+			</subsection>
+			<subsection name="July 17, 2005 - Maintenance release Wicket 1.0.1 available">
+				<p>
+					The Wicket development team has released the first (and probably last)
+					maintenance release of Wicket 1.0. This release fixes some bugs and adds
+					some missing functionality:
+					<ul>
+						<li>Only validate components that are visible</li>
+						<li>FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</li>
+						<li>fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</li>
+						<li>ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</li>
+					</ul>
+					Enjoy!
+				</p>
+			</subsection>
+			<subsection name="June 7, 2005 - Wicket 1.0 available for download">
+				<p>
+					The Wicket development team has made the 1.0 final release available for
+					immediate download. This release marks a huge milestone in the development
+					cycle of Wicket. Go to the <a href="Download.html">downloads page</a> to
+					download Wicket 1.0!
+				</p>
+				<p>
+					We are preparing a media campaign for Wicket 1.0. So you may find us in
+					the media soon. Keep an eye out for Wicket!
+				</p>
+			</subsection>
+			<subsection name="June 5, 2005 - Wicket 1.0 released">
+				<p>
+					The Wicket development team is proud to announce the launch of Wicket 1.0.
+					Wicket is a component based, Java web application framework which seeks to
+					ease and simplify web application development.
+				</p>
+			</subsection>
+			<subsection name="May 28, 2005 - Wicket on JavaOne 2005 / San Francisco">
+				<p>
+					Come see Wicket on JavaOne this summer. Wicket is featured in two events:
+					<ul>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271617&amp;ilocation_id=93-1&amp;ilanguage=english" title="TS-8617">TS-8617 POJO Web Development With Wicket</a> - 
+					    hosted by <a href="http://www.miko.com">Miko Matsumura</a> and 
+					    <a href="http://www.jroller.com/page/dashorst">Martijn Dashorst</a></li>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271642&amp;ilocation_id=93-1&amp;ilanguage=english">TS-7642 Web Framework Smackdown</a> - 
+					    fought out by 
+					    		<a href="http://weblogs.java.net/blog/edburns/">Ed Burns</a>, 
+					    		<a href="http://howardlewisship.com/blog/">Howard Lewis Ship</a> and 
+					    		<a href="http://www.jroller.com/page/eelco12">Eelco Hillenius</a></li>
+					</ul>
+					We look forward to see you at JavaOne!
+				</p>
+			</subsection>
+			<subsection name="May 21, 2005 - 1.0 RC3 is out!">
+				<p>
+					Finally, after a month of some silence, we have produced our last release
+					candidate before we deploy 1.0. If all goes well, you will see the final
+					release within a week or two. The bug list now only contains an issue
+					relating to clustering. As such we advise you currently to not deploy your
+					application on a cluster, until the issues are resolved, or to be very thorough
+					in your clustering tests.
+				</p>
+				<p>
+					In this release you won't see major API changes, however the internals have
+					improved significantly. The request cycle has now correct semantics, we have
+					improved the redirect after post pattern, which now performs significantly
+					better than before, and allows you to do your request handling and rendering
+					in one pass, and then redirect to the rendered page. CompoundModel support has
+					improved and works with more components than before. We added support for 
+					redirecting to external url's (e.g. Google) directly by introducing RedirectPage.
+				</p>
+				<p>
+					For the complete list of fixes, updates and changes please see the 
+					<a href="/changes-report.html" title="Release History">release history</a>.
+				</p>
+			</subsection>
+			<subsection name="May 4, 2005 - Eclipse Live Demo available">
+				<p>
+					Using <a href="http://www.debugmode.com/wink/" title="Wink">Wink</a> we have
+					put together a live 
+					<a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/demos/EclipseDemo.html" target="_new">Eclipse Demo</a>
+					showing how to get started developing your first 
+					<a href="/">Wicket</a> application.
+				</p>
+			</subsection>
+			<subsection name="April 22, 2005 - Last Call for Wicket 1.0!">
+				<p>Wicket needs your input!</p>
+				<p>
+					The Wicket team is preparing the final Wicket 1.0 release candidate. Therefore
+					we need your help. If you have things that are hard for you to accomplish using
+					Wicket, if there is something you posted to the mailinglist and it didn't get
+					resolved, if you have a killer idea that absolutely must be in 1.0 or else...
+				</p>
+				<p>Send it to the mailinglist or create a bug report!</p>
+				<p>
+					The Wicket team want the RC3 to be the final release for Wicket 1.0. After this,
+					development will focus on creating 1.1 with full support for AJAX, JavaScript,
+					CSS and more.
+				</p>
+				<p>This is the final call for changes to Wicket 1.0.</p>
+				<p>With regards,</p>
+				<p>The Wicket Team</p>
+			</subsection>
 			<subsection name="April 17, 2005 - Kick Start Your Wicket Development!">
 				<p>
 					The <a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/index.html">Kick Start</a> 

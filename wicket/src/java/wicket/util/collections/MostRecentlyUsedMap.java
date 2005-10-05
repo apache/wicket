@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public class MostRecentlyUsedMap extends LinkedHashMap
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Value most recently removed from map */
 	Object removedValue;
 	
@@ -42,6 +44,8 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	 */
 	public MostRecentlyUsedMap(final int maxEntries)
 	{
+		super(10, 0.75f, true);
+
 		if (maxEntries <= 0)
 		{
 			throw new IllegalArgumentException("Must have at least one entry");
@@ -64,7 +68,15 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	protected boolean removeEldestEntry(final Map.Entry eldest)
 	{
 		final boolean remove = size() > maxEntries;
-		this.removedValue = eldest.getValue();
+		// when it should be removed remember the oldest value that will be removed
+		if(remove)
+		{
+			this.removedValue = eldest.getValue();
+		}
+		else
+		{
+			removedValue = null;
+		}
 		return remove;
 	}
 }

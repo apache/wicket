@@ -18,6 +18,7 @@
 package wicket.model;
 
 import wicket.Component;
+import wicket.markup.html.form.FormComponent;
 
 /**
  * A simple compound model which uses the component's name as the OGNL
@@ -29,8 +30,10 @@ import wicket.Component;
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel extends AbstractPropertyModel
+public class CompoundPropertyModel extends AbstractPropertyModel implements ICompoundModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 
@@ -47,6 +50,11 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	protected String ognlExpression(final Component component)
 	{
+		if (component == null)
+		{
+		    return null;
+		}
+		
 		return component.getId();
 	}
 
@@ -55,6 +63,18 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	protected Class propertyType(final Component component)
 	{
+		if (component instanceof FormComponent)
+		{
+			return ((FormComponent)component).getValidationType();
+		}
 		return null;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return new StringBuffer(super.toString()).toString();
 	}
 }

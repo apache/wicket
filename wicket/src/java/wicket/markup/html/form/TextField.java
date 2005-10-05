@@ -28,9 +28,8 @@ import wicket.model.IModel;
  */
 public class TextField extends AbstractTextComponent
 {
-	/** Model type for conversions */
-	private Class type;
-
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -71,7 +70,6 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, IModel model, Class type)
 	{
 		super(id, model);
-		this.type = type;
 		add(new TypeValidator(type));
 	}
 
@@ -104,17 +102,24 @@ public class TextField extends AbstractTextComponent
 	/**
 	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
-		if (type != null)
+		String input = getInput();
+		// if input was null then value was not submitted (disabled field), ignore it
+		if(input != null)
 		{
-			// Set model to request string converted to the appropriate type
-			setModelObject(getConverter().convert(getInput(), type));
-		}
-		else
-		{
-			// Update String model
-			super.updateModel();
+			// Get any validation type
+			final Class type = getValidationType();
+			if (type != null)
+			{
+				// Set model to request string converted to the appropriate type
+				setModelObject(getConverter().convert(getInput(), type));
+			}
+			else
+			{
+				// Update String model
+				super.updateModel();
+			}
 		}
 	}
 }

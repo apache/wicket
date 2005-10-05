@@ -20,6 +20,7 @@ package wicket.util.resource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
@@ -33,6 +34,7 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 {
 	/** Charset for resource */
 	private Charset charset;
+	private Locale locale;
 
 	/**
 	 * Sets the character set used for reading this resource.
@@ -77,5 +79,22 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	protected Charset getCharset()
 	{
 		return charset;
+	}
+	
+	
+	/**
+	 * @see wicket.util.resource.IResourceStream#getLocale()
+	 */
+	public Locale getLocale()
+	{
+		return locale;
+	}
+	
+	/**
+	 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
+	 */
+	public void setLocale(Locale locale)
+	{
+		this.locale = locale;
 	}
 }

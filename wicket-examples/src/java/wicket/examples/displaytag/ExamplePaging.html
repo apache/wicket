@@ -115,5 +115,41 @@
 		  </tr>
     </tbody>
   </table>
+	<br/>
+  Select a number from the drop down list below to add or remove elements from the list<p/><p/>
+  <select wicket:id="addRemove">
+    <option>+10</option>
+    <option>+5</option>
+    <option default="true">+3</option>
+    <option>+2</option>
+    <option>+1</option>
+    <option>-1</option>
+    <option>-2</option>
+    <option>-3</option>
+    <option>-5</option>
+    <option>-10</option>
+  </select>
+  <p/><span wicket:id="info5">XXX rows added</span><p/>
+	<span wicket:id="pageTableNav5" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+	  </thead>
+    <tbody>
+	    <tr wicket:id="rows5" class="even">
+				<td><span wicket:id="id">Test ID</span></td>
+				<td><span wicket:id="name">Test Name</span></td>
+				<td><span wicket:id="email">Test EMail</span></td>
+				<td><span wicket:id="status">Test Status</span></td>
+				<td><span wicket:id="comments">Test Comments</span></td>
+		  </tr>
+    </tbody>
+  </table>
 </body>
 </html>

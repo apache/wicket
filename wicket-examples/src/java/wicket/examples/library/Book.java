@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -87,9 +88,31 @@ public final class Book implements Serializable
         this.title = title;
         this.author = author;
         this.isFiction = isFiction;
-        idToBook.put(new Long(id), this);
+        
+        add(this);
     }
 
+    private void add(final Book book)
+    {
+        boolean hit = false;
+        final Iterator iter = idToBook.values().iterator();
+        while (iter.hasNext())
+        {
+            final Book value = (Book)iter.next();
+            if (value.toString().equals(book.toString()))
+            {
+                book.id = value.id;
+                hit = true;
+                break;
+            }
+        }
+        
+        if (hit == false)
+        {
+            idToBook.put(new Long(book.id), book);
+        }
+    }
+    
     /**
      * @param id Book id
      * @return Book for id

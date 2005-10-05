@@ -27,17 +27,38 @@ import wicket.MarkupContainer;
  */
 class Remove extends Change
 {
+	private static final long serialVersionUID = 1L;
+
+	/** subject. */
 	private final Component component;
+
+	/** parent. */
 	private final MarkupContainer container;
-	
+
+	/**
+	 * Construct.
+	 * @param component subject component
+	 */
 	Remove(final Component component)
 	{
 		this.component = component;
 		this.container = component.getParent();
 	}
 	
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
-		container.add(component);
+		container.internalAdd(component);
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Remove[component: " + component.getId() + ", parent: " + container.getId() + "]";
+	}
+	
 }

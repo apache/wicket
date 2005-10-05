@@ -23,6 +23,11 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	padding: 10px 10px 10px 10px;
 }
 
+.mark {
+	background-color: yellow;
+	margin: 5px;	
+}
+
 .feedbackPanelERROR {
 	color: red;
 	list-style: circle;
@@ -35,17 +40,27 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	font-weight: bold;
 }
 
+.block {
+	padding: 10px;
+}
+
+.blockWithBorder {
+	border-width: thin;
+	border-style: dotted;
+	border-color: #E9601A;
+}
+
 #hellomessage {
 	font-size: 30pt;
 }
 
 #titleblock {
-	background: #DEDEDE;
+	background-color: #BBBBBB;
 	color: white;
 	font-weight: bold;
 	border-bottom: solid #E9601A;
 	border-width: thin;
-	padding: 2px 2px 2px 6px;	
+	padding: 2px 2px 2px 6px;
 }
 
 h2 {
@@ -98,93 +113,34 @@ a.none {
 
 #inputForm label {
 	display: block;
-	padding: 3px 0 0;
+	margin-top: 5px;
 }
 
 #inputForm label.non {
 	display: inline !important;
 }
-<!-- css style for TabPanel,thanks Wouter -->
-<!-- TODO clean up stuff that is not used by TabPanel-->
-#tab
-{
-	float:left;
-}
-#navigation
-{
-	float:left;
-	width:100%;
-	background:#DAE0D2 url("bg_blue.gif") repeat-x bottom;
-	font-size:100%;
-	line-height:normal;
+
+#inputFormTable td {
+	vertical-align: top;
+	padding: 10px;
 }
 
-#navigation ul 
-{
-	margin:0;
-	padding:10px 10px 0;
-	list-style:none;
+#nestedExampleTree {
+	width: 300px;
 }
 
-#navigation li 
-{
-	margin:0;
-	padding:0;
-	display: inline;
+#feedbackPanel {
+	width: 600px;
 }
 
-#navigation a 
-{
-	float:left;
-	background:url("left_both_blue.gif") no-repeat left top;
-	margin:0;
-	padding:0 0 0 9px;
-	border-bottom:1px solid #765;
-	text-decoration:none;
+#siteSelection {
+	width: 200px;
 }
 
-#navigation a span 
-{
-	float:left;
-	display:block;
-	background:url("right_both_blue.gif") no-repeat right top;
-	padding:5px 15px 4px 6px;
-	color:#444444;
-}
-
-#navigation a span 
-{
-	float:none;
-}
-
-#navigation a:hover span 
-{
-	color:#333;
-}
-#navigation .active 
-{
-	background-position:0 -150px;
-	border-width:0;
-}
-
-#navigation .active span 
-{
-	background-position:100% -150px;
-	padding-bottom:5px;
-	color:#333;
-}
-
-#navigation a:hover 
-{
-	background-position:0% -150px;
-}
-
-#navigation a:hover span 
-{
-	background-position:100% -150px;
-}
-
-#nestedExampleTree
-{
-	width: 300px;	
+#tabContent {
+	border-color: #DDDDDD;
+	border-style: solid;
+	border-width: 1px;
+	margin: 4px;
+	padding: 4px;
 }

@@ -20,6 +20,7 @@ package wicket.util.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Locale;
 
 import wicket.util.watch.IModifiable;
 
@@ -72,5 +73,17 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * @throws IOException
 	 */
 	public void close() throws IOException;
+	
+	/**
+	 * @return The Locale where this stream did resolve to
+	 */
+	public Locale getLocale();
+	
+	/**
+	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved locale.
+	 * 
+	 * @param locale The Locale where this stream did resolve to.
+	 */
+	public void setLocale(Locale locale);
 
 }

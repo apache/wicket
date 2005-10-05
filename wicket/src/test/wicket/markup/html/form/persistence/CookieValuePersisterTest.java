@@ -29,9 +29,9 @@ import wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm
 import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * How to test CookieValuePersister. Problem: CookieValuePersister relies on
@@ -107,7 +107,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(0, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertNull(((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
@@ -118,7 +118,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(0, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertNull(((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name
@@ -152,19 +152,21 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
+		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
 		assertEquals(0, ((Cookie)getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
 	{
-		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest())
+		// TODO adouma: no Portlet support yet
+		((MockHttpServletRequest)((ServletWebRequest)cycle.getRequest()).getHttpServletRequest())
 				.addCookie((Cookie)getResponseCookies(cycle).get(0));
 	}
 
 	private Cookie[] getRequestCookies(final RequestCycle cycle)
 	{
-		return ((WebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
+		// TODO adouma: no Portlet support yet
+		return ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
 	}
 
 	private List getResponseCookies(final RequestCycle cycle)

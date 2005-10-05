@@ -707,7 +707,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void initialize()
 	{
 		authType = null;
-		method = "POST";
+		method = "post";
 		cookies.clear();
 		setDefaultHeaders();
 		path = null;
@@ -860,7 +860,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param value
 	 *			  The value
 	 */
-	public void setParmeter(final String name, final String value)
+	public void setParameter(final String name, final String value)
 	{
 		parameters.put(name, value);
 	}
@@ -899,7 +899,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToComponent(final Component component)
 	{
-		parameters.put("component", component.getPath());
+		parameters.put("path", component.getPath());
 		parameters.put("version", "" + component.getPage().getCurrentVersionNumber());
 		Class c = null;
 		if (component instanceof IRedirectListener)
@@ -952,7 +952,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					String value = (String)values.get(component);
 					if (value != null)
 					{
-						parameters.put(component.getPath(), values.get(component));
+						parameters.put(((FormComponent)component).getInputName(), values.get(component));
 					}
 				}
 				return CONTINUE_TRAVERSAL;

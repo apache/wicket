@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Wicket QuickTour: StockQuote!</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, example, web, j2ee, java" />
+
+	<body>
+		<section name="Custom Component: StockQuote">
+			<p>
+				This example shows how to create a custom Wicket component: a stock quote component.
+				We assume you already are familiar with the basics of a Wicket application. If not,
+				then please take a look at the
+				<a href="ExampleHelloWorld.html">Hello, World example</a>
+				first.
+			</p>
+			<ul>
+			<li><a href="#Introduction">Introduction</a></li>
+			<li><a href="#POJO_Solution">POJO Solution</a></li>
+			<li><a href="#Reuse_Component_Solution">Reuse Component Solution</a></li>
+			<li><a href="#New_Component_Solution">New Component Solution</a></li>
+			<li><a href="#Discussion">Discussion</a></li>
+			</ul>
+			<subsection name="Introduction">
+				<p>
+					The Stock Quote component should take a symbol and display the value of the
+					stock obtained through a webservice in its body. I've used some code from devx.com 
+					for calling a stock quote webservice provided by 
+					<a href="http://www.xmethods.com/">xmethods.com</a>. In order to keep it simple, I've 
+					not included this code here, but you can see it in our CVS. The webservice calling 
+					code is not the prettiest around, but it suffices.
+				</p>
+				<p>
+					So: <code><![CDATA[<span wicket:id="stockquote">Price of IBM goes here</span>]]></code> 
+					should replace its body contents with the actual value of IBM stock.
+				</p>
+				<p>
+					In the next sections we will show you several solutions for solving the Stock Quote
+					problem. First we will provide a POJO based solution, without creating a custom component.
+					Next we will reuse the existing label component to build the stock quote label, and finally
+					we will write the component from scratch and show how to let the component play nicely in
+					the Wicket stack of components.
+				</p>
+			</subsection>
+		</section>
+		<section name="POJO Solution">
+			<p>
+				Usually you don't need to create a specialized component and can the problem at hand be
+				solved using stuff you already know: normal Java objects. This part shows the most easy
+				way of using the web service, using a POJO.
+			</p>
+			<p>
+				The POJO we introduce here, is also used by the other examples below, instead of reinventing
+				the wheel. The actual code for calling the service is not presented here, but can be found
+				in the Wicket examples project.
+			</p>
+			<source><![CDATA[package wicket.examples.stockquote;
+
+public class StockQuote
+{
+    private static final String serviceUrl = "http://64.124.140.30:9090/soap";
+    
+    private String symbol;
+    
+    public StockQuote()
+    {
+    }
+    
+    public StockQuote(String symbol)
+    {
+        this.symbol = symbol;
+    }
+    
+    public void setSymbol(String symbol)
+    {
+        this.symbol = symbol;
+    }
+    
+    public String getSymbol()
+    {
+        return symbol;
+    }
+
+    public String getQuote()
+    {
+        // ... do SOAP thingy
+    }
+}]]></source>
+            <p>
+                Now, when we want to show a stock quote on a page, then we have to define a label, and bind it
+                to the quote.
+            </p>
+            <source><![CDATA[public PojoStockQuotePage()
+{
+    StockQuote quote = new StockQuote("IBM");
+    add(new Label("stockIBM", new PropertyModel(quote, "quote"));
+}]]></source>
+			<p>
+				And in the markup:
+			</p>
+			<source><![CDATA[<html>
+<body>
+<p>
+    Stock of IBM: <span wicket:id="stockIBM">some value</span>
+</p>
+</body>
+</html>]]></source>
+			<p>
+				It is also easy to use this in a form, or listview, or anything you want.
+			</p>
+		</section>
+		<section name="Reuse Component Solution">
+		<p>
+			In this section we will reuse the existing functionality of the label component. As the stock
+			quote component will replace the body with the quote, we can utilize the label component.
+		</p>
+		<source><![CDATA[public class StockQuoteLabel2 extends Label
+{
+    public StockQuoteLabel2(String id, final String symbol)
+    {
+        super(id, new AbstractReadOnlyModel()
+        {
+            public Object getObject(Component component)
+            {
+                final StockQuote quote = new StockQuote(symbol);
+                return quote.getQuote();
+            }
+        });
+    }
+}]]></source>
+			<p>
+				In the constructor we provide the label with a specific model, giving the label the
+				quote to display.
+			</p>
+		</section>
+		<section name="New Component Solution">
+			<p>
+				In this solution we will create a new component that will render itself, instead of
+				reusing an existing component. Because our component needs to replace the (read only)
+				body with the stockquote, it is natural to look at the <code>Label</code> component.
+			</p>
+			<p>
+				The idea is to attach to a <code><![CDATA[<span>]]></code>, <code><![CDATA[<div>]]></code>,
+				or <code><![CDATA[<p>]]></code> tag, and replace the enclosed body with the quote.
+			</p>
+			<subsection name="Component Class">
+				<p>
+					Since we are just replacing the component body with some text, we don't have a need
+					for our own markup files. So we don't have to extend <code>Panel</code>. Our component
+					also doesn't have nested markup inside the tags, so we also don't need to extend
+					<code>WebMarkupContainer</code>. Instead, we'll extend <code>WebComponent</code>. This
+					is the base class for all HTML markup components. This is also the base class for the
+					label component.
+				</p>
+				<source><![CDATA[package wicket.examples.stockquote;
+
+import wicket.markup.html.WebComponent;
+
+public class StockQuoteLabel extends WebComponent
+{
+}]]></source>
+			</subsection>
+			<subsection name="Construction">
+				<p>
+					First lets take a look at the model of the component. The component will receive through
+					some means the symbol to look for. This will be bound to the components model. So the
+					first, for the user simple <code>StockQuoteLabel</code> constructor just takes a string
+					for the symbol:
+				</p>
+				<source><![CDATA[public StockQuoteLabel(String id, String symbol)
+{
+    super(id, new Model(symbol));
+}]]></source>
+				<p>
+					Wicket uses models in order to be flexible with respect to where the data comes from. Using
+					the string parameter, directly binds the component to the symbol at construction time. This
+					doesn't allow people to bind using the OGNL expression language easily. Sometimes the data
+					isn't available (yet) at construction time, so we should provide a constructor taking an 
+					<code>IModel</code> as well, in order to make the component fit nicely into the Wicket 
+					framework:
+				</p>
+				<source><![CDATA[public StockQuoteLabel(String id, IModel model)
+{
+    super(id, model);
+}]]></source>
+			</subsection>
+			<subsection name="Rendering">
+				<p>
+					When the component is rendered, we have to replace the body contents of the span tag with
+					the stock quote value for the given symbol. So here is the code for doing just that:
+				</p>
+				<source><![CDATA[protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+{
+    String symbol = getModelObjectAsString();
+    StockQuote quote = new StockQuote(symbol);
+    replaceComponentTagBody(markupStream, openTag, quote.getQuote());
+}]]></source>
+			</subsection>
+			<subsection name="Ready">
+				<p>
+					The <code>StockQuoteLabel</code> is now ready for usage:
+				</p>
+				<source><![CDATA[public StockQuotePage()
+{
+    add(new StockQuoteLabel("stockIBM", "IBM"));
+
+    // create a form for entering a symbol
+    final IModel model = new PropertyModel(quote, "symbol");
+    final Form form = new Form("form");
+    add(form);
+    form.add(new TextField("symbol", model));
+    
+    // display the entered symbol and retrieved quote
+    add(new Label("symbol", model));
+    add(new StockQuoteLabel("quote", model));
+}]]></source>
+				<p>The corresponding markup:</p>
+				<source><![CDATA[<p>
+    IBM stockquote: <span wicket:id="stockIBM">1.23</span>
+</p>
+<form wicket:id="form">
+    Type symbol: <input wicket:id="symbol" type="text" />
+    <input type="submit" />
+</form>
+<p>
+    Stock quote of <span wicket:id="symbol">symbol</span> is <span wicket:id="quote">quote</span>.
+</p>
+]]></source>
+			</subsection>
+		</section>
+		<section name="Discussion">
+			<p>
+				When looking at the current component code, there is little that speaks for it, when compared
+				to the POJO solution. And for these kind of components, it is probably best to use vanilla POJOs
+				instead of creating a full blown component.
+			</p>
+			<p>
+				However, this wasn't a matter of just looking what the best scenario is for the stock quote, but
+				how you can create components yourself. The last option we provided is the most flexible one, but
+				also needs more code.
+			</p>
+		</section>
+	</body>
+</document>

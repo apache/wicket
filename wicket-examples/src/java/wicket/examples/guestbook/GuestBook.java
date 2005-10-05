@@ -81,7 +81,7 @@ public final class GuestBook extends WicketExamplePage
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new Comment()), null);
+			super(id, new CompoundPropertyModel(new Comment()));
 			
 			// Add text entry widget
 			add(new TextArea("text"));

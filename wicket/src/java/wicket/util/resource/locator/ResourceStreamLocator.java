@@ -31,7 +31,7 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class ResourceStreamLocator
+public class ResourceStreamLocator implements IResourceStreamLocator
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
@@ -46,6 +46,16 @@ public class ResourceStreamLocator
 	 *            The resource locator
 	 */
 	public ResourceStreamLocator(IResourceStreamLocator locator)
+	{
+		this.locator = locator;
+	}
+
+	/**
+	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF
+	 * 
+	 * @param locator
+	 */
+	protected void setResourceStreamLocator(final IResourceStreamLocator locator)
 	{
 		this.locator = locator;
 	}
@@ -70,7 +80,8 @@ public class ResourceStreamLocator
 	 * @param c
 	 *            Class next to which the resource should be found
 	 * @param style
-	 *            Any resource style, such as a skin style (see {@link wicket.Session})
+	 *            Any resource style, such as a skin style (see
+	 *            {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
@@ -80,7 +91,7 @@ public class ResourceStreamLocator
 	public IResourceStream locate(final Class c, final String style, final Locale locale,
 			final String extension)
 	{
-		return locate(c.getName(), style, locale, extension);
+		return locate(c.getClassLoader(), c.getName().replace('.', '/'), style, locale, extension);
 	}
 
 	/**
@@ -88,18 +99,22 @@ public class ResourceStreamLocator
 	 * convenience method will extract the extension from the path. If the
 	 * extension does not start with a dot, one will be added automatically.
 	 * 
+	 * @param loader
+	 *            class loader
 	 * @param path
 	 *            The path of the resource
 	 * @param style
-	 *            Any resource style, such as a skin style (see {@link wicket.Session})
+	 *            Any resource style, such as a skin style (see
+	 *            {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
 	 *            The extension of the resource
+	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(String path, final String style, final Locale locale,
-			final String extension)
+	public IResourceStream locate(ClassLoader loader, String path, final String style,
+			final Locale locale, final String extension)
 	{
 		// If no extension specified, extract extension
 		final String extensionString;
@@ -120,6 +135,6 @@ public class ResourceStreamLocator
 			}
 		}
 
-		return locator.locate(path.replace('.', '/'), style, locale, extensionString);
+		return locator.locate(loader, path, style, locale, extensionString);
 	}
 }

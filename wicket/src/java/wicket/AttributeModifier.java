@@ -63,12 +63,12 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public class AttributeModifier implements Serializable
 {
-	/** The next attribute modifier in any chain */
-	AttributeModifier next;
-
+	private static final long serialVersionUID = 1L;
+	
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
 
@@ -139,10 +139,6 @@ public class AttributeModifier implements Serializable
 		{
 			throw new IllegalArgumentException("Attribute parameter cannot be null");
 		}
-		if (replaceModel == null)
-		{
-			throw new IllegalArgumentException("ReplaceModel parameter cannot be null");
-		}
 
 		this.attribute = attribute;
 		this.pattern = pattern;
@@ -174,7 +170,7 @@ public class AttributeModifier implements Serializable
 	 * 
 	 * @return Whether enabled or not
 	 */
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
 	}
@@ -191,12 +187,24 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
-	 * Gets the value that should replace the current attribute value.
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "AttributeModifier{attribute=" + attribute + ",enabled=" + isEnabled() + "pattern="
+				+ pattern + ",replacementModel=" + replaceModel + "}";
+	}
+
+	/**
+	 * Gets the value that should replace the current attribute value. This gives users
+	 * the ultimate means to customize what will be used as the attribute value. For instance,
+	 * you might decide to append the replacement value to the current instead of just
+	 * replacing it as is Wicket's default.
 	 * 
 	 * @param currentValue
-	 *            The current attribute value
+	 *            The current attribute value. This value might be null!
 	 * @param replacementValue
-	 *            The replacement value
+	 *            The replacement value. This value might be null!
 	 * @return The value that should replace the current attribute value
 	 */
 	protected String newValue(final String currentValue, final String replacementValue)
@@ -205,12 +213,24 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
+	 * Gets the replacement model. Allows subclasses access to replace model.
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
+	/**
 	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
 	 * be called from the outside
 	 */
 	final void detachModel()
 	{
-		replaceModel.detach();
+		if (replaceModel != null)
+		{
+			replaceModel.detach();
+		}
 	}
 
 	/**
@@ -225,27 +245,43 @@ public class AttributeModifier implements Serializable
 	 */
 	final void replaceAttibuteValue(final Component component, final ComponentTag tag)
 	{
-		if (enabled)
+		if (isEnabled())
 		{
 			final ValueMap attributes = tag.getAttributes();
-			final Object replacementValue = replaceModel.getObject(component);
+			final Object replacementValue = getReplacementOrNull(component);
 
-			// Only do something when we have a replacement
-			if (replacementValue != null)
+			if (attributes.containsKey(attribute))
 			{
-				if (attributes.containsKey(attribute))
+				final String value = attributes.get(attribute).toString();
+				if (pattern == null || value.matches(pattern))
 				{
-					final String value = attributes.get(attribute).toString();
-					if (pattern == null || value.matches(pattern))
+					final String newValue = newValue(value, toStringOrNull(replacementValue));
+					if (newValue != null)
 					{
-						attributes.put(attribute, newValue(value, replacementValue.toString()));
+						attributes.put(attribute, newValue);
 					}
 				}
-				else if (addAttributeIfNotPresent)
+			}
+			else if (addAttributeIfNotPresent)
+			{
+				final String newValue = newValue(null, toStringOrNull(replacementValue));
+				if (newValue != null)
 				{
-					attributes.put(attribute, newValue(null, replacementValue.toString()));
+					attributes.put(attribute, newValue);
 				}
 			}
 		}
+	}
+
+	/* gets replacement with null check. */
+	private Object getReplacementOrNull(final Component component)
+	{
+		return (replaceModel != null) ? replaceModel.getObject(component) : null;
+	}
+
+	/* gets replacement as a string with null check. */
+	private String toStringOrNull(final Object replacementValue)
+	{
+		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
 }

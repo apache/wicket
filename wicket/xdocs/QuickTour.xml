@@ -29,6 +29,10 @@
 						<a href="ExampleGuestBook.html">GuestBook</a>
 						- A tiny blogger demonstrating ListViews and Forms
 					</li>
+					<li>
+						<a href="ExampleStockQuote.html">StockQuote</a>
+						- A short example of building a custom component
+					</li>
 				</ul>
 			</p>
 			<subsection name="Examples in Live Action">

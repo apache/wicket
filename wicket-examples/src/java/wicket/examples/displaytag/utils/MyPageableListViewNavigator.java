@@ -22,22 +22,22 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 
 /**
  * @author Juergen Donnerstag
  */
-public class MyPageableListViewNavigator extends PageableListViewNavigator
+public class MyPageableListViewNavigator extends PagingNavigator
 {
     /**
      * 
-     * @param componentName
+     * @param id
      * @param pageableListView
      */
-    public MyPageableListViewNavigator(final String componentName,
+    public MyPageableListViewNavigator(final String id,
 		final PageableListView pageableListView)
     {
-        super(componentName, pageableListView);
+        super(id, pageableListView);
 
 		// model = null; the headline test will be auto-generated during
 		// handleBody.

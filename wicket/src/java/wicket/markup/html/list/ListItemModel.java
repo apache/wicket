@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
+ * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -28,12 +28,14 @@ import wicket.model.IModel;
  */
 public class ListItemModel extends AbstractDetachableModel
 {
+	private static final long serialVersionUID = 1L;
+	
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
 	private transient Object object;
 
 	/** The ListView's list model */
-	private final IModel listModel;
+	private final ListView listView;
 
 	/* The list item's index */
 	private final int index;
@@ -41,14 +43,14 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * Construct
 	 * 
-	 * @param listModel
-	 *            The ListView's model
+	 * @param listView
+	 *            The ListView
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final IModel listModel, final int index)
+	public ListItemModel(final ListView listView, final int index)
 	{
-		this.listModel = listModel;
+		this.listView = listView;
 		this.index = index;
 		attach();
 	}
@@ -56,7 +58,7 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public Object getNestedModel()
+	public IModel getNestedModel()
 	{
 		return null;
 	}
@@ -67,7 +69,7 @@ public class ListItemModel extends AbstractDetachableModel
 	protected void onAttach()
 	{
 		// Re-attach the model object based on index and ListView model object
-		this.object = ((List)listModel.getObject(null)).get(index);
+		this.object = ((List)listView.getModelObject()).get(index);
 	}
 
 	/**

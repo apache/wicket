@@ -59,6 +59,8 @@ public class ListViewTest extends TestCase
 
 		return new ListView("listView", new Model(modelList))
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
 				; // do nothing
@@ -117,6 +119,8 @@ public class ListViewTest extends TestCase
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
 		lv = new ListView("listView", new Model(null))
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(final ListItem listItem)
 			{
 				; // do nothing

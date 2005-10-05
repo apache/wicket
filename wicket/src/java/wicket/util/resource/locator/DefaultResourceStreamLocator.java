@@ -17,41 +17,106 @@
  */
 package wicket.util.resource.locator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
-import wicket.util.file.Path;
+import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
 
 /**
  * A resource locator that looks in default places for resources. At the present
- * time, the path and default classloader are searched.
+ * time, the given finder and the default classloader are searched.
  * 
  * @author Jonathan Locke
  */
 public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 {
+	private final List locators = new ArrayList();
+
 	/**
 	 * Constructor
 	 * 
-	 * @param path
-	 *            The path to search
+	 * @param finder
+	 *            The finder to search
 	 */
-	public DefaultResourceStreamLocator(final Path path)
+	public DefaultResourceStreamLocator(final IResourceFinder finder)
 	{
-		super(new IResourceStreamLocator()
+		super(null);
+		
+		setResourceStreamLocator(new IResourceStreamLocator()
 		{
-			private final PathResourceStreamLocator pathLocator = new PathResourceStreamLocator(path);
-			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
-
-			public IResourceStream locate(String path, String style, Locale locale, String extension)
+			public IResourceStream locate(ClassLoader loader, String path, String style,
+					Locale locale, String extension)
 			{
-				IResourceStream resource = pathLocator.locate(path, style, locale, extension);
-				if (resource != null)
+				Iterator iter = locators.iterator();
+				while (iter.hasNext())
 				{
-					return resource;
+					IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(loader,
+							path, style, locale, extension);
+					if (resource != null)
+					{
+						return resource;
+					}
 				}
-				return classLoaderLocator.locate(path, style, locale, extension);
+				return null;
 			}
 		});
+
+		locators.add(new ResourceFinderResourceStreamLocator(finder));
+		locators.add(new ClassLoaderResourceStreamLocator());
+	}
+
+	/**
+	 * Add a resource stream locator 
+	 * 
+	 * @param index
+	 * @param locator
+	 */
+	public void add(final int index, final IResourceStreamLocator locator)
+	{
+		locators.add(index, locator);
+	}
+
+	/**
+	 * Add a resource stream locator 
+	 * 
+	 * @param locator
+	 */
+	public void add(final IResourceStreamLocator locator)
+	{
+		locators.add(locator);
+	}
+
+	/**
+	 * Remove locator from list
+	 * 
+	 * @param index
+	 * @return locator which has been removed
+	 */
+	public IResourceStreamLocator remove(final int index)
+	{
+		return (IResourceStreamLocator) locators.remove(index);
+	}
+
+	/**
+	 * Remove locator from list
+	 * 
+	 * @param locator
+	 * @return true, if object has been found and removed
+	 */
+	public boolean remove(final IResourceStreamLocator locator)
+	{
+		return locators.remove(locator);
+	}
+
+	/**
+	 * 
+	 * @return Number of locators in the list
+	 */
+	public int size()
+	{
+		return locators.size();
 	}
 }

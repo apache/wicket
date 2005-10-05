@@ -24,10 +24,14 @@ import wicket.Application;
 import wicket.Component;
 import wicket.IResourceFactory;
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.PackageResource;
+import wicket.markup.html.WebResource;
+import wicket.markup.html.border.Border;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -68,11 +72,13 @@ import wicket.util.string.Strings;
  */
 public final class LocalizedImageResource implements Serializable, IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+	
+	/** What kind of resource it is. TRUE==Resource is set, FALSE==ResourceReference is set, null none */
+	private Boolean resourceKind;
+	
 	/** The component that is referencing this image resource */
 	private Component component;
-
-	/** The locale of the image resource */
-	private Locale locale;
 
 	/** The image resource this image component references */
 	private Resource resource;
@@ -80,8 +86,11 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	/** The resource reference */
 	private ResourceReference resourceReference;
 
+	/** The locale of the image resource */
+	private transient Locale locale;
+
 	/** The style of the image resource */
-	private String style;
+	private transient String style;
 
 	/**
 	 * Parses image value specifications of the form "[factoryName]:
@@ -186,6 +195,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	public final void setResource(final Resource resource)
 	{
+		resourceKind = Boolean.TRUE;
 		this.resource = resource;
 	}
 
@@ -195,6 +205,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
+		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
 		bind();
 	}
@@ -211,8 +222,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
-		if (!Objects.equal(locale, component.getLocale())
-				|| !Objects.equal(style, component.getStyle()))
+		if ( resourceKind == null && 
+				(!Objects.equal(locale, component.getLocale())
+				|| !Objects.equal(style, component.getStyle())))
 		{
 			// Get new component locale and style
 			this.locale = component.getLocale();
@@ -276,7 +288,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 * @throws WicketRuntimeException
 	 *             Thrown if factory cannot be found
 	 */
-	private IResourceFactory getImageResourceFactory(final Application application,
+	private IResourceFactory getResourceFactory(final Application application,
 			final String factoryName)
 	{
 		final IResourceFactory factory = application.getResourceFactory(factoryName);
@@ -301,16 +313,24 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	private void loadStaticImage(final String path)
 	{
-		final Class scope = component.findParentWithAssociatedMarkup().getClass();
-		final Package basePackage = scope.getPackage();
+		MarkupContainer parent = component.findParentWithAssociatedMarkup();
+		if (parent instanceof Border)
+		{
+			parent = parent.getParent();
+		}
+		final Class scope = parent.getClass();
 		this.resourceReference = new ResourceReference(scope, path)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			/**
 			 * @see wicket.ResourceReference#newResource()
 			 */
 			protected Resource newResource()
 			{
-				return StaticImageResource.get(basePackage, path, locale, style);
+				PackageResource pr = PackageResource.get(getScope(), getName(), LocalizedImageResource.this.locale, style);
+				locale = pr.getLocale();
+				return pr;
 			}
 		};
 		resourceReference.setLocale(locale);
@@ -333,19 +353,19 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (valueParser.matches())
 		{
 			final String imageReferenceName = valueParser.getImageReferenceName();
-			final String specification = valueParser.getSpecification();
+			final String specification = Strings.replaceHtmlEscapeNumber(valueParser.getSpecification());
 			final String factoryName = valueParser.getFactoryName();
 			final Application application = component.getApplication();
-
+			
 			// Do we have a reference?
 			if (!Strings.isEmpty(imageReferenceName))
 			{
 				// Is resource already available via the application?
-				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style) == null)
+				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
-					final Resource imageResource = getImageResourceFactory(application, factoryName)
+					final Resource imageResource = getResourceFactory(application, factoryName)
 							.newResource(specification, locale, style);
 					application.getSharedResources().add(Application.class, imageReferenceName, locale, style,
 							imageResource);
@@ -359,7 +379,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			}
 			else
 			{
-				this.resource = (ImageResource)getImageResourceFactory(application, factoryName)
+				this.resource = (WebResource)getResourceFactory(application, factoryName)
 						.newResource(specification, locale, style);
 			}
 		}

@@ -43,12 +43,12 @@ public abstract class SortableListViewHeader extends Border
 
 	/**
 	 * Construct.
-	 * @param componentName The component name
+	 * @param id The component's id
 	 * @param group The group of headers the new one will be added to
 	 */
-	public SortableListViewHeader(final String componentName, final SortableListViewHeaderGroup group)
+	public SortableListViewHeader(final String id, final SortableListViewHeaderGroup group)
 	{
-		super(componentName);
+		super(id);
 
 		// Default to descending.
 		this.ascending = false;

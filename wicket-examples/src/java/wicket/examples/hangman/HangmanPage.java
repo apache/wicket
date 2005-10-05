@@ -33,4 +33,12 @@ public class HangmanPage extends WicketExamplePage
 	{
 		return ((HangmanSession)getSession()).getGame();
 	}
+	
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
 }

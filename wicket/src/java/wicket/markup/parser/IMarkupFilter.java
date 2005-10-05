@@ -42,6 +42,12 @@ public interface IMarkupFilter
 	public abstract IMarkupFilter getParent();
 	
 	/**
+	 * Set parent.
+	 * @param parent The next element in the chain
+	 */
+	public abstract void setParent(final IMarkupFilter parent);
+	
+	/**
 	 * Gets the next tag from the input string.
 	 * 
 	 * @return The extracted tag.

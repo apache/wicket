@@ -31,7 +31,6 @@ import java.io.Reader;
  */
 public final class Streams
 {
-
 	/**
 	 * Writes the input stream to the output stream. Input is done without a
 	 * Reader object, meaning that the input is copied in its raw form.
@@ -44,25 +43,15 @@ public final class Streams
 	 */
 	public static void copy(final InputStream in, final OutputStream out) throws IOException
 	{
-		final byte[] buffer = new byte[1024];
+		final byte[] buffer = new byte[4096];
 		while (true)
 		{
-			final int available = in.available(); 
-			if (available > 0)
-			{
-				final int length = Math.min(available, buffer.length);
-				in.read(buffer, 0, length);
-				out.write(buffer, 0, length);
-			}
-			else
-			{
-				final int c = in.read();
-				if (c == -1)
-				{
-					break;
-				}
-				out.write(c);
-			}
+		    int byteCount = in.read(buffer, 0, buffer.length);
+		    if (byteCount <= 0)
+		    {
+		        break;
+		    }
+			out.write(buffer, 0, byteCount);
 		}
 	}
 
@@ -114,6 +103,7 @@ public final class Streams
 
 		return buffer.toString();
 	}
+	
 	/**
 	 * Private to prevent instantiation.
 	 */

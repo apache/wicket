@@ -20,20 +20,19 @@ package wicket.markup;
 import wicket.markup.parser.XmlTag;
 
 /**
- * WicketTag extends ComponentTag and will be createtd by a MarkupParser
+ * WicketTag extends ComponentTag and will be created by a MarkupParser
  * whenever it parses a tag in the wicket namespace. By default, this namespace
  * is "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
- * Note 2: The namespace name is configurable through ApplicationSettings.
- * 
- * @see wicket.ApplicationSettings#setWicketNamespace(String)
+ * Note 2: The namespace name is configurable. E.g.
+ *    &lt;html xmlns:wcn="http://wicket.sourcefourge.net"&gt;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketTag extends ComponentTag
+public class WicketTag extends ComponentTag
 {
 	/**
 	 * Constructor
@@ -48,7 +47,6 @@ public final class WicketTag extends ComponentTag
 
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
-	 * 
 	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()
@@ -110,6 +108,14 @@ public final class WicketTag extends ComponentTag
 	public final boolean isExtendTag()
 	{
 		return "extend".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:extend'
+	 */
+	public final boolean isHeadTag()
+	{
+		return "head".equalsIgnoreCase(getName());
 	}
 
 	/**

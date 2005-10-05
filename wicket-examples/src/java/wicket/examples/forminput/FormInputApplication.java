@@ -18,7 +18,11 @@
  */
 package wicket.examples.forminput;
 
+import java.util.Locale;
+
+import wicket.Application;
 import wicket.examples.WicketExampleApplication;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
 /**
  * Application class for form input example.
@@ -33,6 +37,13 @@ public class FormInputApplication extends WicketExampleApplication
     public FormInputApplication()
     {
         getPages().setHomePage(FormInput.class);
+        // insert an alias for the wicket.Application class so that all images don't have the wicket.Application in there url. 
+        getPages().putClassAlias(Application.class, "application");
 		getSettings().setThrowExceptionOnMissingResource(false);
+
+		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
+				new DefaultButtonImageResource("\u4E4B\u5916"));
+		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
+				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
     }
 }

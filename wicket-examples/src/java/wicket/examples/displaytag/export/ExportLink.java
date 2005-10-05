@@ -36,13 +36,13 @@ public class ExportLink extends Link
     
     /**
      * Constructor
-     * @param componentName
+     * @param id
      * @param data
      * @param exportView
      */
-    public ExportLink(final String componentName, final List data, final BaseExportView exportView)
+    public ExportLink(final String id, final List data, final BaseExportView exportView)
     {
-        super(componentName);
+        super(id);
         this.data = data;
         this.exportView = exportView;
     }

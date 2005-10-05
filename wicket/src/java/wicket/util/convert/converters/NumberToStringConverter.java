@@ -29,8 +29,17 @@ import java.util.Map;
  */
 public final class NumberToStringConverter extends AbstractConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The date format to use */
 	private Map numberFormats = new HashMap();
+
+	/**
+	 * Construct.
+	 */
+	public NumberToStringConverter()
+	{
+	}
 
 	/**
 	 * @param locale 

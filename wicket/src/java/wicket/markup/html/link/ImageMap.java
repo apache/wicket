@@ -33,6 +33,8 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public final class ImageMap extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** list of shape links. */
 	private final List shapeLinks = new ArrayList();
 
@@ -41,6 +43,8 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	private static final class CircleLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** The circle's radius. */
 		private final int radius;
 
@@ -92,6 +96,8 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	private static final class PolygonLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** Its coordinates. */
 		private final int[] coordinates;
 
@@ -141,6 +147,8 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	private static final class RectangleLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** left upper x. */
 		private final int x1;
 

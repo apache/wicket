@@ -30,28 +30,49 @@ import wicket.Component;
  */
 class ChangeList implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private List changes = new ArrayList();
 
+	/**
+	 * A component was added.
+	 * @param component the added component
+	 */
 	void componentAdded(Component component)
 	{
 		changes.add(new Add(component));
 	}
 
+	/**
+	 * A model is about to change.
+	 * @param component the component of which the model changed
+	 */
 	void componentModelChanging(Component component)
 	{
 		changes.add(new ModelChange(component));
 	}
 
+	/**
+	 * The state of a component is about to change
+	 * @param change the change object
+	 */
+	void componentStateChanging(Change change)
+	{
+		changes.add(change);
+	}
+
+	/**
+	 * A component was removed from its parent.
+	 * @param component the component that was removed
+	 */
 	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));
 	}
 
-	void componentVisibilityChanged(Component component)
-	{
-		changes.add(new VisibilityChange(component));
-	}
-
+	/**
+	 * Undo changes (rollback).
+	 */
 	void undo()
 	{
 		// Go through changes in reverse time order to undo
@@ -60,4 +81,13 @@ class ChangeList implements Serializable
 			((Change)changes.get(i)).undo();
 		}
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return changes.toString();
+	}
+	
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,25 +17,34 @@
  */
 package wicket.markup.html.form.upload;
 
-import org.apache.commons.fileupload.FileItem;
 
+import wicket.Component;
 import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
+import wicket.model.IModel;
+import wicket.protocol.http.MultipartWebRequest;
+import wicket.util.upload.FileItem;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
- * {@link wicket.markup.html.form.upload.UploadForm}, its model is updated with
- * the {@link org.apache.commons.fileupload.FileItem}for this component.
+ * {@link wicket.markup.html.form.Form}, that has multipart == true, its model
+ * is updated with the {@link wicket.util.upload.FileItem}for this
+ * component.
  * 
  * @author Eelco Hillenius
  */
 public class FileUploadField extends FormComponent
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The model for the uploaded file */
 	private FileUpload fileUpload;
-	
+
+	/** True if a model has been set explicitly */
+	private boolean hasExplicitModel;
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -45,11 +54,68 @@ public class FileUploadField extends FormComponent
 	}
 
 	/**
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 */
+	public FileUploadField(final String id, IModel model)
+	{
+		super(id, model);
+		hasExplicitModel = true;
+	}
+
+	/**
 	 * @return The uploaded file
 	 */
 	public FileUpload getFileUpload()
 	{
-		return fileUpload;
+		// Get request
+		final Request request = getRequest();
+		
+		// If we successfully installed a multipart request
+		if (request instanceof MultipartWebRequest)
+		{
+			// Get the item for the path
+			final FileItem item = ((MultipartWebRequest)request).getFile(getInputName());
+
+			// Only update the model when there is a file (larger than zero
+			// bytes)
+			if (item != null && item.getSize() > 0)
+			{
+				return new FileUpload(item);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @see wicket.Component#setModel(wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		hasExplicitModel = true;
+		return super.setModel(model);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	public void updateModel()
+	{
+		// Only update the model if one was passed in
+		if (hasExplicitModel)
+		{
+			setModelObject(getFileUpload());
+		}
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.FormComponent#isMultiPart()
+	 */
+	public boolean isMultiPart()
+	{
+		return true;
 	}
 	
 	/**
@@ -75,27 +141,5 @@ public class FileUploadField extends FormComponent
 	protected boolean supportsPersistence()
 	{
 		return false;
-	}
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	protected void updateModel()
-	{
-		// Get request 
-		final Request request = getRequest();
-		
-		// If we successfully installed a multipart request
-		if (request instanceof MultipartWebRequest)
-		{
-			// Get the item for the path
-			final FileItem item = ((MultipartWebRequest)request).getFile(getPath());
-	
-			// Only update the model when there is a file (larger than zero bytes)
-			if (item != null && item.getSize() > 0)
-			{
-				this.fileUpload = new FileUpload(item);
-			}
-		}
 	}
 }

@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
@@ -27,11 +29,11 @@ import wicket.markup.MarkupStream;
  * 
  * @author Juergen Donnerstag
  */
-public interface IComponentResolver
+public interface IComponentResolver extends Serializable
 {
 	/**
-	 * Try to resolve the component name, then create a component, add it to the
-	 * container and render the component.
+	 * Try to resolve the tag, then create a component, add it to the
+	 * container and render it.
 	 * 
 	 * @param container
 	 *            The container parsing its markup
@@ -39,7 +41,7 @@ public interface IComponentResolver
 	 *            The current markupStream
 	 * @param tag
 	 *            The current component tag while parsing the markup
-	 * @return True if componentId was handled by the resolver, false otherwise.
+	 * @return True if component-id was handled by the resolver, false otherwise.
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag);

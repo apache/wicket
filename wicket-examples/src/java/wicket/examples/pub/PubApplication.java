@@ -33,5 +33,6 @@ public class PubApplication extends WicketExampleApplication
     public PubApplication()
     {
         getPages().setHomePage(Home.class);
+        getPages().putClassAlias(Home.class, "home");
     }
 }

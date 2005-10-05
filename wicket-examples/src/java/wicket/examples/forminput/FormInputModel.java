@@ -18,7 +18,14 @@
 package wicket.examples.forminput;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -26,12 +33,82 @@ import java.util.Date;
  */
 public final class FormInputModel implements Serializable
 {
+	/**
+	 * Represents a line of text. Hack to get around the fact that strings are
+	 * immutable.
+	 */
+	public final class Line implements Serializable
+	{
+		private String text;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param text
+		 */
+		public Line(String text)
+		{
+			this.text = text;
+		}
+
+		/**
+		 * Gets text.
+		 * 
+		 * @return text
+		 */
+		public String getText()
+		{
+			return text;
+		}
+
+		/**
+		 * Sets text.
+		 * 
+		 * @param text
+		 *            text
+		 */
+		public void setText(String text)
+		{
+			this.text = text;
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return text;
+		}
+	}
+
 	private String stringProperty = "test";
 	private Integer integerProperty = new Integer(100);
 	private Double doubleProperty = new Double(20.5);
 	private Date dateProperty = new Date();
 	private Integer integerInRangeProperty = new Integer(50);
 	private Boolean booleanProperty;
+	private URL urlProperty;
+	private String numberRadioChoice;
+	private Set siteSelection = new HashSet();
+	private List lines = new ArrayList();
+
+	/**
+	 * Construct.
+	 */
+	public FormInputModel()
+	{
+		try
+		{
+			urlProperty = new URL("http://wicket.sourceforge.net");
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		lines.add(new Line("line one"));
+		lines.add(new Line("line two"));
+		lines.add(new Line("line three"));
+	}
 
 	/**
 	 * Gets dateProperty.
@@ -157,13 +234,106 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets the urlProperty.
+	 * @return urlProperty
+	 */
+	public URL getUrlProperty()
+	{
+		return urlProperty;
+	}
+
+	/**
+	 * Sets the urlProperty.
+	 * @param urlProperty urlProperty
+	 */
+	public void setUrlProperty(URL urlProperty)
+	{
+		this.urlProperty = urlProperty;
+	}
+
+	/**
+	 * Gets the favoriteColor.
+	 * @return favoriteColor
+	 */
+	public String getNumberRadioChoice()
+	{
+		return numberRadioChoice;
+	}
+
+	/**
+	 * Sets the favoriteColor.
+	 * @param favoriteColor favoriteColor
+	 */
+	public void setNumberRadioChoice(String favoriteColor)
+	{
+		this.numberRadioChoice = favoriteColor;
+	}
+
+	/**
+	 * Gets the selectedSites.
+	 * @return selectedSites
+	 */
+	public Set getSiteSelection()
+	{
+		return siteSelection;
+	}
+
+	/**
+	 * Sets the selectedSites.
+	 * @param selectedSites selectedSites
+	 */
+	public void setSiteSelection(Set selectedSites)
+	{
+		this.siteSelection = selectedSites;
+	}
+
+	/**
+	 * Gets lines.
+	 * @return lines
+	 */
+	public List getLines()
+	{
+		return lines;
+	}
+
+	/**
+	 * Sets lines.
+	 * @param lines lines
+	 */
+	public void setLines(List lines)
+	{
+		this.lines = lines;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return "[TestInputObject stringProperty = '" + stringProperty + "', integerProperty = "
-				+ integerProperty + ", doubleProperty = " + doubleProperty + ", dateProperty = "
-				+ dateProperty + ", booleanProperty = " + booleanProperty
-				+ ", integerInRangeProperty = " + integerInRangeProperty + "]";
+		StringBuffer b = new StringBuffer();
+		b.append("[TestInputObject stringProperty = '").append(stringProperty)
+		 .append("', integerProperty = ").append(integerProperty)
+		 .append(", doubleProperty = ").append(doubleProperty)
+		 .append(", dateProperty = ").append(dateProperty)
+		 .append(", booleanProperty = ").append(booleanProperty)
+		 .append(", integerInRangeProperty = ").append(integerInRangeProperty)
+		 .append(", urlProperty = ").append(urlProperty)
+		 .append(", numberRadioChoice = ").append(numberRadioChoice);
+		b.append(",selected sites {");
+		for(Iterator i = siteSelection.iterator(); i.hasNext();)
+		{
+			b.append(i.next());
+			if(i.hasNext()) b.append(",");
+		}
+		b.append("}");
+		b.append(",lines {");
+		for(Iterator i = lines.iterator(); i.hasNext();)
+		{
+			b.append(i.next());
+			if(i.hasNext()) b.append(",");
+		}
+		b.append("}");
+		b.append("]");
+		return b.toString();
 	}
 }

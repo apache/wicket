@@ -31,4 +31,14 @@ public abstract class AbstractModel implements IModel
 	public void detach()
 	{
 	}
+
+	/**
+	 * @see Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
+		return sb.toString();
+	}
 }

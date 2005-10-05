@@ -7,36 +7,72 @@
     <span wicket:id="mainNavigation"/>
 	<div>
 		Use locale: 
-		<select wicket:id="localeSelect">
-			<option>locale1</option>
+		<select wicket:id="localeSelect"/>
+			<!--  option>locale1</option>
 			<option>locale2</option>
-		</select>
+		</select -->
 		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
     </div>
 	<p>
     <form wicket:id="inputForm" id="inputForm">
       <fieldset>
         <legend>Input Form</legend>
-		  <label for="stringProperty">String</label>
-		  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
-		  <label for="integerProperty">Integer</label>
-		  <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
-		  <label for="doubleProperty">Double</label>
-		  <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
-		  <label for="dateProperty">Date</label>
-		  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
-		  <label for="booleanProperty">Boolean</label>
-		  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-		  <label for="integerInRangeProperty">Value between 0 and 100</label>
-		  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
-		  <p>
-		  <input wicket:id="saveButton" type="image" value="buttonFactory:save:Save"/>
-		  <a wicket:id="resetButtonLink" src="">
-		      <img wicket:id="resetButtonImage" value="buttonFactory:reset:Reset"/> 
-		  </a>
+ 
+        <table id="inputFormTable">
+          <tr>
+          <td valign="top">
+	        
+			  <label for="stringProperty">String</label>
+			  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
+			  <label for="integerProperty">Integer</label>
+			  <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
+			  <label for="doubleProperty">Double</label>
+			  <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
+			  <label wicket:id="dateLabel" for="dateProperty">Date</label>
+			  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
+			  <span wicket:id="datePicker"></span>
+			  <label for="booleanProperty">Boolean</label>
+			  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
+			  
+	      </td>
+	      <td valign="top">
+			  
+			  <label for="integerInRangeProperty">Value between 0 and 100</label>
+			  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
+	          <label for="urlProperty">URL (has to be a valid url)</label>
+	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
+			  <label for="numberRadioChoice">select a number</label>
+			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
+	    		<input type="radio">foo</input>
+				<input type="radio">bar</input>
+			  </span>
+			  <label for="siteSelection">your favorite sites</label>
+			  <select wicket:id="siteSelection" id="siteSelection">
+			  	<option>foo</option>
+			  	<option>bar</option>
+			  </select>
+			  <ul>
+			   <li wicket:id="lines">
+			    <input type="text" wicket:id="lineEdit" /> 
+			   </li>
+			  </ul>
+		  </td>
+		  </tr>
+		  <tr>
+		  <td colspan="2">
+
+			  <input wicket:id="saveButton" type="image" value="buttonFactory:save:Save"/>
+			  <a wicket:id="resetButtonLink" src="">
+			      <img wicket:id="resetButtonImage" value="buttonFactory:reset:Reset"/> 
+			  </a>
+
+		  </td>
+		  </tr>
+		 </table>
+
       </fieldset>
     </form>
-	<div>
+	<div id="feedbackPanel">
 		<span wicket:id="feedback"/>
     </div>
 </body>

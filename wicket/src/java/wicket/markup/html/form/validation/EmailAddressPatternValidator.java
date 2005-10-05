@@ -27,10 +27,25 @@ import java.util.regex.Pattern;
  */
 public class EmailAddressPatternValidator extends PatternValidator
 {
+	private static final long serialVersionUID = 1L;
+	
+	/** Singleton instance */
+	private static final EmailAddressPatternValidator instance = new EmailAddressPatternValidator();
+	
+	
 	/**
-	 * Constructor
+	 * @return Instance of emailadress validator
+	 */	
+	public static  EmailAddressPatternValidator getInstance()
+	{
+		return instance;
+	}
+	
+	/**
+	 * Protectected constructor to force use of static singleton accessor method.
+	 * Or override it to implement resourceKey(Component)
 	 */
-	public EmailAddressPatternValidator()
+	protected EmailAddressPatternValidator()
 	{
 		super("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$", Pattern.CASE_INSENSITIVE);
 	}

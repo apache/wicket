@@ -45,7 +45,7 @@ import wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketLinkTagHandler extends AbstractMarkupFilter
+public class WicketLinkTagHandler extends AbstractMarkupFilter
 {
 	/** Allow to have link regions within link regions */
 	private Stack autolinkStatus;
@@ -84,7 +84,7 @@ public final class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * @see wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
 	 */
-	public MarkupElement nextTag() throws ParseException
+	public final MarkupElement nextTag() throws ParseException
 	{
 		// Get next tag. Null, if no more tag available
 		final ComponentTag tag = (ComponentTag)getParent().nextTag();
@@ -97,10 +97,10 @@ public final class WicketLinkTagHandler extends AbstractMarkupFilter
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
 		// it themselves.
-		final String href = tag.getAttributes().getString("href");
-		if ((autolinking == true) && (tag.getId() == null) && (href != null)
-				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1))
-				&& (href.indexOf(":") == -1))
+		// Subclass analyzeAutolinkCondition() to implement you own implementation
+		// and register the new tag handler with the markup parser through
+		// Application.newMarkupParser().
+		if ((autolinking == true) && (analyzeAutolinkCondition(tag) == true))
 		{
 			// Mark it as autolink enabled
 			tag.enableAutolink(true);
@@ -149,10 +149,32 @@ public final class WicketLinkTagHandler extends AbstractMarkupFilter
 					autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
 				}
 
-				return nextTag();
+				return wtag;
 			}
 		}
 
 		return tag;
+	}
+	
+	/**
+	 * Analyze the tag. If return value == true, a autolink component will
+	 * be created. <p>
+	 * Subclass analyzeAutolinkCondition() to implement you own implementation
+	 * and register the new tag handler with the markup parser through
+	 * Application.newMarkupParser().
+	 * 
+	 * @param tag The current tag being parsed
+	 * @return If true, tag will become auto-component
+	 */
+	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
+	{
+		final String href = tag.getAttributes().getString("href");
+		if ((tag.getId() == null) && (href != null)
+				&& (href.indexOf(":") == -1))
+		{
+		    return true;
+		}
+		
+		return false;
 	}
 }

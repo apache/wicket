@@ -24,6 +24,8 @@ package wicket.util.resource;
  */
 public final class ResourceStreamNotFoundException extends Exception
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */

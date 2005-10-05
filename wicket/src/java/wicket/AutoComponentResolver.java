@@ -19,7 +19,6 @@ package wicket;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,7 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.util.string.StringValueConversionException;
+import wicket.util.lang.Classes;
 
 /**
  * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add 
@@ -48,6 +47,8 @@ import wicket.util.string.StringValueConversionException;
  */
 public final class AutoComponentResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+	
     /** Logging */
     private static Log log = LogFactory.getLog(AutoComponentResolver.class);
 
@@ -209,7 +210,7 @@ public final class AutoComponentResolver implements IComponentResolver
         }
 
         // Get all remaining attributes and invoke the component's setters
-        final Iterator iter = tag.getAttributes().entrySet().iterator();
+        Iterator iter = tag.getAttributes().entrySet().iterator();
         while (iter.hasNext())
         {
             final Map.Entry entry = (Map.Entry)iter.next();
@@ -222,71 +223,18 @@ public final class AutoComponentResolver implements IComponentResolver
                 continue;
             }
 
-            // Get the setter for the attribute
-            final String methodName = "set" + key;
-            final Method[] methods = component.getClass().getMethods();
-            Method method = null;
-            for (int i = 0; i < methods.length; i++)
-            {
-                if (methods[i].getName().equalsIgnoreCase(methodName))
-                {
-                    method = methods[i];
-                }
-            }
+           	Classes.invokeSetter(component, key, value, container.getLocale());
+        }
 
-            if (method == null)
-            {
-                throw new MarkupException(
-                        "Unable to initialize Component. Method with name " + methodName
-                                + " not found");
-            }
+        // Get all remaining attributes and invoke the component's setters
+        iter = tag.getAdditionalAttributes().entrySet().iterator();
+        while (iter.hasNext())
+        {
+            final Map.Entry entry = (Map.Entry)iter.next();
+            final String key = (String)entry.getKey();
+            final String value = (String)entry.getValue();
 
-            // The method must have a single parameter
-            final Class[] parameterClasses = method.getParameterTypes();
-            if (parameterClasses.length != 1)
-            {
-                throw new MarkupException(
-                        "Unable to initialize Component. Method with name " + methodName
-                                + " must have one and only one parameter");
-            }
-
-            // Convert the parameter if necessary, depending on the setter's attribute
-            final Class paramClass = parameterClasses[0];
-            try
-            {
-                if (paramClass.equals(String.class))
-                {
-                    method.invoke(component, new Object[] { value });
-                }
-                else if (paramClass.equals(int.class))
-                {
-                    method.invoke(component, new Object[] { new Integer(tag.getAttributes().getInt(
-                            key)) });
-                }
-                else if (paramClass.equals(long.class))
-                {
-                    method.invoke(component, new Object[] { new Long(tag.getAttributes().getLong(
-                            (key))) });
-                }
-            }
-            catch (IllegalAccessException ex)
-            {
-                throw new MarkupException(
-                        "Unable to initialize Component. Failure while invoking method "
-                                + methodName + ". Cause: " + ex);
-            }
-            catch (InvocationTargetException ex)
-            {
-                throw new MarkupException(
-                        "Unable to initialize Component. Failure while invoking method "
-                                + methodName + ". Cause: " + ex);
-            }
-            catch (StringValueConversionException ex)
-            {
-                throw new MarkupException(
-                        "Unable to initialize Component. Failure while invoking method "
-                                + methodName + ". Cause: " + ex);
-            }
+           	Classes.invokeSetter(component, key, value, container.getLocale());
         }
 
         return component;

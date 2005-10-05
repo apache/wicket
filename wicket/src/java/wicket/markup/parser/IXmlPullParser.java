@@ -108,6 +108,13 @@ public interface IXmlPullParser extends IMarkupFilter
 	public abstract void setPositionMarker();
 
 	/**
+	 * Set the position marker of the markup
+	 * 
+	 * @param pos
+	 */
+	public abstract void setPositionMarker(final int pos);
+
+	/**
 	 * Set whether to strip components.
 	 * 
 	 * @param stripComments

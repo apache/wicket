@@ -36,12 +36,12 @@ public abstract class TableWithAlternatingRowStyle extends ListView
     /**
      * Constructor
      * 
-     * @param componentName
+     * @param id
      * @param data
      */
-    public TableWithAlternatingRowStyle(final String componentName, final List data)
+    public TableWithAlternatingRowStyle(final String id, final List data)
     {
-        super(componentName, data);
+        super(id, data);
     }
 	
     /**

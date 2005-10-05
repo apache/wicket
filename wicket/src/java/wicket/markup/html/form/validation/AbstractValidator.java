@@ -24,23 +24,23 @@ import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.lang.Classes;
 
 /**
- * Base class for form component validators. This class is thread-safe and
- * therefore it is safe to share validators across sessions/threads.
+ * Base class for form component validators. This class is thread-safe and therefore it is
+ * safe to share validators across sessions/threads.
  * <p>
- * Error messages can be registered on a component by calling one of the error()
- * overloads. The error message will be retrieved using the Localizer for the
- * form component. Normally, this localizer will find the error message in a
- * string resource bundle (properties file) associated with the page in which
- * this validator is contained. The resource key must be of the form:
- * [form-name].[component-name].[validator-class]. For example:
+ * Error messages can be registered on a component by calling one of the error(FormComponent ...)
+ * overloads. The error message will be retrieved using the Localizer for the form
+ * component. Normally, this localizer will find the error message in a string resource
+ * bundle (properties file) associated with the page in which this validator is contained.
+ * The key that is used to get the message defaults to the pattern:
+ * <code>[form-name].[component-name].[validator-class]</code>.
+ * For example:
  * <p>
  * MyForm.name.RequiredValidator=A name is required.
  * <p>
- * Error message string resources can contain optional ognl variable
- * interpolations from the component, such as:
+ * Error message string resources can contain optional ognl variable interpolations from
+ * the component, such as:
  * <p>
  * editBook.name.LengthValidator='${input}' is too short a name.
  * <p>
@@ -51,39 +51,34 @@ import wicket.util.lang.Classes;
  * </ul>
  * but specific validator subclasses may add more values.
  * </p>
- * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public abstract class AbstractValidator implements IValidator
 {
-	/** The form component being validated */
-	private FormComponent formComponent;
-
 	/**
 	 * Sets an error on the component being validated using the map returned by
 	 * messageModel() for variable interpolations.
 	 * <p>
-	 * See class comments for details about how error messages are loaded and
-	 * formatted.
+	 * See class comments for details about how error messages are loaded and formatted.
+	 * @param formComponent form component
 	 */
-	public void error()
+	public void error(FormComponent formComponent)
 	{
-		error(messageModel());
+		error(formComponent, messageModel(formComponent));
 	}
 
 	/**
-	 * Returns a formatted validation error message for a given component. The
-	 * error message is retrieved from a message bundle associated with the page
-	 * in which this validator is contained using the given resource key. The
-	 * resourceModel is used for variable interpolation.
-	 * 
-	 * @param resourceKey
-	 *            The resource key to use
-	 * @param resourceModel
-	 *            The model for variable interpolation
+	 * Returns a formatted validation error message for a given component. The error
+	 * message is retrieved from a message bundle associated with the page in which this
+	 * validator is contained using the given resource key. The resourceModel is used for
+	 * variable interpolation.
+	 * @param formComponent form component
+	 * @param resourceKey The resource key to use
+	 * @param resourceModel The model for variable interpolation
 	 */
-	public void error(final String resourceKey, final IModel resourceModel)
+	public void error(FormComponent formComponent, final String resourceKey,
+			final IModel resourceModel)
 	{
 		// Return formatted error message
 		Localizer localizer = formComponent.getLocalizer();
@@ -92,62 +87,39 @@ public abstract class AbstractValidator implements IValidator
 	}
 
 	/**
-	 * Sets an error on the component being validated using the given map for
-	 * variable interpolations.
+	 * Sets an error on the component being validated using the given map for variable
+	 * interpolations.
+	 * @param formComponent form component
+	 * @param resourceKey The resource key to use
+	 * @param map The model for variable interpolation
+	 */
+	public void error(FormComponent formComponent, final String resourceKey, final Map map)
+	{
+		error(formComponent, resourceKey, Model.valueOf(map));
+	}
+
+	/**
+	 * Sets an error on the component being validated using the given map for variable
+	 * interpolations.
+	 * @param formComponent form component
+	 * @param map The model for variable interpolation
+	 */
+	public void error(FormComponent formComponent, final Map map)
+	{
+		error(formComponent, resourceKey(formComponent), Model.valueOf(map));
+	}
+
+	/**
+	 * Gets the resource key for validator's error message from the
+	 * ApplicationSettings class.
+	 * @param formComponent form component that is being validated
 	 * 
-	 * @param resourceKey
-	 *            The resource key to use
-	 * @param map
-	 *            The model for variable interpolation
+	 * @return the resource key based on the form component
 	 */
-	public void error(final String resourceKey, final Map map)
+	protected String resourceKey(FormComponent formComponent)
 	{
-		error(resourceKey, Model.valueOf(map));
-	}
-
-	/**
-	 * Sets an error on the component being validated using the given map for
-	 * variable interpolations.
-	 * 
-	 * @param map
-	 *            The model for variable interpolation
-	 */
-	public void error(final Map map)
-	{
-		error(resourceKey(), Model.valueOf(map));
-	}
-
-	/**
-	 * @return Returns the component.
-	 */
-	public FormComponent getFormComponent()
-	{
-		return formComponent;
-	}
-
-	/**
-	 * @return The string value being validated
-	 */
-	public String getInput()
-	{
-		return formComponent.getInput();
-	}
-
-	/**
-	 * Implemented by subclasses to validate component
-	 */
-	public abstract void onValidate();
-
-	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-	 */
-	public synchronized final void validate(final FormComponent formComponent)
-	{
-		// Save component
-		this.formComponent = formComponent;
-
-		// Cause validation to happen
-		onValidate();
+		return formComponent.getApplicationSettings()
+							.getValidatorResourceKey(this, formComponent);
 	}
 
 	/**
@@ -156,27 +128,14 @@ public abstract class AbstractValidator implements IValidator
 	 * <li>${input}: the user's input</li>
 	 * <li>${name}: the name of the component</li>
 	 * </ul>
-	 * 
+	 * @param formComponent form component
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map messageModel()
+	protected Map messageModel(FormComponent formComponent)
 	{
 		final Map resourceModel = new HashMap(4);
-		resourceModel.put("input", getInput());
+		resourceModel.put("input", formComponent.getInput());
 		resourceModel.put("name", formComponent.getId());
 		return resourceModel;
-	}
-
-	/**
-	 * Gets the resource key based on the form component. It will have the form:
-	 * <code>[form-name].[component-name].[validator-class]</code>
-	 * 
-	 * @return the resource key based on the form component
-	 */
-	protected String resourceKey()
-	{
-		// Resource key must be <form-id>.<component-name>.<validator-class>
-		return formComponent.getForm().getId() + "." + formComponent.getId() + "."
-				+ Classes.name(getClass());
 	}
 }

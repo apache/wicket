@@ -21,7 +21,7 @@ package wicket.examples.encodings;
 import wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for hello world example.
+ * Wicket Application class for hello world example.
  * @author Jonathan Locke
  */
 public class EncodingsApplication extends WicketExampleApplication

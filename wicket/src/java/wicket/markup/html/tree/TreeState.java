@@ -39,7 +39,7 @@ import javax.swing.tree.TreeSelectionModel;
  * {@link javax.swing.tree.FixedHeightLayoutCache}from JDK 1.5_01. Using that
  * class or {@link javax.swing.tree.VariableHeightLayoutCache}gave problems
  * when working in clustered environments. Hence, for this class most of the
- * usefull workings of FixedHeightLayoutCache were copied, while everything that
+ * useful workings of FixedHeightLayoutCache were copied, while everything that
  * is Swing/paint specific was removed.
  * 
  * @author Eelco Hillenius
@@ -47,6 +47,8 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public final class TreeState implements Serializable, TreeModelListener, RowMapper
 {
+	private static final long serialVersionUID = 1L;
+
 	/** currently selected path. */
 	private TreePath selectedPath;
 
@@ -100,11 +102,23 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	{
 		setExpandedState(selection, true);
 		this.selectedPath = selection;
+
+		// if we have a multiple selection model
+		if (treeSelectionModel != null)
+		{
+			if (treeSelectionModel.isPathSelected(selection))
+			{
+				treeSelectionModel.removeSelectionPath(selection);
+			}
+			else
+			{
+				treeSelectionModel.addSelectionPath(selection);
+			}
+		}
 	}
 
 	/**
 	 * Gets the currently selected path.
-	 * 
 	 * @return the currently selected path
 	 */
 	public TreePath getSelectedPath()
@@ -141,20 +155,20 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Sets the <code>TreeSelectionModel</code> used to manage the selection
 	 * to new LSM.
 	 * 
-	 * @param newLSM
+	 * @param selectionModel
 	 *			  the new <code>TreeSelectionModel</code>
 	 */
-	public void setSelectionModel(TreeSelectionModel newLSM)
+	public void setSelectionModel(TreeSelectionModel selectionModel)
 	{
-		if (treeSelectionModel != null)
+		if (this.treeSelectionModel != null)
 		{
-			treeSelectionModel.setRowMapper(null);
+			this.treeSelectionModel.setRowMapper(null);
 		}
-		treeSelectionModel = newLSM;
-		if (treeSelectionModel != null)
+		if (selectionModel != null)
 		{
-			treeSelectionModel.setRowMapper(this);
+			selectionModel.setRowMapper(this);
 		}
+		this.treeSelectionModel = selectionModel;
 	}
 
 	/**
@@ -879,6 +893,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private final class TreeStateNode extends DefaultMutableTreeNode
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** Whether this node is expanded */
 		private boolean isExpanded;
 
@@ -1747,6 +1763,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private final class SearchInfo implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private TreeStateNode node;
 
 		private boolean isNodeParentNode;

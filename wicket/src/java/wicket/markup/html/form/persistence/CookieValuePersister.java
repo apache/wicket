@@ -26,6 +26,7 @@ import wicket.RequestCycle;
 import wicket.markup.html.form.FormComponent;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.time.Time;
 
 /**
@@ -36,6 +37,8 @@ import wicket.util.time.Time;
  */
 public class CookieValuePersister implements IValuePersister
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logging */
 	private final static Log log = LogFactory.getLog(CookieValuePersister.class);
 
@@ -181,7 +184,8 @@ public class CookieValuePersister implements IValuePersister
     {
         try
         {
-            return getWebRequest().getHttpServletRequest().getCookies();
+        	// TODO adouma: no Portlet support yet
+            return ((ServletWebRequest)getWebRequest()).getHttpServletRequest().getCookies();
         }
         catch (NullPointerException ex)
         {

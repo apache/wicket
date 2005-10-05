@@ -18,9 +18,18 @@
  */
 package wicket.examples.signin2;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestWithCryptedUrl;
+import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.WebResponseWithCryptedUrl;
 
 /**
  * Forms example.
@@ -49,6 +58,20 @@ public final class SignIn2Application extends WicketExampleApplication
             }
         };
     }
+    
+	/**
+	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
+	 */
+	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
+	{
+		return new WebRequestWithCryptedUrl(servletRequest);
+	}
+	
+	/**
+	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
+	 */
+	protected WebResponse newWebResponse(HttpServletResponse servletResponse) throws IOException
+	{
+		return new WebResponseWithCryptedUrl(servletResponse);
+	}
 }
-
-

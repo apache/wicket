@@ -18,13 +18,10 @@
  */
 package wicket.markup.html.link;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketTestCase;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -32,11 +29,9 @@ import wicket.protocol.http.MockWebApplication;
  * 
  * @author Chris Turner
  */
-public class HrefTest extends TestCase
+public class HrefTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(HrefTest.class);
-
-	private MockWebApplication application;
 
 	/**
 	 * Create the test.
@@ -56,28 +51,39 @@ public class HrefTest extends TestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
+		application.getSettings().setStripWicketTags(false);
 	    executeTest(Href_1.class, "HrefExpectedResult_1.html");
 	}
 
 	/**
-	 * @param pageClass
-	 * @param filename
+	 * Simple Label
+	 * 
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
+	public void testRenderHomePage_2() throws Exception
 	{
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
 		application.getSettings().setStripWicketTags(true);
+	    executeTest(Href_1.class, "HrefExpectedResult_1-1.html");
+	}
 
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+	/**
+	 * Simple Label
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_2a() throws Exception
+	{
+		application.getSettings().setStripWicketTags(true);
+	    executeTest(Href_2.class, "HrefExpectedResult_2.html");
+	}
 
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		log.info(document);
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	/**
+	 * Simple Label
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+	    executeTest(Href_3.class, "HrefExpectedResult_3.html");
 	}
 }

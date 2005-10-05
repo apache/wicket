@@ -36,13 +36,13 @@ public abstract class PagedTableWithAlternatingRowStyle extends PageableListView
     /**
      * Constructor
      * 
-     * @param componentName
+     * @param id
      * @param data
      * @param pageSize
      */
-    public PagedTableWithAlternatingRowStyle(final String componentName, final List data, int pageSize)
+    public PagedTableWithAlternatingRowStyle(final String id, final List data, int pageSize)
     {
-        super(componentName, data, pageSize);
+        super(id, data, pageSize);
     }
 
 

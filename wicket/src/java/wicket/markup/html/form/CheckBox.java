@@ -26,11 +26,27 @@ import wicket.util.string.Strings;
 
 /**
  * HTML checkbox input component.
+ * <p>
+ * Java:
+ * <pre>
+ * form.add(new CheckBox("bool"));
+ * </pre>
+ * HTML:
+ * <pre>
+ * &lt;input type="checkbox" wicket:id="bool" /&gt;
+ * </pre>
+ * </p>
+ * <p>
+ * You can can extend this class and override method wantOnSelectionChangedNotifications()
+ * to force server roundtrips on each selection change.
+ * </p>
  * 
  * @author Jonathan Locke
  */
 public class CheckBox extends FormComponent implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -90,8 +106,12 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
+	 * Whether this component's onSelectionChanged event handler should called using
+	 * javascript if the selection changes. If true, a roundtrip will be generated with
+	 * each selection change, resulting in the model being updated (of just this component)
+	 * and onSelectionChanged being called. This method returns false by default.
 	 * @return True if this component's onSelectionChanged event handler should
-	 * 			called using javascript if the selection changes
+	 *			called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
@@ -137,7 +157,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			final String url = urlFor(IOnChangeListener.class);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onclick", "location.href='" + url + "&" + getPath()
+			tag.put("onclick", "location.href='" + url + "&" + getInputName()
 					+ "=' + this.checked;");
 		}
 
@@ -157,8 +177,9 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
+		// TODO can't test here for disabled input.. null value is a valid input for checkbox
 		try
 		{
 			setModelObject(Strings.toBoolean(getInput()));

@@ -33,8 +33,11 @@ import wicket.util.resource.IResourceStream;
  */
 public final class Markup
 {
+	/** Placeholder that indicates no markup */
+	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
+	
 	/** The list of markup elements */
-	private final List markup;
+	private /* final */ List markup;
 	
 	/** The markup's resource stream for diagnostic purposes */
 	private final IResourceStream resource;
@@ -44,25 +47,85 @@ public final class Markup
 	
 	/** The encoding as found in <?xml ... encoding="" ?>.	Null, else */
 	private final String encoding;
-	
-	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup(null, null, null, null);
 
+	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
+	private final String wicketNamespace;
+	
+	/** The Class of the directly associated component/container */
+	private Class containerClass;
+    
+    /** Markup has been searched for the header, but it doesn't contain any */
+    public final static int NO_HEADER_FOUND = -1;
+
+	/** If the markup contains a header section, the index will point to
+	 * the MarkupElement.
+	 */
+	private int headerIndex = NO_HEADER_FOUND;
+	
 	/**
 	 * Constructor
 	 * @param resource The resource where the markup was found
 	 * @param markup The markup elements
 	 * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
 	 * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
+	 * @param wicketNamespace Wicket namespace taken from xmlns:wicket="http://wicket.sourceforge.net"
 	 */
-	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, final String encoding)
+	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, 
+	        final String encoding, final String wicketNamespace)
 	{
 		this.resource = resource;
 		this.markup = markup;
 		this.xmlDeclaration = xmlDeclaration;
 		this.encoding = encoding;
+		this.wicketNamespace = wicketNamespace;
+		
+		initialize();
 	}
 
+	/**
+	 * Initialize the index where <head> can be found.
+	 */
+	private void initialize()
+	{
+	    if (markup != null)
+	    {
+	   	 	// Initialize the index where <wicket:extend> can be found.
+		    for (int i=0; i < markup.size(); i++)
+		    {
+		        MarkupElement elem = (MarkupElement) markup.get(i);
+		        if (elem instanceof WicketTag)
+		        {
+		            WicketTag tag = (WicketTag) elem;
+					if ((tag.isHeadTag() == true) && (tag.getNamespace() != null))
+					{
+		                headerIndex = i;
+		                break;
+		            }
+		        }
+		    }
+	    }
+	}
+	
+	/**
+	 * Set the component/container's class directly associated with the markup
+	 * 
+	 * @param containerClass
+	 */
+	void setContainerClass(final Class containerClass)
+	{
+	    this.containerClass = containerClass;
+	}
+
+	/**
+	 * Get the component/container's class directly associated with the markup
+	 * 
+	 * @return The component's class
+	 */
+	Class getContainerClass()
+	{
+	    return this.containerClass;
+	}
+	
 	/**
 	 * @return String representation of markup list
 	 */
@@ -118,5 +181,31 @@ public final class Markup
 	public String getEncoding()
 	{
 		return encoding;
+	}
+
+	/**
+	 * Get the current index pointing to the start element of the 
+	 * header section.
+	 * 
+	 * @return index
+	 */
+	public int getHeaderIndex()
+	{
+	    return this.headerIndex;
+	}
+
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+	    return this.wicketNamespace;
+	}
+	
+	void setMarkup(final List markup)
+	{
+	    this.markup = markup;
 	}
 }

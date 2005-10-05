@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>1.0.0-rc2</currentVersion>
+  <currentVersion>1.1-rc2</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
@@ -44,21 +44,50 @@
       <name>1.0.0-rc2</name>
       <tag>WICKET_R_1_0_0-RC2</tag>
     </version>
+    <version>
+      <id>1.0.0-rc3</id>
+      <name>1.0.0-rc3</name>
+      <tag>WICKET_R_1_0_0_RC3</tag>
+    </version>
+    <version>
+      <id>1.1-b1</id>
+      <name>1.1-b1</name>
+      <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
+    </version>
+    <version>
+      <id>1.1-b3</id>
+      <name>1.1-b3</name>
+      <tag>WICKET_R_1_1_BETA3</tag>
+    </version>
+    <version>
+      <id>1.1-b4</id>
+      <name>1.1-b4</name>
+      <tag>WICKET_R_1_1_BETA4</tag>
+    </version>
+    <version>
+      <id>1.1-rc1</id>
+      <name>1.1-rc1</name>
+      <tag>WICKET_R_1_1_RC1</tag>
+    </version>
+    <version>
+      <id>1.1-rc2</id>
+      <name>1.1-rc2</name>
+      <tag>WICKET_R_1_1_RC2</tag>
+    </version>
   </versions>
   <dependencies>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>2.6.7</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>Used for introspection.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
@@ -67,15 +96,9 @@
       <artifactId>servletapi</artifactId>
       <version>2.3</version>
       <properties>
+        <wicket.group>compile</wicket.group>
+        <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
         <war.bundle>false</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>concurrent</groupId>
-      <artifactId>concurrent</artifactId>
-      <version>1.3.3</version>
-      <properties>
-        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -83,6 +106,8 @@
       <artifactId>commons-collections</artifactId>
       <version>2.1</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description/>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
@@ -91,14 +116,29 @@
       <artifactId>commons-logging</artifactId>
       <version>1.0.4</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This library enables us to give you the choice of logging toolkit (JDK, Log4j, etc.)</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.11</version>
+      <url>http://logging.apache.org/log4j</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.0.0-rc2</version>
+      <version>1.1-rc2</version>
       <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This is the wicket library</wicket.description>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
@@ -139,7 +179,6 @@
   </build>
   <reports>
     <report>maven-license-plugin</report>
-    <report>maven-javadoc-plugin</report>
   </reports>
   <properties/>
 </project>

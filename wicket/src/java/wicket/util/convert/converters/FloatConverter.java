@@ -29,6 +29,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public final class FloatConverter extends AbstractDecimalConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a float converter
 	 */
@@ -40,7 +42,13 @@ public final class FloatConverter extends AbstractDecimalConverter
 	public Object convert(final Object value, Locale locale)
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Float.MIN_VALUE, Float.MAX_VALUE,locale);
+				-Float.MAX_VALUE, Float.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Float(number.floatValue());
 	}
 

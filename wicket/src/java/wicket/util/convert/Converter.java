@@ -69,6 +69,8 @@ import wicket.util.convert.converters.StringConverter;
  */
 public final class Converter implements IConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
 
@@ -77,6 +79,8 @@ public final class Converter implements IConverter
 	 */
 	private IConverter defaultConverter = new IConverter()
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * Converts the given value object to class c using OgnlOps.
 		 * 
@@ -169,7 +173,7 @@ public final class Converter implements IConverter
 		// Class cannot be null
 		if (c == null)
 		{
-			throw new IllegalArgumentException("Class cannot be null");
+			throw new NullPointerException("Class cannot be null");
 		}
 
 		// Catch all cases where value is already the right type
@@ -257,11 +261,11 @@ public final class Converter implements IConverter
 	{
 		if (converter == null)
 		{
-			throw new IllegalArgumentException("Converter cannot be null");
+			throw new NullPointerException("Converter cannot be null");
 		}
 		if (c == null)
 		{
-			throw new IllegalArgumentException("Class cannot be null");
+			throw new NullPointerException("Class cannot be null");
 		}
 		return (ITypeConverter)classToConverter.put(c, converter);
 	}
@@ -285,12 +289,6 @@ public final class Converter implements IConverter
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
-
-//		// Set locale on each string type converter
-//		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-//		{
-//			((ITypeConverter)iterator.next()).setLocale(locale);
-//		}
 
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);

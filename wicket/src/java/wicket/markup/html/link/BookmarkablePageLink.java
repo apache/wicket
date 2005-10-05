@@ -28,6 +28,8 @@ import wicket.PageParameters;
  */
 public class BookmarkablePageLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The page class that this link links to. */
 	private final Class pageClass;
 
@@ -86,12 +88,14 @@ public class BookmarkablePageLink extends Link
 	}
 
 	/**
-	 * Called when a link is clicked; this is here to satisfy the interface, as
+	 * THIS METHOD IS NOT USED!
+	 * Bookmarkable links do not have a click handler.
+	 * It is here to satisfy the interface only, as
 	 * bookmarkable links will be dispatched by the handling servlet.
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
-	public void onClick()
+	public final void onClick()
 	{
 		// Bookmarkable links do not have a click handler.
 		// Instead they are dispatched by the request handling servlet.

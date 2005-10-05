@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.Button</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	Within a form, you can nest Button components. Note that you don't have to do this to
+	let the form work (a simple &lt;input type="submit".. suffices), but if you want to have
+	different kinds of submit behaviour it might be a good idea to use Buttons.
+	</p>
+	<p>
+	When you add a Wicket Button to a form, and that button is clicked, by default the button's
+	onSubmit method is called first, and after that the form's onSubmit button is called.
+	If you want to change this (e.g. you don't want to call the form's onSubmit method, or you
+	want it called before the button's onSubmit method), you can override Form.delegateSubmit.
+	</p>
+	<p>
+	One other option you should know of is the 'immediate' property of Button components.
+	When you set this to true (default is false), all validation and formupdating is bypassed
+	and the onSubmit method of that button is called directly, and the onSubmit method of the
+	parent form is not called. A common use for this is to create a cancel button.
+	</p>
+
+	<p>
+	 <form wicket:id="form">
+	  <input type="submit" value="non wicket submit button" />
+	  <input wicket:id="button1" type="submit" value="default wicket button" />
+	  <input wicket:id="button2" type="submit" value="wicket button with immediate == true" />
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

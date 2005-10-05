@@ -1,14 +1,14 @@
 /*
  * $Id: RenderedDynamicImageResource.java,v 1.4 2005/03/08 21:12:40
  * jonathanlocke Exp $ $Revision$ $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,7 @@ package wicket.markup.html.image.resource;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.lang.ref.SoftReference;
 
 import wicket.util.time.Time;
 
@@ -32,10 +33,11 @@ import wicket.util.time.Time;
  * <p>
  * The extension/format of the image resource can be specified with
  * setFormat(String).
- * 
+ *
  * @see wicket.markup.html.image.resource.DefaultButtonImageResource
  * @see wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
  * @author Jonathan Locke
+ * @author Gili Tzabari
  */
 public abstract class RenderedDynamicImageResource extends DynamicImageResource
 {
@@ -43,7 +45,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	private int height = 100;
 
 	/** Transient image data so that image only needs to be generated once per VM */
-	private transient byte[] imageData;
+	private transient SoftReference imageData;
 
 	/** Type of image (one of BufferedImage.TYPE_*) */
 	private int type = BufferedImage.TYPE_INT_RGB;
@@ -53,7 +55,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param width
 	 *            Width of image
 	 * @param height
@@ -95,7 +97,10 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	public void invalidate()
 	{
 		super.invalidate();
-		imageData = null;
+		synchronized (this)
+		{
+			imageData = null;
+		}
 	}
 
 	/**
@@ -130,32 +135,47 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		if (imageData == null)
+		// Prevent image data from getting flushed while we access it
+		byte[] data;
+		synchronized (this)
 		{
-			imageData = render();
-			lastModifiedTime = Time.now();
+			if (imageData!=null)
+				data = (byte[]) imageData.get();
+			else
+				data = null;
 		}
-		return imageData;
+		if (data == null)
+		{
+			data = render();
+			synchronized (this)
+			{
+				imageData = new SoftReference(data);
+			}
+			setLastModifiedTime(Time.now());
+		}
+		return data;
 	}
 
 	/**
 	 * Renders this image
-	 * 
+	 *
 	 * @return The image data
 	 */
 	protected byte[] render()
 	{
-		final BufferedImage image = new BufferedImage(width, height, type);
-		if (render((Graphics2D)image.getGraphics()))
+		while (true)
 		{
-			return toImageData(image);
+			final BufferedImage image = new BufferedImage(width, height, type);
+			if (render((Graphics2D)image.getGraphics()))
+			{
+				return toImageData(image);
+			}
 		}
-		return render();
 	}
 
 	/**
 	 * Override this method to provide your rendering code
-	 * 
+	 *
 	 * @param graphics
 	 *            The graphics context to render on
 	 * @return True if the image was rendered. False if the image size was

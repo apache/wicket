@@ -29,6 +29,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public final class ShortConverter extends AbstractIntegerConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a short converter
 	 */
@@ -41,6 +43,12 @@ public final class ShortConverter extends AbstractIntegerConverter
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
 				Short.MIN_VALUE, Short.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Short(number.shortValue());
 	}
 

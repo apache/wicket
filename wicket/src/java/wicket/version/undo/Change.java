@@ -24,10 +24,10 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-abstract class Change implements Serializable
+public abstract class Change implements Serializable
 {
 	/**
-	 * Undoes the given change
+	 * Undoes the given change.
 	 */
-	abstract void undo();
+	public abstract void undo();
 }

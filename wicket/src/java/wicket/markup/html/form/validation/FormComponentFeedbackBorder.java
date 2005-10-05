@@ -17,13 +17,14 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.Component;
-import wicket.IFeedback;
+import wicket.feedback.ContainerFeedbackMessageFilter;
+import wicket.feedback.IFeedback;
+import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
- * A border that can be placed around a form bordered to indicate when the
+ * A border that can be placed around a form component to indicate when the
  * bordered child has a validation error. A child of the border named
  * "errorIndicator" will be shown and hidden depending on whether the child has
  * an error. A typical error indicator might be a little red asterisk.
@@ -31,10 +32,42 @@ import wicket.markup.html.border.Border;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FormComponentFeedbackBorder extends Border implements IFeedback
+public class FormComponentFeedbackBorder extends Border implements IFeedback
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The error indicator child which should be shown if an error occurs. */
-	private final WebMarkupContainer errorIndicator;
+	private final ErrorIndicator errorIndicator;
+
+	/** Visible property cache. */
+	private boolean visible;
+
+	/**
+	 * Error indicator that will be shown whenever there is an error-level
+	 * message for the collecting component.
+	 */
+	private final class ErrorIndicator extends WebMarkupContainer
+	{
+		private static final long serialVersionUID = 1L;
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            component id
+		 */
+		public ErrorIndicator(String id)
+		{
+			super(id);
+		}
+
+		/**
+		 * @see wicket.Component#isVisible()
+		 */
+		public boolean isVisible()
+		{
+			return visible;
+		}
+	}
 
 	/**
 	 * Constructor.
@@ -45,32 +78,23 @@ public final class FormComponentFeedbackBorder extends Border implements IFeedba
 	public FormComponentFeedbackBorder(final String id)
 	{
 		super(id);
-
-		// Create invisible error indicator bordered that will be shown when a
-		// validation error occurs
-		errorIndicator = new WebMarkupContainer("errorIndicator");
-		errorIndicator.setVisible(false);
-		add(errorIndicator);
+		add(errorIndicator = new ErrorIndicator("errorIndicator"));
 	}
 
 	/**
-	 * Handles feedback. If any errors were registered on child components of
-	 * this feedback border, the decorated error indicator will be set to
-	 * visible.
-	 * 
-	 * @see IFeedback#addFeedbackMessages(Component, boolean)
+	 * @see wicket.feedback.IFeedback#updateFeedback()
 	 */
-	public void addFeedbackMessages(final Component component, final boolean recurse)
+	public void updateFeedback()
 	{
-		errorIndicator.setVisible(getPage().getFeedbackMessages().messages(this, true).size() > 0);
+		// Get the messages for the current page
+		visible = getPage().getFeedbackMessages().messages(getMessagesFilter()).size() != 0;
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#onEndRequest()
+	 * @return Let subclass specify some other filter
 	 */
-	protected void onEndRequest()
+	protected IFeedbackMessageFilter getMessagesFilter()
 	{
-		// Clear feedback
-		errorIndicator.setVisible(false);
+		return new ContainerFeedbackMessageFilter(this);
 	}
 }

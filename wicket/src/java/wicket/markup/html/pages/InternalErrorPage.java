@@ -26,6 +26,8 @@ import wicket.markup.html.WebPage;
  */
 public class InternalErrorPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 */
@@ -33,4 +35,13 @@ public class InternalErrorPage extends WebPage
 	{
 		add(homePageLink("homePageLink"));
 	}
+	
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
+	}
+	
 }

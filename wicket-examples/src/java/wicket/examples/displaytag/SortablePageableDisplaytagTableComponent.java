@@ -29,9 +29,9 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigation;
-import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
-import wicket.markup.html.list.PageableListViewNavigationLink;
+import wicket.markup.html.navigation.paging.PagingNavigation;
+import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
+import wicket.markup.html.navigation.paging.PagingNavigationLink;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
@@ -48,12 +48,12 @@ public class SortablePageableDisplaytagTableComponent extends Panel
     /**
      * Constructor.
      * 
-     * @param componentName Name of component
+     * @param id Name of component
      * @param list List of data to display
      */
-    public SortablePageableDisplaytagTableComponent(final String componentName, final List list)
+    public SortablePageableDisplaytagTableComponent(final String id, final List list)
     {
-        super(componentName);
+        super(id);
         
         // Get an internal copy of the model data
         this.data = new ArrayList();
@@ -133,13 +133,13 @@ public class SortablePageableDisplaytagTableComponent extends Panel
             }
         });
 
-        final PageableListViewNavigation tableNavigation = new PageableListViewNavigation("navigation", table /* , 5, 2 */);
+        final PagingNavigation tableNavigation = new PagingNavigation("navigation", table /* , 5, 2 */);
         add(tableNavigation);
 
         // Add some navigation links
-        add(new PageableListViewNavigationLink("first", table, 0));
-        add(new PageableListViewNavigationIncrementLink("prev", table, -1));
-        add(new PageableListViewNavigationIncrementLink("next", table, 1));
-        add(new PageableListViewNavigationLink("last", table, table.getPageCount() - 1));
+        add(new PagingNavigationLink("first", table, 0));
+        add(new PagingNavigationIncrementLink("prev", table, -1));
+        add(new PagingNavigationIncrementLink("next", table, 1));
+        add(new PagingNavigationLink("last", table, table.getPageCount() - 1));
     }
 }

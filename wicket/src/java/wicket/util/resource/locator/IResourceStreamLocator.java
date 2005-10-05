@@ -31,15 +31,20 @@ public interface IResourceStreamLocator
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
 	 * 
+	 * @param classLoader
+	 *            The class loader for delegating the loading of the resource
 	 * @param path
 	 *            The path of the resource
 	 * @param style
-	 *            Any resource style, such as a skin style (see {@link wicket.Session})
+	 *            Any resource style, such as a skin style (see
+	 *            {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
 	 *            The extension of the resource
+	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(String path, String style, Locale locale, String extension);
+	public IResourceStream locate(ClassLoader classLoader, String path, String style,
+			Locale locale, String extension);
 }

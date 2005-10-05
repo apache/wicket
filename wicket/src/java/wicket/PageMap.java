@@ -31,6 +31,8 @@ import wicket.util.collections.MostRecentlyUsedMap;
  */
 public final class PageMap implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Default page map name */
 	public static final String defaultName = "main";
 
@@ -78,18 +80,42 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param page
-	 *            The page to add
-	 * @return Any Page that got bumped out of the map
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @return Returns the name.
 	 */
-	public final Page add(final Page page)
+	public final String getName()
 	{
-		// Give page a new id
-		page.setId(this.pageId++);
-		session.dirty();
+		return name;
+	}
 
-		// Add to map
-		return put(page);
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @return True if this is the default page map
+	 */
+	public final boolean isDefault()
+	{
+		return name.equals(defaultName);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Removes this PageMap from the Session.
+	 */
+	public final void remove()
+	{
+		session.removePageMap(this);
+	}
+
+	/**
+	 * @return The next id for this pagemap
+	 */
+	final int getNextId()
+	{
+		session.dirty();
+		return this.pageId++;
 	}
 
 	/**
@@ -99,7 +125,7 @@ public final class PageMap implements Serializable
 	 * @return True if an original destination was redirected to
 	 * @see PageMap#redirectToInterceptPage(Page)
 	 */
-	public final boolean continueToOriginalDestination()
+	final boolean continueToOriginalDestination()
 	{
 		// Get request cycle
 		final RequestCycle cycle = session.getRequestCycle();
@@ -127,7 +153,7 @@ public final class PageMap implements Serializable
 	 *            The identifier
 	 * @return Any page having the given id
 	 */
-	public final Page get(final String id)
+	final Page get(final String id)
 	{
 		final Page page = (Page)getPages().get(id);
 		if (page != null)
@@ -138,59 +164,39 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @return Returns the name.
-	 */
-	public final String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @return True if this is the default page map
-	 */
-	public final boolean isDefault()
-	{
-		return name.equals(defaultName);
-	}
-
-	/**
 	 * @param page
 	 *            The page to put into this map
 	 * @return Any page that was removed
 	 */
-	public final Page put(final Page page)
+	final Page put(final Page page)
 	{
 		MostRecentlyUsedMap pages = getPages();
 		pages.put(page.getId(), page);
 		return (Page)pages.getRemovedValue();
 	}
-
+	
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * The current request's url is saved for future use by method continueToOriginalDestination();
+	 * Only use this method when you plan to continue to the current url at some later time;
+	 * otherwise just use setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
 	 * 
 	 * @param page
 	 *            The sign in page
 	 */
-	public final void redirectToInterceptPage(final Page page)
+	final void redirectToInterceptPage(final Page page)
 	{
 		interceptContinuationURL = page.getResponse().encodeURL(page.getRequest().getURL());
 		page.redirectTo(page);
 		session.dirty();
-	}
-	
-	/**
-	 * Removes this PageMap from the Session.
-	 */
-	public final void remove()
-	{
-		session.removePageMap(this);
 	}
 
 	/**
 	 * @param page
 	 *            The page to remove
 	 */
-	public final void remove(final Page page)
+	final void remove(final Page page)
 	{
 		getPages().remove(page.getId());
 	}
@@ -198,7 +204,7 @@ public final class PageMap implements Serializable
 	/**
 	 * Removes all pages from this map
 	 */
-	public final void removeAll()
+	final void removeAll()
 	{
 		getPages().clear();
 	}
@@ -218,10 +224,13 @@ public final class PageMap implements Serializable
 	 */
 	final void visitPages(final IVisitor visitor)
 	{
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
-		{
-			visitor.page((Page)iterator.next());
-		}
+	    if (pages != null)
+	    {
+			for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+			{
+				visitor.page((Page)iterator.next());
+			}
+	    }
 	}
 
 	/**

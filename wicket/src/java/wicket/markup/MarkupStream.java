@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public final class MarkupStream
+public class MarkupStream
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
@@ -52,6 +52,15 @@ public final class MarkupStream
 
 	/** The markup element list */
 	private final Markup markup;
+	
+	/**
+	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN
+	 * THE NEAR FUTURE.
+	 */
+	protected MarkupStream()
+	{
+	    markup = null;
+	}
 
 	/**
 	 * Constructor
@@ -65,7 +74,7 @@ public final class MarkupStream
 
 		if (markup.size() > 0)
 		{
-			current = get(0);
+			current = get(currentIndex);
 		}
 	}
 
@@ -236,6 +245,27 @@ public final class MarkupStream
 	}
 
 	/**
+	 * Skips any markup at the current position until the wicket tag name is found.
+	 * @param wicketTagName wicket tag name to seek
+	 */
+	public void skipUntil(final String wicketTagName)
+	{
+		while (true)
+		{
+			if ((current instanceof WicketTag) && ((WicketTag)current).getName().equals(wicketTagName))
+			{
+				return;
+			}
+
+			// go on until we reach the end
+			if (next() == null )
+			{
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message
@@ -338,5 +368,37 @@ public final class MarkupStream
 	public String getEncoding()
 	{
 		return markup.getEncoding();
+	}
+	
+	/**
+	 * Get the component/container's Class which is directly associated with 
+	 * the stream.
+	 * 
+	 * @return The component's class
+	 */
+	public Class getContainerClass()
+	{
+	    return markup.getContainerClass();
+	}
+	
+	/**
+	 * Get the current index pointing to the start element of the 
+	 * header section.
+	 * 
+	 * @return index
+	 */
+	public final int getHeaderIndex()
+	{
+	    return markup.getHeaderIndex();
+	}
+	
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+	    return this.markup.getWicketNamespace();
 	}
 }

@@ -49,6 +49,8 @@ public class TableTest extends TestCase
 
 		return new PageableListView("table", new Model(modelList), pageSize)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
 				; // do nothing
@@ -104,6 +106,8 @@ public class TableTest extends TestCase
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
 		table = new PageableListView("table", new Model(null), 10)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
 				; // do nothing

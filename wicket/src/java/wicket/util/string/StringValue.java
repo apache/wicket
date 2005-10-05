@@ -17,6 +17,7 @@
  */
 package wicket.util.string;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -44,8 +45,10 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class StringValue
+public class StringValue implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
 	

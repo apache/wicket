@@ -22,7 +22,14 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import wicket.Application;
+import wicket.ApplicationSettings;
+import wicket.DefaultPageFactory;
 import wicket.Page;
+import wicket.Session;
+import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.WebApplicationPath;
 
 /**
  * This class provides a mock implementation of a Wicket HTTP based application
@@ -97,12 +104,30 @@ public class MockWebApplication extends WebApplication
      * @see wicket.protocol.http.MockServletContext
      */
     public MockWebApplication(final String path)
-    {
+    {   
+        Application.set(this);
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
-        wicketSession = getSession(servletRequest);
+		wicketRequest = newWebRequest(servletRequest);
+        wicketSession = getSession(wicketRequest, true);
+        ApplicationSettings settings = getSettings();
+        settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
+    }
+
+    /**
+     * @see wicket.protocol.http.WebApplication#createApplicationSettings()
+     */
+    public ApplicationSettings createApplicationSettings()
+    {
+    	return new ApplicationSettings(this)
+    	{
+    		public IResourceFinder newResourceFinder()
+    		{
+    			return new WebApplicationPath(context);
+    		}
+    	};
     }
 
     /**
@@ -207,18 +232,34 @@ public class MockWebApplication extends WebApplication
         
         if (httpResponse.isRedirect())
         {
-            lastRenderedPage = cycle.getResponsePage();
+            generateLastRenderedPage(cycle);
             
             final MockHttpServletRequest httpRequest = 
-                	(MockHttpServletRequest)cycle.getWebRequest().getHttpServletRequest();
+                	(MockHttpServletRequest)((ServletWebRequest)cycle.getWebRequest()).getHttpServletRequest();
             
             httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-            wicketSession = getSession(servletRequest);
+            // TODO adouma: check if this is a valid fix            
+            // wicketSession = getSession(servletRequest);            
+            wicketSession = getSession(wicketRequest, true);
             new WebRequestCycle(wicketSession, wicketRequest,
                     wicketResponse).request();
         }
-        lastRenderedPage = cycle.getResponsePage();
+        generateLastRenderedPage(cycle);
     }
+
+	private void generateLastRenderedPage(WebRequestCycle cycle)
+	{
+		lastRenderedPage = cycle.getResponsePage();
+		if(lastRenderedPage == null)
+		{
+			Class responseClass = cycle.getResponsePageClass();
+			if(responseClass != null)
+			{
+				Session.set(cycle.getSession());
+				lastRenderedPage = new DefaultPageFactory().newPage(responseClass, cycle.getResponsePagePageParameters());
+			}
+		}
+	}
 
     /**
      * Create and process the request cycle using the current request and
@@ -242,8 +283,8 @@ public class MockWebApplication extends WebApplication
     {
         servletRequest.initialize();
         servletResponse.initialize();
-        wicketSession = getSession(servletRequest);
-        wicketRequest = new WebRequest(servletRequest);
+        wicketRequest = new ServletWebRequest(servletRequest);
+        wicketSession = getSession(wicketRequest, true);
         wicketResponse = new WebResponse(servletResponse);
     }
 

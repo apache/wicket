@@ -27,6 +27,8 @@ import wicket.model.IModel;
  */
 public class ListItem extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The index of the ListItem in the parent ListView */
 	private final int index;
 
@@ -39,7 +41,7 @@ public class ListItem extends WebMarkupContainer
 	 * @param model
 	 *            The model object of the item
 	 */
-	protected ListItem(final int index, final IModel model)
+	public ListItem(final int index, final IModel model)
 	{
 		super(Integer.toString(index), model);
 		this.index = index;

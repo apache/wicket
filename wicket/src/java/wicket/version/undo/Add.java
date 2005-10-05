@@ -26,6 +26,8 @@ import wicket.Component;
  */
 class Add extends Change
 {
+	private static final long serialVersionUID = 1L;
+	
 	private final Component component;
 	
 	Add(final Component component)
@@ -33,8 +35,19 @@ class Add extends Change
 		this.component = component;
 	}
 	
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		component.remove();
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Add[component: " + component.getId() + ", parent: " + component.getParent().getId() + "]";
 	}
 }

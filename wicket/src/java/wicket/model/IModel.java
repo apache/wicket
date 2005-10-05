@@ -79,9 +79,9 @@ public interface IModel extends IDetachable
 	/**
 	 * Gets the nested model.
 	 * 
-	 * @return The nested model object, which may or may not be an IModel.
+	 * @return The nested model object.
 	 */
-	public Object getNestedModel();
+	public IModel getNestedModel();
 
 	/**
 	 * Gets the model object.

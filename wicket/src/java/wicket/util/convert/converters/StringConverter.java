@@ -38,6 +38,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public class StringConverter extends AbstractConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps value Classes to specific StringConverters. */
 	private final Map classToConverter = new HashMap();
 	{
@@ -55,6 +57,8 @@ public class StringConverter extends AbstractConverter
 	 */
 	private ITypeConverter defaultConverter = new ITypeConverter()
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 		 */
@@ -63,6 +67,13 @@ public class StringConverter extends AbstractConverter
 			return value.toString();
 		}
 	};
+
+	/**
+	 * Construct.
+	 */
+	public StringConverter()
+	{
+	}
 
 	/**
 	 * Removes all registered string converters.

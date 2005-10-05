@@ -27,6 +27,8 @@ import java.util.Locale;
  */
 public final class ConversionException extends RuntimeException
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The converter that was used. */
 	private IConverter converter;
 

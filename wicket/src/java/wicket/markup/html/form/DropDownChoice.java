@@ -17,18 +17,39 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
+import java.util.List;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 
 /**
- * A choice implemented as a dropdown menu/list. Framework users can extend this
- * class and optionally implement interface
- * {@link wicket.markup.html.form.IOnChangeListener}to implement onChange
- * behaviour of the HTML select element.
+ * A choice implemented as a dropdown menu/list.
+ * <p>
+ * Java:
+ * <pre>
+ * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+ *
+ *	// Add a dropdown choice component that uses Input's 'site' property to designate the
+ *	// current selection, and that uses the SITES list for the available options.
+ *	// Note that when the selection is null, Wicket will lookup a localized string to
+ *	// represent this null with key: "id + '.null'". In this case, this is 'site.null'
+ *	// which can be found in DropDownChoicePage.properties
+ *	form.add(new DropDownChoice("site", SITES));
+ * </pre>
+ * HTML:
+ * <pre>
+ *	&lt;select wicket:id="site"&gt;
+ *		&lt;option&gt;site 1&lt;/option&gt;
+ *		&lt;option&gt;site 2&lt;/option&gt;
+ *	&lt;/select&gt;
+ * </pre>
+ * </p>
+ * 
+ * <p>
+ * You can can extend this class and override method wantOnSelectionChangedNotifications()
+ * to force server roundtrips on each selection change.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -36,38 +57,81 @@ import wicket.model.IModel;
  */
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public DropDownChoice(final String id, final Collection choices)
+	public DropDownChoice(final String id)
+	{
+		super(id);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 */
+	public DropDownChoice(final String id, final List choices)
 	{
 		super(id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final IChoiceList choices)
+	public DropDownChoice(final String id, final List data, final IChoiceRenderer renderer)
 	{
-		super(id, choices);
+		super(id,data, renderer);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel model, final Collection choices)
+	public DropDownChoice(final String id, IModel model, final List choices)
 	{
 		super(id, model, choices);
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel model, final IChoiceList choices)
+	public DropDownChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
+	{
+		super(id, model,data, renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public DropDownChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices)
 	{
 		super(id, model, choices);
 	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
 
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */
@@ -95,7 +159,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			final String url = urlFor(IOnChangeListener.class);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onChange", "location.href='" + url + "&" + getPath()
+			tag.put("onChange", "location.href='" + url + "&" + getInputName()
 					+ "=' + this.options[this.selectedIndex].value;");
 		}
 
@@ -121,6 +185,10 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
+	 * Whether this component's onSelectionChanged event handler should called using
+	 * javascript if the selection changes. If true, a roundtrip will be generated with
+	 * each selection change, resulting in the model being updated (of just this component)
+	 * and onSelectionChanged being called. This method returns false by default.
 	 * @return True if this component's onSelectionChanged event handler should
 	 *			called using javascript if the selection changes
 	 */

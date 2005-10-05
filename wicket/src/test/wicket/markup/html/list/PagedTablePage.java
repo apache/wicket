@@ -24,9 +24,7 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigation;
+import wicket.markup.html.navigation.paging.PagingNavigation;
 
 
 /**
@@ -34,6 +32,7 @@ import wicket.markup.html.list.PageableListViewNavigation;
  */
 public class PagedTablePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -48,6 +47,8 @@ public class PagedTablePage extends WebPage
 		list.add("three");
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -56,7 +57,7 @@ public class PagedTablePage extends WebPage
 		};
 
 		add(table);
- 		PageableListViewNavigation navigation = new PageableListViewNavigation("navigation", table);
+ 		PagingNavigation navigation = new PagingNavigation("navigation", table);
 		add(navigation);
 	}
 }

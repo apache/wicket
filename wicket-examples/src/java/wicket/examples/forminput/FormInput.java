@@ -17,24 +17,34 @@
  */
 package wicket.examples.forminput;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import wicket.IFeedback;
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.datepicker.DatePicker;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.PropertyModel;
+import wicket.protocol.http.WebRequest;
+import wicket.util.convert.IConverter;
 
 /**
  * Example for form input.
@@ -46,38 +56,37 @@ public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.US, new Locale("nl_NL"), Locale.GERMANY });
+	        { Locale.ENGLISH, new Locale("nl"), Locale.GERMAN , Locale.SIMPLIFIED_CHINESE });
+
+	/** available numbers for the radio selection. */
+	private static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+
+	/** available sites for the multiple select. */
+	private static final List SITES = Arrays.asList(new String[] { 
+	        "The Server Side", "Java Lobby", "Java.Net" });
 
 	/**
 	 * Constructor
 	 */
 	public FormInput()
 	{
+		Locale locale = getLocale();
+
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
-		add(new InputForm("inputForm", feedback));
+		add(new InputForm("inputForm"));
 
 		// Dropdown for selecting locale
-		add(new DropDownChoice("localeSelect", new PropertyModel(this, "locale"), LOCALES) 
-		{
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-
-			public void onSelectionChanged(Object newSelection)
-			{
-				setLocale((Locale)newSelection);
-			}
-		});
+		add(new LocaleDropDownChoice("localeSelect"));
 
 		// Link to return to default locale
 		add(new Link("defaultLocaleLink")
 		{
 			public void onClick()
 			{
-				setLocale(Locale.getDefault());
+				WebRequest request = (WebRequest)getRequest();
+				setLocale(request.getLocale());
 			}
 		});
 	}
@@ -95,7 +104,7 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/**
-	 * Form for collecting input. 
+	 * Form for collecting input.
 	 */
 	private static class InputForm extends Form
 	{
@@ -104,20 +113,41 @@ public class FormInput extends WicketExamplePage
 		 * 
 		 * @param name
 		 *            Component name
-		 * @param feedback
-		 *            Feedback display for form
 		 */
-		public InputForm(String name, IFeedback feedback)
+		public InputForm(String name)
 		{
-			super(name, new CompoundPropertyModel(new FormInputModel()), feedback);
+			super(name, new CompoundPropertyModel(new FormInputModel()));
 
-			add(new RequiredTextField("stringProperty"));
-			add(new RequiredTextField("integerProperty", Integer.class));
+			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
+			add(stringTextField);
+			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
+			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
-			add(new RequiredTextField("dateProperty", Date.class));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class)
-					.add(IntegerValidator.range(0, 100)));
+			// we have a component attached to the label here, as we want to synchronize the
+			// id's of the label, textfield and datepicker. Note that you can perfectly
+			// do without labels
+			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
+			add(dateLabel);
+			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
+			add(datePropertyTextField);
+			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
+			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
+			add(new RadioChoice("numberRadioChoice", NUMBERS).setSuffix(""));
+			add(new ListMultipleChoice("siteSelection", SITES));
+
+			// as an example, we use a custom converter here.
+			add(new TextField("urlProperty", URL.class)
+			{
+				public IConverter getConverter()
+				{
+					return new URLConverter();
+				}
+			});
+
+			// and this is to show we can nest ListViews in Forms too
+			add(new LinesListView("lines"));
 
 			add(new ImageButton("saveButton"));
 
@@ -125,8 +155,9 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					InputForm.this.setModel(
-					        new CompoundPropertyModel(new FormInputModel()));
+					// just call modelChanged so that any invalid input is
+					// cleared.
+					InputForm.this.modelChanged();
 				}
 			}.add(new Image("resetButtonImage")));
 		}
@@ -138,6 +169,91 @@ public class FormInput extends WicketExamplePage
 		{
 			// Form validation successful. Display message showing edited model.
 			info("Saved model " + getModelObject());
+		}
+	}
+
+	/**
+	 * Dropdown with Locales.
+	 */
+	private final class LocaleDropDownChoice extends DropDownChoice
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            component id
+		 */
+		public LocaleDropDownChoice(String id)
+		{
+			super(id, LOCALES, new LocaleChoiceRenderer());
+
+			// set the model that gets the current locale, and that is used for
+			// updating the current locale to property 'locale' of FormInput
+			setModel(new PropertyModel(FormInput.this, "locale"));
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
+		 */
+		protected boolean wantOnSelectionChangedNotifications()
+		{
+			// we want roundtrips when a the user selects another item
+			return true;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
+		 */
+		public void onSelectionChanged(Object newSelection)
+		{
+			// note that we don't have to do anything here, as our property
+			// model allready calls FormInput.setLocale when the model is updated
+			// setLocale((Locale)newSelection); // so we don't need to do this
+		}
+	}
+
+	/**
+	 * Choice for a locale.
+	 */
+	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	{
+		/**
+		 * Constructor.
+		 */
+		public LocaleChoiceRenderer()
+		{
+		}
+
+		/**
+		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
+		 */
+		public String getDisplayValue(Object object)
+		{
+			Locale locale = (Locale)object;
+			String display = locale.getDisplayName(getLocale()); 
+			return display;
+		}
+	}
+
+	/** list view to be nested in the form. */
+	private static final class LinesListView extends ListView
+	{
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
+		public LinesListView(String id)
+		{
+			super(id);
+		}
+
+		protected void populateItem(ListItem item)
+		{
+			// add a text field that works on each list item model (returns objects of
+			// type FormInputModel.Line) using property text.
+			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
 		}
 	}
 }

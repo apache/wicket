@@ -63,11 +63,14 @@ public abstract class Request
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the URL of this request.
-	 * 
-	 * @return The full original request URL
+	 * Retrieves the URL of this request for local use.
+	 *
+	 * @return The request URL for local use
 	 */
 	public abstract String getURL();
+	
+	/**
+	 * @return Path info for request
+	 */
+	public abstract String getPath();
 }
-
-

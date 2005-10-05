@@ -46,7 +46,7 @@ import wicket.util.string.Strings;
  * does not itself have a reference to the session that contains it. However,
  * the Page component at the root of the containment hierarchy does have a
  * reference to the Session that holds the Page. So
- * {@link Component#getSession()}traverses the component hierarchy to the root
+ * {@link Component#getSession()} traverses the component hierarchy to the root
  * Page and then calls {@link Page#getSession()}.
  * 
  * <li><b>Access via Thread Local </b>- In the odd case where neither a
@@ -84,7 +84,7 @@ import wicket.util.string.Strings;
  * <li><b>Session Properties </b>- Arbitrary objects can be attached to a
  * Session by installing a session factory on your Application class which
  * creates custom Session subclasses that have typesafe properties specific to
- * the application (see {@link Application}for details). To discourage
+ * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
  * method is provided.
  * 
@@ -107,7 +107,7 @@ public abstract class Session implements Serializable
 	public static final String sessionAttributeName = "session";
 
 	/** Separator for component paths. */
-	private static final char componentPathSeparator = '.';
+	private static final char componentPathSeparator = ':';
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
@@ -137,7 +137,7 @@ public abstract class Session implements Serializable
 	private transient IPageFactory pageFactory;
 
 	/** Maps from name to page map */
-	private final Map pageMapForName = new HashMap();
+	private final Map pageMapForName = new HashMap(3);
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -225,7 +225,7 @@ public abstract class Session implements Serializable
 		if (converter == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(locale);
+			converter = getApplication().getConverterFactory().newConverter(getLocale());
 		}
 		return converter;
 	}
@@ -235,7 +235,7 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return This session's locale
 	 */
-	public final Locale getLocale()
+	public Locale getLocale()
 	{
 		return locale;
 	}
@@ -348,7 +348,7 @@ public abstract class Session implements Serializable
 	{
 		return style;
 	}
-
+	
 	/**
 	 * Invalidates this session
 	 */
@@ -413,6 +413,7 @@ public abstract class Session implements Serializable
 		});
 	}
 
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -472,7 +473,7 @@ public abstract class Session implements Serializable
 		// If state is dirty
 		if (dirty)
 		{
-			log.debug("updateCluster(): Session is dirty.  Replicating.");
+			if(log.isDebugEnabled()) log.debug("updateCluster(): Session is dirty.  Replicating.");
 
 			// State is no longer dirty
 			this.dirty = false;
@@ -482,7 +483,10 @@ public abstract class Session implements Serializable
 		}
 		else
 		{
-			log.debug("updateCluster(): Session not dirty.");
+			if(log.isDebugEnabled())
+			{
+				log.debug("updateCluster(): Session not dirty.");
+			}
 		}
 
 		// Go through all pages in all page maps, replicating any dirty pages
@@ -512,18 +516,27 @@ public abstract class Session implements Serializable
 	public final void updateSession()
 	{
 		// Go through each page map in the session
-		log.debug("updateSession(): Updating session.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Updating session.");
+		}
 		visitPageMaps(new IVisitor()
 		{
 			public void pageMap(PageMap pageMap)
 			{
-				log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				if(log.isDebugEnabled())
+				{
+					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				}
 				pageMap.setSession(Session.this);
 			}
 		});
 
 		// Get PageStates from session attributes
-		log.debug("updateSession(): Getting PageState attributes.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Getting PageState attributes.");
+		}
 		final List pageStates = getPageStateAttributes();
 
 		// Sort page states so that they can be added in reverse order of
@@ -532,31 +545,24 @@ public abstract class Session implements Serializable
 
 		// Adds pages to session
 		addPages(pageStates);
-		log.debug("updateSession(): Done updating session.");
+		if(log.isDebugEnabled())
+		{
+			log.debug("updateSession(): Done updating session.");
+		}
 	}
 
 	/**
-	 * Adds page to session if not already added.
-	 * 
-	 * @param page
-	 *            Page to add to this session
+	 * Any attach logic for session subclasses.
 	 */
-	protected final void add(final Page page)
+	protected void attach()
 	{
-		// Set page map for page. If cycle is null, we may be being called from
-		// some kind of test harness, so we will just use the default page map
-		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
-				.getParameter("pagemap");
-		page.setPageMap(pageMapName);
-
-		// Add to page local transient page map
-		final Page removedPage = page.getPageMap().add(page);
-
-		// Get any page that was removed
-		if (removedPage != null)
-		{
-			removeAttribute(removedPage.getId());
-		}
+	}
+	
+	/**
+	 * Any detach logic for session subclasses.
+	 */
+	protected void detach()
+	{
 	}
 
 	/**
@@ -608,7 +614,7 @@ public abstract class Session implements Serializable
 	/**
 	 * Marks session state as dirty
 	 */
-	final void dirty()
+	protected final void dirty()
 	{
 		this.dirty = true;
 	}
@@ -674,12 +680,19 @@ public abstract class Session implements Serializable
 			{
 				// Get page from page state
 				final Page page = pageState.getPage();
-				log.debug("addPages(): Adding replicated page state " + pageState
-						+ ", which produced page " + page);
+				if(log.isDebugEnabled())
+				{
+					log.debug("addPages(): Adding replicated page state " + pageState
+							+ ", which produced page " + page);
+				}
 
 				// Add to page map specified in page state info
 				attach(page);
-				getPageMap(pageState.pageMapName).put(page);
+				Page removed = getPageMap(pageState.pageMapName).put(page);
+				if(removed != null)
+				{
+					removeAttribute(removed.getId());
+				}
 
 				// Page has been added to session now
 				pageState.addedToSession = true;
@@ -734,8 +747,11 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-		pageState.addedToSession = true;
+		
 		pageState.pageMapName = page.getPageMap().getName();
+		
+		// For this session the page is in the pagemap.
+		pageState.addedToSession = true;
 
 		// Set HttpSession attribute for new PageState
 		setAttribute(page.getId(), pageState);
@@ -766,5 +782,26 @@ public abstract class Session implements Serializable
 				return 0;
 			}
 		});
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * The page will be 'touched' in the session.
+	 * If it wasn't added yet to the pagemap, it will be added
+	 * to the page map else it will set this page to the front.
+	 * 
+	 * If another page was removed because of this it will be cleaned up.
+	 * 
+	 * @param page
+	 */
+	public void touch(Page page)
+	{
+		// touch the page in its pagemap.
+		Page removedPage = page.getPageMap().put(page);
+		if(removedPage != null)
+		{
+			removeAttribute(removedPage.getId());
+		}
 	}
 }

@@ -51,7 +51,9 @@ import wicket.model.IModel;
  */
 public class Panel extends WebMarkupContainer
 {
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * @see wicket.Component#Component(String)
      */
     public Panel(final String id)
@@ -84,15 +86,21 @@ public class Panel extends WebMarkupContainer
         // later.
         final ComponentTag openTag = markupStream.getTag().mutable();
         openTag.setType(XmlTag.OPEN);
-		renderComponentTag(openTag);
+        if (getRenderBodyOnly() == false)
+        {
+            renderComponentTag(openTag);
+        }
 
         // Render the associated markup
         renderAssociatedMarkup("panel",
-                "Markup for a panel component must begin with '<wicket:panel>'");
+                "Markup for a panel component has to contain part '<wicket:panel>'");
         
-        // Close the manually opened panel tag.
-        getResponse().write(openTag.syntheticCloseTagString());
-                
+        if (getRenderBodyOnly() == false)
+        {
+	        // Close the manually opened panel tag.
+	        getResponse().write(openTag.syntheticCloseTagString());
+        }
+        
         // Skip opening tag
 		markupStream.next();
 		

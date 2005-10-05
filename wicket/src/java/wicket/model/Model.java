@@ -37,6 +37,8 @@ import wicket.WicketRuntimeException;
  */
 public class Model extends AbstractModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Backing object. */
 	private Serializable object;
 
@@ -81,9 +83,9 @@ public class Model extends AbstractModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public Object getNestedModel()
+	public IModel getNestedModel()
 	{
-		return object;
+		return null;
 	}
 
 	/**
@@ -125,5 +127,16 @@ public class Model extends AbstractModel
 	public void setObject(final Serializable object)
 	{
 		this.object = object;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":nestedModel=[").append(getNestedModel()).append("]");
+		sb.append(":object=[").append(this.object).append("]");
+		return sb.toString();
 	}
 }

@@ -19,6 +19,7 @@ package wicket.version.undo;
 
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.lang.Objects;
 
@@ -29,9 +30,18 @@ import wicket.util.lang.Objects;
  */
 class ModelChange extends Change
 {
+	private static final long serialVersionUID = 1L;
+	
+	/** subject. */
 	private final Component component;
+
+	/** original model. */
 	private IModel originalModel;
 
+	/**
+	 * Construct.
+	 * @param component subject of the change
+	 */
 	ModelChange(final Component component)
 	{
 		// Save component
@@ -47,24 +57,27 @@ class ModelChange extends Change
 			boolean cloneModel = true;
 
 			// If the component is a form component
-			if (component instanceof FormComponent)
+			if (model instanceof CompoundPropertyModel)
 			{
-				// and it's using the same model as the form
-				if (((FormComponent)component).getForm().getModel() == model)
+				if (component instanceof FormComponent)
 				{
-					// we don't need to clone the model, because it will
-					// be re-initialized using initModel()
-					cloneModel = false;
+					// and it's using the same model as the form
+					if (((FormComponent)component).getForm().getModel() == model)
+					{
+						// we don't need to clone the model, because it will
+						// be re-initialized using initModel()
+						cloneModel = false;
+					}
 				}
-			}
-			else
-			{
-				// If the component is using the same model as the page
-				if (component.getPage().getModel() == model)
+				else
 				{
-					// we don't need to clone the model, because it will
-					// be re-initialized using initModel()
-					cloneModel = false;
+					// If the component is using the same model as the page
+					if (component.getPage().getModel() == model)
+					{
+						// we don't need to clone the model, because it will
+						// be re-initialized using initModel()
+						cloneModel = false;
+					}
 				}
 			}
 
@@ -74,11 +87,26 @@ class ModelChange extends Change
 				model.detach();
 				originalModel = (IModel)Objects.clone(model);
 			}
+			else
+			{
+				originalModel = model;
+			}
 		}
 	}
 
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		component.setModel(originalModel);
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "ModelChange[component: " + component.getId() + ", model: " + originalModel + "]";
 	}
 }

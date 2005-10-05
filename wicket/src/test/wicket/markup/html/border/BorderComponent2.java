@@ -25,6 +25,8 @@ package wicket.markup.html.border;
  */
 public class BorderComponent2 extends Border
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @param id
 	 */

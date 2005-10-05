@@ -19,7 +19,9 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
+import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
+import wicket.version.undo.Change;
 
 /**
  * PageableListView is similar to ListView but provides in addition pageable
@@ -28,13 +30,13 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView
+public abstract class PageableListView extends ListView implements IPageable
 {
 	/** The page to show. */
 	private int currentPage;
 
 	/** Number of rows per page of the list view. */
-	private final int rowsPerPage;
+	private int rowsPerPage;
 
 	/**
 	 * Constructor
@@ -97,13 +99,29 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Get the maximum number of rows on each page.
+	 * Gets the maximum number of rows on each page.
 	 * 
 	 * @return the maximum number of rows on each page.
 	 */
 	public final int getRowsPerPage()
 	{
 		return rowsPerPage;
+	}
+
+	/**
+	 * Sets the maximum number of rows on each page.
+	 * 
+	 * @param rowsPerPage the maximum number of rows on each page.
+	 */
+	public final void setRowsPerPage(int rowsPerPage)
+	{
+		if (rowsPerPage < 0)
+		{
+			rowsPerPage = 0;
+		}
+
+		addStateChange(new RowsPerPageChange(this.rowsPerPage));
+		this.rowsPerPage = rowsPerPage;
 	}
 
 	/**
@@ -126,22 +144,23 @@ public abstract class PageableListView extends ListView
 	 * @param currentPage
 	 *            The currentPage to set.
 	 */
-	public final void setCurrentPage(final int currentPage)
+	public final void setCurrentPage(int currentPage)
 	{
 		if (currentPage < 0)
 		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage);
+			currentPage = 0;
 		}
 
 		int pageCount = getPageCount();
-		if (currentPage > 0 && (currentPage >= pageCount))
+		if ((currentPage > 0) && (currentPage >= pageCount))
 		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage
-					+ " because this pageable list view only has " + pageCount + " pages");
+			currentPage = pageCount - 1;
 		}
-
+		
+		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
 	}
+
 
 	/**
 	 * Prevent users from accidentially using it. Throw an
@@ -170,4 +189,59 @@ public abstract class PageableListView extends ListView
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
 	}
+	
+	/**
+	 * Records the changing of the current page.
+	 */
+	private class CurrentPageChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+		
+		/** the former 'current' page. */
+		private int currentPage;
+
+		/**
+		 * Construct.
+		 * @param currentPage the former 'current' page
+		 */
+		CurrentPageChange(int currentPage)
+		{
+			this.currentPage = currentPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setCurrentPage(currentPage);
+		}
+	}
+
+	/**
+	 * Records the changing of the nbr of rows per page.
+	 */
+	private class RowsPerPageChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+		
+		/** the former nbr of rows per page. */
+		private int rowsPerPage;
+
+		/**
+		 * Construct.
+		 * @param rowsPerPage the former nbr of rows per page
+		 */
+		RowsPerPageChange(int rowsPerPage)
+		{
+			this.rowsPerPage = rowsPerPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setRowsPerPage(rowsPerPage);
+		}
+	}
+
 }

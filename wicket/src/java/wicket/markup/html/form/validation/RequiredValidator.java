@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.FormComponent;
 import wicket.util.string.Strings;
 
 /**
@@ -29,6 +30,8 @@ import wicket.util.string.Strings;
  */
 public class RequiredValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Singleton instance */
 	private static final RequiredValidator instance = new RequiredValidator();
 	
@@ -41,21 +44,26 @@ public class RequiredValidator extends StringValidator
 	}
 	
 	/**
-	 * Private constructor to force use of static singleton accessor method.
+	 * Protectected constructor to force use of static singleton accessor method.
+	 * Or override it to implement resourceKey(Component)
 	 */
-	private RequiredValidator()
+	protected RequiredValidator()
 	{
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
+	 * Validates whether the input value is not-null or empty.
+	 *
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(String value)
+	public final void onValidate(FormComponent formComponent, String value)
 	{
+		// if input was null then value was not submitted (disabled field), ignore it
+		if(value == null) return;
 		// Check value
 		if (Strings.isEmpty(value))
 		{
-			error();
+			error(formComponent);
 		}
 	}
 

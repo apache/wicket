@@ -39,8 +39,8 @@ import wicket.model.Model;
  * 
  * <pre>
  *          &lt;tbody&gt;
- *            &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *                &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *            &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
  *            ...    
  * </pre>
  * 
@@ -56,13 +56,31 @@ import wicket.model.Model;
  * 	public void populateItem(final ListItem item)
  * 	{
  * 		final UserDetails user = (UserDetails)item.getModelObject();
- * 		item(new Label(&quot;id&quot;, user.getId()));
+ * 		item.add(new Label(&quot;id&quot;, user.getId()));
  * 	}
  * });
  * </pre>
+ * <p>
+ * WARNING: though you can nest ListViews within Forms, you HAVE to set the
+ * optimizeItemRemoval property to true in order to have validation work properly.
+ * By default, optimizeItemRemoval is false, which has the effect that
+ * ListView replaces all child components by new instances. The idea
+ * behind this, is that you allways render the fresh data, and as people
+ * usually use ListViews for displaying read-only lists (at least, that's
+ * what we think), this is good default behaviour.
+ * <br />
+ * However, as the components are replaced before the rendering starts, the
+ * search for specific messages for these components fail as they are replace
+ * with other instances. Another problem is that 'wrong' user input is kept
+ * as (temporary) instance data of the components. And as these components
+ * are replaced by new ones, your user will never see the wrong data when
+ * optimizeItemRemoval is false.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public abstract class ListView extends WebMarkupContainer
 {
@@ -77,11 +95,21 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
 	 */
 	private boolean optimizeItemRemoval = false;
 
 	/** Max number (not index) of items to show */
 	private int viewSize = Integer.MAX_VALUE;
+
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public ListView(final String id)
+	{
+		super(id);
+	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
@@ -135,6 +163,8 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
 	 * 
 	 * @return Returns the optimizeItemRemoval.
 	 */
@@ -207,6 +237,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see wicket.Component#onBeginRequest()
 			 */
@@ -251,6 +283,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see wicket.Component#onBeginRequest()
 			 */
@@ -295,6 +329,8 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
@@ -305,19 +341,27 @@ public abstract class ListView extends WebMarkupContainer
 				// Remove item and invalidate listView
 				getList().remove(item.getModelObject());
 
-				item.modelChanged();
+				ListView.this.modelChanged();
 			}
 		};
 	}
 
 	/**
-	 * @see #getOptimizeItemRemoval()
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems.
+	 * If you nest a ListView in a Form, ALLWAYS set this property to true, as
+	 * otherwise validation will not work properly.
+	 *
 	 * @param optimizeItemRemoval
 	 *            The optimizeItemRemoval to set.
+	 * @return this
 	 */
-	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
+	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		this.optimizeItemRemoval = optimizeItemRemoval;
+		return this;
 	}
 
 	/**
@@ -379,15 +423,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected IModel getListItemModel(final IModel listViewModel, final int index)
 	{
-		return new ListItemModel(listViewModel, index);
-	}
-
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return new Model();
+		return new ListItemModel(this, index);
 	}
 
 	/**
@@ -399,7 +435,7 @@ public abstract class ListView extends WebMarkupContainer
 		final int size = getViewSize();
 		if (size > 0)
 		{
-			if (optimizeItemRemoval)
+			if (getOptimizeItemRemoval())
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
@@ -495,7 +531,7 @@ public abstract class ListView extends WebMarkupContainer
 				// Get index
 				final int index = firstIndex + i;
 
-				// If this component does not already exist, populate it
+				// Get list item for index
 				ListItem item = (ListItem)get(Integer.toString(index));
 
 				// Rewind to start of markup for kids
@@ -513,7 +549,16 @@ public abstract class ListView extends WebMarkupContainer
 
 	/**
 	 * Populate a given item.
-	 * 
+	 * <p>
+	 * <b>be carefull</b> to add any components to the list item. So, don't do:
+	 * <pre>
+	 *  add(new Label("foo", "bar"));
+	 * </pre>
+	 * but:
+	 * <pre>
+	 *  item.add(new Label("foo", "bar"));
+	 * </pre>
+	 * </p>
 	 * @param item
 	 *            The item to populate
 	 */

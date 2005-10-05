@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
+import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * A factory that constructs Pages.
@@ -49,7 +49,16 @@ public final class DefaultPageFactory implements IPageFactory
 	{
 		try
 		{
+		    // throw an exception in case default constructor is missing 
+		    // => improved error message
+		    pageClass.getConstructor((Class[])null);
+		    
 			return (Page)pageClass.newInstance();
+		}
+		catch (NoSuchMethodException e)
+		{
+	        throw new WicketRuntimeException("Unable to create page from " 
+	                + pageClass + ". Class does not have a default contructor", e);
 		}
 		catch (InstantiationException e)
 		{

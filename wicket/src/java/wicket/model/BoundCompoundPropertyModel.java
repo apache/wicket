@@ -17,6 +17,7 @@
  */
 package wicket.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import wicket.Component;
@@ -29,6 +30,8 @@ import wicket.Component;
  */
 public class BoundCompoundPropertyModel extends CompoundPropertyModel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * List of Bindings. Although a Map would be a more natural implementation
 	 * here, a List is much more compact in terms of space. Although it may take
@@ -43,8 +46,10 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * 
 	 * @author Jonathan Locke
 	 */
-	private class Binding
+	private class Binding implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final Component component;
 		private final String ognlExpression;
 		private final Class type;
@@ -54,6 +59,19 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 			this.component = component;
 			this.ognlExpression = ognlExpression;
 			this.type = type;
+		}
+
+		/**
+		 * @see Object#toString()
+		 */
+		public String toString()
+		{
+			StringBuffer sb = new StringBuffer("Binding(");
+			sb.append(":component=[").append(component).append("]");
+			sb.append(":expression=[").append(ognlExpression).append("]");
+			sb.append(":type=[").append(type).append("]");
+			sb.append(")");
+			return sb.toString();
 		}
 	}
 
@@ -133,7 +151,15 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	protected String ognlExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
-		return binding != null ? binding.ognlExpression : component.getId();
+		if (binding != null)
+		{
+			return binding.ognlExpression;
+		}
+		else if (component != null)
+		{
+			return component.getId();
+		}
+		return null;
 	}
 
 	/**
@@ -142,7 +168,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	protected Class propertyType(final Component component)
 	{
 		final Binding binding = getBinding(component);
-		return binding != null ? binding.type : null;
+		return (binding != null) ? binding.type : null;
 	}
 
 	/**
@@ -161,5 +187,24 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @see wicket.model.AbstractDetachableModel#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":bindings=[");
+		for (int i = 0, size = this.bindings.size(); i < size; i++)
+		{
+			if (i > 0)
+			{
+				sb.append(",");
+			}
+			sb.append(bindings.get(i));
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }

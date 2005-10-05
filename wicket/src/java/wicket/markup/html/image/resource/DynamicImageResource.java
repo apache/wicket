@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,18 +18,14 @@
 package wicket.markup.html.image.resource;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
-import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.time.Time;
+import wicket.resource.DynamicByteArrayResource;
 
 /**
  * An ImageResource subclass for dynamic images (images created
@@ -54,17 +50,25 @@ import wicket.util.time.Time;
  * The format of the image (and therefore the resource's extension) can be
  * specified with setFormat(String). The default format is "PNG" because JPEG is
  * lossy and makes generated images look bad and GIF has patent issues.
- * 
+ *
  * @author Jonathan Locke
+ * @author Gili Tzabari
  */
-public abstract class DynamicImageResource extends ImageResource
+public abstract class DynamicImageResource extends DynamicByteArrayResource
 {
 	/** The image type */
 	private String format = "png";
 
-	/** The time this image resource was last modified */
-	protected Time lastModifiedTime;
 
+	/**
+	 * default constructor
+	 */
+	public DynamicImageResource()
+	{
+		super();
+	}
+
+	
 	/**
 	 * @return Returns the image format.
 	 */
@@ -73,74 +77,10 @@ public abstract class DynamicImageResource extends ImageResource
 		return format;
 	}
 
-	/**
-	 * @return Gets the image resource to attach to the component.
-	 */
-	public IResourceStream getResourceStream()
-	{
-		return new IResourceStream()
-		{
-			/** Transient input stream to resource */
-			private transient InputStream inputStream = null;
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#close()
-			 */
-			public void close() throws IOException
-			{
-				if (inputStream != null)
-				{
-					inputStream.close();
-					inputStream = null;
-				}
-			}
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#getContentType()
-			 */
-			public String getContentType()
-			{
-				return "image/" + format;
-			}
-
-			/**
-			 * @see wicket.util.resource.IResourceStream#getInputStream()
-			 */
-			public InputStream getInputStream() throws ResourceStreamNotFoundException
-			{
-				if (inputStream == null)
-				{
-					inputStream = new ByteArrayInputStream(getImageData());
-				}
-				return inputStream;
-			}
-
-			/**
-			 * @see wicket.util.watch.IModifiable#lastModifiedTime()
-			 */
-			public Time lastModifiedTime()
-			{
-				return DynamicImageResource.this.lastModifiedTime();
-			}
-
-			public long length()
-			{
-				return DynamicImageResource.this.getImageData().length;
-			}
-		};
-	}
-
-	/**
-	 * @return The last time this image resource was modified
-	 */
-	public Time lastModifiedTime()
-	{
-		return lastModifiedTime;
-	}
-
+	
 	/**
 	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
-	 * 
+	 *
 	 * @param format
 	 *            The image format to set.
 	 */
@@ -148,16 +88,32 @@ public abstract class DynamicImageResource extends ImageResource
 	{
 		this.format = format;
 	}
+	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#getData()
+	 */
+	protected byte[] getData()
+	{
+		return getImageData();
+	}
+	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#getContentType()
+	 */
+	public String getContentType()
+	{
+		return "image/" + format;
+	}
 
 	/**
 	 * Get image data for our dynamic image resource. If the subclass
 	 * regenerates the data, it should set the lastModifiedTime when it does so.
 	 * This ensures that image caching works correctly.
-	 * 
+	 *
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
-
+	
 	/**
 	 * @param image
 	 *            The image to turn into data

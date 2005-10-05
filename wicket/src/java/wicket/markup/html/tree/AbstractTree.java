@@ -43,14 +43,14 @@ public abstract class AbstractTree extends Panel
 	 * Construct using the given model as the tree model to use. A new tree
 	 * state will be constructed by calling newTreeState.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param model
 	 *            the underlying tree model
 	 */
-	public AbstractTree(final String componentName, final TreeModel model)
+	public AbstractTree(final String id, final TreeModel model)
 	{
-		super(componentName);
+		super(id);
 		this.treeState = newTreeState(model);
 	}
 
@@ -58,14 +58,14 @@ public abstract class AbstractTree extends Panel
 	 * Construct using the given tree state that holds the model to be
 	 * used as the tree model.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param treeState
 	 *            treeState that holds the underlying tree model
 	 */
-	public AbstractTree(final String componentName, final TreeState treeState)
+	public AbstractTree(final String id, final TreeState treeState)
 	{
-		super(componentName);
+		super(id);
 		this.treeState = treeState;
 	}
 
@@ -185,9 +185,19 @@ public abstract class AbstractTree extends Panel
 	 * @param treeState
 	 *            the tree state to set as the current one
 	 */
-	public final void setTreeState(final TreeState treeState)
+	public void setTreeState(final TreeState treeState)
 	{
 		this.treeState = treeState;
+	}
+
+	/**
+	 * Sets the current tree model.
+	 *
+	 * @param treeModel the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		this.treeState = newTreeState(treeModel);
 	}
 
 	/**
@@ -244,7 +254,7 @@ public abstract class AbstractTree extends Panel
 	{
 		final TreeState treeState = new TreeState();
 		final TreeSelectionModel treeSelectionModel = new DefaultTreeSelectionModel();
-		treeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		treeSelectionModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		treeState.setModel(treeModel);
 		treeState.setSelectionModel(treeSelectionModel);
 		treeState.setRootVisible(rootVisible);

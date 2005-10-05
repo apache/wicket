@@ -19,6 +19,7 @@
 package wicket.markup.html.list;
 
 import java.io.IOException;
+import java.util.List;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
@@ -61,131 +62,144 @@ public class PagedTableNavigatorTest extends TestCase
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_1.html"));
 
-		Link link = (Link)page.get("navigator.first");
+		Link link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_2.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_3.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_4.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_5.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.navigation.2.pageLink");
+		link = (Link)page.get("navigator:navigation:2:pageLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_6.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_7.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
+		
+		// add entries to the model list.
+		List modelData = (List)page.get("table").getModelObject();
+		modelData.add("add-1");
+		modelData.add("add-2");
+		modelData.add("add-3");
+		
+		link = (Link)page.get("navigator:first");
+		application.setupRequestAndResponse();
+		application.getServletRequest().setRequestToComponent(link);
+		application.processRequestCycle();
+		document = application.getServletResponse().getDocument();
+		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_8.html"));
 	}
 	
 	private boolean validatePage(final String document, final String file) throws IOException

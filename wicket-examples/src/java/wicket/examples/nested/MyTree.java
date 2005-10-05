@@ -25,9 +25,10 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.ResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.StaticImageResourceReference;
 import wicket.markup.html.tree.Tree;
 
 /**
@@ -37,9 +38,9 @@ import wicket.markup.html.tree.Tree;
  */
 public class MyTree extends Tree
 {
-	private static final ResourceReference folderOpen = new StaticImageResourceReference(MyTree.class, "folderopen.gif");
-	private static final ResourceReference folder = new StaticImageResourceReference(MyTree.class, "folder.gif");
-	private static final ResourceReference nodeImage = new StaticImageResourceReference(MyTree.class, "node.gif");
+	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
+	private final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
+	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
 	
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
@@ -47,14 +48,14 @@ public class MyTree extends Tree
 	/**
 	 * Construct.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param model
 	 *            the tree model
 	 */
-	public MyTree(String componentName, TreeModel model)
+	public MyTree(String id, TreeModel model)
 	{
-		super(componentName, model);
+		super(id, model);
 	}
 
 	/**

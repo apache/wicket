@@ -57,6 +57,8 @@ import wicket.util.time.Time;
  */
 public class ValueMap implements Map, Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 	
@@ -188,6 +190,18 @@ public class ValueMap implements Map, Serializable
 	public final double getDouble(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toDouble();
+	}
+
+	/**
+	 * Gets a boolean value by key.
+	 *
+	 * @param key The key
+	 * @return The value
+	 * @throws StringValueConversionException
+	 */
+	public final boolean getBoolean(final String key) throws StringValueConversionException
+	{
+		return getStringValue(key).toBoolean();
 	}
 
 	/**

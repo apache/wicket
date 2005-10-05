@@ -34,6 +34,8 @@ import wicket.util.string.Strings;
  */
 public class ExceptionErrorPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 * 
@@ -66,7 +68,7 @@ public class ExceptionErrorPage extends WebPage
 		// Create markup label
 		final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
 
-		markupLabel.setShouldEscapeModelStrings(false);
+		markupLabel.setEscapeModelStrings(false);
 
 		// Add container with markup highlighted
 		final WebMarkupContainer markupHighlight = new WebMarkupContainer("markupHighlight");

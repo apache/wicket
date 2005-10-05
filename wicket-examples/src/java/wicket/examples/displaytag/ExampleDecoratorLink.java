@@ -24,7 +24,6 @@ import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.examples.linkomatic.Page3;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.list.ListItem;
@@ -67,7 +66,7 @@ public class ExampleDecoratorLink extends Displaytag
                 listItem.add(idLink);
 
                 BookmarkablePageLink emailLink = new BookmarkablePageLink("mailLink", Page3.class);
-                emailLink.setParameter("action", "sendamail");
+                emailLink.setParameter("id", value.getId());
                 emailLink.add(new Label("email", value.getEmail()));
                 listItem.add(emailLink);
 

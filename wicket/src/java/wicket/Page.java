@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.100 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,12 +26,17 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.feedback.FeedbackMessages;
+import wicket.feedback.IFeedback;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.ajax.IAjaxListener;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
+import wicket.version.undo.Change;
 import wicket.version.undo.UndoPageVersionManager;
 
 /**
@@ -72,10 +77,12 @@ import wicket.version.undo.UndoPageVersionManager;
  * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any
  * constructor when they are being used in a Wicket session, but if you wish to
  * link to a Page using a URL that is "bookmarkable" (which implies that the URL
- * will not have any session information encoded in it), you need to implement
- * your Page with a no-arg constructor or with a constructor that accepts a
- * PageParameters argument (which wraps any query string parameters for a
- * request).
+ * will not have any session information encoded in it, and that you can call
+ * this page directly without having a session first directly from your
+ * browser), you need to implement your Page with a no-arg constructor or with a
+ * constructor that accepts a PageParameters argument (which wraps any query
+ * string parameters for a request). In case the page has both constructors, the
+ * constructor with PageParameters will be used.
  * 
  * <li><b>Models </b>- Pages, like other Components, can have models (see
  * {@link IModel}). A Page can be assigned a model by passing one to the Page's
@@ -99,11 +106,6 @@ import wicket.version.undo.UndoPageVersionManager;
  * an instance of UndoPageVersionManager, which manages versions of a page by
  * keeping change records that can be reversed at a later time.
  * 
- * <li><b>User Feedback </b>- A page can have one or more feedback messages and
- * it can specify a feedback component implementing IFeedback for displaying
- * these messages. An easy and useful implementation of IFeedback is the
- * FeedbackPanel component which displays feedback messages in a list view.
- * 
  * <li><b>Security </b>- Pages can be secured by overriding checkAccess(). If
  * checkAccess() returns ACCESS_ALLOWED (true), then onRender() will render the
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
@@ -113,7 +115,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * used to allow a user to authenticate themselves if they were denied access.
  * 
  * <li><b>Clustering </b>- The newPageState() method provides a convenient way
- * for a Page to create a {@link PageState}record that reconstitutes the Page
+ * for a Page to create a {@link PageState} record that reconstitutes the Page
  * when replicated in a cluster.
  * 
  * @see wicket.markup.html.WebPage
@@ -126,6 +128,8 @@ import wicket.version.undo.UndoPageVersionManager;
  * 
  * @author Jonathan Locke
  * @author Chris Turner
+ * @author Eelco Hillenius
+ * @author Johan Compagner
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener
 {
@@ -136,25 +140,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	protected static final boolean ACCESS_DENIED = false;
 
 	/** True if this page is dirty. */
-	private static final short FLAG_IS_DIRTY = FLAG_USER1;
+	private static final short FLAG_IS_DIRTY = FLAG_RESERVED1;
 
 	/** True if this page is currently rendering. */
-	private static final short FLAG_IS_RENDERING = FLAG_USER2;
+	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
 
 	/** True if a new version was created for this request. */
-	private static final short FLAG_NEW_VERSION = FLAG_USER3;
+	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
 
 	/** True if component changes are being tracked. */
-	private static final short FLAG_TRACK_CHANGES = FLAG_USER4;
+	private static final short FLAG_TRACK_CHANGES = FLAG_RESERVED4;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 
 	/** Used to create page-unique numbers */
 	private int autoIndex;
-
-	/** Any feedback display for this page */
-	private IFeedback feedback;
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
@@ -203,11 +204,87 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * redirectToInterceptPage.
 	 * 
 	 * @return True if an original destination was redirected to
-	 * @see PageMap#redirectToInterceptPage(Page)
+	 * @see Page#redirectToInterceptPage(Page)
 	 */
 	public final boolean continueToOriginalDestination()
 	{
 		return getPageMap().continueToOriginalDestination();
+	}
+	
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	public final void doRender()
+	{
+		// check access much earlier then in onRender!
+		// if false in onRender then checkRendering below fails anyway!!
+		if (checkAccess())
+		{
+			// Add/touch the response page in the session (its pagemap).
+			session.touch(this);
+			
+			// Set form component values from cookies
+			setFormComponentValuesFromCookies();
+			
+			try
+			{
+				// We have to initialize the page's request now
+
+				// First, give priority to IFeedback instances, as they have to
+				// collect their messages before components like ListViews
+				// remove any child components
+				visitChildren(IFeedback.class, new IVisitor()
+				{
+					public Object component(Component component)
+					{
+						((IFeedback)component).updateFeedback();
+						component.internalBeginRequest();
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+				});
+
+				// Now, do the initialization for the other components
+				internalBeginRequest();
+
+				// Handle request by rendering page
+				render();
+
+				// Size profiling for pages
+				// dumpSize();
+				
+				// Check rendering if it happened fully
+				checkRendering();
+			}
+			finally
+			{
+				// The request is over
+				internalEndRequest();
+			}
+		}
+		// Test if the response page is set by the checkAccess and render that
+		// one.
+		else
+		{
+			final RequestCycle requestCycle = getRequestCycle();
+			final Page responsePage = requestCycle.getResponsePage();
+			if (responsePage != null && responsePage != this)
+			{
+				responsePage.doRender();
+			}
+			else
+			{
+				final Class pageClass = requestCycle.getResponsePageClass();
+				if (pageClass != null)
+				{
+					final PageParameters pageParameters = requestCycle.getResponsePagePageParameters();
+					String redirectUrl = requestCycle.urlFor(pageClass, pageParameters);
+					getResponse().redirect(redirectUrl);
+				}
+			}
+			// for this page the request is also over.
+			internalEndRequest();
+		}
 	}
 
 	/**
@@ -222,6 +299,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return this.autoIndex++;
 	}
 
+	
+	/**
+	 * Sets values for form components based on cookie values in the request.
+	 *
+	 */
+	final void setFormComponentValuesFromCookies()
+	{
+		// Visit all Forms contained in the page
+		visitChildren(Form.class, new Component.IVisitor()
+		{
+			// For each FormComponent found on the Page (not Form)
+			public Object component(final Component component)
+			{
+				((Form)component).loadPersistentFormComponentValues();
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+	
 	/**
 	 * @return The current version number of this page. If the page has been
 	 *         changed once, the return value will be 1. If the page has not yet
@@ -341,7 +437,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath()
-						+ "." + Classes.name(component.getClass()));
+						+ ":" + Classes.name(component.getClass()));
 				return null;
 			}
 		});
@@ -376,6 +472,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return new PageState()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public Page getPage()
 			{
 				return Page.this;
@@ -391,16 +489,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final void onRedirect()
 	{
 		final RequestCycle cycle = getRequestCycle();
-	
+
 		// Do not need to update cluster when redirecting to a page
 		cycle.setUpdateCluster(false);
-		
+
 		// This method is used when redirecting to a page
 		cycle.setResponsePage(this);
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's url is saved for future use by method
+	 * continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current url at some later time; otherwise just use
+	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
 	 * 
 	 * @param page
 	 *            The sign in page
@@ -450,46 +553,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 */
-	public final void request()
-	{
-		try
-		{
-			// Start of request to page
-			internalBeginRequest();
-
-			// Handle request by rendering page
-			render();
-
-			// Check rendering if it happened fully
-			checkRendering();
-		}
-		finally
-		{
-			// The request is over
-			internalEndRequest();
-		}
-	}
-
-	/**
 	 * @param dirty
 	 *            True to make this page dirty, false to make it clean.
 	 */
 	public final void setDirty(final boolean dirty)
 	{
 		setFlag(FLAG_IS_DIRTY, dirty);
-	}
-
-	/**
-	 * Sets the feedback display for this page
-	 * 
-	 * @param feedback
-	 *            The feedback
-	 */
-	public final void setFeedback(final IFeedback feedback)
-	{
-		this.feedback = feedback;
 	}
 
 	/**
@@ -569,7 +638,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			final PageParameters parameters);
 
 	/**
-	 * Whether access is allowed to this page.
+	 * Whether access is allowed to this page. If the page is not allowed you
+	 * must redirect to a another page, else you will get a blank page.
+	 * Redirecting to another page can be done in a few ways:
+	 * <li>Use redirectToInterceptPage(Page page), You will be redirected to
+	 * that page when it is done you will be returned to this one</li>
+	 * <li>Use redirectTo(Page page), You will be redirected to that page when
+	 * it is done you will have to specify where you will go next</li>
+	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
+	 * directly, no redirect wil happen</li>
 	 * 
 	 * @return true if access is allowed, false otherwise
 	 */
@@ -579,37 +656,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Set-up response with appropriate content type and locale.
+	 * Set-up response with appropriate content type and locale. The locale is
+	 * set equal to the session locale. The content type header contains
+	 * information about the markup type (@see #getMarkupType()) and the
+	 * encoding. The response (and request) encoding is determined by an
+	 * application setting (@see
+	 * ApplicationSettings#getResponseRequestEncoding()). In addition and in
+	 * case the page's markup contains a xml declaration like &lt?xml ... ?&gt;
+	 * an xml declaration with proper encoding information is written to the
+	 * output as well, provided it is not disabled by an applicaton setting
+	 * (@see ApplicationSettings#getStripXmlDeclarationFromOutput()).
+	 * <p>
+	 * Note: Prior to Wicket 1.1 the output encoding was determined by the
+	 * page's markup encoding. Because this caused uncertainties about the
+	 * /request/ encoding, it has been changed in favour of the new, much saver,
+	 * approach. Please see the Wiki for more details.
 	 */
 	protected void configureResponse()
 	{
-		// Get response
+		// Get the response
 		final Response response = getResponse();
 
-		// In case the Page markup contained a <?xml ..?> to determine the
-		// markup's encoding, than forward that very same declaration to
-		// the browser. The xml declaration of all components on the page
-		// are swallowed. Note: this is a potential issue in cases where
-		// the page's encoding (e.g. ascii) does not allow for special
-		// characters used in the contained components. The user has to
-		// make sure that the Page's encoding allow for all characters
-		// required.
-
-		// Note:
+		// Set content type based on markup type for page
+		response.setContentType("text/" + getMarkupType() + "; charset="
+				+ getApplicationSettings().getResponseRequestEncoding());
 
 		final MarkupStream markupStream = findMarkupStream();
-		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null))
+		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
+				&& (getApplicationSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			// Set content type based on markup type for page
-			response.setContentType("text/" + getMarkupType() + "; charset="
-					+ markupStream.getEncoding());
-
-			response.write(markupStream.getXmlDeclaration());
-		}
-		else
-		{
-			// Set content type based on markup type for page
-			response.setContentType("text/" + getMarkupType());
+			response.write("<?xml version='1.0' encoding='"
+					+ getApplicationSettings().getResponseRequestEncoding() + "'?>");
 		}
 
 		// Set response locale from session locale
@@ -620,29 +697,34 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
-	 * @see wicket.Component#internalOnBeginRequest()
-	 */
-	protected final void internalOnBeginRequest()
-	{
-		// Adds any feedback messages on this page to the given component
-		if (feedback != null)
-		{
-			feedback.addFeedbackMessages(this, false);
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
 	 * @see wicket.Component#internalOnEndRequest()
 	 */
 	protected final void internalOnEndRequest()
 	{
-		// Clear all feedback messages
-		getFeedbackMessages().clear();
+		if (log.isDebugEnabled())
+		{
+			log.debug("ending request for page " + this + ", request " + getRequest());
+		}
+		// visit all this page's children to detach the models
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				try
+				{
+					// detach any models of the component
+					component.detachModels();
+				}
+				catch (Exception e) // catch anything; we MUST detach all models
+				{
+					log.error("detaching models of component " + component + " failed:", e);
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 
-		// If page is versioned
+		detachModel();
+
 		if (isVersioned())
 		{
 			// Any changes to the page after this point will be tracked by the
@@ -651,20 +733,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// first request to a page completes.
 			setFlag(FLAG_TRACK_CHANGES, true);
 
-			// If a new version was created
-			if (getFlag(FLAG_NEW_VERSION))
-			{
-				// We're done with this version
-				if (versionManager != null)
-				{
-					versionManager.endVersion();
-				}
-
-				// Reset boolean for next request
-				setFlag(FLAG_NEW_VERSION, false);
-			}
+			endVersion();
 		}
 	}
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
@@ -702,30 +774,44 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected final void onRender()
 	{
-		// Check access to page
-		if (checkAccess())
+		// Set page's associated markup stream
+		final MarkupStream markupStream = getAssociatedMarkupStream();
+		setMarkupStream(markupStream);
+
+		// Configure response object with locale and content type
+		configureResponse();
+
+		// Render all the page's markup
+		setFlag(FLAG_IS_RENDERING, true);
+		try
 		{
-			// Set page's associated markup stream
-			final MarkupStream markupStream = getAssociatedMarkupStream();
-			setMarkupStream(markupStream);
-
-			// Configure response object with locale and content type
-			configureResponse();
-
-			// Render all the page's markup
-			setFlag(FLAG_IS_RENDERING, true);
-			try
-			{
-				renderAll(markupStream);
-			}
-			finally
-			{
-				setFlag(FLAG_IS_RENDERING, false);
-			}
+			renderAll(markupStream);
+		}
+		finally
+		{
+			setFlag(FLAG_IS_RENDERING, false);
 		}
 	}
 
 	/**
+	 * Quick way to dump size of page without the whole session it's attached to
+	 */
+	final void dumpSize()
+	{
+		PageMap oldPageMap = this.pageMap;
+		Session oldSession = this.session;
+		
+		this.pageMap = null;
+		this.session = null;
+		
+		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
+				+ ObjectProfiler.sizeof(this));
+
+		this.pageMap = oldPageMap;
+		this.session = oldSession;
+	}
+
+	/*
 	 * @param component
 	 *            The component that was added
 	 */
@@ -773,7 +859,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
-		if (getSession().getApplication().getSettings().getComponentUseCheck())
+		if (Application.get().getSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
@@ -787,16 +873,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 	}
 
-	/**
-	 * @param component
-	 *            The component that was removed
-	 */
-	final void componentVisibilityChanged(final Component component)
+	final void componentStateChanging(final Component component, Change change)
 	{
 		setDirty(true);
 		if (isVersioned(component))
 		{
-			versionManager.componentVisibilityChanged(component);
+			versionManager.componentStateChanging(change);
 		}
 	}
 
@@ -859,7 +941,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		final ApplicationSettings settings = Application.get().getSettings();
 		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
@@ -872,13 +954,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
+						// If auto component ...
 						if (component.isAuto())
 						{
 							// Add to list of unrendered auto components to
 							// delete below
 							unrenderedAutoComponents.add(component);
 						}
-						else
+						else if (component.isVisibleInHierarchy())
 						{
 							// Increase number of unrendered components
 							unrenderedComponents.increment();
@@ -914,6 +997,27 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 */
+	private final void endVersion()
+	{
+		// If a new version was created
+		if (getFlag(FLAG_NEW_VERSION))
+		{
+			// We're done with this version
+			if (versionManager != null)
+			{
+				versionManager.endVersion();
+			}
+
+			// Reset boolean for next request
+			setFlag(FLAG_NEW_VERSION, false);
+		}
+	}
+
+	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 */
 	private final void init()
@@ -921,14 +1025,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// All Pages are born dirty so they get clustered right away
 		setDirty(true);
 
-		// Get session
-		final Session session = getSession();
-
-		// Add page to session
-		session.add(this);
-
+		// set the pagemap
+		setPageMap(getRequestCycle() != null? getRequestCycle().getRequest().getParameter("pagemap"):null);
+		
+		setId(getPageMap().getNextId());
+		
 		// Set versioning of page based on default
-		setVersioned(session.getApplication().getSettings().getVersionPagesByDefault());
+		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
 
 		// Loop through the PageSet objects for this Page
 		for (final Iterator iterator = getPageSets(); iterator.hasNext();)
@@ -1003,5 +1106,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
+
+		// Allow XmlHttpRequest calls
+		RequestCycle.registerRequestListenerInterface(IAjaxListener.class);
 	}
 }

@@ -22,7 +22,7 @@ import java.io.Serializable;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * THIS INTERFACE IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+ * Interface for validations by form components.
  * <p>
  * Instead of subclassing IValidator, you should use one of the existing
  * validators, which cover a huge number of cases, or if none satisfies your
@@ -36,11 +36,6 @@ import wicket.markup.html.form.FormComponent;
  */
 public interface IValidator extends Serializable
 {
-	/**
-	 * An implementation of IValidator that does nothing at all.
-	 */
-	public static final IValidator NULL = new NullValidator();
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
 	 * <p>
@@ -57,29 +52,4 @@ public interface IValidator extends Serializable
 	 *            Component to validate
 	 */
 	public void validate(final FormComponent component);
-
-	/**
-	 * Validator that does nothing.
-	 */
-	static final class NullValidator implements IValidator
-	{
-		/**
-		 * Returns null.
-		 * 
-		 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-		 */
-		public synchronized void validate(final FormComponent component)
-		{
-		}
-
-		/**
-		 * Returns the string representation.
-		 * 
-		 * @see java.lang.Object#toString()
-		 */
-		public String toString()
-		{
-			return "[NullValidator]";
-		}
-	}
 }

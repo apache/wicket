@@ -24,9 +24,10 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigator;
-import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.navigation.paging.IPageable;
+import wicket.markup.html.navigation.paging.IPagingLabelProvider;
+import wicket.markup.html.navigation.paging.PagingNavigation;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 
 
 /**
@@ -34,6 +35,7 @@ import wicket.markup.html.list.PageableListView;
  */
 public class PagedTableNavigatorWithMarginPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
@@ -60,6 +62,8 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -68,11 +72,16 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		};
 
 		add(table);
-		add(new PageableListViewNavigator("navigator", table)
+		add(new PagingNavigator("navigator", table)
         {
-            protected PageableListViewNavigation newNavigation(final PageableListView table)
-            {
-                PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(wicket.markup.html.navigation.paging.IPageable, wicket.markup.html.navigation.paging.IPagingLabelProvider)
+			 */
+			protected PagingNavigation newNavigation(IPageable pageable, IPagingLabelProvider labelProvider)
+			{
+                PagingNavigation nav = new PagingNavigation("navigation", pageable);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {
@@ -81,7 +90,16 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
                 
                 nav.setSeparator(", ");
                 return nav;
-            }
+			}
         });
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		// for testing we set versioning off, because it gets too difficult to maintain otherwise
+		return false;
 	}
 }

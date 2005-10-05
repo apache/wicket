@@ -18,10 +18,13 @@
 package wicket.markup.html.border;
 
 import wicket.IComponentResolver;
+import wicket.IComponentResolverMarker;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
-import wicket.markup.WicketTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
+import wicket.markup.html.HtmlHeaderContainer;
+import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
@@ -77,7 +80,8 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainer implements IComponentResolver
+public abstract class Border extends WebMarkupContainer implements IComponentResolver, 
+	IComponentResolverMarker, IHeaderRenderer
 {
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
@@ -214,6 +218,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	/**
+	 * Render the tag body
+	 * 
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
@@ -235,5 +241,27 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			markupStream.throwMarkupException(
 			        "There must be exactly one <wicket:body> tag for each border compoment.");
         }
+	}
+
+	/**
+	 * "Visit all components of the component hierarchie and ask if they have
+	 * something to contribute to the header section of the page. If yes,
+	 * child components will return a MarkupContainer of there header
+	 * section which gets (auto) added to the component hierarchie and
+	 * immediately rendered.". In case of bordered Pages, the header component
+	 * is not added to the Page, but to the Border component. Thus, in order
+	 * to handle bordered pages properly, we must the request down one more 
+	 * level. In case of a bordered page, it is a Page component.
+     *
+     * @param container The current html header container
+	 */
+	public final void renderHeaderSections(final HtmlHeaderContainer container)
+	{
+		MarkupContainer parent = getParent();
+
+		if (parent instanceof IHeaderRenderer)
+		{
+		    ((IHeaderRenderer)parent).renderHeaderSections(container);
+		}
 	}
 }

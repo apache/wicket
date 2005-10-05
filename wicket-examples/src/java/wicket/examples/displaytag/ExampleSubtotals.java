@@ -105,12 +105,12 @@ public class ExampleSubtotals extends Displaytag
         
         /**
          * Constructor
-         * @param componentName
+         * @param id
          * @param data
          */
-        public SubtotalTable(final String componentName, final List data)
+        public SubtotalTable(final String id, final List data)
         {
-            super(componentName, data);
+            super(id, data);
         }
 
         /**

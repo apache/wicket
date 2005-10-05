@@ -17,7 +17,7 @@
  */
 package wicket.examples.panels.signin;
 
-import wicket.IFeedback;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -66,14 +66,12 @@ public abstract class SignInPanel extends Panel
 		/**
 		 * Constructor.
 		 * 
-		 * @param componentName
-		 *            Name of the form component
-		 * @param feedback
-		 *            The feedback panel to update
+		 * @param id
+		 *            id of the form component
 		 */
-		public SignInForm(final String componentName, final IFeedback feedback)
+		public SignInForm(final String id)
 		{
-			super(componentName, feedback);
+			super(id);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
@@ -111,7 +109,7 @@ public abstract class SignInPanel extends Panel
 				{
 					// HTTP redirect response has been committed. No more data
 					// shall be written to the response.
-					setResponsePage(null);
+					setResponsePage((Page)null);
 				}
 				else
 				{
@@ -135,21 +133,21 @@ public abstract class SignInPanel extends Panel
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String componentName)
+	public SignInPanel(final String id)
 	{
-		this(componentName, true);
+		this(id, true);
 	}
 
 	/**
-	 * @param componentName
+	 * @param id
 	 *            See Component constructor
 	 * @param includeRememberMe
 	 *            True if form should include a remember-me checkbox
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String componentName, final boolean includeRememberMe)
+	public SignInPanel(final String id, final boolean includeRememberMe)
 	{
-		super(componentName);
+		super(id);
 
 		this.includeRememberMe = includeRememberMe;
 
@@ -159,7 +157,7 @@ public abstract class SignInPanel extends Panel
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm("signInForm", feedback));
+		add(new SignInForm("signInForm"));
 	}
 
 	/**

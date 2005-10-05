@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,19 +17,47 @@
  */
 package wicket.markup.html.form;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
+import wicket.version.undo.Change;
 
 /**
  * A form button.
+ * <p>
+ * Within a form, you can nest Button components. Note that you don't have to do
+ * this to let the form work (a simple &lt;input type="submit".. suffices), but
+ * if you want to have different kinds of submit behaviour it might be a good
+ * idea to use Buttons.
+ * </p>
+ * <p>
+ * When you add a Wicket Button to a form, and that button is clicked, by
+ * default the button's onSubmit method is called first, and after that the
+ * form's onSubmit button is called. If you want to change this (e.g. you don't
+ * want to call the form's onSubmit method, or you want it called before the
+ * button's onSubmit method), you can override Form.delegateSubmit.
+ * </p>
+ * <p>
+ * One other option you should know of is the 'defaultFormProcessing' property
+ * of Button components. When you set this to false (default is true), all
+ * validation and formupdating is bypassed and the onSubmit method of that
+ * button is called directly, and the onSubmit method of the parent form is not
+ * called. A common use for this is to create a cancel button.
+ * </p>
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class Button extends FormComponent
 {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * If false, all standard processing like validating and model updating is
+	 * skipped.
+	 */
+	private boolean defaultFormProcessing = true;
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -39,20 +67,70 @@ public class Button extends FormComponent
 	}
 
 	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public Button(final String id, final IModel object)
+	{
+		super(id, object);
+	}
+
+
+	/**
+	 * Gets the defaultFormProcessing property. When false (default is true),
+	 * all validation and formupdating is bypassed and the onSubmit method of
+	 * that button is called directly, and the onSubmit method of the parent
+	 * form is not called. A common use for this is to create a cancel button.
+	 * 
+	 * @return defaultFormProcessing
+	 */
+	public final boolean getDefaultFormProcessing()
+	{
+		return defaultFormProcessing;
+	}
+
+	/**
+	 * Sets the defaultFormProcessing property. When false (default is true),
+	 * all validation and formupdating is bypassed and the onSubmit method of
+	 * that button is called directly, and the onSubmit method of the parent
+	 * form is not called. A common use for this is to create a cancel button.
+	 * 
+	 * @param defaultFormProcessing
+	 *            defaultFormProcessing
+	 * @return This
+	 */
+	public final Button setDefaultFormProcessing(boolean defaultFormProcessing)
+	{
+		if (this.defaultFormProcessing != defaultFormProcessing)
+		{
+			addStateChange(new Change()
+			{
+				private static final long serialVersionUID = 1L;
+				
+				boolean formerValue = Button.this.defaultFormProcessing;
+
+				public void undo()
+				{
+					Button.this.defaultFormProcessing = formerValue;
+				}
+			});
+		}
+
+		this.defaultFormProcessing = defaultFormProcessing;
+		return this;
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	public void updateModel()
+	{
+	}
+
+	/**
 	 * @return Any onClick JavaScript that should be used
 	 */
 	protected String getOnClickScript()
 	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		// Buttons don't have models and so we don't want
-		// Component.initModel() to try to attach one automatically.
 		return null;
 	}
 
@@ -65,31 +143,24 @@ public class Button extends FormComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// Must be attached to an input tag
-		checkComponentTag(tag, "input");
-
 		// Get tag attributes
 		final ValueMap attributes = tag.getAttributes();
 
-		// Check for type of button, image or submit
-		final String type = attributes.getString("type");
-		if (type == null
-				|| (!type.equalsIgnoreCase("button") && !type.equalsIgnoreCase("image") && !type
-						.equalsIgnoreCase("submit")))
-		{
-			throw new WicketRuntimeException(
-					"Button tag must have a type of 'button', 'image' or 'submit'");
-		}
-
-		// Check for non-empty value
-		final String value = tag.getAttributes().getString("value");
-		if (Strings.isEmpty(value))
-		{
-			throw new WicketRuntimeException("Button tag must have non-empty value attribute");
-		}
-
 		// Default handling for component tag
 		super.onComponentTag(tag);
+
+		try
+		{
+			String value = getValue();
+			if (value != null && !"".equals(value))
+			{
+				tag.put("value", value);
+			}
+		}
+		catch (Exception e)
+		{
+			// ignore.
+		}
 
 		// If the subclass specified javascript, use that
 		final String onClickJavaScript = getOnClickScript();
@@ -104,13 +175,6 @@ public class Button extends FormComponent
 	 * form
 	 */
 	protected void onSubmit()
-	{
-	}
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	protected void updateModel()
 	{
 	}
 }

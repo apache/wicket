@@ -51,8 +51,10 @@ import java.io.Serializable;
  */
 public class ResourceReference implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The locale of the resource */
-	private Locale locale;
+	protected Locale locale;
 
 	/** The name of the resource */
 	private final String name;
@@ -107,7 +109,7 @@ public class ResourceReference implements Serializable
 		if (resource == null)
 		{
 			// Try to get resource from Application repository
-			resource = application.getSharedResources().get(scope, name, locale, style);
+			resource = application.getSharedResources().get(scope, name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -118,7 +120,7 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, null, null);
+					resource = application.getSharedResources().get(scope, name, locale, style, false);
 					if (resource == null)
 					{
 						throw new WicketRuntimeException("Unable to resolve shared resource "
@@ -153,9 +155,11 @@ public class ResourceReference implements Serializable
 	 */
 	public final String getPath()
 	{
+		Application application = Application.get();
+		bind(application);
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		buffer.append(SharedResources.path(scope, name, locale, style));
+		buffer.append(SharedResources.path(application, scope, name, locale, style));
 		return buffer.toString();
 	}
 

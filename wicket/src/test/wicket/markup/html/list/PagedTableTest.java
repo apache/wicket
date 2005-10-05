@@ -63,7 +63,7 @@ public class PagedTableTest extends TestCase
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage1(document));
 
-		Link link = (Link)page.get("navigation.1.pageLink");
+		Link link = (Link)page.get("navigation:1:pageLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();

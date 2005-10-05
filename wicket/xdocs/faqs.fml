@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 <faqs title="Frequently Asked Questions">
-
 	<part id="general-questions">
 		<title>General Questions</title>
 		<faq id="why-wicket">
 			<question>Why "Wicket"?</question>
 			<answer>
 				<p>
-					The name "wicket" was at first selected simply because it was unique, memorable  
+				   The name "wicket" was at first selected simply because it was unique, memorable  
                     and easy to say... and yet not used by a serious software project (the owner  
                     of the "dodgy IRC bot" called "wicket" which shows up in a Google search was  
                     kind enough to give his blessings to me via email to use the name).  It is    
@@ -28,6 +27,103 @@
 				</p>
 			</answer>       
 		</faq>                  
+		<faq id="why-no-forums">
+			<question>Why no forums?</question>
+			<answer>
+				<p>
+					We feel that there are several issues with discussion forums and a lot
+					of advantages when using mailinglists as a main discussion and support platform.
+					We like having just one method of communicating with our users and co-developers.
+					When we introduce message boards, mailinglists, and whatnot kind of discussion 
+					platforms, we have to monitor all those platforms. As all core-developers work on 
+					Wicket in their free time or some spare minutes during working hours answering 
+					e-mail on the lists, we are limited in our time to monitor all those different
+					platforms and answer all questions or discuss design issues. In this case: less 
+					is more. Less communication platforms means more attention from the developers.
+				</p>
+				<p>
+					Mailinglists allow us to monitor user and development questions directly. Usually
+					you get a response within minutes from either a core developer or another user.
+					The current mailinglists have been very kind to us and our users.
+				</p>
+				<p>
+					Mail is often not blocked on corporate networks. Several corporations block
+					non-approved websites. Discussion forums are necessarily website based. We
+					don't have to go to a website and refresh the discussion groups constantly in 
+					order to see what has happened. Discussion websites are usually very bad at
+					searching and browsing for information.
+				</p>
+				<p>
+					E-mail clients have better editors, and support (when using a good e-mail program)
+					threaded views of mail messages. For instance Mozilla Thunderbird supports this.
+					If your mail client doesn't support threaded views, you can always use
+					<a href="news:gmane.comp.java.wicket.user">gmane.comp.java.wicket.user</a> or
+					<a href="news:gmane.comp.java.wicket.develop">gmane.comp.java.wicket.develop</a> in
+					a News client.
+				</p>
+				<p>
+					And finally <a href="http://article.gmane.org/gmane.comp.java.wicket.devel/4011">most
+					Wicket users</a> prefer mailinglists over discussion forums. (Check out the votes in
+					the linked thread).
+				</p>
+			</answer>
+		</faq>
+		<faq id="why-no-tiger">
+			<question>Why doesn't Wicket use Java 5?</question>
+			<answer>
+				<p>
+					We strive to make Wicket available for the largest possible number of developers. This
+					means that we have to take into account those developers that don't have the luxury of
+					running their application servers on Java 5. Many shops don't run on Java 5 yet. We would
+					be doing ourselves and our users a great disservice when we would target Java 5 as our
+					base platform.
+				</p>
+				<p>
+					As several members of our community have pointed out, there is a code converter for 
+					running Java 5 code on a Java 1.4 runtime, <a href="http://retroweaver.sf.net">RetroWeaver</a>.
+					Even though it is a remarkable product, and probably works flawlessly, we, the
+					Wicket core team, can't support using such a tool on a framework. Debugging web applications
+					is already a very complex thing to do, and when we introduce such an unknown component (or
+					to be more precise: 2 components), bug finding becomes even harder. Furthermore, some clients 
+					of our users won't or can't accept such retrofitted code.
+				</p>
+				<p>
+					Also note that RetroWeaver only takes your source code into consideration. The standard libraries, 
+					which are an integral part of a Java Runtime Environment, are not backported. For instance, Wicket
+					uses the 
+					<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">concurrent</a>
+					package of <a href="http://gee.cs.oswego.edu/dl">Doug Lea</a>. This package has been adopted
+					by the Java 5 runtime library. However the backport of this JDK 1.5 extension is not a 1-on-1
+					drop in library that makes our code ready for JDK 1.5. Java explicitly forbids that other than
+					the Java Runtime Library classes contribute to the <code>java.xxx</code> namespace. So supplying
+					the backport with Wicket will <em>not</em> solve our problem.
+				</p>
+				<p>
+					Please keep in mind that we <em>do</em> see the benefits of using Java 5. We like annotations, generics,
+					autoboxing, removing the need for concurrent.jar, etc. But we have to look at the world around us,
+					and that world is unfortunately not using Java 5.
+				</p>
+			</answer>
+		</faq>
+		<faq id="when-tiger">
+			<question>When will Wicket use Java 5?</question>
+			<answer>
+				<p>
+					Basically a large part of the answer is: when the majority of our customers can run their web 
+					applications on Java 5. As IBM WebSphere is one of the leading application servers, having Java 
+					5 support for WebSphere application server is one condition.
+				</p>
+				<p>
+					Furthermore, upgrading to Java 5 will break a lot of stuff, so this will be scheduled for a major 
+					release. At the moment this is scheduled for Wicket 2.
+				</p>
+				<p>
+					We would like to give other functional requirements a higher priority, like AJAX and Portlet support,
+					as those will help <em>all</em> users of Wicket. So first Wicket 1.1 and 1.2 will see the light of day,
+					after that we will see what needs to be done.
+				</p>
+			</answer>
+		</faq>
 	</part>                         
                                         
 	<part id="design-philosopy">
@@ -69,6 +165,24 @@
 			<question>What design decisions were made regarding state management?</question>
 			<answer>
 				<p>
+					There are probably only a small percentage (perhaps 20%-30%) of all web
+					applications written that have to scale up to large clusters of machines with 
+					hundreds of concurrent users. Unfortunately, many web application frameworks
+					are built around the assumption that everyone wants to build web applications 
+					of this size. The result being that people with the skills and resources available 
+					to build such applications are happy, while the other 80% of people are forced to 
+					jump through many hoops and do loads of manual state management that is not really 
+					necessary for the size of application they are building.
+				</p>
+				<p>
+					Wicket adopts an alternative approach. What we have tried to do is build a framework 
+					where out of the box (and for perhaps 50%+) of applications the developers do not need 
+					to worry about state management at all. No need to directly access the session, no need 
+					to enlist the help of second level caches or to manually reconstruct object state for each 
+					request and so on. Application developers can be more productive and the learning 
+					curve for Wicket is far lower.
+				</p>
+				<p>
 					One of the primary objectives was to make state management a Java thing that is 
 					abstracted away from implementation details like HttpSession. In Wicket, state is 
 					stored in components that are nested in Pages which are all contained in a map in 
@@ -81,6 +195,64 @@
 					the repositories of all state. It will take time to adapt to this and for people to 
 					set aside old functional models of programming where they accomplish everything 
 					with query parameters, session state or their equivalent.
+				</p>
+				<p>
+					That said, we also recognise the need to build large, highly scalable web applications
+					using Wicket. Therefore, Wicket has a number of interfaces where we have adopted the 
+					strategy design pattern and where people needing to build large, scalable applications 
+					can take control and implement their own alternative approaches. As Wicket develops 
+					further we will probably provide our own implementations of the most common alternative 
+					approaches.
+				</p>
+			</answer>
+		</faq>
+		
+		<faq id="how-state-management">
+			<question>Can I control how Wicket managed its session state?</question>
+			<answer>
+				<p>
+					The default Wicket behaviour is to use the HttpSession object to hold a Wicket WebSession 
+					object and object hierarchies for each of the current active pages for any session (you 
+					can control how many in the settings). When new pages are created they are added to the s
+					ession, when pages are no longer needed they are expired (removed) from the session. 
+					When an event arrives in a request for a particular page it is retrieved from the session 
+					and the event passed to the appropriate component listener. At the end of the request, any 
+					pages that have been accessed are marked as dirty and readded to the session to force cluster 
+					replication to occur. This approach provides transparent state management and enables near 
+					transparent support of the browser back button. However, we would agree that this approach 
+					does store a reasonable volume of objects in the session and causes some amount of cluster 
+					replication (but this may be fine for many applications, where the saving in development 
+					time far outweighs the cost of some extra processor or memory).
+				</p>
+				<p>
+					When such use of the session is prohibitive, Wicket offers a range of options for tuning 
+					the session usage:
+				</p>
+				<ol>
+				<li>
+					Detachable models can be used behind each component so that the model objects only hold an 
+					id value (or even nothing if you wish) and the actual business objects can be detached at 
+					the end of one request and reattached at the start of the next. You can then implement any 
+					second level approach that you wish in the attach/detach methods.
+				</li>
+				<li>
+					Developers can manually override the page dirty state if they know that the event listener 
+					that was just invoked for a page did not cause any alterations to the page or model objects. 
+					This can be particularly useful to reduce unnecessary cluster replication.
+				</li>
+				<li>
+					It is possible to override the PageState mechanism so that each page (or a base class for 
+					a group of pages) can control its own state replication. Thus instead of the entire page 
+					hierarchy of objects being added to the session, the custom PageState can hold just a minimum 
+					of state data and then reinstantiate the page again for the next request, or adopt some 
+					alternative approach - the choices are endless (and probably different for each application 
+					or group of pages within an application).
+				</li>
+				</ol>
+				<p>
+					Longer term (Wicket 1.1) we are planning to add some additional approaches such as externalizing 
+					state to the client, stateless pages and allowing listeners that are not attached to pages for 
+					handling requests that do not require existing page state.
 				</p>
 			</answer>
 		</faq>

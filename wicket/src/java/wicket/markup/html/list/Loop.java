@@ -42,8 +42,10 @@ public abstract class Loop extends WebMarkupContainer
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static public final class LoopItem extends WebMarkupContainer
+	public static final class LoopItem extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** The iteration number */
 		private final int iteration;
 
@@ -120,13 +122,25 @@ public abstract class Loop extends WebMarkupContainer
 			for (int iteration = 0; iteration < iterations; iteration++)
 			{
 				// Create item for loop iteration
-				final LoopItem item = new LoopItem(iteration);
+				LoopItem item = newItem(iteration);
 
 				// Add and populate item
 				add(item);
 				populateItem(item);
 			}
 		}
+	}
+
+	/**
+	 * Create a new LoopItem for loop at iteration.
+	 * 
+	 * @param iteration
+	 *            iteration in the loop
+	 * @return LoopItem
+	 */
+	protected LoopItem newItem(int iteration)
+	{
+		return new LoopItem(iteration);
 	}
 
 	/**

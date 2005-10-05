@@ -36,10 +36,10 @@ import wicket.examples.panels.signin.SignInPanel;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.encryption.ICrypt;
-import wicket.markup.html.form.encryption.NoCrypt;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.crypt.ICrypt;
+import wicket.util.crypt.NoCrypt;
 
 
 /**
@@ -93,7 +93,7 @@ public class CookieTest extends TestCase
 		this.form = (Form)panel.get("signInForm");
 
         final ICrypt crypt = application.newCrypt();
-        final String encryptedPassword = crypt.encryptString("test");
+        final String encryptedPassword = crypt.encrypt("test");
         assertNotNull(encryptedPassword);
         this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");
         this.cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);

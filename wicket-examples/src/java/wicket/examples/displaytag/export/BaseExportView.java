@@ -18,6 +18,7 @@
  */
 package wicket.examples.displaytag.export;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public abstract class BaseExportView
+public abstract class BaseExportView implements Serializable
 {
     /**
      * logger.

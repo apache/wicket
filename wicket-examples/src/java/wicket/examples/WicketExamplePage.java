@@ -46,6 +46,11 @@ public class WicketExamplePage extends WebPage
 		super(model);
         final String packageName = getClass().getPackage().getName();
         add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.')));
-
+		explain();
 	}
+
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain() {}
 }

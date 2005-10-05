@@ -18,6 +18,7 @@
  */
 package wicket.examples.helloworld;
 
+import wicket.ApplicationPages;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -32,5 +33,7 @@ public class HelloWorldApplication extends WicketExampleApplication
     public HelloWorldApplication()
     {
         getPages().setHomePage(HelloWorld.class);
+        getPages().putClassAlias(HelloWorld.class, "helloworld");
+        getPages().setHomePageRenderStrategy(ApplicationPages.BOOKMARK_REDIRECT);
     }
 }

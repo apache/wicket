@@ -31,6 +31,8 @@ import java.awt.RenderingHints;
  */
 public class DefaultButtonImageResource extends RenderedDynamicImageResource
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The default height for button images */
 	private static int defaultHeight = 26;
 
@@ -157,6 +159,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setArcHeight(int arcHeight)
 	{
 		this.arcHeight = arcHeight;
+		invalidate();
 	}
 
 	/**
@@ -166,6 +169,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setArcWidth(int arcWidth)
 	{
 		this.arcWidth = arcWidth;
+		invalidate();
 	}
 
 	/**
@@ -175,6 +179,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setBackgroundColor(Color backgroundColor)
 	{
 		this.backgroundColor = backgroundColor;
+		invalidate();
 	}
 
 	/**
@@ -184,6 +189,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setColor(Color color)
 	{
 		this.color = color;
+		invalidate();
 	}
 
 	/**
@@ -193,6 +199,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setFont(Font font)
 	{
 		this.font = font;
+		invalidate();
 	}
 
 	/**
@@ -202,6 +209,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	public void setTextColor(Color textColor)
 	{
 		this.textColor = textColor;
+		invalidate();
 	}
 
 	/**

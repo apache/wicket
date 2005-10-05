@@ -53,7 +53,7 @@ public final class SignIn extends WicketExamplePage
         add(feedback);
 
         // Add sign-in form to page, passing feedback panel as validation error handler
-        add(new SignInForm("signInForm", feedback));
+        add(new SignInForm("signInForm"));
     }
 
     /**
@@ -67,13 +67,11 @@ public final class SignIn extends WicketExamplePage
 
         /**
          * Constructor
-         * @param componentName Name of the form component
-         * @param feedback The feedback panel to update
+         * @param id id of the form component
          */
-        public SignInForm(final String componentName,
-            final FeedbackPanel feedback)
+        public SignInForm(final String id)
         {
-            super(componentName, feedback);
+            super(id);
 
             // Attach textfield components that edit properties map model
             add(new TextField("username", new PropertyModel(properties, "username")));

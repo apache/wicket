@@ -29,6 +29,8 @@ import java.io.Serializable;
  */
 public class PopupSettings implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Flag to include location bar */
 	public static final int LOCATION_BAR = 1;
 
@@ -112,7 +114,7 @@ public class PopupSettings implements Serializable
 		else
 		{
 			// Fix for IE bug.
-			windowTitle = windowTitle.replace('.', '_'); 
+			windowTitle = windowTitle.replace(':', '_'); 
 		}
 
 		StringBuffer script = new StringBuffer("if (!window.focus) return true; window.open("

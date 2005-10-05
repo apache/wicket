@@ -5,3 +5,4 @@ build.properties
 *.backup
 *.temp
 RECYCLER
+.clover

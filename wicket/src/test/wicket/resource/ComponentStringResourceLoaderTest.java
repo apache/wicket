@@ -20,12 +20,10 @@ package wicket.resource;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import wicket.Component;
 import wicket.markup.html.panel.Panel;
-import wicket.resource.ComponentStringResourceLoader;
-import wicket.resource.IStringResourceLoader;
-
-import junit.framework.Assert;
 
 /**
  * Test case for the <code>ComponentStringResourceLoader</code> class.
@@ -58,16 +56,17 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	{
 		Component c = new DummyComponent("hello", application)
 		{
+			private static final long serialVersionUID = 1L;
 		};
 		DummyPage page = new DummyPage();
 		page.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
-		Assert.assertNull("Missing resource should return null", loader.loadStringResource(c, "test.string",
+		Assert.assertNull("Missing resource should return null", loader.loadStringResource(c, "test.string.bad",
 				Locale.getDefault(), null));
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testNullComponent()
 	{
@@ -76,12 +75,13 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testNonPageComponent()
 	{
 		Component c = new DummyComponent("hello", application)
 		{
+			private static final long serialVersionUID = 1L;
 		};
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		try
@@ -96,7 +96,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testPageEmbeddedComponentLoadFromPage()
 	{
@@ -109,7 +109,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
@@ -124,7 +124,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testLoadDirectFromPage()
 	{
@@ -132,6 +132,19 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.loadStringResource(
 				p, "another.test.string", Locale.getDefault(), null));
+	}
+
+	/**
+	 *
+	 */
+	public void testSearchClassHierarchyFromPage()
+	{
+		DummySubClassPage p = new DummySubClassPage();
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		Assert.assertEquals("Valid resource string should be found", "SubClass Test String",
+				loader.loadStringResource(p, "subclass.test.string", Locale.getDefault(), null));
+		Assert.assertEquals("Valid resource string should be found", "Another string",
+				loader.loadStringResource(p, "another.test.string", Locale.getDefault(), null));
 	}
 }
 

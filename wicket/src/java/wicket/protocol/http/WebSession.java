@@ -39,6 +39,8 @@ import wicket.Session;
  */
 public class WebSession extends Session
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The underlying HttpSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
 
@@ -49,8 +51,8 @@ public class WebSession extends Session
 	private transient String sessionAttributePrefix;
 
 	/** True, if session has been invalidated */
-	private transient boolean sessionInvalid = false;
-	
+	private transient boolean sessionInvalidated = false;
+
 	/**
 	 * Constructor
 	 * 
@@ -69,11 +71,21 @@ public class WebSession extends Session
 	{
 		return httpSession;
 	}
+	
+	/**
+	 * @return Session id for this web session
+	 */
+	public String getId()
+	{
+		return httpSession.getId();
+	}
 
 	/**
-	 * Invalidates this session
+	 * Invalidates this session immediately. Calling this method will remove all
+	 * Wicket components from this session, which means that you will no longer
+	 * be able to work with them.
 	 */
-	public void invalidate()
+	public void invalidateNow()
 	{
 		try
 		{
@@ -83,8 +95,17 @@ public class WebSession extends Session
 		{
 			// Ignore
 		}
-		
-		sessionInvalid = true;
+	}
+
+	/**
+	 * Invalidates this session at the end of the current request. If you need
+	 * to invalidate the session immediately, you can do this by calling
+	 * invalidateNow(), however this will remove all Wicket components from this
+	 * session, which means that you will no longer be able to work with them.
+	 */
+	public void invalidate()
+	{
+		sessionInvalidated = true;
 	}
 
 	/**
@@ -92,12 +113,23 @@ public class WebSession extends Session
 	 */
 	public final void updateCluster()
 	{
-	    if (sessionInvalid == false)
-	    {
-	        super.updateCluster();
-	    }
+		if (sessionInvalidated == false)
+		{
+			super.updateCluster();
+		}
 	}
 	
+	/**
+	 * @see wicket.Session#detach()
+	 */
+	protected void detach()
+	{
+		if (sessionInvalidated)
+		{
+			invalidateNow();
+		}
+	}
+
 	/**
 	 * @see Session#getAttribute(String)
 	 */
@@ -134,6 +166,8 @@ public class WebSession extends Session
 		{
 			this.requestCycleFactory = new IRequestCycleFactory()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public RequestCycle newRequestCycle(Session session, Request request,
 						Response response)
 				{
@@ -180,5 +214,7 @@ public class WebSession extends Session
 
 		// Set the current session
 		set(this);
+		
+		attach();
 	}
 }

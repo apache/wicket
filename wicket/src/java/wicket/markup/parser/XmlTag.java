@@ -24,7 +24,7 @@ import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.LowerCaseKeyValueMap;
+import wicket.util.value.AttributeMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -34,22 +34,17 @@ import wicket.util.value.LowerCaseKeyValueMap;
  */
 public class XmlTag extends MarkupElement
 {
-	/**
-	 * A close tag, like &lt;/TAG&gt;.
-	 */
+	/** A close tag, like &lt;/TAG&gt;. */
 	public static final Type CLOSE = new Type("CLOSE");
-	/**
-	 * An open tag, like &lt;TAG componentId = "xyz"&gt;.
-	 */
+	
+	/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
 	public static final Type OPEN = new Type("OPEN");
 
-	/**
-	 * An open/close tag, like &lt;TAG componentId = "xyz"/&gt;.
-	 */
+	/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private LowerCaseKeyValueMap attributes = new LowerCaseKeyValueMap();
+	private AttributeMap attributes = new AttributeMap();
 
 	/** Column number. */
 	int columnNumber;
@@ -92,6 +87,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public static final class Type extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
 		/**
 		 * Construct.
 		 * 
@@ -129,7 +125,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public LowerCaseKeyValueMap getAttributes()
+	public AttributeMap getAttributes()
 	{
 		return attributes;
 	}
@@ -165,7 +161,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets the name of the tag, for example the tag <b>'s name would be 'b'.
+	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s name would be 'b'.
 	 * 
 	 * @return The tag's name
 	 */
@@ -276,6 +272,32 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Compare tag name including namespace
+	 * 
+	 * @param tag
+	 * @return true if name and namespace are equal 
+	 */
+	public boolean hasEqualTagName(final XmlTag tag)
+	{
+		if (!getName().equalsIgnoreCase(tag.getName()))
+		{
+			return false;
+		}
+		
+		if ((getNamespace() == null) && (tag.getNamespace() == null))
+		{
+			return true;
+		}
+		
+		if ((getNamespace() != null) && (tag.getNamespace() != null))
+		{
+			return getNamespace().equalsIgnoreCase(tag.getNamespace());
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Makes this tag object immutable by making the attribute map unmodifiable.
 	 * Immutable tags cannot be made mutable again. They can only be copied into
 	 * new mutable tag objects.
@@ -311,7 +333,7 @@ public class XmlTag extends MarkupElement
 			tag.pos = pos;
 			tag.length = length;
 			tag.text = text;
-			tag.attributes = new LowerCaseKeyValueMap(attributes);
+			tag.attributes = new AttributeMap(attributes);
 			tag.type = type;
 			tag.isMutable = true;
 			tag.closes = closes;
@@ -436,6 +458,25 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Sets the tag namespace.
+	 * 
+	 * @param namespace
+	 *			  New tag name
+	 */
+	public void setNamespace(final String namespace)
+	{
+		if (isMutable)
+		{
+			this.namespace = namespace;
+			this.nameChanged = true;
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Attempt to set namespace of immutable tag");
+		}
+	}
+
+	/**
 	 * Assuming this is a close tag, assign it's corresponding open tag.
 	 * 
 	 * @param tag
@@ -484,7 +525,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toString()
 	{
-		if (!isMutable)
+		if (!isMutable && (text != null))
 		{
 			return text;
 		}
@@ -540,7 +581,7 @@ public class XmlTag extends MarkupElement
 					buffer.append(" ");
 					buffer.append(key);
 					String value = getString(key);
-					if(value != null) // attributes without values are possible, e.g. 'disabled'
+					if (value != null) // attributes without values are possible, e.g. 'disabled'
 					{
 						buffer.append("=\"");
 						value = Strings.replaceAll(value,"\"", "\\\"");

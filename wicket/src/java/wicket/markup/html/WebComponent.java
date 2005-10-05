@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.AjaxHandler;
 import wicket.Component;
 import wicket.model.IModel;
 
@@ -28,8 +29,10 @@ import wicket.model.IModel;
  * @see wicket.markup.html.WebMarkupContainer
  * @author Jonathan Locke
  */
-public class WebComponent extends Component
+public class WebComponent extends Component implements IHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -44,6 +47,29 @@ public class WebComponent extends Component
 	public WebComponent(final String id, final IModel model)
 	{
 		super(id, model);
+	}
+
+	/**
+     * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT CALL IT YOURSELF
+	 * Print to the web response what ever the component wants
+	 * to contribute to the head section. Does nothing by default.
+	 *
+	 * @param container The HtmlHeaderContainer
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 */
+	public void renderHead(final HtmlHeaderContainer container)
+	{
+		AjaxHandler[] handlers = getAjaxHandlers();
+		if (handlers != null)
+		{
+			for (int i = 0; i < handlers.length; i++)
+			{
+				if (handlers[i] instanceof IHeaderContributor)
+				{
+					((IHeaderContributor)handlers[i]).renderHead(container);
+				}
+			}
+		}
 	}
 
 	/**
