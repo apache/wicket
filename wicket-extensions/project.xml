@@ -179,6 +179,7 @@
   </build>
   <reports>
     <report>maven-license-plugin</report>
+    <report>maven-javadoc-plugin</report>
   </reports>
   <properties/>
 </project>
