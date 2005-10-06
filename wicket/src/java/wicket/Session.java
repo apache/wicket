@@ -473,7 +473,10 @@ public abstract class Session implements Serializable
 		// If state is dirty
 		if (dirty)
 		{
-			if(log.isDebugEnabled()) log.debug("updateCluster(): Session is dirty.  Replicating.");
+			if (log.isDebugEnabled()) 
+			{
+				log.debug("updateCluster(): Session is dirty.  Replicating.");
+			}
 
 			// State is no longer dirty
 			this.dirty = false;
@@ -483,7 +486,7 @@ public abstract class Session implements Serializable
 		}
 		else
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("updateCluster(): Session not dirty.");
 			}
@@ -516,7 +519,7 @@ public abstract class Session implements Serializable
 	public final void updateSession()
 	{
 		// Go through each page map in the session
-		if(log.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
 			log.debug("updateSession(): Updating session.");
 		}
@@ -524,7 +527,7 @@ public abstract class Session implements Serializable
 		{
 			public void pageMap(PageMap pageMap)
 			{
-				if(log.isDebugEnabled())
+				if (log.isDebugEnabled())
 				{
 					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
 				}
@@ -533,7 +536,7 @@ public abstract class Session implements Serializable
 		});
 
 		// Get PageStates from session attributes
-		if(log.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
 			log.debug("updateSession(): Getting PageState attributes.");
 		}
@@ -545,7 +548,7 @@ public abstract class Session implements Serializable
 
 		// Adds pages to session
 		addPages(pageStates);
-		if(log.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
 			log.debug("updateSession(): Done updating session.");
 		}
@@ -631,7 +634,7 @@ public abstract class Session implements Serializable
 	final Page getPage(final String pageMapName, final String id)
 	{
 		// This call will always mark the Page dirty
-		return (Page)getPageMap(pageMapName).get(id);
+		return getPageMap(pageMapName).get(id);
 	}
 
 	/**
@@ -680,7 +683,7 @@ public abstract class Session implements Serializable
 			{
 				// Get page from page state
 				final Page page = pageState.getPage();
-				if(log.isDebugEnabled())
+				if (log.isDebugEnabled())
 				{
 					log.debug("addPages(): Adding replicated page state " + pageState
 							+ ", which produced page " + page);
@@ -689,7 +692,7 @@ public abstract class Session implements Serializable
 				// Add to page map specified in page state info
 				attach(page);
 				Page removed = getPageMap(pageState.pageMapName).put(page);
-				if(removed != null)
+				if (removed != null)
 				{
 					removeAttribute(removed.getId());
 				}
@@ -799,7 +802,7 @@ public abstract class Session implements Serializable
 	{
 		// touch the page in its pagemap.
 		Page removedPage = page.getPageMap().put(page);
-		if(removedPage != null)
+		if (removedPage != null)
 		{
 			removeAttribute(removedPage.getId());
 		}

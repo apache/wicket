@@ -193,14 +193,17 @@ public class LengthValidator extends StringValidator
 	protected Map messageModel(FormComponent formComponent)
 	{
 		final Map map = super.messageModel(formComponent);
-		if(checkMin) {
+		if (checkMin) 
+		{
 			map.put("min", new Long(min));
 		}
-		if(checkMax) {
+		if (checkMax) 
+		{
 			map.put("max", new Long(max));
 		}
 		int size = 0;
-		if(formComponent.getInput() != null) {
+		if (formComponent.getInput() != null) 
+		{
 			size = formComponent.getInput().length();
 		}
 		map.put("length", new Integer(size));

@@ -17,9 +17,6 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
@@ -33,9 +30,6 @@ import wicket.markup.MarkupStream;
 public class BodyOnLoadResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Logging */
-	private static Log log = LogFactory.getLog(BodyOnLoadResolver.class);
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container
@@ -56,8 +50,7 @@ public class BodyOnLoadResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// It must be <body onload>
-		if ((tag instanceof ComponentTag) && "body".equalsIgnoreCase(tag.getName()) 
-		        && (tag.getNamespace() == null))
+		if ("body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
 			// Create, add and render the component.
 		    

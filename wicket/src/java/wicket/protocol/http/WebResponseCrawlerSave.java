@@ -17,13 +17,9 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
@@ -37,17 +33,13 @@ import wicket.util.value.ValueMap;
  */
 public class WebResponseCrawlerSave extends WebResponse
 {
-    /** Logger */
-    private static Log log = LogFactory.getLog(WebResponseCrawlerSave.class);
-
 	/**
 	 * Constructor.
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponseCrawlerSave(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponseCrawlerSave(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}

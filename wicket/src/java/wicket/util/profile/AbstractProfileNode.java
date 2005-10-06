@@ -103,7 +103,7 @@ abstract class AbstractProfileNode implements IObjectProfileNode, Comparable
         for (IObjectProfileNode parent = parent(); parent != null; node = parent, parent = parent
                 .parent())
         {
-            ;
+            // no action required
         }
 
         return node;

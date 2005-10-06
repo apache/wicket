@@ -20,9 +20,6 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -40,9 +37,6 @@ import wicket.markup.parser.XmlTag;
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
-
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
 	public static final String HEADER_ID = "_header";
 

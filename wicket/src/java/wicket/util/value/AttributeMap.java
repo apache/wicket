@@ -57,7 +57,7 @@ public final class AttributeMap extends ValueMap
 		AttributeMap newMap = new AttributeMap();
 		if (map != null)
 		{
-			for(Iterator i = map.keySet().iterator(); i.hasNext();)
+			for (Iterator i = map.keySet().iterator(); i.hasNext();)
 			{
 				Object key = i.next();
 				newMap.put(key, map.get(key));
@@ -76,7 +76,7 @@ public final class AttributeMap extends ValueMap
 	{
 		if (map != null)
 		{
-			for(Iterator i = map.keySet().iterator(); i.hasNext();)
+			for (Iterator i = map.keySet().iterator(); i.hasNext();)
 			{
 				Object key = i.next();
 				put(key, map.get(key));

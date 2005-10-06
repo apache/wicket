@@ -46,7 +46,7 @@ public class HtmlProblemFinderTest extends TestCase
 	    }
 	    catch (Exception ex)
 	    {
-	        ; // ignore
+	        // ignore
 	    }
     }
 }

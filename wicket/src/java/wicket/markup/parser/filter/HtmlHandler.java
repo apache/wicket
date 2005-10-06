@@ -44,9 +44,6 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	/** Logging */
 	private static Log log = LogFactory.getLog(HtmlHandler.class);
 
-	/** Remember the last tag in order to close specific tags automatically */
-	private ComponentTag lastTag;
-
 	/** Tag stack to find balancing tags */
 	final private Stack stack = new Stack();
 

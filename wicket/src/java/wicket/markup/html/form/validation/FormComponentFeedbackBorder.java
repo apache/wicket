@@ -35,9 +35,6 @@ import wicket.markup.html.border.Border;
 public class FormComponentFeedbackBorder extends Border implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** The error indicator child which should be shown if an error occurs. */
-	private final ErrorIndicator errorIndicator;
 
 	/** Visible property cache. */
 	private boolean visible;
@@ -78,7 +75,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	public FormComponentFeedbackBorder(final String id)
 	{
 		super(id);
-		add(errorIndicator = new ErrorIndicator("errorIndicator"));
+		add(new ErrorIndicator("errorIndicator"));
 	}
 
 	/**

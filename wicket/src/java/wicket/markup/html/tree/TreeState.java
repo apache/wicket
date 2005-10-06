@@ -579,7 +579,6 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			if (changedParentNode != null
 					&& changedIndexs != null && (maxCounter = changedIndexs.length) > 0)
 			{
-				Object[] children = e.getChildren();
 				boolean isVisible = (changedParentNode.isVisible() && changedParentNode
 						.isExpanded());
 
@@ -1059,8 +1058,6 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		public int getRowToModelIndex(int index)
 		{
 			TreeStateNode child;
-			int lastRow = getRow() + 1;
-			int retValue = lastRow;
 
 			// This too could be a binary search!
 			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
@@ -1463,23 +1460,23 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @param newChild
 		 *			  the node to add
 		 */
-		private void addNode(TreeStateNode newChild)
-		{
-			boolean added = false;
-			int childIndex = newChild.getChildIndex();
-
-			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
-			{
-				if (((TreeStateNode) getChildAt(counter)).getChildIndex() > childIndex)
-				{
-					added = true;
-					insert(newChild, counter);
-					counter = maxCounter;
-				}
-			}
-			if (!added)
-				add(newChild);
-		}
+//		private void addNode(TreeStateNode newChild)
+//		{
+//			boolean added = false;
+//			int childIndex = newChild.getChildIndex();
+//
+//			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
+//			{
+//				if (((TreeStateNode) getChildAt(counter)).getChildIndex() > childIndex)
+//				{
+//					added = true;
+//					insert(newChild, counter);
+//					counter = maxCounter;
+//				}
+//			}
+//			if (!added)
+//				add(newChild);
+//		}
 
 		/**
 		 * Removes the child at <code>modelIndex</code>.
@@ -1702,25 +1699,25 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 *			  index to stop on
 		 * @return childcount of all children of the receiver
 		 */
-		private int getCountTo(int stopIndex)
-		{
-			TreeStateNode aChild;
-			int retCount = stopIndex + 1;
-
-			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
-			{
-				aChild = (TreeStateNode) getChildAt(counter);
-				if (aChild.childIndex >= stopIndex)
-					counter = maxCounter;
-				else
-					retCount += aChild.getTotalChildCount();
-			}
-			if (parent != null)
-				return retCount + ((TreeStateNode) getParent()).getCountTo(childIndex);
-			if (!isRootVisible())
-				return (retCount - 1);
-			return retCount;
-		}
+//		private int getCountTo(int stopIndex)
+//		{
+//			TreeStateNode aChild;
+//			int retCount = stopIndex + 1;
+//
+//			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
+//			{
+//				aChild = (TreeStateNode) getChildAt(counter);
+//				if (aChild.childIndex >= stopIndex)
+//					counter = maxCounter;
+//				else
+//					retCount += aChild.getTotalChildCount();
+//			}
+//			if (parent != null)
+//				return retCount + ((TreeStateNode) getParent()).getCountTo(childIndex);
+//			if (!isRootVisible())
+//				return (retCount - 1);
+//			return retCount;
+//		}
 
 		/**
 		 * Returns the number of children that are expanded to
@@ -1732,30 +1729,30 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @return the number of children that are expanded to
 		 *		   <code>stopIndex</code>
 		 */
-		private int getNumExpandedChildrenTo(int stopIndex)
-		{
-			TreeStateNode aChild;
-			int retCount = stopIndex;
-
-			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
-			{
-				aChild = (TreeStateNode) getChildAt(counter);
-				if (aChild.childIndex >= stopIndex)
-					return retCount;
-				else
-				{
-					retCount += aChild.getTotalChildCount();
-				}
-			}
-			return retCount;
-		}
+//		private int getNumExpandedChildrenTo(int stopIndex)
+//		{
+//			TreeStateNode aChild;
+//			int retCount = stopIndex;
+//
+//			for (int counter = 0, maxCounter = getChildCount(); counter < maxCounter; counter++)
+//			{
+//				aChild = (TreeStateNode) getChildAt(counter);
+//				if (aChild.childIndex >= stopIndex)
+//					return retCount;
+//				else
+//				{
+//					retCount += aChild.getTotalChildCount();
+//				}
+//			}
+//			return retCount;
+//		}
 
 		/**
 		 * Messaged when this node either expands or collapses.
 		 */
-		private void didAdjustTree()
-		{
-		}
+//		private void didAdjustTree()
+//		{
+//		}
 	}
 
 	/**

@@ -237,7 +237,7 @@ public class StringResourceModelTest extends TestCase
 		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(((IModel)model.getNestedModel()).getObject(page));
+		Assert.assertNotNull(model.getNestedModel().getObject(page));
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...

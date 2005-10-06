@@ -258,7 +258,7 @@ public final class MarkupParserTest extends TestCase
 	    }
 	    catch (MarkupException ex)
 	    {
-	        ; // ignore
+	        // ignore
 	    }
 	    
 	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
@@ -282,7 +282,7 @@ public final class MarkupParserTest extends TestCase
 	    }
 	    catch (MarkupException ex)
 	    {
-	        ; // ignore
+	        // ignore
 	    }
 
 	    Markup markup = parser.parse("<wicket:remove>  </wicket:remove>");
@@ -303,7 +303,7 @@ public final class MarkupParserTest extends TestCase
 	    }
 	    catch (MarkupException ex)
 	    {
-	        ; // ignore
+	        // ignore
 	    }
 	    
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");

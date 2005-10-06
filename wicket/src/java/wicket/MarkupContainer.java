@@ -227,7 +227,7 @@ public abstract class MarkupContainer extends Component
 		final String id = Strings.firstPathComponent(path, ':');
 
 		// Get child by id
-		final Component child = (Component)children_get(id);
+		final Component child = children_get(id);
 
 		// Found child?
 		if (child != null)
@@ -420,7 +420,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
-		if(children != null)
+		if (children != null)
 		{
 			addStateChange(new Change()
 			{
@@ -985,7 +985,7 @@ public abstract class MarkupContainer extends Component
 		else
 		{
 			Component[] c = ((Component[])children);
-			final Component removed = (Component)c[index];
+			final Component removed = c[index];
 			if (c.length == 2)
 			{
 				if (index == 0)
@@ -1178,7 +1178,7 @@ public abstract class MarkupContainer extends Component
 		else
 		{
 			// Render as raw markup
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("Rendering raw markup");
 			}

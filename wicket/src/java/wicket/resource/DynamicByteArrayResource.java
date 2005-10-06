@@ -132,7 +132,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 			 */
 			private void checkLoadData()
 			{
-				if(data == null)
+				if (data == null)
 				{
 					data = getData();
 				}

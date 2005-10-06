@@ -104,7 +104,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			// attribute to be copied to the page's body tag. 
 			checkBodyOnLoad();
 		}
-		else if(headerPart != null)
+		else if (headerPart != null)
 		{
 			// already added but all the components in this header part must be touched (that they are rendered)
 			Response response = getRequestCycle().getResponse();
@@ -125,17 +125,12 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		{
 			for (int i = 0; i < handlers.length; i++)
 			{
-				if (handlers[i] instanceof IHeaderContributor)
+				((IHeaderContributor)handlers[i]).renderHead(container);
+
+				String stmt = ((IBodyOnloadContributor)handlers[i]).getBodyOnload();
+				if (stmt != null)
 				{
-					((IHeaderContributor)handlers[i]).renderHead(container);
-				}
-				if (handlers[i] instanceof IBodyOnloadContributor)
-				{
-					String stmt = ((IBodyOnloadContributor)handlers[i]).getBodyOnload();
-					if (stmt != null)
-					{
-						((WebPage)getPage()).appendToBodyOnLoad(stmt);
-					}
+					((WebPage)getPage()).appendToBodyOnLoad(stmt);
 				}
 			}	
 		}

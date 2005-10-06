@@ -88,7 +88,7 @@ abstract class AbstractTextComponent extends FormComponent
 	{
 		String input = getInput();
 		// if input was null then value was not submitted (disabled field), ignore it
-		if(input != null)
+		if (input != null)
 		{
 			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
 			{

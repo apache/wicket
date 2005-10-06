@@ -53,7 +53,7 @@ public class TableTest extends TestCase
 
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 	}
@@ -110,7 +110,7 @@ public class TableTest extends TestCase
 
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 		assertEquals(0, table.getStartIndex());

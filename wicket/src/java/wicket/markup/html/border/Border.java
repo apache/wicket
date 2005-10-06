@@ -168,12 +168,10 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		// Render the body tag
 		renderComponentTag(bodyTag);
 
-		// Find nearest Border at or above this container
-		Border border = (Border)((this instanceof Border) ? this : findParent(Border.class));
-
 		// If markup stream is null, that indicates we already recursed into
 		// this block of log and set it to null (below). If we did that,
 		// then we want to go up another level of border nesting.
+		Border border = this;
 		if (border.getMarkupStream() == null)
 		{
 			// Find Border at or above parent of this border

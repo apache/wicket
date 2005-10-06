@@ -55,7 +55,7 @@ public abstract class WebResource extends Resource
 	 */
 	protected void setHeaders(WebResponse response)
 	{
-		if(isCacheable())
+		if (isCacheable())
 		{
 			// If time is set also set cache headers.
 			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));

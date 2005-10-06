@@ -64,10 +64,7 @@ public class WebComponent extends Component implements IHeaderContributor
 		{
 			for (int i = 0; i < handlers.length; i++)
 			{
-				if (handlers[i] instanceof IHeaderContributor)
-				{
-					((IHeaderContributor)handlers[i]).renderHead(container);
-				}
+				handlers[i].renderHead(container);
 			}
 		}
 	}

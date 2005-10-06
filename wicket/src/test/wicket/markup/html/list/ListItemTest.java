@@ -64,7 +64,7 @@ public class ListItemTest extends TestCase
 
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 	}

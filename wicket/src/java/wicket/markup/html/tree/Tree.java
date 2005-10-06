@@ -280,13 +280,13 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			if (dirty)
 			{
 				paths.clear();
-				TreeModel model = (TreeModel)getTreeState().getModel();
+				TreeModel model = getTreeState().getModel();
 				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
 				Enumeration e = rootNode.preorderEnumeration();
 				while (e.hasMoreElements())
 				{
 					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
-					TreePath path = new TreePath(treeNode.getPath());
+					//TreePath path = new TreePath(treeNode.getPath());
 					paths.add(treeNode);
 				}
 				dirty = false;
@@ -402,7 +402,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			{
 				String url = getPage().urlFor(CSS.getPath());
 				return url;
-			};
+			}
 		};
 		WebMarkupContainer css = new WebMarkupContainer("css");
 		css.add(new AttributeModifier("href", true, hrefReplacement));
@@ -480,8 +480,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void treeNodesInserted(TreeModelEvent e)
 	{
 		modelChanging();
-		TreePath parentPath = e.getTreePath();
-		TreeState treeState = getTreeState();
 		Object[] newNodes = e.getChildren();
 		int len = newNodes.length;
 		for (int i = 0; i < len; i++)
@@ -517,8 +515,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void treeNodesRemoved(TreeModelEvent e)
 	{
 		modelChanging();
-		TreePath parentPath = e.getTreePath();
-		TreeState treeState = getTreeState();
 		Object[] deletedNodes = e.getChildren();
 		int len = deletedNodes.length;
 		for (int i = 0; i < len; i++)
@@ -583,7 +579,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected final TreePathsListView createTreePathsListView()
 	{
-		final TreeState treeState = getTreeState();
 		final TreePathsListView treePaths = new TreePathsListView("tree");
 		return treePaths;
 	}

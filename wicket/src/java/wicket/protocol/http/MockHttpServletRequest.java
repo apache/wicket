@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +40,9 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Application;
@@ -61,6 +65,9 @@ import wicket.util.value.ValueMap;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 { 
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(MockHttpServletRequest.class);
+
 	/** The application */
 	private final Application application;
 
@@ -943,6 +950,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToFormComponent(final Form form, final Map values)
 	{
 		setRequestToComponent(form);
+		
+		final Map valuesApplied = new HashMap();
 		form.visitChildren(new Component.IVisitor()
 		{
 			public Object component(final Component component)
@@ -953,11 +962,25 @@ public class MockHttpServletRequest implements HttpServletRequest
 					if (value != null)
 					{
 						parameters.put(((FormComponent)component).getInputName(), values.get(component));
+						valuesApplied.put(component.getId(), component);
 					}
 				}
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+		
+		if (values.size() != valuesApplied.size())
+		{
+			Map diff = new HashMap();
+			diff.putAll(values);
+			Iterator iter = valuesApplied.keySet().iterator();
+			while (iter.hasNext())
+			{
+				diff.remove(iter.next());
+			}
+			log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': " 
+					+ diff.keySet());
+		}
 	}
 
 	/**

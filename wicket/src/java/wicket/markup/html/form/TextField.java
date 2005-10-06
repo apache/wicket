@@ -106,7 +106,7 @@ public class TextField extends AbstractTextComponent
 	{
 		String input = getInput();
 		// if input was null then value was not submitted (disabled field), ignore it
-		if(input != null)
+		if (input != null)
 		{
 			// Get any validation type
 			final Class type = getValidationType();

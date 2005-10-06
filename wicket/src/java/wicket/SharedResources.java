@@ -102,12 +102,12 @@ public class SharedResources
 		 */
 		void cancel()
 		{
-			if(idleTask != null)
+			if (idleTask != null)
 			{
 				idleTask.cancel();
 				idleTask = null;
 			}
-			if(cacheTask != null)
+			if (cacheTask != null)
 			{
 				cacheTask.cancel();
 				cacheTask = null;
@@ -120,18 +120,18 @@ public class SharedResources
 		 */
 		void touch(String key)
 		{
-			if(idleTask != null)
+			if (idleTask != null)
 			{
 				idleTask.cancel();
 				makeIdleTask(key);
 			}
-			if(cacheTask != null)
+			if (cacheTask != null)
 			{
 				cacheTask.cancel();
 				makeCacheTask(key);
 			}
 		}
-	};
+	}
 
 	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();

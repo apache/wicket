@@ -139,7 +139,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	    }
 	    else if (problemEscalation == ERR_INGORE)
 	    {
-	        ;
+	        // no action required
 	    }
 	    else // if (problemEscalation == ERR_THROW_EXCEPTION)
 	    {

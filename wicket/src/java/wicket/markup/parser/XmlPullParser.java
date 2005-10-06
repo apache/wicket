@@ -24,9 +24,6 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.MarkupElement;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
@@ -48,9 +45,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	/** Regex to find <?xml encoding ... ?> */
 	private static final Pattern encodingPattern = Pattern
 			.compile("[\\s\\n\\r]*<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
-
-	/** Logging */
-	private static final Log log = LogFactory.getLog(XmlPullParser.class);
 
 	/** current column number. */
 	private int columnNumber = 1;
@@ -74,9 +68,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	private int lineNumber = 1;
 
 	private int positionMarker;
-
-	/** True to strip out HTML comments. */
-	private boolean stripComments;
 
 	/** temporary variable which will hold the name of the closing tag. */
 	private String skipUntilText;
@@ -352,7 +343,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	{
 	    char quote = 0;
 	    
-	    for(; startIndex < input.length(); startIndex++)
+	    for (; startIndex < input.length(); startIndex++)
 	    {
 	        char charAt = input.charAt(startIndex);
 	        if (quote != 0)
@@ -470,17 +461,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	public final void setPositionMarker(final int pos)
 	{
 		this.positionMarker = pos;
-	}
-
-	/**
-	 * Set whether to strip components.
-	 *
-	 * @param stripComments
-	 *            whether to strip components.
-	 */
-	public void setStripComments(boolean stripComments)
-	{
-		this.stripComments = stripComments;
 	}
 
 	/**

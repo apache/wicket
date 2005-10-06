@@ -29,9 +29,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketRuntimeException;
 
 /**
@@ -53,9 +50,6 @@ public class SunJceCrypt extends AbstractCrypt
 
 	/** Name of encryption method */
 	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
-	
-	/** Log. */
-	private static Log log = LogFactory.getLog(SunJceCrypt.class);
 
 	/** Salt */
 	private final static byte[] salt = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,

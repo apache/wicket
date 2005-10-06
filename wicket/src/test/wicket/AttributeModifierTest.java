@@ -18,7 +18,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -42,15 +41,6 @@ public class AttributeModifierTest extends TestCase
 	public AttributeModifierTest(final String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * Test that a modifier is Serializable
-	 */
-	public void testSerializable()
-	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model("model"));
-		Assert.assertTrue(modifier instanceof Serializable);
 	}
 
 	/**

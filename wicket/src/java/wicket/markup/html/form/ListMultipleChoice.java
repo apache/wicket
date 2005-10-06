@@ -276,7 +276,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		final String[] ids = inputAsStringArray();
 		// if input was null then value was not submitted (disabled field), ignore it
-		if(ids != null)
+		if (ids != null)
 		{
 			// Get the list of selected values
 			Collection selectedValues = (Collection)getModelObject();

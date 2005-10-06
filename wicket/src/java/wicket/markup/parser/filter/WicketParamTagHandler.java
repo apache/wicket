@@ -54,9 +54,6 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	/** Logging */
 	private final static Log log = LogFactory.getLog(WicketParamTagHandler.class);
 
-	/** The last Wicket component tag found in markup */
-	private ComponentTag componentTag;
-
 	/** The tag immediately preceeding the current tag */
 	private ComponentTag lastTag;
 
@@ -156,7 +153,6 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		{
 			// Reset the last tag seen. Null meaning: the last tag was
 			// no wicket tag.
-			componentTag = null;
 			return tag;
 		}
 
@@ -164,7 +160,6 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		// wicket param tag, than remember it and we are done.
 		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isParamTag())
 		{
-			componentTag = tag;
 			return tag;
 		}
 

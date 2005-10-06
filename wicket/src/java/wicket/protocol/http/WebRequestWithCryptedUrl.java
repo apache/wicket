@@ -48,9 +48,6 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	
 	/** URL query parameters decoded */
 	private final ValueMap parameters;
-
-	/** decoded url path */
-	private String path;
 	
 	/**
 	 * Constructor.
@@ -148,7 +145,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			if (pos < 0)
 			{
 				String[] prevValue = (String[])params.get(pair);
-				if(prevValue != null)
+				if (prevValue != null)
 				{
 					String[] newValue = new String[prevValue.length];
 					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
@@ -166,7 +163,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			    final String key = pair.substring(0, pos);
 			    final String value = pair.substring(pos + 1);
 				String[] prevValue = (String[])params.get(key);
-				if(prevValue != null)
+				if (prevValue != null)
 				{
 					String[] newValue = new String[prevValue.length];
 					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
@@ -194,8 +191,10 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	public String getParameter(final String key)
 	{
 		String[] value = (String[]) this.parameters.get(key);
-		if(value != null)
+		if (value != null)
+		{
 			return value[0];
+		}
 		return null;
 	}
 
@@ -208,7 +207,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	{
 		HashMap map = new HashMap(parameters.size(),1);
 		Iterator it = parameters.keySet().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			String param = (String)it.next();
 			map.put(param, getParameter(param));

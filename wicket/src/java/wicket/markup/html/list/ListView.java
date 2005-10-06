@@ -22,9 +22,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
@@ -84,9 +81,6 @@ import wicket.model.Model;
  */
 public abstract class ListView extends WebMarkupContainer
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(ListView.class);
-
 	/** Index of the first item to show */
 	private int firstIndex = 0;
 

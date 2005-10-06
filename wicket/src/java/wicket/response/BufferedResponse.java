@@ -21,9 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Response;
 import wicket.WicketRuntimeException;
 
@@ -37,9 +34,6 @@ import wicket.WicketRuntimeException;
  */
 public class BufferedResponse extends Response
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(BufferedResponse.class);
-
 	/**
 	 * The url to be used to issue a client side redirect request; when a
 	 * request to the url comes in, this buffered response is streamed to the

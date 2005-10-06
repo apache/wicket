@@ -18,8 +18,6 @@
  */
 package wicket.examples.signin2;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -70,7 +68,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
 	 */
-	protected WebResponse newWebResponse(HttpServletResponse servletResponse) throws IOException
+	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 	{
 		return new WebResponseWithCryptedUrl(servletResponse);
 	}

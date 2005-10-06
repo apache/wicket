@@ -161,14 +161,14 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	private void testContentType()
 	{
-		if(contentType == null || contentType.indexOf("unknown") != -1)
+		if (contentType == null || contentType.indexOf("unknown") != -1)
 		{
 			Application application = Application.get();
-			if(application instanceof WebApplication)
+			if (application instanceof WebApplication)
 			{
 				// TODO for non webapplication another method should be implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getWicketServlet().getServletContext().getMimeType(url.getFile());
-				if(contentType == null)
+				if (contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
 				}
@@ -219,7 +219,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 		if (file != null)
 		{
 			long lastModified = file.lastModified();
-			if(lastModified != this.lastModified)
+			if (lastModified != this.lastModified)
 			{
 				this.lastModified = lastModified;
 				this.contentLength = (int)file.length();
@@ -235,7 +235,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 	
 				// update the last modified time.
 				long lastModified = urlConnection.getLastModified();
-				if(lastModified != this.lastModified)
+				if (lastModified != this.lastModified)
 				{
 					this.lastModified = lastModified;
 					this.contentLength = urlConnection.getContentLength();

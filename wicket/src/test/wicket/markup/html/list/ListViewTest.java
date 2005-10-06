@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.list;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -63,7 +62,7 @@ public class ListViewTest extends TestCase
 
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 	}
@@ -105,9 +104,9 @@ public class ListViewTest extends TestCase
 	}
 
 	/**
-	 * @throws IOException
+	 *
 	 */
-	public void testEmptyListView() throws IOException
+	public void testEmptyListView()
 	{
 		// Empty tables
 		ListView lv = createListView(0);
@@ -123,7 +122,7 @@ public class ListViewTest extends TestCase
 			
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 		assertEquals(0, lv.getStartIndex());

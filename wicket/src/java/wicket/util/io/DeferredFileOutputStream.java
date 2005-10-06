@@ -51,12 +51,6 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * The output stream to which data will be written after the theshold is reached.
-	 */
-	private FileOutputStream diskOutputStream;
-
-
-	/**
 	 * The output stream to which data will be written at any given time. This will always
 	 * be one of <code>memoryOutputStream</code> or <code>diskOutputStream</code>.
 	 */
@@ -114,7 +108,6 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 		byte[] data = memoryOutputStream.toByteArray();
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		fos.write(data);
-		diskOutputStream = fos;
 		currentOutputStream = fos;
 		memoryOutputStream = null;
 	}

@@ -194,7 +194,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			}
 			catch (WicketRuntimeException ex)
 			{
-				; // fall through
+				// fall through
 			}
 		}
 		// It is not "*.html". Create a static resource reference
