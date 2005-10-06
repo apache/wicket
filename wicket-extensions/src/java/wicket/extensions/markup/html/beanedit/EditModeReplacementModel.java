@@ -72,11 +72,11 @@ public final class EditModeReplacementModel extends Model
 	 */
 	public Object getObject(Component component)
 	{
-		if(editMode != null)
+		if (editMode != null)
 		{
 			return (editMode == EditMode.READ_ONLY) ? "disabled" : null;
 		}
-		if(propertyMeta != null)
+		if (propertyMeta != null)
 		{
 			return (propertyMeta.getPropertyDescriptor().getWriteMethod() == null) ? "disabled" : null;
 		}

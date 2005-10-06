@@ -320,17 +320,23 @@ public final class FormInputModel implements Serializable
 		 .append(", urlProperty = ").append(urlProperty)
 		 .append(", numberRadioChoice = ").append(numberRadioChoice);
 		b.append(",selected sites {");
-		for(Iterator i = siteSelection.iterator(); i.hasNext();)
+		for (Iterator i = siteSelection.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
-			if(i.hasNext()) b.append(",");
+			if (i.hasNext()) 
+			{
+				b.append(",");
+			}
 		}
 		b.append("}");
 		b.append(",lines {");
-		for(Iterator i = lines.iterator(); i.hasNext();)
+		for (Iterator i = lines.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
-			if(i.hasNext()) b.append(",");
+			if (i.hasNext()) 
+			{
+				b.append(",");
+			}
 		}
 		b.append("}");
 		b.append("]");

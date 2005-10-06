@@ -106,7 +106,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		private String listAsString(List list)
 		{
 			StringBuffer b = new StringBuffer();
-			for(Iterator i = list.iterator(); i.hasNext();)
+			for (Iterator i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
 				if (i.hasNext()) b.append(", ");

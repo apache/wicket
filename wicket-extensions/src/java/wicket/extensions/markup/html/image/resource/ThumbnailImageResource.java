@@ -70,7 +70,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
 		super();
-		if(unscaledImageResource == null)
+		if (unscaledImageResource == null)
 		{
 			throw new NullPointerException("unscaledImageResource must be not null");
 		}
@@ -83,7 +83,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		if(thumbnail == null)
+		if (thumbnail == null)
 		{
 			final BufferedImage image = getScaledImageInstance();
 			thumbnail = toImageData(image);

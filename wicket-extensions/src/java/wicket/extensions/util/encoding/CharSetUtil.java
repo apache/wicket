@@ -72,7 +72,7 @@ public class CharSetUtil
 			if (inputStream == null)
 			{
 				charSetMap = new CharSetMap();
-				if(log.isDebugEnabled())
+				if (log.isDebugEnabled())
 				{
 					log.debug("File '" + CharSetMap.CHARSET_RESOURCE + "' not found");
 				}

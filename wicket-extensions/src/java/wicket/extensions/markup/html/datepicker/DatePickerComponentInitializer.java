@@ -167,7 +167,7 @@ public class DatePickerComponentInitializer implements IInitializer
 		PackageResource.bind(application, DatePicker.class, "calendar-setup.js");
 		
 		Iterator it = localeToLanguageReference.values().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			String path = (String)it.next();
 			PackageResource.bind(application, DatePickerSettings.class, path);

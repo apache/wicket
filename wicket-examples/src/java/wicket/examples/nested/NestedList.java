@@ -67,7 +67,7 @@ public final class NestedList extends Panel
         {
             Object modelObject = listItem.getModelObject();
 
-            if(modelObject instanceof List)
+            if (modelObject instanceof List)
             {
                 // create a panel that renders the sub lis
                 NestedList nested = new NestedList("nested", (List)modelObject);
