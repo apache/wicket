@@ -123,7 +123,6 @@ public class ApplicationSettingsTest extends TestCase
 	public void testLocalizer()
 	{
 		Application dummy = new DummyApplication();
-		ApplicationSettings settings = new ApplicationSettings(dummy);
 		Assert.assertNotNull("Localizer should be available", dummy.getLocalizer());
 	}
 }

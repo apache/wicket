@@ -23,9 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.IValidator;
@@ -233,9 +230,6 @@ public class ApplicationSettings
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
 			"SHOW_NO_EXCEPTION_PAGE");
-
-	/** Log */
-	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
 	/** The application */
 	private Application application;

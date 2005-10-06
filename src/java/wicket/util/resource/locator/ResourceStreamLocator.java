@@ -19,9 +19,6 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
@@ -33,9 +30,6 @@ import wicket.util.string.Strings;
  */
 public class ResourceStreamLocator implements IResourceStreamLocator
 {
-	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
-
 	/** The resource locator */
 	private IResourceStreamLocator locator;
 

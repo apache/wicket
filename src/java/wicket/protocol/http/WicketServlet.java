@@ -134,8 +134,7 @@ public class WicketServlet extends HttpServlet
 			    requestUri += "?" + servletRequest.getQueryString();
 			}
 
-			BufferedResponse bufferedResponse = (BufferedResponse)webApplication
-					.getBufferedResponse(servletRequest, requestUri);
+			BufferedResponse bufferedResponse = webApplication.getBufferedResponse(servletRequest, requestUri);
 
 			if (bufferedResponse != null)
 			{

@@ -17,9 +17,6 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
@@ -38,9 +35,6 @@ import wicket.markup.WicketTag;
 public class WicketLinkResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Logging */
-	private static Log log = LogFactory.getLog(WicketLinkResolver.class);
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container

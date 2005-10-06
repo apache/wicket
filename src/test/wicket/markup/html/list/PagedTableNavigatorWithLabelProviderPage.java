@@ -80,7 +80,10 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 				int size = listview.getList().size();
 				 int current = page*pageSize;
 				 int end = current+pageSize;
-				 if(end > size) end = size;
+				 if (end > size) 
+				 {
+					 end = size;
+				 }
 				 current++; // page start at 0.
 				 return current + "-" + end;
 			}

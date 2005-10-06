@@ -113,12 +113,4 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @param pos
 	 */
 	public abstract void setPositionMarker(final int pos);
-
-	/**
-	 * Set whether to strip components.
-	 * 
-	 * @param stripComments
-	 *			  if true, comments will be stripped
-	 */
-	public abstract void setStripComments(boolean stripComments);
 }

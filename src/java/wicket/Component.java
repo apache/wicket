@@ -413,25 +413,28 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public final Component add(final AttributeModifier modifier)
 	{
-		if(attributeModifiers == null)
+		if (attributeModifiers == null)
 		{
 			attributeModifiers = modifier;
 		}
 		else
 		{
-			if(attributeModifiers instanceof Object[])
+			if (attributeModifiers instanceof Object[])
 			{
 				Object[] tmp = (Object[])attributeModifiers;
 				for (int i = 0; i < tmp.length; i++)
 				{
-					if(tmp[i] == modifier) return this;
+					if (tmp[i] == modifier)
+					{
+						return this;
+					}
 				}
 				Object[] newArray = new Object[tmp.length+1];
 				System.arraycopy(tmp, 0, newArray, 0, tmp.length);
 				newArray[tmp.length] = modifier;
 				attributeModifiers = newArray;
 			}
-			else if(attributeModifiers != modifier)
+			else if (attributeModifiers != modifier)
 			{
 				Object[] tmp = new Object[2];
 				tmp[0] = attributeModifiers;
@@ -916,9 +919,9 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		String variation = getVariation();
 		String style = getSession().getStyle();
-		if(variation != null && !"".equals(variation))
+		if (variation != null && !"".equals(variation))
 		{
-			if(style != null && !"".equals(style))
+			if (style != null && !"".equals(style))
 			{
 				style = variation + "_" + style;
 			}
@@ -1257,7 +1260,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		if (this.model != model)
 		{
 			addStateChange(new ComponentModelChange(this.model));
-			this.model = (IModel)model;
+			this.model = model;
 		}
 		
 		// If a compound model is explicitly set on this component
@@ -1433,10 +1436,10 @@ public abstract class Component implements Serializable, IAjaxListener
 		if (detailed)
 		{
 			final Page page = findPage();
-			if(page == null)
+			if (page == null)
 			{
 				return "[Component id = " + getId() + ", page = <No Page>, path = "
-				+ getPath() + "." + Classes.name(getClass()) + "]";
+					+ getPath() + "." + Classes.name(getClass()) + "]";
 			}
 			else
 			{
@@ -1863,7 +1866,6 @@ public abstract class Component implements Serializable, IAjaxListener
 		onComponentTag(tag);
 
 		// If we're an openclose tag
-		final XmlTag.Type type = tag.getType();
 		if (!tag.isOpenClose() && !tag.isOpen())
 		{
 			// We were something other than <tag> or <tag/>
@@ -1916,7 +1918,7 @@ public abstract class Component implements Serializable, IAjaxListener
 				{
 					((AttributeModifier)attributeModifiers).replaceAttibuteValue(this, tag);
 				}
-				else if(attributeModifiers instanceof Object[])
+				else if (attributeModifiers instanceof Object[])
 				{
 					Object[] array = (Object[])attributeModifiers ;
 					for (int i = 0; i < array.length; i++)
@@ -2046,7 +2048,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		{
 			((AttributeModifier)attributeModifiers).detachModel();
 		}
-		else if(attributeModifiers instanceof Object[])
+		else if (attributeModifiers instanceof Object[])
 		{
 			Object[] array = (Object[])attributeModifiers ;
 			for (int i = 0; i < array.length; i++)

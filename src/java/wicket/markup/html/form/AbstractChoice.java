@@ -290,7 +290,7 @@ abstract class AbstractChoice extends FormComponent
 		buffer.append(getDefaultChoice(selected));
 
 		List choices = getChoices();
-		for(int index=0;index<choices.size();index++)
+		for (int index=0;index<choices.size();index++)
 		{
 			// Get next choice (Can be null is up to the renderer to support this)
 			final Object choice = choices.get(index);

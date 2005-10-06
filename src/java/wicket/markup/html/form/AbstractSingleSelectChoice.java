@@ -159,11 +159,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public final void setModelValue(final String value)
 	{
 		List choices = getChoices();
-		for(int index=0;index<choices.size();index++)
+		for (int index=0;index<choices.size();index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
-			if(getChoiceRenderer().getIdValue(choice, index).equals(value))
+			if (getChoiceRenderer().getIdValue(choice, index).equals(value))
 			{
 				setModelObject(choice);
 				break;
@@ -236,7 +236,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	{
 		final String id = getInput();
 		// if input was null then value was not submitted (disabled field), ignore it
-		if(id != null)
+		if (id != null)
 		{
 			if (Strings.isEmpty(id))
 			{

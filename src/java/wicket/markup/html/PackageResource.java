@@ -176,7 +176,7 @@ public class PackageResource extends WebResource
 		this.locale = locale;
 		this.style = style;
 		
-		if(locale != null)
+		if (locale != null)
 		{
 			// get the resource stream so that the real locale that could be resolved is set.
 			getResourceStream();

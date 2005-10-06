@@ -531,7 +531,10 @@ public abstract class Application
 				} 
 				finally
 				{
-					if(is != null) is.close();
+					if (is != null) 
+					{
+						is.close();
+					}
 				}
 			}
 		}

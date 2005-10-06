@@ -17,7 +17,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,9 +45,8 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponseWithCryptedUrl(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponseWithCryptedUrl(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}

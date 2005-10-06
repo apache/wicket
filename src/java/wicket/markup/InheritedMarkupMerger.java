@@ -99,7 +99,7 @@ public class InheritedMarkupMerger
 			        boolean copy = false;
 			        for (int i=0; i < extendIndex; i++)
 			        {
-			            MarkupElement elem = (MarkupElement) markup.get(i);
+			            MarkupElement elem = markup.get(i);
 			            if (elem instanceof WicketTag)
 			            {
 			                WicketTag etag = (WicketTag) elem;
@@ -144,7 +144,7 @@ public class InheritedMarkupMerger
 			        boolean copy = false;
 			        for (int i=0; i < extendIndex; i++)
 			        {
-			            MarkupElement elem = (MarkupElement) markup.get(i);
+			            MarkupElement elem = markup.get(i);
 			            if (elem instanceof WicketTag)
 			            {
 			                WicketTag etag = (WicketTag) elem;

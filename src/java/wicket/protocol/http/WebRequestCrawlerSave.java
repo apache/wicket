@@ -61,9 +61,7 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 	{
 		super(request);
 
-		String servletPath = request.getServletPath();
 		queryString = request.getQueryString();
-		String contextPath = request.getContextPath();
 		this.path = request.getPathInfo();
 		
 		if (this.path == null)

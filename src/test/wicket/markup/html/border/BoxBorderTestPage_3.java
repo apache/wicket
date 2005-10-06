@@ -20,6 +20,9 @@ package wicket.markup.html.border;
 
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.form.TextField;
+import wicket.model.PropertyModel;
+import wicket.util.value.ValueMap;
 
 
 /**
@@ -27,18 +30,22 @@ import wicket.markup.html.WebPage;
  * 
  * @author Chris Turner
  */
-public class BoxBorderTestPage extends WebPage
+public class BoxBorderTestPage_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	private final ValueMap properties = new ValueMap();
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param parameters
 	 */
-	public BoxBorderTestPage(final PageParameters parameters)
+	public BoxBorderTestPage_3(final PageParameters parameters)
 	{
-	    add(new BorderComponent1("border1"));
-	    add(new BorderComponent2("border2"));
+		Border formBorder = new FormBorder("border");
+		add(formBorder);
+		
+		formBorder.add(new TextField("name", new PropertyModel(properties, "name")));
 	}
 }

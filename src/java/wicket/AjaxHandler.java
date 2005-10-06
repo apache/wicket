@@ -79,7 +79,7 @@ public abstract class AjaxHandler
 		String implementationId = getImplementationId();
 
 		// was a contribution for this specific implementation done yet?
-		if(!contributors.contains(implementationId))
+		if (!contributors.contains(implementationId))
 		{
 			staticContrib = getBodyOnloadInitContribution();
 			contributors.add(implementationId);
@@ -112,7 +112,7 @@ public abstract class AjaxHandler
 		String implementationId = getImplementationId();
 
 		// was a contribution for this specific implementation done yet?
-		if(!contributors.contains(implementationId))
+		if (!contributors.contains(implementationId))
 		{
 			renderHeadInitContribution(container);
 			contributors.add(implementationId);

@@ -21,6 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
+import wicket.protocol.http.MockHttpServletRequest;
 
 /**
  * Test the component: WicketComponentTree
@@ -48,7 +51,7 @@ public class BoxBorderTest extends WicketTestCase
 	 */
 	public void test1() throws Exception
 	{
-		executeTest(BoxBorderTestPage.class, "BoxBorderTestPage_ExpectedResult.html");
+		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_1.html");
 	}
 	
 	/**
@@ -58,5 +61,31 @@ public class BoxBorderTest extends WicketTestCase
 	public void test2() throws Exception
 	{
 		executeTest(BoxBorderTestPage_2.class, "BoxBorderTestPage_ExpectedResult_2.html");
+	}
+	
+	/**
+	 * Test a simply page containing the debug component
+	 * @throws Exception
+	 */
+	public void test3() throws Exception
+	{
+		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
+
+        Border border = (Border) application.getLastRenderedPage().get("border");
+        Form form = (Form) application.getLastRenderedPage().get("border:myForm");
+        
+        TextField input = (TextField) application.getLastRenderedPage().get("border:name");
+        assertEquals("", input.getModelObjectAsString());
+        
+        application.setupRequestAndResponse();
+
+        MockHttpServletRequest mockRequest = application.getServletRequest();
+        mockRequest.setRequestToComponent(form);
+        mockRequest.setParameter(input.getInputName(), "jdo");
+
+        application.processRequestCycle();      
+
+        input = (TextField) application.getLastRenderedPage().get("border:name");
+        assertEquals("jdo", input.getModelObjectAsString());
 	}
 }

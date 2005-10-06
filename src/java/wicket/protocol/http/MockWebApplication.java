@@ -17,8 +17,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -27,6 +25,8 @@ import wicket.ApplicationSettings;
 import wicket.DefaultPageFactory;
 import wicket.Page;
 import wicket.Session;
+import wicket.WicketRuntimeException;
+import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -76,6 +76,9 @@ public class MockWebApplication extends WebApplication
 
     /** The last rendered page. */
     private Page lastRenderedPage;
+
+    /** The previously rendered page */
+	private Page previousRenderedPage;
 
     /** Mock http servlet request. */
     private final MockHttpServletRequest servletRequest;
@@ -138,6 +141,16 @@ public class MockWebApplication extends WebApplication
     public Page getLastRenderedPage()
     {
         return lastRenderedPage;
+    }
+
+    /**
+     * Get the page that was previously 
+     * 
+     * @return The last rendered page
+     */
+    public Page getPreviousRenderedPage()
+    {
+        return previousRenderedPage;
     }
 
     /**
@@ -216,15 +229,22 @@ public class MockWebApplication extends WebApplication
     /**
      * Create and process the request cycle using the current request and
      * response information.
-     * 
-     * @throws ServletException
-     *             If the render cycle fails
      */
-    public void processRequestCycle() throws ServletException
+    public void processRequestCycle()
     {
         WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest,
                 wicketResponse);
-        cycle.request();
+        
+        try
+        {
+        	cycle.request();
+        }
+        catch (ServletException ex)
+        {
+        	throw new WicketRuntimeException("Error while processing Wicket request cycle.", ex);
+        }
+
+        previousRenderedPage = lastRenderedPage;
         
         // handle redirects which are usually managed by the browser transparently
         final MockHttpServletResponse httpResponse = 
@@ -241,22 +261,34 @@ public class MockWebApplication extends WebApplication
             // TODO adouma: check if this is a valid fix            
             // wicketSession = getSession(servletRequest);            
             wicketSession = getSession(wicketRequest, true);
-            new WebRequestCycle(wicketSession, wicketRequest,
-                    wicketResponse).request();
+            try
+            {
+            	new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
+            }
+            catch (ServletException ex)
+            {
+            	throw new WicketRuntimeException("Error while processing Wicket redirect request cycle.", ex);
+            }
         }
         generateLastRenderedPage(cycle);
+        
+		if (getLastRenderedPage() instanceof ExceptionErrorPage)
+		{
+			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage()).getRootCause());
+		}
     }
 
 	private void generateLastRenderedPage(WebRequestCycle cycle)
 	{
 		lastRenderedPage = cycle.getResponsePage();
-		if(lastRenderedPage == null)
+		if (lastRenderedPage == null)
 		{
 			Class responseClass = cycle.getResponsePageClass();
-			if(responseClass != null)
+			if (responseClass != null)
 			{
 				Session.set(cycle.getSession());
-				lastRenderedPage = new DefaultPageFactory().newPage(responseClass, cycle.getResponsePagePageParameters());
+				lastRenderedPage = new DefaultPageFactory().newPage(
+						responseClass, cycle.getResponsePagePageParameters());
 			}
 		}
 	}
@@ -276,10 +308,8 @@ public class MockWebApplication extends WebApplication
      * Reset the request and the response back to a starting state and recreate
      * the necessary wicket request, response and session objects. The request
      * and response objects can be accessed and initialised at this point.
-     * 
-     * @throws IOException
      */
-    public void setupRequestAndResponse() throws IOException
+    public void setupRequestAndResponse()
     {
         servletRequest.initialize();
         servletResponse.initialize();
@@ -287,5 +317,4 @@ public class MockWebApplication extends WebApplication
         wicketSession = getSession(wicketRequest, true);
         wicketResponse = new WebResponse(servletResponse);
     }
-
 }

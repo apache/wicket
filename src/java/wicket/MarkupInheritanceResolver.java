@@ -17,9 +17,6 @@
  */
 package wicket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
@@ -34,9 +31,6 @@ import wicket.markup.html.WebMarkupContainer;
 public class MarkupInheritanceResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Logging */
-	private static Log log = LogFactory.getLog(MarkupInheritanceResolver.class);
 
 	/**
 	 * @see wicket.IComponentResolver#resolve(MarkupContainer,

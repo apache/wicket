@@ -40,9 +40,12 @@ import wicket.Resource;
 import wicket.Response;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.form.Form;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 import wicket.util.string.Strings;
 
 /**
@@ -58,13 +61,13 @@ import wicket.util.string.Strings;
  * @author Johan Compagner
  * @author Gili Tzabari
  */
-public class WebRequestCycle extends RequestCycle
+public class WebRequestCycle_New extends RequestCycle
 {
 	/** Path prefix for shared resources */
 	public static final String resourceReferencePrefix = "/resources/";
 
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+	private static final Log log = LogFactory.getLog(WebRequestCycle_New.class);
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -77,7 +80,7 @@ public class WebRequestCycle extends RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public WebRequestCycle(final WebSession session, final WebRequest request,
+	public WebRequestCycle_New(final WebSession session, final WebRequest request,
 			final Response response)
 	{
 		super(session, request, response);
@@ -131,7 +134,6 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-
 		if (callDispatchedComponentListener())
 		{
 			// if it is, we don't need to update the cluster, etc, and return false
@@ -142,11 +144,24 @@ public class WebRequestCycle extends RequestCycle
 			// Returning a page
 			return true;
 		}
-		else
+		// If it's not a resource reference or static content
+		else if (resourceReference() || staticContent())
+	    {
+			// if it is, we don't need to update the cluster, etc, and return false
+	    }
+		else 
 		{
-			// If it's not a resource reference or static content
-			if (!resourceReference() && !staticContent())
-			{
+		    int rtn = doParseRequest();
+		    if (rtn == 1)
+		    {
+		        return true;
+		    }
+		    else if (rtn == 2)
+		    {
+				// if it is, we don't need to update the cluster, etc, and return false
+		    }
+		    else
+		    {
 				// not found... send 404 to client indicating that no resource was found
 				// for the request uri
 				WebResponse webResponse = (WebResponse)getResponse();
@@ -160,7 +175,7 @@ public class WebRequestCycle extends RequestCycle
 					// that seems unlikely... anyway, log exception and forget about it
 					log.error("unable to send 404 for " + getRequest() + ", cause: " + e.getMessage(), e);
 				}
-			}
+		    }
 		}
 
 		// Don't update the cluster, not returning a page
@@ -169,6 +184,45 @@ public class WebRequestCycle extends RequestCycle
 		return false;
 	}
 
+	/**
+	 * Subclasses may implement there own strategies to return static content.
+	 * The default implementation only returns css and js files matching the url 
+	 * path and found by the class loader.
+	 * 
+	 * @return 1 - returning a page; 2 - static content (no Page); else - not found
+	 */
+	protected int doParseRequest()
+	{
+		final String path = Strings.beforeLast(request.getPath(), '.').substring(1);
+		final String extension = '.' + Strings.afterLast(request.getPath(), '.');
+		if (".css".equalsIgnoreCase(extension) || ".js".equalsIgnoreCase(extension))
+		{
+		    final IResourceStream stream = new ClassLoaderResourceStreamLocator().locate(
+		            getClass().getClassLoader(), path, session.getStyle(), session.getLocale(), 
+		            extension);
+		    
+			if (stream != null)
+			{
+				final Resource resource = new Resource()
+				{
+					private static final long serialVersionUID = 1L;
+
+					public IResourceStream getResourceStream()
+					{
+						return stream;
+					}
+				};
+				resource.onResourceRequested();
+				
+				// Found static resource
+				return 2;
+			}
+		}
+		
+		// Did not found the resource
+		return 0;
+	}
+	
 	/**
 	 * Redirects browser to the given page.
 	 * NOTE: Usually, you should never call this method directly, but work with
@@ -182,8 +236,8 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	protected void redirectTo(final Page page) throws ServletException
 	{
-		String redirectUrl = null;
-		
+		String redirectUrl = page.urlFor(page, IRedirectListener.class);
+
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
 		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
@@ -221,12 +275,12 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(currentResponse);
 
 				final String responseRedirect = redirectResponse.getRedirectUrl();
-				if (responseRedirect != null)
+				if (redirectUrl != responseRedirect)
 				{
 					// if the redirectResponse has another redirect url set
 					// then the rendering of this page caused a redirect to something else.
 					// set this redirect then.
-					redirectUrl = responseRedirect;
+					redirectUrl = redirectResponse.getRedirectUrl();
 				}
 				else if (redirectResponse.getContentLength() > 0)
 				{
@@ -238,7 +292,6 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
 
-					redirectUrl = page.urlFor(page, IRedirectListener.class);
           // TODO adouma: no Portlets support yet so typecasted for Servlet env.
 					((WebApplication)application).addRedirect(
 					        ((ServletWebRequest)getWebRequest()).getHttpServletRequest(), redirectUrl, redirectResponse);
@@ -259,10 +312,6 @@ public class WebRequestCycle extends RequestCycle
 			page.internalEndRequest();
 		}
 
-		if (redirectUrl == null)
-		{
-			redirectUrl = page.urlFor(page, IRedirectListener.class);
-		}
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
@@ -279,15 +328,31 @@ public class WebRequestCycle extends RequestCycle
 		{
 			final String contextPath = request.getContextPath();
 			buffer.append(contextPath);
-			String path = request.getServletPath();
-			if (path == null || "".equals(path)) 
-			{
-				path = "/";
-			}
-			buffer.append(path);			
+			buffer.append(request.getServletPath());
 		}
 
 		return buffer;
+	}
+
+
+	/**
+	 * Sets values for form components based on cookie values in the request.
+	 *
+	 * @param page
+	 *            the current page
+	 */
+	final void setFormComponentValuesFromCookies(final Page page)
+	{
+		// Visit all Forms contained in the page
+		page.visitChildren(Form.class, new Component.IVisitor()
+		{
+			// For each FormComponent found on the Page (not Form)
+			public Object component(final Component component)
+			{
+				((Form)component).loadPersistentFormComponentValues();
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -563,8 +628,8 @@ public class WebRequestCycle extends RequestCycle
 				// Invoke interface on component
 				invokeInterface(component, method);
 
-//				// Set form component values from cookies
-//				setFormComponentValuesFromCookies(page);
+				// Set form component values from cookies
+				setFormComponentValuesFromCookies(page);
 			}
 			else
 			{
@@ -621,10 +686,7 @@ public class WebRequestCycle extends RequestCycle
 			Resource resource = sharedResources.get(rawResourceKey);
 			if (resource == null)
 			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Could not find resource referenced by key " + rawResourceKey);
-				}
+				log.debug("Could not find resource referenced by key " + rawResourceKey);
 				try
 				{
 					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);

@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -48,9 +45,6 @@ import wicket.util.lang.Classes;
 public final class AutoComponentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
-    /** Logging */
-    private static Log log = LogFactory.getLog(AutoComponentResolver.class);
 
     /** 
      * Temporary storage for containers currently being rendered. Thus child

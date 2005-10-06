@@ -17,9 +17,6 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
@@ -46,9 +43,6 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 public class HtmlHeaderResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Logging */
-	private static Log log = LogFactory.getLog(HtmlHeaderResolver.class);
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container

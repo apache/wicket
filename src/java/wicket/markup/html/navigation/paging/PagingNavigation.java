@@ -308,7 +308,7 @@ public class PagingNavigation extends Loop
 
 		// Add a page number label to the list which is enclosed by the link
 		String label = "";
-		if(labelProvider != null)
+		if (labelProvider != null)
 		{
 			label = labelProvider.getPageLabel(pageIndex);
 		}

@@ -42,7 +42,7 @@ public class TrivialCrypt extends AbstractCrypt
 		final byte[] result = new byte[input.length];
 		for (int i = 0; i < input.length; i++)
 		{
-			result[i] = (byte)((int)input[i] ^ 0xff);
+			result[i] = (byte)(input[i] ^ 0xff);
 		}
 		return result;
 	}

@@ -20,9 +20,6 @@ package wicket.util.watch;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.util.listener.ChangeListenerSet;
 import wicket.util.listener.IChangeListener;
 
@@ -34,9 +31,6 @@ import wicket.util.listener.IChangeListener;
  */
 public final class Watcher
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(Watcher.class);
-
 	/** Maps objects to change listener sets */
 	private final Map keyToEntry = new HashMap();
 

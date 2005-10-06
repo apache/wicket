@@ -431,12 +431,9 @@ public abstract class FileUploadBase {
      *                      opposed to a file.
      *
      * @return A newly created <code>FileItem</code> instance.
-     *
-     * @exception FileUploadException if an error occurs.
      */
     protected FileItem createItem(Map /* String, String */ headers,
-                                  boolean isFormField)
-        throws FileUploadException {
+                                  boolean isFormField) {
         return getFileItemFactory().createItem(getFieldName(headers),
                 getHeader(headers, CONTENT_TYPE),
                 isFormField,

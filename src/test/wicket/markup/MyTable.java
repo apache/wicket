@@ -34,8 +34,6 @@ import wicket.model.Model;
 public class MyTable extends ListView
 {
 	private static final long serialVersionUID = 1L;
-	
-    private int rows = 10;
     
     /**
      * Construct.
@@ -58,8 +56,6 @@ public class MyTable extends ListView
      */
     public void setRowsPerPage(final int rows)
     {
-        this.rows = rows;
-        
         List list = new ArrayList();
 
         for (int i=0; i < rows; i++)

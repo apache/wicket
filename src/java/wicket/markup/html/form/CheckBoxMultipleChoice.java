@@ -310,7 +310,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		final List choices = getChoices();
 
 		// Loop through choices
-		for(int index=0;index<choices.size();index++)
+		for (int index=0;index<choices.size();index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);

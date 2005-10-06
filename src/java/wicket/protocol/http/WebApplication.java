@@ -17,7 +17,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -185,7 +184,6 @@ public abstract class WebApplication extends Application
 	protected void internalInit()
 	{
 		super.internalInit();
-		final WicketServlet servlet = getWicketServlet();
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
 		{
@@ -214,7 +212,10 @@ public abstract class WebApplication extends Application
 	{
 		// Get session, creating if it doesn't exist
 		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest().getSession(true);
-		if(!create && httpSession == null) return null;
+		if (!create && (httpSession == null)) 
+		{
+			return null;
+		}
 
 		// Namespacing for session attributes is provided by adding the servlet
 		// path
@@ -228,7 +229,11 @@ public abstract class WebApplication extends Application
 		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
 		if (webSession == null)
 		{
-			if(!create) return null;
+			if (!create) 
+			{
+				return null;
+			}
+			
 			// Create session using session factory
 			final Session session = getSessionFactory().newSession();
 			if (session instanceof WebSession)
@@ -276,10 +281,8 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param servletResponse
 	 * @return a WebResponse object
-	 * @throws IOException
 	 */
 	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-			throws IOException
 	{
 		return (getSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)

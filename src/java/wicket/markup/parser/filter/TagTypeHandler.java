@@ -22,9 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -40,9 +37,6 @@ import wicket.markup.parser.XmlTag;
  */
 public final class TagTypeHandler extends AbstractMarkupFilter
 {
-	/** Logging */
-	private static Log log = LogFactory.getLog(TagTypeHandler.class);
-
 	/** Tag stack to find balancing tags */
 	final private Stack stack = new Stack();
 

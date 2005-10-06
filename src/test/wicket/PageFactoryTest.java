@@ -18,18 +18,12 @@
  */
 package wicket;
 
-import java.io.IOException;
-
-import junit.framework.TestCase;
-import wicket.protocol.http.MockWebApplication;
-import wicket.resource.DummyApplication;
 
 /**
  * Test the Pagefactory
  */
-public class PageFactoryTest extends TestCase
+public class PageFactoryTest extends WicketTestCase
 {
-	private MockWebApplication application;
 	private DefaultPageFactory factory;
 
 	/**
@@ -46,7 +40,6 @@ public class PageFactoryTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new DummyApplication();
 		factory = new DefaultPageFactory();
 	}
 
@@ -112,10 +105,8 @@ public class PageFactoryTest extends TestCase
 
 	/**
 	 * Test a new page using a class and page parameters.
-	 * 
-	 * @throws IOException
 	 */
-	public void testNewPageClassPageParameters() throws IOException
+	public void testNewPageClassPageParameters()
 	{
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, (PageParameters)null).getClass());
 

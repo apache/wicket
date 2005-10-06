@@ -25,9 +25,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.ApplicationSettings;
 import wicket.MarkupContainer;
 import wicket.Page;
@@ -58,9 +55,6 @@ import wicket.util.value.ValueMap;
  */
 public class MarkupParser
 {
-    /** Logging */
-    private static final Log log = LogFactory.getLog(MarkupParser.class);
-
     /** Name of desired componentId tag attribute.
      * E.g. &lt;tag wicket:id="..."&gt; */
     private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
@@ -186,7 +180,6 @@ public class MarkupParser
 	 */
 	protected void initFilterChain()
 	{
-	    ;
 	}
 
 	/**

@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
-import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -163,9 +162,6 @@ import wicket.util.string.Strings;
  */
 public abstract class RequestCycle
 {
-	/** Map from class name to Constructor. */
-	private static final Map constructors = new HashMap();
-
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
@@ -193,13 +189,6 @@ public abstract class RequestCycle
 	private Page invokePage;
 
 	/**
-	 * If the page is set to null, we'll first set the current page to this
-	 * variable. We use this in order to be able to release resources on the
-	 * page and its components.
-	 */
-	private Page pageBackup;
-
-	/**
 	 * True if request should be redirected to the resulting page instead of
 	 * just rendering it back to the user.
 	 */
@@ -219,7 +208,6 @@ public abstract class RequestCycle
 	 * bookmarkable page url
 	 */
 	private PageParameters responsePageParams;
-	private IResourceStream responseStream;
 
 	/** True if the cluster should be updated */
 	private boolean updateCluster;

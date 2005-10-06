@@ -38,9 +38,6 @@ import wicket.util.upload.FileItem;
 public class FileUploadField extends FormComponent
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** The model for the uploaded file */
-	private FileUpload fileUpload;
 
 	/** True if a model has been set explicitly */
 	private boolean hasExplicitModel;

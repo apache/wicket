@@ -19,10 +19,6 @@
 package wicket;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
@@ -32,8 +28,6 @@ import wicket.protocol.http.MockWebApplication;
  */
 public abstract class WicketTestCase extends TestCase
 {
-	private static Log log = LogFactory.getLog(WicketTestCase.class);
-
 	/** */
 	public MockWebApplication application;
 

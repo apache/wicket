@@ -69,7 +69,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	{
 		final boolean remove = size() > maxEntries;
 		// when it should be removed remember the oldest value that will be removed
-		if(remove)
+		if (remove)
 		{
 			this.removedValue = eldest.getValue();
 		}

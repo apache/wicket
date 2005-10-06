@@ -266,15 +266,11 @@ public class MultipartStream {
      * @param boundary The token used for dividing the stream into
      *                 <code>encapsulations</code>.
      *
-     * @exception IOException when an error occurs.
-     *
      * @see #MultipartStream()
      * @see #MultipartStream(InputStream, byte[], int)
      *
      */
-    public MultipartStream(InputStream input,
-                           byte[] boundary)
-        throws IOException {
+    public MultipartStream(InputStream input, byte[] boundary) {
         this(input, boundary, DEFAULT_BUFSIZE);
     }
 

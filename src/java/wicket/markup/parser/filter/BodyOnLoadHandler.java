@@ -19,9 +19,6 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -37,9 +34,6 @@ import wicket.markup.parser.IMarkupFilter;
  */
 public final class BodyOnLoadHandler extends AbstractMarkupFilter
 {
-    /** Logging */
-	private static final Log log = LogFactory.getLog(BodyOnLoadHandler.class);
-
     /** The automatically assigned wicket:id to &gt;body&lt; tag */
 	public static final String BODY_ID = "_body";
 

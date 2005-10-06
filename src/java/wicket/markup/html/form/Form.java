@@ -18,16 +18,19 @@
 package wicket.markup.html.form;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.model.IModel;
@@ -304,6 +307,28 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+		
+		/**
+		 * TODO may be we should re-think how Borders are implemented, because
+		 * there are just too many exceptions in the code base because of borders.
+		 * This time it is to solve the problem tested in BoxBorderTestPage_3
+		 * where the Form is defined in the box border and the FormComponents
+		 * are in the "body". Thus, the formComponents are not childs of the 
+		 * form. They are rather childs of the border, as the Form itself.
+		 */
+		if (getParent() instanceof Border)
+		{
+			MarkupContainer border = getParent();
+			Iterator iter = border.iterator();
+			while (iter.hasNext())
+			{
+				Component child = (Component) iter.next();
+				if (child instanceof FormComponent)
+				{
+					visitor.formComponent((FormComponent)child);
+				}
+			}
+		}
 	}
 
 	/**

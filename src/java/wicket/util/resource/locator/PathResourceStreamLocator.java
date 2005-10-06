@@ -58,7 +58,7 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 	protected IResourceStream locate(final ClassLoader classLoader, final String path)
 	{
 		// Log attempt
-		if(log.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
 			log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
 		}

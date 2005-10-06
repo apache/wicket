@@ -21,9 +21,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,9 +33,6 @@ import wicket.util.concurrent.ConcurrentHashMap;
  */
 public final class DefaultPageFactory implements IPageFactory
 {
-	/** Logging */
-	private final static Log log = LogFactory.getLog(DefaultPageFactory.class);
-
 	/** Map of Constructors for Page subclasses */
 	private final Map constructorForClass = new ConcurrentHashMap();
 

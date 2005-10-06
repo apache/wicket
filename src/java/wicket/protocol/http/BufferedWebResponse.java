@@ -17,12 +17,7 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketRuntimeException;
 
@@ -33,9 +28,6 @@ import wicket.WicketRuntimeException;
  */
 public class BufferedWebResponse extends WebResponse
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(BufferedWebResponse.class);
-
 	/** URL to redirect to when response is flushed, if any */
 	private String redirectURL;
 
@@ -54,9 +46,8 @@ public class BufferedWebResponse extends WebResponse
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	BufferedWebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	BufferedWebResponse(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}

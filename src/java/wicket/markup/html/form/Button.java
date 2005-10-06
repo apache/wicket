@@ -19,7 +19,6 @@ package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
 
 /**
@@ -143,9 +142,6 @@ public class Button extends FormComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// Get tag attributes
-		final ValueMap attributes = tag.getAttributes();
-
 		// Default handling for component tag
 		super.onComponentTag(tag);
 

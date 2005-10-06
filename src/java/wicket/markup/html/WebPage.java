@@ -310,9 +310,11 @@ public class WebPage extends Page implements IHeaderRenderer
 		{
 			final String contextPath = request.getContextPath();
 			buffer.append(contextPath);
-			String path = ((WebRequest)request).getServletPath();
+			String path = request.getServletPath();
 			if (path == null || "".equals(path))
+			{
 				path = "/";
+			}
 			buffer.append(path);
 		}
 

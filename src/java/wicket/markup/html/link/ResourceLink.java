@@ -97,7 +97,7 @@ public class ResourceLink extends Link implements IResourceListener
 	 */
 	protected final String getURL()
 	{
-		if(resourceReference != null)
+		if (resourceReference != null)
 		{
 			resourceReference.setLocale(getLocale());
 			resourceReference.setStyle(getStyle());

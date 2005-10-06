@@ -59,7 +59,11 @@ public class RequiredValidator extends StringValidator
 	public final void onValidate(FormComponent formComponent, String value)
 	{
 		// if input was null then value was not submitted (disabled field), ignore it
-		if(value == null) return;
+		if (value == null) 
+		{
+			return;
+		}
+		
 		// Check value
 		if (Strings.isEmpty(value))
 		{

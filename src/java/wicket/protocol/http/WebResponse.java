@@ -64,9 +64,8 @@ public class WebResponse extends Response
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponse(final HttpServletResponse httpServletResponse)
 	{
 		this.httpServletResponse = httpServletResponse;
 	}
@@ -139,7 +138,7 @@ public class WebResponse extends Response
 	 */
 	public void redirect(final String url)
 	{
-		if(!redirect)
+		if (!redirect)
 		{
 			if (httpServletResponse != null)
 			{

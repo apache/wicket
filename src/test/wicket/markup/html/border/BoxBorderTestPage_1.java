@@ -16,31 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.time;
+package wicket.markup.html.border;
 
+import wicket.PageParameters;
+import wicket.markup.html.WebPage;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
- * Test cases for this object
- * @author Jonathan Locke
+ * Mock page for testing.
+ * 
+ * @author Chris Turner
  */
-public final class TimeOfDayTest extends TestCase
+public class BoxBorderTestPage_1 extends WebPage
 {
-    /**
-     * 
-     */
-    public void test()
-    {
-        Assert.assertTrue(TimeOfDay.MIDNIGHT.hour() == 0);
-        Assert.assertTrue(TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()).equals(TimeOfDay.MIDNIGHT));
+	private static final long serialVersionUID = 1L;
 
-        final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
-        final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
-
-        Assert.assertTrue(five.after(three));
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param parameters
+	 */
+	public BoxBorderTestPage_1(final PageParameters parameters)
+	{
+	    add(new BorderComponent1("border1"));
+	    add(new BorderComponent2("border2"));
+	}
 }
-
-

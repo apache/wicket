@@ -24,7 +24,7 @@ public class SimpleResponsePageClassTest extends TestCase
         mockWebApp.getPages().setHomePage(SimpleResponsePageClass.class);
         mockWebApp.setupRequestAndResponse();
         mockWebApp.processRequestCycle();
-        SimpleResponsePageClass manageBook = (SimpleResponsePageClass) mockWebApp.getLastRenderedPage();;
+        SimpleResponsePageClass manageBook = (SimpleResponsePageClass) mockWebApp.getLastRenderedPage();
 
         Form form = (Form) manageBook.get("form");
         mockWebApp.setupRequestAndResponse();
