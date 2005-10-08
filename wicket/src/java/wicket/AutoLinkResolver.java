@@ -365,11 +365,13 @@ public final class AutoLinkResolver implements IComponentResolver
 
 			// Create a shared (static) reference to the resource
 			final SharedResources sharedResources = getApplication().getSharedResources();
-			Resource resource = PackageResource.get(clazz, href);
-			sharedResources.add(clazz, href, null, null, resource);
+			Resource resource = PackageResource.get(clazz, href, getLocale(), getStyle());
+			sharedResources.add(clazz, href, getLocale(), getStyle(), resource);
 
 			// Create the component implementing the link
 			resourceReference = new PackageResourceReference(getApplication(), clazz, href);
+			resourceReference.setLocale(getLocale());
+			resourceReference.setStyle(getStyle());
 		}
 
 		/**

@@ -18,6 +18,8 @@
  */
 package wicket.markup.html.link;
 
+import java.util.Locale;
+
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -39,5 +41,7 @@ public class AutolinkPage_2 extends WebPage
 	public AutolinkPage_2(final PageParameters parameters) 
 	{
 	    add(new Label("myLabel", "Home"));
+	    getSession().setStyle("myStyle");
+	    getSession().setLocale(Locale.GERMANY);
     }
 }
