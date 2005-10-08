@@ -18,6 +18,8 @@
  */
 package wicket.markup.html;
 
+import java.util.Locale;
+
 import wicket.Application;
 import wicket.Resource;
 import wicket.ResourceReference;
@@ -31,6 +33,36 @@ public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Constuctor to get a resource reference to a packaged resource.
+	 * It will bind itself directly to the given application object, so
+	 * that the resource will be created if it did not exist and added to 
+	 * the application shared resources.
+	 * 
+	 * Package resources should be added by a IInitializer implementation
+	 * So that all needed packaged resources are there on startup of the application. 
+	 * 
+	 * @param application
+	 *            The application to bind to
+	 * @param scope
+	 *            The scope of the binding
+	 * @param name
+	 *            The name of the resource
+	 * @param locale
+	 *			  The Locale from which the search for the PackageResource must start 			 
+	 * @param style 
+	 * 			  The Style of the PackageResource
+	 * 
+	 * @see ResourceReference#ResourceReference(Class, String)
+	 */
+	public PackageResourceReference(Application application, Class scope, String name, Locale locale, String style)
+	{
+		super(scope, name);
+		setLocale(locale);
+		setStyle(style);
+		bind(application);
+	}
+
 	/**
 	 * Constuctor to get a resource reference to a packaged resource.
 	 * It will bind itself directly to the given application object, so
