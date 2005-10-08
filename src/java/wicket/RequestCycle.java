@@ -18,6 +18,7 @@
 package wicket;
 
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -620,7 +621,7 @@ public abstract class RequestCycle
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
-					final String escapedValue = Strings.escapeMarkup(value);
+					final String escapedValue = URLEncoder.encode(value);
 					buffer.append('&');
 					buffer.append(key);
 					buffer.append('=');
