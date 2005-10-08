@@ -179,8 +179,9 @@ public class HeaderSectionTest extends TestCase
 
 		// Do the processing
 		application.setupRequestAndResponse();
+		application.getWicketSession().setLocale(null);
 		application.processRequestCycle();
-
+		
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		//System.out.println(document);
