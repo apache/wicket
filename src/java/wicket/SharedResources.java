@@ -229,7 +229,7 @@ public class SharedResources
 		}
 		if (resourceState == null)
 		{
-			resourceState = new ResourceState(key,resource);
+			resourceState = new ResourceState(key, resource);
 		}
 		synchronized (resourceMap)
 		{
