@@ -47,6 +47,7 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.collections.MostRecentlyUsedMap;
+import wicket.util.lang.Classes;
 
 /**
  * 
@@ -204,7 +205,7 @@ public class WicketTester extends MockWebApplication
 		if (component == null)
 		{
 			Assert.fail("path: '" + path + "' does no exist for page: "
-					+ getLastRenderedPage().getClass().getSimpleName());
+					+ Classes.name(getLastRenderedPage().getClass()));
 		}
 		return component;
 	}
@@ -260,8 +261,8 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class componentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("componet '" + component.getClass().getSimpleName() + "' is not type:"
-				+ componentClass.getSimpleName(), componentClass.isAssignableFrom(component
+		Assert.assertTrue("componet '" + Classes.name(component.getClass()) + "' is not type:"
+				+ Classes.name(componentClass), componentClass.isAssignableFrom(component
 				.getClass()));
 	}
 
@@ -342,8 +343,7 @@ public class WicketTester extends MockWebApplication
 	{
 		if (!getLastRenderedPage().getClass().isAssignableFrom(pageClass))
 		{
-			Assert.assertEquals(pageClass.getSimpleName(), getLastRenderedPage().getClass()
-					.getSimpleName());
+			Assert.assertEquals(Classes.name(pageClass), Classes.name(getLastRenderedPage().getClass()));
 		}
 	}
 
@@ -424,7 +424,7 @@ public class WicketTester extends MockWebApplication
 			internalMapCacheField = pageMap.getClass().getDeclaredField("pages");
 			internalMapCacheField.setAccessible(true);
 			MostRecentlyUsedMap mru = (MostRecentlyUsedMap)internalMapCacheField.get(pageMap);
-			Assert.assertFalse("Previous Page '" + getPreviousRenderedPage().getClass().getSimpleName()
+			Assert.assertFalse("Previous Page '" + Classes.name(getPreviousRenderedPage().getClass())
 					+ "' not expire", mru.containsValue(getPreviousRenderedPage()));
 		}
 		catch (SecurityException e)
