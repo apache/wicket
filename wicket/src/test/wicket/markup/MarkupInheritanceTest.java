@@ -129,4 +129,12 @@ public class MarkupInheritanceTest extends WicketTestCase
 		application.getSettings().setStripWicketTags(true);
 	    executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_9() throws Exception
+	{
+	    executeTest(MarkupInheritancePage_9.class, "MarkupInheritanceExpectedResult_9.html");
+	}
 }

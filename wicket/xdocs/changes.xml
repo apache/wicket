@@ -9,6 +9,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    [ 1318175 ] wicket:head required in inherited base panel as well
+      <action type="add" dev="Juergen Donnerstag" issue="1318175">wicket:head tags is no longer required in the inherited base panel. It is automatically inserted if required.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1317715" due-to=" Zoltan Luspai">wicket1.1-rc2 depends on jdk1.5.</action>
       <action type="add" dev="Juergen Donnerstag" issue="1315708" due-to="Ari Suutari">Add locale/style support for autolinks</action>
       <action type="add" dev="Juergen Donnerstag" issue="1287539" due-to="Ingrem Chen">Enhanced MockWebApplication For Testing Controller Logic</action>

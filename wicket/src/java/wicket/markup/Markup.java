@@ -64,6 +64,7 @@ public final class Markup
 	
 	/**
 	 * Constructor
+	 * 
 	 * @param resource The resource where the markup was found
 	 * @param markup The markup elements
 	 * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
@@ -78,6 +79,23 @@ public final class Markup
 		this.xmlDeclaration = xmlDeclaration;
 		this.encoding = encoding;
 		this.wicketNamespace = wicketNamespace;
+		
+		initialize();
+	}
+	
+	/**
+	 * Kind of copy constructor, though new markup elements are attached
+	 * 
+	 * @param markup The Markup which variables are copied
+	 * @param markupElements The new list of markup elements
+	 */
+	Markup(final Markup markup, final List markupElements)
+	{
+		this.resource = markup.resource;
+		this.markup = markupElements;
+		this.xmlDeclaration = markup.xmlDeclaration;
+		this.encoding = markup.encoding;
+		this.wicketNamespace = markup.wicketNamespace;
 		
 		initialize();
 	}
@@ -202,10 +220,5 @@ public final class Markup
 	public String getWicketNamespace()
 	{
 	    return this.wicketNamespace;
-	}
-	
-	void setMarkup(final List markup)
-	{
-	    this.markup = markup;
 	}
 }
