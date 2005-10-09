@@ -136,7 +136,7 @@ public abstract class Application
 	private IConverterFactory converterFactory = new ConverterFactory();
 
 	/** The single application-wide localization class */
-	private final Localizer localizer;
+	private Localizer localizer;
 
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
@@ -254,11 +254,22 @@ public abstract class Application
 	/**
 	 * @return The application wide localizer instance
 	 */
-	public Localizer getLocalizer()
+	public final Localizer getLocalizer()
 	{
 		return localizer;
 	}
 
+	/**
+	 * Users may provide there own implementation of a localizer,
+	 * e.g. one which uses Spring's MessageSource.
+	 * 
+	 * @param localizer
+	 */
+	public final void setLocalizer(final Localizer localizer)
+	{
+		this.localizer = localizer;
+	}
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
