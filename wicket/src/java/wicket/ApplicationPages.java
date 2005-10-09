@@ -272,7 +272,9 @@ public class ApplicationPages
 	public final Class classForAlias(final String alias)
 	{
 		if (alias == null)
+		{
 			return null;
+		}
 
 		for (Iterator i = classAliases.entrySet().iterator(); i.hasNext();)
 		{

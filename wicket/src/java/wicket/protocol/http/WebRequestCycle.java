@@ -66,6 +66,15 @@ public class WebRequestCycle extends RequestCycle
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
+	/** Return value for doParseRequest: URL did not match and was not handled */
+	public static final int PARSE_REQUEST_NO_MATCH = 0;
+
+	/** Return value for doParseRequest: The URL points to a page and the response page was set */
+	public static final int PARSE_REQUEST_RETURNING_PAGE = 1;
+	
+	/** Return value for doParseRequest: The URL points to some static content */
+	public static final int PARSE_REQUEST_RETURNING_STATIC_CONTENT = 2;
+
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
@@ -131,7 +140,6 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-
 		if (callDispatchedComponentListener())
 		{
 			// if it is, we don't need to update the cluster, etc, and return false
@@ -142,11 +150,24 @@ public class WebRequestCycle extends RequestCycle
 			// Returning a page
 			return true;
 		}
+		// If it's not a resource reference or static content
+		else if (resourceReference() || staticContent())
+	    {
+			// if it is, we don't need to update the cluster, etc, and return false
+	    }
 		else
 		{
-			// If it's not a resource reference or static content
-			if (!resourceReference() && !staticContent())
-			{
+		    int rtn = doParseRequest();
+		    if (rtn == PARSE_REQUEST_RETURNING_PAGE)
+		    {
+		        return true;
+		    }
+		    else if (rtn == PARSE_REQUEST_RETURNING_STATIC_CONTENT)
+		    {
+				// if it is, we don't need to update the cluster, etc, and return false
+		    }
+		    else
+		    {
 				// not found... send 404 to client indicating that no resource was found
 				// for the request uri
 				WebResponse webResponse = (WebResponse)getResponse();
@@ -169,6 +190,27 @@ public class WebRequestCycle extends RequestCycle
 		return false;
 	}
 
+	/**
+	 * Users may implement there own strategies on how to handle specific URLs.
+	 * Bare in mind that Wicket's default strategies are extended and not 
+	 * replaced and thus you can not replace existing ones. Please see 
+	 * WebRequestCrawlerSave and WebResponseCrawlerSave for examples on how
+	 * to replace existing strategies.<p>
+	 * A possible implementation of doParseRequest may automatically resolve
+	 * static URLs like *.css and *.js or handle specific URLs which return
+	 * images from a database without the need to register the resource with
+	 * the application, or ...
+	 * 
+	 * @see WebRequestCrawlerSave
+	 * @see WebResponseCrawlerSave
+	 * 
+	 * @return PARSE_REQUEST_RETURNING_PAGE - returning a page; PARSE_REQUEST_RETURNING_STATIC_CONTENT - static content (no Page); else - not found
+	 */
+	protected int doParseRequest()
+	{
+		return PARSE_REQUEST_NO_MATCH;
+	}
+	
 	/**
 	 * Redirects browser to the given page.
 	 * NOTE: Usually, you should never call this method directly, but work with
