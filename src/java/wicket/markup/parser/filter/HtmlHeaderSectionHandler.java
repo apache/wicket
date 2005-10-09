@@ -105,7 +105,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			}
 
 			// Usually <head> is not a wicket special tag. But because we want
-			// transparent header support we insert it automatically if mmissing
+			// transparent header support we insert it automatically if missing
 			// and while rendering its content all child components are asked if 
 			// they want to contribute something to the header. Thus we have to
 			// handle <head> accordingly.

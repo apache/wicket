@@ -411,6 +411,16 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * @see wicket.markup.parser.XmlTag#setNamespace(String)
+	 * @param namespace
+	 *			  New tag name namespace
+	 */
+	public final void setNamespace(String namespace)
+	{
+		xmlTag.setNamespace(namespace);
+	}
+
+	/**
 	 * Assuming this is a close tag, assign it's corresponding open tag.
 	 * 
 	 * @param tag

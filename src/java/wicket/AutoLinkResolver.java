@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -364,7 +363,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			super(id);
 
 			// Create the component implementing the link
-			resourceReference = new PackageResourceReference(getApplication(), clazz, href, getLocale(),getStyle());
+			resourceReference = new PackageResourceReference(
+					getApplication(), clazz, href, getLocale(), getStyle());
 		}
 
 		/**

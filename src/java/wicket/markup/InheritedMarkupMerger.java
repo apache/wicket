@@ -91,8 +91,26 @@ public class InheritedMarkupMerger
 			{
 			    final WicketTag tag = (WicketTag) element;
 			    
-			    if (tag.isClose() && "head".equalsIgnoreCase(tag.getName()) 
-			            && (tag.getNamespace() != null))
+			    boolean hitPanel = tag.isOpen() && "panel".equalsIgnoreCase(tag.getName()) 
+			            && (tag.getNamespace() != null);
+
+			    // If we reached <wicket:panel> and have not yet seen <wicket:head>, than
+			    // automatically add <wicket:head> into the stream
+		    	WicketTag openTag = null;
+			    if (hitPanel)
+			    {
+			    	openTag = new WicketTag(new XmlTag());
+			    	openTag.setName("head");
+			    	openTag.setNamespace(tag.getNamespace());
+			    	openTag.setType(XmlTag.OPEN);
+			    	
+			    	markupElements.add(openTag);
+			    }
+			    	
+			    boolean hitHead = tag.isClose() && "head".equalsIgnoreCase(tag.getName()) 
+			            && (tag.getNamespace() != null);
+			    
+			    if (hitHead || hitPanel)
 			    {
 			        // Before close the tag, add the <wicket:head> body from the 
 			        // derived markup
@@ -126,6 +144,19 @@ public class InheritedMarkupMerger
 					        markupElements.add(elem);
 					    }
 			        }
+			    }
+
+			    // If we reached <wicket:panel> and have not yet seen <wicket:head>, than
+			    // automatically add <wicket:head> into the stream
+			    if (hitPanel)
+			    {
+			    	WicketTag closeTag = new WicketTag(new XmlTag());
+			    	closeTag.setName("head");
+			    	closeTag.setNamespace(tag.getNamespace());
+			    	closeTag.setType(XmlTag.CLOSE);
+			    	closeTag.setOpenTag(openTag);
+			    	
+			    	markupElements.add(closeTag);
 			    }
 			}
 
@@ -217,8 +248,7 @@ public class InheritedMarkupMerger
 		}
 
 		// Replace the markups elements.
-		markup.setMarkup(markupElements);
-		return markup;
+		return new Markup(markup, markupElements);
 	}
 
 	/**
