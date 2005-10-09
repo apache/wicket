@@ -17,8 +17,11 @@
  */
 package wicket.markup.html;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
+import wicket.Application;
 import wicket.ApplicationPages;
 import wicket.Component;
 import wicket.Page;
@@ -155,7 +158,15 @@ public class WebPage extends Page implements IHeaderRenderer
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
-					final String escapedValue = Strings.escapeMarkup(value);
+					String escapedValue = value;
+					try
+					{
+						escapedValue = URLEncoder.encode(escapedValue, Application.get().getSettings().getResponseRequestEncoding());
+					}
+					catch (UnsupportedEncodingException ex)
+					{
+						// log?
+					}
 					buffer.append('&');
 					buffer.append(key);
 					buffer.append('=');
