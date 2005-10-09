@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -621,7 +622,15 @@ public abstract class RequestCycle
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
-					final String escapedValue = URLEncoder.encode(value);
+					String escapedValue = value;
+					try
+					{
+						escapedValue = URLEncoder.encode(escapedValue, Application.get().getSettings().getResponseRequestEncoding());
+					}
+					catch (UnsupportedEncodingException ex)
+					{
+						// log?
+					}
 					buffer.append('&');
 					buffer.append(key);
 					buffer.append('=');
