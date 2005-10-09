@@ -1,5 +1,20 @@
-/**
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.resource;
 
@@ -14,21 +29,30 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
- * @author jcompagner
+ * Byte array resource class for static data.
  *
+ * @author Johan Compagner
  */
 public class ByteArrayResource extends WebResource
 {
 	private static final long serialVersionUID = 1L;
 
+	/** the content type. */
 	private final String contentType;
+
+	/** binary data. */
 	private final byte[] array;
+
+	/** the locale. */
 	private final Locale locale;
+
+	/** the time that this resource was last modified; same as construction time. */
 	private final Time lastModified = Time.now();
 
 	/**
-	 * @param contentType
-	 * @param array
+	 * Construct.
+	 * @param contentType the content type
+	 * @param array the binary contents
 	 */
 	public ByteArrayResource(String contentType, byte[] array)
 	{
@@ -38,9 +62,10 @@ public class ByteArrayResource extends WebResource
 	}
 
 	/**
-	 * @param contentType
-	 * @param array
-	 * @param locale 
+	 * Construct.
+	 * @param contentType the content type
+	 * @param array the binary contents
+	 * @param locale the locale
 	 */
 	public ByteArrayResource(String contentType, byte[] array, Locale locale)
 	{
