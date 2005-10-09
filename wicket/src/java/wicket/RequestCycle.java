@@ -706,7 +706,7 @@ public abstract class RequestCycle
 		log.error("Unexpected runtime exception [page = " + page + "]", e);
 
 		// Always print stack trace
-		e.printStackTrace();
+		//e.printStackTrace();
 		
 		// Reset page for re-rendering after exception
 		if (page != null)

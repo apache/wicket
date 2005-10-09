@@ -20,6 +20,9 @@ package wicket.protocol.http;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.DefaultPageFactory;
@@ -71,7 +74,10 @@ import wicket.util.file.WebApplicationPath;
  */
 public class MockWebApplication extends WebApplication
 {
-    /** Mock http servlet context. */
+	/** Logging */
+	private static Log log = LogFactory.getLog(MockWebApplication.class);
+
+	/** Mock http servlet context. */
     private final MockServletContext context;
 
     /** The last rendered page. */
@@ -98,6 +104,11 @@ public class MockWebApplication extends WebApplication
     /** Session. */
     private WebSession wicketSession;
 
+    /** In case of an RuntimeException, Wicket usually renders a error page.
+     * In some test cases however it is useful to get the exception instead.
+     */
+    private boolean rethrowRuntimeException = false;
+    
     /**
      * Create the mock http application that can be used for testing.
      * 
@@ -317,4 +328,36 @@ public class MockWebApplication extends WebApplication
         wicketSession = getSession(wicketRequest, true);
         wicketResponse = new WebResponse(servletResponse);
     }
+    
+    /**
+     * If true, runtime exception will not be handled by Wicket. Instead
+     * the exception will be rethrown.
+     * 
+     * @param enable
+     */
+    public void setRethrowRuntimeException(boolean enable)
+    {
+    	this.rethrowRuntimeException = enable;
+    }
+    
+    /**
+     * In case of an error, don't render the error page. Through the
+     * root exception instead to be handled by the test case.
+     * 
+     * @param page
+     * @param ex
+     * @return Page
+     */
+	protected Page onRuntimeException(final Page page, final RuntimeException ex)
+	{
+		if (rethrowRuntimeException)
+		{
+			log.info("Caught exception: " + ex.getMessage());
+			throw ex;
+		}
+		else
+		{
+			return super.onRuntimeException(page, ex);
+		}
+	}
 }
