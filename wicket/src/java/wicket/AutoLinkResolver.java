@@ -219,8 +219,19 @@ public final class AutoLinkResolver implements IComponentResolver
 					relevantContainer = relevantContainer.getParent(); 
 				}
 
-				// Create the component implementing the link
-				return new CssLink(autoId, relevantContainer.getClass(), href);
+				try
+				{
+					// Create the component implementing the link
+					return new CssLink(autoId, relevantContainer.getClass(), href);
+				}
+				catch (WicketRuntimeException ex)
+				{
+					// Provided the resource does not exist, assume the user did
+					// deliberately not point it to a page or resource. The href
+					// might still point to a valid homepage outside of wicket.
+					log.info("Did not find autolink resource: " + href 
+							+ "; Assume it is a valid external URL");
+				}
 			}
 		}
 
