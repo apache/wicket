@@ -21,6 +21,7 @@ import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -88,7 +89,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 						HtmlHeaderSectionHandler.HEADER_ID);
 				
 				// It is <wicket:head>. Because they do not provide any additional
-				// functionality there are merely a means of surroounding relevant
+				// functionality there are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
 				final WebMarkupContainer header2 = new WebMarkupContainer(
@@ -99,10 +100,10 @@ public class HtmlHeaderResolver implements IComponentResolver
 				
 				container.autoAdd(header);
 		    }
-		    else
+		    else if (container instanceof HtmlHeaderContainer)
 		    {
 				// It is <wicket:head>. Because they do not provide any additional
-				// functionality there are merely a means of surroounding relevant
+				// functionality there are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
 				final WebMarkupContainer header = new WebMarkupContainer(
@@ -120,6 +121,11 @@ public class HtmlHeaderResolver implements IComponentResolver
 							+ "then you most likely forgot to override autoAdd() "
 							+ "in your bordered page component.", ex);
 				}
+		    }
+		    else
+		    {
+		    	throw new MarkupException(
+		    			"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel> and <wicket:border>");
 		    }
 		    
 			// Yes, we handled the tag

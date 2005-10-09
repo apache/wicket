@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
@@ -43,6 +44,7 @@ public class HeaderSectionTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		application = new MockWebApplication(null);
+		application.setRethrowRuntimeException(true);
 	}
 	
 	/**
@@ -164,6 +166,23 @@ public class HeaderSectionTest extends TestCase
 	    assertNotNull(absPath);
 	    IResourceStream stream = res.getResourceStream();
 	    assertNotNull(stream);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_13() throws Exception
+	{
+		boolean hit = false;
+		try
+		{
+			executeTest(HeaderSectionPage_13.class, "HeaderSectionPageExpectedResult_13.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			hit = true;
+		}
+		assertTrue("Expected a MarkupException to be thrown", hit);
 	}
 
 	/**

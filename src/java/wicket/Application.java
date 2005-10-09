@@ -481,8 +481,6 @@ public abstract class Application
 		return null;
 	}
 
-
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
 	 * CALL.
