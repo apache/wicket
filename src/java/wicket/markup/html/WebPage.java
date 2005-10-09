@@ -35,7 +35,6 @@ import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.lang.Classes;
-import wicket.util.string.Strings;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
