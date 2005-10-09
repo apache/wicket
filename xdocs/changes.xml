@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="add" dev="Juergen Donnerstag">Allow for user specifc Localizer, e.g one using Spring MessageSources.</action>
       <action type="fix" dev="Johan Compagner">Bookmarkable Pages parameter encoding using URLEncoder.encode(value,charset)<br/>For tomcat you have to use useBodyEncodingForURI="true" in the Connector configuration in the server.xml</action>
       <action type="add" dev="Juergen Donnerstag" issue="1318196">Improved wicket:head mis-placement detection.</action>
       <action type="add" dev="Juergen Donnerstag" issue="1318175">wicket:head tags is no longer required in the inherited base panel. It is automatically inserted if required.</action>
