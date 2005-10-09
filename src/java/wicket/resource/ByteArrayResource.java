@@ -29,8 +29,11 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
- * Byte array resource class for static data.
- *
+ * This class can be used to easy make a Resource from a predefined byte array.
+ * If youre data comes from a database then a DynamicByteArrayResource is a better choice.
+ * Only use this class if you have to have the byte array in memory.
+ * Like a pdf that is generated on the fly.
+ * 
  * @author Johan Compagner
  */
 public class ByteArrayResource extends WebResource
@@ -50,9 +53,12 @@ public class ByteArrayResource extends WebResource
 	private final Time lastModified = Time.now();
 
 	/**
-	 * Construct.
-	 * @param contentType the content type
-	 * @param array the binary contents
+	 * Creates a Resource from the given byte array with its content type
+	 * 
+	 * @param contentType
+	 * 			The Content type of the array.
+	 * @param array
+	 * 			The binary content
 	 */
 	public ByteArrayResource(String contentType, byte[] array)
 	{
@@ -62,10 +68,15 @@ public class ByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Construct.
-	 * @param contentType the content type
-	 * @param array the binary contents
-	 * @param locale the locale
+	 * Creates a Resource from the given byte array with its content type and the locale
+	 * for which it is valid.
+	 * 
+	 * @param contentType
+	 * 			The Content type of the array.
+	 * @param array
+	 * 			The binary content.
+	 * @param locale
+	 * 			The locale of this resource 
 	 */
 	public ByteArrayResource(String contentType, byte[] array, Locale locale)
 	{

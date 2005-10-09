@@ -28,7 +28,7 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * Byte array resource class that supports dynamic data.
+ * Byte array resource class that supports dynamic (database or on the fly generated) data.
  * 
  * @author Johan Compagner
  */
@@ -44,17 +44,17 @@ public abstract class DynamicByteArrayResource extends WebResource
 	private Locale locale;
 
 	/**
-	 * Construct.
+	 * Creates a dynamic resource 
 	 */
 	public DynamicByteArrayResource()
 	{
 	}
 
 	/**
-	 * Construct.
+	 * Creates a dynamic resource from for the given locale
 	 * 
 	 * @param locale
-	 *            The Locale for which this resource is meant for.
+	 * 			The locale of this resource 
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
