@@ -1,5 +1,18 @@
-/**
+/*
+ * $Id$ $Revision$ $Date$
  * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.resource;
 
@@ -15,8 +28,9 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * @author jcompagner
- *
+ * Byte array resource class that supports dynamic data.
+ * 
+ * @author Johan Compagner
  */
 public abstract class DynamicByteArrayResource extends WebResource
 {
@@ -26,23 +40,27 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/** The maximum duration a resource can be idle before its cache is flushed */
 	private Duration cacheTimeout = Duration.NONE;
 
+	/** the locale. */
 	private Locale locale;
-	
+
 	/**
-	 * defaut constructor
+	 * Construct.
 	 */
 	public DynamicByteArrayResource()
 	{
 	}
 
 	/**
-	 * @param locale  The Locale for which this resource is meant for.
+	 * Construct.
+	 * 
+	 * @param locale
+	 *            The Locale for which this resource is meant for.
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
 		this.locale = locale;
 	}
-	
+
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
@@ -54,9 +72,12 @@ public abstract class DynamicByteArrayResource extends WebResource
 
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
-			
-			/** Transient byte array of the resources, will always be deleted in the close*/
-			private transient byte[] data = null; 
+
+			/**
+			 * Transient byte array of the resources, will always be deleted in
+			 * the close
+			 */
+			private transient byte[] data = null;
 
 			/**
 			 * @see wicket.util.resource.IResourceStream#close()
@@ -141,7 +162,8 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * @return The last time this image resource was modified
+	 * Gets the last time this resource was modified.
+	 * @return The last time this resource was modified
 	 */
 	public final Time lastModifiedTime()
 	{
@@ -149,7 +171,9 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * @param lastModifiedTime 
+	 * Sets the last time this resource was modified.
+	 *
+	 * @param lastModifiedTime the last time this resource was modified
 	 */
 	public final void setLastModifiedTime(Time lastModifiedTime)
 	{
@@ -158,15 +182,18 @@ public abstract class DynamicByteArrayResource extends WebResource
 
 
 	/**
+	 * Gets the content type.
+	 * 
 	 * @return The content type of the byte array
 	 */
 	public abstract String getContentType();
 
 	/**
-	 * Set the maximum duration the resource can be idle before its cache is flushed.
-	 * The cache might get flushed sooner if the JVM is low on memory.
+	 * Set the maximum duration the resource can be idle before its cache is
+	 * flushed. The cache might get flushed sooner if the JVM is low on memory.
 	 * 
-	 * @param value The cache timout 
+	 * @param value
+	 *            The cache timout
 	 */
 	public final void setCacheTimeout(Duration value)
 	{
@@ -174,9 +201,10 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Returns the maximum duration the resource can be idle before its cache is flushed.
+	 * Gets the maximum duration the resource can be idle before its cache is
+	 * flushed.
 	 * 
-	 * @return The cache timeout 
+	 * @return The cache timeout
 	 */
 	public final Duration getCacheTimeout()
 	{
@@ -184,10 +212,10 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Get byte array for our dynamic resource. If the subclass
-	 * regenerates the data, it should set the lastModifiedTime when it does so.
-	 * This ensures that image caching works correctly.
-	 *
+	 * Gets the byte array for our dynamic resource. If the subclass regenerates
+	 * the data, it should set the lastModifiedTime too. This ensures that image
+	 * caching works correctly.
+	 * 
 	 * @return The byte array for this dynamic resource.
 	 */
 	protected abstract byte[] getData();
