@@ -44,7 +44,7 @@ import wicket.util.value.ValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link wicket.Component#add(AttributeModifier)}method after the component
+ * {@link wicket.Component#add(AttributeModifier)} method after the component
  * has been constucted.
  * <p>
  * It is possible to create new subclasses of AttributeModifier by overriding

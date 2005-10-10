@@ -27,7 +27,7 @@ import wicket.util.string.Strings;
 /**
  * A MultiLineLabel component replaces its body with the model object.
  * <p>
- * Unlike {@link Label},{@link MultiLineLabel}shows text that spans multiple
+ * Unlike {@link Label}, {@link MultiLineLabel} shows text that spans multiple
  * lines by inserting line breaks (<code>BR</code> tags) for newlines and
  * paragraph markers (<code>P</code> tags) for sequences of more than one
  * newline.
