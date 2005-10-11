@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.Page;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -45,7 +44,7 @@ import wicket.util.value.ValueMap;
 public class ApplicationStringResourceLoader implements IStringResourceLoader
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Page.class);
+	private static final Log log = LogFactory.getLog(ApplicationStringResourceLoader.class);
 
 	/** The application we are loading for. */
 	private Application application;
