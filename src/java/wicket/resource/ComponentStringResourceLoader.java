@@ -84,7 +84,7 @@ import wicket.util.value.ValueMap;
 public class ComponentStringResourceLoader implements IStringResourceLoader
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Page.class);
+	private static final Log log = LogFactory.getLog(ComponentStringResourceLoader.class);
 
 	/** The cache of previously loaded resources. */
 	private Map resourceCache;
