@@ -363,7 +363,7 @@ public class MarkupCache
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
-		int extendIndex = InheritedMarkupMerger.requiresBaseMarkup(markup);
+		int extendIndex = requiresBaseMarkup(markup);
 		if (extendIndex == -1)
 		{
 			// return a MarkupStream for the markup
@@ -418,5 +418,32 @@ public class MarkupCache
 		Markup mergedMarkup = InheritedMarkupMerger.mergeMarkups(markup, baseMarkup, extendIndex);
 
 		return mergedMarkup;
+	}
+
+	/**
+	 * Check if markup contains &lt;wicket:extend&gt; which tells us that we need to
+	 * read the inherited markup as well. &lt;wicket:extend&gt; MUST BE the first
+	 * wicket tag in the markup. Skip raw markup
+	 * 
+	 * @param markup
+	 * @return == 0, if no wicket:extend was found
+	 */
+	private int requiresBaseMarkup(final Markup markup)
+	{
+	    for (int i=0; i < markup.size(); i++)
+	    {
+			if (markup.get(i) instanceof WicketTag)
+			{
+				WicketTag wtag = (WicketTag) markup.get(i);
+				if (wtag.isExtendTag())
+				{
+					// Ok, inheritance is on and we must get the
+					// inherited markup as well.
+					return i;
+				}
+			}
+	    }
+
+		return -1;
 	}
 }
