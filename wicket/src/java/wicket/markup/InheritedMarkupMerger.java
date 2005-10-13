@@ -39,11 +39,7 @@ public class InheritedMarkupMerger
 	}
 
 	/**
-	 * Merge inherited and base markup. <p/>
-	 * Note: There is no new Markup object created. Instead the list of markup 
-	 * elements contained in the inherited markup gets replaced. Thus, the 
-	 * 'markup' parameter and the return value are the same and the content 
-	 * of parameter 'markup' gets modified.
+	 * Merge inherited and base markup.
 	 * 
 	 * @param markup
 	 *            The inherited markup
@@ -249,32 +245,5 @@ public class InheritedMarkupMerger
 
 		// Replace the markups elements.
 		return new Markup(markup, markupElements);
-	}
-
-	/**
-	 * Check if markup contains <wicket:extend>which tells us that we need to
-	 * read the inherited markup as well. <wicket:extend>MUST BE the first
-	 * wicket tag in the markup. Skip raw markup
-	 * 
-	 * @param markup
-	 * @return == 0, if no wicket:extend was found
-	 */
-	static int requiresBaseMarkup(final Markup markup)
-	{
-	    for (int i=0; i < markup.size(); i++)
-	    {
-			if (markup.get(i) instanceof WicketTag)
-			{
-				WicketTag wtag = (WicketTag) markup.get(i);
-				if (wtag.isExtendTag())
-				{
-					// Ok, inheritance is on and we must get the
-					// inherited markup as well.
-					return i;
-				}
-			}
-	    }
-
-		return -1;
 	}
 }
