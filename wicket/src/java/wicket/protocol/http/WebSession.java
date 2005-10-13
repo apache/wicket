@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,11 +17,16 @@
  */
 package wicket.protocol.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
@@ -29,6 +34,7 @@ import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
+import wicket.util.lang.Bytes;
 
 /**
  * Session subclass for HTTP protocol which holds an HttpSession object and
@@ -40,6 +46,9 @@ import wicket.Session;
 public class WebSession extends Session
 {
 	private static final long serialVersionUID = 1L;
+
+	/** log. careful, this log is used to trigger profiling too! */
+	private static Log log = LogFactory.getLog(WebSession.class);
 
 	/** The underlying HttpSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
@@ -71,7 +80,7 @@ public class WebSession extends Session
 	{
 		return httpSession;
 	}
-	
+
 	/**
 	 * @return Session id for this web session
 	 */
@@ -118,7 +127,7 @@ public class WebSession extends Session
 			super.updateCluster();
 		}
 	}
-	
+
 	/**
 	 * @see wicket.Session#detach()
 	 */
@@ -193,6 +202,29 @@ public class WebSession extends Session
 	 */
 	protected void setAttribute(final String name, final Object object)
 	{
+		// Do some extra profiling/ debugging. This can be a great help
+		// just for testing whether your webbapp will behave when using
+		// session replication
+		if (log.isDebugEnabled())
+		{
+			long t1 = System.currentTimeMillis();
+			Object test = null;
+			byte[] serialized;
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(object);
+				serialized = out.toByteArray();
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
+			long t2 = System.currentTimeMillis();
+			log.debug("attribute " + name + " serialized in " + (t2 - t1)
+					+ " miliseconds, size: " + Bytes.bytes(serialized.length));
+		}
+
 		httpSession.setAttribute(sessionAttributePrefix + "-" + name, object);
 	}
 
@@ -214,7 +246,7 @@ public class WebSession extends Session
 
 		// Set the current session
 		set(this);
-		
+
 		attach();
 	}
 }
