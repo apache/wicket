@@ -350,6 +350,8 @@ public class WebPage extends Page implements IHeaderRenderer
 	 */
 	public final void renderHeaderSections(final HtmlHeaderContainer container)
 	{
+		this.bodyOnLoad = null;
+		
 		// A components interested in contributing to the header must
 		// implement IHeaderContributor.
 		visitChildren(IHeaderContributor.class, new IVisitor()
