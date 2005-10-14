@@ -77,6 +77,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	private Object validators = null;
 
+	/** The value will be made available to the validator property by 
+	 * means of ${label}. It does not have any specific meaning to 
+	 * FormComponent itself. 
+	 */
+	private IModel labelModel = null;
+	
 	/**
 	 * Typesafe interface to code that is called when visiting a form component
 	 * 
@@ -138,6 +144,30 @@ public abstract class FormComponent extends WebMarkupContainer
 		return form;
 	}
 
+	/**
+	 * The value will be made available to the validator property by 
+	 * means of ${label}. It does not have any specific meaning to 
+	 * FormComponent itself. 
+	 * 
+	 * @param labelModel
+	 */
+	public void setLabel(final IModel labelModel)
+	{
+		this.labelModel = labelModel;
+	}
+	
+	/**
+	 * The value will be made available to the validator property by 
+	 * means of ${label}. It does not have any specific meaning to 
+	 * FormComponent itself. 
+	 * 
+	 * @return labelModel
+	 */
+	public IModel getLabel()
+	{
+		return this.labelModel;
+	}
+	
 	/**
 	 * Gets the request parameter for this component as a string.
 	 * 

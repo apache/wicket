@@ -42,6 +42,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.WebRequest;
 import wicket.util.convert.IConverter;
@@ -119,6 +120,7 @@ public class FormInput extends WicketExamplePage
 			super(name, new CompoundPropertyModel(new FormInputModel()));
 
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
+			stringTextField.setLabel(new Model("String"));
 			add(stringTextField);
 			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
 			add(integerTextField);

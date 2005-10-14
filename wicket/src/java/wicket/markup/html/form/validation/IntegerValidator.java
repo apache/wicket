@@ -144,7 +144,7 @@ public class IntegerValidator extends StringValidator
 	/**
 	 * @see wicket.markup.html.form.validation.AbstractValidator#messageModel(wicket.markup.html.form.FormComponent)
 	 */
-	protected final Map messageModel(FormComponent formComponent)
+	protected Map messageModel(FormComponent formComponent)
 	{
 		final Map map = super.messageModel(formComponent);
         map.put("min", new Long(min));
