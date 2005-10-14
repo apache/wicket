@@ -62,6 +62,16 @@ import wicket.util.time.Time;
  * qualified name of a class that extends WebApplication. If your class cannot
  * be found, does not extend WebApplication or cannot be instantiated, a runtime
  * exception of type WicketRuntimeException will be thrown.
+ * </p>
+ * As an alternative, you can configure an application factory instead. This looks like:
+ * <pre>
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * </pre>
+ * and it has to satisfy interface {@link wicket.protocol.http.IWebApplicationFactory}.
+ * 
  * <p>
  * When GET/POST requests are made via HTTP, an WebRequestCycle object is
  * created from the request, response and session objects (after wrapping them
@@ -88,6 +98,8 @@ import wicket.util.time.Time;
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  * @author Timur Mehrvarz
+ * @author Juergen Donnerstag
+ * @author Igor Vaynberg ( ivaynberg at privesec dot com )
  */
 public class WicketServlet extends HttpServlet
 {
