@@ -19,11 +19,13 @@ package wicket.markup.html.form.validation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingResourceException;
 
 import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.lang.Classes;
 
 /**
  * Base class for form component validators. This class is thread-safe and therefore it is
@@ -63,7 +65,7 @@ public abstract class AbstractValidator implements IValidator
 	 * See class comments for details about how error messages are loaded and formatted.
 	 * @param formComponent form component
 	 */
-	public void error(FormComponent formComponent)
+	public void error(final FormComponent formComponent)
 	{
 		error(formComponent, messageModel(formComponent));
 	}
@@ -77,12 +79,21 @@ public abstract class AbstractValidator implements IValidator
 	 * @param resourceKey The resource key to use
 	 * @param resourceModel The model for variable interpolation
 	 */
-	public void error(FormComponent formComponent, final String resourceKey,
+	public void error(final FormComponent formComponent, final String resourceKey,
 			final IModel resourceModel)
 	{
 		// Return formatted error message
 		Localizer localizer = formComponent.getLocalizer();
-		String message = localizer.getString(resourceKey, formComponent, resourceModel);
+		
+		// TODO I didn't find a simpler way to getString() throw a MissingResourceException
+		// without changes the application settings. I guess this is something to change in
+		// 1.2 or 1.3
+		String message = localizer.getString(resourceKey, formComponent, resourceModel, "");
+		if ((message == null) || (message.length() == 0))
+		{
+			throw new MissingResourceException("Unable to find resource: " + resourceKey, 
+					formComponent.getClass().getName(), resourceKey);
+		}
 		formComponent.error(message);
 	}
 
@@ -93,7 +104,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @param resourceKey The resource key to use
 	 * @param map The model for variable interpolation
 	 */
-	public void error(FormComponent formComponent, final String resourceKey, final Map map)
+	public void error(final FormComponent formComponent, final String resourceKey, final Map map)
 	{
 		error(formComponent, resourceKey, Model.valueOf(map));
 	}
@@ -104,9 +115,18 @@ public abstract class AbstractValidator implements IValidator
 	 * @param formComponent form component
 	 * @param map The model for variable interpolation
 	 */
-	public void error(FormComponent formComponent, final Map map)
+	public void error(final FormComponent formComponent, final Map map)
 	{
-		error(formComponent, resourceKey(formComponent), Model.valueOf(map));
+		IModel model = Model.valueOf(map);
+		try
+		{
+			error(formComponent, resourceKey(formComponent), model);
+		}
+		catch (MissingResourceException ex)
+		{
+			String key = Classes.name(getClass());
+			error(formComponent, key, model);
+		}
 	}
 
 	/**
@@ -116,7 +136,7 @@ public abstract class AbstractValidator implements IValidator
 	 * 
 	 * @return the resource key based on the form component
 	 */
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey(final FormComponent formComponent)
 	{
 		return formComponent.getApplicationSettings()
 							.getValidatorResourceKey(this, formComponent);
@@ -131,11 +151,20 @@ public abstract class AbstractValidator implements IValidator
 	 * @param formComponent form component
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map messageModel(FormComponent formComponent)
+	protected Map messageModel(final FormComponent formComponent)
 	{
 		final Map resourceModel = new HashMap(4);
 		resourceModel.put("input", formComponent.getInput());
 		resourceModel.put("name", formComponent.getId());
+		
+		if (formComponent.getLabel() != null)
+		{
+			resourceModel.put("label", formComponent.getLabel().getObject(null));
+		}
+		else
+		{
+			resourceModel.put("label", formComponent.getId());
+		}
 		return resourceModel;
 	}
 }

@@ -66,23 +66,4 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component,
 				"test.string", Locale.getDefault(), null));
 	}
-
-	/**
-	 * 
-	 */
-	public void testNullApplication()
-	{
-		try
-		{
-			new ApplicationStringResourceLoader(null);
-			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Extected result
-		}
-	}
-
 }
-
-// 
