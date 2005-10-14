@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="add" dev="Juergen Donnerstag" issue="1249907" due-to=" Igor Vaynberg">added ${label} to variables available for form component validator messages and implemented validator default messages accessible by the validators simple class name.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1318438">onload event handler does no longer string append on each render</action>
       <action type="add" dev="Juergen Donnerstag">Allow for user specifc Localizer, e.g one using Spring MessageSources.</action>
       <action type="fix" dev="Johan Compagner">Bookmarkable Pages parameter encoding using URLEncoder.encode(value,charset)<br/>For tomcat you have to use useBodyEncodingForURI="true" in the Connector configuration in the server.xml</action>
