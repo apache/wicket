@@ -483,7 +483,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		final String path = getWebRequest().getPath();
 		final String servletPath = getWebRequest().getServletPath();
-		if (Strings.isEmpty(path) || ("/".equals(path) && "".equals(servletPath)))
+		if (Strings.isEmpty(path) || ("/".equals(path)))
 		{
 			try
 			{
