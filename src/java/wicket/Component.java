@@ -1296,7 +1296,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 		else
 		{
-			throw new IllegalStateException("Attempt to set model object on null model");
+			throw new IllegalStateException("Attempt to set model object on null model of component: "  + getPageRelativePath());
 		}
 		return this;
 	}
