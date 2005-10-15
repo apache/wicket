@@ -25,7 +25,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent extends FormComponent
 {
 	/**
 	 * @see wicket.Component#Component(String)
