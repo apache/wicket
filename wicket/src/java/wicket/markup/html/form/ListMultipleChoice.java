@@ -276,7 +276,8 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		final String[] ids = inputAsStringArray();
 		// if input was null then value was not submitted (disabled field), ignore it
-		if (ids != null)
+		// TODO this can't be done! null is nothing selected! we need check for isEnabled for this.
+//		if (ids != null)
 		{
 			// Get the list of selected values
 			Collection selectedValues = (Collection)getModelObject();
@@ -289,7 +290,7 @@ public class ListMultipleChoice extends AbstractChoice
 			// Get indices selected from request
 	
 			// If one or more ids is selected
-			if (ids.length > 0 && !Strings.isEmpty(ids[0]))
+			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 			{
 				if(selectedValues == null)
 				{
