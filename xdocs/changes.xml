@@ -9,6 +9,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+	   <action type="fix" dev="Johan Compagner" issue="1325155"  due-to="Ralf Ebert">RequiredValidator for RadioChoice</action>
+	   <action type="fix" dev="Johan Compagner" issue="1327434"  due-to="Ralf Ebert">Default converter throws exception for empty values</action>
       <action type="add" dev="Juergen Donnerstag" issue="1249907" due-to=" Igor Vaynberg">added ${label} to variables available for form component validator messages and implemented validator default messages accessible by the validators simple class name.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1318438">onload event handler does no longer string append on each render</action>
       <action type="add" dev="Juergen Donnerstag">Allow for user specifc Localizer, e.g one using Spring MessageSources.</action>
