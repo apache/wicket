@@ -33,6 +33,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
+import wicket.util.string.Strings;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -89,6 +90,8 @@ public final class Converter implements IConverter
 		 */
 		public Object convert(Object value, Class c)
 		{
+			if(value == null || "".equals(value)) return null;
+			
 			return OgnlOps.convertValue(value, c);
 		}
 
