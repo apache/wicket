@@ -408,7 +408,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		if (!enabled && beforeDisabledLink != null)
+		if (!isEnabled() && beforeDisabledLink != null)
 		{
 			getResponse().write(beforeDisabledLink);
 		}
@@ -417,7 +417,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		renderComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
-		if (!enabled && afterDisabledLink != null)
+		if (!isEnabled() && afterDisabledLink != null)
 		{
 			getResponse().write(afterDisabledLink);
 		}
