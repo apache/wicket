@@ -390,26 +390,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * Add stylesheet to header.
-	 */
-	private void addCSS()
-	{
-		IModel hrefReplacement = new Model()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Object getObject(Component component)
-			{
-				String url = getPage().urlFor(CSS.getPath());
-				return url;
-			}
-		};
-		WebMarkupContainer css = new WebMarkupContainer("css");
-		css.add(new AttributeModifier("href", true, hrefReplacement));
-		add(css);
-	}
-
-	/**
 	 * Gets whether item removal should be optimized. If true, re-rendering the tree is
 	 * more efficient if the tree model doesn't get changed. However, if this is true, you
 	 * need to push changes to this tree. This can easility be done by registering this
@@ -673,6 +653,35 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
 		setSelected(node);
+	}
+
+	/**
+	 * Gets the stylesheet.
+	 * @return the stylesheet
+	 */
+	protected PackageResourceReference getCss()
+	{
+		return CSS;
+	}
+
+	/**
+	 * Add stylesheet to header.
+	 */
+	private void addCSS()
+	{
+		IModel hrefReplacement = new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component)
+			{
+				String url = getPage().urlFor(getCss().getPath());
+				return url;
+			}
+		};
+		WebMarkupContainer css = new WebMarkupContainer("css");
+		css.add(new AttributeModifier("href", true, hrefReplacement));
+		add(css);
 	}
 
 	/**
