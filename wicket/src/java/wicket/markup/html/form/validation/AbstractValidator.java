@@ -50,6 +50,7 @@ import wicket.util.lang.Classes;
  * <ul>
  * <li>${input} - The user's input</li>
  * <li>${name} - The name of the component</li>
+ * <li>${label} - the label of the component - either comes from FormComponent.labelModel or resource key [form-id].[form-component-id] in that order</li>
  * </ul>
  * but specific validator subclasses may add more values.
  * </p>
@@ -147,6 +148,7 @@ public abstract class AbstractValidator implements IValidator
 	 * <ul>
 	 * <li>${input}: the user's input</li>
 	 * <li>${name}: the name of the component</li>
+	 * <li>${label}: the label of the component - either comes from FormComponent.labelModel or resource key [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * @param formComponent form component
 	 * @return a map with the variables for interpolation
@@ -156,14 +158,21 @@ public abstract class AbstractValidator implements IValidator
 		final Map resourceModel = new HashMap(4);
 		resourceModel.put("input", formComponent.getInput());
 		resourceModel.put("name", formComponent.getId());
-		
+
+		Object label = null;
 		if (formComponent.getLabel() != null)
 		{
-			resourceModel.put("label", formComponent.getLabel().getObject(null));
+			label = formComponent.getLabel().getObject(formComponent);
+		}
+
+		if (label != null)
+		{
+			resourceModel.put("label", label);
 		}
 		else
 		{
-			resourceModel.put("label", formComponent.getId());
+			String labelKey=formComponent.getForm().getId()+"."+formComponent.getId();
+			resourceModel.put("label", formComponent.getLocalizer().getString(labelKey, formComponent));
 		}
 		return resourceModel;
 	}
