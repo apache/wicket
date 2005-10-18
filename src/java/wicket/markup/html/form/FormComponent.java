@@ -77,12 +77,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	private Object validators = null;
 
-	/** The value will be made available to the validator property by 
-	 * means of ${label}. It does not have any specific meaning to 
-	 * FormComponent itself. 
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 */
 	private IModel labelModel = null;
-	
+
 	/**
 	 * Typesafe interface to code that is called when visiting a form component
 	 * 
@@ -145,21 +145,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * The value will be made available to the validator property by 
-	 * means of ${label}. It does not have any specific meaning to 
-	 * FormComponent itself. 
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 * 
 	 * @param labelModel
+	 * @return this for chaining
 	 */
-	public void setLabel(final IModel labelModel)
+	public FormComponent setLabel(final IModel labelModel)
 	{
 		this.labelModel = labelModel;
+		return this;
 	}
-	
+
 	/**
-	 * The value will be made available to the validator property by 
-	 * means of ${label}. It does not have any specific meaning to 
-	 * FormComponent itself. 
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 * 
 	 * @return labelModel
 	 */
@@ -167,7 +167,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		return this.labelModel;
 	}
-	
+
 	/**
 	 * Gets the request parameter for this component as a string.
 	 * 
@@ -178,21 +178,21 @@ public abstract class FormComponent extends WebMarkupContainer
 		return getRequest().getParameter(getInputName());
 	}
 
-    /**
-     * Gets the string to be used for the <tt>name</tt> attribute of the form element.
-     * Generated using the path from the form to the component, excluding the form itself.
-     * Override it if you want even a smaller name. E.g. if you know for sure that the id
-     * is unique within a form.
-     *
-     * @return The string to use as the form element's name attribute
-     */
-    public String getInputName()
+	/**
+	 * Gets the string to be used for the <tt>name</tt> attribute of the form
+	 * element. Generated using the path from the form to the component,
+	 * excluding the form itself. Override it if you want even a smaller name.
+	 * E.g. if you know for sure that the id is unique within a form.
+	 * 
+	 * @return The string to use as the form element's name attribute
+	 */
+	public String getInputName()
 	{
-    	String id = getId();
-    	final StringBuffer inputName = new StringBuffer(id.length());
-    	Component c = this;
-    	while (true)
-    	{
+		String id = getId();
+		final StringBuffer inputName = new StringBuffer(id.length());
+		Component c = this;
+		while (true)
+		{
 			inputName.insert(0, id);
 			c = c.getParent();
 			if (c == null || c instanceof Form || c instanceof Page)
@@ -201,8 +201,8 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 			inputName.insert(0, ':');
 			id = c.getId();
-    	}
-		return inputName.toString();		
+		}
+		return inputName.toString();
 	}
 
 	/**
@@ -227,7 +227,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets an unmodifiable list of validators for this FormComponent.
 	 * 
