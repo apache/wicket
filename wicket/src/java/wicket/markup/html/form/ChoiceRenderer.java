@@ -30,12 +30,12 @@ import wicket.WicketRuntimeException;
  * id the index of the object in the ListOfUsers.
  * </p>
  * <p>
- * <pre>new DropDownChoice("users",new Model(selectedUser),new ChoiceRenderer("name"),listOfUsers)</pre>
+ * <pre>new DropDownChoice("users",new Model(selectedUser),listOfUsers,new ChoiceRenderer("name"))</pre>
  * creates a DropDownChoice of users and the display value will be looked up by
  * ognl ("name") and the id the index of the object in the ListOfUsers
  * </p>
  * <p>
- * <pre>new DropDownChoice("users",new Model(selectedUser),new ChoiceRenderer("name","id"),listOfUsers)</pre>
+ * <pre>new DropDownChoice("users",new Model(selectedUser),listOfUsers,new ChoiceRenderer("name","id"))</pre>
  * creates a DropDownChoice of users and the display value will be looked up by ognl ("name") 
  * and the id will be looked up by the  ognl expression "id" 
  * </p>
