@@ -138,6 +138,7 @@ public class FormInput extends WicketExamplePage
 			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
+			rc.setLabel(new Model("number"));
 			rc.add(RequiredValidator.getInstance());
 			add(rc);
 			
