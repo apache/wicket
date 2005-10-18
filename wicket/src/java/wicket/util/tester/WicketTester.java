@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -54,13 +54,15 @@ import wicket.util.lang.Classes;
  * @author ingram
  * @author Juergen Donnerstag
  */
+// TODO document in what way this can be used (best) and revisit the method's
+// docs
 public class WicketTester extends MockWebApplication
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
-	 * 
+	 * Construct.
 	 */
 	public WicketTester()
 	{
@@ -68,8 +70,11 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Construct.
 	 * 
 	 * @param path
+	 *            The absolute path on disk to the web application contents
+	 *            (e.g. war root) - may be null
 	 */
 	public WicketTester(final String path)
 	{
@@ -77,7 +82,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Render a wicket WebPage that is defined in TestPageSource.
+	 * Renders a wicket WebPage that is defined in TestPageSource.
 	 * 
 	 * @param testPageSource
 	 * @return Page
@@ -313,7 +318,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * create a TestWorkingForm for the form of latest rendered WebPage
+	 * Creates a TestWorkingForm for the form of latest rendered WebPage.
 	 * 
 	 * @param path
 	 * @return FormTester
@@ -324,9 +329,10 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * click the Link of the last rendered WebPage
+	 * Clicks the Link of the last rendered WebPage.
 	 * 
 	 * @param path
+	 *            path of the link
 	 */
 	public final void clickLink(String path)
 	{
@@ -335,20 +341,22 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert last rendered WebPage
+	 * Asserts that the last rendered WebPage is of the given type.
 	 * 
 	 * @param pageClass
+	 *            tyoe to check
 	 */
 	public final void assertRenderedPage(Class pageClass)
 	{
 		if (!getLastRenderedPage().getClass().isAssignableFrom(pageClass))
 		{
-			Assert.assertEquals(Classes.name(pageClass), Classes.name(getLastRenderedPage().getClass()));
+			Assert.assertEquals(Classes.name(pageClass), Classes.name(getLastRenderedPage()
+					.getClass()));
 		}
 	}
 
 	/**
-	 * assert no error feedback message
+	 * Asserts that the given messages have NOT been set for the ERROR level.
 	 */
 	public final void assertNoErrorMessage()
 	{
@@ -358,7 +366,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert no info feedback message
+	 * Asserts that the given messages have NOT been set for the INFO level.
 	 */
 	public final void assertNoInfoMessage()
 	{
@@ -368,7 +376,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert error feedback message
+	 * Asserts that the given messages have been set for the ERROR level.
 	 * 
 	 * @param expectMessages
 	 */
@@ -379,7 +387,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert info feedback message
+	 * Asserts that the given messages have been set for the INFO level.
 	 * 
 	 * @param expectMessages
 	 */
@@ -390,6 +398,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Gets the messages from starting from the given level.
 	 * 
 	 * @param level
 	 * @return List
@@ -413,7 +422,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert previous page expired.
+	 * Assert that the previous page expired.
 	 */
 	public final void assertExpirePreviousPage()
 	{
@@ -424,8 +433,9 @@ public class WicketTester extends MockWebApplication
 			internalMapCacheField = pageMap.getClass().getDeclaredField("pages");
 			internalMapCacheField.setAccessible(true);
 			MostRecentlyUsedMap mru = (MostRecentlyUsedMap)internalMapCacheField.get(pageMap);
-			Assert.assertFalse("Previous Page '" + Classes.name(getPreviousRenderedPage().getClass())
-					+ "' not expire", mru.containsValue(getPreviousRenderedPage()));
+			Assert.assertFalse("Previous Page '"
+					+ Classes.name(getPreviousRenderedPage().getClass()) + "' not expire", mru
+					.containsValue(getPreviousRenderedPage()));
 		}
 		catch (SecurityException e)
 		{
@@ -442,7 +452,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * dump the source of lastet rendered WebPage to System.out
+	 * Dump the source of last rendered WebPage to the logger's info channel.
 	 */
 	public final void dumpPage()
 	{
@@ -450,7 +460,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * dump componet tree
+	 * Dump component tree.
 	 */
 	public final void debugComponentTrees()
 	{
