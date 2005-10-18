@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Running the Examples Using the Source Distribution</title>
+		<title>Running the Examples from Source</title>
 	</properties>
 
 	<meta name="keyword" content="wicket, web, j2ee, java, examples, running" />
 
 	<body>
-		<section name="Running the Examples Using the Source Distribution">
+		<section name="Running the Examples from Source">
 			<p>
-				The process for running the source distribution of the examples is quite simple. We have
+				The process for running the the examples from source is quite simple. We have
 				supplied an embedded application server 
 				(<a href="http://jetty.mortbay.org" title="Jetty Java HTTP Servlet Server">Jetty</a>) which
 				can be run directly from your IDE. Note that you are not obligated to use the embedded 
@@ -28,13 +28,12 @@
 			<p>
 				The following sections will elaborate these steps further.
 			</p>
-			<subsection name="Download the Source Distribution">
+			<subsection name="Download the Distribution">
 				<p>
-					In order to run the examples from the binary distribution (so you don't have to
-					build the examples yourself) you need to
+					In order to build the examples from the distribution you need to
 					<a
 						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
-						download the latest source distribution
+						download the latest distribution
 					</a>
 					from a mirror close to you. After the download you have to unpack
 					the archive which will give you
