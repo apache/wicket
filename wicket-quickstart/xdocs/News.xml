@@ -11,6 +11,30 @@
 				<a href="http://wicket-stuff.sourceforge.net/wicket-kickstart">front page</a>
 				.
 			</p>
+			<subsection name="October 19, 2005 - Moved to Wicket home">
+				<p>
+					The Wicket Quickstart project has been upgraded from the Wicket Stuff project
+					and moved to the Wicket core project.
+				</p>
+				<p>
+					In preparation for the Wicket 1.1 release, we have updated the project with regard
+					to the following sections:
+					<ul>
+						<li>
+							now includes an <a href="http://ant.apache.org">Ant</a> build.xml 
+							file for building your WAR archive using Apache Ant
+						</li>
+						<li>
+							now includes a <a href="http://maven.apache.org">Maven 1</a> project descriptor 
+							for those that want to build their project using Apache Maven (1.0.x and 1.1)
+						</li>
+						<li>
+							now also includes a sysdeo Tomcat plugin configuration file, so you can now run 
+							the project directly using the Eclipse tomcat plugin.
+						</li>
+					</ul>
+				</p>
+			</subsection>
 			<subsection name="Juli 17, 2005 - NetBeans Guide available">
 				<p>
 					Thanks to the writing talents of 
