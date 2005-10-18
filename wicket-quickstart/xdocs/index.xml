@@ -3,11 +3,11 @@
 	<properties>
 		<title>Home</title>
 	</properties>
-	<meta name="keyword" content="wicket, web, j2ee, java, kick start, eclipse, netbeans, intellij, idea" />
+	<meta name="keyword" content="wicket, web, j2ee, java, quickstart, eclipse, netbeans, intellij, idea" />
 	<body>
-		<section name="Kick Start">
+		<section name="Quick Start">
 			<p>
-				This kick start is a small guide to get you up and running to start using
+				This quick start is a small guide to get you up and running to start using
 				<a href="http://wicket.sourceforge.net">Wicket</a>
 				within minutes. This project is meant to be a starting point for your first project.
 				If you are looking for examples, please look at the example projects.
@@ -19,7 +19,7 @@
 				<li><a href="intellij.html">IntelliJ IDEA</a></li>
 			</ul>
 			<p>
-				These kick start guides assume you have some knowlegde of developing Java web
+				These quick start guides assume you have some knowlegde of developing Java web
 				applications and using your IDE. This kick start will only give you a working
 				environment, it is not intended as a blueprint project.
 			</p>
@@ -35,14 +35,14 @@
 			<subsection name="Juli 17, 2005 - Wicket 1.0.1 maintenance release available">
 				<p>
 					The first maintenance release of the 1.0 release of 
-					<a href="http://wicket.sf.net">Wicket</a> is available. The Kickstart project
+					<a href="http://wicket.sf.net">Wicket</a> is available. The Quickstart project
 					has been updated to reflect this maintenance release.
 				</p>
 			</subsection>
 		    <subsection name="June 7, 2005 - Wicket 1.0 final Launched!">
 		        <p>
 		            With the launch of <a href="http://wicket.sf.net/PressRelease1_0.html">Wicket 1.0 final</a>
-		            we also upgraded the Wicket Kickstart project to be 1.0 based.
+		            we also upgraded the Wicket Quickstart project to be 1.0 based.
 		        </p>
 		    </subsection>
 			<subsection name="May 4, 2005 - Eclipse Live Demo added">
@@ -66,29 +66,8 @@
 			</p>
 			<a href="http://www.sourceforge.net" target="_blank" class="logoLink">
 				<img alt="SourceForge.net"
-					src="http://sourceforge.net/sflogo.php?group_id=134391&amp;type=1" />
+					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
 			</a>
-			<p>
-				<!-- Begin Nedstat Basic code -->
-				<!-- Title: Kickstart - home -->
-				<!-- URL: http://wicket-stuff.sourceforge.net/wicket-kickstart -->
-				<script language="JavaScript" type="text/javascript"
-					src="http://m1.nedstatbasic.net/basic.js">
-				</script>
-				<script language="JavaScript" type="text/javascript" src="nedstat.js"></script>
-				<noscript>
-					<a target="_blank"
-						href="http://www.nedstatbasic.net/stats?ADV36wTRX+7g6zAMcHdmGVrhRPug">
-						<img src="http://m1.nedstatbasic.net/n?id=ADV36wTRX+7g6zAMcHdmGVrhRPug"
-							border="0" width="18" height="18"
-							alt="Nedstat Basic - Free web site statistics
-				Personal homepage website counter" />
-					</a>
-					<br />
-					<a target="_blank" href="http://www.nedstatbasic.net/">Free counter</a>
-				</noscript>
-				<!-- End Nedstat Basic code -->
-			</p>
 		</section>
 	</body>
 </document>

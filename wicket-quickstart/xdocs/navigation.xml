@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<project name="Wicket Kick Start">
-	<title>Wicket Kick Start</title>
+<project name="Wicket QuickStart">
+	<title>Wicket QuickStart</title>
 	<body>
 	    <links>
 	      <item name="Wicket"  href="http://wicket.sourceforge.net/"/>
 	      <item name="Stuff"  href="http://wicket-stuff.sourceforge.net/"/>
 	    </links>
 	
-	    <menu name="Wicket Kick Start">
+	    <menu name="Wicket QuickStart">
 	        <item name="Home" href="/index.html"/>
 	        <item name="News" href="/News.html"/>
             <item name="License" href="/license.html"/>
@@ -40,12 +40,11 @@
 		</menu>
 
 		<menu name="Download">
-			<item name="Kick Start Project" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
+			<item name="QuickStart Project" href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850"/>
  		</menu>
 
 	    <menu name="Related projects">
-	        <item name="Wicket" href="http://wicket.sourceforge.net"/>
-	        <item name="Wicket Stuff" href="//index.html"/>
+	        <item name="Wicket" href="//index.html"/>
 	        <item name="Eclipse" href="http://www.eclipse.org"/>
 	        <item name="NetBeans" href="http://www.netbeans.org"/>
 	        <item name="IntelliJ IDEA" href="http://www.jetbrains.com/idea/"/>

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>NetBeans Kick Start Guide</title>
+		<title>NetBeans QuickStart Guide</title>
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java, netbeans" />
 	<body>
-		<section name="NetBeans Kick Start Guide">
+		<section name="NetBeans QuickStart Guide">
 			<p>
-				This kick start is a small guide to get you up and running to start using Wicket
+				This quickstart is a small guide to get you up and running to start using Wicket
 				within minutes. This project is meant to be a starting point for your first project.
 				If you are looking for examples, please look at the example projects.
 			</p>
@@ -107,14 +107,14 @@
 					</li>
 					<li>
 						Click Next and browse to the location where you unzipped the Wicket
-						Kickstart sources. Select the "foobar" folder (to which we renamed the
+						QuickStart sources. Select the "foobar" folder (to which we renamed the
 						downloaded distribution) for the Location field. Name the project
-						"Kickstart". Click Next and Finish.
+						"QuickStart". Click Next and Finish.
 					</li>
 				</ol>
 				<p>
 					From a traditional NetBeans IDE (or probably any other) perspective, the
-					structure of the kickstart project is novel, because the HTML file is located
+					structure of the quickstart project is novel, because the HTML file is located
 					within the source package:
 				</p>
 				<img src="images/netbeans-project.png" />
