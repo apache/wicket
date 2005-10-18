@@ -9,9 +9,9 @@
 	<body>
 		<section name="Running the Examples Using the Binary Distribution">
 			<p>
-				The process for running the binary distribution of the examples is quite simple. All you need is
-				a working J2EE application server like Tomcat, JBoss, Jetty, Resin, WebSphere, etc. and the binary
-				distribution. Basically the process is outlined as follows:
+				The process for running the distribution of the examples is quite simple. All you need is
+				a working J2EE application server like Tomcat, JBoss, Jetty, Resin, WebSphere, etc. and the 
+				war file from the examples distribution. Basically the process is outlined as follows:
 			</p>
 			<ul>
 				<li>Download the distribution</li>
@@ -23,9 +23,9 @@
 			<p>
 				In the following sections each step is described in more detail.
 			</p>
-			<subsection name="Download the Binary Distribution">
+			<subsection name="Download the Distribution">
 				<p>
-					In order to run the examples from the binary distribution (so you don't have to
+					In order to run the examples from the distribution (so you don't have to
 					build the examples yourself) you need to
 					<a
 						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
@@ -35,7 +35,8 @@
 					the archive which will give you
 					<ul>
 						<li>a <code>war</code> archive,</li>
-						<li>a file containing the Apache license and</li>
+						<li>a file containing the Apache license</li>
+						<li>the source files and</li>
 						<li>a directory containing some basic documentation.</li>
 					</ul>
 				</p>
