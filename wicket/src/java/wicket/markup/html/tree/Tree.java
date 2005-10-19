@@ -30,6 +30,7 @@ import javax.swing.tree.TreePath;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -222,7 +223,17 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			listItem.add(new SpacerList("spacers", level));
 
 			// add node panel
-			listItem.add(newNodePanel("node", node));
+			NodePanel nodePanel = newNodePanel("node", node);
+			if (nodePanel == null)
+			{
+				throw new WicketRuntimeException("node panel must be not-null");
+			}
+			if (!"node".equals(nodePanel.getId()))
+			{
+				throw new WicketRuntimeException("panel must have id 'node' assigned");
+			}
+
+			listItem.add(nodePanel);
 
 			// add attr modifier for highlighting the selection
 			listItem.add(new AttributeModifier("class", true,
