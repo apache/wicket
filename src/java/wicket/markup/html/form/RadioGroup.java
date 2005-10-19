@@ -74,6 +74,9 @@ public class RadioGroup extends FormComponent
 
 			// assign the value of the group's model
 			setModelObject(choice.getModelObject());
+		} else {
+			// no choice selected - set model object to null
+			setModelObject(null);
 		}
 	}
 
