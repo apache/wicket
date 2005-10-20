@@ -17,7 +17,6 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import wicket.markup.html.WebMarkupContainer;
@@ -66,7 +65,8 @@ public class CheckGroup extends FormComponent
 	 */
 	public CheckGroup(String id)
 	{
-		this(id, new Model(new ArrayList()));
+		super(id);
+		setRenderBodyOnly(true);
 	}
 
 	/**

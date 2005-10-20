@@ -19,7 +19,6 @@ package wicket.markup.html.form;
 
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * Component used to connect instances of Radio components into a group.
@@ -54,7 +53,8 @@ public class RadioGroup extends FormComponent
 	 */
 	public RadioGroup(String id)
 	{
-		this(id, new Model());
+		super(id);
+		setRenderBodyOnly(true);
 	}
 
 	/**
