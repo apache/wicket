@@ -113,9 +113,12 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 
 			return tag;
 		}
-
+		else if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() != null))
+		{
+			foundHead = true;
+		}
 		// if it is <body>
-		if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		else if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
 			// we found no <head> . But because we found <body> we assume it 
 		    // could be a page. And because we need to auto-add <head> to 
