@@ -27,8 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * This class is experimental only and may not yet work in your environment
  * 
- * @author ingram
+ * @author Ingram Chen
  */
 public class ExternalPageViewer
 {
