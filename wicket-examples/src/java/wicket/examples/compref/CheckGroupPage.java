@@ -12,7 +12,7 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.PropertyModel;
 
 /**
- * RadioGroup and Radio components example page
+ * CheckGroup and Check components example page
  * @author ivaynberg
  */
 public class CheckGroupPage extends WicketExamplePage
