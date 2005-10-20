@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,13 +25,11 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * Component used to connect instances of Check components into a
- * group. Instances of Check have to be in the component hierarchy
- * somewhere below the group component. The model of the CheckGroup component
- * has to be an instance of java.util.Collection. If no model is provided a new
- * instance of java.util.ArrayList will be used as the default model collection.
- * The model collection of the group is filled with model objects of all
- * selected Check components.
+ * Component used to connect instances of Check components into a group.
+ * Instances of Check have to be in the component hierarchy somewhere below the
+ * group component. The model of the CheckGroup component has to be an instance
+ * of java.util.Collection. The model collection of the group is filled with
+ * model objects of all selected Check components.
  * 
  * ie
  * 
