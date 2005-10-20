@@ -8,6 +8,7 @@ import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 
 /**
@@ -21,7 +22,7 @@ public class RadioGroupPage extends WicketExamplePage
 	 */
 	public RadioGroupPage() {
 		
-		final RadioGroup group=new RadioGroup("group");
+		final RadioGroup group=new RadioGroup("group", new Model());
 		Form form=new Form("form") {
 			protected void onSubmit() {
 				info("selected person: "+group.getModelObjectAsString());

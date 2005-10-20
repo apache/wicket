@@ -1,5 +1,7 @@
 package wicket.examples.compref;
 
+import java.util.ArrayList;
+
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Check;
@@ -22,7 +24,7 @@ public class CheckGroupPage extends WicketExamplePage
 	 */
 	public CheckGroupPage() {
 		
-		final CheckGroup group=new CheckGroup("group");
+		final CheckGroup group=new CheckGroup("group", new ArrayList());
 		Form form=new Form("form") {
 			protected void onSubmit() {
 				info("selected person(s): "+group.getModelObjectAsString());
