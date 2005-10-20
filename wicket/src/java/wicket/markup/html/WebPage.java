@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.48 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
 package wicket.markup.html;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
@@ -160,7 +161,8 @@ public class WebPage extends Page implements IHeaderRenderer
 					String escapedValue = value;
 					try
 					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get().getSettings().getResponseRequestEncoding());
+						escapedValue = URLEncoder.encode(escapedValue, Application.get()
+								.getSettings().getResponseRequestEncoding());
 					}
 					catch (UnsupportedEncodingException ex)
 					{
@@ -351,7 +353,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	public final void renderHeaderSections(final HtmlHeaderContainer container)
 	{
 		this.bodyOnLoad = null;
-		
+
 		// A components interested in contributing to the header must
 		// implement IHeaderContributor.
 		visitChildren(IHeaderContributor.class, new IVisitor()
@@ -426,5 +428,38 @@ public class WebPage extends Page implements IHeaderRenderer
 		}
 
 		super.onEndRequest();
+	}
+
+	/**
+	 * Called just before a component's listener method (the provided method
+	 * argument) is called. This method may be used to set up dependencies,
+	 * enforce authorization, etc. NOTE: if this method fails, the method will
+	 * not be excuted. Method
+	 * {@link WebPage#afterCallComponent(Component, Method)} will always be
+	 * called.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param method
+	 *            the method of that component that is to be called
+	 */
+	public void beforeCallComponent(final Component component, final Method method)
+	{
+	}
+
+	/**
+	 * Called right after a component's listener method (the provided method
+	 * argument) was called. This method may be used to clean up dependencies,
+	 * do logging, etc. NOTE: this method will also be called when
+	 * {@link WebPage#beforeCallComponent(Component, Method)} or the method
+	 * invocation itself failed.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param method
+	 *            the method of that component that is to be called
+	 */
+	public void afterCallComponent(final Component component, final Method method)
+	{
 	}
 }
