@@ -20,14 +20,15 @@ package wicket.util.tester;
 import wicket.markup.html.WebPage;
 
 /**
+ * A dummy panel component
  * 
- * @author ingram
+ * @author Ingram Chen
  */
 public class DummyPanelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/** */
+	/** The dummy panels component id */
 	public static final String TEST_PANEL_ID = "panel";
 
 	/**

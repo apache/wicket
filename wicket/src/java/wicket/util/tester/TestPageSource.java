@@ -20,14 +20,16 @@ package wicket.util.tester;
 import wicket.Page;
 
 /**
+ * A test page factory for WicketTester
  * 
- * @author ingram
+ * @author Ingram Chen
  */
 public abstract interface TestPageSource
 {
 	/**
+	 * Define a page instance source for WicketTester
 	 * 
-	 * @return Page
+	 * @return Page created page instance for testing
 	 */
 	public Page getTestPage();
 }

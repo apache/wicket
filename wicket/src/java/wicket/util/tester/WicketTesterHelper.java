@@ -30,8 +30,9 @@ import wicket.Component.IVisitor;
 import wicket.util.string.Strings;
 
 /**
+ * A WicketTester specific helper class
  * 
- * @author ingram
+ * @author Ingram Chen
  */
 public class WicketTesterHelper
 {
@@ -99,6 +100,7 @@ public class WicketTesterHelper
 	}
 
 	/**
+	 * Assert both collections contain the same elements
 	 * 
 	 * @param expects
 	 * @param actuals
@@ -112,6 +114,7 @@ public class WicketTesterHelper
 	}
 
 	/**
+	 * Fail with a verbose error message
 	 * 
 	 * @param expects
 	 * @param actuals
@@ -123,6 +126,7 @@ public class WicketTesterHelper
 	}
 
 	/**
+	 * toString() for the collection provided.
 	 * 
 	 * @param objects
 	 * @return String

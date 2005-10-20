@@ -21,18 +21,22 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
 /**
- * @author ingram
+ * A dummy homepage required by WicketTester only
+ * 
+ * @author Ingram Chen
  */
 public class DummyHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/** ?? TODO ?? */
 	private TestPageSource testPageSource;
 
+	/** ?? TODO ?? */
 	private Link testPageLink;
 
 	/**
-	 * 
+	 * Construct
 	 */
 	public DummyHomePage()
 	{

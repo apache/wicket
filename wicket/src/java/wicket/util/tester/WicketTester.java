@@ -37,7 +37,6 @@ import wicket.WicketRuntimeException;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.link.IPageLink;
@@ -50,19 +49,126 @@ import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.lang.Classes;
 
 /**
+ * A helper to ease unit testing of Wicket applications without the need for a
+ * servlet container. To start a test, we can use either startPage() or
+ * startPanel():
  * 
- * @author ingram
+ * <pre>
+ * // production page  
+ * public class MyPage extends WebPage
+ * {
+ * 	public MyPage()
+ * 	{
+ * 		add(new Label(&quot;myMessage&quot;, &quot;Hello!&quot;));
+ * 		add(new Link(&quot;toYourPage&quot;)
+ * 		{
+ * 			public void onClick()
+ * 			{
+ * 				setResponsePage(new YourPage(&quot;Hi!&quot;));
+ * 			}
+ * 		});
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * // test code
+ * private WicketTester tester;
+ * 
+ * public void setUp()
+ * {
+ * 	tester = new WicketTester();
+ * }
+ * 
+ * public void testRenderMyPage()
+ * {
+ * 	//start and render the test page
+ * 	tester.startPage(MyPage.class);
+ * 
+ * 	//assert rendered page class
+ * 	tester.assertRenderedPage(MyPage.class);
+ * 
+ * 	//assert rendered label component 
+ * 	tester.assertLabel(&quot;myMessage&quot;, &quot;Hello!&quot;);
+ * }
+ * </pre>
+ * 
+ * Above example is straight forward: start MyPage.class and assert Label it
+ * rendered. Next, we try to navigate through link:
+ * 
+ * <pre>
+ * // production page  
+ * public class YourPage extends WebPage
+ * {
+ * 	public YourPage(String message)
+ * 	{
+ * 		add(new Label(&quot;yourMessage&quot;, message));
+ * 		info(&quot;Wicket Rocks ;-)&quot;);
+ * 	}
+ * }
+ * 
+ * //test code
+ * public void testLinkToYourPage()
+ * {
+ * 	tester.startPage(MyPage.class);
+ * 
+ * 	//click link and render
+ * 	tester.clickLink(&quot;toYourPage&quot;);
+ * 
+ * 	tester.assertRenderedPage(YourPage.class);
+ * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;Hi!&quot;);
+ * }
+ * </pre>
+ * 
+ * <code>tester.clickLink(path);</code> will simulate user click on the
+ * component (in this case, it's a <code>Link</code>) and render the response
+ * page <code>YourPage</code>. Ok, unit test of <code>MyPage</code> is
+ * completed. Now we test <code>YourPage</code> standalone:
+ * 
+ * <pre>
+ * //test code
+ * public void testRenderYourPage()
+ * {
+ * 	// provide page instance source for WicketTester
+ * 	tester.startPage(new TestPageSource()
+ * 	{
+ * 		public Page getTestPage()
+ * 		{
+ * 			return new YourPage(&quot;mock message&quot;);
+ * 		}
+ * 	});
+ * 
+ * 	tester.assertRenderedPage(YourPage.class);
+ * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;mock message&quot;);
+ * 
+ * 	// assert feedback messages in INFO Level 
+ * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
+ * 
+ * }
+ * </pre>
+ * 
+ * Instead of <code>tester.startPage(pageClass)</code>, we define a
+ * {@link wicket.util.tester.TestPageSource} to provide testing page instance
+ * for WicketTester. This is necessary because <code>YourPage</code> uses a
+ * custom constructor, which is very common for transfering model data, can not
+ * be instansiated by reflection. Finally, we use
+ * <code>assertInfoMessages</code> to assert there is a feedback message
+ * "Wicket Rocks ;-)" in INFO level.
+ * 
+ * TODO ingram: example usage of FormTester
+ * 
+ * @author Ingram Chen
  * @author Juergen Donnerstag
  */
-// TODO document in what way this can be used (best) and revisit the method's
-// docs
 public class WicketTester extends MockWebApplication
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
-	 * Construct.
+	 * create WicketTester with null path
+	 * 
+	 * @see #WicketTester(String)
 	 */
 	public WicketTester()
 	{
@@ -70,11 +176,13 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Construct.
+	 * create a WicketTester to help unit testing.
 	 * 
 	 * @param path
 	 *            The absolute path on disk to the web application contents
 	 *            (e.g. war root) - may be null
+	 * 
+	 * @see wicket.protocol.http.MockWebApplication#MockWebApplication(String)
 	 */
 	public WicketTester(final String path)
 	{
@@ -82,10 +190,24 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Renders a wicket WebPage that is defined in TestPageSource.
+	 * Render a page defined in <code>TestPageSource</code>. This usually
+	 * used when a page does not have default consturctor. For example, a
+	 * <code>ViewBook</code> page requires a <code>Book</code> instance:
+	 * 
+	 * <pre>
+	 * tester.startPage(new TestPageSource()
+	 * {
+	 * 	public Page getTestPage()
+	 * 	{
+	 * 		Book mockBook = new Book(&quot;myBookName&quot;);
+	 * 		return new ViewBook(mockBook);
+	 * 	}
+	 * });
+	 * </pre>
 	 * 
 	 * @param testPageSource
-	 * @return Page
+	 *            a page factory that creating test page instance
+	 * @return Page rendered page
 	 */
 	public final Page startPage(TestPageSource testPageSource)
 	{
@@ -111,24 +233,39 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * render a wicket WebPage for pageClass
+	 * Render a page from its default constructor.
 	 * 
 	 * @param pageClass
-	 * @return WebPage
+	 *            a test page class with default constructor
+	 * @return Page Rendered Page
 	 */
-	public final WebPage startPage(Class pageClass)
+	public final Page startPage(Class pageClass)
 	{
 		getPages().setHomePage(pageClass);
 		setupRequestAndResponse();
 		processRequestCycle();
-		return (WebPage)getLastRenderedPage();
+		return getLastRenderedPage();
 	}
 
 	/**
-	 * render a Panel that defined in TestPanelSource.
+	 * Render a panel defined in <code>TestPanelSource</code>. The usage is
+	 * similar with {@link #startPage(TestPageSource)}. Please note that
+	 * testing panel must use supplied <code>panelId<code> as component id.
+	 * 
+	 * <pre>
+	 * tester.startPanel(new TestPanelSource()
+	 * {
+	 * 	public Panel getTestPanel(String panelId)
+	 * 	{
+	 * 		MyData mockMyData = new MyData();
+	 * 		return new MyPanel(panelId, mockMyData);
+	 * 	}
+	 * });
+	 * </pre>
 	 * 
 	 * @param testPanelSource
-	 * @return Panel
+	 *            a panel factory that creating test panel instance
+	 * @return Panel rendered panel
 	 */
 	public final Panel startPanel(final TestPanelSource testPanelSource)
 	{
@@ -142,10 +279,12 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * render a Panel for panelClass
+	 * Render a panel from <code>Panel(String id)</code> constructor.
 	 * 
 	 * @param panelClass
-	 * @return Panel
+	 *            a test panel class with <code>Panel(String id)</code>
+	 *            constructor
+	 * @return Panel rendered panel
 	 */
 	public final Panel startPanel(final Class panelClass)
 	{
@@ -189,6 +328,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Throw "standard" WicketRuntimeException
 	 * 
 	 * @param e
 	 * @return RuntimeException
@@ -199,10 +339,12 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * get component From Last Rendered Page
+	 * get component from last rendered page
 	 * 
 	 * @param path
-	 * @return component at specified path
+	 *            Path to component
+	 * @return The component at the path
+	 * @see wicket.MarkupContainer#get(String)
 	 */
 	public Component getComponentFromLastRenderedPage(String path)
 	{
@@ -216,24 +358,28 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert the model of Label component in String.
+	 * assert the text of <code>Label</code> component.
 	 * 
 	 * @param path
-	 * @param expect
+	 *            path to <code>Label</code> component
+	 * @param expectedLabelText
+	 *            expected label text
 	 */
-	public final void assertLabel(String path, String expect)
+	public void assertLabel(String path, String expectedLabelText)
 	{
 		Label label = (Label)getComponentFromLastRenderedPage(path);
-		Assert.assertEquals(expect, label.getModelObjectAsString());
+		Assert.assertEquals(expectedLabelText, label.getModelObjectAsString());
 	}
 
 	/**
-	 * assert PageLink link to pageClass.
+	 * assert <code>PageLink</code> link to page class.
 	 * 
 	 * @param path
-	 * @param pageClass
+	 *            path to <code>PageLink</code> component
+	 * @param expectedPageClass
+	 *            expected page class to link
 	 */
-	public final void assertPageLink(String path, Class pageClass)
+	public void assertPageLink(String path, Class expectedPageClass)
 	{
 		PageLink pageLink = (PageLink)getComponentFromLastRenderedPage(path);
 		try
@@ -241,7 +387,7 @@ public class WicketTester extends MockWebApplication
 			Field iPageLinkField = pageLink.getClass().getDeclaredField("pageLink");
 			iPageLinkField.setAccessible(true);
 			IPageLink iPageLink = (IPageLink)iPageLinkField.get(pageLink);
-			Assert.assertEquals(pageClass, iPageLink.getPageIdentity());
+			Assert.assertEquals(expectedPageClass, iPageLink.getPageIdentity());
 		}
 		catch (SecurityException e)
 		{
@@ -258,23 +404,26 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert componentClass defined at path ;
+	 * assert component class
 	 * 
 	 * @param path
-	 * @param componentClass
+	 *            path to component
+	 * @param expectedComponentClass
+	 *            expected component class
 	 */
-	public void assertComponent(String path, Class componentClass)
+	public void assertComponent(String path, Class expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		Assert.assertTrue("componet '" + Classes.name(component.getClass()) + "' is not type:"
-				+ Classes.name(componentClass), componentClass.isAssignableFrom(component
-				.getClass()));
+				+ Classes.name(expectedComponentClass), expectedComponentClass
+				.isAssignableFrom(component.getClass()));
 	}
 
 	/**
-	 * assert component at path visible.
+	 * assert component visible.
 	 * 
 	 * @param path
+	 *            path to component
 	 */
 	public void assertVisible(String path)
 	{
@@ -283,9 +432,10 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert component at path invisible.
+	 * assert component invisible.
 	 * 
 	 * @param path
+	 *            path to component
 	 */
 	public void assertInvisible(String path)
 	{
@@ -294,10 +444,10 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert last rendered page contain String pattern.
+	 * assert the content of last rendered page contains(matches) regex pattern.
 	 * 
 	 * @param pattern
-	 *            reqex pattern of containing string
+	 *            reqex pattern to match
 	 */
 	public void assertContains(String pattern)
 	{
@@ -306,59 +456,83 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert ListView at path use expectList ;
+	 * assert the model of {@link ListView} use expectedList
 	 * 
 	 * @param path
-	 * @param expectList
+	 *            path to {@link ListView} component
+	 * @param expectedList
+	 *            expected list in the model of {@link ListView}
 	 */
-	public void assertListView(String path, List expectList)
+	public void assertListView(String path, List expectedList)
 	{
 		ListView listView = (ListView)getComponentFromLastRenderedPage(path);
-		WicketTesterHelper.assertEquals(expectList, listView.getList());
+		WicketTesterHelper.assertEquals(expectedList, listView.getList());
 	}
 
 	/**
-	 * Creates a TestWorkingForm for the form of latest rendered WebPage.
+	 * create a {@link FormTester} for the form at path, and fill all child
+	 * {@link wicket.markup.html.form.FormComponent}s with blank String
+	 * initially.
 	 * 
 	 * @param path
-	 * @return FormTester
+	 *            path to {@link Form} component
+	 * @return FormTester A FormTester instance for testing form
+	 * @see #newFormTester(String, boolean)
 	 */
-	public final FormTester newFormTester(String path)
+	public FormTester newFormTester(String path)
 	{
-		return new FormTester(path, (Form)getComponentFromLastRenderedPage(path), this);
+		return newFormTester(path, true);
 	}
 
 	/**
-	 * Clicks the Link of the last rendered WebPage.
+	 * create a {@link FormTester} for the form at path.
 	 * 
 	 * @param path
-	 *            path of the link
+	 *            path to {@link Form} component
+	 * @param fillBlankString
+	 *            specify whether fill all child
+	 *            {@link wicket.markup.html.form.FormComponent}s with
+	 *            blankString initially.
+	 * @return FormTester A FormTester instance for testing form
+	 * @see FormTester
 	 */
-	public final void clickLink(String path)
+	public FormTester newFormTester(String path, boolean fillBlankString)
+	{
+		return new FormTester(path, (Form)getComponentFromLastRenderedPage(path), this,
+				fillBlankString);
+	}
+
+	/**
+	 * click the <coe>Link</code> in the last rendered Page.
+	 * 
+	 * @param path
+	 *            path to <code>Link</code> component
+	 */
+	public void clickLink(String path)
 	{
 		Link link = (Link)getComponentFromLastRenderedPage(path);
 		newRequestToComponent(link);
 	}
 
 	/**
-	 * Asserts that the last rendered WebPage is of the given type.
+	 * assert last rendered Page class
 	 * 
-	 * @param pageClass
-	 *            tyoe to check
+	 * @param expectedReneredPageClass
+	 *            expected class of last renered page
 	 */
-	public final void assertRenderedPage(Class pageClass)
+	public void assertRenderedPage(Class expectedReneredPageClass)
 	{
-		if (!getLastRenderedPage().getClass().isAssignableFrom(pageClass))
+		if (!getLastRenderedPage().getClass().isAssignableFrom(expectedReneredPageClass))
 		{
-			Assert.assertEquals(Classes.name(pageClass), Classes.name(getLastRenderedPage()
-					.getClass()));
+			Assert.assertEquals(Classes.name(expectedReneredPageClass), Classes
+					.name(getLastRenderedPage().getClass()));
 		}
 	}
 
 	/**
-	 * Asserts that the given messages have NOT been set for the ERROR level.
+	 * assert no error feedback messages
 	 */
-	public final void assertNoErrorMessage()
+	public void assertNoErrorMessage()
 	{
 		List messages = getMessages(FeedbackMessage.ERROR);
 		Assert.assertTrue("expect no error message, but contains\n"
@@ -366,9 +540,9 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Asserts that the given messages have NOT been set for the INFO level.
+	 * assert no info feedback messages
 	 */
-	public final void assertNoInfoMessage()
+	public void assertNoInfoMessage()
 	{
 		List messages = getMessages(FeedbackMessage.INFO);
 		Assert.assertTrue("expect no info message, but contains\n"
@@ -376,34 +550,39 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Asserts that the given messages have been set for the ERROR level.
+	 * assert error feedback messages
 	 * 
-	 * @param expectMessages
+	 * @param expectedErrorMessages
+	 *            expected error messages
 	 */
-	public final void assertErrorMessages(String[] expectMessages)
+	public void assertErrorMessages(String[] expectedErrorMessages)
 	{
 		List actualMessages = getMessages(FeedbackMessage.ERROR);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectMessages), actualMessages);
+		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), actualMessages);
 	}
 
 	/**
-	 * Asserts that the given messages have been set for the INFO level.
+	 * assert info feedback message
 	 * 
-	 * @param expectMessages
+	 * @param expectedInfoMessages
+	 *            expected info messages
 	 */
-	public final void assertInfoMessages(String[] expectMessages)
+	public void assertInfoMessages(String[] expectedInfoMessages)
 	{
 		List actualMessages = getMessages(FeedbackMessage.INFO);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectMessages), actualMessages);
+		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
 	}
 
 	/**
-	 * Gets the messages from starting from the given level.
+	 * get feedback messages
 	 * 
 	 * @param level
-	 * @return List
+	 *            level of feedback message, ex.
+	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
+	 * @return List list of messages (in String)
+	 * @see FeedbackMessage
 	 */
-	private List getMessages(final int level)
+	public List getMessages(final int level)
 	{
 		FeedbackMessages feedbackMessages = getLastRenderedPage().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
@@ -422,9 +601,9 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Assert that the previous page expired.
+	 * assert previous rendered page expired
 	 */
-	public final void assertExpirePreviousPage()
+	public void assertExpirePreviousPage()
 	{
 		PageMap pageMap = getWicketSession().getPageMap(null);
 		Field internalMapCacheField;
@@ -452,17 +631,17 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Dump the source of last rendered WebPage to the logger's info channel.
+	 * dump the source of last rendered page
 	 */
-	public final void dumpPage()
+	public void dumpPage()
 	{
 		log.info(getServletResponse().getDocument());
 	}
 
 	/**
-	 * Dump component tree.
+	 * dump component tree
 	 */
-	public final void debugComponentTrees()
+	public void debugComponentTrees()
 	{
 		log.info("debugging ----------------------------------------------");
 		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter

@@ -20,15 +20,19 @@ package wicket.util.tester;
 import wicket.markup.html.panel.Panel;
 
 /**
+ * A test panel factory for WicketTester
  * 
- * @author ingram
+ * @author Ingram Chen
  */
 public abstract interface TestPanelSource
 {
 	/**
+	 * Define a panel instance source for WicketTester
 	 * 
 	 * @param panelId
-	 * @return Panel
+	 *            panelId of the testing panel
+	 * @return Panel testing panel instance, note that testing panel's
+	 *         componentId must use supplied <code>panelId</code>.
 	 */
 	public Panel getTestPanel(final String panelId);
 }
