@@ -186,6 +186,14 @@ public class HeaderSectionTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_14() throws Exception
+	{
+	    executeTest(HeaderSectionPage_14.class, "HeaderSectionPageExpectedResult_14.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
