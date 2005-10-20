@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.Component;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -26,9 +27,9 @@ import wicket.util.lang.Objects;
 /**
  * Component representing a single radio choice in a wicket.markup.html.form.RadioGroup.
  * 
- * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; component.
+ * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
  * 
- * @see RadioGroup
+ * @see wicket.markup.html.form.RadioGroup
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
@@ -73,10 +74,10 @@ public class Radio extends WebMarkupContainer
 		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
 		if (group == null)
 		{
-			throw new RuntimeException(
+			throw new WicketRuntimeException(
 					"RadioChoice component ["
 							+ getPath()
-							+ "] cannot find a parent RadioGroup. All RadioChoice components must be a child of or below in the hierarchy of a RadioGroup component.");
+							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 		// assign name and value
