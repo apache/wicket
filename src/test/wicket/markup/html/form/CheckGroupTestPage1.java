@@ -19,7 +19,6 @@
 package wicket.markup.html.form;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * tests rendering of no checkboxes selected
@@ -29,6 +28,9 @@ import java.util.List;
  */
 public class CheckGroupTestPage1 extends AbstractCheckGroupTestPage
 {
+	/**
+	 * constructor
+	 */
 	public CheckGroupTestPage1()
 	{
 		super(new ArrayList());

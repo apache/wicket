@@ -19,11 +19,14 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.CompoundPropertyModel;
@@ -58,7 +61,8 @@ public class CheckGroupTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		
 		private Set prop1=new HashSet();
-
+		private String prop2;
+		
 		/**
 		 * @return prop1
 		 */
@@ -75,6 +79,23 @@ public class CheckGroupTest extends WicketTestCase
 			this.prop1 = prop1;
 		}
 
+		/**
+		 * @return prop2
+		 */
+		public String getProp2()
+		{
+			return prop2;
+		}
+
+		/**
+		 * @param prop2
+		 */
+		public void setProp2(String prop2)
+		{
+			this.prop2 = prop2;
+		}
+		
+		
 
 	}
 
@@ -88,7 +109,18 @@ public class CheckGroupTest extends WicketTestCase
 		final String check2 = "check2-selection";
 
 		MockModelObject modelObject = new MockModelObject();
+		modelObject.setProp2(check2);
 		
+		// test model constructors
+		List list=new ArrayList();
+		Model model=new Model((Serializable)list);
+
+		final CheckGroup group2=new CheckGroup("group2", model);
+		assertTrue(group2.getModelObject()==list);
+
+		final CheckGroup group3=new CheckGroup("group3", list);
+		assertTrue(group3.getModelObject()==list);
+
 		
 		// set up necessary objects to emulate a form submission
 		
@@ -101,17 +133,17 @@ public class CheckGroupTest extends WicketTestCase
 		// create component hierarchy
 		
 		final Form form = new Form("form", new CompoundPropertyModel(modelObject));
-		page.add(form);
 
 		final CheckGroup group = new CheckGroup("prop1");
-		form.add(group);
 
 		final WebMarkupContainer container = new WebMarkupContainer("container");
-		group.add(container);
 
 		final Check choice1 = new Check("check1", new Model(check1));
-		final Check choice2 = new Check("check2", new Model(check2));
-
+		final Check choice2 = new Check("prop2");
+		
+		page.add(form);
+		form.add(group);
+		group.add(container);
 		container.add(choice1);
 		group.add(choice2);
 
@@ -133,11 +165,21 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with choice2 selected - model must only contain value of check2",
 				modelObject.getProp1().size()==1&&modelObject.getProp1().contains(check2));
 
-		application.getServletRequest().getParameterMap().put(group.getInputName(), new String[] {choice1.getPath(),choice2.getPath()});
+		// throw in some nulls into the request param to make sure they are ignored
+		application.getServletRequest().getParameterMap().put(group.getInputName(), new String[] {null, choice1.getPath(),null, choice2.getPath()});
 		form.onFormSubmitted();
 		assertTrue("running with choice1 and choice2 selected - model must only contain values of check1 and check2",
 				modelObject.getProp1().size()==2&&modelObject.getProp1().contains(check2)&&modelObject.getProp1().contains(check1));
-	
+
+		application.getServletRequest().getParameterMap().put(group.getInputName(), new String[] {"some weird path to test error"});
+		try {
+			form.onFormSubmitted();
+			fail("running with an invalid choice value in the request param, should fail");
+		} catch (WicketRuntimeException e) {
+			
+		}
+
+		
 	}
 
 	/**
@@ -150,6 +192,15 @@ public class CheckGroupTest extends WicketTestCase
 		executeTest(CheckGroupTestPage2.class, "CheckGroupTestPage2_expected.html");
 		executeTest(CheckGroupTestPage3.class, "CheckGroupTestPage3_expected.html");
 		executeTest(CheckGroupTestPage4.class, "CheckGroupTestPage4_expected.html");
+		try {
+			executeTest(CheckGroupTestPage5.class, "");
+			fail("this will always fail");
+		} catch (WicketRuntimeException e) {
+			if (!e.getMessage().contains("Check component [4:form:check2] cannot find its parent CheckGroup")) {
+				fail("failed with wrong exception");
+			}
+
+		}
 	}
 
 
