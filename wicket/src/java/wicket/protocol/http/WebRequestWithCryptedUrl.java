@@ -147,7 +147,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 				String[] prevValue = (String[])params.get(pair);
 				if (prevValue != null)
 				{
-					String[] newValue = new String[prevValue.length];
+					String[] newValue = new String[prevValue.length+1];
 					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
 					newValue[prevValue.length] = "";
 					params.put(pair,newValue);
@@ -165,7 +165,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 				String[] prevValue = (String[])params.get(key);
 				if (prevValue != null)
 				{
-					String[] newValue = new String[prevValue.length];
+					String[] newValue = new String[prevValue.length+1];
 					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
 					newValue[prevValue.length] = value;
 					params.put(key,newValue);
