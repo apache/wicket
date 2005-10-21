@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.io.Serializable;
 import java.util.Collection;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -132,6 +133,19 @@ public class CheckGroup extends FormComponent
 
 					// retrieve the selected checkbox component
 					Check checkbox = (Check)get(path);
+
+					if (checkbox == null)
+					{
+						throw new WicketRuntimeException(
+								"submitted http post value ["
+										+ paths.toString()
+										+ "] for CheckGroup component ["
+										+ getPath()
+										+ "] contains an illegal relative path "
+										+ "element ["
+										+ path
+										+ "] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+					}
 
 					// assign the value of the group's model
 					collection.add(checkbox.getModelObject());
