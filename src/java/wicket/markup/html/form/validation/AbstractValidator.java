@@ -171,8 +171,11 @@ public abstract class AbstractValidator implements IValidator
 		}
 		else
 		{
-			String labelKey=formComponent.getForm().getId()+"."+formComponent.getId();
-			resourceModel.put("label", formComponent.getLocalizer().getString(labelKey, formComponent));
+			String labelKey = formComponent.getForm().getId() + "." + formComponent.getId();
+			
+			// apply default value (component id) if key/value can not be found
+			resourceModel.put("label", formComponent.getLocalizer().getString(labelKey, formComponent, 
+					formComponent.getId()));
 		}
 		return resourceModel;
 	}
