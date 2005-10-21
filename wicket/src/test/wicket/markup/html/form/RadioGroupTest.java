@@ -59,7 +59,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		private String prop1;
 		private String prop2;
-		
+
 		/**
 		 * @return prop1
 		 */
@@ -156,7 +156,8 @@ public class RadioGroupTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
 				modelObject.getProp1(), choice1.getModelObject());
-		assertEquals("group2: running with choice3 selected - model must be set to value of radio1",
+		assertEquals(
+				"group2: running with choice3 selected - model must be set to value of radio1",
 				model.getObject(null), choice3.getModelObject());
 
 		application.getServletRequest().setParameter(group.getInputName(), choice2.getPath());
@@ -165,13 +166,16 @@ public class RadioGroupTest extends WicketTestCase
 				modelObject.getProp1(), choice2.getModelObject());
 
 		application.getServletRequest().setParameter(group2.getInputName(), choice1.getPath());
-		try {
+		try
+		{
 			form.onFormSubmitted();
 			fail("group2: ran with an invalid choice selected but did not fail");
-		} catch (WicketRuntimeException e) {
-			
 		}
-		
+		catch (WicketRuntimeException e)
+		{
+
+		}
+
 	}
 
 	/**
@@ -182,11 +186,16 @@ public class RadioGroupTest extends WicketTestCase
 	public void testRendering() throws Exception
 	{
 		executeTest(RadioGroupTestPage1.class, "RadioGroupTestPage1_expected.html");
-		try {
+		try
+		{
 			executeTest(RadioGroupTestPage2.class, "");
 			fail("the rendering of page above must fail because radio2 component is not under any group");
-		} catch (WicketRuntimeException e) {
-			if (!e.getMessage().contains("Radio component [1:form:radio2] cannot find its parent RadioGroup")) {
+		}
+		catch (WicketRuntimeException e)
+		{
+			if (e.getMessage().indexOf(
+					"Radio component [1:form:radio2] cannot find its parent RadioGroup") < 0)
+			{
 				fail("failed with wrong exception");
 			}
 		}
