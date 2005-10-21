@@ -649,10 +649,6 @@ public class WebRequestCycle extends RequestCycle
 
 				// Invoke interface on component
 				invokeInterface(component, method, page);
-
-				// TODO code smell: why is this commented code here?
-				// // Set form component values from cookies
-				// setFormComponentValuesFromCookies(page);
 			}
 			else
 			{
