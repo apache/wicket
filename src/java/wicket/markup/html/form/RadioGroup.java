@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
@@ -89,6 +90,18 @@ public class RadioGroup extends FormComponent
 			// retrieve the selected single radio choice component
 			Radio choice = (Radio)get(path);
 
+			if (choice == null)
+			{
+				throw new WicketRuntimeException(
+						"submitted http post value ["
+								+ path
+								+ "] for RadioGroup component ["
+								+ getPath()
+								+ "] is illegal because it does not contain relative path to a Radio componnet. "
+								+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+			}
+
+			
 			// assign the value of the group's model
 			setModelObject(choice.getModelObject());
 		} else {
