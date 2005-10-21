@@ -434,14 +434,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String[] getParameterValues(final String name)
 	{
-		String value = getParameter(name);
+		Object value = parameters.get(name);
 		if (value == null)
 		{
 			return new String[0];
 		}
-		String[] result = new String[1];
-		result[0] = value;
-		return result;
+		if (value instanceof String[]) {
+			return (String[])value;
+		} else {
+			String[] result = new String[1];
+			result[0] = value.toString();
+			return result;
+		}
 	}
 
 	/**
