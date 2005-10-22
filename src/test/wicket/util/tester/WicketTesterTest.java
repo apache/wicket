@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import wicket.Page;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
+import wicket.util.tester.apps_1.MyMockApplication;
 import wicket.util.tester.apps_1.SuccessPage;
 import wicket.util.tester.apps_1.ViewBook;
 
@@ -36,7 +37,7 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testViewBook() throws Exception
 	{
-		WicketTester tester = new WicketTester();
+		MyMockApplication tester = new MyMockApplication();
 
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
@@ -61,7 +62,7 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testCreateBook_validateFail() throws Exception
 	{
-		WicketTester tester = new WicketTester();
+		MyMockApplication tester = new MyMockApplication();
 		tester.startPage(CreateBook.class);
 
 		FormTester formTester = tester.newFormTester("createForm");
@@ -82,7 +83,7 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testCreateBook_validatePass() throws Exception
 	{
-		WicketTester tester = new WicketTester();
+		MyMockApplication tester = new MyMockApplication();
 		tester.startPage(CreateBook.class);
 
 		FormTester formTester = tester.newFormTester("createForm");
