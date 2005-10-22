@@ -282,6 +282,9 @@ public abstract class Component implements Serializable, IAjaxListener
 	/** Any parent container. */
 	private MarkupContainer parent;
 
+	/** The position within the markup stream, where the markup for the component begins */
+	private int markupStreamPosition = -1;
+	
 	/**
 	 * Change record of a model.
 	 */
@@ -1859,6 +1862,19 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
+		// Allow the component to be re-rendered without a page. Partial
+		// re-rendering is a requirement of AJAX.
+		if (this.markupStreamPosition < 0)
+		{
+			// Remember the position while rendering the component the first time
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+		}
+		else
+		{
+			// Re-set the markups index to the beginning of the component tag
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
 

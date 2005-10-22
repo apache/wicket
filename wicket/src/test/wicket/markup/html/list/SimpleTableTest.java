@@ -18,11 +18,11 @@
  */
 package wicket.markup.html.list;
 
+import junit.framework.TestCase;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
-import junit.framework.TestCase;
 
 
 /**
@@ -61,6 +61,16 @@ public class SimpleTableTest extends TestCase
 		SimpleTablePage page = (SimpleTablePage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validateDocument(document));
+
+		// Does re-render do as well ??
+	    ListView view = (ListView)application.getLastRenderedPage().get("table");
+	    assertNotNull(view);
+		application.rerender(view);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+
 	}
 
 	/**

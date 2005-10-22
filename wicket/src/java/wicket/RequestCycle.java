@@ -458,6 +458,76 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Responds to a request to re-render a single component. 
+	 * 
+	 * @param component to be re-rendered
+	 * @throws ServletException
+	 */
+	public final void request(final Component component) throws ServletException
+	{
+		// Serialize renderings on the session object so that only one page
+		// can be rendered at a time for a given session.
+		synchronized (session)
+		{
+			try
+			{
+				// Attach thread local resources for request
+				threadAttach();
+
+				// Response is beginning
+				internalOnBeginRequest();
+				onBeginRequest();
+
+				component.render();
+			}
+			catch (RuntimeException e)
+			{
+				// Handle any runtime exception
+				internalOnRuntimeException(null, e);
+			}
+			finally
+			{
+				// make sure the invokerPage is ended correctly.
+				try
+				{
+					if (invokePage != null)
+					{
+						invokePage.internalEndRequest();
+					}
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during invokerPage.internalEndRequest", e);
+				}
+
+				// Response is ending
+				try
+				{
+					internalOnEndRequest();
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during internalOnEndRequest", e);
+				}
+
+				try
+				{
+					onEndRequest();
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during onEndRequest", e);
+				}
+
+				// Release thread local resources
+				threadDetach();
+			}
+		}
+	}
+
+	/**
 	 * Sets whether the page for this request should be redirected.
 	 * 
 	 * @param redirect

@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -61,10 +63,43 @@ public class SimplePageTest extends WicketTestCase
 	    executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 	    
 	    Label label = (Label)application.getLastRenderedPage().get("myLabel");
-	    //label.renderComponent();
-	    
+	    assertNotNull(label);
+		application.rerender(label);
+		String document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertEquals("<span wicket:id=\"myLabel\">Test Label</span>", document);
+		
 	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
-	    //panel.renderComponent();
+	    assertNotNull(panel);
+		application.rerender(panel);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<wicket:panel>Inside the panel</wicket:panel>", document);
+		
+	    Border border = (Border)application.getLastRenderedPage().get("myBorder");
+	    assertNotNull(border);
+		application.rerender(border);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>", document);
+		
+	    border = (Border)application.getLastRenderedPage().get("myBorder2");
+	    assertNotNull(border);
+		application.rerender(border);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
+		
+	    WebMarkupContainer container = (WebMarkupContainer)application.getLastRenderedPage().get("test");
+	    assertNotNull(container);
+		application.rerender(container);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("body", document);
 	}
 
 	/**
