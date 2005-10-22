@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.ApplicationSettings;
+import wicket.Component;
 import wicket.DefaultPageFactory;
 import wicket.Page;
 import wicket.Session;
@@ -237,6 +238,22 @@ public class MockWebApplication extends WebApplication
         return wicketSession;
     }
 
+    /**
+     * Initialize a new WebRequestCycle and all its dependent objects
+     * 
+     * @param component
+     * @throws ServletException
+     */
+    public void rerender(final Component component) throws ServletException
+    {
+		setupRequestAndResponse();
+
+		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest,
+                wicketResponse);
+		
+       	cycle.request(component);
+    }
+    
     /**
      * Create and process the request cycle using the current request and
      * response information.
