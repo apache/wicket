@@ -355,6 +355,15 @@ public class ValueMap implements Map, Serializable
 	}
 
 	/**
+	 * Gets whether this value map is made immutable.
+	 * @return whether this value map is made immutable
+	 */
+	public final boolean isImmutable()
+	{
+		return immutable;
+	}
+
+	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	public Object put(final Object key, final Object value)
