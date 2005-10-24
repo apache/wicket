@@ -285,6 +285,14 @@
       <name>Jan Mikkelsen</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Simon Berriman</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Ingram Chen</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
