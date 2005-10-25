@@ -1,0 +1,486 @@
+package wicket.extensions.markup.html.repeater.pageable;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.markup.html.navigation.paging.IPageable;
+import wicket.model.IModel;
+import wicket.version.undo.Change;
+
+/**
+ * An abstract repeater view that provides paging functionality to its
+ * subclasses.
+ * <p>
+ * The view is populated by overriding the
+ * <code>getItemModels(int offset, int count)</code> method and providing an
+ * iterator that returns models for items in the current page. The
+ * AbstractPageableView builds the items that will be rendered by looping over
+ * the models and calling the
+ * <code>newItem(String id, int index, IModel model)</code> to generate the
+ * child item container followed by <code>populateItem(Component item)</code>
+ * to let the user populate the newly created item container with with custom
+ * components.
+ * </p>
+ * 
+ * @see wicket.extensions.markup.html.repeater.OrderedRepeatingView
+ * @see wicket.markup.html.navigation.paging.IPageable
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
+public abstract class AbstractPageableView extends OrderedRepeatingView implements IPageable
+
+{
+	/**
+	 * Keeps track of the number of items we show per page. The default is
+	 * Integer.MAX_VALUE which effectively disables paging.
+	 */
+	private int itemsPerPage = Integer.MAX_VALUE;
+
+	/**
+	 * Keeps track of the current page number.
+	 */
+	private int currentPage;
+
+	/**
+	 * <code>cachedItemCount</code> is used to cache the call to
+	 * <code>internalGetItemCount()</code> for the duration of the request
+	 * because that call can potentially be expensive ( a select count query )
+	 * and so we do not want to execute it multiple times.
+	 */
+	private int cachedItemCount;
+
+	/**
+	 * The item reuse strategy that will be used to recycle items when the page
+	 * is changed or the view is redrawn.
+	 * 
+	 * @see IItemReuseStrategy
+	 */
+	private IItemReuseStrategy itemReuseStrategy;
+
+
+	/** @see wicket.Component#Component(String, IModel) */
+	public AbstractPageableView(String id, IModel model)
+	{
+		super(id, model);
+	}
+
+
+	/** @see wicket.Component#Component(String) */
+	public AbstractPageableView(String id)
+	{
+		super(id);
+	}
+
+
+	protected void internalOnBeginRequest()
+	{
+		super.internalOnBeginRequest();
+
+		if (isVisibleInHierarchy())
+		{
+			clearCachedItemCount();
+
+			int offset = getViewOffset();
+			int size = getViewSize();
+
+			IItemFactory itemFactory = new IItemFactory()
+			{
+
+				public Item newItem(int index, IModel model)
+				{
+					String id = AbstractPageableView.this.newChildId();
+					Item item = AbstractPageableView.this.newItem(id, index, model);
+					AbstractPageableView.this.populateItem(item);
+					return item;
+				}
+
+			};
+
+			Iterator models = getItemModels(offset, size);
+			models = new CappedIteratorAdapter(models, size);
+
+			Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
+			removeAll();
+			addItems(items);
+		}
+	}
+
+	/**
+	 * Add items to the view. Prior to this all items were removed so every
+	 * request this function starts from a clean slate.
+	 * 
+	 * @param items
+	 *            item instances to be added to this view
+	 */
+	protected void addItems(Iterator items)
+	{
+		while (items.hasNext())
+		{
+			add((Item)items.next());
+		}
+	}
+
+	/**
+	 * @return iterator over item instances that exist as children of this view
+	 */
+	public Iterator getItems()
+	{
+		return iterator();
+	}
+
+	/**
+	 * Returns an iterator over models for items in the current page
+	 * 
+	 * @param offset
+	 *            index of first item in this page
+	 * @param size
+	 *            number of items that will be showin in the current page
+	 * @return an iterator over models for items in the current page
+	 */
+	protected abstract Iterator getItemModels(int offset, int size);
+
+	// /////////////////////////////////////////////////////////////////////////
+	// ITEM GENERATION
+	// /////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @return currently set item reuse strategy. Defaults to
+	 *         <code>DefaultItemReuseStrategy</code> if none was set.
+	 * 
+	 * @see DefaultItemReuseStrategy
+	 */
+	public IItemReuseStrategy getItemReuseStrategy()
+	{
+		if (itemReuseStrategy == null)
+		{
+			return DefaultItemReuseStrategy.getInstance();
+		}
+		return itemReuseStrategy;
+	}
+
+	/**
+	 * Sets the item reuse strategy.
+	 * 
+	 * @param strategy
+	 *            item reuse strategy
+	 */
+	public void setItemReuseStrategy(IItemReuseStrategy strategy)
+	{
+		if (strategy == null)
+		{
+			throw new IllegalArgumentException();
+		}
+
+		if (!strategy.equals(itemReuseStrategy))
+		{
+			addStateChange(new Change()
+			{
+				private static final long serialVersionUID = 1L;
+
+				private final IItemReuseStrategy old = itemReuseStrategy;
+
+				public void undo()
+				{
+					itemReuseStrategy = old;
+				}
+			});
+		}
+		itemReuseStrategy = strategy;
+	}
+
+	/**
+	 * Factory method for Item container. Item containers are simple
+	 * MarkupContainer used to aggregate the user added components for a row
+	 * inside the view.
+	 * 
+	 * @see Item
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
+	/**
+	 * Populate the given Item container.
+	 * <p>
+	 * <b>be carefull</b> to add any components to the item and not the view
+	 * itself. So, don't do:
+	 * 
+	 * <pre>
+	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
+	 * </pre>
+	 * 
+	 * but:
+	 * 
+	 * <pre>
+	 * item.add(new Label(&quot;foo&quot;, &quot;bar&quot;));
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param item
+	 *            The item to populate
+	 */
+	protected abstract void populateItem(final Item item);
+
+
+	// /////////////////////////////////////////////////////////////////////////
+	// ITEM COUNT CACHE
+	// /////////////////////////////////////////////////////////////////////////
+
+
+	private void clearCachedItemCount()
+	{
+		cachedItemCount = -1;
+	}
+
+	private void setCachedItemCount(int itemCount)
+	{
+		cachedItemCount = itemCount;
+	}
+
+	private int getCachedItemCount()
+	{
+		if (cachedItemCount < 0)
+		{
+			throw new IllegalStateException("getItemCountCache() called when cache was not set");
+		}
+		return cachedItemCount;
+	}
+
+	private boolean isItemCountCached()
+	{
+		return cachedItemCount >= 0;
+	}
+
+	// /////////////////////////////////////////////////////////////////////////
+	// PAGING
+	// /////////////////////////////////////////////////////////////////////////
+
+
+	/**
+	 * @return maximum number of items that will be shown per page
+	 */
+	protected final int internalGetItemsPerPage()
+	{
+		return itemsPerPage;
+	}
+
+	/**
+	 * Sets the maximum number of items to show per page. The current page will
+	 * also be set to zero
+	 * 
+	 * @param items
+	 */
+	protected final void internalSetItemsPerPage(int items)
+	{
+		if (items < 1)
+		{
+			throw new IllegalArgumentException("Argument [itemsPerPage] cannot be less then 1");
+		}
+
+		if (itemsPerPage != items)
+		{
+			addStateChange(new Change()
+			{
+				private static final long serialVersionUID = 1L;
+
+				final int old = itemsPerPage;
+
+				public void undo()
+				{
+					itemsPerPage = old;
+				}
+			});
+		}
+
+		itemsPerPage = items;
+
+		// because items per page can effect the total number of pages we always
+		// reset the current page back to zero
+		setCurrentPage(0);
+	}
+
+	/**
+	 * @return total item count
+	 */
+	protected abstract int internalGetItemCount();
+
+	/**
+	 * @return total item count
+	 */
+	public final int getItemCount()
+	{
+		if (!isVisibleInHierarchy())
+		{
+			return 0;
+		}
+
+		if (isItemCountCached())
+		{
+			return getCachedItemCount();
+		}
+
+		int count = internalGetItemCount();
+
+		setCachedItemCount(count);
+
+		return count;
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
+	 */
+	public final int getCurrentPage()
+	{
+		int page = currentPage;
+
+		/*
+		 * trim current page if its out of bounds this can happen if items are
+		 * added/deleted between requests
+		 */
+
+		if (page > getPageCount())
+		{
+			page = Math.max(page - 1, 0);
+			setCurrentPage(page);
+			return page;
+		}
+
+		return page;
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
+	 */
+	public final void setCurrentPage(int page)
+	{
+		if (page < 0 || page > getPageCount())
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		if (currentPage != page)
+		{
+			addStateChange(new Change()
+			{
+				private static final long serialVersionUID = 1L;
+
+				private final int old = currentPage;
+
+				public void undo()
+				{
+					currentPage = old;
+				}
+			});
+		}
+		currentPage = page;
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#getPageCount()
+	 */
+	public final int getPageCount()
+	{
+		int total = getItemCount();
+		int page = internalGetItemsPerPage();
+		int count = total / page;
+
+		if (page * count < total)
+		{
+			count++;
+		}
+
+		return count;
+
+	}
+
+	/**
+	 * @return the index of the first visible item
+	 */
+	protected int getViewOffset()
+	{
+		return getCurrentPage() * internalGetItemsPerPage();
+	}
+
+
+	/**
+	 * @return the number of items visible
+	 */
+	protected int getViewSize()
+	{
+		return Math.min(internalGetItemsPerPage(), getItemCount() - getViewOffset());
+	}
+
+	// /////////////////////////////////////////////////////////////////////////
+	// HELPER CLASSES
+	// /////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Iterator adapter that makes sure the only the specified max number of
+	 * items can be accessed from its delegate.
+	 */
+	private static class CappedIteratorAdapter implements Iterator
+	{
+		private int max;
+		private int index;
+		private Iterator delegate;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param delegate
+		 *            delegate iterator
+		 * @param max
+		 *            maximum number of items that can be accessed.
+		 */
+		public CappedIteratorAdapter(Iterator delegate, int max)
+		{
+			this.delegate = delegate;
+			this.max = max;
+		}
+
+		/**
+		 * @see java.util.Iterator#remove()
+		 */
+		public void remove()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext()
+		{
+			return (index < max) && delegate.hasNext();
+		}
+
+		/**
+		 * @see java.util.Iterator#next()
+		 */
+		public Object next()
+		{
+			if (index >= max)
+			{
+				throw new NoSuchElementException();
+			}
+			index++;
+			return delegate.next();
+		}
+
+	};
+
+
+}
