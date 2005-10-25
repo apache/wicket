@@ -114,8 +114,6 @@ import wicket.util.watch.ModificationWatcher;
  * override getSessionFactory() to provide your own session factory that creates
  * Session instances of your own application-specific subclass of WebSession.
  * 
- * <li><b>A Page Sets Factory </b>- Page sets are an experimental feature which
- * will not be finished until Wicket 1.1.
  * </ul>
  * 
  * @see wicket.protocol.http.WebApplication
