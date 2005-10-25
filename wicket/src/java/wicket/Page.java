@@ -1032,16 +1032,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
-
-		// Loop through the PageSet objects for this Page
-		for (final Iterator iterator = getPageSets(); iterator.hasNext();)
-		{
-			// Get next PageSet
-			final PageSet pageSet = (PageSet)iterator.next();
-
-			// Let PageSet initialize the Page
-			pageSet.init(this);
-		}
 	}
 
 	/**
