@@ -15,19 +15,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.pageset;
+
+package wicket;
+
 
 /**
+ * TODO docme
  * 
- * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public class OrderedPageSetMap
+public interface IAuthorizationStrategy
 {
 	/**
-	 * Constructor
+	 * Gets whether the given component may be rendered.
+	 * 
+	 * @param c
+	 *            the component
+	 * @return whether the given component may be rendered
 	 */
-	public OrderedPageSetMap()
-	{
-		super();
-	}
+	boolean allowRender(Component c);
+
+	/**
+	 * Checks whether the given component may be created.
+	 * 
+	 * @param c
+	 *            the component
+	 * @return whether the given component may be created
+	 */
+	boolean allowCreation(Component c);
 }
