@@ -1,0 +1,58 @@
+package wicket.examples.repeater;
+
+import java.util.Iterator;
+
+import wicket.extensions.markup.html.repeater.data.sort.SortParam;
+import wicket.extensions.markup.html.repeater.data.sort.SortableDataProvider;
+import wicket.model.IModel;
+
+/**
+ * implementation of IDataProvider for contacts that keeps track of sort
+ * information
+ * 
+ * @author igor
+ * 
+ */
+public class SortableContactDataProvider extends SortableDataProvider
+{
+	/**
+	 * constructor
+	 */
+	public SortableContactDataProvider()
+	{
+		// set default sort
+		addSort("firstName");
+	}
+
+	protected ContactsDatabase getContactsDB()
+	{
+		return DatabaseLocator.getDatabase();
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int,
+	 *      int)
+	 */
+	public Iterator iterator(int first, int count)
+	{
+		SortParam sp = (SortParam)getSort();
+		return getContactsDB().find(first, count, sp.getProperty(), sp.isAscending()).iterator();
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#size()
+	 */
+	public int size()
+	{
+		return getContactsDB().getCount();
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
+	 */
+	public IModel model(Object object)
+	{
+		return new DetachableContactModel((Contact)object);
+	}
+
+}

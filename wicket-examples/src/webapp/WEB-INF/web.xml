@@ -207,6 +207,22 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>RepeaterExamplesApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.examples.repeater.RepeaterApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>RepeaterExamplesApplication</servlet-name>
+		<url-pattern>/repeater/*</url-pattern>
+	</servlet-mapping>
+	
+
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
