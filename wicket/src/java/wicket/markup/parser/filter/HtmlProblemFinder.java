@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
 
 /**
@@ -126,8 +125,9 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	 * 
 	 * @param msg The message
 	 * @param tag The current tag
+	 * @throws ParseException
 	 */
-	private void escalateWarning(final String msg, final ComponentTag tag)
+	private void escalateWarning(final String msg, final ComponentTag tag) throws ParseException
 	{
 	    if (problemEscalation == ERR_LOG_WARN)
 	    {
@@ -143,7 +143,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	    }
 	    else // if (problemEscalation == ERR_THROW_EXCEPTION)
 	    {
-	        throw new MarkupException(msg + tag.toUserDebugString());
+	        throw new ParseException(msg + tag.toUserDebugString(), tag.getPos());
 	    }
 	}
 }
