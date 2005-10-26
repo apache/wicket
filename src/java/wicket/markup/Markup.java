@@ -149,7 +149,14 @@ public final class Markup
 	 */
 	public String toString()
 	{
-		return resource.toString();
+		if (resource != null)
+		{
+			return resource.toString();
+		}
+		else
+		{
+			return "(unknown resource)";
+		}
 	}
 
 	/**

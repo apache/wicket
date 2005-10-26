@@ -86,6 +86,9 @@ public class MarkupParser
     /** The handler detecting wicket tags: wicket namespace */
     private WicketTagIdentifier detectWicketComponents;
 
+    /** If used, the resource stream containing the markup */
+    private IResourceStream resource;
+    
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
@@ -228,6 +231,7 @@ public class MarkupParser
     final Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
             ResourceStreamNotFoundException
     {
+    	this.resource = resource;
         xmlParser.parse(resource);
         return new Markup(resource, parseMarkup(), 
                 getXmlDeclaration(), getEncoding(), this.wicketNamespace);
@@ -244,6 +248,7 @@ public class MarkupParser
     final Markup parse(final String string) throws ParseException, IOException,
     	ResourceStreamNotFoundException
     {
+    	this.resource = null;
         xmlParser.parse(string);
         return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding(), 
                 this.wicketNamespace);
@@ -264,83 +269,102 @@ public class MarkupParser
         // List to return
         final List list = new ArrayList();
 
-        // Loop through tags
-        for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
+        try
         {
-            boolean add = (tag.getId() != null);
-            if (!add && tag.getXmlTag().isClose())
-            {
-                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
-            }
-            
-            // Determine wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net">
-            RawMarkup replaceTag = null;
-			if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
-			{
-				// if add already true, do not make it false
-			    add |= determineWicketNamespace(tag);
-			    
-			    // If add and tag has no wicket:id, than
-			    if ((add == true) && (tag.getId() == null))
-			    {
-			    	// Replace the current tag
-			    	replaceTag = new RawMarkup(tag.toString());
-			    }
-			}
-
-            // Add tag to list?
-            if (add || (autoAddList.size() > 0))
-            {
-                final CharSequence text =
-                    	xmlParser.getInputFromPositionMarker(tag.getPos());
-
-                // Add text from last position to tag position
-                if (text.length() > 0)
-                {
-                    String rawMarkup = text.toString();
-
-                    if (stripComments)
-                    {
-                        rawMarkup = rawMarkup.replaceAll("<!--(.|\n|\r)*?-->", "");
-                    }
-
-                    if (compressWhitespace)
-                    {
-                        rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
-                        rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
-                    }
-
-                    list.add(new RawMarkup(rawMarkup));
-                }
-
-                if ((add == false) && (autoAddList.size() > 0))
-                {
-                    xmlParser.setPositionMarker(tag.getPos());
-                }
-
-                list.addAll(autoAddList);
-                autoAddList.clear();
-            }
-            
-            if (add)
-            {
-                // Add to list unless preview component tag remover flagged as removed
-                if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
-                {
-                	if (replaceTag != null)
-                	{
-                		list.add(replaceTag);
-                	}
-                	else
-                	{
-                		list.add(tag);
-                	}
-                }
-                
-                xmlParser.setPositionMarker();
-            }
+	        // Loop through tags
+	        for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
+	        {
+	            boolean add = (tag.getId() != null);
+	            if (!add && tag.getXmlTag().isClose())
+	            {
+	                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
+	            }
+	            
+	            // Determine wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net">
+	            RawMarkup replaceTag = null;
+				if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
+				{
+					// if add already true, do not make it false
+				    add |= determineWicketNamespace(tag);
+				    
+				    // If add and tag has no wicket:id, than
+				    if ((add == true) && (tag.getId() == null))
+				    {
+				    	// Replace the current tag
+				    	replaceTag = new RawMarkup(tag.toString());
+				    }
+				}
+	
+	            // Add tag to list?
+	            if (add || (autoAddList.size() > 0))
+	            {
+	                final CharSequence text =
+	                    	xmlParser.getInputFromPositionMarker(tag.getPos());
+	
+	                // Add text from last position to tag position
+	                if (text.length() > 0)
+	                {
+	                    String rawMarkup = text.toString();
+	
+	                    if (stripComments)
+	                    {
+	                        rawMarkup = rawMarkup.replaceAll("<!--(.|\n|\r)*?-->", "");
+	                    }
+	
+	                    if (compressWhitespace)
+	                    {
+	                        rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
+	                        rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
+	                    }
+	
+	                    list.add(new RawMarkup(rawMarkup));
+	                }
+	
+	                if ((add == false) && (autoAddList.size() > 0))
+	                {
+	                    xmlParser.setPositionMarker(tag.getPos());
+	                }
+	
+	                list.addAll(autoAddList);
+	                autoAddList.clear();
+	            }
+	            
+	            if (add)
+	            {
+	                // Add to list unless preview component tag remover flagged as removed
+	                if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
+	                {
+	                	if (replaceTag != null)
+	                	{
+	                		list.add(replaceTag);
+	                	}
+	                	else
+	                	{
+	                		list.add(tag);
+	                	}
+	                }
+	                
+	                xmlParser.setPositionMarker();
+	            }
+	        }
         }
-
+        catch (ParseException ex)
+        {
+            // Add tail?
+            final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+            if (text.length() > 0)
+            {
+                list.add(new RawMarkup(text));
+            }
+            
+        	Markup markup = new Markup(this.resource, list, getXmlDeclaration(), getEncoding(), 
+                    this.wicketNamespace);
+        	
+        	MarkupStream markupStream = new MarkupStream(markup); 
+        	markupStream.setCurrentIndex(list.size() - 1);
+        	throw new MarkupException(markupStream, ex.getMessage());
+        }
+        
         // Add tail?
         final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
         if (text.length() > 0)

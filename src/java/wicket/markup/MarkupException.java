@@ -30,7 +30,7 @@ public final class MarkupException extends WicketRuntimeException
 	private static final long serialVersionUID = 1L;
 	
 	/** The markup stream that was being parsed when the exception was thrown */
-	private final MarkupStream markupStream;
+	private MarkupStream markupStream;
 
 	/**
 	 * Constructor
@@ -88,5 +88,14 @@ public final class MarkupException extends WicketRuntimeException
 	public MarkupStream getMarkupStream()
 	{
 		return markupStream;
+	}
+	
+	/**
+	 * Set the markup stream which caused the exception
+	 * @param markupStream
+	 */
+	public void setMarkupStream(final MarkupStream markupStream)
+	{
+		this.markupStream = markupStream;
 	}
 }

@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
@@ -147,8 +146,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 					// it must be a real mismatch.
 					if (mismatch)
 					{
-						throw new MarkupException("Tag " + top.toUserDebugString()
-								+ " has a mismatched close tag at " + tag.toUserDebugString());
+						throw new ParseException("Tag " + top.toUserDebugString()
+								+ " has a mismatched close tag at " + tag.toUserDebugString(), 
+								top.getPos());
 					}
 				}
 
@@ -157,8 +157,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				throw new MarkupException("Tag " + tag.toUserDebugString()
-						+ " does not have a matching open tag");
+				throw new ParseException("Tag " + tag.toUserDebugString()
+						+ " does not have a matching open tag", tag.getPos());
 			}
 		}
 		else if (tag.isOpenClose())

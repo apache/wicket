@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
@@ -706,6 +707,11 @@ public abstract class MarkupContainer extends Component
 		try
 		{
 			return getApplication().getMarkupCache().getMarkupStream(this);
+		}
+		catch (MarkupException ex)
+		{
+			// re-throw it. The exception contains already all the information required.
+			throw ex;
 		}
 		catch (WicketRuntimeException ex)
 		{
