@@ -31,6 +31,7 @@ import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
@@ -716,12 +717,12 @@ public abstract class MarkupContainer extends Component
 		catch (WicketRuntimeException ex)
 		{
 			// throw exception since there is no associated markup
-			throw new WicketRuntimeException(
+			throw new MarkupNotFoundException(
 					exceptionMessage("Markup of type '"
 							+ getMarkupType()
 							+ "' for component '"
 							+ getClass().getName()
-							+ "' not found or invalid"
+							+ "' not found."
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried"),
 					ex);
 		}
