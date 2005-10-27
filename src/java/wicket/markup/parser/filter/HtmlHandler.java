@@ -29,7 +29,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
-import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It identifies HTML specific issues which make
@@ -91,7 +90,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			// If there's still a non-simple tag left, it's an error
 			while (stack.size() > 0)
 			{
-				final XmlTag top = (XmlTag)stack.peek();
+				final ComponentTag top = (ComponentTag)stack.peek();
 
 				if (!requiresCloseTag(top.getName()))
 				{
