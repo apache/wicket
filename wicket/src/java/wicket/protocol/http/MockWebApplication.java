@@ -285,9 +285,7 @@ public class MockWebApplication extends WebApplication
             final MockHttpServletRequest httpRequest = 
                 	(MockHttpServletRequest)((ServletWebRequest)cycle.getWebRequest()).getHttpServletRequest();
             
-            httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-            // TODO adouma: check if this is a valid fix            
-            // wicketSession = getSession(servletRequest);            
+            httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());           
             wicketSession = getSession(wicketRequest, true);
             try
             {
