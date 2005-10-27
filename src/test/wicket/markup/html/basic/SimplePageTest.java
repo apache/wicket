@@ -21,7 +21,10 @@ package wicket.markup.html.basic;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
+import wicket.markup.MarkupException;
+import wicket.markup.MarkupNotFoundException;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -66,5 +69,50 @@ public class SimplePageTest extends WicketTestCase
 	public void testRenderHomePage_3() throws Exception
 	{
 	    executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_4() throws Exception
+	{
+		boolean hit = false;
+		try
+		{
+			executeTest(SimplePage_4.class, "SimplePageExpectedResult_4.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
+			{
+				hit = true;
+				
+				MarkupException mex = (MarkupException)ex.getCause();
+				assertNotNull(mex.getMarkupStream());
+				assertTrue(mex.getMessage().indexOf("<span>") != -1);
+				assertTrue(mex.getMessage().indexOf("SimplePage_4.html") != -1);
+			}
+		}
+		assertTrue("Did expect a MarkupException", hit);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+		boolean hit = false;
+		try
+		{
+			executeTest(SimplePage_5.class, "SimplePageExpectedResult_5.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupNotFoundException))
+			{
+				hit = true;
+			}
+		}
+		assertTrue("Did expect a MarkupNotFoundException", hit);
 	}
 }
