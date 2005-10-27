@@ -86,7 +86,7 @@ public class MarkupParser
     /** The handler detecting wicket tags: wicket namespace */
     private WicketTagIdentifier detectWicketComponents;
 
-    /** If used, the resource stream containing the markup */
+    /** The resource stream containing the markup. May be null */
     private IResourceStream resource;
     
     /**
@@ -350,7 +350,7 @@ public class MarkupParser
         }
         catch (ParseException ex)
         {
-            // Add tail?
+            // Add remaining input string
             final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
             if (text.length() > 0)
             {

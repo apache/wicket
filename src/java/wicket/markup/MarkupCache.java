@@ -108,7 +108,7 @@ public class MarkupCache
 		if (throwException == true)
 		{
 			// throw exception since there is no associated markup
-			throw new WicketRuntimeException(
+			throw new MarkupNotFoundException(
 					"Markup not found. Component class: "
 							+ container.getClass().getName()
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
@@ -374,7 +374,7 @@ public class MarkupCache
 		final Markup baseMarkup = getMarkup(container, clazz.getSuperclass());
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
-			throw new WicketRuntimeException(
+			throw new MarkupNotFoundException(
 					"Markup not found. Component class: "
 							+ (clazz != null ? clazz.getName() : container.getClass().getName())
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
