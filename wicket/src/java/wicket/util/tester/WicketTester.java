@@ -339,7 +339,9 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * get component from last rendered page
+	 * Gets the component with the given path from last rendered page. This
+	 * method fails in case the component couldn't be found, and it will return
+	 * null if the component was found, but is not visible.
 	 * 
 	 * @param path
 	 *            Path to component
@@ -348,13 +350,17 @@ public class WicketTester extends MockWebApplication
 	 */
 	public Component getComponentFromLastRenderedPage(String path)
 	{
-		Component component = getLastRenderedPage().get(path);
+		final Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
 			Assert.fail("path: '" + path + "' does no exist for page: "
 					+ Classes.name(getLastRenderedPage().getClass()));
 		}
-		return component;
+		if (component.isVisibleInHierarchy())
+		{
+			return component;
+		}
+		return null;
 	}
 
 	/**
