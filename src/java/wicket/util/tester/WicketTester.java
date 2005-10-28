@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -445,8 +445,8 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertInvisible(String path)
 	{
-		Assert.assertFalse("component '" + path + "' is visible", getComponentFromLastRenderedPage(
-				path).isVisible());
+		Assert.assertNull("component '" + path + "' is visible",
+				getComponentFromLastRenderedPage(path));
 	}
 
 	/**
