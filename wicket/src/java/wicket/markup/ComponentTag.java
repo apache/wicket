@@ -17,12 +17,15 @@
  */
 package wicket.markup;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import wicket.Response;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.StringValue;
+import wicket.util.string.Strings;
 import wicket.util.value.AttributeMap;
 import wicket.util.value.ValueMap;
 
@@ -464,25 +467,68 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Converts this object to a string representation.
+	 * Write the tag to the response
 	 * 
-	 * @param stripWicketAttributes If true, tag attributes with namespace
-	 *		'wicket# will not be printed. 
-	 * @param namespace Wicket namespace
-	 * @return String version of this object
+	 * @param response The response to write to
+	 * @param stripWicketAttributes if true, wicket:id are removed from output
+	 * @param namespace Wicket's namespace to use
 	 */
-	public final String toString(final boolean stripWicketAttributes, final String namespace)
+	public final void writeOutput(final Response response, final boolean stripWicketAttributes, final String namespace)
 	{
-		if (stripWicketAttributes == false)
+		String attributeToBeIgnored = null;
+		if (stripWicketAttributes == true)
 		{
-			return xmlTag.toXmlString(null);
+			attributeToBeIgnored = namespace + ":id";
 		}
-		else
+
+		response.write("<");
+
+		if (getType() == XmlTag.CLOSE)
 		{
-			return xmlTag.toXmlString(namespace + ":id");
+			response.write("/");
 		}
+
+		if (getNamespace() != null)
+		{
+			response.write(getNamespace());
+			response.write(":");
+		}
+
+		response.write(getName());
+
+		if (getAttributes().size() > 0)
+		{
+			final Iterator iterator = getAttributes().keySet().iterator();
+			for (; iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				if ((key != null) && ((attributeToBeIgnored == null) || 
+						!key.equalsIgnoreCase(attributeToBeIgnored)))
+				{
+					response.write(" ");
+					response.write(key);
+					String value = getString(key);
+					
+					// attributes without values are possible, e.g. 'disabled'
+					if (value != null) 
+					{
+						response.write("=\"");
+						value = Strings.replaceAll(value,"\"", "\\\"");
+						response.write(value);
+						response.write("\"");
+					}
+				}
+			}
+		}
+
+		if (getType() == XmlTag.OPEN_CLOSE)
+		{
+			response.write("/");
+		}
+
+		response.write(">");
 	}
-	
+
 	/**
 	 * Converts this object to a string representation including useful
 	 * information for debugging

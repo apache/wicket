@@ -1938,9 +1938,8 @@ public abstract class Component implements Serializable, IAjaxListener
 			}
 
 			// Write the tag
-			getResponse().write(tag.toString(
-			        settings.getStripWicketTags(), 
-			        this.findMarkupStream().getWicketNamespace()));
+			tag.writeOutput(getResponse(), settings.getStripWicketTags(), 
+			        this.findMarkupStream().getWicketNamespace());
 		}
 	}
 
