@@ -239,13 +239,19 @@ public class WebPage extends Page implements IHeaderRenderer
 	 */
 	public String urlFor(final String path)
 	{
+		String prefix = urlPrefix(getWebRequestCycle()).toString();
 		if ((path == null) || (path.trim().length() == 0))
 		{
-			return urlPrefix(getWebRequestCycle()).toString();
+			return prefix;
 		}
 		else
 		{
-			return urlPrefix(getWebRequestCycle()) + "/" + path;
+			if (prefix.endsWith("/") || path.startsWith("/"))
+			{
+				return prefix + path;
+			}
+
+			return prefix + "/" + path;
 		}
 	}
 
