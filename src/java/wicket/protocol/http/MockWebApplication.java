@@ -341,7 +341,7 @@ public class MockWebApplication extends WebApplication
 	{
 		servletRequest.initialize();
 		servletResponse.initialize();
-		newWicketRequest();
+		wicketRequest = newWicketRequest();
 		wicketSession = getSession(wicketRequest, true);
 		wicketResponse = new WebResponse(servletResponse);
 	}
@@ -350,10 +350,11 @@ public class MockWebApplication extends WebApplication
 	 * Overridable method that is called by
 	 * {@link MockWebApplication#setupRequestAndResponse()} so that users can
 	 * e.g. provide a bunch of request parameters in an easy way.
+	 * @return new web request instance
 	 */
-	protected void newWicketRequest()
+	protected WebRequest newWicketRequest()
 	{
-		wicketRequest = new ServletWebRequest(servletRequest);
+		return new ServletWebRequest(servletRequest);
 	}
 
 	/**
