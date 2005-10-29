@@ -17,6 +17,9 @@
  */
 package wicket.protocol.http;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -98,6 +101,9 @@ public class MockWebApplication extends WebApplication
 
 	/** Request. */
 	private WebRequest wicketRequest;
+
+	/** Parameters to be set on the next request. */
+	private Map parametersForNextRequest = new HashMap();
 
 	/** Response. */
 	private WebResponse wicketResponse;
@@ -341,20 +347,11 @@ public class MockWebApplication extends WebApplication
 	{
 		servletRequest.initialize();
 		servletResponse.initialize();
-		wicketRequest = newWicketRequest();
+		servletRequest.setParameters(parametersForNextRequest);
+		parametersForNextRequest.clear();
+		wicketRequest = new ServletWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest, true);
 		wicketResponse = new WebResponse(servletResponse);
-	}
-
-	/**
-	 * Overridable method that is called by
-	 * {@link MockWebApplication#setupRequestAndResponse()} so that users can
-	 * e.g. provide a bunch of request parameters in an easy way.
-	 * @return new web request instance
-	 */
-	protected WebRequest newWicketRequest()
-	{
-		return new ServletWebRequest(servletRequest);
 	}
 
 	/**
@@ -366,6 +363,27 @@ public class MockWebApplication extends WebApplication
 	public void setRethrowRuntimeException(boolean enable)
 	{
 		this.rethrowRuntimeException = enable;
+	}
+
+	/**
+	 * Gets the parameters to be set on the next request.
+	 * 
+	 * @return the parameters to be set on the next request
+	 */
+	public Map getParametersForNextRequest()
+	{
+		return parametersForNextRequest;
+	}
+
+	/**
+	 * Sets the parameters to be set on the next request.
+	 * 
+	 * @param parametersForNextRequest
+	 *            the parameters to be set on the next request
+	 */
+	public void setParametersForNextRequest(Map parametersForNextRequest)
+	{
+		this.parametersForNextRequest = parametersForNextRequest;
 	}
 
 	/**

@@ -889,7 +889,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setParameters(final Map parameters)
 	{
-		parameters.putAll(parameters);
+		this.parameters.putAll(parameters);
 	}
 
 	/**
