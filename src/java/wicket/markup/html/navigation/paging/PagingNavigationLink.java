@@ -26,7 +26,7 @@ import wicket.markup.html.link.Link;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class PagingNavigationLink extends Link
+public class PagingNavigationLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -117,7 +117,7 @@ public final class PagingNavigationLink extends Link
 	 * @return True if this page is the first page of the containing
 	 *         PageableListView
 	 */
-	public boolean isFirst()
+	public final boolean isFirst()
 	{
 		return getPageNumber() == 0;
 	}
@@ -126,7 +126,7 @@ public final class PagingNavigationLink extends Link
 	 * @return True if this page is the last page of the containing
 	 *         PageableListView
 	 */
-	public boolean isLast()
+	public final boolean isLast()
 	{
 		return getPageNumber() == (pageable.getPageCount() - 1);
 	}
@@ -140,7 +140,7 @@ public final class PagingNavigationLink extends Link
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */
-	public boolean linksTo(final Page page)
+	public final boolean linksTo(final Page page)
 	{
 		return getPageNumber() == pageable.getCurrentPage();
 	}
