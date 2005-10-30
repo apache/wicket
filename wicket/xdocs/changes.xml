@@ -8,7 +8,9 @@
     <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
   </properties>
   <body>
-    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+    <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+    </release>
+    <release version="1.1" date="2005-10-30" description="Wicket 1.1 final">
       <action type="fix" dev="Juergen Donnerstag" issue="1339686" due-to="Janne Hietamäki">fixed: Invalid Panel markup throws weird exception</action>
       <action type="delete" dev="Jonathan Locke">Removed experimental code: page sets.</action>
       <action type="update" dev="Eelco Hillenius" due-to="Simon Berriman">added ValueMap.isMutable()</action>
