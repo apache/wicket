@@ -441,6 +441,13 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Enforce resetting the markup positions of all components.
+	 */
+	private final void resetMarkupPositions()
+	{	
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Sets the currently active request cycle for this session.

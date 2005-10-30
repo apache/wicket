@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,6 +31,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.BodyOnLoadResolver;
@@ -132,6 +133,9 @@ public abstract class Application
 	 * {@link ConverterFactory}.
 	 */
 	private IConverterFactory converterFactory = new ConverterFactory();
+
+	/** the authorization strategy. */
+	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** The single application-wide localization class */
 	private Localizer localizer;
@@ -250,6 +254,16 @@ public abstract class Application
 	}
 
 	/**
+	 * Gets the authorization strategy.
+	 * 
+	 * @return Returns the authorizationStrategy.
+	 */
+	public IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return authorizationStrategy;
+	}
+
+	/**
 	 * @return The application wide localizer instance
 	 */
 	public final Localizer getLocalizer()
@@ -258,8 +272,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Users may provide there own implementation of a localizer,
-	 * e.g. one which uses Spring's MessageSource.
+	 * Users may provide there own implementation of a localizer, e.g. one which
+	 * uses Spring's MessageSource.
 	 * 
 	 * @param localizer
 	 */
@@ -267,7 +281,7 @@ public abstract class Application
 	{
 		this.localizer = localizer;
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
@@ -379,8 +393,8 @@ public abstract class Application
 
 	/**
 	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings.
-	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
+	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
+	 * instead.
 	 * 
 	 * @return An instanceof an ApplicationSettings class.
 	 */
@@ -474,7 +488,7 @@ public abstract class Application
 	protected void init()
 	{
 	}
-	
+
 	/**
 	 * Template method that is called when a runtime exception is thrown, just
 	 * before the actual handling of the runtime exception.
@@ -524,8 +538,8 @@ public abstract class Application
 		try
 		{
 			// Load components used by all applications
-			for (Enumeration e = getClass().getClassLoader().getResources(
-					"wicket.properties"); e.hasMoreElements();)
+			for (Enumeration e = getClass().getClassLoader().getResources("wicket.properties"); e
+					.hasMoreElements();)
 			{
 				InputStream is = null;
 				try
@@ -535,10 +549,10 @@ public abstract class Application
 					is = url.openStream();
 					properties.load(is);
 					initializeComponents(properties);
-				} 
+				}
 				finally
 				{
-					if (is != null) 
+					if (is != null)
 					{
 						is.close();
 					}

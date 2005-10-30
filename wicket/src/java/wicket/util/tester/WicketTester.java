@@ -39,6 +39,7 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
@@ -509,7 +510,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * click the <coe>Link</code> in the last rendered Page.
+	 * click the <code>Link</code> in the last rendered Page.
 	 * 
 	 * @param path
 	 *            path to <code>Link</code> component
@@ -518,6 +519,52 @@ public class WicketTester extends MockWebApplication
 	{
 		Link link = (Link)getComponentFromLastRenderedPage(path);
 		newRequestToComponent(link);
+	}
+
+	/**
+	 * submit the <code>Form</code> in the last rendered Page.
+	 * 
+	 * @param path
+	 *            path to <code>Form</code> component
+	 */
+	public void submitForm(String path)
+	{
+		Form form = (Form)getComponentFromLastRenderedPage(path);
+		newRequestToComponent(form);
+	}
+
+	/**
+	 * Sets a parameter for the component with the given path to be used with
+	 * the next request. NOTE: this method only works when a page was rendered
+	 * first.
+	 * 
+	 * @param componentPath
+	 *            path of the component
+	 * @param value
+	 *            the parameter value to set
+	 */
+	public void setParameterForNextRequest(String componentPath, Object value)
+	{
+		if (getLastRenderedPage() == null)
+		{
+			Assert.fail("before using this method, at least one page has to be rendered");
+		}
+
+		Component c = (Component)getComponentFromLastRenderedPage(componentPath);
+		if (c == null)
+		{
+			Assert.fail("component " + componentPath + " was not found");
+		}
+
+		if (c instanceof FormComponent)
+		{
+			getParametersForNextRequest().put(((FormComponent)c).getInputName(), value);
+		}
+		else
+		{
+			getParametersForNextRequest().put(c.getPath(), value);
+		}
+
 	}
 
 	/**

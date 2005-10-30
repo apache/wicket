@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.100 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,6 +26,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupStream;
@@ -210,7 +211,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return getPageMap().continueToOriginalDestination();
 	}
-	
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -223,10 +224,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		{
 			// Add/touch the response page in the session (its pagemap).
 			session.touch(this);
-			
+
 			// Set form component values from cookies
 			setFormComponentValuesFromCookies();
-			
+
 			try
 			{
 				// We have to initialize the page's request now
@@ -252,7 +253,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 				// Size profiling for pages
 				// dumpSize();
-				
+
 				// Check rendering if it happened fully
 				checkRendering();
 			}
@@ -277,7 +278,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				final Class pageClass = requestCycle.getResponsePageClass();
 				if (pageClass != null)
 				{
-					final PageParameters pageParameters = requestCycle.getResponsePagePageParameters();
+					final PageParameters pageParameters = requestCycle
+							.getResponsePagePageParameters();
 					String redirectUrl = requestCycle.urlFor(pageClass, pageParameters);
 					getResponse().redirect(redirectUrl);
 				}
@@ -299,10 +301,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return this.autoIndex++;
 	}
 
-	
+
 	/**
 	 * Sets values for form components based on cookie values in the request.
-	 *
+	 * 
 	 */
 	final void setFormComponentValuesFromCookies()
 	{
@@ -317,7 +319,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		});
 	}
-	
+
 	/**
 	 * @return The current version number of this page. If the page has been
 	 *         changed once, the return value will be 1. If the page has not yet
@@ -473,7 +475,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return new PageState()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			public Page getPage()
 			{
 				return Page.this;
@@ -774,6 +776,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected final void onRender()
 	{
+		// visit all this page's children to check rendering authorization.
+		// we set any result; positive or negative as a temporary boolean
+		// in the components, and when a authorization exception is thrown
+		// it will be block the rendering of this page
+		final IAuthorizationStrategy authorizationStrategy = getApplication()
+				.getAuthorizationStrategy();
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				component.setRenderAllowed(authorizationStrategy.allowRender(component));
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
 		// Set page's associated markup stream
 		final MarkupStream markupStream = getAssociatedMarkupStream();
 		setMarkupStream(markupStream);
@@ -800,10 +817,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		PageMap oldPageMap = this.pageMap;
 		Session oldSession = this.session;
-		
+
 		this.pageMap = null;
 		this.session = null;
-		
+
 		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
 				+ ObjectProfiler.sizeof(this));
 
@@ -812,8 +829,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/*
-	 * @param component
-	 *            The component that was added
+	 * @param component The component that was added
 	 */
 	final void componentAdded(final Component component)
 	{
@@ -1026,10 +1042,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		setDirty(true);
 
 		// set the pagemap
-		setPageMap(getRequestCycle() != null? getRequestCycle().getRequest().getParameter("pagemap"):null);
-		
+		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
+				"pagemap") : null);
+
 		setId(getPageMap().getNextId());
-		
+
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
 	}

@@ -81,9 +81,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	private String beforeDisabledLink;
 
-	/** True if this link is enabled. */
-	private boolean enabled = true;
-
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
 	 * will be generated that opens a new window using the popup properties.
@@ -150,16 +147,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	public final PopupSettings getPopupSettings()
 	{
 		return popupSettings;
-	}
-
-	/**
-	 * Gets whether this link is enabled.
-	 * 
-	 * @return whether this link is enabled.
-	 */
-	public boolean isEnabled()
-	{
-		return enabled;
 	}
 
 	/**
@@ -230,21 +217,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 					"Value cannot be null.  For no text, specify an empty String instead.");
 		}
 		this.beforeDisabledLink = beforeDisabledLink;
-	}
-
-	/**
-	 * Sets link enabled state. Note that if you call this method, auto enabling
-	 * of links will be turned off.
-	 * 
-	 * @param enabled
-	 *            The enabled to set.
-	 * @return This
-	 */
-	public final Link setEnabled(final boolean enabled)
-	{
-		// Set enabled state
-		this.enabled = enabled;
-		return this;
 	}
 
 	/**
