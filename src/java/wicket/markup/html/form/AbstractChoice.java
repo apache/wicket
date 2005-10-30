@@ -283,13 +283,13 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		List choices = getChoices();
+		final StringBuffer buffer = new StringBuffer( (choices.size()*50)+16);
 		final Object selected = getModelObject();
 
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
 
-		List choices = getChoices();
 		for (int index=0;index<choices.size();index++)
 		{
 			// Get next choice (Can be null is up to the renderer to support this)

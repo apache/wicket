@@ -179,8 +179,7 @@ public class ClassStringResourceLoader implements IStringResourceLoader
 	 */
 	private String createCacheId(final String style, final Locale locale)
 	{
-		final StringBuffer buffer = new StringBuffer();
-		buffer.append(clazz.getName());
+		final StringBuffer buffer = new StringBuffer(clazz.getName());
 		if (style != null)
 		{
 			buffer.append('.');
