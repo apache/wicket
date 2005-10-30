@@ -277,8 +277,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 */
 	private String createCacheId(final Class componentClass, final String style, final Locale locale)
 	{
-		final StringBuffer buffer = new StringBuffer();
-		buffer.append(componentClass.getName());
+		final StringBuffer buffer = new StringBuffer(componentClass.getName());
 		if (style != null)
 		{
 			buffer.append('.');
