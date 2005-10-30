@@ -31,7 +31,7 @@ import org.dom4j.Node;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketWebTestCase extends WebTestCase
+public abstract class WicketWebTestCase extends WebTestCase
 {
     /**
      * 

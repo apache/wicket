@@ -22,12 +22,14 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
 import wicket.examples.displaytag.DisplaytagTest;
+import wicket.examples.displaytag.list.SortableTableHeadersTest;
 import wicket.examples.forminput.FormInputTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.hangman.HangManTest;
 import wicket.examples.hangman.WordGeneratorTest;
 import wicket.examples.helloworld.HelloWorldTest;
 import wicket.examples.linkomatic.LinkomaticTest;
+import wicket.examples.panels.signin.CookieTest;
 import wicket.examples.signin2.Signin2Test;
 
 /**
@@ -83,9 +85,11 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(HelloWorldTest.class);
 		suite.addTestSuite(GuestbookTest.class);
 		suite.addTestSuite(DisplaytagTest.class);
+		suite.addTestSuite(SortableTableHeadersTest.class);
 		suite.addTestSuite(FormInputTest.class);
 		suite.addTestSuite(LinkomaticTest.class);
 		suite.addTestSuite(Signin2Test.class);
+		suite.addTestSuite(CookieTest.class);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");

@@ -95,8 +95,8 @@ public class CookieTest extends TestCase
         final ICrypt crypt = application.newCrypt();
         final String encryptedPassword = crypt.encrypt("test");
         assertNotNull(encryptedPassword);
-        this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");
-        this.cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
+        this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");
+        this.cookiePassword = new Cookie("panel:signInForm:password", encryptedPassword);
         this.cookies = new Cookie[] {cookieUsername, cookiePassword};
         
         application.getServletRequest().setCookies(cookies);
@@ -128,9 +128,14 @@ public class CookieTest extends TestCase
 		this.form.loadPersistentFormComponentValues();
 		
 		// validate
-        FormComponent username = (FormComponent)panel.get("signInForm.username");
-        FormComponent password = (FormComponent)panel.get("signInForm.password");
+        FormComponent username = (FormComponent)panel.get("signInForm:username");
+        FormComponent password = (FormComponent)panel.get("signInForm:password");
         
+        Assert.assertNotNull(username);
+        Assert.assertNotNull(password);
+
+        Assert.assertNotNull(cookieUsername);
+
         Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
         Assert.assertEquals("test", password.getModelObjectAsString());
     }
@@ -201,8 +206,8 @@ public class CookieTest extends TestCase
         Assert.assertEquals(2, cookieCollection.size());
 
         // initialize
-        final Cookie cookieUsername = new Cookie("panel.signInForm.username", "juergen");
-        final Cookie cookiePassword = new Cookie("panel.signInForm.password", "test");
+        final Cookie cookieUsername = new Cookie("panel:signInForm:username", "juergen");
+        final Cookie cookiePassword = new Cookie("panel:signInForm:password", "test");
         final Cookie[] cookies = new Cookie[] {cookieUsername, cookiePassword};
         
         application.getServletRequest().setCookies(cookies);
