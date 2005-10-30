@@ -31,7 +31,7 @@
 				<item name="Jonathan's Blog" href="http://www.jroller.com/page/JonathanLocke" />
 				<item name="Geertjan's Blog" href="http://blogs.sun.com/geertjan" />
 			</item>
-			<item name="RSS" img="/images/rss.png" href="/news.rss" />
+<!-- 			<item name="RSS" img="/images/rss.png" href="/news.rss" /> -->
 		</menu>
 		<menu name="Documentation">
 			<item name="Vision" href="/Vision.html" />
