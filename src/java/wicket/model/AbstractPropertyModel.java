@@ -17,15 +17,8 @@
  */
 package wicket.model;
 
-import java.lang.reflect.Member;
-import java.util.Map;
-
-import ognl.DefaultTypeConverter;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
 import wicket.Component;
-import wicket.WicketRuntimeException;
+import wicket.util.object.Objects;
 import wicket.util.string.Strings;
 
 /**
@@ -40,7 +33,7 @@ import wicket.util.string.Strings;
 public abstract class AbstractPropertyModel extends AbstractDetachableModel
 {
 	/** Ognl context wrapper object. It contains the type converter. */
-	private transient ConversionContext conversionContext;
+//	private transient ConversionContext conversionContext;
 
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
@@ -111,7 +104,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	protected void onDetach()
 	{
 		// Reset OGNL context
-		this.conversionContext = null;
+//		this.conversionContext = null;
 
 		// Detach nested object if it's an IModel
 		if (nestedModel instanceof IModel)
@@ -138,17 +131,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 		final Object modelObject = modelObject(component);
 		if (modelObject != null)
 		{
-			try
-			{
-				// note: if property type is null it is ignored by Ognl
-				prepareContext(component);
-				return Ognl.getValue(expression, conversionContext, modelObject,
-						propertyType(component));
-			}
-			catch (OgnlException e)
-			{
-				throw new WicketRuntimeException("OGNL Exception: expression='" + expression + "'; path='" + component.getPath() + "'", e);
-			}
+			return Objects.getValue(expression, modelObject);
 		}
 		return null;
 	}
@@ -164,52 +147,44 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 */
 	protected void onSetObject(final Component component, Object object)
 	{
-		try
+		final String expression = ognlExpression(component);
+		if (Strings.isEmpty(expression))
 		{
-			final String expression = ognlExpression(component);
-			if (Strings.isEmpty(expression))
+			// No expression will cause OGNL to throw an exception. The OGNL
+			// expression to set the current object is "#this".
+			if (nestedModel instanceof IModel)
 			{
-				// No expression will cause OGNL to throw an exception. The OGNL
-				// expression to set the current object is "#this".
-				if (nestedModel instanceof IModel)
-				{
-					((IModel)nestedModel).setObject(null, object);
-				}
-				else
-				{
-					nestedModel = object;
-				}
+				((IModel)nestedModel).setObject(null, object);
 			}
 			else
 			{
-				// Get the real object
-				Object modelObject = modelObject(component);
-	
-				// If the object is a String
-				if (object instanceof String)
-				{
-					// and that String is not empty
-					final String string = (String)object;
-					if (!Strings.isEmpty(string))
-					{
-						// and there is a non-null property type for the component
-						final Class propertyType = propertyType(component);
-						if (propertyType != null)
-						{
-							// convert the String to the right type
-							object = component.getConverter().convert(string, propertyType);
-						}
-					}
-				}
-	
-				// Let OGNL set the value
-				prepareContext(component);
-				Ognl.setValue(ognlExpression(component), conversionContext, modelObject, object);
+				nestedModel = object;
 			}
 		}
-		catch (OgnlException e)
+		else
 		{
-			throw new WicketRuntimeException(e);
+			// Get the real object
+			Object modelObject = modelObject(component);
+
+			// If the object is a String
+			if (object instanceof String)
+			{
+				// and that String is not empty
+				final String string = (String)object;
+				if (!Strings.isEmpty(string))
+				{
+					// and there is a non-null property type for the component
+					final Class propertyType = propertyType(component);
+					if (propertyType != null)
+					{
+						// convert the String to the right type
+						object = component.getConverter().convert(string, propertyType);
+					}
+				}
+			}
+
+			// Let OGNL set the value
+			Objects.setValue(expression, modelObject, object, component.getConverter());
 		}
 	}
 
@@ -226,19 +201,19 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 * framework.
 	 * @param component The Component
 	 */
-	private final void prepareContext(final Component component)
-	{
-		// create a context object when it was not yet done for this request cycle
-		if (conversionContext == null)
-		{
-			// Setup ognl context for this request
-			this.conversionContext = new ConversionContext();
-		}
-
-		// set the current component for each request (as this could be a shared model, this
-		// has to be done every time!!!
-		conversionContext.component = component;
-	}
+//	private final void prepareContext(final Component component)
+//	{
+//		// create a context object when it was not yet done for this request cycle
+//		if (conversionContext == null)
+//		{
+//			// Setup ognl context for this request
+//			this.conversionContext = new ConversionContext();
+//		}
+//
+//		// set the current component for each request (as this could be a shared model, this
+//		// has to be done every time!!!
+//		conversionContext.component = component;
+//	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -252,55 +227,55 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	/**
 	 * Ognl context with a reference to the current component.
 	 */
-	private static final class ConversionContext extends OgnlContext
-	{
-		/** current component. */
-		Component component;
-
-		/**
-		 * Construct.
-		 */
-		ConversionContext()
-		{
-			setTypeConverter(new TypeConverter());
-		}
-
-		/**
-		 * Type converter for expressions.
-		 */
-		private final class TypeConverter extends DefaultTypeConverter
-		{
-			/**
-			 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
-			 */
-			public Object convertValue(Map context, Object value, Class toType)
-			{
-				if (value == null)
-				{
-					return null;
-				}
-
-				if (!toType.isArray() && value instanceof String[]
-						&& ((String[])value).length == 1)
-				{
-					value = ((String[])value)[0];
-				}
-
-				if (value instanceof String && ((String)value).trim().equals(""))
-				{
-					return null;
-				}
-				return component.getConverter().convert(value, toType);
-			}
-
-			/**
-			 * @see ognl.TypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.reflect.Member, java.lang.String, java.lang.Object, java.lang.Class)
-			 */
-			public Object convertValue(Map context, Object target, Member member,
-					String propertyName, Object value, Class toType)
-			{
-				return convertValue(context, value, toType);
-			}
-		}
-	}
+//	private static final class ConversionContext extends OgnlContext
+//	{
+//		/** current component. */
+//		Component component;
+//
+//		/**
+//		 * Construct.
+//		 */
+//		ConversionContext()
+//		{
+//			setTypeConverter(new TypeConverter());
+//		}
+//
+//		/**
+//		 * Type converter for expressions.
+//		 */
+//		private final class TypeConverter extends DefaultTypeConverter
+//		{
+//			/**
+//			 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
+//			 */
+//			public Object convertValue(Map context, Object value, Class toType)
+//			{
+//				if (value == null)
+//				{
+//					return null;
+//				}
+//
+//				if (!toType.isArray() && value instanceof String[]
+//						&& ((String[])value).length == 1)
+//				{
+//					value = ((String[])value)[0];
+//				}
+//
+//				if (value instanceof String && ((String)value).trim().equals(""))
+//				{
+//					return null;
+//				}
+//				return component.getConverter().convert(value, toType);
+//			}
+//
+//			/**
+//			 * @see ognl.TypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.reflect.Member, java.lang.String, java.lang.Object, java.lang.Class)
+//			 */
+//			public Object convertValue(Map context, Object target, Member member,
+//					String propertyName, Object value, Class toType)
+//			{
+//				return convertValue(context, value, toType);
+//			}
+//		}
+//	}
 }
