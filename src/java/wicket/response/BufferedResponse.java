@@ -63,7 +63,7 @@ public class BufferedResponse extends Response
 	 */
 	public BufferedResponse()
 	{
-		this.stringBuffer = new StringBuffer();
+		this.stringBuffer = new StringBuffer(2500);
 	}
 
 	/**
