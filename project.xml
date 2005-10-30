@@ -403,8 +403,9 @@
     <report>maven-license-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-javadoc-plugin</report>
-<!--     <report>maven-junit-report-plugin</report>
-    <report>maven-clover-plugin</report> -->
+<!--    <report>maven-linkcheck-plugin</report> -->
+<!--    <report>maven-junit-report-plugin</report> -->
+<!--    <report>maven-clover-plugin</report> -->
   </reports>
   <properties/>
 </project>
