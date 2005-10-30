@@ -4,10 +4,14 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>1.1-rc2</currentVersion>
+  <currentVersion>1.1</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
+  <url>http://wicket.sourceforge.net/wicket-extensions</url>
+  <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
+  <siteAddress>shell.sourceforge.net</siteAddress>
+  <siteDirectory>/home/groups/w/wi/wicket/htdocs/wicket-extensions</siteDirectory>
   <repository>
     <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</connection>
     <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</developerConnection>
@@ -135,7 +139,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1-rc2</version>
+      <version>1.1</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description>This is the wicket library</wicket.description>

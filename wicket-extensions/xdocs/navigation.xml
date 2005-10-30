@@ -1,21 +1,27 @@
 <?xml version="1.0"?>
-<project name="Wicket">
-	<title>Wicket</title>
+<project name="Wicket Extensions">
+	<title>Wicket Extensions</title>
 	<body>
-	    <menu name="Wicket contrib">
-	        <item name="About" href="/index.html"/>
-            <item name="License" href="/license.html"/>
-	    </menu>
-	    <menu name="Project info">
-	        <item name="Wicket home" href="http://wicket.sourceforge.net"/>
-	        <item name="Mailing Lists" href="http://wicket.sourceforge.net/mail-lists.html" />
-	        <item name="SourceForge" href="http://wicket.sourceforge.net/SourceForge.html"/>
-            <item name="Issue tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
-        </menu>
-        <menu name="Documentation">
-            <item name="Wiki" href="http://wicket.sourceforge.net/wiki" />
-	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
-	        <item name="Dependencies" href="/dependencies.html"/>
-        </menu>
+		<menu name="Wicket Extensions">
+			<item name="About" href="/index.html" />
+			<item name="License" href="/license.html" />
+		</menu>
+		<menu name="Components">
+			<item name="DatePicker" href="/DatePicker.html" collapse="true">
+				<item name="Description" href="/apidocs/wicket/extensions/markup/html/datepicker/DatePicker.html" />
+				<item name="License" href="/JSLicense.html" />
+			</item>
+		</menu>
+		<menu name="Documentation">
+			<item name="Wiki" href="http://wicket.sourceforge.net/wiki" />
+			<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
+			<item name="Dependencies" href="/dependencies.html" />
+		</menu>
+		<menu name="Project info">
+			<item name="Wicket home" href="http://wicket.sourceforge.net" />
+			<item name="Mailing Lists" href="http://wicket.sourceforge.net/mail-lists.html" />
+			<item name="SourceForge" href="http://wicket.sourceforge.net/SourceForge.html" />
+			<item name="Issue tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
+		</menu>
 	</body>
 </project>

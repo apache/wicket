@@ -9,6 +9,12 @@
 			<p>
 				This is an extensions project for the <a href="http://wicket.sourceforge.net">Wicket</a> framework.
 			</p>
+			<p>
+				The library currently contains the following components:
+			</p>
+			<ul>
+				<li>A <a href="apidocs/wicket/extensions/markup/html/datepicker/DatePicker.html">DatePicker</a> component</li>
+			</ul>
 			<ul>
 				<li>Read <a href="apidocs/index.html">the javadocs</a> for more information.</li>
 			</ul>
