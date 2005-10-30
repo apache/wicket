@@ -6,7 +6,7 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
-  	<release version="1.1" date="n/a" description="Wicket 1.1 final">
+  	<release version="1.1" date="2005-10-30" description="Wicket 1.1 final">
   		<action type="add" dev="Martijn Dashorst">Added an ant build.xml file to the distribution</action>
   		<action type="add" dev="Martijn Dashorst">Added a maven project.xml file to the distribution</action>
   		<action type="add" dev="Martijn Dashorst">Added Sysdeo tomcat plugin configuration to the distribution</action>
