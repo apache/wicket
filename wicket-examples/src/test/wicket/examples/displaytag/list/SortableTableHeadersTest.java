@@ -126,10 +126,6 @@ public class SortableTableHeadersTest extends TestCase
 
 		document = application.getServletResponse().getDocument();
 
-		FileWriter writer = new FileWriter("SortableTableHeadersExcpetedResult_1.html");
-		writer.write(document);
-		writer.close();
-
 		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_3.html"));
 	}
 
