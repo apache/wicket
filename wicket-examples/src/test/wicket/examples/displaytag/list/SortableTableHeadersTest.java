@@ -19,6 +19,7 @@
 package wicket.examples.displaytag.list;
 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -30,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
+import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.io.Streams;
 import wicket.util.string.StringList;
@@ -52,7 +54,9 @@ public class SortableTableHeadersTest extends TestCase
 
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public SortableTableHeadersTest(String name)
 	{
@@ -61,6 +65,7 @@ public class SortableTableHeadersTest extends TestCase
 
 	/**
 	 * Test simple table behaviour.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
@@ -71,25 +76,28 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
+		FileWriter writer = new FileWriter("SortableTableHeadersExcpetedResult_1.html");
+		writer.write(document);
+		writer.close();
 		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_1.html"));
 
-		Link link = (Link)page.get("header.id.actionLink");
+		Link link = (Link)page.get("header:id:actionLink");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("header.name.actionLink");
+		link = (Link)page.get("header:name:actionLink");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("header.email.actionLink");
+		link = (Link)page.get("header:email:actionLink");
 		assertNull(link);
 
-		link = (Link)page.get("header.name.actionLink");
+		link = (Link)page.get("header:name:actionLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 
 		// Check that redirect was set as expected and invoke it
-		Assert.assertTrue("Response should be a redirect", application.getServletResponse()
-				.isRedirect());
+		MockHttpServletResponse redirectResponse = application.getServletResponse();
+		Assert.assertTrue("Response should be a redirect", redirectResponse.isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
@@ -120,8 +128,11 @@ public class SortableTableHeadersTest extends TestCase
 
 	/**
 	 * Validates page 1 of paged table.
-	 * @param document The document
-	 * @param file the file
+	 * 
+	 * @param document
+	 *            The document
+	 * @param file
+	 *            the file
 	 * @return The validation result
 	 * @throws IOException
 	 */
@@ -142,24 +153,24 @@ public class SortableTableHeadersTest extends TestCase
 		boolean equals = document.equals(reference);
 		if (equals == false)
 		{
-		    // Change the condition to true, if you want to make the new output
-		    // the reference output for future tests. That is, it is regarded as 
-		    // correct. It'll replace the current reference files. Thus change
-		    // it only for one test-run.
-		    if (false)
-		    {
-		        in.close();
-		        in = null;
+			// Change the condition to true, if you want to make the new output
+			// the reference output for future tests. That is, it is regarded as
+			// correct. It'll replace the current reference files. Thus change
+			// it only for one test-run.
+			if (false)
+			{
+				in.close();
+				in = null;
 
-		        final URL url = this.getClass().getClassLoader().getResource(filename);
-		        filename = url.getFile();
-		        filename = filename.replaceAll("/build/test-classes/", "/src/test/");
-		        PrintWriter out = new PrintWriter(new FileOutputStream(filename));
-		        out.print(document);
-		        out.close();
-		        return true;
-		    }
-		    
+				final URL url = this.getClass().getClassLoader().getResource(filename);
+				filename = url.getFile();
+				filename = filename.replaceAll("/build/test-classes/", "/src/test/");
+				PrintWriter out = new PrintWriter(new FileOutputStream(filename));
+				out.print(document);
+				out.close();
+				return true;
+			}
+
 			log.error("File name: " + file);
 			/*  */
 			log.error("===================");
