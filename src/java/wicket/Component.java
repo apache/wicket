@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.188 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,6 +28,9 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.AuthorizationException;
+import wicket.authorization.CreationNotAllowedException;
+import wicket.authorization.EnabledNotAllowedException;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
@@ -220,14 +223,14 @@ public abstract class Component implements Serializable, IAjaxListener
 			{
 				return true;
 			}
-			if (newObject == null || previous == null) 
+			if (newObject == null || previous == null)
 			{
 				return false;
 			}
 			return newObject.equals(previous);
 		}
 	};
-	
+
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
@@ -261,6 +264,9 @@ public abstract class Component implements Serializable, IAjaxListener
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
+	/** Visibility boolean */
+	private static final short FLAG_ENABLED = 0x0020;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -281,20 +287,31 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/** Any parent container. */
 	private MarkupContainer parent;
-	
+
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer), and as an optimization, the result for the current request is
+	 * stored in this variable.
+	 */
+	private transient boolean renderAllowed = true;
+
 	/**
 	 * Change record of a model.
 	 */
 	public class ComponentModelChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** former model. */
 		private IModel model;
 
 		/**
 		 * Construct.
-		 * @param model 
+		 * 
+		 * @param model
 		 */
 		public ComponentModelChange(IModel model)
 		{
@@ -342,32 +359,66 @@ public abstract class Component implements Serializable, IAjaxListener
 	/**
 	 * A visibility change operation.
 	 */
-	protected class VisibilityChange extends Change
+	protected final static class VisibilityChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** subject. */
 		private final Component component;
 
 		/** former value. */
-		private final boolean isVisible;
+		private final boolean visible;
 
 		/**
 		 * Construct.
+		 * 
 		 * @param component
 		 */
 		VisibilityChange(final Component component)
 		{
 			this.component = component;
-			this.isVisible = component.isVisible();
+			this.visible = component.getFlag(FLAG_VISIBLE);
 		}
-		
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
 		public void undo()
 		{
-			component.setVisible(!isVisible);
+			component.setVisible(visible);
+		}
+	}
+
+	/**
+	 * A enabled change operation.
+	 */
+	protected final static class EnabledChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** subject. */
+		private final Component component;
+
+		/** former value. */
+		private final boolean enabled;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param component
+		 */
+		EnabledChange(final Component component)
+		{
+			this.component = component;
+			this.enabled = component.getFlag(FLAG_ENABLED);
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			component.setEnabled(enabled);
 		}
 	}
 
@@ -383,6 +434,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public Component(final String id)
 	{
+		checkAuthorization();
 		setId(id);
 	}
 
@@ -400,6 +452,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public Component(final String id, final IModel model)
 	{
+		checkAuthorization();
 		setId(id);
 		setModel(model);
 	}
@@ -429,7 +482,7 @@ public abstract class Component implements Serializable, IAjaxListener
 						return this;
 					}
 				}
-				Object[] newArray = new Object[tmp.length+1];
+				Object[] newArray = new Object[tmp.length + 1];
 				System.arraycopy(tmp, 0, newArray, 0, tmp.length);
 				newArray[tmp.length] = modifier;
 				attributeModifiers = newArray;
@@ -447,7 +500,9 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Registers a handler for an event request.
-	 * @param ajaxHandler handler
+	 * 
+	 * @param ajaxHandler
+	 *            handler
 	 * @return This for chaining
 	 */
 	public final Component add(AjaxHandler ajaxHandler)
@@ -933,12 +988,12 @@ public abstract class Component implements Serializable, IAjaxListener
 		return style;
 	}
 
-	
 
 	/**
-	 * Gets the variation string of this component that will be used to look up markup for this component.
-	 * Subclasses can override this method to define by an instance what markup variation should be picked up.
-	 * By default it will return null. 
+	 * Gets the variation string of this component that will be used to look up
+	 * markup for this component. Subclasses can override this method to define
+	 * by an instance what markup variation should be picked up. By default it
+	 * will return null.
 	 * 
 	 * @return The variation of this component.
 	 * 
@@ -998,8 +1053,8 @@ public abstract class Component implements Serializable, IAjaxListener
 		// This component is not an ancestor of the given component
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * @return Returns the isVersioned.
 	 */
@@ -1047,17 +1102,21 @@ public abstract class Component implements Serializable, IAjaxListener
 		Component component = this;
 		while (component != null)
 		{
-			if (!component.isVisible()) 
+			if (renderAllowed && component.isVisible())
+			{
+				component = component.getParent();
+			}
+			else
 			{
 				return false;
 			}
-			component = component.getParent();
 		}
 		return true;
 	}
 
 	/**
-	 * Called to indicate that the model content for this component has been changed
+	 * Called to indicate that the model content for this component has been
+	 * changed
 	 */
 	public final void modelChanged()
 	{
@@ -1067,7 +1126,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Called to indicate that the model content for this component is about to change
+	 * Called to indicate that the model content for this component is about to
+	 * change
 	 */
 	public final void modelChanging()
 	{
@@ -1118,7 +1178,8 @@ public abstract class Component implements Serializable, IAjaxListener
 
 		if (id == null)
 		{
-			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
+			throw new WicketRuntimeException(
+					"parameter id was not provided: unable to locate listener");
 		}
 
 		int IdAsInt = Integer.parseInt(id);
@@ -1146,29 +1207,30 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public final void render()
 	{
-		// Determine if component is visible
-		if (!isVisible())
-		{
-			findMarkupStream().skipComponent();
-		}
-		else
+		// Determine if component is visible using it's authorization status
+		// and the isVisible property.
+		if (renderAllowed && isVisible())
 		{
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
 				log.debug("Begin render " + this);
 			}
-	
+
 			// Call implementation to render component
 			onRender();
-	
+
 			// Component has been rendered
 			rendered();
-	
+
 			if (log.isDebugEnabled())
 			{
 				log.debug("End render " + this);
 			}
+		}
+		else
+		{
+			findMarkupStream().skipComponent();
 		}
 	}
 
@@ -1243,6 +1305,11 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Sets the given model.
+	 * <p>
+	 * WARNING: DO NOT OVERRIDE THIS METHOD UNLESS YOU HAVE A VERY GOOD REASON
+	 * FOR IT. OVERRIDING THIS MIGHT OPEN UP SECURITY LEAKS AND BROKEN
+	 * BACK-BUTTON SUPPORT.
+	 * </p>
 	 * 
 	 * @param model
 	 *            the model
@@ -1262,14 +1329,14 @@ public abstract class Component implements Serializable, IAjaxListener
 			addStateChange(new ComponentModelChange(this.model));
 			this.model = model;
 		}
-		
+
 		// If a compound model is explicitly set on this component
 		if (model instanceof CompoundPropertyModel)
 		{
 			// we need to remember this for getModelObject()
 			setFlag(FLAG_HAS_ROOT_MODEL, true);
 		}
-		
+
 		modelChanged();
 		return this;
 	}
@@ -1285,26 +1352,44 @@ public abstract class Component implements Serializable, IAjaxListener
 	public final Component setModelObject(final Object object)
 	{
 		final IModel model = getModel();
-		if (model != null)
+
+		// check whether anything can be set at all
+		if (model == null)
 		{
-			if (!getComparator().compareValue(this, object))
-			{
-				modelChanging();
-				model.setObject(this, object);
-				modelChanged();
-			}
+			throw new IllegalStateException(
+					"Attempt to set model object on null model of component: "
+							+ getPageRelativePath());
 		}
-		else
+
+		// check authorization
+		if (!getApplication().getAuthorizationStrategy().allowEnabled(this))
 		{
-			throw new IllegalStateException("Attempt to set model object on null model of component: "  + getPageRelativePath());
+			throw new EnabledNotAllowedException(
+					"operation not allowed in the current authorization context");
+		}
+
+		// check whether this will result in a actual change
+		if (!getComparator().compareValue(this, object))
+		{
+			modelChanging();
+			model.setObject(this, object);
+			modelChanged();
 		}
 		return this;
 	}
 
+	/**
+	 * Gets the value comparator. Implementations of this interface can be used
+	 * in the Component.getComparator() for testing the current value of the
+	 * components model data with the new value that is given.
+	 * 
+	 * @return the value comparator
+	 */
 	protected IComponentValueComparator getComparator()
 	{
 		return comparator;
 	}
+
 	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
@@ -1314,31 +1399,33 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		getRequestCycle().setRedirect(redirect);
 	}
-	
+
 	/**
-	 * If false the component's tag will be printed as well as its
-	 * body (which is default). If true only the body will be printed,
-	 * but not the component's tag.
+	 * If false the component's tag will be printed as well as its body (which
+	 * is default). If true only the body will be printed, but not the
+	 * component's tag.
 	 * 
-	 * @param renderTag If true, the component tag will not be printed
+	 * @param renderTag
+	 *            If true, the component tag will not be printed
 	 * @return This
 	 */
 	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
-	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
-	    return this;
+		this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
+		return this;
 	}
-	
+
 	/**
 	 * If true, all attribute modifiers will be ignored
 	 * 
-	 * @param ignore If true, all attribute modifiers will be ignored
+	 * @param ignore
+	 *            If true, all attribute modifiers will be ignored
 	 * @return This
 	 */
 	protected final Component setIgnoreAttributeModifier(final boolean ignore)
 	{
-	    this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
-	    return this;
+		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
+		return this;
 	}
 
 	/**
@@ -1352,19 +1439,19 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
-	
+
 	/**
 	 * Sets the page class and its parameters that will respond to this request
 	 * 
 	 * @param cls
 	 *            The response page class
-	 * @param parameters 
-	 * 			  The parameters for thsi bookmarkable page.
+	 * @param parameters
+	 *            The parameters for thsi bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
 	public final void setResponsePage(final Class cls, PageParameters parameters)
 	{
-		getRequestCycle().setResponsePage(cls,parameters);
+		getRequestCycle().setResponsePage(cls, parameters);
 	}
 
 	/**
@@ -1401,17 +1488,60 @@ public abstract class Component implements Serializable, IAjaxListener
 	public final Component setVisible(final boolean visible)
 	{
 		// Is new visibility state a change?
-		if (visible != isVisible())
+		if (visible != getFlag(FLAG_VISIBLE))
 		{
-			// Change visibility
-			setFlag(FLAG_VISIBLE, visible);
-
 			// Tell the page that this component's visibility was changed
 			final Page page = findPage();
 			if (page != null)
 			{
 				addStateChange(new VisibilityChange(this));
 			}
+
+			// Change visibility
+			setFlag(FLAG_VISIBLE, visible);
+		}
+		return this;
+	}
+
+	/**
+	 * Gets whether this component is enabled. Specific components may decide to
+	 * implement special behaviour that uses this property, like web form
+	 * components that add a disabled='disabled' attribute when enabled is
+	 * false.
+	 * 
+	 * @return whether this component is enabled.
+	 */
+	public boolean isEnabled()
+	{
+		return getFlag(FLAG_ENABLED);
+	}
+
+	/**
+	 * Sets whether this component is enabled. Specific components may decide to
+	 * implement special behaviour that uses this property, like web form
+	 * components that add a disabled='disabled' attribute when enabled is
+	 * false. If it is not enabled, it will not be allowed to call any listener
+	 * method on it (e.g. Link.onClick) and the model object will be protected
+	 * (for the common use cases, not for programmer's misuse)
+	 * 
+	 * @param enabled
+	 *            whether this component is enabled
+	 * @return This
+	 */
+	public final Component setEnabled(final boolean enabled)
+	{
+		// Is new enabled state a change?
+		if (enabled != getFlag(FLAG_ENABLED))
+		{
+			// Tell the page that this component's enabled was changed
+			final Page page = findPage();
+			if (page != null)
+			{
+				addStateChange(new EnabledChange(this));
+			}
+
+			// Change visibility
+			setFlag(FLAG_ENABLED, enabled);
 		}
 		return this;
 	}
@@ -1438,15 +1568,17 @@ public abstract class Component implements Serializable, IAjaxListener
 			final Page page = findPage();
 			if (page == null)
 			{
-				return "[Component id = " + getId() + ", page = <No Page>, path = "
-					+ getPath() + "." + Classes.name(getClass()) + "]";
+				return new StringBuffer("[Component id = ").append(getId()).append(
+						", page = <No Page>, path = ").append(getPath()).append(".").append(
+						Classes.name(getClass())).append("]").toString();
 			}
 			else
 			{
-				return "[Component id = " + getId() + ", page = "
-					+ getPage().getClass().getName() + ", path = "
-					+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
-					+ ", isVersioned = " + isVersioned() + "]";
+				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
+						.append(getPage().getClass().getName()).append(", path = ").append(
+								getPath()).append(".").append(Classes.name(getClass())).append(
+								", isVisible = ").append((renderAllowed && isVisible())).append(
+								", isVersioned = ").append(isVersioned()).append("]").toString();
 			}
 		}
 		else
@@ -1457,7 +1589,7 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Gets the url for the listener interface (e.g. ILinkListener).
-	 *
+	 * 
 	 * @param listenerInterface
 	 *            The listener interface that the URL should call
 	 * @return The URL
@@ -1470,7 +1602,7 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Gets the url for the ajax handlers.
-	 *
+	 * 
 	 * @param ajaxHandler
 	 * @return The URL
 	 * @see Page#urlFor(Component, Class)
@@ -1632,7 +1764,9 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/**
 	 * Gets an array with registered event request handlers or null.
-	 * @return an array with registered event request handlers, null if none are registered
+	 * 
+	 * @return an array with registered event request handlers, null if none are
+	 *         registered
 	 */
 	protected final AjaxHandler[] getAjaxHandlers()
 	{
@@ -1644,7 +1778,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT!
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param flag
 	 *            The flag to test
@@ -1656,15 +1790,15 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * If false the component's tag will be printed as well as its
-	 * body (which is default). If true only the body will be printed,
-	 * but not the component's tag.
+	 * If false the component's tag will be printed as well as its body (which
+	 * is default). If true only the body will be printed, but not the
+	 * component's tag.
 	 * 
 	 * @return If true, the component tag will not be printed
 	 */
 	protected final boolean getRenderBodyOnly()
 	{
-	    return getFlag(FLAG_RENDER_BODY_ONLY);
+		return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 
 
@@ -1685,7 +1819,8 @@ public abstract class Component implements Serializable, IAjaxListener
 			final IModel model = current.getModel();
 			if (model instanceof ICompoundModel)
 			{
-				// we turn off versioning as we share the model with another component
+				// we turn off versioning as we share the model with another
+				// component
 				// that is the owner of the model (that component has to decide
 				// whether to version or not
 				setVersioned(false);
@@ -1826,13 +1961,14 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Redirects browser to the given page.
-	 * note: usually, you should never call this method directly, but work with
-	 * setresponsepage instead. this method is part of wicket's internal
-	 * behaviour and should only be used when you want to circumvent the normal
-	 * framework behaviour and issue the redirect directly.
+	 * Redirects browser to the given page. note: usually, you should never call
+	 * this method directly, but work with setresponsepage instead. this method
+	 * is part of wicket's internal behaviour and should only be used when you
+	 * want to circumvent the normal framework behaviour and issue the redirect
+	 * directly.
 	 * 
-	 * @param page The page to redirect to
+	 * @param page
+	 *            The page to redirect to
 	 */
 	protected void redirectTo(final Page page)
 	{
@@ -1877,7 +2013,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		// Render open tag
 		if (getRenderBodyOnly() == false)
 		{
-		    renderComponentTag(tag);
+			renderComponentTag(tag);
 		}
 		markupStream.next();
 
@@ -1909,23 +2045,23 @@ public abstract class Component implements Serializable, IAjaxListener
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply attribute modifiers
-			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE) 
+			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE)
 					&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) == false))
 			{
 				tag = tag.mutable();
-				
+
 				if (attributeModifiers instanceof AttributeModifier)
 				{
 					((AttributeModifier)attributeModifiers).replaceAttibuteValue(this, tag);
 				}
 				else if (attributeModifiers instanceof Object[])
 				{
-					Object[] array = (Object[])attributeModifiers ;
+					Object[] array = (Object[])attributeModifiers;
 					for (int i = 0; i < array.length; i++)
 					{
 						((AttributeModifier)array[i]).replaceAttibuteValue(this, tag);
 					}
-				}				
+				}
 			}
 
 			if (ajaxHandlers != null)
@@ -1982,7 +2118,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT!
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param flag
 	 *            The flag to set
@@ -2049,7 +2185,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 		else if (attributeModifiers instanceof Object[])
 		{
-			Object[] array = (Object[])attributeModifiers ;
+			Object[] array = (Object[])attributeModifiers;
 			for (int i = 0; i < array.length; i++)
 			{
 				((AttributeModifier)array[i]).detachModel();
@@ -2102,8 +2238,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	 * @param renderTagOnly
 	 *            if true, the tag will not be written to the output
 	 */
-	final void renderClosingComponentTag(final MarkupStream markupStream, 
-	        final ComponentTag openTag, final boolean renderTagOnly)
+	final void renderClosingComponentTag(final MarkupStream markupStream,
+			final ComponentTag openTag, final boolean renderTagOnly)
 	{
 		// Tag should be open tag and not openclose tag
 		if (openTag.isOpen())
@@ -2125,7 +2261,7 @@ public abstract class Component implements Serializable, IAjaxListener
 				// Render the close tag
 				if (renderTagOnly == false)
 				{
-				    renderComponentTag(closeTag);
+					renderComponentTag(closeTag);
 				}
 				markupStream.next();
 			}
@@ -2181,6 +2317,16 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * Sets the render allowed flag.
+	 * 
+	 * @param renderAllowed
+	 */
+	final void setRenderAllowed(boolean renderAllowed)
+	{
+		this.renderAllowed = renderAllowed;
+	}
+
+	/**
 	 * Finds the root object for an IModel
 	 * 
 	 * @param model
@@ -2205,5 +2351,19 @@ public abstract class Component implements Serializable, IAjaxListener
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
+	}
+
+	/**
+	 * Check whether this component may be created at all. Throws a
+	 * {@link AuthorizationException} when it may not be created
+	 * 
+	 */
+	private final void checkAuthorization()
+	{
+		if (!getApplication().getAuthorizationStrategy().allowCreateComponent(getClass()))
+		{
+			throw new CreationNotAllowedException("insufficiently authorized to create component "
+					+ getClass());
+		}
 	}
 }

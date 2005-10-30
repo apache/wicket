@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.55 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
@@ -29,6 +30,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.StringList;
 
 /**
@@ -46,6 +48,56 @@ import wicket.util.string.StringList;
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
+	/**
+	 * Typesafe interface to code that is called when visiting a form component.
+	 */
+	public interface IVisitor
+	{
+		/**
+		 * Called when visiting a form component
+		 * 
+		 * @param formComponent
+		 *            The form component
+		 */
+		public void formComponent(FormComponent formComponent);
+	}
+
+	/**
+	 * Attribute modifier model that returns 'disabled' if a form component is
+	 * disabled or null otherwise (resulting in no attribute being appended).
+	 */
+	private final class DisabledAttributeModel extends Model
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 */
+		public Object getObject(Component component)
+		{
+			return (FormComponent.this.isEnabled()) ? null : "disabled";
+		}
+	}
+
+	/**
+	 * Attribute modifier that adds 'disabled="disabled"' to the component tag's
+	 * attribute if a form component is disabled.
+	 */
+	private static final class DisabledAttributeModifier extends AttributeModifier
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param model
+		 */
+		public DisabledAttributeModifier(DisabledAttributeModel model)
+		{
+			super("disabled", true, model);
+		}
+	}
+
 	/**
 	 * Make empty strings null values boolean. Used by AbstractTextComponent
 	 * subclass.
@@ -84,27 +136,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	private IModel labelModel = null;
 
 	/**
-	 * Typesafe interface to code that is called when visiting a form component
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public interface IVisitor
-	{
-		/**
-		 * Called when visiting a form component
-		 * 
-		 * @param formComponent
-		 *            The form component
-		 */
-		public void formComponent(FormComponent formComponent);
-	}
-
-	/**
 	 * @see wicket.Component#Component(String)
 	 */
 	public FormComponent(final String id)
 	{
 		super(id);
+		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		setVersioned(false);
 	}
 
@@ -114,6 +151,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	public FormComponent(final String id, IModel model)
 	{
 		super(id, model);
+		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		setVersioned(false);
 	}
 
