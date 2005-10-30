@@ -30,6 +30,8 @@ import org.apache.commons.logging.LogFactory;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.ApplicationSettings;
+import wicket.ApplicationSettings.RenderStrategy;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
@@ -71,14 +73,12 @@ public class SortableTableHeadersTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
+		application.getSettings().setRenderStrategy(ApplicationSettings.REDIRECT_TO_BUFFER);
 		application.getPages().setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
-		FileWriter writer = new FileWriter("SortableTableHeadersExcpetedResult_1.html");
-		writer.write(document);
-		writer.close();
 		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_1.html"));
 
 		Link link = (Link)page.get("header:id:actionLink");
@@ -97,6 +97,7 @@ public class SortableTableHeadersTest extends TestCase
 
 		// Check that redirect was set as expected and invoke it
 		MockHttpServletResponse redirectResponse = application.getServletResponse();
+		
 		Assert.assertTrue("Response should be a redirect", redirectResponse.isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
@@ -104,10 +105,11 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
+
 		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_2.html"));
 
 		// reverse sorting
-		link = (Link)page.get("header.name.actionLink");
+		link = (Link)page.get("header:name:actionLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
@@ -123,6 +125,11 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
+
+		FileWriter writer = new FileWriter("SortableTableHeadersExcpetedResult_1.html");
+		writer.write(document);
+		writer.close();
+
 		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_3.html"));
 	}
 
