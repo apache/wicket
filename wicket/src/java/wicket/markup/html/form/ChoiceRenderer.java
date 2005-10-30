@@ -18,9 +18,7 @@
  */
 package wicket.markup.html.form;
 
-import ognl.Ognl;
-import ognl.OgnlException;
-import wicket.WicketRuntimeException;
+import wicket.util.object.Objects;
 
 /**
  * Default implementation of {@link wicket.markup.html.form.IChoiceRenderer}. Usage:
@@ -105,15 +103,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 		Object returnValue = object;
 		if ((displayExpression != null) && (object != null))
 		{
-			try
-			{
-				returnValue = Ognl.getValue(displayExpression, object);
-			}
-			catch (OgnlException ex)
-			{
-				throw new WicketRuntimeException("Error getting display value of: " + 
-				        object+ " for property: " + displayExpression,ex);
-			}
+			returnValue = Objects.getValue(displayExpression, object);
 		}
 		
 		if (returnValue == null)
@@ -139,20 +129,12 @@ public class ChoiceRenderer implements IChoiceRenderer
 		    return "";
 		}
 		
-		try
+		Object returnValue = Objects.getValue(idExpression, object);
+		if (returnValue == null)
 		{
-			Object returnValue = Ognl.getValue(idExpression, object);
-			if (returnValue == null)
-			{
-			    return "";
-			}
-			
-			return returnValue.toString();
+		    return "";
 		}
-		catch (OgnlException ex)
-		{
-			throw new WicketRuntimeException("Error getting id value of: " + 
-			        object + " for property: " + idExpression,ex);
-		}
+		
+		return returnValue.toString();
 	}
 }

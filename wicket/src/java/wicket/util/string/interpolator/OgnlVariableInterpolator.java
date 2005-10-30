@@ -17,9 +17,8 @@
  */
 package wicket.util.string.interpolator;
 
-import ognl.Ognl;
-import ognl.OgnlException;
 import wicket.WicketRuntimeException;
+import wicket.util.object.Objects;
 
 /**
  * Interpolates values into strings that are produced by interpreting OGNL
@@ -86,15 +85,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
 	 */
 	protected String getValue(final String variableName)
 	{
-		try
-		{
-			Object value = Ognl.getValue(variableName, model);
-			return (value != null) ? value.toString() : null;
-		}
-		catch (OgnlException e)
-		{
-			throw new WicketRuntimeException("Unable to get value of variable '" + variableName
-					+ "' in " + string);
-		}
+		Object value = Objects.getValue(variableName, model);
+		return (value != null) ? value.toString() : null;
 	}
 }
