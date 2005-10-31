@@ -252,20 +252,20 @@ public abstract class Component implements Serializable, IAjaxListener
 	/** Flag for Component holding root compound model */
 	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
 
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
 	/** Versioning boolean */
 	private static final short FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
-	/** Visibility boolean */
-	private static final short FLAG_ENABLED = 0x0020;
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** TODO */
+	private static final short FLAG_ENABLED = 0x0080;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -277,7 +277,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	private List ajaxHandlers;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
 
 	/** Component id. */
 	private String id;
