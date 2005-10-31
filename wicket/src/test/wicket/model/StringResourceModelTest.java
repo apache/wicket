@@ -248,7 +248,7 @@ public class StringResourceModelTest extends TestCase
 	/**
 	 * Inner class used for testing.
 	 */
-	class WeatherStation implements Serializable
+	public class WeatherStation implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
