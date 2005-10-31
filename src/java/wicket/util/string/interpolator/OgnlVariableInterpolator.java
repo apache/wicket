@@ -17,7 +17,6 @@
  */
 package wicket.util.string.interpolator;
 
-import wicket.WicketRuntimeException;
 import wicket.util.object.Objects;
 
 /**
