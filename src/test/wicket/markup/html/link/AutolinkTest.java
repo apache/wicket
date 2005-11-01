@@ -70,4 +70,13 @@ public class AutolinkTest extends WicketTestCase
         application.getSettings().setAutomaticLinking(true);
 	    executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
 	}
+    
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_4() throws Exception
+	{
+        application.getSettings().setAutomaticLinking(true);
+	    executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");
+	}
 }
