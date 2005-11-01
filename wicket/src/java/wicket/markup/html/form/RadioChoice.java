@@ -51,6 +51,7 @@ import wicket.version.undo.Change;
  * </p>
  * 
  * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
@@ -372,10 +373,12 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
+				final String idAttr=getInputName()+"_"+id;
+				
 				// Add radio tag
 				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
 						+ (isSelected(choice,index) ? " checked=\"checked\"" : "") + " value=\"" + id
-						+ "\"");
+						+ "\" id=\""+idAttr+"\"");
 				
 				// Should a roundtrip be made (have onSelectionChanged called) when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
@@ -387,12 +390,12 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 							+ "=" + id + "';\"");
 				}
 
-				buffer.append(">");
+				buffer.append("/>");
 
 				// Add label for radio button
 				String display = getLocalizer().getString(getId() + "." + label, this, label);
 				String escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append(escaped);
+				buffer.append("<label for=\""+idAttr+"\">"+escaped+"</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
