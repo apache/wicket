@@ -54,7 +54,7 @@ public abstract class GridView extends AbstractDataView
 {
 
 	private int columns = 1;
-	private int rows = 1;
+	private int rows = Integer.MAX_VALUE;
 
 
 	/**
@@ -87,7 +87,6 @@ public abstract class GridView extends AbstractDataView
 	public GridView(String id)
 	{
 		super(id);
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -223,6 +222,9 @@ public abstract class GridView extends AbstractDataView
 
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
+	 */
 	public Iterator getItems()
 	{
 		return new ItemsIterator(iterator());
