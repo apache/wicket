@@ -236,8 +236,9 @@ a.logoLink {
 	padding-right: 20px;
 }
 
-a.externalLink,a.externalLink:link,a.externalLink:visited,a.externalLink:active,a.externalLink:hover
-	{
+//fixes external links
+//a.externalLink,a.externalLink:link,a.externalLink:visited,a.externalLink:active,a.externalLink:hover
+a.nonWicketLink,a.nonWicketLink:link,a.nonWicketLink:visited,a.nonWicketLink:active,a.nonWicketLink:hover {
 	background: url(external.png) right center no-repeat;
 	padding-right: 15px;
 }

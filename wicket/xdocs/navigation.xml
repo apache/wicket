@@ -37,17 +37,17 @@
 			<item name="Vision" href="/Vision.html" />
 			<item name="FAQ" href="/faqs.html" />
 			<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
-			<item name="Wiki" href="/wiki" />
+			<item name="Wiki" href="http://wicket.sourceforge.net/wiki" />
 			<item name="Dependencies" href="/dependencies.html" />
 		</menu>
 		<menu name="Releases">
-			<!--  <item name="Wicket 1.2 (n/a)" href="/Roadmap.html#Wicket_1.2"/> -->
-			<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
-			<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
+			<!--  <item name="Wicket 1.2 (n/a)" href="http://wicket.sourceforge.net/Roadmap.html#Wicket_1.2"/> -->
+			<item name="Wicket 1.1" href="http://wicket.sourceforge.net/wicket-1.1/index.html" />
+			<item name="Wicket 1.0" href="http://wicket.sourceforge.net/wicket-1.0/index.html" />
 		</menu>
 		<menu name="Related projects">
-			<item name="Wicket Extensions" href="/wicket-extensions/index.html" />
-			<item name="Wicket QuickStart" href="/wicket-quickstart/index.html" />
+			<item name="Wicket Extensions" href="http://wicket.sourceforge.net/wicket-extensions/index.html" />
+			<item name="Wicket QuickStart" href="http://wicket.sourceforge.net/wicket-quickstart/index.html" />
 			<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
 			<item name="Wicket Library" href="http://www.wicket-library.com" />
 		</menu>
