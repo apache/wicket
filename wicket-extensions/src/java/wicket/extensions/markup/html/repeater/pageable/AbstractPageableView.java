@@ -82,6 +82,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	public AbstractPageableView(String id, IModel model)
 	{
 		super(id, model);
+		clearCachedItemCount();
 	}
 
 
@@ -89,6 +90,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	public AbstractPageableView(String id)
 	{
 		super(id);
+		clearCachedItemCount();
 	}
 
 
