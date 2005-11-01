@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,41 +29,46 @@ import wicket.version.undo.Change;
  * A choice subclass that shows choices via checkboxes.
  * <p>
  * Java:
+ * 
  * <pre>
- * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
- *	// Add a set of checkboxes uses Input's 'site' property to designate the
- *	// current selections, and that uses the SITES list for the available options.
- *	form.add(new CheckBoxMultipleChoice("site", SITES));
+ * List SITES = Arrays.asList(new String[] { &quot;The Server Side&quot;, &quot;Java Lobby&quot;, &quot;Java.Net&quot; });
+ * // Add a set of checkboxes uses Input's 'site' property to designate the
+ * // current selections, and that uses the SITES list for the available options.
+ * form.add(new CheckBoxMultipleChoice(&quot;site&quot;, SITES));
  * </pre>
+ * 
  * HTML:
+ * 
  * <pre>
- * &lt;span valign="top" wicket:id="site"&gt;
- *	&lt;input type="checkbox"&gt;site 1&lt;/input&gt;
- *	&lt;input type="checkbox"&gt;site 2&lt;/input&gt;
- * &lt;/span&gt;
+ *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *  	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
+ *  	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
+ *   &lt;/span&gt;
  * </pre>
+ * 
  * </p>
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Martijn Dashorst
  * @author Gwyn Evans
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class CheckBoxMultipleChoice extends ListMultipleChoice
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private class SuffixChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		final String prevSuffix;
-		
+
 		SuffixChange(String prevSuffix)
 		{
 			this.prevSuffix = prevSuffix;
 		}
-		
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
@@ -77,14 +81,14 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	private class PrefixChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		final String prevPrefix;
-		
+
 		PrefixChange(String prevSuffix)
 		{
 			this.prevPrefix = prevSuffix;
 		}
-		
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
@@ -93,22 +97,22 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 			setPrefix(prevPrefix);
 		}
 	}
-	
+
 	private String prefix = "";
-	private String suffix = "<br />\n";
-	
-    /**
-     * Constructor
-     *
-     * @param id
-     *            See Component
-     * @see wicket.Component#Component(String)
-     * @see AbstractChoice#AbstractChoice(String)
-     */
-    public CheckBoxMultipleChoice(final String id)
-    {
-        super(id);
-    }
+	private String suffix = "<br/>\n";
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            See Component
+	 * @see wicket.Component#Component(String)
+	 * @see AbstractChoice#AbstractChoice(String)
+	 */
+	public CheckBoxMultipleChoice(final String id)
+	{
+		super(id);
+	}
 
 	/**
 	 * Constructor
@@ -135,11 +139,13 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String, java.util.List,wicket.markup.html.form.IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(final String id, final List choices,
+			final IChoiceRenderer renderer)
 	{
-		super(id,choices,renderer);
+		super(id, choices, renderer);
 	}
 
 	/**
@@ -152,7 +158,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel, java.util.List)
+	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 *      java.util.List)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel model, final List choices)
 	{
@@ -171,11 +178,13 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel, java.util.List,wicket.markup.html.form.IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(final String id, IModel model, final List choices,
+			final IChoiceRenderer renderer)
 	{
-		super(id, model, choices,renderer);
+		super(id, model, choices, renderer);
 	}
 
 	/**
@@ -195,20 +204,23 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      wicket.model.IModel,wicket.model.IModel)
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices)
 	{
 		super(id, model, choices);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -218,7 +230,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 * @see wicket.Component#Component(String)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel choices, IChoiceRenderer renderer)
@@ -229,17 +242,19 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel, wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
 	{
@@ -256,7 +271,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	}
 
 	/**
-	 * @param prefix Prefix to use before choice
+	 * @param prefix
+	 *            Prefix to use before choice
 	 * @return this
 	 */
 	public final CheckBoxMultipleChoice setPrefix(final String prefix)
@@ -267,11 +283,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		{
 			addStateChange(new PrefixChange(this.prefix));
 		}
-		
+
 		this.prefix = prefix;
 		return this;
 	}
-	
+
 	/**
 	 * @return Separator to use between radio options
 	 */
@@ -281,10 +297,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	}
 
 	/**
-	 * @param suffix Separator to use between radio options
+	 * @param suffix
+	 *            Separator to use between radio options
 	 * @return this
 	 */
-	public  final CheckBoxMultipleChoice setSuffix(final String suffix)
+	public final CheckBoxMultipleChoice setSuffix(final String suffix)
 	{
 		// Tell the page that this component's suffix was changed
 		final Page page = findPage();
@@ -292,13 +309,14 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		{
 			addStateChange(new SuffixChange(this.suffix));
 		}
-		
+
 		this.suffix = suffix;
 		return this;
 	}
-	
+
 	/**
-	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
 	 */
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
@@ -310,7 +328,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		final List choices = getChoices();
 
 		// Loop through choices
-		for (int index=0;index<choices.size();index++)
+		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
@@ -328,15 +346,18 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
+				final String idAttr = getInputName() + "_" + id;
+
 				// Add checkbox element
 				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"checkbox\""
-						+ (isSelected(choice,index) ? " checked=\"checked\"" : "") + " value=\"" + id
-						+ "\">");
+						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
+						+ id + "\" id=\"" + idAttr + "\"/>");
 
 				// Add label for checkbox
 				String display = getLocalizer().getString(getId() + "." + label, this, label);
 				String escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append(escaped);
+
+				buffer.append("<label for=\"" + idAttr + "\">").append(escaped).append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
@@ -346,4 +367,6 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer.toString());
 	}
+
+
 }
