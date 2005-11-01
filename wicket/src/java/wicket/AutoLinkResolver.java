@@ -160,77 +160,78 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			extension = infoPath.substring(pos + 1);
 			infoPath = infoPath.substring(0, pos);
-		}
 
-		// HTML hrefs are handled first
-		if (supportedPageExtensions.containsKey(extension.toLowerCase()))
-		{
-			// Obviously a href like href="myPkg.MyLabel.html" will do as well.
-			// Wicket will not throw an exception. It accepts it.
-			infoPath = Strings.replaceAll(infoPath, "/", ".");
-
-			final ApplicationSettings appSettings = page.getApplicationSettings();
-			final IClassResolver defaultClassResolver = appSettings.getDefaultClassResolver();
-			
-			final String className;
-			if (!infoPath.startsWith("."))
+			// HTML hrefs are handled first
+			if (supportedPageExtensions.containsKey(extension.toLowerCase()))
 			{
-				// Href is relative. Resolve the url given relative to the
-				// current page
-				className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
-			}
-			else
-			{
-				// href is absolute. If class with the same absolute path
-				// exists, use it. Else don't change the href.
-				className = infoPath.substring(1);
-			}
-			
-			try
-			{
-				final Class clazz = defaultClassResolver.resolveClass(className);
-				return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
-			}
-			catch (WicketRuntimeException ex)
-			{
-				// fall through
-			}
-		}
-		// It is not "*.html". Create a static resource reference
-		else
-		{
-			if (infoPath.startsWith("/") || infoPath.startsWith("\\"))
-			{
-				// href is absolute. Don't change it at all.
-			}
-			else
-			{
-				// Href is relative. Create a resource reference pointing at
-				// this file
-
-				// <wicket:head> components are handled differently. We can not
-				// use the container, because it is the container the header
-				// has been added to (e.g. the Page). What we need however, is
-				// the component (e.g. a Panel) which contributed it.
-				Component relevantContainer = container;
-				while ((relevantContainer instanceof IComponentResolver) 
-						&& !(relevantContainer instanceof IComponentResolverMarker))
+				// Obviously a href like href="myPkg.MyLabel.html" will do as well.
+				// Wicket will not throw an exception. It accepts it.
+				infoPath = Strings.replaceAll(infoPath, "/", ".");
+	
+				final ApplicationSettings appSettings = page.getApplicationSettings();
+				final IClassResolver defaultClassResolver = appSettings.getDefaultClassResolver();
+				
+				final String className;
+				if (!infoPath.startsWith("."))
 				{
-					relevantContainer = relevantContainer.getParent(); 
+					// Href is relative. Resolve the url given relative to the
+					// current page
+					className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
 				}
-
+				else
+				{
+					// href is absolute. If class with the same absolute path
+					// exists, use it. Else don't change the href.
+					className = infoPath.substring(1);
+				}
+				
 				try
 				{
-					// Create the component implementing the link
-					return new CssLink(autoId, relevantContainer.getClass(), href);
+					final Class clazz = defaultClassResolver.resolveClass(className);
+					return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
 				}
 				catch (WicketRuntimeException ex)
 				{
-					// Provided the resource does not exist, assume the user did
-					// deliberately not point it to a page or resource. The href
-					// might still point to a valid homepage outside of wicket.
-					log.info("Did not find autolink resource: " + href 
-							+ "; Assume it is a valid external URL");
+					log.info("Did not find corresponding java class: " + className);
+					// fall through
+				}
+			}
+			// It is not "*.html". Create a static resource reference
+			else
+			{
+				if (infoPath.startsWith("/") || infoPath.startsWith("\\"))
+				{
+					// href is absolute. Don't change it at all.
+				}
+				else
+				{
+					// Href is relative. Create a resource reference pointing at
+					// this file
+	
+					// <wicket:head> components are handled differently. We can not
+					// use the container, because it is the container the header
+					// has been added to (e.g. the Page). What we need however, is
+					// the component (e.g. a Panel) which contributed it.
+					Component relevantContainer = container;
+					while ((relevantContainer instanceof IComponentResolver) 
+							&& !(relevantContainer instanceof IComponentResolverMarker))
+					{
+						relevantContainer = relevantContainer.getParent(); 
+					}
+	
+					try
+					{
+						// Create the component implementing the link
+						return new CssLink(autoId, relevantContainer.getClass(), href);
+					}
+					catch (WicketRuntimeException ex)
+					{
+						// Provided the resource does not exist, assume the user did
+						// deliberately not point it to a page or resource. The href
+						// might still point to a valid homepage outside of wicket.
+						log.info("Did not find autolink resource: " + href 
+								+ "; Assume it is a valid external URL");
+					}
 				}
 			}
 		}
