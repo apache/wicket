@@ -235,47 +235,100 @@ public class Objects
 			{
 				if (List.class.isAssignableFrom(clz))
 				{
-					int index = Integer.parseInt(exp);
-					getAndSetter = new ListGetSet(index);
+					try
+					{
+						int index = Integer.parseInt(exp);
+						getAndSetter = new ListGetSet(index);
+					}
+					catch (NumberFormatException ex)
+					{
+						// can't parse the exp als a index maybe the exp was a method.
+						method = findMethod(clz, exp );
+						if(method != null)
+						{
+							getAndSetter = new MethodGetAndSet(method);
+						}
+						else
+						{
+							throw new WicketRuntimeException("Can parse " + exp + " as an index or look it up as a method for the list " + clz);
+						}
+					}
 				}
 				else if (Map.class.isAssignableFrom(clz))
 				{
-					getAndSetter = new MapGetSet(exp);
-				}
-				else if (clz.isArray())
-				{
-					int index = Integer.parseInt(exp);
-					getAndSetter = new ArrayGetSet(index);
-				}
-				else
-				{
-					int index = exp.indexOf('.');
-					if (index != -1)
+					if(exp.endsWith("()"))
 					{
-						String propertyName = exp.substring(0, index);
-						String propertyIndex = exp.substring(index + 1);
-						try
+						method = findMethod(clz, exp );
+						if(method != null)
 						{
-
-							int parsedIndex = Integer.parseInt(propertyIndex);
-							// if so then it could be a getPropertyIndex(int)
-							// and setPropertyIndex(int, object)
-							String name = Character.toUpperCase(propertyName.charAt(0))
-									+ propertyName.substring(1);
-							method = clz.getMethod("get" + name, new Class[] { int.class });
-							getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
-
+							getAndSetter = new MethodGetAndSet(method);
 						}
-						catch (Exception e)
+						else
 						{
-							throw new WicketRuntimeException("no get method defined for class: "
-									+ clz + " expression: " + propertyName);
+							throw new WicketRuntimeException("Method " + exp + " not found on class " + clz);
 						}
 					}
 					else
 					{
-						throw new WicketRuntimeException("no get method defined for class: " + clz
-								+ " expression: " + exp);
+						getAndSetter = new MapGetSet(exp);
+					}
+				}
+				else if (clz.isArray())
+				{
+					try
+					{
+						int index = Integer.parseInt(exp);
+						getAndSetter = new ArrayGetSet(index);
+					}
+					catch (NumberFormatException ex)
+					{
+						if(exp.equals("length") || exp.equals("size"))
+						{
+							getAndSetter = new ArrayLengthGetSet();
+						}
+						else
+						{
+							throw new WicketRuntimeException("can't parse the exp " + exp + " as an index for an array lookup");
+						}
+					}
+				}
+				else
+				{
+					method = findMethod(clz, exp);
+					if(method == null)
+					{
+						int index = exp.indexOf('.');
+						if (index != -1)
+						{
+							String propertyName = exp.substring(0, index);
+							String propertyIndex = exp.substring(index + 1);
+							try
+							{
+	
+								int parsedIndex = Integer.parseInt(propertyIndex);
+								// if so then it could be a getPropertyIndex(int)
+								// and setPropertyIndex(int, object)
+								String name = Character.toUpperCase(propertyName.charAt(0))
+										+ propertyName.substring(1);
+								method = clz.getMethod("get" + name, new Class[] { int.class });
+								getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
+	
+							}
+							catch (Exception e)
+							{
+								throw new WicketRuntimeException("no get method defined for class: "
+										+ clz + " expression: " + propertyName);
+							}
+						}
+						else
+						{
+							throw new WicketRuntimeException("no get method defined for class: " + clz
+									+ " expression: " + exp);
+						}
+					}
+					else
+					{
+						getAndSetter = new MethodGetAndSet(method);
 					}
 				}
 			}
@@ -313,7 +366,26 @@ public class Objects
 			}
 			catch (Exception ex)
 			{
+				// TODO log
 			}
+		}
+		return method;
+	}
+	
+	private final static Method findMethod(Class clz, String expression)
+	{
+		if(expression.endsWith("()"))
+		{
+			expression = expression.substring(0,expression.length()-2);
+		}
+		Method method = null;
+		try
+		{
+			method = clz.getMethod(expression, null);
+		}
+		catch (Exception ex)
+		{
+			// TODO log
 		}
 		return method;
 	}
@@ -524,6 +596,38 @@ public class Objects
 		}
 	}
 
+	private static final class ArrayLengthGetSet implements IGetAndSet
+	{
+		ArrayLengthGetSet()
+		{
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 */
+		public Object getValue(Object object)
+		{
+			return new Integer(Array.getLength(object));
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 *      java.lang.Object, wicket.util.convert.IConverter)
+		 */
+		public void setValue(Object object, Object value, IConverter converter)
+		{
+			throw new WicketRuntimeException("Cant set the length on an array");
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 */
+		public Object newValue(Object object)
+		{
+			throw new WicketRuntimeException("Cant get a new value from a length of an array");
+		}
+	}
+	
 	private static final class ArrayPropertyGetSet implements IGetAndSet
 	{
 		final private Integer index;
