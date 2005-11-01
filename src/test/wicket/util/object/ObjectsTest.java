@@ -23,7 +23,9 @@ package wicket.util.object;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import wicket.WicketRuntimeException;
 import wicket.util.convert.ConversionException;
@@ -208,4 +210,63 @@ public class ObjectsTest extends TestCase
 		String street = (String)Objects.getValue("addressAt.0.street", person);
 		assertEquals(street, "wicket-street");
 	}
+	
+	/**
+	 * @throws Exception 
+	 */
+	public void testListSizeLookup() throws Exception
+	{
+		Person person = new Person();
+		List addresses = new ArrayList();
+		addresses.add(new Address());
+		addresses.add(new Address());
+		person.setAddressList(addresses);
+		Object size = Objects.getValue("addressList.size", person);
+		assertEquals(size, new Integer(2));
+		size = (Integer)Objects.getValue("addressList.size()", person);
+		assertEquals(size, new Integer(2));
+	}
+	
+	/**
+	 * @throws Exception 
+	 */
+	public void testMapSizeLookup() throws Exception
+	{
+		Person person = new Person();
+		Map addresses = new HashMap();
+		Address address = new Address();
+		addresses.put("size",address);
+		addresses.put("test",new Address());
+		person.setAddressMap(addresses);
+		Object addressFromMap = Objects.getValue("addressMap.size", person);
+		assertEquals(addressFromMap, address);
+		Object size = (Integer)Objects.getValue("addressMap.size()", person);
+		assertEquals(size, new Integer(2));
+	}
+	
+	/**
+	 * @throws Exception 
+	 */
+	public void testArraytSizeLookup() throws Exception
+	{
+		Person person = new Person();
+		person.setAddressArray(new Address[] {new Address(), new Address()});
+		Object size = Objects.getValue("addressArray.length", person);
+		assertEquals(size, new Integer(2));
+		size = (Integer)Objects.getValue("addressArray.size", person);
+		assertEquals(size, new Integer(2));
+	}
+	
+	/**
+	 * @throws Exception 
+	 */
+	public void testMethodLookup() throws Exception
+	{
+		Person person = new Person();
+		Address[] addresses = new Address[] {new Address(), new Address()};
+		person.setAddressArray(addresses);
+		Object value = Objects.getValue("getAddressArray()", person);
+		assertEquals(value, addresses);
+	}	
+	
 }
