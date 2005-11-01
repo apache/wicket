@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.40 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,43 +30,49 @@ import wicket.version.undo.Change;
  * A choice subclass that shows choices in radio style.
  * <p>
  * Java:
+ * 
  * <pre>
- * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
- *	// Add a radio choice component that uses Input's 'site' property to designate the
- *	// current selection, and that uses the SITES list for the available options.
- *	form.add(new RadioChoice("site", SITES));
+ * List SITES = Arrays.asList(new String[] { &quot;The Server Side&quot;, &quot;Java Lobby&quot;, &quot;Java.Net&quot; });
+ * // Add a radio choice component that uses Input's 'site' property to designate the
+ * // current selection, and that uses the SITES list for the available options.
+ * form.add(new RadioChoice(&quot;site&quot;, SITES));
  * </pre>
+ * 
  * HTML:
+ * 
  * <pre>
- * &lt;span valign="top" wicket:id="site"&gt;
- *	&lt;input type="radio"&gt;site 1&lt;/input&gt;
- *	&lt;input type="radio"&gt;site 2&lt;/input&gt;
- * &lt;/span&gt;
+ *  &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ * 	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ * 	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *  &lt;/span&gt;
  * </pre>
+ * 
  * </p>
  * 
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications()
- * to force server roundtrips on each selection change.
+ * You can can extend this class and override method
+ * wantOnSelectionChangedNotifications() to force server roundtrips on each
+ * selection change.
  * </p>
  * 
  * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private class SuffixChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
 
 		final String prevSuffix;
-		
+
 		SuffixChange(String prevSuffix)
 		{
 			this.prevSuffix = prevSuffix;
 		}
-		
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
@@ -81,12 +87,12 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		private static final long serialVersionUID = 1L;
 
 		final String prevPrefix;
-		
+
 		PrefixChange(String prevSuffix)
 		{
 			this.prevPrefix = prevSuffix;
 		}
-		
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
@@ -95,11 +101,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 			setPrefix(prevPrefix);
 		}
 	}
-	
-	
+
+
 	private String prefix = "";
 	private String suffix = "<br />\n";
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -138,11 +144,12 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(final String id, final List choices, final IChoiceRenderer renderer)
 	{
-		super(id,choices,renderer);
+		super(id, choices, renderer);
 	}
 
 	/**
@@ -155,7 +162,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List)
 	 */
 	public RadioChoice(final String id, IModel model, final List choices)
 	{
@@ -174,11 +182,13 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @param renderer
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
+	public RadioChoice(final String id, IModel model, final List choices,
+			final IChoiceRenderer renderer)
 	{
-		super(id, model, choices,renderer);
+		super(id, model, choices, renderer);
 	}
 
 	/**
@@ -189,7 +199,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel)
 	 */
 	public RadioChoice(String id, IModel choices)
 	{
@@ -198,20 +209,23 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IModel)
 	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public RadioChoice(String id, IModel model, IModel choices)
 	{
 		super(id, model, choices);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -221,7 +235,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IChoiceRenderer)
 	 * @see wicket.Component#Component(String)
 	 */
 	public RadioChoice(String id, IModel choices, IChoiceRenderer renderer)
@@ -232,23 +247,25 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, IModel,IChoiceRenderer)
 	 */
 	public RadioChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
@@ -268,21 +285,23 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *			  The newly selected object of the backing model NOTE this is
-	 *			  the same as you would get by calling getModelObject() if the
-	 *			  new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
 	protected void onSelectionChanged(Object newSelection)
 	{
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called using
-	 * javascript if the selection changes. If true, a roundtrip will be generated with
-	 * each selection change, resulting in the model being updated (of just this component)
-	 * and onSelectionChanged being called. This method returns false by default.
+	 * Whether this component's onSelectionChanged event handler should called
+	 * using javascript if the selection changes. If true, a roundtrip will be
+	 * generated with each selection change, resulting in the model being
+	 * updated (of just this component) and onSelectionChanged being called.
+	 * This method returns false by default.
+	 * 
 	 * @return True if this component's onSelectionChanged event handler should
-	 *			called using javascript if the selection changes
+	 *         called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
@@ -296,9 +315,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	{
 		return prefix;
 	}
-	
+
 	/**
-	 * @param prefix Prefix to use before choice
+	 * @param prefix
+	 *            Prefix to use before choice
 	 * @return this
 	 */
 	public final RadioChoice setPrefix(String prefix)
@@ -309,7 +329,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		{
 			addStateChange(new PrefixChange(this.prefix));
 		}
-		
+
 		this.prefix = prefix;
 		return this;
 	}
@@ -317,16 +337,17 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @return Separator to use between radio options
 	 */
-	public  final String getSuffix()
+	public final String getSuffix()
 	{
 		return suffix;
 	}
 
 	/**
-	 * @param suffix Separator to use between radio options
+	 * @param suffix
+	 *            Separator to use between radio options
 	 * @return this
 	 */
-	public  final RadioChoice setSuffix(String suffix)
+	public final RadioChoice setSuffix(String suffix)
 	{
 		// Tell the page that this component's suffix was changed
 		final Page page = findPage();
@@ -334,7 +355,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		{
 			addStateChange(new SuffixChange(this.suffix));
 		}
-		
+
 		this.suffix = suffix;
 		return this;
 	}
@@ -352,9 +373,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		final List choices = getChoices();
 
 		// Loop through choices
-		
-		
-		for (int index=0;index<choices.size();index++)
+
+
+		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
@@ -372,27 +393,31 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
+				final String idAttr = getInputName() + "_" + id;
+
 				// Add radio tag
 				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
-						+ (isSelected(choice,index) ? " checked=\"checked\"" : "") + " value=\"" + id
-						+ "\"");
-				
-				// Should a roundtrip be made (have onSelectionChanged called) when the option is clicked?
+						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
+						+ id + "\" id=\"" + idAttr + "\"");
+
+				// Should a roundtrip be made (have onSelectionChanged called)
+				// when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
 				{
 					final String url = urlFor(IOnChangeListener.class);
 
-					// NOTE: do not encode the url as that would give invalid JavaScript
-					buffer.append(" onclick=\"location.href='" + url + "&" + getInputName()
-							+ "=" + id + "';\"");
+					// NOTE: do not encode the url as that would give invalid
+					// JavaScript
+					buffer.append(" onclick=\"location.href='" + url + "&" + getInputName() + "="
+							+ id + "';\"");
 				}
 
-				buffer.append(">");
+				buffer.append("/>");
 
 				// Add label for radio button
 				String display = getLocalizer().getString(getId() + "." + label, this, label);
 				String escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append(escaped);
+				buffer.append("<label for=\"" + idAttr + "\">" + escaped + "</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
