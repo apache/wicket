@@ -19,19 +19,18 @@
 package wicket.examples.displaytag.list;
 
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import wicket.ApplicationSettings;
-import wicket.ApplicationSettings.RenderStrategy;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
