@@ -54,7 +54,7 @@ public abstract class GridView extends AbstractDataView
 {
 
 	private int columns = 1;
-	private int rows = 1;
+	private int rows = Integer.MAX_VALUE;
 
 
 	/**
