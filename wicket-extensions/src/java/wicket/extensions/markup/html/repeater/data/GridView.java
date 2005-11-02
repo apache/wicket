@@ -35,13 +35,13 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *          
- *          
- *          &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *          &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
- *          wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
- *          
- *          
+ *              
+ *              
+ *              &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *              &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
+ *              wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
+ *              
+ *              
  * </pre>
  * 
  * <p>
@@ -174,7 +174,21 @@ public abstract class GridView extends AbstractDataView
 
 	private void updateItemsPerPage()
 	{
-		internalSetItemsPerPage(rows * columns);
+		int items = Integer.MAX_VALUE;
+
+		// need to check for overflow
+
+		long result = (long)rows * (long)columns;
+		int desiredHiBits = -((int)(result >>> 31) & 1);
+		int actualHiBits = (int)(result >>> 32);
+
+		if (desiredHiBits == actualHiBits)
+		{
+			items = (int)result;
+		}
+
+		internalSetItemsPerPage(items);
+
 	}
 
 	protected void addItems(Iterator items)
