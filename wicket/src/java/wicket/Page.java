@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -160,6 +161,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
+	
+	/** MetaDataEntry array for efficient representation of metadata associated with child components */
+	private MetaDataEntry[] metaData;
 
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
@@ -1116,5 +1120,79 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Allow XmlHttpRequest calls
 		RequestCycle.registerRequestListenerInterface(IAjaxListener.class);
+	}
+	
+	private static class MetaDataEntry
+	{
+		Component component;
+		MetaDataKey key;
+		Serializable object;
+	}
+	
+	/**
+	 * Sets metadata on a given component using a given key
+	 * 
+	 * @param component The component
+	 * @param key The key
+	 * @param object The object
+	 */
+	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
+	{
+		key.checkType(object);		
+		boolean set = false;
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (component == m.component && key == m.key)
+				{
+					m.object = object;
+					set = true;
+				}
+			}
+		}		
+		if (!set)
+		{
+			MetaDataEntry m = new MetaDataEntry();
+			m.component = component;
+			m.key = key;
+			m.object = object;
+			if (metaData == null)
+			{
+				metaData = new MetaDataEntry[1];
+				metaData[0] = m;
+			}
+			else
+			{
+				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
+				newMetaData[metaData.length] = m;
+				metaData = newMetaData;
+			}
+		}
+	}
+
+	/**
+	 * Gets metadata for key on the given component 
+	 * 
+	 * @param component The component
+	 * @param key The key
+	 * @return The object
+	 */
+	Serializable getMetaData(final Component component, final MetaDataKey key)
+	{
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (component == m.component && key == m.key)
+				{
+					return m.object;
+				}
+			}
+		}
+		return null;
 	}
 }
