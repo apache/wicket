@@ -121,6 +121,10 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		final String value = tag.getAttributes().getString(wicketNamespace + ":id");
 		if (value != null)
 		{
+			if (value.trim().length() == 0)
+			{
+				throw new ParseException("The wicket:id attribute value must not be empty. May be unmatched quotes?!?", tag.getPos());
+			}
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(value);
 		}
