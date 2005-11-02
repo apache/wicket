@@ -712,6 +712,17 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		return getApplication().getLocalizer();
 	}
+	
+	/**
+	 * Gets metadata for this component using the given key.
+	 * 
+	 * @param key The key for the data
+	 * @return The metadata
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return getPage().getMetaData(this, key);
+	}
 
 	/**
 	 * Gets the model. It returns the object that wraps the backing model.
@@ -1301,6 +1312,20 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
 		return this;
+	}
+	
+	/**
+	 * Sets the metadata for this component using the given key.
+	 * If the metadata object is not of the correct type for the
+	 * metadata key, an InvalidMetaDataTypeException will be thrown.
+	 * 
+	 * @param key The key for the metadata
+	 * @param object The metadata object
+	 * @throws InvalidMetaDataTypeException
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		getPage().setMetaData(this, key, object);
 	}
 
 	/**
