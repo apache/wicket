@@ -175,8 +175,23 @@ public abstract class GridView extends AbstractDataView
 
 	private void updateItemsPerPage()
 	{
-		internalSetItemsPerPage(rows * columns);
+		int items = Integer.MAX_VALUE;
+
+		// need to check for overflow
+
+		long result = (long)rows * (long)columns;
+		int desiredHiBits = -((int)(result >>> 31) & 1);
+		int actualHiBits = (int)(result >>> 32);
+
+		if (desiredHiBits == actualHiBits)
+		{
+			items = (int)result;
+		}
+
+		internalSetItemsPerPage(items);
+
 	}
+
 
 	protected void addItems(Iterator items)
 	{
