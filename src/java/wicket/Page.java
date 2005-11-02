@@ -1145,7 +1145,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			for (int i = 0; i < metaData.length; i++)
 			{
 				MetaDataEntry m = metaData[i];
-				if (component == m.component && key == m.key)
+				if (component == m.component && key.equals(m.key))
 				{
 					m.object = object;
 					set = true;
@@ -1187,7 +1187,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			for (int i = 0; i < metaData.length; i++)
 			{
 				MetaDataEntry m = metaData[i];
-				if (component == m.component && key == m.key)
+				if (component == m.component && key.equals(m.key))
 				{
 					return m.object;
 				}

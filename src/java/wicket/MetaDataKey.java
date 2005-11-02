@@ -53,4 +53,12 @@ public abstract class MetaDataKey
 			throw new InvalidMetaDataTypeException("MetaDataKey " + getClass() + " expected " + type + ", not " + object.getClass());
 		}
 	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		return getClass().isInstance(obj);
+	}
 }
