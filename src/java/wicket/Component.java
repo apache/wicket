@@ -1559,12 +1559,15 @@ public abstract class Component implements Serializable, IAjaxListener
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-			// Tell the page that this component's enabled was changed
-			final Page page = findPage();
-			if (page != null)
-			{
-				addStateChange(new EnabledChange(this));
-			}
+//TODO we can't record any state change as Link.onComponentTag potentially sets this property
+// we probably don't need to support this, but I'll keep this commented so that we can
+// think about it
+//			// Tell the page that this component's enabled was changed
+//			final Page page = findPage();
+//			if (page != null)
+//			{
+//				addStateChange(new EnabledChange(this));
+//			}
 
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
