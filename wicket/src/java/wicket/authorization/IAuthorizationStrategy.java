@@ -33,6 +33,7 @@ import wicket.Component;
  * controlling it's reachability etc) at all.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public interface IAuthorizationStrategy
 {
