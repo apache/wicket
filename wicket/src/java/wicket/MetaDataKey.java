@@ -21,7 +21,7 @@ package wicket;
 /**
  * A key to a piece of metadata associated with a Component at runtime.
  * The key contains type information that can be used to check the type
- * of any metadata value for the key when the value is set on a given
+ * of any metadata value for the key when the value is set on the given
  * Component.  MetaDataKey is abstract in order to force the creation of
  * a subtype.  That subtype is used to test for identity when looking for
  * the metadata because actual object identity would suffer from problems 
@@ -32,6 +32,7 @@ package wicket;
  */
 public abstract class MetaDataKey
 {
+	/** Type of data associated with this key */
 	private Class type;
 	
 	/**
