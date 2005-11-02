@@ -26,18 +26,15 @@ package wicket;
  */
 public abstract class MetaDataKey
 {
-	private String name;
 	private Class type;
 	
 	/**
 	 * Constructor.
      * 
-	 * @param name The name of the key
 	 * @param type The type of value stored under this key
 	 */
-	public MetaDataKey(final String name, final Class type)
+	public MetaDataKey(final Class type)
 	{
-		this.name = name;
 		this.type = type;
 	}
 
@@ -53,7 +50,7 @@ public abstract class MetaDataKey
 	{
 		if (object != null && object.getClass() != type)
 		{
-			throw new InvalidMetaDataTypeException("MetaDataKey " + name + " expected " + type + ", not " + object.getClass());
+			throw new InvalidMetaDataTypeException("MetaDataKey " + getClass() + " expected " + type + ", not " + object.getClass());
 		}
 	}
 }
