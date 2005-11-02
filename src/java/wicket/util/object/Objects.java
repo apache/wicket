@@ -32,6 +32,7 @@ import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
+import wicket.util.string.Strings;
 
 /**
  * This class parses expressions to lookup or set a value on the object that is
@@ -131,19 +132,15 @@ public class Objects
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
-		String exp = expression.replace('[', '.');
-		if (exp != expression)
-		{
-			exp = exp.replaceAll("].", ".");
-		}
-		final String expressionWithoutBrackets = exp;
-		int index = exp.indexOf('.');
+		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[");
+		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;
 		Class clz = value.getClass();
+		String exp = expressionBracketsSeperated;
 		while (index != -1)
 		{
-			exp = expressionWithoutBrackets.substring(lastIndex, index);
+			exp = expressionBracketsSeperated.substring(lastIndex, index);
 			IGetAndSet getAndSetter = null;
 			try
 			{
@@ -154,15 +151,15 @@ public class Objects
 
 				// expression by it self can't be found. try to find a
 				// setPropertyByIndex(int,value) method
-				index = expressionWithoutBrackets.indexOf('.', index + 1);
+				index = expressionBracketsSeperated.indexOf('.', index + 1);
 				if (index != -1)
 				{
-					String indexExpression = expressionWithoutBrackets.substring(lastIndex, index);
+					String indexExpression = expressionBracketsSeperated.substring(lastIndex, index);
 					getAndSetter = getGetAndSetter(indexExpression, clz);
 				}
 				else
 				{
-					exp = expressionWithoutBrackets.substring(lastIndex);
+					exp = expressionBracketsSeperated.substring(lastIndex);
 					break;
 				}
 			}
@@ -184,11 +181,11 @@ public class Objects
 			}
 			value = newValue;
 			lastIndex = index + 1;
-			index = expressionWithoutBrackets.indexOf('.', lastIndex);
+			index = expressionBracketsSeperated.indexOf('.', lastIndex);
 			clz = value.getClass();
 			if (index == -1)
 			{
-				exp = expressionWithoutBrackets.substring(lastIndex);
+				exp = expressionBracketsSeperated.substring(lastIndex);
 				break;
 			}
 		}
@@ -230,7 +227,21 @@ public class Objects
 		IGetAndSet getAndSetter = (IGetAndSet)getAndSetters.get(exp);
 		if (getAndSetter == null)
 		{
-			Method method = findGetter(clz, exp);
+			Method method = null;
+			if(exp.startsWith("["))
+			{
+				// if expression begins with [ skip method finding and use it as a key/index lookup on a map.
+				exp = exp.substring(1,exp.length()-1);
+			}
+			else if(exp.endsWith("()"))
+			{
+				// if expression ends with (), don't test for setters just skip directly to method finding.
+				method = findMethod(clz, exp);
+			}
+			else 
+			{
+				method = findGetter(clz, exp);
+			}
 			if (method == null)
 			{
 				if (List.class.isAssignableFrom(clz))
@@ -322,6 +333,7 @@ public class Objects
 						}
 						else
 						{
+							// TODO find a public FIELD
 							throw new WicketRuntimeException("no get method defined for class: " + clz
 									+ " expression: " + exp);
 						}
@@ -754,6 +766,7 @@ public class Objects
 		MethodGetAndSet(Method getMethod)
 		{
 			this.getMethod = getMethod;
+			this.getMethod.setAccessible(true);
 		}
 
 		/**
@@ -833,7 +846,9 @@ public class Objects
 			}
 			try
 			{
-				return clz.getMethod(name, new Class[] { getMethod.getReturnType() });
+				Method method = clz.getMethod(name, new Class[] { getMethod.getReturnType() });
+				if(method != null) method.setAccessible(true);
+				return method;
 			}
 			catch (Exception ex)
 			{
