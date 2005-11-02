@@ -305,7 +305,19 @@
     <contributor>
       <name>Andrew Berman</name>
       <email>-</email>
-    </contributor>   
+    </contributor>
+    <contributor>
+      <name>Gert Jan Verhoog</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Timothy Bennet</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Niclas Hedhman</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
