@@ -714,7 +714,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 	
 	/**
-	 * Gets metadata for this component using the given key.
+	 * Gets metadata for this component using the given singleton key object.
 	 * 
 	 * @param key The key for the data
 	 * @return The metadata
@@ -1315,11 +1315,12 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 	
 	/**
-	 * Sets the metadata for this component using the given key.
-	 * If the metadata object is not of the correct type for the
-	 * metadata key, an InvalidMetaDataTypeException will be thrown.
+	 * Sets the metadata for this component using the given key, which
+	 * should be a unique singleton object. If the metadata object is 
+	 * not of the correct type for the metadata key, an 
+	 * InvalidMetaDataTypeException will be thrown.
 	 * 
-	 * @param key The key for the metadata
+	 * @param key The singleton key for the metadata
 	 * @param object The metadata object
 	 * @throws InvalidMetaDataTypeException
 	 */
