@@ -213,6 +213,18 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IAjaxListener
 {
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
+
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
 		public boolean compareValue(Component component, Object newObject)
@@ -231,20 +243,11 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 	};
 
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
-
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
+
+	/** TODO */
+	private static final short FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
 	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
@@ -252,29 +255,26 @@ public abstract class Component implements Serializable, IAjaxListener
 	/** Flag for Component holding root compound model */
 	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
 
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
 	/** Versioning boolean */
 	private static final short FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** TODO */
-	private static final short FLAG_ENABLED = 0x0080;
-
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
-	/** List of AttributeModifiers to be applied for this Component */
-	private Object attributeModifiers = null;
-
 	/** possible list of handlers of event requests (eg XmlHttpRequests). */
 	private List ajaxHandlers;
+
+	/** List of AttributeModifiers to be applied for this Component */
+	private Object attributeModifiers = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
@@ -357,39 +357,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * A visibility change operation.
-	 */
-	protected final static class VisibilityChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** subject. */
-		private final Component component;
-
-		/** former value. */
-		private final boolean visible;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param component
-		 */
-		VisibilityChange(final Component component)
-		{
-			this.component = component;
-			this.visible = component.getFlag(FLAG_VISIBLE);
-		}
-
-		/**
-		 * @see wicket.version.undo.Change#undo()
-		 */
-		public void undo()
-		{
-			component.setVisible(visible);
-		}
-	}
-
-	/**
 	 * A enabled change operation.
 	 */
 	protected final static class EnabledChange extends Change
@@ -419,6 +386,39 @@ public abstract class Component implements Serializable, IAjaxListener
 		public void undo()
 		{
 			component.setEnabled(enabled);
+		}
+	}
+
+	/**
+	 * A visibility change operation.
+	 */
+	protected final static class VisibilityChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** subject. */
+		private final Component component;
+
+		/** former value. */
+		private final boolean visible;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param component
+		 */
+		VisibilityChange(final Component component)
+		{
+			this.component = component;
+			this.visible = component.getFlag(FLAG_VISIBLE);
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			component.setVisible(visible);
 		}
 	}
 
@@ -455,6 +455,33 @@ public abstract class Component implements Serializable, IAjaxListener
 		checkAuthorization();
 		setId(id);
 		setModel(model);
+	}
+
+	/**
+	 * Registers a handler for an event request.
+	 * 
+	 * @param ajaxHandler
+	 *            handler
+	 * @return This for chaining
+	 */
+	public final Component add(AjaxHandler ajaxHandler)
+	{
+		if (ajaxHandler == null)
+		{
+			throw new NullPointerException("argument may not be null");
+		}
+
+		// Lazy create
+		if (ajaxHandlers == null)
+		{
+			ajaxHandlers = new ArrayList(1);
+		}
+
+		ajaxHandlers.add(ajaxHandler);
+
+		// Give handler the opportunity to bind this component
+		ajaxHandler.bind(this);
+		return this;
 	}
 
 	/**
@@ -495,33 +522,6 @@ public abstract class Component implements Serializable, IAjaxListener
 				attributeModifiers = tmp;
 			}
 		}
-		return this;
-	}
-
-	/**
-	 * Registers a handler for an event request.
-	 * 
-	 * @param ajaxHandler
-	 *            handler
-	 * @return This for chaining
-	 */
-	public final Component add(AjaxHandler ajaxHandler)
-	{
-		if (ajaxHandler == null)
-		{
-			throw new NullPointerException("argument may not be null");
-		}
-
-		// Lazy create
-		if (ajaxHandlers == null)
-		{
-			ajaxHandlers = new ArrayList(1);
-		}
-
-		ajaxHandlers.add(ajaxHandler);
-
-		// Give handler the opportunity to bind this component
-		ajaxHandler.bind(this);
 		return this;
 	}
 
@@ -1067,6 +1067,20 @@ public abstract class Component implements Serializable, IAjaxListener
 
 
 	/**
+	 * Gets whether this component is enabled. Specific components may decide to
+	 * implement special behaviour that uses this property, like web form
+	 * components that add a disabled='disabled' attribute when enabled is
+	 * false.
+	 * 
+	 * @return whether this component is enabled.
+	 */
+	public boolean isEnabled()
+	{
+		return getFlag(FLAG_ENABLED);
+	}
+
+
+	/**
 	 * @return Returns the isVersioned.
 	 */
 	public boolean isVersioned()
@@ -1091,7 +1105,6 @@ public abstract class Component implements Serializable, IAjaxListener
 			return true;
 		}
 	}
-
 
 	/**
 	 * Gets whether this component and any children are visible.
@@ -1246,6 +1259,55 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * <p>
+	 * Renders the component at the current position in the given markup stream.
+	 * The method onComponentTag() is called to allow the component to mutate
+	 * the start tag. The method onComponentTagBody() is then called to permit
+	 * the component to render its body.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 */
+	public final void renderComponent(final MarkupStream markupStream)
+	{
+		// Get mutable copy of next tag
+		final ComponentTag tag = markupStream.getTag().mutable();
+
+		// Call any tag handler
+		onComponentTag(tag);
+
+		// If we're an openclose tag
+		if (!tag.isOpenClose() && !tag.isOpen())
+		{
+			// We were something other than <tag> or <tag/>
+			markupStream
+					.throwMarkupException("Method renderComponent called on bad markup element "
+							+ tag);
+		}
+
+		// Render open tag
+		if (getRenderBodyOnly() == false)
+		{
+			renderComponentTag(tag);
+		}
+		markupStream.next();
+
+		// Render the body only if open-body-close. Do not render if open-close.
+		if (tag.isOpen())
+		{
+			// Render the body
+			onComponentTagBody(markupStream, tag);
+		}
+
+		// Render close tag
+		if (tag.isOpen())
+		{
+			renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+		}
+	}
+
+	/**
 	 * Called to indicate that a component has been rendered. This method should
 	 * only very rarely be called at all. One usage is in ImageMap, which
 	 * renders its link children its own special way (without calling render()
@@ -1279,7 +1341,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		return sameRootModel(component.getModel());
 	}
-
+	
 	/**
 	 * @param model
 	 *            The model to compare with
@@ -1302,6 +1364,39 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * Sets whether this component is enabled. Specific components may decide to
+	 * implement special behaviour that uses this property, like web form
+	 * components that add a disabled='disabled' attribute when enabled is
+	 * false. If it is not enabled, it will not be allowed to call any listener
+	 * method on it (e.g. Link.onClick) and the model object will be protected
+	 * (for the common use cases, not for programmer's misuse)
+	 * 
+	 * @param enabled
+	 *            whether this component is enabled
+	 * @return This
+	 */
+	public final Component setEnabled(final boolean enabled)
+	{
+		// Is new enabled state a change?
+		if (enabled != getFlag(FLAG_ENABLED))
+		{
+//TODO we can't record any state change as Link.onComponentTag potentially sets this property
+// we probably don't need to support this, but I'll keep this commented so that we can
+// think about it
+//			// Tell the page that this component's enabled was changed
+//			final Page page = findPage();
+//			if (page != null)
+//			{
+//				addStateChange(new EnabledChange(this));
+//			}
+
+			// Change visibility
+			setFlag(FLAG_ENABLED, enabled);
+		}
+		return this;
+	}
+
+	/**
 	 * Sets whether model strings should be escaped.
 	 * 
 	 * @param escapeMarkup
@@ -1313,7 +1408,7 @@ public abstract class Component implements Serializable, IAjaxListener
 		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the metadata for this component using the given key, which
 	 * should be a unique singleton object. If the metadata object is 
@@ -1405,18 +1500,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Gets the value comparator. Implementations of this interface can be used
-	 * in the Component.getComparator() for testing the current value of the
-	 * components model data with the new value that is given.
-	 * 
-	 * @return the value comparator
-	 */
-	protected IComponentValueComparator getComparator()
-	{
-		return comparator;
-	}
-
-	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
 	 * @see RequestCycle#setRedirect(boolean)
@@ -1438,19 +1521,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
 		this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
-		return this;
-	}
-
-	/**
-	 * If true, all attribute modifiers will be ignored
-	 * 
-	 * @param ignore
-	 *            If true, all attribute modifiers will be ignored
-	 * @return This
-	 */
-	protected final Component setIgnoreAttributeModifier(final boolean ignore)
-	{
-		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 		return this;
 	}
 
@@ -1530,52 +1600,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Gets whether this component is enabled. Specific components may decide to
-	 * implement special behaviour that uses this property, like web form
-	 * components that add a disabled='disabled' attribute when enabled is
-	 * false.
-	 * 
-	 * @return whether this component is enabled.
-	 */
-	public boolean isEnabled()
-	{
-		return getFlag(FLAG_ENABLED);
-	}
-
-	/**
-	 * Sets whether this component is enabled. Specific components may decide to
-	 * implement special behaviour that uses this property, like web form
-	 * components that add a disabled='disabled' attribute when enabled is
-	 * false. If it is not enabled, it will not be allowed to call any listener
-	 * method on it (e.g. Link.onClick) and the model object will be protected
-	 * (for the common use cases, not for programmer's misuse)
-	 * 
-	 * @param enabled
-	 *            whether this component is enabled
-	 * @return This
-	 */
-	public final Component setEnabled(final boolean enabled)
-	{
-		// Is new enabled state a change?
-		if (enabled != getFlag(FLAG_ENABLED))
-		{
-//TODO we can't record any state change as Link.onComponentTag potentially sets this property
-// we probably don't need to support this, but I'll keep this commented so that we can
-// think about it
-//			// Tell the page that this component's enabled was changed
-//			final Page page = findPage();
-//			if (page != null)
-//			{
-//				addStateChange(new EnabledChange(this));
-//			}
-
-			// Change visibility
-			setFlag(FLAG_ENABLED, enabled);
-		}
-		return this;
-	}
-
-	/**
 	 * Gets the string representation of this component.
 	 * 
 	 * @return The path to this component
@@ -1617,19 +1641,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Gets the url for the listener interface (e.g. ILinkListener).
-	 * 
-	 * @param listenerInterface
-	 *            The listener interface that the URL should call
-	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
-	 */
-	public final String urlFor(final Class listenerInterface)
-	{
-		return getPage().urlFor(this, listenerInterface);
-	}
-
-	/**
 	 * Gets the url for the ajax handlers.
 	 * 
 	 * @param ajaxHandler
@@ -1656,6 +1667,19 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 
 		return urlFor(IAjaxListener.class) + "&id=" + index;
+	}
+
+	/**
+	 * Gets the url for the listener interface (e.g. ILinkListener).
+	 * 
+	 * @param listenerInterface
+	 *            The listener interface that the URL should call
+	 * @return The URL
+	 * @see Page#urlFor(Component, Class)
+	 */
+	public final String urlFor(final Class listenerInterface)
+	{
+		return getPage().urlFor(this, listenerInterface);
 	}
 
 	/**
@@ -1804,6 +1828,18 @@ public abstract class Component implements Serializable, IAjaxListener
 			return (AjaxHandler[])ajaxHandlers.toArray(new AjaxHandler[ajaxHandlers.size()]);
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the value comparator. Implementations of this interface can be used
+	 * in the Component.getComparator() for testing the current value of the
+	 * components model data with the new value that is given.
+	 * 
+	 * @return the value comparator
+	 */
+	protected IComponentValueComparator getComparator()
+	{
+		return comparator;
 	}
 
 	/**
@@ -2012,55 +2048,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
-	 * <p>
-	 * Renders the component at the current position in the given markup stream.
-	 * The method onComponentTag() is called to allow the component to mutate
-	 * the start tag. The method onComponentTagBody() is then called to permit
-	 * the component to render its body.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	public final void renderComponent(final MarkupStream markupStream)
-	{
-		// Get mutable copy of next tag
-		final ComponentTag tag = markupStream.getTag().mutable();
-
-		// Call any tag handler
-		onComponentTag(tag);
-
-		// If we're an openclose tag
-		if (!tag.isOpenClose() && !tag.isOpen())
-		{
-			// We were something other than <tag> or <tag/>
-			markupStream
-					.throwMarkupException("Method renderComponent called on bad markup element "
-							+ tag);
-		}
-
-		// Render open tag
-		if (getRenderBodyOnly() == false)
-		{
-			renderComponentTag(tag);
-		}
-		markupStream.next();
-
-		// Render the body only if open-body-close. Do not render if open-close.
-		if (tag.isOpen())
-		{
-			// Render the body
-			onComponentTagBody(markupStream, tag);
-		}
-
-		// Render close tag
-		if (tag.isOpen())
-		{
-			renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
-		}
-	}
-
-	/**
 	 * Writes a simple tag out to the response stream. Any components that might
 	 * be referenced by the tag are ignored. Also undertakes any tag attribute
 	 * modifications if they have been added to the component.
@@ -2164,6 +2151,19 @@ public abstract class Component implements Serializable, IAjaxListener
 		{
 			this.flags &= ~flag;
 		}
+	}
+
+	/**
+	 * If true, all attribute modifiers will be ignored
+	 * 
+	 * @param ignore
+	 *            If true, all attribute modifiers will be ignored
+	 * @return This
+	 */
+	protected final Component setIgnoreAttributeModifier(final boolean ignore)
+	{
+		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
+		return this;
 	}
 
 	/**
@@ -2356,6 +2356,20 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * Check whether this component may be created at all. Throws a
+	 * {@link AuthorizationException} when it may not be created
+	 * 
+	 */
+	private final void checkAuthorization()
+	{
+		if (!getApplication().getAuthorizationStrategy().allowCreateComponent(getClass()))
+		{
+			throw new CreationNotAllowedException("insufficiently authorized to create component "
+					+ getClass());
+		}
+	}
+
+	/**
 	 * Finds the root object for an IModel
 	 * 
 	 * @param model
@@ -2380,19 +2394,5 @@ public abstract class Component implements Serializable, IAjaxListener
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
-	}
-
-	/**
-	 * Check whether this component may be created at all. Throws a
-	 * {@link AuthorizationException} when it may not be created
-	 * 
-	 */
-	private final void checkAuthorization()
-	{
-		if (!getApplication().getAuthorizationStrategy().allowCreateComponent(getClass()))
-		{
-			throw new CreationNotAllowedException("insufficiently authorized to create component "
-					+ getClass());
-		}
 	}
 }

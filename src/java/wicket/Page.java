@@ -180,6 +180,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
+	private static class MetaDataEntry
+	{
+		Component component;
+		MetaDataKey key;
+		Serializable object;
+	}
+
 	/**
 	 * Constructor.
 	 */
@@ -204,6 +211,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		init();
 	}
 
+
 	/**
 	 * Redirects to any intercept page previously specified by a call to
 	 * redirectToInterceptPage.
@@ -215,7 +223,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return getPageMap().continueToOriginalDestination();
 	}
-
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -293,6 +300,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 	}
 
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -303,25 +311,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final int getAutoIndex()
 	{
 		return this.autoIndex++;
-	}
-
-
-	/**
-	 * Sets values for form components based on cookie values in the request.
-	 * 
-	 */
-	final void setFormComponentValuesFromCookies()
-	{
-		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor()
-		{
-			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
-			{
-				((Form)component).loadPersistentFormComponentValues();
-				return CONTINUE_TRAVERSAL;
-			}
-		});
 	}
 
 	/**
@@ -814,24 +803,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 	}
 
-	/**
-	 * Quick way to dump size of page without the whole session it's attached to
-	 */
-	final void dumpSize()
-	{
-		PageMap oldPageMap = this.pageMap;
-		Session oldSession = this.session;
-
-		this.pageMap = null;
-		this.session = null;
-
-		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
-				+ ObjectProfiler.sizeof(this));
-
-		this.pageMap = oldPageMap;
-		this.session = oldSession;
-	}
-
 	/*
 	 * @param component The component that was added
 	 */
@@ -903,6 +874,47 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Quick way to dump size of page without the whole session it's attached to
+	 */
+	final void dumpSize()
+	{
+		PageMap oldPageMap = this.pageMap;
+		Session oldSession = this.session;
+
+		this.pageMap = null;
+		this.session = null;
+
+		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
+				+ ObjectProfiler.sizeof(this));
+
+		this.pageMap = oldPageMap;
+		this.session = oldSession;
+	}
+
+	/**
+	 * Gets metadata for key on the given component 
+	 * 
+	 * @param component The component
+	 * @param key The key
+	 * @return The object
+	 */
+	Serializable getMetaData(final Component component, final MetaDataKey key)
+	{
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (component == m.component && key.equals(m.key))
+				{
+					return m.object;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * This method is not called getSession() because we want to ensure that
 	 * getSession() is final in Component.
 	 * 
@@ -942,6 +954,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Sets values for form components based on cookie values in the request.
+	 * 
+	 */
+	final void setFormComponentValuesFromCookies()
+	{
+		// Visit all Forms contained in the page
+		visitChildren(Form.class, new Component.IVisitor()
+		{
+			// For each FormComponent found on the Page (not Form)
+			public Object component(final Component component)
+			{
+				((Form)component).loadPersistentFormComponentValues();
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
 	 * Set the id for this Page. This method is called by PageMap when a Page is
 	 * added because the id, which is assigned by PageMap, is not known until
 	 * this time.
@@ -952,6 +982,50 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void setId(final int id)
 	{
 		setId(Integer.toString(id));
+	}
+
+	/**
+	 * Sets metadata on a given component using a given key
+	 * 
+	 * @param component The component
+	 * @param key The key
+	 * @param object The object
+	 */
+	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
+	{
+		key.checkType(object);		
+		boolean set = false;
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (component == m.component && key.equals(m.key))
+				{
+					m.object = object;
+					set = true;
+				}
+			}
+		}		
+		if (!set)
+		{
+			MetaDataEntry m = new MetaDataEntry();
+			m.component = component;
+			m.key = key;
+			m.object = object;
+			if (metaData == null)
+			{
+				metaData = new MetaDataEntry[1];
+				metaData[0] = m;
+			}
+			else
+			{
+				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
+				newMetaData[metaData.length] = m;
+				metaData = newMetaData;
+			}
+		}
 	}
 
 	/**
@@ -1054,7 +1128,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
 	}
-
+	
 	/**
 	 * @param component
 	 *            The component which is affected
@@ -1091,7 +1165,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Starts a new version of this page
 	 */
@@ -1120,79 +1194,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Allow XmlHttpRequest calls
 		RequestCycle.registerRequestListenerInterface(IAjaxListener.class);
-	}
-	
-	private static class MetaDataEntry
-	{
-		Component component;
-		MetaDataKey key;
-		Serializable object;
-	}
-	
-	/**
-	 * Sets metadata on a given component using a given key
-	 * 
-	 * @param component The component
-	 * @param key The key
-	 * @param object The object
-	 */
-	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
-	{
-		key.checkType(object);		
-		boolean set = false;
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					m.object = object;
-					set = true;
-				}
-			}
-		}		
-		if (!set)
-		{
-			MetaDataEntry m = new MetaDataEntry();
-			m.component = component;
-			m.key = key;
-			m.object = object;
-			if (metaData == null)
-			{
-				metaData = new MetaDataEntry[1];
-				metaData[0] = m;
-			}
-			else
-			{
-				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
-				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
-				newMetaData[metaData.length] = m;
-				metaData = newMetaData;
-			}
-		}
-	}
-
-	/**
-	 * Gets metadata for key on the given component 
-	 * 
-	 * @param component The component
-	 * @param key The key
-	 * @return The object
-	 */
-	Serializable getMetaData(final Component component, final MetaDataKey key)
-	{
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					return m.object;
-				}
-			}
-		}
-		return null;
 	}
 }

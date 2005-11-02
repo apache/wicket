@@ -19,8 +19,14 @@
 package wicket;
 
 /**
- * Runtime type-checking key to a piece of metadata associated
- * with a Component.
+ * A key to a piece of metadata associated with a Component at runtime.
+ * The key contains type information that can be used to check the type
+ * of any metadata value for the key when the value is set on a given
+ * Component.  MetaDataKey is abstract in order to force the creation of
+ * a subtype.  That subtype is used to test for identity when looking for
+ * the metadata because actual object identity would suffer from problems 
+ * under serialization.  So, the correct way to declare a MetaDataKey is
+ * like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
  * 
  * @author Jonathan Locke
  */
