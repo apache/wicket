@@ -401,4 +401,20 @@ public class MarkupStream
 	{
 	    return this.markup.getWicketNamespace();
 	}
+
+	/**
+	 * True, if associate markup is the same. It will change e.g. if the
+	 * markup file has been re-loaded or the locale has been changed.
+	 * 
+	 * @param markupStream The markup stream to compare with.
+	 * @return true, if markup has not changed
+	 */
+	public boolean equalMarkup(final MarkupStream markupStream)
+	{
+		if (markupStream == null)
+		{
+			return false;
+		}
+		return this.markup == markupStream.markup;
+	}
 }

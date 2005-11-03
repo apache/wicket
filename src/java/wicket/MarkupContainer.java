@@ -826,6 +826,18 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
+		if ((markupStream != null) && (markupStream.equalMarkup(this.markupStream) == false))
+		{
+			visitChildren(new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							component.invalidateMarkupStreamPosition();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+		}
+
 		this.markupStream = markupStream;
 	}
 
