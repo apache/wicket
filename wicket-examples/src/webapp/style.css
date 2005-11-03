@@ -116,6 +116,8 @@ a.none {
 	margin-top: 5px;
 }
 
+#numberRadioChoice label { display: inline !important; }
+
 #inputForm label.non {
 	display: inline !important;
 }
