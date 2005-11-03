@@ -25,6 +25,9 @@ import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.border.Border;
+import wicket.markup.html.panel.Panel;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -61,6 +64,45 @@ public class SimplePageTest extends WicketTestCase
 	public void testRenderHomePage_2() throws Exception
 	{
 	    executeTest(SimplePage.class, "SimplePageExpectedResult.html");
+
+	    Label label = (Label)application.getLastRenderedPage().get("myLabel");
+	    assertNotNull(label);
+		application.rerender(label);
+		String document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertEquals("<span wicket:id=\"myLabel\">Test Label</span>", document);
+		
+	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
+	    assertNotNull(panel);
+		application.rerender(panel);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<wicket:panel>Inside the panel</wicket:panel>", document);
+		
+	    Border border = (Border)application.getLastRenderedPage().get("myBorder");
+	    assertNotNull(border);
+		application.rerender(border);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>", document);
+		
+	    border = (Border)application.getLastRenderedPage().get("myBorder2");
+	    assertNotNull(border);
+		application.rerender(border);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
+		
+	    WebMarkupContainer container = (WebMarkupContainer)application.getLastRenderedPage().get("test");
+	    assertNotNull(container);
+		application.rerender(container);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("body", document);
 	}
 
 	/**

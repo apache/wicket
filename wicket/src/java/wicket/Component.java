@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.188 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -287,6 +287,12 @@ public abstract class Component implements Serializable, IAjaxListener
 
 	/** Any parent container. */
 	private MarkupContainer parent;
+
+	/**
+	 * The position within the markup stream, where the markup for the component
+	 * begins
+	 */
+	private int markupStreamPosition = -1;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -712,11 +718,12 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		return getApplication().getLocalizer();
 	}
-	
+
 	/**
 	 * Gets metadata for this component using the given key.
 	 * 
-	 * @param key The key for the data
+	 * @param key
+	 *            The key for the data
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
@@ -1272,6 +1279,19 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
+		// Allow the component to be re-rendered without a page. Partial
+		// re-rendering is a requirement of AJAX.
+		if (this.markupStreamPosition < 0)
+		{
+			// Remember the position while rendering the component the first time
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+		}
+		else
+		{
+			// Re-set the markups index to the beginning of the component tag
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
 
@@ -1342,7 +1362,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		return sameRootModel(component.getModel());
 	}
-	
+
 	/**
 	 * @param model
 	 *            The model to compare with
@@ -1963,6 +1983,23 @@ public abstract class Component implements Serializable, IAjaxListener
 	 */
 	protected void internalOnModelChanging()
 	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * <p>
+	 * In case a markup stream has been reloaded or the locale has changed and
+	 * hence another markup assigned, the markup position pointer must be reset
+	 * to properly render the page.
+	 * <p>
+	 * Note: invalidating the markup position requires the whole page to be
+	 * re-rendered prior to be able to re-render specific components as required
+	 * by AJAX.
+	 */
+	public void invalidateMarkupStreamPosition()
+	{
+		this.markupStreamPosition = -1;
 	}
 
 	/**
