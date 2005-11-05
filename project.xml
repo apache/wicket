@@ -318,6 +318,10 @@
       <name>Niclas Hedhman</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Ralf Ebert</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
