@@ -17,20 +17,13 @@
  */
 package wicket.resource;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.util.concurrent.ConcurrentReaderHashMap;
-import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 
 /**
@@ -41,7 +34,9 @@ import wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class ClassStringResourceLoader implements IStringResourceLoader
+public class ClassStringResourceLoader 
+	extends AbstractStringResourceLoader
+	implements IStringResourceLoader
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
@@ -51,9 +46,6 @@ public class ClassStringResourceLoader implements IStringResourceLoader
 	
 	/** The application we are loading for. */
 	private final Class clazz;
-
-	/** The cache of previously loaded resources. */
-	private final Map resourceCache;
 
 	/**
 	 * Create and initialise the resource loader.
@@ -71,7 +63,6 @@ public class ClassStringResourceLoader implements IStringResourceLoader
 		}
 		this.application = application;
 		this.clazz = clazz;
-		this.resourceCache = new ConcurrentReaderHashMap();
 	}
 
 	/**
@@ -95,102 +86,24 @@ public class ClassStringResourceLoader implements IStringResourceLoader
 			final Locale locale, final String style)
 	{
 		// Locate previously loaded resources from the cache
-		final String id = createCacheId(style, locale);
-		ValueMap strings = (ValueMap)resourceCache.get(id);
+		final String id = createCacheId(clazz, style, locale);
+		ValueMap strings = getResourceCache(id);
 		if (strings == null)
 		{
 			// No resources previously loaded, attempt to load them
-			strings = loadResources(style, locale, id);
+			strings = loadResources(clazz, style, locale, id);
 		}
 
-		return strings.getString(key);
-	}
-
-	/**
-	 * Helper method to do the actual loading of resources if required.
-	 * 
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
-	 * @param id
-	 *            The cache id to use
-	 * @return The map of loaded resources
-	 */
-	private synchronized ValueMap loadResources(final String style, final Locale locale,
-			final String id)
-	{
-		// Make sure someone else didn't load our resources while we were
-		// waiting for the synchronized lock on the method
-		ValueMap strings = (ValueMap)resourceCache.get(id);
-		if (strings != null)
+		if (log.isDebugEnabled())
 		{
-			return strings;
+			log.debug("Try to load resource from: " + id + "; key: " + key);
 		}
-
-		// Do the resource load
-		final Properties properties = new Properties();
-		final IResourceStream resource = application.getResourceStreamLocator().locate(
-				clazz, style, locale, "properties");
-		if (resource != null)
+		String value = strings.getString(key);
+		if (value != null && log.isDebugEnabled())
 		{
-			try
-			{
-				try
-				{
-					properties.load(new BufferedInputStream(resource.getInputStream()));
-					strings = new ValueMap(properties);
-				}
-				finally
-				{
-					resource.close();
-				}
-			}
-			catch (ResourceStreamNotFoundException e)
-			{
-				log.warn("Unable to find resource " + resource, e);
-				strings = ValueMap.EMPTY_MAP;
-			}
-			catch (IOException e)
-			{
-				log.warn("Unable to access resource " + resource, e);
-				strings = ValueMap.EMPTY_MAP;
-			}
+			log.debug("Found resource from: " + id + "; key: " + key);
 		}
-		else
-		{
-			// Unable to load resources
-			strings = ValueMap.EMPTY_MAP;
-		}
-
-		resourceCache.put(id, strings);
-		return strings;
-	}
-
-	/**
-	 * Helper method to create a unique id for caching previously loaded
-	 * resources.
-	 * 
-	 * @param style
-	 *            The style of the resources (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale of the resources
-	 * @return The unique cache id
-	 */
-	private String createCacheId(final String style, final Locale locale)
-	{
-		final StringBuffer buffer = new StringBuffer(clazz.getName());
-		if (style != null)
-		{
-			buffer.append('.');
-			buffer.append(style);
-		}
-		if (locale != null)
-		{
-			buffer.append('.');
-			buffer.append(locale.toString());
-		}
-		final String id = buffer.toString();
-		return id;
+		
+		return value;
 	}
 }

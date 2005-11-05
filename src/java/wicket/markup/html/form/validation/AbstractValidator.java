@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
@@ -59,6 +62,9 @@ import wicket.util.lang.Classes;
  */
 public abstract class AbstractValidator implements IValidator
 {
+	/** Log. */
+	private static Log log = LogFactory.getLog(AbstractValidator.class);
+
 	/**
 	 * Sets an error on the component being validated using the map returned by
 	 * messageModel() for variable interpolations.
@@ -89,7 +95,7 @@ public abstract class AbstractValidator implements IValidator
 		// TODO I didn't find a simpler way to getString() throw a MissingResourceException
 		// without changes the application settings. I guess this is something to change in
 		// 1.2 or 1.3
-		String message = localizer.getString(resourceKey, formComponent, resourceModel, "");
+		String message = localizer.getString(resourceKey, formComponent.getParent(), resourceModel, "");
 		if ((message == null) || (message.length() == 0))
 		{
 			throw new MissingResourceException("Unable to find resource: " + resourceKey, 
@@ -171,11 +177,9 @@ public abstract class AbstractValidator implements IValidator
 		}
 		else
 		{
-			String labelKey = formComponent.getForm().getId() + "." + formComponent.getId();
-			
 			// apply default value (component id) if key/value can not be found
-			resourceModel.put("label", formComponent.getLocalizer().getString(labelKey, formComponent, 
-					formComponent.getId()));
+			resourceModel.put("label", formComponent.getLocalizer().getString(formComponent.getId(), 
+					formComponent.getParent(), formComponent.getId()));
 		}
 		return resourceModel;
 	}
