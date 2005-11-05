@@ -20,19 +20,25 @@ package wicket.markup.html.list;
 
 import java.util.ArrayList;
 
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
+import wicket.WicketTestCase;
 import wicket.model.Model;
-
-import junit.framework.TestCase;
 
 
 /**
  * Test for tables.
  * @author Juergen Donnerstag
  */
-public class TableTest extends TestCase
+public class TableTest extends WicketTestCase
 {
+	/**
+	 * Construct.
+	 * @param name
+	 */
+	public TableTest(String name)
+	{
+		super(name);
+	}
+
 	/**
 	 * creates a table.
 	 * @param modelListSize

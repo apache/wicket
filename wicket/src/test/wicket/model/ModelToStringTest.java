@@ -3,15 +3,23 @@ package wicket.model;
 import java.util.Properties;
 
 import wicket.Component;
+import wicket.WicketTestCase;
 import wicket.markup.html.basic.Label;
-
-import junit.framework.TestCase;
 
 /**
  * Tests the toString() method on the models in the wicket.model package.
  */
-public class ModelToStringTest extends TestCase
+public class ModelToStringTest extends WicketTestCase
 {
+	/**
+	 * Construct.
+	 * @param name
+	 */
+	public ModelToStringTest(String name)
+	{
+		super(name);
+	}
+
 	/**
 	 * Used for models in testing.
 	 */
