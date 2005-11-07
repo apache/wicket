@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.197 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,7 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -36,8 +37,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IAjaxListener;
-import wicket.markup.parser.XmlTag;
+import wicket.markup.html.ajax.IBehaviourListener;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -211,7 +211,7 @@ import wicket.version.undo.Change;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Component implements Serializable, IAjaxListener
+public abstract class Component implements Serializable, IBehaviourListener
 {
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
@@ -270,11 +270,8 @@ public abstract class Component implements Serializable, IAjaxListener
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
-	/** possible list of handlers of event requests (eg XmlHttpRequests). */
-	private List ajaxHandlers;
-
-	/** List of AttributeModifiers to be applied for this Component */
-	private Object attributeModifiers = null;
+	/** List of behaviours to be applied for this Component */
+	private List behaviours = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
@@ -464,71 +461,31 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Registers a handler for an event request.
+	 * Adds an behaviour modifier to the component.
 	 * 
-	 * @param ajaxHandler
-	 *            handler
-	 * @return This for chaining
+	 * @param behaviour
+	 *            The behaviour modifier to be added
+	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(AjaxHandler ajaxHandler)
+	public final Component add(final IBehaviour behaviour)
 	{
-		if (ajaxHandler == null)
+		if (behaviour == null)
 		{
 			throw new NullPointerException("argument may not be null");
 		}
 
 		// Lazy create
-		if (ajaxHandlers == null)
+		if (behaviours == null)
 		{
-			ajaxHandlers = new ArrayList(1);
+			behaviours = new ArrayList(1);
 		}
 
-		ajaxHandlers.add(ajaxHandler);
+		behaviours.add(behaviour);
 
 		// Give handler the opportunity to bind this component
-		ajaxHandler.bind(this);
+		behaviour.bind(this);
 		return this;
-	}
 
-	/**
-	 * Adds an attribute modifier to the component.
-	 * 
-	 * @param modifier
-	 *            The attribute modifier to be added
-	 * @return this (to allow method call chaining)
-	 */
-	public final Component add(final AttributeModifier modifier)
-	{
-		if (attributeModifiers == null)
-		{
-			attributeModifiers = modifier;
-		}
-		else
-		{
-			if (attributeModifiers instanceof Object[])
-			{
-				Object[] tmp = (Object[])attributeModifiers;
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] == modifier)
-					{
-						return this;
-					}
-				}
-				Object[] newArray = new Object[tmp.length + 1];
-				System.arraycopy(tmp, 0, newArray, 0, tmp.length);
-				newArray[tmp.length] = modifier;
-				attributeModifiers = newArray;
-			}
-			else if (attributeModifiers != modifier)
-			{
-				Object[] tmp = new Object[2];
-				tmp[0] = attributeModifiers;
-				tmp[1] = modifier;
-				attributeModifiers = tmp;
-			}
-		}
-		return this;
 	}
 
 	/**
@@ -1202,7 +1159,7 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.IAjaxListener#onRequest()
+	 * @see wicket.markup.html.ajax.IBehaviourListener#onRequest()
 	 */
 	public void onRequest()
 	{
@@ -1215,14 +1172,14 @@ public abstract class Component implements Serializable, IAjaxListener
 		}
 
 		int IdAsInt = Integer.parseInt(id);
-		AjaxHandler ajaxHandler = (AjaxHandler)ajaxHandlers.get(IdAsInt);
+		IBehaviourListener behaviourListener = (IBehaviourListener)behaviours.get(IdAsInt);
 
-		if (ajaxHandler == null)
+		if (behaviourListener == null)
 		{
-			throw new WicketRuntimeException("no handler found with id " + id);
+			throw new WicketRuntimeException("no behaviour listener found with id " + id);
 		}
 
-		ajaxHandler.onRequest();
+		behaviourListener.onRequest();
 	}
 
 	/**
@@ -1283,7 +1240,8 @@ public abstract class Component implements Serializable, IAjaxListener
 		// re-rendering is a requirement of AJAX.
 		if (this.markupStreamPosition < 0)
 		{
-			// Remember the position while rendering the component the first time
+			// Remember the position while rendering the component the first
+			// time
 			this.markupStreamPosition = markupStream.getCurrentIndex();
 		}
 		else
@@ -1342,12 +1300,12 @@ public abstract class Component implements Serializable, IAjaxListener
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 
-		if (ajaxHandlers != null)
+		if (behaviours != null)
 		{
-			for (Iterator i = ajaxHandlers.iterator(); i.hasNext();)
+			for (Iterator i = behaviours.iterator(); i.hasNext();)
 			{
-				AjaxHandler handler = (AjaxHandler)i.next();
-				handler.internalOnComponentRendered();
+				IBehaviour behaviour = (IBehaviour)i.next();
+				behaviour.rendered(this);
 			}
 		}
 	}
@@ -1401,15 +1359,17 @@ public abstract class Component implements Serializable, IAjaxListener
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-//TODO we can't record any state change as Link.onComponentTag potentially sets this property
-// we probably don't need to support this, but I'll keep this commented so that we can
-// think about it
-//			// Tell the page that this component's enabled was changed
-//			final Page page = findPage();
-//			if (page != null)
-//			{
-//				addStateChange(new EnabledChange(this));
-//			}
+			// TODO we can't record any state change as Link.onComponentTag
+			// potentially sets this property
+			// we probably don't need to support this, but I'll keep this
+			// commented so that we can
+			// think about it
+			// // Tell the page that this component's enabled was changed
+			// final Page page = findPage();
+			// if (page != null)
+			// {
+			// addStateChange(new EnabledChange(this));
+			// }
 
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
@@ -1431,13 +1391,15 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Sets the metadata for this component using the given key. 
-	 * If the metadata object is not of the correct type for the 
-	 * metadata key, an InvalidMetaDataTypeException will be thrown.
-	 * For information on creating MetaDataKeys, see {@link MetaDataKey}.
+	 * Sets the metadata for this component using the given key. If the metadata
+	 * object is not of the correct type for the metadata key, an
+	 * InvalidMetaDataTypeException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
-	 * @param key The singleton key for the metadata
-	 * @param object The metadata object
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
 	 * @throws InvalidMetaDataTypeException
 	 * @see MetaDataKey
 	 */
@@ -1663,32 +1625,30 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
-	 * Gets the url for the ajax handlers.
+	 * Gets the url for the provided behaviour listener.
 	 * 
-	 * @param ajaxHandler
+	 * @param behaviourListener
+	 *            the behaviour listener to get the url for
 	 * @return The URL
 	 * @see Page#urlFor(Component, Class)
 	 */
-	public final String urlFor(final AjaxHandler ajaxHandler)
+	public final String urlFor(final IBehaviourListener behaviourListener)
 	{
-		if (ajaxHandler == null)
+		if (behaviourListener == null)
 		{
-			throw new NullPointerException("argument ajaxHandler must be not null");
+			throw new NullPointerException("argument behaviourListener must be not null");
 		}
 
-		if (ajaxHandlers == null)
-		{
-			throw new IllegalStateException("no ajax handlers are registered with " + this);
-		}
+		List behaviourListeners = getBehaviours(IBehaviourListener.class);
 
-		int index = ajaxHandlers.indexOf(ajaxHandler);
+		int index = behaviourListeners.indexOf(behaviourListener);
 		if (index == -1)
 		{
-			throw new IllegalArgumentException("ajaxHandler " + ajaxHandler
+			throw new IllegalArgumentException("behaviourListener " + behaviourListener
 					+ " was not registered with this component");
 		}
 
-		return urlFor(IAjaxListener.class) + "&id=" + index;
+		return urlFor(IBehaviourListener.class) + "&id=" + index;
 	}
 
 	/**
@@ -1835,21 +1795,6 @@ public abstract class Component implements Serializable, IAjaxListener
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
-	}
-
-	/**
-	 * Gets an array with registered event request handlers or null.
-	 * 
-	 * @return an array with registered event request handlers, null if none are
-	 *         registered
-	 */
-	protected final AjaxHandler[] getAjaxHandlers()
-	{
-		if (ajaxHandlers != null)
-		{
-			return (AjaxHandler[])ajaxHandlers.toArray(new AjaxHandler[ajaxHandlers.size()]);
-		}
-		return null;
 	}
 
 	/**
@@ -2087,6 +2032,54 @@ public abstract class Component implements Serializable, IAjaxListener
 	}
 
 	/**
+	 * Gets the currently coupled {@link IBehaviour}s as a unmodifiable list.
+	 * Returns an empty list rather than null if there are no behaviours coupled
+	 * to this component.
+	 * 
+	 * @return the currently coupled behaviours as a unmodifiable list
+	 */
+	protected final List/* <IBehaviour> */getBehaviours()
+	{
+		if (behaviours == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		return Collections.unmodifiableList(behaviours);
+	}
+
+	/**
+	 * Gets the subset of the currently coupled {@link IBehaviour}s that are of
+	 * the provided type as a unmodifiable list or null if there are no
+	 * behaviours attached. Returns an empty list rather than null if there are
+	 * no behaviours coupled to this component.
+	 * 
+	 * @param type
+	 *            the type
+	 * 
+	 * @return the subset of the currently coupled behaviours that are of the
+	 *         provided type as a unmodifiable list or null
+	 */
+	protected final List/* <IBehaviour> */getBehaviours(Class type)
+	{
+		if (behaviours == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		List subset = new ArrayList(behaviours.size()); // avoid growing
+		for (Iterator i = behaviours.iterator(); i.hasNext();)
+		{
+			Object behaviour = i.next();
+			if (type.isAssignableFrom(behaviour.getClass()))
+			{
+				subset.add(behaviour);
+			}
+		}
+		return Collections.unmodifiableList(subset);
+	}
+
+	/**
 	 * Writes a simple tag out to the response stream. Any components that might
 	 * be referenced by the tag are ignored. Also undertakes any tag attribute
 	 * modifications if they have been added to the component.
@@ -2099,39 +2092,43 @@ public abstract class Component implements Serializable, IAjaxListener
 		final ApplicationSettings settings = getApplication().getSettings();
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
-			// Apply attribute modifiers
-			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE)
-					&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) == false))
+			// Apply behaviour modifiers
+			if (behaviours != null && !behaviours.isEmpty())
 			{
 				tag = tag.mutable();
 
-				if (attributeModifiers instanceof AttributeModifier)
+				for (Iterator i = behaviours.iterator(); i.hasNext();)
 				{
-					((AttributeModifier)attributeModifiers).replaceAttibuteValue(this, tag);
-				}
-				else if (attributeModifiers instanceof Object[])
-				{
-					Object[] array = (Object[])attributeModifiers;
-					for (int i = 0; i < array.length; i++)
+					AbstractBehaviour behaviour = (AbstractBehaviour)i.next();
+					// components may reject some behaviour components
+					if (isBehaviourAccepted(behaviour))
 					{
-						((AttributeModifier)array[i]).replaceAttibuteValue(this, tag);
+						behaviour.onComponentTag(this, tag);
 					}
 				}
 			}
 
-			if (ajaxHandlers != null)
-			{
-				for (Iterator i = ajaxHandlers.iterator(); i.hasNext();)
-				{
-					AjaxHandler handler = (AjaxHandler)i.next();
-					handler.onComponentTag(tag);
-				}
-			}
-
 			// Write the tag
-			tag.writeOutput(getResponse(), settings.getStripWicketTags(), 
-			        this.findMarkupStream().getWicketNamespace());
+			tag.writeOutput(getResponse(), settings.getStripWicketTags(), this.findMarkupStream()
+					.getWicketNamespace());
 		}
+	}
+
+	/**
+	 * Components are allowed to reject behaviour modifiers.
+	 * 
+	 * @param behaviour
+	 * @return false, if the component should not apply this behaviour
+	 */
+	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
+	{
+
+		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
+		if (behaviour instanceof AttributeModifier
+				&& getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false)
+			return false;
+
+		return true;
 	}
 
 	/**
@@ -2247,16 +2244,12 @@ public abstract class Component implements Serializable, IAjaxListener
 		detachModel();
 
 		// Also detach models from any contained attribute modifiers
-		if (attributeModifiers instanceof AttributeModifier)
+		if (behaviours != null)
 		{
-			((AttributeModifier)attributeModifiers).detachModel();
-		}
-		else if (attributeModifiers instanceof Object[])
-		{
-			Object[] array = (Object[])attributeModifiers;
-			for (int i = 0; i < array.length; i++)
+			for (Iterator i = behaviours.iterator(); i.hasNext();)
 			{
-				((AttributeModifier)array[i]).detachModel();
+				AbstractBehaviour behaviour = (AbstractBehaviour)i.next();
+				behaviour.detachModel();
 			}
 		}
 	}

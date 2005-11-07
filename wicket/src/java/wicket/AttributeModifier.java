@@ -20,6 +20,7 @@ package wicket;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
@@ -64,11 +65,12 @@ import wicket.util.value.ValueMap;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * @author Martijn Dashorst
+ * @author Ralf Ebert
  */
-public class AttributeModifier implements Serializable
+public class AttributeModifier extends AbstractBehaviour implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
 
@@ -196,10 +198,10 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
-	 * Gets the value that should replace the current attribute value. This gives users
-	 * the ultimate means to customize what will be used as the attribute value. For instance,
-	 * you might decide to append the replacement value to the current instead of just
-	 * replacing it as is Wicket's default.
+	 * Gets the value that should replace the current attribute value. This
+	 * gives users the ultimate means to customize what will be used as the
+	 * attribute value. For instance, you might decide to append the replacement
+	 * value to the current instead of just replacing it as is Wicket's default.
 	 * 
 	 * @param currentValue
 	 *            The current attribute value. This value might be null!
@@ -214,23 +216,12 @@ public class AttributeModifier implements Serializable
 
 	/**
 	 * Gets the replacement model. Allows subclasses access to replace model.
+	 * 
 	 * @return the replace model of this attribute modifier
 	 */
 	protected final IModel getReplaceModel()
 	{
 		return replaceModel;
-	}
-
-	/**
-	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
-	 * be called from the outside
-	 */
-	final void detachModel()
-	{
-		if (replaceModel != null)
-		{
-			replaceModel.detach();
-		}
 	}
 
 	/**
@@ -284,4 +275,29 @@ public class AttributeModifier implements Serializable
 	{
 		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
+
+
+	/**
+	 * @see wicket.AbstractBehaviour#onComponentTag(wicket.Component,
+	 *      wicket.markup.ComponentTag)
+	 */
+	public final void onComponentTag(Component component, ComponentTag tag)
+	{
+		if (tag.getType() != XmlTag.CLOSE)
+			replaceAttibuteValue(component, tag);
+	}
+
+	/**
+	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
+	 * be called from the outside
+	 */
+	public final void detachModel()
+	{
+		if (replaceModel != null)
+		{
+			replaceModel.detach();
+		}
+	}
+
+
 }

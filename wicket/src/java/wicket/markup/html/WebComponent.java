@@ -17,22 +17,28 @@
  */
 package wicket.markup.html;
 
-import wicket.AjaxHandler;
+import java.util.Iterator;
+import java.util.List;
+
 import wicket.Component;
+import wicket.IBehaviour;
 import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see WebMarkupContainer or use Panel if the
- * component will have its own associated markup.
+ * you need to support nested components, see WebMarkupContainer or use Panel if
+ * the component will have its own associated markup.
  * 
  * @see wicket.markup.html.WebMarkupContainer
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
 public class WebComponent extends Component implements IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -50,22 +56,21 @@ public class WebComponent extends Component implements IHeaderContributor
 	}
 
 	/**
-     * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT CALL IT YOURSELF
-	 * Print to the web response what ever the component wants
-	 * to contribute to the head section. Does nothing by default.
-	 *
-	 * @param container The HtmlHeaderContainer
+	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT CALL IT YOURSELF Print to
+	 * the web response what ever the component wants to contribute to the head
+	 * section. Does nothing by default.
+	 * 
+	 * @param container
+	 *            The HtmlHeaderContainer
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		AjaxHandler[] handlers = getAjaxHandlers();
-		if (handlers != null)
+		List behaviours = getBehaviours();
+		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
-			for (int i = 0; i < handlers.length; i++)
-			{
-				handlers[i].renderHead(container);
-			}
+			IBehaviour behaviour = (IBehaviour)i.next();
+			behaviour.renderHead(container);
 		}
 	}
 
