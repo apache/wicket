@@ -47,7 +47,7 @@ public class Address
 	}
 
 	/**
-	 * @return
+	 * @return number
 	 */
 	public int getNumber()
 	{
