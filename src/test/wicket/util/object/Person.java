@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,22 +26,23 @@ import java.util.Map;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class Person
 {
 	private String name;
-	
+
 	private Address address;
-	
+
+	/** */
 	public Address address2;
-	
+
 	private Country country;
-	
+
 	private Map addressMap;
-	
+
 	private List addressList;
-	
+
 	private Address[] addressArray;
 
 	/**
@@ -77,56 +77,89 @@ public class Person
 		this.address = address;
 	}
 
+	/**
+	 * @return addresses
+	 */
 	public List getAddressList()
 	{
 		return this.addressList;
 	}
 
+	/**
+	 * @param addressList
+	 */
 	public void setAddressList(List addressList)
 	{
 		this.addressList = addressList;
 	}
-	
+
+	/**
+	 * @param index
+	 * @param address
+	 */
 	public void setAddressAt(int index, Address address)
 	{
-		if(addressList == null) addressList = new ArrayList();
-		while(addressList.size() < index)
+		if (addressList == null)
+			addressList = new ArrayList();
+		while (addressList.size() < index)
 		{
 			addressList.add(null);
 		}
 		addressList.add(address);
 	}
-	
+
+	/**
+	 * @param index
+	 * @return address
+	 */
 	public Address getAddressAt(int index)
 	{
 		return (Address)addressList.get(index);
 	}
 
+	/**
+	 * @return addresses
+	 */
 	public Map getAddressMap()
 	{
 		return this.addressMap;
 	}
 
+	/**
+	 * @param addressMap
+	 */
 	public void setAddressMap(Map addressMap)
 	{
 		this.addressMap = addressMap;
 	}
 
+	/**
+	 * @return country
+	 */
 	public Country getCountry()
 	{
 		return this.country;
 	}
 
+	/**
+	 * @param country
+	 */
 	public void setCountry(Country country)
 	{
 		this.country = country;
 	}
 
+	/**
+	 * @return addresses
+	 */
 	public Address[] getAddressArray()
 	{
 		return this.addressArray;
 	}
 
+	/**
+	 * @param addressArray
+	 */
 	public void setAddressArray(Address[] addressArray)
 	{
 		this.addressArray = addressArray;
