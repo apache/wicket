@@ -25,7 +25,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.IBehaviourListener;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;

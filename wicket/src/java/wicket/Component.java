@@ -37,7 +37,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IBehaviourListener;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -1159,7 +1158,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.IBehaviourListener#onRequest()
+	 * Component has to implement {@link IBehaviourListener} to be able to pass
+	 * through events to behaviours without ending up with many if/else blocks.
+	 * 
+	 * @see wicket.IBehaviourListener#onRequest()
 	 */
 	public void onRequest()
 	{
@@ -1639,9 +1641,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 			throw new NullPointerException("argument behaviourListener must be not null");
 		}
 
-		List behaviourListeners = getBehaviours(IBehaviourListener.class);
+		if (behaviours == null)
+		{
+			throw new IllegalArgumentException("behaviourListener " + behaviourListener
+					+ " was not registered with this component");
+		}
 
-		int index = behaviourListeners.indexOf(behaviourListener);
+		int index = behaviours.indexOf(behaviourListener);
 		if (index == -1)
 		{
 			throw new IllegalArgumentException("behaviourListener " + behaviourListener
@@ -2099,7 +2105,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 				for (Iterator i = behaviours.iterator(); i.hasNext();)
 				{
-					AbstractBehaviour behaviour = (AbstractBehaviour)i.next();
+					IBehaviour behaviour = (IBehaviour)i.next();
 					// components may reject some behaviour components
 					if (isBehaviourAccepted(behaviour))
 					{
@@ -2248,7 +2254,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		{
 			for (Iterator i = behaviours.iterator(); i.hasNext();)
 			{
-				AbstractBehaviour behaviour = (AbstractBehaviour)i.next();
+				IBehaviour behaviour = (IBehaviour)i.next();
 				behaviour.detachModel();
 			}
 		}
