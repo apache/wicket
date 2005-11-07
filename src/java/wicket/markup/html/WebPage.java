@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.48 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,14 +22,17 @@ import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.ApplicationPages;
 import wicket.Component;
+import wicket.IBehaviourListener;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.ajax.IBehaviourListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
@@ -60,6 +63,9 @@ import wicket.util.lang.Classes;
 public class WebPage extends Page implements IHeaderRenderer
 {
 	private static final long serialVersionUID = 1L;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(WebPage.class);
 
 	/** Components contribution to <body onload="..." */
 	private String bodyOnLoad;
@@ -166,7 +172,7 @@ public class WebPage extends Page implements IHeaderRenderer
 					}
 					catch (UnsupportedEncodingException ex)
 					{
-						// log?
+						log.error("WebPage.urlFor: unable to escape value: " + ex.getMessage());
 					}
 					buffer.append('&');
 					buffer.append(key);

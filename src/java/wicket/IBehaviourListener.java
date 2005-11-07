@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,22 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.ajax;
+package wicket;
 
-import wicket.IRequestListener;
 
 /**
  * Listens for requests to behaviours. When {@link wicket.IBehaviour}s are
  * 'enriched' with this interface, they can receive requests themselves. You can
- * use this to implement AJAX behaviour, though you'll probably want to extend
- * from {@link wicket.AjaxHandler} directly instead.
+ * use this for example to implement AJAX behaviour, though you'll probably want
+ * to extend from {@link wicket.AjaxHandler} directly instead in that case.
  * 
  * @author Eelco Hillenius
  */
 public interface IBehaviourListener extends IRequestListener
 {
 	/**
-	 * Called when a behavioural request is received.
+	 * Called when a request to a behaviour is received.
 	 */
 	void onRequest();
 }

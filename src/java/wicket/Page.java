@@ -31,7 +31,6 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.ajax.IBehaviourListener;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;

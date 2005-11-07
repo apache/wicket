@@ -276,9 +276,8 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
 
-
 	/**
-	 * @see wicket.AbstractBehaviour#onComponentTag(wicket.Component,
+	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
 	public final void onComponentTag(Component component, ComponentTag tag)
