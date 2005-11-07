@@ -43,7 +43,13 @@ public class Guess extends HangmanPage
 		add(new Label("guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("word", new PropertyModel(getGame(), "word.asString(true)")));
+		add(new Label("word", new Model()
+		{
+			public Object getObject(wicket.Component component)
+			{
+				return getGame().getWord().asString(true);
+			}
+		}));
 
 		// Show the game's letters
 		add(new ListView("letters", getGame().getLetters())
@@ -82,7 +88,9 @@ public class Guess extends HangmanPage
 						}
 					}
 				};
-				link.add(new AttributeModifier("id", true, new Model("letter_" + letter.asString())));
+				link
+						.add(new AttributeModifier("id", true, new Model("letter_"
+								+ letter.asString())));
 				link.add(new Image("image", letter.getSharedImageResource()));
 				listItem.add(link);
 			}
