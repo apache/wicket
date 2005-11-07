@@ -129,12 +129,18 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
 			IBehaviour behaviour = (IBehaviour)i.next();
-			behaviour.renderHead(container);
-
-			String stmt = ((IBodyOnloadContributor)behaviour).getBodyOnload();
-			if (stmt != null)
+			if (behaviour instanceof IHeaderContributor)
 			{
-				((WebPage)getPage()).appendToBodyOnLoad(stmt);
+				((IHeaderContributor)behaviour).renderHead(container);
+			}
+
+			if (behaviour instanceof IBodyOnloadContributor)
+			{
+				String stmt = ((IBodyOnloadContributor)behaviour).getBodyOnload();
+				if (stmt != null)
+				{
+					((WebPage)getPage()).appendToBodyOnLoad(stmt);
+				}
 			}
 		}
 	}

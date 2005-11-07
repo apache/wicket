@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.15 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -70,7 +70,10 @@ public class WebComponent extends Component implements IHeaderContributor
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
 			IBehaviour behaviour = (IBehaviour)i.next();
-			behaviour.renderHead(container);
+			if (behaviour instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)behaviour).renderHead(container);
+			}
 		}
 	}
 

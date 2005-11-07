@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +18,6 @@
 package wicket;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.HtmlHeaderContainer;
 
 /**
  * Adapter implementation of {@link wicket.IBehaviour}. This class just
@@ -57,21 +55,6 @@ public abstract class AbstractBehaviour implements IBehaviour
 	 * @see wicket.IBehaviour#detachModel()
 	 */
 	public void detachModel()
-	{
-	}
-
-	/**
-	 * @see wicket.markup.html.ajax.IBodyOnloadContributor#getBodyOnload()
-	 */
-	public String getBodyOnload()
-	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
-	 */
-	public void renderHead(HtmlHeaderContainer container)
 	{
 	}
 }
