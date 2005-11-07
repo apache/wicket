@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,16 +19,17 @@ package wicket.markup.html.ajax;
 import wicket.IRequestListener;
 
 /**
- * THIS INTERFACE IS FOR INTERNAL USE ONLY. DO NOT USE IT.
- *
- * Listens for Ajax requests.
- *
+ * Listens for requests to behaviours. When {@link wicket.IBehaviour}s are
+ * 'enriched' with this interface, they can receive requests themselves. You can
+ * use this to implement AJAX behaviour, though you'll probably want to extend
+ * from {@link wicket.AjaxHandler} directly instead.
+ * 
  * @author Eelco Hillenius
  */
-public interface IAjaxListener extends IRequestListener
+public interface IBehaviourListener extends IRequestListener
 {
 	/**
-	 * Called when an Ajax request is received.
+	 * Called when a behavioural request is received.
 	 */
 	void onRequest();
 }
