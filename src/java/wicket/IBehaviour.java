@@ -19,8 +19,6 @@ package wicket;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.ajax.IBodyOnloadContributor;
 
 /**
  * Behaviours are kind of plug-ins for Components. They allow to be added to a
@@ -34,7 +32,7 @@ import wicket.markup.html.ajax.IBodyOnloadContributor;
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public interface IBehaviour extends Serializable, IHeaderContributor, IBodyOnloadContributor
+public interface IBehaviour extends Serializable
 {
 	/**
 	 * Bind this handler to the given component.

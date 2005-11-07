@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,8 +23,10 @@ import java.util.Set;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
+import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.IBehaviourListener;
+import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
@@ -35,7 +38,12 @@ import wicket.util.resource.IResourceStream;
  * @author Eelco Hillenius
  * @author Ralf Ebert
  */
-public abstract class AjaxHandler implements IBehaviour, IBehaviourListener
+public abstract class AjaxHandler
+		implements
+			IBehaviour,
+			IBehaviourListener,
+			IHeaderContributor,
+			IBodyOnloadContributor
 {
 	/** the component that this handler is bound to. */
 	private Component component;
