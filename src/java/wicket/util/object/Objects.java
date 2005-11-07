@@ -353,7 +353,7 @@ public class Objects
 	/**
 	 * @param clz
 	 * @param exp
-	 * @return
+	 * @return introspected field
 	 */
 	private static Field findField(Class clz, String exp)
 	{
