@@ -22,6 +22,7 @@
 package wicket.util.object;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -228,6 +229,7 @@ public class Objects
 		if (getAndSetter == null)
 		{
 			Method method = null;
+			Field field = null;
 			if(exp.startsWith("["))
 			{
 				// if expression begins with [ skip method finding and use it as a key/index lookup on a map.
@@ -241,8 +243,13 @@ public class Objects
 			else 
 			{
 				method = findGetter(clz, exp);
+				if(method == null)
+				{
+					// find field.
+					field = findField(clz,exp);
+				}
 			}
-			if (method == null)
+			if (method == null && field == null)
 			{
 				if (List.class.isAssignableFrom(clz))
 				{
@@ -267,22 +274,7 @@ public class Objects
 				}
 				else if (Map.class.isAssignableFrom(clz))
 				{
-					if(exp.endsWith("()"))
-					{
-						method = findMethod(clz, exp );
-						if(method != null)
-						{
-							getAndSetter = new MethodGetAndSet(method);
-						}
-						else
-						{
-							throw new WicketRuntimeException("Method " + exp + " not found on class " + clz);
-						}
-					}
-					else
-					{
-						getAndSetter = new MapGetSet(exp);
-					}
+					getAndSetter = new MapGetSet(exp);
 				}
 				else if (clz.isArray())
 				{
@@ -344,6 +336,10 @@ public class Objects
 					}
 				}
 			}
+			else if(field != null)
+			{
+				getAndSetter = new FieldGetAndSetter(field);
+			}
 			else
 			{
 				getAndSetter = new MethodGetAndSet(method);
@@ -353,6 +349,25 @@ public class Objects
 		return getAndSetter;
 	}
 
+
+	/**
+	 * @param clz
+	 * @param exp
+	 * @return
+	 */
+	private static Field findField(Class clz, String exp)
+	{
+		Field field = null;
+		try
+		{
+			field = clz.getField(exp);
+		}
+		catch (Exception ex)
+		{
+			// TODO log
+		}
+		return field;
+	}
 
 	/**
 	 * @param clz
@@ -882,6 +897,76 @@ public class Objects
 				// TODO LOG
 			}
 			return value;
+		}
+
+	}
+	
+	/**
+	 * @author jcompagner
+	 */
+	private static class FieldGetAndSetter implements IGetAndSet
+	{
+
+		private Field field;
+		
+		/**
+		 * Construct.
+		 * @param field 
+		 */
+		public FieldGetAndSetter(Field field)
+		{
+			super();
+			this.field = field;
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 */
+		public Object getValue(Object object)
+		{
+			try
+			{
+				return field.get(object);
+			}
+			catch (Exception ex)
+			{
+				throw new WicketRuntimeException("Error getting field value of field " + field + " from object " + object ,ex);
+			}
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 */
+		public Object newValue(Object object)
+		{
+			Class clz = field.getType();
+			Object value = null;
+			try
+			{
+				value = clz.newInstance();
+				field.set(object, value);
+			}
+			catch (Exception ex)
+			{
+				// TODO LOG
+			}
+			return value;
+		}
+
+		/**
+		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object, java.lang.Object, wicket.util.convert.IConverter)
+		 */
+		public void setValue(Object object, Object value, IConverter converter)
+		{
+			value = converter.convert(value, field.getType());
+			try
+			{
+				field.set(object, value);
+			}
+			catch (Exception ex)
+			{
+				throw new WicketRuntimeException("Error setting field value of field " + field + " on object " + object + ", value " + value,ex);
+			}
 		}
 
 	}
