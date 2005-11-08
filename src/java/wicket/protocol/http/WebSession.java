@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.21 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -60,7 +60,7 @@ public class WebSession extends Session
 
 	/**
 	 * Constructor
-	 *    
+	 * 
 	 * @param application
 	 *            The application
 	 */
@@ -169,11 +169,11 @@ public class WebSession extends Session
 	{
 		if (requestCycleFactory == null)
 		{
-			this.requestCycleFactory = 
-				((WebApplication)getApplication()).getDefaultRequestCycleFactory();	
+			this.requestCycleFactory = ((WebApplication)getApplication())
+					.getDefaultRequestCycleFactory();
 		}
-		
-		return this.getRequestCycleFactory();
+
+		return this.requestCycleFactory;
 	}
 
 	/**
@@ -208,8 +208,8 @@ public class WebSession extends Session
 				throw new RuntimeException("Internal error cloning object", e);
 			}
 			long t2 = System.currentTimeMillis();
-			log.debug("attribute " + name + " serialized in " + (t2 - t1)
-					+ " miliseconds, size: " + Bytes.bytes(serialized.length));
+			log.debug("attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
+					+ Bytes.bytes(serialized.length));
 		}
 
 		httpSession.setAttribute(sessionAttributePrefix + "-" + name, object);
