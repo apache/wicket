@@ -28,11 +28,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.IRequestCycleFactory;
-import wicket.Request;
-import wicket.RequestCycle;
-import wicket.Response;
 import wicket.Session;
 import wicket.util.lang.Bytes;
 
@@ -64,11 +60,11 @@ public class WebSession extends Session
 
 	/**
 	 * Constructor
-	 * 
+	 *    
 	 * @param application
 	 *            The application
 	 */
-	protected WebSession(final Application application)
+	protected WebSession(final WebApplication application)
 	{
 		super(application);
 	}
@@ -173,20 +169,11 @@ public class WebSession extends Session
 	{
 		if (requestCycleFactory == null)
 		{
-			this.requestCycleFactory = new IRequestCycleFactory()
-			{
-				private static final long serialVersionUID = 1L;
-
-				public RequestCycle newRequestCycle(Session session, Request request,
-						Response response)
-				{
-					// Respond to request
-					return new WebRequestCycle((WebSession)session, (WebRequest)request,
-							(WebResponse)response);
-				}
-			};
+			this.requestCycleFactory = 
+				((WebApplication)getApplication()).getDefaultRequestCycleFactory();	
 		}
-		return requestCycleFactory;
+		
+		return this.getRequestCycleFactory();
 	}
 
 	/**

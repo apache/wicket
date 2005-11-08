@@ -30,7 +30,11 @@ import javax.servlet.http.HttpSession;
 import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.AutoLinkResolver;
+import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
+import wicket.Request;
+import wicket.RequestCycle;
+import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
@@ -362,5 +366,31 @@ public abstract class WebApplication extends Application
 				return new WebApplicationPath(getWicketServlet().getServletContext());
 			}
 		};
+	}
+
+	/**
+     * Create a request cylce factory which is used by default by WebSession.
+     * You may provide your own default factory by subclassing WebApplication
+     * or your may subclass WebSession to create a session specific request
+     * cycle factory.
+     * 
+     * @see WebSession#getRequestCycleFactory()
+     *
+	 * @return Request cycle factory 
+	 */
+	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		return new IRequestCycleFactory()
+			{
+				private static final long serialVersionUID = 1L;
+	
+				public RequestCycle newRequestCycle(Session session, Request request,
+						Response response)
+				{
+					// Respond to request
+					return new WebRequestCycle((WebSession)session, (WebRequest)request,
+							(WebResponse)response);
+				}
+			};
 	}
 }
