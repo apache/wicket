@@ -20,7 +20,7 @@ package wicket.examples.library;
 
 import java.util.List;
 
-import wicket.Application;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
 /**
@@ -36,7 +36,7 @@ public final class LibrarySession extends WebSession
      * Constructor
      * @param application The application 
      */
-    protected LibrarySession(Application application) 
+    protected LibrarySession(final WebApplication application) 
     { 
         super(application); 
     }

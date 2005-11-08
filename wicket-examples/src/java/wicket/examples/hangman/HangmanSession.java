@@ -17,7 +17,7 @@
  */
 package wicket.examples.hangman;
 
-import wicket.Application;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
 /**
@@ -35,7 +35,7 @@ public class HangmanSession extends WebSession
 	 * 
 	 * @param application
 	 */
-	protected HangmanSession(final Application application)
+	protected HangmanSession(final WebApplication application)
 	{
 		super(application);
 	}
