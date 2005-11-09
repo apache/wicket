@@ -1,26 +1,26 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
 import wicket.AttributeModifier;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
@@ -34,32 +34,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *             
- *             List tabs=new ArrayList();
- *             
- *             tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *            
- *             public Panel getPanel(String panelId)
- *             {
- *             return new TabPanel1(panelId);
- *             }
- *             
- *             });
- *            
- *             tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *            
- *             public Panel getPanel(String panelId)
- *             {
- *             return new TabPanel2(panelId);
- *             }
- *             
- *             });
- *            
- *             add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *         
- *             
- *             &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *         
+ *               
+ *               List tabs=new ArrayList();
+ *               
+ *               tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ *              
+ *               public Panel getPanel(String panelId)
+ *               {
+ *               return new TabPanel1(panelId);
+ *               }
+ *               
+ *               });
+ *              
+ *               tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ *              
+ *               public Panel getPanel(String panelId)
+ *               {
+ *               return new TabPanel2(panelId);
+ *               }
+ *               
+ *               });
+ *              
+ *               add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *           
+ *               
+ *               &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *           
  * </pre>
  * 
  * </p>
@@ -173,7 +173,26 @@ public class TabbedPanel extends Panel
 
 			setModelObject(new Integer(index));
 
-			Panel panel = ((ITab)tabs.get(index)).getPanel(TAB_PANEL_ID);
+			ITab tab = (ITab)tabs.get(index);
+
+			Panel panel = tab.getPanel(TAB_PANEL_ID);
+
+			if (panel == null)
+			{
+				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel ["
+						+ getPath() + "] ITab index [" + index + "]");
+
+			}
+
+			if (!panel.getId().equals(TAB_PANEL_ID))
+			{
+				throw new WicketRuntimeException(
+						"ITab.getPanel() returned a panel with invalid id ["
+								+ panel.getId()
+								+ "]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel ["
+								+ getPath() + "] ITab index [" + index + "]");
+			}
+
 
 			if (get(TAB_PANEL_ID) == null)
 			{
