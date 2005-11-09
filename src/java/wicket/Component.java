@@ -1190,6 +1190,11 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void remove()
 	{
+		if (parent == null)
+		{
+			throw new IllegalStateException("cannot remove " + this + " from null parent!");
+		}
+
 		parent.remove(this);
 	}
 
@@ -1787,6 +1792,12 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	protected MarkupStream findMarkupStream()
 	{
+		if (parent == null)
+		{
+			throw new IllegalStateException("cannot find markupstream for " + this
+					+ " as there is no parent");
+		}
+
 		return parent.findMarkupStream();
 	}
 
