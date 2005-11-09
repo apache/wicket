@@ -34,7 +34,7 @@ public class ValidatorPropertiesTest extends TestCase
 	 */
 	public void test1()
 	{
-		WicketTester tester = new WicketTester();
+		WicketTester tester = new MyTesterApplication();
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		
@@ -50,6 +50,7 @@ public class ValidatorPropertiesTest extends TestCase
 		validator.error(page.getText4());
 		validator.error(page.getText5());
 		validator.error(page.getText6());
+//		validator.error(page.getText7());
 		
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
 		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());
@@ -57,5 +58,6 @@ public class ValidatorPropertiesTest extends TestCase
 		assertEquals("ok: Text4Label is missing", page.getText4().getFeedbackMessage().getMessage());
 		assertEquals("ok: text is missing", page.getText5().getFeedbackMessage().getMessage());
 		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage().getMessage());
+//		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage().getMessage());
 	}
 }

@@ -354,7 +354,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 						+ id + "\" id=\"" + idAttr + "\"/>");
 
 				// Add label for checkbox
-				String display = getLocalizer().getString(getId() + "." + label, this, label);
+				String display = getLocalizer().getString(label, this, label);
 				String escaped = Strings.escapeMarkup(display, false, true);
 
 				buffer.append("<label for=\"" + idAttr + "\">").append(escaped).append("</label>");

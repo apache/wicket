@@ -44,6 +44,7 @@ public class TestPage extends WebPage
 		add(form1);
 		form1.add(new MyTextField("text1", "input-1"));
 		form1.add(new MyTextField("text2", "input-2"));
+		form1.add(new MyTextField("text7", "input-3"));
 		
 		Form form2 = new TestForm("form2");
 		add(form2);
@@ -111,6 +112,15 @@ public class TestPage extends WebPage
 	public TextField getText6()
 	{
 		return (TextField) get("form2:panel2:text6");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText7()
+	{
+		return (TextField) get("form1:text7");
 	}
 	
 	/**
