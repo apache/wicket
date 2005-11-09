@@ -203,7 +203,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			if (selected == null)
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString(getId() + ".null", this, CHOOSE_ONE);
+				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
 				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option).append(
 						"</option>");
 			}
