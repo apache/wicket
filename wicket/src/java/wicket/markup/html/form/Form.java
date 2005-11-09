@@ -46,8 +46,8 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * Base class for forms. To implement a form, subclass this class, add
  * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
  * You can nest multiple buttons if you want to vary submit behaviour. However,
- * it is not necessary to use Wicket's button class, just putting e.g.
- * &lt;input type="submit" value="go"&gt; suffices.
+ * it is not necessary to use Wicket's button class, just putting e.g. &lt;input
+ * type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
  * <li> The submitting button is looked up. A submitting button is a button that
@@ -107,7 +107,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
@@ -276,7 +276,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see wicket.Component#setVersioned(boolean)
 	 */
-	public Component setVersioned(final boolean isVersioned)
+	public final Component setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
 
@@ -289,6 +289,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		});
 		return this;
+	}
+
+	/**
+	 * Method made final because we want to ensure users call setVersioned.
+	 * 
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return super.isVersioned();
 	}
 
 	/**
@@ -307,14 +317,15 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		
+
 		/**
 		 * TODO may be we should re-think how Borders are implemented, because
-		 * there are just too many exceptions in the code base because of borders.
-		 * This time it is to solve the problem tested in BoxBorderTestPage_3
-		 * where the Form is defined in the box border and the FormComponents
-		 * are in the "body". Thus, the formComponents are not childs of the 
-		 * form. They are rather childs of the border, as the Form itself.
+		 * there are just too many exceptions in the code base because of
+		 * borders. This time it is to solve the problem tested in
+		 * BoxBorderTestPage_3 where the Form is defined in the box border and
+		 * the FormComponents are in the "body". Thus, the formComponents are
+		 * not childs of the form. They are rather childs of the border, as the
+		 * Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -322,7 +333,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			Iterator iter = border.iterator();
 			while (iter.hasNext())
 			{
-				Component child = (Component) iter.next();
+				Component child = (Component)iter.next();
 				if (child instanceof FormComponent)
 				{
 					visitor.formComponent((FormComponent)child);
@@ -656,16 +667,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			// parsed out correctly
 			try
 			{
-				final WebRequest multipartWebRequest = ((WebRequest)getRequest()).newMultipartWebRequest(this.maxSize);
+				final WebRequest multipartWebRequest = ((WebRequest)getRequest())
+						.newMultipartWebRequest(this.maxSize);
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
 			catch (WicketRuntimeException wre)
 			{
-				if ( wre.getCause() == null || !(wre.getCause() instanceof FileUploadException) )
+				if (wre.getCause() == null || !(wre.getCause() instanceof FileUploadException))
 				{
 					throw wre;
 				}
-				
+
 				FileUploadException e = (FileUploadException)wre.getCause();
 				// Create model with exception and maximum size values
 				final HashMap model = new HashMap();
