@@ -17,6 +17,9 @@
  */
 package wicket.version.undo;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.CompoundPropertyModel;
@@ -31,7 +34,10 @@ import wicket.util.lang.Objects;
 class ModelChange extends Change
 {
 	private static final long serialVersionUID = 1L;
-	
+
+	/** log. */
+	private static Log log = LogFactory.getLog(ModelChange.class);
+
 	/** subject. */
 	private final Component component;
 
@@ -44,6 +50,11 @@ class ModelChange extends Change
 	 */
 	ModelChange(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component must be not null");
+		}
+
 		// Save component
 		this.component = component;
 
@@ -92,6 +103,12 @@ class ModelChange extends Change
 				originalModel = model;
 			}
 		}
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("RECORD MODEL CHANGE: changed model of " + component.getPath() + "@"
+					+ component.hashCode());
+		}
 	}
 
 	/**
@@ -99,6 +116,12 @@ class ModelChange extends Change
 	 */
 	public void undo()
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("UNDO MODEL CHANGE: setting original model " + originalModel + " to "
+					+ component.getPath() + "@" + component.hashCode());
+		}
+
 		component.setModel(originalModel);
 	}
 	
@@ -107,6 +130,6 @@ class ModelChange extends Change
 	 */
 	public String toString()
 	{
-		return "ModelChange[component: " + component.getId() + ", model: " + originalModel + "]";
+		return "ModelChange[component: " + component.getPath() + "]";
 	}
 }

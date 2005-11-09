@@ -20,6 +20,9 @@ package wicket.version.undo;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.IPageVersionManager;
 import wicket.Page;
@@ -34,6 +37,9 @@ import wicket.Page;
 public class UndoPageVersionManager implements IPageVersionManager
 {
 	private static final long serialVersionUID = 1L;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(UndoPageVersionManager.class);
 	
 	/** The current list of changes */
 	private ChangeList changeList;
@@ -132,6 +138,12 @@ public class UndoPageVersionManager implements IPageVersionManager
 		// list is the set of changes to /get/ to the current version.
 		appliedChangeListForVersionNumber.put(new Integer(getCurrentVersionNumber() - 1),
 				changeList);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("version " + versionNumber + " for page " + page + " stored with changes: "
+					+ changeList);
+		}
 	}
 
 	/**
@@ -179,7 +191,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private boolean undo()
 	{
 		// Get the change list that was applied to the previous version
-		final Integer key = new Integer(getCurrentVersionNumber() - 1);
+		int currentVersionNumber = getCurrentVersionNumber();
+		final Integer key = new Integer(currentVersionNumber - 1);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
+		}
+
 		final ChangeList changeList = (ChangeList)appliedChangeListForVersionNumber.get(key);
 		if (changeList == null)
 		{
