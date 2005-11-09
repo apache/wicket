@@ -17,6 +17,9 @@
  */
 package wicket.version.undo;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 
@@ -28,6 +31,9 @@ import wicket.MarkupContainer;
 class Remove extends Change
 {
 	private static final long serialVersionUID = 1L;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(Remove.class);
 
 	/** subject. */
 	private final Component component;
@@ -41,8 +47,24 @@ class Remove extends Change
 	 */
 	Remove(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component must be not null");
+		}
+
 		this.component = component;
 		this.container = component.getParent();
+
+		if (this.container == null)
+		{
+			throw new IllegalArgumentException("component must have a parent");
+		}
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("RECORD REMOVE: removed " + component.getPath() + "@" + component.hashCode()
+					+ " from parent");
+		}
 	}
 	
 	/**
@@ -50,6 +72,12 @@ class Remove extends Change
 	 */
 	public void undo()
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("UNDO REMOVE: re-adding " + component.getPath() + "@" + component.hashCode()
+					+ " to parent");
+		}
+
 		container.internalAdd(component);
 	}
 	
@@ -58,7 +86,7 @@ class Remove extends Change
 	 */
 	public String toString()
 	{
-		return "Remove[component: " + component.getId() + ", parent: " + container.getId() + "]";
+		return "Remove[component: " + component.getPath() + "]";
 	}
 	
 }
