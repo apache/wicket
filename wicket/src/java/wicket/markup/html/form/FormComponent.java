@@ -143,6 +143,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		super(id);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
+		// the form decides whether form components are versioned or not
+		// see Form.setVersioned
 		setVersioned(false);
 	}
 
@@ -153,6 +155,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		super(id, model);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
+		// the form decides whether form components are versioned or not
+		// see Form.setVersioned
 		setVersioned(false);
 	}
 
