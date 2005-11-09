@@ -245,7 +245,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
 
-	/** TODO */
+	/** True when a component is enabled for model updates and is reachable. */
 	private static final short FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
@@ -265,6 +265,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -1050,7 +1053,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public boolean isVersioned()
 	{
 		// Is the component itself versioned?
-		if (!getFlag(FLAG_VERSIONED))
+		if (!getFlag(FLAG_VERSIONED) || (!getFlag(FLAG_IS_RENDERED_ONCE)))
 		{
 			return false;
 		}
@@ -1203,6 +1206,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void render()
 	{
+		setFlag(FLAG_IS_RENDERED_ONCE, true);
+
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
 		if (renderAllowed && isVisible())
