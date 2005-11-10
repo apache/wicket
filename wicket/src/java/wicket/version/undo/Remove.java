@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.util.lang.Classes;
 
 /**
  * A remove change operation.
@@ -43,7 +44,9 @@ class Remove extends Change
 
 	/**
 	 * Construct.
-	 * @param component subject component
+	 * 
+	 * @param component
+	 *            subject component
 	 */
 	Remove(final Component component)
 	{
@@ -62,11 +65,12 @@ class Remove extends Change
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("RECORD REMOVE: removed " + component.getPath() + "@" + component.hashCode()
-					+ " from parent");
+			log.debug("RECORD REMOVE: removed " + component.getPath() + " ("
+					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ ") from parent");
 		}
 	}
-	
+
 	/**
 	 * @see wicket.version.undo.Change#undo()
 	 */
@@ -74,13 +78,14 @@ class Remove extends Change
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("UNDO REMOVE: re-adding " + component.getPath() + "@" + component.hashCode()
-					+ " to parent");
+			log.debug("UNDO REMOVE: re-adding " + component.getPath() + " ("
+					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ ") to parent");
 		}
 
 		container.internalAdd(component);
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -88,5 +93,5 @@ class Remove extends Change
 	{
 		return "Remove[component: " + component.getPath() + "]";
 	}
-	
+
 }

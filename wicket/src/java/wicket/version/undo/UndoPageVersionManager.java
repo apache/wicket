@@ -40,7 +40,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 
 	/** log. */
 	private static Log log = LogFactory.getLog(UndoPageVersionManager.class);
-	
+
 	/** The current list of changes */
 	private ChangeList changeList;
 
@@ -75,7 +75,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		this.appliedChangeListForVersionNumber = new LinkedHashMap()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected boolean removeEldestEntry(final Map.Entry ignored)
 			{
 				// Tell collections class to remove oldest entry if there are
@@ -120,7 +120,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	{
 		changeList.componentStateChanging(change);
 	}
-	
+
 	/**
 	 * @see wicket.IPageVersionManager#componentRemoved(wicket.Component)
 	 */
@@ -141,8 +141,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("version " + versionNumber + " for page " + page + " stored with changes: "
-					+ changeList);
+			log.debug("version " + versionNumber + " for page " + page + " stored");
 		}
 	}
 

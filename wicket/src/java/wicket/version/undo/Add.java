@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date:
+ * $Id$ $Revision$ $Date:
  * 2005/10/02 10:06:30 $
  * 
  * ==============================================================================
@@ -22,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.util.lang.Classes;
 
 /**
  * An add change operation.
@@ -58,8 +58,9 @@ class Add extends Change
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("RECORD ADD: added " + component.getPath() + "@" + component.hashCode()
-					+ " to parent");
+			log.debug("RECORD ADD: added " + component.getPath() + " ("
+					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ ") to parent");
 		}
 
 		this.component = component;
@@ -72,8 +73,9 @@ class Add extends Change
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("UNDO ADD: removing " + component.getPath() + "@" + component.hashCode()
-					+ " from parent");
+			log.debug("UNDO ADD: removing " + component.getPath() + " ("
+					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ ") from parent");
 		}
 
 		component.remove();
