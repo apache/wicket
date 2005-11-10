@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 
 /**
@@ -31,7 +34,11 @@ import wicket.Component;
 class ChangeList implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
+	/** log. */
+	private static Log log = LogFactory.getLog(ChangeList.class);
+
+	/** the changes. */
 	private List changes = new ArrayList();
 
 	/**
@@ -53,11 +60,16 @@ class ChangeList implements Serializable
 	}
 
 	/**
-	 * The state of a component is about to change
+	 * The state of a component is about to change.
 	 * @param change the change object
 	 */
 	void componentStateChanging(Change change)
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("RECORD CHANGE: " + change);
+		}
+
 		changes.add(change);
 	}
 
