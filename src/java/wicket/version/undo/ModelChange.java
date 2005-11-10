@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.11 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,6 +24,7 @@ import wicket.Component;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
+import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 
 /**
@@ -46,7 +47,9 @@ class ModelChange extends Change
 
 	/**
 	 * Construct.
-	 * @param component subject of the change
+	 * 
+	 * @param component
+	 *            subject of the change
 	 */
 	ModelChange(final Component component)
 	{
@@ -106,8 +109,8 @@ class ModelChange extends Change
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("RECORD MODEL CHANGE: changed model of " + component.getPath() + "@"
-					+ component.hashCode());
+			log.debug("RECORD MODEL CHANGE: changed model of " + " ("
+					+ Classes.name(component.getClass()) + "@" + component.hashCode() + ")");
 		}
 	}
 
@@ -119,12 +122,12 @@ class ModelChange extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO MODEL CHANGE: setting original model " + originalModel + " to "
-					+ component.getPath() + "@" + component.hashCode());
+					+ component.getPath() + "@" + component.hashCode() + ")");
 		}
 
 		component.setModel(originalModel);
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
