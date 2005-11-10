@@ -65,6 +65,9 @@ public class ComponentTag extends MarkupElement
 	/** Additional attributes map. Attributes contributed by <wicket:param> */
 	private AttributeMap additionalAttributes;
 
+	/** True, if attributes have been modified or added */
+	private boolean modified = false;
+	
 	/**
 	 * Construct.
 	 * 
@@ -565,4 +568,23 @@ public class ComponentTag extends MarkupElement
 	    return this.additionalAttributes;
 	}
 
+	/**
+	 * Manually mark the ComponentTag being modified. Flagging the tag being
+	 * modified does not happen automatically.
+	 * 
+	 * @param modified
+	 */
+	public final void setModified(final boolean modified)
+	{
+		this.modified = modified;
+	}
+
+	/**
+	 * 
+	 * @return True, if the component tag has been marked modified
+	 */
+	public final boolean isModified()
+	{
+		return this.modified;
+	}
 }

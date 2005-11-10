@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Juergen Donnerstag" due-to="Wickit Community">Support for wicket:message</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1352468" due-to=" Tobias Kalbitz">XML tags names must not be converted to lower case in TagNameParser</action>
       <action type="add" dev="Juergen Donnerstag">Allow to re-render single components.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1346317" due-to="Jason Essington">unclosed quote in wicket:id causes JVM crash</action>
