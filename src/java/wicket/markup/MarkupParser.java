@@ -35,6 +35,7 @@ import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.TagTypeHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
@@ -52,6 +53,7 @@ import wicket.util.value.ValueMap;
  * Wicket relevant tags and RawMarkup.
  *
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public class MarkupParser
 {
@@ -144,37 +146,33 @@ public class MarkupParser
 	private final IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
-        this.detectWicketComponents = new WicketTagIdentifier(xmlParser);
-        this.detectWicketComponents.setWicketNamespace(this.wicketNamespace);
-        
-        final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
-                new HtmlHandler(new TagTypeHandler(detectWicketComponents)));
-        wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
-        
-        final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
-        
-        final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
-        autolinkHandler.setAutomaticLinking(this.automaticLinking);
+        this.detectWicketComponents = new WicketTagIdentifier(this.wicketNamespace, xmlParser);
+        IMarkupFilter filter = this.detectWicketComponents;
+
+        filter = new TagTypeHandler(filter);
+        filter = new HtmlHandler(filter);
+        filter = new WicketParamTagHandler(this.stripWicketTag, filter);
+        filter = new WicketRemoveTagHandler(filter);
+        filter = new WicketLinkTagHandler(this.automaticLinking, filter); 
         
         // Provided the wicket component requesting the markup is known ...
         if (this.container != null)
         {
-	        final BodyOnLoadHandler bodyHandler = new BodyOnLoadHandler(autolinkHandler);
+        	if (WicketMessageTagHandler.enable)
+        	{
+        		filter = new WicketMessageTagHandler(this.container, filter);
+        	}
+        	
+	        filter = new BodyOnLoadHandler(filter);
 	
 	        // Pages require additional handlers
-	        if ((this.container != null) && (container instanceof Page))
+	        if (container instanceof Page)
 	        {
-	            final HtmlHeaderSectionHandler headerHandler = new HtmlHeaderSectionHandler(bodyHandler);
-	            headerHandler.setTagList(tagList);
-	            
-	            return headerHandler;
+	            filter = new HtmlHeaderSectionHandler(tagList, filter);
 	        }
-	        
-	        // Markup filter chain starts with auto link handler
-	        return bodyHandler;
         }
         
-        return autolinkHandler;
+        return filter;
 	}
 
 	/**
@@ -296,7 +294,7 @@ public class MarkupParser
 				}
 	
 	            // Add tag to list?
-	            if (add || (autoAddList.size() > 0))
+	            if (add || (autoAddList.size() > 0) || tag.isModified())
 	            {
 	                final CharSequence text =
 	                    	xmlParser.getInputFromPositionMarker(tag.getPos());
@@ -344,6 +342,11 @@ public class MarkupParser
 	                	}
 	                }
 	                
+	                xmlParser.setPositionMarker();
+	            }
+	            else if (tag.isModified())
+	            {
+                    list.add(new RawMarkup(tag.toString()));
 	                xmlParser.setPositionMarker();
 	            }
 	        }

@@ -52,12 +52,14 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
+	 * @param tagList
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public HtmlHeaderSectionHandler(final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final List tagList, final IMarkupFilter parent)
 	{
 		super(parent);
+		setTagList(tagList);
 	}
 
 	/**

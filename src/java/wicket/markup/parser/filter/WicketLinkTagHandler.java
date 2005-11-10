@@ -56,12 +56,15 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
+	 * @param enable
+	 *            if true, autolinks are enabled
 	 * @param parent
 	 *            The next element in the chain.
 	 */
-	public WicketLinkTagHandler(final IMarkupFilter parent)
+	public WicketLinkTagHandler(final boolean enable, final IMarkupFilter parent)
 	{
 		super(parent);
+		setAutomaticLinking(enable);
 	}
 
 	/**

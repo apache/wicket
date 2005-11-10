@@ -65,10 +65,12 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
+	 * @param strip
+	 *            True, if Wicket param tags shall be removed
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public WicketParamTagHandler(final IMarkupFilter parent)
+	public WicketParamTagHandler(final boolean strip, final IMarkupFilter parent)
 	{
 		super(parent);
 
@@ -79,6 +81,8 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 			parser = parser.getParent();
 		}
 		this.xmlParser = (IXmlPullParser)parser;
+		
+		setStripWicketTag(strip);
 	}
 
 	/**

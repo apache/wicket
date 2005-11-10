@@ -53,23 +53,26 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
+	 * @param namespace
+	 *            component namespace
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public WicketTagIdentifier(final IMarkupFilter parent)
+	public WicketTagIdentifier(final String namespace, final IMarkupFilter parent)
 	{
 		super(parent);
+		setWicketNamespace(namespace);
 	}
 
 	/**
 	 * Name of the desired componentId tag attribute.
 	 * 
-	 * @param name
-	 *            component name
+	 * @param namespace
+	 *            component namespace
 	 */
-	public void setWicketNamespace(final String name)
+	public void setWicketNamespace(final String namespace)
 	{
-		this.wicketNamespace = name;
+		this.wicketNamespace = namespace;
 
 		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{

@@ -37,6 +37,7 @@ import wicket.markup.MarkupParser;
 import wicket.markup.html.BodyOnLoadResolver;
 import wicket.markup.html.HtmlHeaderResolver;
 import wicket.markup.html.WicketLinkResolver;
+import wicket.markup.html.WicketMessageResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
@@ -213,6 +214,7 @@ public abstract class Application
 		componentResolvers.add(new HtmlHeaderResolver());
 		componentResolvers.add(new BodyOnLoadResolver());
 		componentResolvers.add(new WicketLinkResolver());
+		componentResolvers.add(new WicketMessageResolver());
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
