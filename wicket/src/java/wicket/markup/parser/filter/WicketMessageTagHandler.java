@@ -30,7 +30,9 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
 /**
- * This is a markup inline filter. It identifies wicket:i18n attributes
+ * THIS IS EXPERIMENTAL ONLY AND DISABLED BY DEFAULT
+ * <p>
+ * This is a markup inline filter. It identifies wicket:message attributes
  * and replaces the attributes referenced. E.g. wicket:message="value=key"
  * would replace or add the attribute "value" with the message associated
  * with "key". The 
@@ -46,7 +48,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private final static String WICKET_MESSAGE_ATTR_NAME = "wicket:message";
 
 	/** globally enable wicket:message; If accepted by user, we should use an apps setting */
-	public static boolean enable = true;
+	public static boolean enable = false;
 	
 	/** The MarkupContainer requesting the information */
 	private final MarkupContainer container;
