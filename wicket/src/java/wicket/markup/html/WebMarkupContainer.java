@@ -125,6 +125,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		}
 
 		// get head and body contributions in one loop
+		// NOTE: THIS CODE MUST BE IN SYNC WITH SAME PIECE OF CODE in WEBCOMPONENT
 		List behaviours = getBehaviours();
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{

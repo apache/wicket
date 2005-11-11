@@ -22,6 +22,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.IBehaviour;
+import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.model.IModel;
 
 /**
@@ -66,6 +67,8 @@ public class WebComponent extends Component implements IHeaderContributor
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
+		// get head and body contributions in one loop
+		// NOTE: THIS CODE MUST BE IN SYNC WITH SAME PIECE OF CODE in WEBMARKUPCONTAINER
 		List behaviours = getBehaviours();
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
@@ -73,6 +76,15 @@ public class WebComponent extends Component implements IHeaderContributor
 			if (behaviour instanceof IHeaderContributor)
 			{
 				((IHeaderContributor)behaviour).renderHead(container);
+			}
+
+			if (behaviour instanceof IBodyOnloadContributor)
+			{
+				String stmt = ((IBodyOnloadContributor)behaviour).getBodyOnload();
+				if (stmt != null)
+				{
+					((WebPage)getPage()).appendToBodyOnLoad(stmt);
+				}
 			}
 		}
 	}
