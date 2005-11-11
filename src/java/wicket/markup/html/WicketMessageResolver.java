@@ -26,7 +26,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
-import wicket.markup.parser.filter.WicketMessageTagHandler;
 
 /**
  * This is a tag resolver which handles &lt;wicket:messae&gt; tags. The looks
@@ -59,12 +58,6 @@ public class WicketMessageResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// A global switch to enable / disable wicket:message
-		if (WicketMessageTagHandler.enable == false)
-		{
-			return false;
-		}
-		
 		// It must be <body onload>
 		if (tag instanceof WicketTag)
 		{
