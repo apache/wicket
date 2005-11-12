@@ -292,27 +292,41 @@ abstract class AbstractChoice extends FormComponent
 
 		for (int index=0;index<choices.size();index++)
 		{
-			// Get next choice (Can be null is up to the renderer to support this)
 			final Object choice = choices.get(index);
-			final String displayValue = renderer.getDisplayValue(choice);
-			buffer.append("\n<option ");
-			if (isSelected(choice, index))
-			{
-				buffer.append("selected=\"selected\" ");
-			}
-			buffer.append("value=\"");
-			buffer.append(renderer.getIdValue(choice, index));
-			buffer.append("\">");
-			String display = getLocalizer().getString(displayValue, this, displayValue);
-			String escaped = Strings.escapeMarkup(display, false, true);
-			buffer.append(escaped);
-			buffer.append("</option>");
+			appendOptionHtml(buffer, choice, index);
 		}
 
 		buffer.append("\n");
 		replaceComponentTagBody(markupStream, openTag, buffer.toString());
 	}
 
+	/**
+	 * Generats and appends html for a single choice into the provided buffer
+	 * 
+	 * @param buffer
+	 *            string buffer that will have the generated html appended
+	 * @param choice
+	 *            choice object
+	 * @param index
+	 * 
+	 */
+	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index)
+	{
+		final String displayValue = renderer.getDisplayValue(choice);
+		buffer.append("\n<option ");
+		if (isSelected(choice, index))
+		{
+			buffer.append("selected=\"selected\"");
+		}
+		buffer.append("value=\"");
+		buffer.append(renderer.getIdValue(choice, index));
+		buffer.append("\">");
+		String display = getLocalizer().getString(getId() + "." + displayValue, this, displayValue);
+		String escaped = Strings.escapeMarkup(display, false, true);
+		buffer.append(escaped);
+		buffer.append("</option>");
+	}
+	
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
