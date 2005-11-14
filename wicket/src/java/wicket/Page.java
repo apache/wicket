@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
@@ -855,7 +856,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			{
 				renderedComponents = new HashSet();
 			}
-			renderedComponents.add(component);
+			if (renderedComponents.add(component) == false)
+			{
+				throw new MarkupException(
+						"The markup file must not contain the same wicket:id at the same level: " 
+						+ component.getId());
+			}
 			if (log.isDebugEnabled())
 			{
 				log.debug("Rendered " + component);

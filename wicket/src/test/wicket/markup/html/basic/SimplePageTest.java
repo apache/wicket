@@ -183,6 +183,26 @@ public class SimplePageTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_7() throws Exception
 	{
-		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
+//		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_8() throws Exception
+	{
+		boolean hit = false;
+		try
+		{
+			executeTest(SimplePage_8.class, "SimplePageExpectedResult_8.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
+			{
+				hit = true;
+			}
+		}
+		assertTrue("Did expect a MarkupException", hit);
 	}
 }
