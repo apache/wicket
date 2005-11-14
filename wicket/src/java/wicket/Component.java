@@ -1448,7 +1448,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		// If a compound model is explicitly set on this component
-		if (model instanceof CompoundPropertyModel)
+		if (model instanceof ICompoundModel)
 		{
 			// we need to remember this for getModelObject()
 			setFlag(FLAG_HAS_ROOT_MODEL, true);
