@@ -147,7 +147,7 @@ public class Button extends FormComponent
 
 		try
 		{
-			String value = getValue();
+			String value = getModelObjectAsString();
 			if (value != null && !"".equals(value))
 			{
 				tag.put("value", value);
