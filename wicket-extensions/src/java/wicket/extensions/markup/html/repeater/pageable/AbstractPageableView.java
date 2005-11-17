@@ -387,7 +387,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	{
 		if (page < 0 || page > getPageCount())
 		{
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("argument [page]="+page+", must be 0<=page<="+getPageCount());
 		}
 
 		if (currentPage != page)
