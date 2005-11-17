@@ -34,32 +34,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
+ *                
+ *                List tabs=new ArrayList();
+ *                
+ *                tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
  *               
- *               List tabs=new ArrayList();
+ *                public Panel getPanel(String panelId)
+ *                {
+ *                return new TabPanel1(panelId);
+ *                }
+ *                
+ *                });
  *               
- *               tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *              
- *               public Panel getPanel(String panelId)
- *               {
- *               return new TabPanel1(panelId);
- *               }
+ *                tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
  *               
- *               });
- *              
- *               tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *              
- *               public Panel getPanel(String panelId)
- *               {
- *               return new TabPanel2(panelId);
- *               }
+ *                public Panel getPanel(String panelId)
+ *                {
+ *                return new TabPanel2(panelId);
+ *                }
+ *                
+ *                });
  *               
- *               });
- *              
- *               add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *           
- *               
- *               &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *           
+ *                add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *            
+ *                
+ *                &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *            
  * </pre>
  * 
  * </p>
@@ -163,46 +163,41 @@ public class TabbedPanel extends Panel
 	 */
 	public final void setSelectedTab(int index)
 	{
-		if (getSelectedTab() != index)
+		if (index < 0 || index >= tabs.size())
 		{
+			throw new IndexOutOfBoundsException();
+		}
 
-			if (index < 0 || index >= tabs.size())
-			{
-				throw new IndexOutOfBoundsException();
-			}
+		setModelObject(new Integer(index));
 
-			setModelObject(new Integer(index));
+		ITab tab = (ITab)tabs.get(index);
 
-			ITab tab = (ITab)tabs.get(index);
+		Panel panel = tab.getPanel(TAB_PANEL_ID);
 
-			Panel panel = tab.getPanel(TAB_PANEL_ID);
+		if (panel == null)
+		{
+			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel ["
+					+ getPath() + "] ITab index [" + index + "]");
 
-			if (panel == null)
-			{
-				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel ["
-						+ getPath() + "] ITab index [" + index + "]");
+		}
 
-			}
-
-			if (!panel.getId().equals(TAB_PANEL_ID))
-			{
-				throw new WicketRuntimeException(
-						"ITab.getPanel() returned a panel with invalid id ["
-								+ panel.getId()
-								+ "]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel ["
-								+ getPath() + "] ITab index [" + index + "]");
-			}
+		if (!panel.getId().equals(TAB_PANEL_ID))
+		{
+			throw new WicketRuntimeException(
+					"ITab.getPanel() returned a panel with invalid id ["
+							+ panel.getId()
+							+ "]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel ["
+							+ getPath() + "] ITab index [" + index + "]");
+		}
 
 
-			if (get(TAB_PANEL_ID) == null)
-			{
-				add(panel);
-			}
-			else
-			{
-				replace(panel);
-			}
-
+		if (get(TAB_PANEL_ID) == null)
+		{
+			add(panel);
+		}
+		else
+		{
+			replace(panel);
 		}
 	}
 
