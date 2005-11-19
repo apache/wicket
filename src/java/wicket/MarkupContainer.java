@@ -832,7 +832,7 @@ public abstract class MarkupContainer extends Component
 					{
 						public Object component(Component component)
 						{
-							component.invalidateMarkupStreamPosition();
+							component.setRequiresFullRender(true);
 							return IVisitor.CONTINUE_TRAVERSAL;
 						}
 					});
