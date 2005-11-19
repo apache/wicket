@@ -47,6 +47,9 @@ import wicket.util.string.Strings;
  */
 public class WicketLinkTagHandler extends AbstractMarkupFilter
 {
+	/** The id of autolink components */
+	public static final String AUTOLINK_ID = "_autolink_";
+
 	/** Allow to have link regions within link regions */
 	private Stack autolinkStatus;
 
@@ -109,7 +112,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 			tag.enableAutolink(true);
 
 			// Just a dummy name. The ComponentTag will not be forwarded.
-			tag.setId("_autolink_");
+			tag.setId(AUTOLINK_ID);
 			return tag;
 		}
 
