@@ -26,6 +26,7 @@ import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
+import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
@@ -90,7 +91,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		if (tag.isAutolinkEnabled())
 		{
 			// Try to find the Page matching the href
-			final Component link = resolveAutomaticLink(container, tag.getId(), tag);
+			// Note: to not use tag.getId() because it will be modified while 
+			// resolving the link and hence the 2nd render will fail.
+			final Component link = resolveAutomaticLink(container, 
+					WicketLinkTagHandler.AUTOLINK_ID, tag);
 
 			// Add the link to the container
 			container.autoAdd(link);
