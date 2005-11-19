@@ -212,7 +212,31 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviourListener
 {
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
+
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
 	/** Reserved subclass-definable flag bit */
+	
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
@@ -223,6 +247,16 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+
+	/** If true, a full render is required and a component re-render is not possible. */
+	private static final short FLAG_NEEDS_FULL_RENDER = 0x2000;
+
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED 
+		| FLAG_ENABLED | FLAG_NEEDS_FULL_RENDER;
 
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
@@ -242,41 +276,11 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 	};
 
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** List of behaviours to be applied for this Component */
 	private List behaviours = null;
-
-	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
 
 	/** Component id. */
 	private String id;
@@ -1046,6 +1050,17 @@ public abstract class Component implements Serializable, IBehaviourListener
 		return getFlag(FLAG_ENABLED);
 	}
 
+	/**
+	 * If true, a markup stream is not assigned yet and hence the component can 
+	 * not be re-rendered yet. A full render cycle which assigns the markup stream 
+	 * is required first.
+	 * 
+	 * @return if true, requires full render cycle
+	 */
+	protected boolean isRequiresFullRender()
+	{
+		return getFlag(FLAG_NEEDS_FULL_RENDER);
+	}
 
 	/**
 	 * @return Returns the isVersioned.
@@ -1248,19 +1263,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		if (this.markupStreamPosition < 0)
-		{
-			// Remember the position while rendering the component the first
-			// time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
+		// If yet unknown, set the markup stream position with the current position
+		// of markupStream. Else set the markupStream.setCurrentPosition based
+		// on the position already known to the component.
+		validateMarkupStream(markupStream);
 
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
@@ -1387,6 +1393,56 @@ public abstract class Component implements Serializable, IBehaviourListener
 			setFlag(FLAG_ENABLED, enabled);
 		}
 		return this;
+	}
+
+	/**
+	 * If yet unknown, set the markup stream position with the current position
+	 * of markupStream. Else set the markupStream.setCurrentPosition based
+	 * the position already known to the component.
+	 * <p>
+	 * Note: Parameter markupStream.getCurrentPosition() will be update, if
+	 * re-render is allowed.
+	 * 
+	 * @param markupStream
+	 */
+	protected final void validateMarkupStream(final MarkupStream markupStream)
+	{
+		// Allow the component to be re-rendered without a page. Partial
+		// re-rendering is a requirement of AJAX.
+		if (getFlag(FLAG_NEEDS_FULL_RENDER) == true)
+		{
+			// Remember the position while rendering the component the first
+			// time
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+			setFlag(FLAG_NEEDS_FULL_RENDER, false);
+		}
+		else if (this.markupStreamPosition < 0)
+		{
+			throw new WicketRuntimeException(
+					"The markup stream of the component should be known by now, but isn't: " 
+					+ this.toString());
+		}
+		else
+		{
+			// Re-set the markups index to the beginning of the component tag
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+	}
+	
+	/**
+	 * If true, the component requires a full (page level) render cycle to assign
+	 * the markup to the component. Only if the markup has been assigned, the 
+	 * component can be re-rendered (AJAX)
+	 *  
+	 * @param fullRender
+	 */
+	protected void setRequiresFullRender(final boolean fullRender)
+	{
+		setFlag(FLAG_NEEDS_FULL_RENDER, fullRender);
+		if (fullRender == true)
+		{
+			this.markupStreamPosition = -1;
+		}
 	}
 
 	/**
@@ -1950,23 +2006,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	protected void internalOnModelChanging()
 	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * <p>
-	 * In case a markup stream has been reloaded or the locale has changed and
-	 * hence another markup assigned, the markup position pointer must be reset
-	 * to properly render the page.
-	 * <p>
-	 * Note: invalidating the markup position requires the whole page to be
-	 * re-rendered prior to be able to re-render specific components as required
-	 * by AJAX.
-	 */
-	public void invalidateMarkupStreamPosition()
-	{
-		this.markupStreamPosition = -1;
 	}
 
 	/**

@@ -52,9 +52,6 @@ import wicket.model.IModel;
 public class Panel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** The position within the markup stream, where the markup for the component begins */
-	private int markupStreamPosition = -1;
 
 	/**
      * @see wicket.Component#Component(String)
@@ -79,19 +76,7 @@ public class Panel extends WebMarkupContainer
     {
         // Render the tag that included this html compoment
         final MarkupStream markupStream = findMarkupStream();
-        
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		if (this.markupStreamPosition < 0)
-		{
-			// Remember the position while rendering the component the first time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
+		validateMarkupStream(markupStream);
 
         // True if our panel is referenced by <wicket:panel>
         final boolean atOpenTag = markupStream.atOpenTag();
@@ -139,18 +124,4 @@ public class Panel extends WebMarkupContainer
 			markupStream.next();
         }
     }
-
-	/**
-	 * In case a markup stream has been reloaded or the locale has changed and
-	 * hence another markup assigned, the markup position pointer must be
-	 * reset to properly render the page.<p>
-	 * Note: invalidating the markup position requires the whole page to
-	 * be re-rendered prior to be able to re-render specific components as
-	 * required by AJAX.
-	 */
-	public void invalidateMarkupStreamPosition()
-	{
-		super.invalidateMarkupStreamPosition();
-		this.markupStreamPosition = -1;
-	}
 }

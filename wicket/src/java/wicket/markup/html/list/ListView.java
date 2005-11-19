@@ -97,9 +97,6 @@ public abstract class ListView extends WebMarkupContainer
 	/** Max number (not index) of items to show */
 	private int viewSize = Integer.MAX_VALUE;
 
-	/** The position within the markup stream, where the markup for the component begins */
-	private int markupStreamPosition = -1;
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -514,19 +511,7 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();
-        
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		if (this.markupStreamPosition < 0)
-		{
-			// Remember the position while rendering the component the first time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
+		validateMarkupStream(markupStream);
 
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
@@ -583,19 +568,5 @@ public abstract class ListView extends WebMarkupContainer
 	protected void renderItem(final ListItem item)
 	{
 		item.render();
-	}
-
-	/**
-	 * In case a markup stream has been reloaded or the locale has changed and
-	 * hence another markup assigned, the markup position pointer must be
-	 * reset to properly render the page.<p>
-	 * Note: invalidating the markup position requires the whole page to
-	 * be re-rendered prior to be able to re-render specific components as
-	 * required by AJAX.
-	 */
-	public void invalidateMarkupStreamPosition()
-	{
-		super.invalidateMarkupStreamPosition();
-		this.markupStreamPosition = -1;
 	}
 }
