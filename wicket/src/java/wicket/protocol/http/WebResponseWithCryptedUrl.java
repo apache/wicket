@@ -70,10 +70,10 @@ public class WebResponseWithCryptedUrl extends WebResponse
 		    {
 		        // The url's path
 			    String urlPrefix = url.substring(0, pos);
-			    
+
 			    // Extract the querystring 
 			    String queryString = url.substring(pos + 1);
-			    
+
 			    // if the querystring starts with a parameter like 
 			    // "x=", than don#t change the querystring as it 
 			    // has been encoded already
@@ -84,22 +84,21 @@ public class WebResponseWithCryptedUrl extends WebResponse
 			        // make the querystring shorter first without loosing
 			        // information.
 				    queryString = shortenUrl(queryString);
-				    
+
 				    // encrypt the query string
-					
 					final String encryptedQueryString = urlCrypt.encrypt(queryString);
-					
+
 					// build the new complete url
 					final String encryptedUrl = urlPrefix + "?x=" + escapeUrl(encryptedQueryString);
 					return encryptedUrl;
 			    }
 		    }
 		}
-		
+
 		// we didn't change anything
 		return url;
 	}
-	
+
 	/**
 	 * Escape invalid URL characters 
 	 * 
@@ -108,19 +107,43 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 */
 	private String escapeUrl(String queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, " ", "%20");
-	    queryString = Strings.replaceAll(queryString, "\"", "%22");
-	    queryString = Strings.replaceAll(queryString, "%", "%26");
-	    queryString = Strings.replaceAll(queryString, "=", "%3D");
-	    queryString = Strings.replaceAll(queryString, "/", "%2F");
-	    queryString = Strings.replaceAll(queryString, "+", "%2B");
-	    queryString = Strings.replaceAll(queryString, "&", "%26");
-	    queryString = Strings.replaceAll(queryString, "~", "%7E");
-	    queryString = Strings.replaceAll(queryString, "?", "%3F");
+		StringBuffer buf = new StringBuffer(queryString.length() * 2);
+		for (int i=0; i < queryString.length(); i++)
+		{
+			char ch = queryString.charAt(i);
+			switch (ch)
+			{
+				case ' ': buf.append("%20"); break;
+				case '<': buf.append("%3C"); break;
+				case '>': buf.append("%3E"); break;
+		    	case '#': buf.append("%23"); break;
+		    	case '{': buf.append("%7B"); break;
+		    	case '}': buf.append("%7D"); break;
+		    	case '|': buf.append("%7C"); break;
+		    	case '^': buf.append("%5E"); break;
+		    	case '\"': buf.append("%22"); break;
+		    	case '%': buf.append("%26"); break;
+		    	case '=': buf.append("%3D"); break;
+		    	case '/': buf.append("%2F"); break;
+		    	case '+': buf.append("%2B"); break;
+		    	case '&': buf.append("%26"); break;
+		    	case '~': buf.append("%7E"); break;
+		    	case '?': buf.append("%3F"); break;
+		    	case '\\': buf.append("%5C"); break;
+		    	case '[': buf.append("%5B"); break;
+		    	case ']': buf.append("%5D"); break;
+		    	case '`': buf.append("%60"); break;
+		    	case ';': buf.append("%3B"); break;
+		    	case ':': buf.append("%3A"); break;
+		    	case '@': buf.append("%40"); break;
+		    	case '$': buf.append("%24"); break;
+		    	default: buf.append(ch);
+			}
+		}
 	    
-	    return queryString;
+	    return buf.toString();
 	}
-	
+
 	/**
 	 * Try to shorten the querystring without loosing information
 	 * 
@@ -134,7 +157,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	    queryString = Strings.replaceAll(queryString, "interface=IRedirectListener", "4=");
 	    queryString = Strings.replaceAll(queryString, "interface=", "3=");
 	    queryString = Strings.replaceAll(queryString, "bookmarkablePage=", "5=");
-	    
+
 	    // For debugging only: determine possibilities to further shorten
 	    // the query string
 	    if (log.isInfoEnabled())
@@ -148,7 +171,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	            log.info("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
 	        }
 	    }
-	    
+
 	    return queryString;
 	}
 }

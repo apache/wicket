@@ -34,7 +34,7 @@ import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
- * it extends WebRequest and decodes URLs encoded by 
+ * It extends WebRequest and decodes URLs encoded by 
  * WebResponseWithCryptedUrl. One reason for obfuscating the URL's query string
  * might be, that you don't want the details to be visible to the user to
  * play around with.
@@ -45,10 +45,10 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 {
 	/** URL querystring decoded */
 	private final String queryString;
-	
+
 	/** URL query parameters decoded */
 	private final ValueMap parameters;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -65,13 +65,14 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 		{
 			// Get the crypt implementation from the application
 			ICrypt urlCrypt = Application.get().newCrypt();
+			
 		    // Decrypt the query string
 			final String queryString = urlCrypt.decrypt(secureParam);
-			
+
 			// The querystring might have been shortened (length reduced).
 			// In that case, lengthen the query string again. 
 			this.queryString = rebuildUrl(queryString);
-			
+
 			// extract parameter key/value pairs from the query string
 		    this.parameters = analyzeQueryString(this.queryString);
 		}
@@ -84,19 +85,20 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			this.queryString = null;
 		    this.parameters = new ValueMap();
 		}
-		
+
 		// If available, add POST parameters as well. They are not encrypted.
 		// The parameters from HttpRequest 
 		final Enumeration paramNames = request.getParameterNames();
+		
 	    // For all parameters (POST + URL query string)
 	    while (paramNames.hasMoreElements())
 	    {
-	       String paramName = (String)paramNames.nextElement();
-	        
+	    	String paramName = (String)paramNames.nextElement();
+
 	        // Ignore the "x" parameter
 	        if (!"x".equalsIgnoreCase(paramName))
 	        {
-	 	       String[] values = request.getParameterValues(paramName);
+	 	       	String[] values = request.getParameterValues(paramName);
 	            // add key/value to our parameter map
 	            this.parameters.put(paramName, values);
 	        }
@@ -117,7 +119,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	    queryString = Strings.replaceAll(queryString, "4=", "interface=IRedirectListener");
 	    queryString = Strings.replaceAll(queryString, "3=", "interface=");
 	    queryString = Strings.replaceAll(queryString, "5=", "bookmarkablePage=");
-	    
+
 	    return queryString;
 	}
 
@@ -133,7 +135,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 
 		// Get a list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(queryString, "&");
-	    
+
 		// Go through each string in the list
 		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
 		{
@@ -177,10 +179,10 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 				}
 			}
 		}
-		
+
 		return params;
 	}
-	
+
 	/**
 	 * Gets the request parameter with the given key.
 	 * 
