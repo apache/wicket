@@ -800,7 +800,6 @@ public abstract class MarkupContainer extends Component
 			final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
-		// TODO This is the reason for bug 1357506
 		boolean render = openTag.requiresCloseTag();
 		if (render == false)
 		{
