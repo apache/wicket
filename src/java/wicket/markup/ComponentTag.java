@@ -304,7 +304,10 @@ public class ComponentTag extends MarkupElement
 		{
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			tag.id = id;
-			tag.getAdditionalAttributes().putAll(this.additionalAttributes); 
+			if (this.additionalAttributes != null)
+			{
+				tag.getAdditionalAttributes().putAll(this.additionalAttributes);
+			}
 			return tag;
 		}
 	}
