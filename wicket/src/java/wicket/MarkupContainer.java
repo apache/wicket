@@ -800,7 +800,29 @@ public abstract class MarkupContainer extends Component
 			final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
-		if (openTag.requiresCloseTag())
+		// TODO This is the reason for bug 1357506
+		boolean render = openTag.requiresCloseTag();
+		if (render == false)
+		{
+			// Tags like <p> do not require a close tag, but they may have. 
+			// Because ComponentTag does not have the information, we analyze
+			// the remaining of the streams to find the close tag.
+			int pos = markupStream.getCurrentIndex();
+			while (markupStream.hasMore())
+			{
+				MarkupElement elem = markupStream.next();
+				if (elem instanceof ComponentTag)
+				{
+					if (elem.closes(openTag))
+					{
+						render = true;
+						break;
+					}
+				}
+			}
+			markupStream.setCurrentIndex(pos);
+		}
+		if (render == true)
 		{
 			// Loop through the markup in this container
 			while (markupStream.hasMore() && !markupStream.get().closes(openTag))
