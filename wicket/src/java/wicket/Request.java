@@ -33,6 +33,13 @@ import java.util.Map;
 public abstract class Request
 {
 	/**
+	 * Construct.
+	 */
+	public Request()
+	{		
+	}
+
+	/**
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
