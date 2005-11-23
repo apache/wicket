@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Johan Compagner">response filter support, 2 filters added: ServerTime and ServerClientTime, Can for example also be used for Xml Transformations</action>
       <action type="fix" dev="Johan Compagner" due-to="Anders Peterson">Fixed setModelObject() when the component has a root model.</action>
       <action type="add" dev="Johan Compagner">Replaced OGNL with our own implementation. Most simple property and method calls (with no parameters) are supported. see wicket.util.object.Objects</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1357506" due-to="Phil Kulak">Fixed component handling for HTML tags which do not require close tags</action>
