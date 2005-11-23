@@ -100,8 +100,6 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 
 		if (isVisibleInHierarchy())
 		{
-			clearCachedItemCount();
-
 			int offset = getViewOffset();
 			int size = getViewSize();
 
@@ -127,6 +125,13 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 		}
 	}
 
+	protected void internalOnEndRequest()
+	{
+		super.internalOnEndRequest();
+		clearCachedItemCount();
+		
+	}
+	
 	/**
 	 * Add items to the view. Prior to this all items were removed so every
 	 * request this function starts from a clean slate.
