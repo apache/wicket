@@ -36,7 +36,14 @@ public abstract class Response
 {
     /** Default encoding of output stream */
     private String defaultEncoding;
-    
+
+    /**
+     * Construct.
+     */
+    public Response()
+    {
+    }
+
 	/**
 	 * Closes the response output stream
 	 */
