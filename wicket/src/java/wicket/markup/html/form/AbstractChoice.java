@@ -321,7 +321,7 @@ abstract class AbstractChoice extends FormComponent
 		buffer.append("value=\"");
 		buffer.append(renderer.getIdValue(choice, index));
 		buffer.append("\">");
-		String display = getLocalizer().getString(getId() + "." + displayValue, this, displayValue);
+		String display = getLocalizer().getString(displayValue, this, displayValue);
 		String escaped = Strings.escapeMarkup(display, false, true);
 		buffer.append(escaped);
 		buffer.append("</option>");
