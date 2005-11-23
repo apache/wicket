@@ -917,6 +917,7 @@ public class Objects
 		{
 			super();
 			this.field = field;
+			this.field.setAccessible(true);
 		}
 
 		/**
