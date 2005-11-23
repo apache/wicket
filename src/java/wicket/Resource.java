@@ -59,7 +59,7 @@ import wicket.util.value.ValueMap;
  * @author Johan Compagner
  * @author Gili Tzabari
  */
-public abstract class Resource implements IResourceListener
+public abstract class Resource implements IResourceListener, IRequestTarget
 {
 	/** Logger */
 	private static Log log = LogFactory.getLog(Resource.class);
