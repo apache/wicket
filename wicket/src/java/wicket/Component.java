@@ -728,12 +728,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			{
 				// we need to return the root model and not a property of the
 				// model
-				Object result = getRootModel(model);
-				if ((result instanceof IModel))
-				{
-					result = ((IModel)result).getObject(null);
-				}
-				return result;
+				return getRootModel(model).getObject(null);
 			}
 
 			// Get model value for this component
@@ -1545,7 +1540,15 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!getComparator().compareValue(this, object))
 		{
 			modelChanging();
-			model.setObject(this, object);
+			
+			if (getFlag(FLAG_HAS_ROOT_MODEL))
+			{
+				getRootModel(model).setObject(null, object);
+			}
+			else
+			{
+				model.setObject(this, object);
+			}
 			modelChanged();
 		}
 		return this;
@@ -2469,12 +2472,12 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 *            The model
 	 * @return The root object
 	 */
-	private final Object getRootModel(final IModel model)
+	private final IModel getRootModel(final IModel model)
 	{
-		Object nestedModelObject = model;
-		while (nestedModelObject instanceof IModel)
+		IModel nestedModelObject = model;
+		while (true)
 		{
-			final Object next = ((IModel)nestedModelObject).getNestedModel();
+			final IModel next = ((IModel)nestedModelObject).getNestedModel();
 			if (next == null)
 			{
 				break;
