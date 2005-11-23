@@ -168,6 +168,9 @@ public abstract class Application
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
 
+	/** List of response filters @see {@link IResponseFilter}*/
+	private List responseFilters;
+
 	private static ThreadLocal applicationObjects = new ThreadLocal();
 
 	/**
@@ -484,6 +487,37 @@ public abstract class Application
 	 */
 	protected abstract ISessionFactory getSessionFactory();
 
+	/**
+	 * Adds a response filer to the list. Filters are evaluated in the order they have been added.
+	 * 
+	 * @param responseFilter The {@link IResponseFilter} that is added
+	 */
+	public final void addResponseFilter(IResponseFilter responseFilter)
+	{
+		if(responseFilters == null) responseFilters = new ArrayList(3);
+		responseFilters.add(responseFilter);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * Loops over all the response filters that were set (if any) with the give response
+	 * returns the response buffer itself if there where now filters or the response buffer
+	 * that was created/returned by the filter(s)  
+	 * 
+	 * @param responseBuffer  The response buffer to be filtered
+	 * @return Returns the filtered string buffer.
+	 */
+	public final StringBuffer filterResponse(StringBuffer responseBuffer)
+	{
+		if(responseFilters == null) return responseBuffer;
+		for (int i = 0; i < responseFilters.size(); i++)
+		{
+			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
+			responseBuffer = filter.filter(responseBuffer);
+		}
+		return responseBuffer;
+	}
 	/**
 	 * Allows for initialization of the application by a subclass.
 	 */
