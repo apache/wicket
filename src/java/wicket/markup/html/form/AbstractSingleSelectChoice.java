@@ -183,7 +183,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString(getId() + ".null", this, "");
+			final String option = getLocalizer().getString("null", this, "");
 
 			// Add option tag
 			buffer.append("\n<option");
