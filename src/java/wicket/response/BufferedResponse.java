@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import wicket.Application;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 
@@ -161,6 +162,16 @@ public class BufferedResponse extends Response
 		this.stringBuffer = null;
 	}
 
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 */
+	public final void filter()
+	{
+        if (redirectUrl == null && stringBuffer != null && stringBuffer.length() != 0)
+        {
+        	this.stringBuffer = Application.get().filterResponse(stringBuffer);
+        }
+	}	
 	/**
 	 * Get the bytes of this buffered response string in the encoding of the
 	 * mime type.

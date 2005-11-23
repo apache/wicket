@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
+import wicket.protocol.http.BufferedWebResponse;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
@@ -213,6 +214,8 @@ public abstract class RequestCycle
 
 	/** True if the cluster should be updated */
 	private boolean updateCluster;
+
+	private long startTime = System.currentTimeMillis();
 
 
 	/**
@@ -762,6 +765,11 @@ public abstract class RequestCycle
 			// attributes that might be required to update the cluster
 			session.updateCluster();
 		}
+		
+		if(getResponse() instanceof BufferedWebResponse)
+		{
+			((BufferedWebResponse)getResponse()).filter();
+		}
 	}
 
 	/**
@@ -1004,5 +1012,13 @@ public abstract class RequestCycle
 
 		// This thread is no longer attached to a Session
 		Session.set(null);
+	}
+
+	/**
+	 * @return The start time for this request
+	 */
+	public long getStartTime()
+	{
+		return startTime ;
 	}
 }

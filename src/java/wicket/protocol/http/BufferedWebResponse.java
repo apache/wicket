@@ -19,6 +19,7 @@ package wicket.protocol.http;
 
 import javax.servlet.http.HttpServletResponse;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 
 /**
@@ -98,5 +99,17 @@ public class BufferedWebResponse extends WebResponse
 	public void write(final String string)
 	{
 		buffer.append(string);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 */
+	public final void filter()
+	{
+        if (redirectURL == null && buffer.length() != 0)
+        {
+        	this.buffer = Application.get().filterResponse(buffer);
+
+        }
 	}
 }

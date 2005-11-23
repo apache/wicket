@@ -295,6 +295,8 @@ public class WebRequestCycle extends RequestCycle
 					// Set the encoding of the response (what the browser wants)
 					redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
+					// call filter() so that any filters can process the response
+					redirectResponse.filter();
 					// close it so that the reponse is fixed and encoded from
 					// here on.
 					redirectResponse.close();
