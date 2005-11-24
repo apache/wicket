@@ -29,6 +29,7 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
@@ -37,6 +38,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.request.WebEventProcessorStrategy;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;
@@ -117,6 +119,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/** True if the form has enctype of multipart/form-data */
 	private boolean multiPart = false;
 
+	private transient String cssId;
+
 	/**
 	 * Constructs a form with no validation.
 	 * 
@@ -193,23 +197,35 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (handleMultiPart())
 		{
-			// First, see if the processing was triggered by a Wicket button
-			final Button submittingButton = findSubmittingButton();
 
-			// When processing was triggered by a Wicket button and that button
-			// indicates it wants to be called immediately (without processing),
-			// call Button.onSubmit() right away.
-			if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
+			// Tells FormComponents that a new user input has come
+			registerNewUserInput();
+			
+			String url = getRequest().getParameter(getHiddenFieldId());
+			if(!Strings.isEmpty(url))
 			{
-				submittingButton.onSubmit();
+				new WebEventProcessorStrategy().dispatchEvent(getPage(), url);
 			}
 			else
 			{
-				// process the form for this request
-				if (process())
+				// First, see if the processing was triggered by a Wicket button
+				final Button submittingButton = findSubmittingButton();
+	
+				// When processing was triggered by a Wicket button and that button
+				// indicates it wants to be called immediately (without processing),
+				// call Button.onSubmit() right away.
+				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
 				{
-					// let clients handle further processing
-					delegateSubmit(submittingButton);
+					submittingButton.onSubmit();
+				}
+				else
+				{
+					// process the form for this request
+					if (process())
+					{
+						// let clients handle further processing
+						delegateSubmit(submittingButton);
+					}
 				}
 			}
 		}
@@ -474,6 +490,58 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		});
 	}
+	
+
+	/**
+	 * Mark each form component on this form invalid.
+	 */
+	protected final void markFormComponentsValid()
+	{
+		// call invalidate methods of all nested form components
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.valid();
+				}
+			}
+		});
+	}
+	
+	protected final String getHiddenFieldId()
+	{
+        return getCssId() + ":hiddenfield";		
+	}
+
+	protected final String getCssId()
+	{
+		if(Strings.isEmpty(cssId))
+		{
+			final StringBuffer inputName = new StringBuffer(getId());
+	        Component c = this;
+	        while (true)
+	        {
+	            c = c.getParent();
+	            if (c == null || c instanceof Page || inputName.length() > 100)
+	            {
+	                break;
+	            }
+	            inputName.append(':');
+	            inputName.append(c.getId());
+	        }
+			cssId = inputName.toString();
+		}
+		return cssId;
+	}
+
+	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+    {
+		String nameAndId = getHiddenFieldId();
+        getResponse().write("<input type=\"hidden\" name=\""+ nameAndId+ "\" id=\"" + nameAndId + "\">");
+        super.onComponentTagBody(markupStream, openTag);
+    }	
 
 	/**
 	 * @see wicket.Component#onComponentTag(ComponentTag)
@@ -482,6 +550,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
+		cssId = (String)tag.getAttributes().get("id");
+		if(Strings.isEmpty(cssId))
+		{
+			cssId = getCssId();
+			tag.put("id", cssId);
+		}
 		tag.put("method", "post");
 		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
 		if (multiPart)
@@ -563,6 +637,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		}
 		else
 		{
+			// mark all childeren as valid
+			markFormComponentsValid();
+			
 			// before updating, call the interception method for clients
 			beforeUpdateFormComponentModels();
 
@@ -615,18 +692,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				{
 					// Validate form component
 					formComponent.validate();
-
-					// If component is not valid (has an error)
-					if (!formComponent.isValid())
-					{
-						// tell component to deal with invalidity
-						formComponent.invalid();
-					}
-					else
-					{
-						// tell component that it is valid now
-						formComponent.valid();
-					}
 				}
 			}
 		});
@@ -763,6 +828,38 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		}
 	}
 
+	/**
+	 * Visits the form's children FormComponents and inform them 
+	 * that a new user input is available in the Request
+	 */
+	private void registerNewUserInput() 
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.registerNewUserInput();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * This generates a piece of javascript code that sets the url in the special hidden field and submits the form.
+	 * 
+	 * Warning: This code should only be called in the rendering phase for form components inside the form because it uses
+	 * the css/javascript id of the form which can be stored in the markup.
+	 *  
+	 * @param url The interface url that has to be stored in the hidden field and submitted
+	 * @return The javascript code that submits the form.
+	 */
+	public final String getJsForInterfaceUrl(String url)
+	{
+		return "document.getElementById('" + getHiddenFieldId()+ "').value='" + url+ "';document.getElementById('" + getCssId()+"').submit();";
+	}
+	
 	static
 	{
 		// Allow use of IFormSubmitListener interface

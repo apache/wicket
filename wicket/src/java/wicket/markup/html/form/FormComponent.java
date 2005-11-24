@@ -32,6 +32,7 @@ import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.StringList;
+import wicket.util.string.Strings;
 
 /**
  * An HTML form component knows how to validate itself. Validators that
@@ -106,24 +107,28 @@ public abstract class FormComponent extends WebMarkupContainer
 	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
 
 	/**
-	 * Special flag value to indicate when there is no invalid input, since null
-	 * is a valid value!
-	 */
-	protected static final String NO_INVALID_INPUT = "[No invalid input]";
-
-	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.
 	 */
 	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
+	
+	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
 
 	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
+	 * Raw Input entered by the user
+	 * or NO_RAW_INPUT if nothing is filled in.
 	 */
-	private String invalidInput = NO_INVALID_INPUT;
+	private String rawInput = NO_RAW_INPUT;
 
+	/**
+	 * Indicates if the model is considered up to date with the last user input.
+	 * If true, the model value will be used to render the component.
+	 * If false, the rawInput value (last user input) will be used to render the component.
+	 * (Can be false if validation fails, or if component not validated/updated after a user input,
+	 * for example if a Button with defaultFormProcessing property set to true, aka "immediate button")  
+	 */
+//	private boolean modelUpToDate = true;
+	
 	/**
 	 * The list of validators for this form component as either an IValidator
 	 * instance or an array of IValidator instances.
@@ -301,7 +306,18 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		return NO_INVALID_INPUT.equals(invalidInput) ? getModelValue() : invalidInput;
+		if(NO_RAW_INPUT.equals(rawInput))
+		{
+			return getModelValue();		
+		}
+		else
+		{
+			if (getEscapeModelStrings())
+			{
+				return Strings.escapeMarkup(rawInput);
+			}
+			return rawInput;
+		}
 	}
 
 	/**
@@ -396,6 +412,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final void valid()
 	{
+		rawInput = NO_RAW_INPUT;
+
 		onValid();
 	}
 
@@ -512,24 +530,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Handle invalidation by storing the user input for form repopulation
+	 * Handle invalidation
 	 */
 	protected void onInvalid()
 	{
-		// Get input as String array
-		final String[] input = inputAsStringArray();
-
-		// If there is any input
-		if (input != null)
-		{
-			// join the values together with ";", for example, "id1;id2;id3"
-			invalidInput = StringList.valueOf(input).join(";");
-		}
-		else
-		{
-			// no input
-			invalidInput = null;
-		}
 	}
 
 	/**
@@ -547,7 +551,6 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onValid()
 	{
-		invalidInput = NO_INVALID_INPUT;
 	}
 
 	/**
@@ -628,4 +631,39 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return 1;
 	}
+	
+	/**
+	 * Used by Form to tell the FormComponent that a new user input is available  
+	 */
+	final void registerNewUserInput() 
+	{
+		if (isVisibleInHierarchy()) 
+		{
+			rawInput = getUserInput();
+		}
+	}
+	
+	/**
+	 * @return The value of the user input for this form component
+	 */
+	private String getUserInput() 
+	{
+		String rawInput;
+		// Get input as String array
+		final String[] input = inputAsStringArray();
+
+		// If there is any input
+		if (input != null)
+		{
+			// join the values together with ";", for example, "id1;id2;id3"
+			rawInput = StringList.valueOf(input).join(";");
+		}
+		else
+		{
+			// no input
+			rawInput = null;
+		}
+		return rawInput;
+	}
+	
 }
