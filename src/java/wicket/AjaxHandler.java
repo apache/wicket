@@ -274,7 +274,8 @@ public abstract class AjaxHandler
 	protected void configure(final Response response, final IResourceStream resourceStream)
 	{
 		// Configure response with content type of resource
-		response.setContentType(getResponseType());
+		response.setContentType(getResponseType() + ";charset=" + response.getCharacterEncoding());
+		// and the content length
 		response.setContentLength((int)resourceStream.length());
 	}
 
