@@ -78,19 +78,6 @@ public class FormInput extends WicketExamplePage
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new InputForm("inputForm"));
-
-		// Dropdown for selecting locale
-		add(new LocaleDropDownChoice("localeSelect"));
-
-		// Link to return to default locale
-		add(new Link("defaultLocaleLink")
-		{
-			public void onClick()
-			{
-				WebRequest request = (WebRequest)getRequest();
-				setLocale(request.getLocale());
-			}
-		});
 	}
 
 	/**
@@ -108,7 +95,7 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Form for collecting input.
 	 */
-	private static class InputForm extends Form
+	private class InputForm extends Form
 	{
 		/**
 		 * Construct.
@@ -120,6 +107,19 @@ public class FormInput extends WicketExamplePage
 		{
 			super(name, new CompoundPropertyModel(new FormInputModel()));
 
+			// Dropdown for selecting locale
+			add(new LocaleDropDownChoice("localeSelect"));
+
+			// Link to return to default locale
+			add(new Link("defaultLocaleLink")
+			{
+				public void onClick()
+				{
+					WebRequest request = (WebRequest)getRequest();
+					setLocale(request.getLocale());
+				}
+			});
+			
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			stringTextField.setLabel(new Model("String"));
 			add(stringTextField);
