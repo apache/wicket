@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.95 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,16 +23,17 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.BufferedWebResponse;
+import wicket.request.PageClassRequestTarget;
+import wicket.request.PageRequestTarget;
 import wicket.util.lang.Classes;
-import wicket.util.string.Strings;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -162,20 +163,24 @@ import wicket.util.string.Strings;
  * <p>
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public abstract class RequestCycle
 {
 	/** Thread-local that holds the current request cycle. */
-	private static final ThreadLocal current = new ThreadLocal();
-
-	/** Map from request interface Class to Method. */
-	private static final Map listenerRequestInterfaceMethods = new HashMap();
+	private static final ThreadLocal CURRENT = new ThreadLocal();
 
 	/** Log */
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
 
+	/** Map from request interface Class to Method. */
+	private static final Map listenerRequestInterfaceMethods = new HashMap();
+
 	/** The application object. */
 	protected final Application application;
+
+	/** The session object. */
+	protected final Session session;
 
 	/** The current request. */
 	protected Request request;
@@ -184,12 +189,11 @@ public abstract class RequestCycle
 	protected Response response;
 
 	/** The original response the request cycle was created with */
-	private final Response originalResponse;  
-	
-	/** The session object. */
-	protected final Session session;
+	private final Response originalResponse;
 
-	private Page invokePage;
+	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
+	// TODO use a more efficient implementation, maybe with a default size of 3
+	private Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/**
 	 * True if request should be redirected to the resulting page instead of
@@ -197,26 +201,11 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** The page to render to the user */
-	private Page responsePage;
-
-	/**
-	 * The class of a page to render to the user, redirect as a bookmarkable
-	 * page
-	 */
-	private Class responsePageClass;
-
-	/**
-	 * The page parameters used by the responsepage class to generate its
-	 * bookmarkable page url
-	 */
-	private PageParameters responsePageParams;
-
 	/** True if the cluster should be updated */
 	private boolean updateCluster;
 
-	private long startTime = System.currentTimeMillis();
-
+	/** the time that this request cycle object was created. */
+	private final long startTime = System.currentTimeMillis();;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -225,7 +214,7 @@ public abstract class RequestCycle
 	 */
 	public final static RequestCycle get()
 	{
-		return (RequestCycle)current.get();
+		return (RequestCycle)CURRENT.get();
 	}
 
 	/**
@@ -288,13 +277,13 @@ public abstract class RequestCycle
 		this.originalResponse = response;
 
 		// Set this RequestCycle into ThreadLocal variable
-		current.set(this);
+		CURRENT.set(this);
 	}
 
 	/**
 	 * Get the orignal respone the request was create with. Access may be
 	 * necessary with the response has temporarily being replaced but your
-	 * components requires access to lets say the cookie methods of a 
+	 * components requires access to lets say the cookie methods of a
 	 * WebResponse.
 	 * 
 	 * @return The original response object.
@@ -303,7 +292,7 @@ public abstract class RequestCycle
 	{
 		return this.originalResponse;
 	}
-	
+
 	/**
 	 * Gets the application object.
 	 * 
@@ -345,37 +334,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the current respond page.
-	 * 
-	 * @return The page
-	 */
-	public final Page getResponsePage()
-	{
-		return responsePage;
-	}
-
-	/**
-	 * Gets the current responde page class.
-	 * 
-	 * @return The page
-	 */
-	public final Class getResponsePageClass()
-	{
-		return responsePageClass;
-	}
-
-	/**
-	 * Gets the current responde page page parameters (only used with the
-	 * responsepage class).
-	 * 
-	 * @return The page
-	 */
-	public final PageParameters getResponsePagePageParameters()
-	{
-		return responsePageParams;
-	}
-
-	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
@@ -394,79 +352,151 @@ public abstract class RequestCycle
 	 */
 	public final void request() throws ServletException
 	{
-		// Serialize renderings on the session object so that only one page
-		// can be rendered at a time for a given session.
-		synchronized (session)
+		// get the processor we delegate the handling of the request
+		// cycle behaviour to
+		IRequestCycleProcessor processor = getRequestCycleProcessor();
+		if (processor == null)
 		{
+			throw new WicketRuntimeException("request cycle processor must be not-null");
+		}
+
+		// Attach thread local resources for request
+		threadAttach();
+
+		// Response is beginning
+		internalOnBeginRequest();
+		onBeginRequest();
+
+		try
+		{
+			// resolve the target of the request
+			IRequestTarget target = processor.resolve(this);
+
+			if (target == null)
+			{
+				throw new WicketRuntimeException(
+						"the processor did not resolve to any request target");
+			}
+
+			// set it as the current target, on the top of the stack
+			setRequestTarget(target);
+
+			// see whether we need to do synchronization
+			Object synchronizeLock = target.getSynchronizationLock();
+
+			// if the lock is not-null, synchronize the rest of the request
+			// cycle processing
+			if (synchronizeLock != null)
+			{
+				synchronized (synchronizeLock)
+				{
+					processEventsAndRespond(processor);
+				}
+			}
+			else
+			{
+				// no lock means no synchronization (e.g. when handling static
+				// resources or external resources)
+				processEventsAndRespond(processor);
+			}
+		}
+		finally
+		{
+			// clean up target stack; calling cleanUp has effects like
+			for (Iterator i = requestTargets.iterator(); i.hasNext();)
+			{
+				IRequestTarget t = (IRequestTarget)i.next();
+				try
+				{
+					t.cleanUp(this);
+				}
+				catch (RuntimeException e)
+				{
+					log.error("there was an error cleaning up target " + t + ".", e);
+				}
+			}
+
+			// Response is ending
 			try
 			{
-				// Attach thread local resources for request
-				threadAttach();
-
-				// Response is beginning
-				internalOnBeginRequest();
-				onBeginRequest();
-
-				// If request is parsed successfully
-				if (parseRequest())
-				{
-					// respond with a page
-					respond();
-				}
-
+				internalOnEndRequest();
 			}
 			catch (RuntimeException e)
 			{
-				// Handle any runtime exception
-				internalOnRuntimeException(null, e);
+				log.error("Exception occurred during internalOnEndRequest", e);
 			}
-			finally
+
+			try
 			{
-				// make sure the invokerPage is ended correctly.
-				try
-				{
-					if (invokePage != null)
-					{
-						invokePage.internalEndRequest();
-					}
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during invokerPage.internalEndRequest", e);
-				}
-
-				// Response is ending
-				try
-				{
-					internalOnEndRequest();
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during internalOnEndRequest", e);
-				}
-
-				try
-				{
-					onEndRequest();
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during onEndRequest", e);
-				}
-
-				// Release thread local resources
-				threadDetach();
+				onEndRequest();
 			}
+			catch (RuntimeException e)
+			{
+				log.error("Exception occurred during onEndRequest", e);
+			}
+
+			// Release thread local resources
+			threadDetach();
 		}
+	}
+
+	/**
+	 * Call the even processing and and respond methods on the request
+	 * processor.
+	 * 
+	 * @param processor
+	 *            the request processor
+	 */
+	private void processEventsAndRespond(IRequestCycleProcessor processor)
+	{
+		try
+		{
+			// let the processor handle/ issue any events
+			processor.processEvents(this);
+
+			// generate a response
+			processor.respond(this);
+
+		}
+		catch (RuntimeException e)
+		{
+			// Handle any runtime exception
+			log.error(e.getMessage(), e);
+			processor.respond(e, this);
+		}
+	}
+
+	/**
+	 * Sets the request target as the current.
+	 * 
+	 * @param requestTarget
+	 *            the request target to set as current
+	 */
+	public final void setRequestTarget(IRequestTarget requestTarget)
+	{
+		requestTargets.push(requestTarget);
+	}
+
+	/**
+	 * Gets the current request target. May be null.
+	 * 
+	 * @return the current request target, null if none was set yet.
+	 */
+	public final IRequestTarget getRequestTarget()
+	{
+		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
 	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Responds to a request to re-render a single component. 
+	 * Responds to a request to re-render a single component.
 	 * 
-	 * @param component to be re-rendered
+	 * @param component
+	 *            to be re-rendered
 	 * @throws ServletException
+	 * @deprecated replace this method by integrating it with
+	 *             IRequestCycleProcessor
 	 */
 	public final void request(final Component component) throws ServletException
 	{
@@ -487,23 +517,25 @@ public abstract class RequestCycle
 			}
 			catch (RuntimeException e)
 			{
-				// Handle any runtime exception
-				internalOnRuntimeException(null, e);
+				log.error(e.getMessage(), e);
+				IRequestCycleProcessor processor = getRequestCycleProcessor();
+				processor.respond(e, this);
 			}
 			finally
 			{
-				// make sure the invokerPage is ended correctly.
-				try
-				{
-					if (invokePage != null)
-					{
-						invokePage.internalEndRequest();
-					}
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during invokerPage.internalEndRequest", e);
-				}
+				// // make sure the invokerPage is ended correctly.
+				// try
+				// {
+				// if (invokePage != null)
+				// {
+				// invokePage.internalEndRequest();
+				// }
+				// }
+				// catch (RuntimeException e)
+				// {
+				// log.error("Exception occurred during
+				// invokerPage.internalEndRequest", e);
+				// }
 
 				// Response is ending
 				try
@@ -575,9 +607,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Convenience method that sets page class as the response. This will
-	 * generate a redirect to the page with a bookmarkable url and its
-	 * pageparameters.
+	 * Sets the page class with optionally the page parameters as the render
+	 * target of this request.
 	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
@@ -587,58 +618,53 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
 	{
-		if (responsePageClass != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePageClass + " with " + pageClass);
-			}
-		}
-		else if (responsePage != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePage + " with " + pageClass);
-			}
-		}
-
-		if (!Page.class.isAssignableFrom(pageClass))
-		{
-			throw new IllegalArgumentException("Class must be a subclass of Page");
-		}
-		this.responsePageClass = pageClass;
-		this.responsePageParams = pageParameters;
-		// reset response page, only one of the 2 responses should be set.
-		this.responsePage = null;
+		IRequestTarget target = new PageClassRequestTarget(pageClass, pageParameters);
+		setRequestTarget(target);
 	}
 
 	/**
-	 * Convenience method that sets page on response object.
+	 * Sets the page as the render target of this request.
 	 * 
 	 * @param page
 	 *            The page to render as a response
 	 */
 	public final void setResponsePage(final Page page)
 	{
-		if (responsePageClass != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePageClass + " with " + page);
-			}
-		}
-		else if (responsePage != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePage + " with " + page);
-			}
-		}
+		IRequestTarget target = new PageRequestTarget(page);
+		setRequestTarget(target);
+	}
 
-		this.responsePage = page;
-		// reset response page class, only one of the 2 responses should be set.
-		this.responsePageClass = null;
-		this.responsePageParams = null;
+	/**
+	 * Gets the page that is to be rendered for this request in case the last
+	 * set request target is of type {@link PageRequestTarget}.
+	 * 
+	 * @return the page or null
+	 */
+	public final Page getResponsePage()
+	{
+		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		if (target != null && (target instanceof PageRequestTarget))
+		{
+			return ((PageRequestTarget)target).getPage();
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the page class that is to be instantiated and rendered for this
+	 * request in case the last set request target is of type
+	 * {@link PageClassRequestTarget}.
+	 * 
+	 * @return the page class or null
+	 */
+	public final Class getResponsePageClass()
+	{
+		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		if (target != null && (target instanceof PageClassRequestTarget))
+		{
+			return ((PageClassRequestTarget)target).getPageClass();
+		}
+		return null;
 	}
 
 	/**
@@ -698,7 +724,8 @@ public abstract class RequestCycle
 					String escapedValue = value;
 					try
 					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get().getSettings().getResponseRequestEncoding());
+						escapedValue = URLEncoder.encode(escapedValue, Application.get()
+								.getSettings().getResponseRequestEncoding());
 					}
 					catch (UnsupportedEncodingException ex)
 					{
@@ -715,16 +742,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the page that was used for invoking and interface.
-	 * 
-	 * @return The page
-	 */
-	protected final Page getInvokePage()
-	{
-		return invokePage;
-	}
-
-	/**
 	 * Looks up an request interface method by name.
 	 * 
 	 * @param interfaceName
@@ -732,7 +749,7 @@ public abstract class RequestCycle
 	 * @return The method, null of nothing is found
 	 * 
 	 */
-	protected final Method getRequestInterfaceMethod(final String interfaceName)
+	public final Method getRequestInterfaceMethod(final String interfaceName)
 	{
 		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
 	}
@@ -765,65 +782,10 @@ public abstract class RequestCycle
 			// attributes that might be required to update the cluster
 			session.updateCluster();
 		}
-		
-		if(getResponse() instanceof BufferedWebResponse)
+
+		if (getResponse() instanceof BufferedWebResponse)
 		{
 			((BufferedWebResponse)getResponse()).filter();
-		}
-	}
-
-	/**
-	 * Sets up to handle a runtime exception thrown during rendering. FRAMEWORK
-	 * CLIENTS SHOULD NOT CALL THIS METHOD.
-	 * 
-	 * @param page
-	 *            Any page context where the exception was thrown
-	 * @param e
-	 *            The exception
-	 * @throws ServletException
-	 *             The exception rethrown for the servlet container
-	 */
-	protected final void internalOnRuntimeException(final Page page, final RuntimeException e)
-			throws ServletException
-	{
-		// Let client handle any specifics and possibly return a page to redirect to
-		final Page redirectTo = application.onRuntimeException(page, e);
-
-		// Always log as error
-		log.error("Unexpected runtime exception [page = " + page + "]", e);
-		
-		// Reset page for re-rendering after exception
-		if (page != null)
-		{
-			page.resetMarkupStreams();
-		}
-
-		// If the page we failed to render is an error page
-		if (page != null && page.isErrorPage())
-		{
-			// give up while we're ahead!
-			throw new ServletException("Internal Error: Could not render error page " + page, e);
-		}
-		else
-		{
-			if (redirectTo != null)
-			{
-				setResponsePage(redirectTo);
-				redirectTo(redirectTo);
-			}
-			else
-			{
-				try
-				{
-					redirectToExceptionErrorPage(page, e);
-				}
-				catch (RuntimeException e2)
-				{
-					throw new ServletException(
-							"Internal Error: Could not redirect to exception error page.  Was trying to display exception for page "
-									+ page + ":\n" + Strings.toString(e), e2);
-				}
-			}
 		}
 	}
 
@@ -842,11 +804,11 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Parses a request when this request cycle is asked to respond.
+	 * Gets the processor for delegated request cycle handling.
 	 * 
-	 * @return True if a Page should be rendered back to the user
+	 * @return the processor for delegated request cycle handling
 	 */
-	protected abstract boolean parseRequest();
+	protected abstract IRequestCycleProcessor getRequestCycleProcessor();
 
 	/**
 	 * Redirects browser to the given page. NOTE: Usually, you should never call
@@ -859,18 +821,7 @@ public abstract class RequestCycle
 	 *            The page to redirect to
 	 * @throws ServletException
 	 */
-	protected abstract void redirectTo(final Page page) throws ServletException;
-
-	/**
-	 * Sets the page to invoke.
-	 * 
-	 * @param page
-	 */
-	protected final void setInvokePage(final Page page)
-	{
-		this.invokePage = page;
-	}
-
+	public abstract void redirectTo(final Page page) throws ServletException;
 
 	/**
 	 * Creates a prefix for a url.
@@ -878,101 +829,6 @@ public abstract class RequestCycle
 	 * @return Prefix for URLs including the context path and servlet path.
 	 */
 	protected abstract StringBuffer urlPrefix();
-
-	/**
-	 * @param page
-	 *            The page that went wrong
-	 * @param e
-	 *            The exception that was thrown
-	 * @throws ServletException
-	 */
-	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
-			throws ServletException
-	{
-		// If application doesn't want debug info showing up for users
-		final ApplicationSettings settings = application.getSettings();
-		if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
-		{
-			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
-			Page responsePage = getResponsePage();
-			Class responseClass = responsePage != null ? responsePage.getClass() : null;
-
-			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
-			{
-				// Show internal error page
-				setResponsePage(session.getPageFactory(page).newPage(internalErrorPageClass));
-			}
-			else if (responseClass != ExceptionErrorPage.class)
-			{
-				// Show full details
-				setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
-			}
-			else
-			{
-				// give up while we're ahead!
-				throw new ServletException("Internal Error: Could not render error page " + page, e);
-			}
-
-			// We generally want to redirect the response because we
-			// were in the middle of rendering and the page may end up
-			// looking like spaghetti otherwise
-			redirectTo(getResponsePage());
-		}
-	}
-
-
-	/**
-	 * Respond with response page
-	 * 
-	 * @throws ServletException
-	 */
-	private final void respond() throws ServletException
-	{
-		// Get any page that is to be used to respond to the request
-		final Page page = getResponsePage();
-		if (page != null)
-		{
-			try
-			{
-				// Should page be redirected to?
-				if (getRedirect())
-				{
-					// Redirect to the page
-					redirectTo(page);
-				}
-				else
-				{
-					// Test if the invoker page was the same as the page that is
-					// going to be rendered
-					if (getInvokePage() == getResponsePage())
-					{
-						// Set it to null because it is already ended inthe
-						// page.doRender()
-						setInvokePage(null);
-					}
-					
-					// Let page render itself
-					page.doRender();
-				}
-			}
-			catch (RuntimeException e)
-			{
-				// Handle any runtime exception
-				internalOnRuntimeException(page, e);
-			}
-		}
-		else
-		{
-			final Class pageClass = getResponsePageClass();
-			if (pageClass != null)
-			{
-				final PageParameters pageParameters = getResponsePagePageParameters();
-				String redirectUrl = urlFor(pageClass, pageParameters);
-				getResponse().redirect(redirectUrl);
-			}
-		}
-	}
 
 	/**
 	 * Attach thread
@@ -1004,7 +860,7 @@ public abstract class RequestCycle
 		}
 
 		// Clear ThreadLocal reference
-		current.set(null);
+		CURRENT.set(null);
 
 		// Set the active request cycle back to null since we are
 		// done rendering the requested page
@@ -1019,6 +875,6 @@ public abstract class RequestCycle
 	 */
 	public long getStartTime()
 	{
-		return startTime ;
+		return startTime;
 	}
 }

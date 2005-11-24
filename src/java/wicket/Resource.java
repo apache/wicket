@@ -128,11 +128,6 @@ public abstract class Resource implements IResourceListener
 		// Get request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
-		// The cycle's page is set to null so that it won't be rendered back to
-		// the client since the resource being requested has nothing to do with
-		// pages
-		cycle.setResponsePage((Page)null);
-
 		// Reset parameters
 		parameters = null;
 
