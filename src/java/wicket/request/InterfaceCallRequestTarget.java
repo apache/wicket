@@ -28,7 +28,7 @@ import wicket.Page;
  * 
  * @author Eelco Hillenius
  */
-public class ComponentCallRequestTarget extends PageRequestTarget
+public class InterfaceCallRequestTarget extends PageRequestTarget
 {
 	/** the target component. */
 	private final Component component;
@@ -42,9 +42,11 @@ public class ComponentCallRequestTarget extends PageRequestTarget
 	 * @param page
 	 *            the page instance
 	 * @param component
+	 *            the target component
 	 * @param listenerMethod
+	 *            the listener method
 	 */
-	public ComponentCallRequestTarget(Page page, Component component, Method listenerMethod)
+	public InterfaceCallRequestTarget(Page page, Component component, Method listenerMethod)
 	{
 		super(page);
 		this.component = component;
@@ -59,6 +61,26 @@ public class ComponentCallRequestTarget extends PageRequestTarget
 		}
 
 		this.listenerMethod = listenerMethod;
+	}
+
+	/**
+	 * Gets the target component.
+	 * 
+	 * @return the target component
+	 */
+	public Component getComponent()
+	{
+		return component;
+	}
+
+	/**
+	 * Gets listener method.
+	 * 
+	 * @return the listener method
+	 */
+	public Method getListenerMethod()
+	{
+		return listenerMethod;
 	}
 
 	/**
