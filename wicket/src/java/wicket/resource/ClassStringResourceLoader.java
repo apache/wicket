@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -82,7 +83,7 @@ public class ClassStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not loaded
 	 */
-	public final String loadStringResource(final Component component, final String key,
+	public final String loadStringResource(final Component component, String key,
 			final Locale locale, final String style)
 	{
 		// Locate previously loaded resources from the cache
@@ -98,11 +99,23 @@ public class ClassStringResourceLoader
 		{
 			log.debug("Try to load resource from: " + id + "; key: " + key);
 		}
-		String value = strings.getString(key);
-		if (value != null && log.isDebugEnabled())
-		{
-			log.debug("Found resource from: " + id + "; key: " + key);
-		}
+		
+		// Check the key.  If not found and if the key contains a ".", than
+		// remove the first component from the path and try again.
+        String value = null;
+        while ((value == null) &&  (key != null) && (key.length() != 0))
+        {
+        	value = strings.getString(key);
+            if (value != null)
+            {
+                if (log.isDebugEnabled())
+                {
+                	log.debug("Found resource from: " + id + "; key: " + key);
+                }
+                break;
+            }
+            key = Strings.afterFirst(key, '.');
+        }
 		
 		return value;
 	}
