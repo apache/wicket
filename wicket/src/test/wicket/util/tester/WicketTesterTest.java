@@ -20,7 +20,6 @@ package wicket.util.tester;
 import java.util.Locale;
 
 import junit.framework.TestCase;
-import wicket.Localizer;
 import wicket.Page;
 import wicket.Session;
 import wicket.util.tester.apps_1.Book;
