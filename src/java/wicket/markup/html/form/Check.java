@@ -88,6 +88,12 @@ public class Check extends WebMarkupContainer
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
 		Collection collection = (Collection)group.getModelObject();
+
+		// check for npe in group's model object
+		if (collection==null) {
+			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
+		}
+		
 		if (collection.contains(getModelObject()))
 		{
 			tag.put("checked", "checked");
