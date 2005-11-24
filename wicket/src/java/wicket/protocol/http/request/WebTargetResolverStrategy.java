@@ -17,6 +17,8 @@
  */
 package wicket.protocol.http.request;
 
+import java.lang.reflect.Method;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -36,9 +38,11 @@ import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.InterfaceCallRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
+import wicket.request.RedirectPageRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.util.string.Strings;
@@ -187,19 +191,43 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			webRequestCycle.setUpdateCluster(true);
 
 			// see whether this resolves to a component call or just the page
-			String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
-			if (!Strings.isEmpty(componentPart))
+			final String interfaceName = getInterfaceName(webRequest);
+			if (interfaceName != null)
 			{
-				
+				if (interfaceName.equals("IRedirectListener"))
+				{
+					return new RedirectPageRequestTarget(page);
+				}
+				else
+				{
+					final Method listenerMethod = webRequestCycle
+							.getRequestInterfaceMethod(interfaceName);
+					if (listenerMethod == null)
+					{
+						throw new WicketRuntimeException("Attempt to access unknown interface "
+								+ interfaceName);
+					}
+					String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
+					if (Strings.isEmpty(componentPart))
+					{
+						// we have an interface that is not redirect, but no
+						// component... that must be wrong
+						throw new WicketRuntimeException("when trying to call " + listenerMethod
+								+ ", a component must be provided");
+					}
+					final Component component = page.get(componentPart);
+					if (!component.isVisible())
+					{
+						throw new WicketRuntimeException(
+								"Calling listener methods on components that are not visible is not allowed");
+					}
+					return new InterfaceCallRequestTarget(page, component, listenerMethod);
+				}
 			}
-			final Component component = page.get(componentPart);
-			if (!component.isVisible())
+			else
 			{
-				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed");
+				return new PageRequestTarget(page);
 			}
-
-			return new PageRequestTarget(page);
 		}
 		else
 		{
@@ -207,6 +235,23 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			// limit was reached
 			return new ExpiredPageClassRequestTarget();
 		}
+	}
+
+	/**
+	 * Gets the name of the interface to invoke.
+	 * 
+	 * @param webRequest
+	 *            the web request object
+	 * @return the name of the interface to invoke
+	 */
+	private String getInterfaceName(final WebRequest webRequest)
+	{
+		String interfaceName = webRequest.getParameter("interface");
+		if (interfaceName == null)
+		{
+			interfaceName = "IRedirectListener";
+		}
+		return interfaceName;
 	}
 
 	/**
