@@ -9,6 +9,10 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="fix" dev="Johan Compagner">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
+      <action type="add" dev="Johan Compagner">Form will hold the values now in its own state until everything is validated</action>
+      <action type="add" dev="Johan Compagner">Form aware listeners, like OnChangeListener of DropDown, that one now uses the form submit to call the interface method</action>
+      <action type="fix" dev="Johan Compagner" due-to="Maurice Marrink">localized null fixes and localized display value fixes, getID() shouldn't be appended. (that does the localizer)</action>
       <action type="add" dev="Johan Compagner">response filter support, 2 filters added: ServerTime and ServerClientTime, Can for example also be used for Xml Transformations</action>
       <action type="fix" dev="Johan Compagner" due-to="Anders Peterson">Fixed setModelObject() when the component has a root model.</action>
       <action type="add" dev="Johan Compagner">Replaced OGNL with our own implementation. Most simple property and method calls (with no parameters) are supported. see wicket.util.object.Objects</action>
