@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.53 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,15 +47,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *   &lt;servlet&gt;
- *       &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *       &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *       &lt;init-param&gt;
- *           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *           &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *       &lt;/init-param&gt;
- *       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *   &lt;/servlet&gt;
+ *    &lt;servlet&gt;
+ *        &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *        &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *        &lt;init-param&gt;
+ *            &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *            &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *        &lt;/init-param&gt;
+ *        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *    &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -63,14 +63,18 @@ import wicket.util.time.Time;
  * be found, does not extend WebApplication or cannot be instantiated, a runtime
  * exception of type WicketRuntimeException will be thrown.
  * </p>
- * As an alternative, you can configure an application factory instead. This looks like:
+ * As an alternative, you can configure an application factory instead. This
+ * looks like:
+ * 
  * <pre>
- *   &lt;init-param&gt;
- *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *   &lt;/init-param&gt;
+ *    &lt;init-param&gt;
+ *      &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *        &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *    &lt;/init-param&gt;
  * </pre>
- * and it has to satisfy interface {@link wicket.protocol.http.IWebApplicationFactory}.
+ * 
+ * and it has to satisfy interface
+ * {@link wicket.protocol.http.IWebApplicationFactory}.
  * 
  * <p>
  * When GET/POST requests are made via HTTP, an WebRequestCycle object is
@@ -83,11 +87,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *   public void init() throws ServletException
- *   {
- *       ServletConfig config = getServletConfig();
- *       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *       ...
+ *    public void init() throws ServletException
+ *    {
+ *        ServletConfig config = getServletConfig();
+ *        String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        ...
  * </pre>
  * 
  * </p>
@@ -143,10 +147,11 @@ public class WicketServlet extends HttpServlet
 			String requestUri = servletRequest.getRequestURI();
 			if (servletRequest.getQueryString() != null)
 			{
-			    requestUri += "?" + servletRequest.getQueryString();
+				requestUri += "?" + servletRequest.getQueryString();
 			}
 
-			BufferedResponse bufferedResponse = webApplication.getBufferedResponse(servletRequest, requestUri);
+			BufferedResponse bufferedResponse = webApplication.getBufferedResponse(servletRequest,
+					requestUri);
 
 			if (bufferedResponse != null)
 			{
@@ -254,11 +259,11 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			Application.set(webApplication);
-			
+
 			// Call init method of web application
 			this.webApplication.internalInit();
 			this.webApplication.init();
-		} 
+		}
 		finally
 		{
 			Application.set(null);
@@ -337,30 +342,29 @@ public class WicketServlet extends HttpServlet
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getPathInfo();
-		if ((pathInfo != null) && pathInfo.startsWith(WebRequestCycle.resourceReferencePrefix))
+		if ((pathInfo != null) && pathInfo.startsWith("/resources/"))
 		{
-			final String resourceReferenceKey = pathInfo
-					.substring(WebRequestCycle.resourceReferencePrefix.length());
+			final String resourceReferenceKey = pathInfo.substring("/resources/".length());
 			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
-			
+
 			// If resource found and it is cacheable
 			if ((resource != null) && resource.isCacheable())
 			{
 				try
 				{
 					Application.set(webApplication);
-					
+
 					// Set parameters from servlet request
 					resource.setParameters(webRequest.getParameterMap());
-	
+
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();
-	
+
 					// First ask the length so the content is created/accessed
 					stream.length();
-	
+
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();
 					return time != null ? time.getMilliseconds() : -1;

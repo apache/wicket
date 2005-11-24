@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.197 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -236,7 +236,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** True when a component is enabled for model updates and is reachable. */
 	private static final short FLAG_ENABLED = 0x0080;
 	/** Reserved subclass-definable flag bit */
-	
+
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
@@ -251,12 +251,15 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** boolean whether this component was rendered once for tracking changes. */
 	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
-	/** If true, a full render is required and a component re-render is not possible. */
+	/**
+	 * If true, a full render is required and a component re-render is not
+	 * possible.
+	 */
 	private static final short FLAG_NEEDS_FULL_RENDER = 0x2000;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED 
-		| FLAG_ENABLED | FLAG_NEEDS_FULL_RENDER;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
+			| FLAG_NEEDS_FULL_RENDER;
 
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
@@ -1046,9 +1049,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * If true, a markup stream is not assigned yet and hence the component can 
-	 * not be re-rendered yet. A full render cycle which assigns the markup stream 
-	 * is required first.
+	 * If true, a markup stream is not assigned yet and hence the component can
+	 * not be re-rendered yet. A full render cycle which assigns the markup
+	 * stream is required first.
 	 * 
 	 * @return if true, requires full render cycle
 	 */
@@ -1258,7 +1261,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		// If yet unknown, set the markup stream position with the current position
+		// If yet unknown, set the markup stream position with the current
+		// position
 		// of markupStream. Else set the markupStream.setCurrentPosition based
 		// on the position already known to the component.
 		validateMarkupStream(markupStream);
@@ -1392,8 +1396,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/**
 	 * If yet unknown, set the markup stream position with the current position
-	 * of markupStream. Else set the markupStream.setCurrentPosition based
-	 * the position already known to the component.
+	 * of markupStream. Else set the markupStream.setCurrentPosition based the
+	 * position already known to the component.
 	 * <p>
 	 * Note: Parameter markupStream.getCurrentPosition() will be update, if
 	 * re-render is allowed.
@@ -1414,8 +1418,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 		else if (this.markupStreamPosition < 0)
 		{
 			throw new WicketRuntimeException(
-					"The markup stream of the component should be known by now, but isn't: " 
-					+ this.toString());
+					"The markup stream of the component should be known by now, but isn't: "
+							+ this.toString());
 		}
 		else
 		{
@@ -1423,12 +1427,12 @@ public abstract class Component implements Serializable, IBehaviourListener
 			markupStream.setCurrentIndex(this.markupStreamPosition);
 		}
 	}
-	
+
 	/**
-	 * If true, the component requires a full (page level) render cycle to assign
-	 * the markup to the component. Only if the markup has been assigned, the 
-	 * component can be re-rendered (AJAX)
-	 *  
+	 * If true, the component requires a full (page level) render cycle to
+	 * assign the markup to the component. Only if the markup has been assigned,
+	 * the component can be re-rendered (AJAX)
+	 * 
 	 * @param fullRender
 	 */
 	protected void setRequiresFullRender(final boolean fullRender)
@@ -1540,7 +1544,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!getComparator().compareValue(this, object))
 		{
 			modelChanging();
-			
+
 			if (getFlag(FLAG_HAS_ROOT_MODEL))
 			{
 				getRootModel(model).setObject(null, object);
@@ -2075,10 +2079,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/**
 	 * Redirects browser to the given page. note: usually, you should never call
-	 * this method directly, but work with setresponsepage instead. this method
-	 * is part of wicket's internal behaviour and should only be used when you
-	 * want to circumvent the normal framework behaviour and issue the redirect
-	 * directly.
+	 * this method directly, but work with {@link #setResponsePage(Page)} or
+	 * {@link #setResponsePage(Class)} instead. this method is part of wicket's
+	 * internal behaviour and should only be used when you want to circumvent
+	 * the normal framework behaviour and issue the redirect directly.
 	 * 
 	 * @param page
 	 *            The page to redirect to

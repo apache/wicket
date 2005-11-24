@@ -161,8 +161,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
-	
-	/** MetaDataEntry array for efficient representation of metadata associated with child components */
+
+	/**
+	 * MetaDataEntry array for efficient representation of metadata associated
+	 * with child components
+	 */
 	private MetaDataEntry[] metaData;
 
 	/** The PageMap within the session that this page is stored in */
@@ -278,25 +281,27 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// one.
 		else
 		{
-			final RequestCycle requestCycle = getRequestCycle();
-			final Page responsePage = requestCycle.getResponsePage();
-			if (responsePage != null && responsePage != this)
-			{
-				responsePage.doRender();
-			}
-			else
-			{
-				final Class pageClass = requestCycle.getResponsePageClass();
-				if (pageClass != null)
-				{
-					final PageParameters pageParameters = requestCycle
-							.getResponsePagePageParameters();
-					String redirectUrl = requestCycle.urlFor(pageClass, pageParameters);
-					getResponse().redirect(redirectUrl);
-				}
-			}
-			// for this page the request is also over.
-			internalEndRequest();
+			// TODO fix
+			// final RequestCycle requestCycle = getRequestCycle();
+			// final Page responsePage = requestCycle.getResponsePage();
+			// if (responsePage != null && responsePage != this)
+			// {
+			// responsePage.doRender();
+			// }
+			// else
+			// {
+			// final Class pageClass = requestCycle.getResponsePageClass();
+			// if (pageClass != null)
+			// {
+			// final PageParameters pageParameters = requestCycle
+			// .getResponsePagePageParameters();
+			// String redirectUrl = requestCycle.urlFor(pageClass,
+			// pageParameters);
+			// getResponse().redirect(redirectUrl);
+			// }
+			// }
+			// // for this page the request is also over.
+			// internalEndRequest();
 		}
 	}
 
@@ -859,8 +864,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException(
-						"The markup file must not contain the same wicket:id at the same level: " 
-						+ component.getId());
+						"The markup file must not contain the same wicket:id at the same level: "
+								+ component.getId());
 			}
 			if (log.isDebugEnabled())
 			{
@@ -897,10 +902,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Gets metadata for key on the given component 
+	 * Gets metadata for key on the given component
 	 * 
-	 * @param component The component
-	 * @param key The key
+	 * @param component
+	 *            The component
+	 * @param key
+	 *            The key
 	 * @return The object
 	 */
 	Serializable getMetaData(final Component component, final MetaDataKey key)
@@ -992,13 +999,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * Sets metadata on a given component using a given key
 	 * 
-	 * @param component The component
-	 * @param key The key
-	 * @param object The object
+	 * @param component
+	 *            The component
+	 * @param key
+	 *            The key
+	 * @param object
+	 *            The object
 	 */
 	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
 	{
-		key.checkType(object);		
+		key.checkType(object);
 		boolean set = false;
 		if (metaData != null)
 		{
@@ -1011,7 +1021,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					set = true;
 				}
 			}
-		}		
+		}
 		if (!set)
 		{
 			MetaDataEntry m = new MetaDataEntry();
@@ -1133,7 +1143,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
 	}
-	
+
 	/**
 	 * @param component
 	 *            The component which is affected
@@ -1170,7 +1180,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Starts a new version of this page
 	 */

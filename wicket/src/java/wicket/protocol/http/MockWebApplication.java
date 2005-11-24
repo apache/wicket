@@ -30,11 +30,15 @@ import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.DefaultPageFactory;
+import wicket.IRequestTarget;
 import wicket.Page;
+import wicket.PageParameters;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.PageClassRequestTarget;
+import wicket.request.PageRequestTarget;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
 
@@ -321,8 +325,18 @@ public class MockWebApplication extends WebApplication
 			if (responseClass != null)
 			{
 				Session.set(cycle.getSession());
-				lastRenderedPage = new DefaultPageFactory().newPage(responseClass, cycle
-						.getResponsePagePageParameters());
+				IRequestTarget target = cycle.getRequestTarget();
+				if (target instanceof PageRequestTarget)
+				{
+					lastRenderedPage = ((PageRequestTarget)target).getPage();
+				}
+				else if (target instanceof PageClassRequestTarget)
+				{
+					PageClassRequestTarget pageClassRequestTarget = (PageClassRequestTarget)target;
+					Class pageClass = pageClassRequestTarget.getPageClass();
+					PageParameters parameters = pageClassRequestTarget.getPageParameters();
+					lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
+				}
 			}
 		}
 	}
