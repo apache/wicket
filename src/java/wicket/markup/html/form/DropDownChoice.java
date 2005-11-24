@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -158,9 +159,17 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			// url that points to this components IOnChangeListener method
 			final String url = urlFor(IOnChangeListener.class);
 
-			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onChange", "location.href='" + url + "&" + getInputName()
-					+ "=' + this.options[this.selectedIndex].value;");
+			try
+			{
+				Form form = getForm();
+				tag.put("onChange", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onChange", "location.href='" + url + "&" + getInputName()
+						+ "=' + this.options[this.selectedIndex].value;");
+			}
 		}
 
 		super.onComponentTag(tag);
