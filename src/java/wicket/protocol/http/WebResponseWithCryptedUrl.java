@@ -155,8 +155,11 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	    queryString = Strings.replaceAll(queryString, "path=", "1=");
 	    queryString = Strings.replaceAll(queryString, "version=", "2=");
 	    queryString = Strings.replaceAll(queryString, "interface=IRedirectListener", "4=");
-	    queryString = Strings.replaceAll(queryString, "interface=", "3=");
-	    queryString = Strings.replaceAll(queryString, "bookmarkablePage=", "5=");
+	    queryString = Strings.replaceAll(queryString, "interface=IFormSubmitListener", "5=");
+	    queryString = Strings.replaceAll(queryString, "interface=IOnChangeListener", "6=");
+	    queryString = Strings.replaceAll(queryString, "interface=ILinkListener", "7=");
+	    queryString = Strings.replaceAll(queryString, "interface=", "8=");
+	    queryString = Strings.replaceAll(queryString, "bookmarkablePage=", "9=");
 
 	    // For debugging only: determine possibilities to further shorten
 	    // the query string
