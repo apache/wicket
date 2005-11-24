@@ -249,6 +249,8 @@ public final class StringList extends AbstractStringList
 	 */
 	public void add(final int pos, final String string)
 	{
+		if (string == null) return;
+
 		strings.add(pos, string);
 
 		// Increase total length
