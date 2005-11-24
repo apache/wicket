@@ -151,6 +151,54 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Method for dispatching/calling a interface on a page from the given url.
+	 * Used by {@link Form#onFormSubmitted()} for dispatching events
+	 * 
+	 * @param requestCycle The current request cycle 
+	 * 
+	 * @param page The page where the event should be called on.
+	 * @param url The url which describes the component path and the interface to be called.
+	 */
+	public final void dispatchEvent(final Page page, final String url)
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		String decodedUrl = requestCycle.getRequest().decodeURL(url);
+		int indexOfPath = decodedUrl.indexOf("path=");
+		int indexOfInterface = decodedUrl.indexOf("interface=");
+		if(indexOfPath != -1 && indexOfInterface != -1)
+		{
+			indexOfPath += "path=".length();
+			indexOfInterface += "interface=".length();
+			int indexOfPathEnd = decodedUrl.indexOf("&",indexOfPath);
+			if(indexOfPathEnd == -1) indexOfPathEnd = decodedUrl.length();
+			int indexOfInterfaceEnd = decodedUrl.indexOf("&",indexOfInterface);
+			if(indexOfInterfaceEnd == -1) indexOfInterfaceEnd = decodedUrl.length();
+			
+			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
+			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
+			
+			final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
+
+			if (!component.isVisible())
+			{
+				throw new WicketRuntimeException(
+						"Calling listener methods on components that are not visible is not allowed");
+			}
+			Method method = requestCycle.getRequestInterfaceMethod(interfaceName);
+			if (method != null)
+			{
+				invokeInterface(component, method, page);
+			}
+		}
+		else
+		{
+			// log warning??
+		}
+	}
+	
+	/**
 	 * Gets the name of the interface to invoke.
 	 * 
 	 * @param webRequest
