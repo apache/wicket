@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +17,12 @@
  */
 package wicket.util.tester;
 
+import java.util.Locale;
+
 import junit.framework.TestCase;
+import wicket.Localizer;
 import wicket.Page;
+import wicket.Session;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
 import wicket.util.tester.apps_1.MyMockApplication;
@@ -63,18 +67,19 @@ public class WicketTesterTest extends TestCase
 	public void testCreateBook_validateFail() throws Exception
 	{
 		MyMockApplication tester = new MyMockApplication();
+		Session.get().setLocale(Locale.US); // fix locale
 		tester.startPage(CreateBook.class);
 
 		FormTester formTester = tester.newFormTester("createForm");
-		
+
 		formTester.setValue("id", "");
 		formTester.setValue("name", "");
 		formTester.submit();
-		
+
 		tester.assertRenderedPage(CreateBook.class);
 
 		// assert error message from validation
-		tester.assertErrorMessages(new String[] { "id is required", "name is required" });
+		tester.assertErrorMessages(new String[] { "field 'id' is required", "field 'name' is required" });
 	}
 
 	/**
@@ -87,7 +92,7 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(CreateBook.class);
 
 		FormTester formTester = tester.newFormTester("createForm");
-		
+
 		formTester.setValue("id", "xxId");
 		formTester.setValue("name", "xxName");
 		formTester.submit();
