@@ -40,6 +40,20 @@ public abstract class Request
 	}
 
 	/**
+	 * An implementation of this method is only required if a subclass wishes to
+	 * support sessions via URL rewriting. This default implementation simply
+	 * returns the URL String it is passed.
+	 * 
+	 * @param url
+	 *            The URL to decode
+	 * @return The decoded url
+	 */
+	public String decodeURL(final String url)
+	{
+		return url;
+	}
+	
+	/**
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
