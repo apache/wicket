@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -72,7 +73,8 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 			{
 				// Invoke interface on the component at the given path on the
 				// page
-				final Component component = page.get(Strings.afterFirstPathComponent(componentPath, ':'));
+				final Component component = page.get(Strings.afterFirstPathComponent(componentPath,
+						':'));
 
 				if (!component.isVisible())
 				{
@@ -154,12 +156,15 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Method for dispatching/calling a interface on a page from the given url.
-	 * Used by {@link Form#onFormSubmitted()} for dispatching events
+	 * Used by {@link wicket.markup.html.form.Form#onFormSubmitted()} for
+	 * dispatching events
 	 * 
-	 * @param requestCycle The current request cycle 
-	 * 
-	 * @param page The page where the event should be called on.
-	 * @param url The url which describes the component path and the interface to be called.
+	 * @param page
+	 *            The page where the event should be called on.
+	 * @param url
+	 *            The url which describes the component path and the interface
+	 *            to be called.
+	 * @deprecated this method is to be removed and made part of the strategies
 	 */
 	public final void dispatchEvent(final Page page, final String url)
 	{
@@ -167,18 +172,20 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 		String decodedUrl = requestCycle.getRequest().decodeURL(url);
 		int indexOfPath = decodedUrl.indexOf("path=");
 		int indexOfInterface = decodedUrl.indexOf("interface=");
-		if(indexOfPath != -1 && indexOfInterface != -1)
+		if (indexOfPath != -1 && indexOfInterface != -1)
 		{
 			indexOfPath += "path=".length();
 			indexOfInterface += "interface=".length();
-			int indexOfPathEnd = decodedUrl.indexOf("&",indexOfPath);
-			if(indexOfPathEnd == -1) indexOfPathEnd = decodedUrl.length();
-			int indexOfInterfaceEnd = decodedUrl.indexOf("&",indexOfInterface);
-			if(indexOfInterfaceEnd == -1) indexOfInterfaceEnd = decodedUrl.length();
-			
+			int indexOfPathEnd = decodedUrl.indexOf("&", indexOfPath);
+			if (indexOfPathEnd == -1)
+				indexOfPathEnd = decodedUrl.length();
+			int indexOfInterfaceEnd = decodedUrl.indexOf("&", indexOfInterface);
+			if (indexOfInterfaceEnd == -1)
+				indexOfInterfaceEnd = decodedUrl.length();
+
 			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
 			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
-			
+
 			final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
 
 			if (!component.isVisible())
@@ -197,7 +204,7 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 			// log warning??
 		}
 	}
-	
+
 	/**
 	 * Gets the name of the interface to invoke.
 	 * 

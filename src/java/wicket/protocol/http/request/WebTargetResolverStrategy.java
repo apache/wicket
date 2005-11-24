@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
+import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -153,7 +154,10 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 	}
 
 	/**
-	 * Resolves to a page target that was previously rendered.
+	 * Resolves to a page target that was previously rendered. Optionally
+	 * resolves to a component call target, which is a specialization of a page
+	 * target. If no corresponding page could be found, a expired page target
+	 * will be returned.
 	 * 
 	 * @param webRequestCycle
 	 *            the current request cycle
@@ -181,6 +185,20 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			// invocation change this (for example, with a simple page
 			// redirect)
 			webRequestCycle.setUpdateCluster(true);
+
+			// see whether this resolves to a component call or just the page
+			String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
+			if (!Strings.isEmpty(componentPart))
+			{
+				
+			}
+			final Component component = page.get(componentPart);
+			if (!component.isVisible())
+			{
+				throw new WicketRuntimeException(
+						"Calling listener methods on components that are not visible is not allowed");
+			}
+
 			return new PageRequestTarget(page);
 		}
 		else
