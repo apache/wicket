@@ -249,12 +249,10 @@ public final class StringList extends AbstractStringList
 	 */
 	public void add(final int pos, final String string)
 	{
-		if (string == null) return;
-
-		strings.add(pos, string);
+		strings.add(pos, string==null?"":string);
 
 		// Increase total length
-		totalLength += string.length();
+		totalLength += string == null?0:string.length();
 	}
 
 	/**
