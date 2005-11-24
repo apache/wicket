@@ -18,17 +18,25 @@
  */
 package wicket.markup.html;
 
+import java.util.HashMap;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
+import wicket.Session;
+import wicket.model.Model;
 
 /**
  * This is a filter that injects javascript code to the top head portion and after the body so that
  * the time can me measured what the client parse time was for this page. 
  * It also reports the total server parse/response time in the client and logs the server response time and response size
  * it took for a specific response in the server log.
+ * 
+ * You can specify what the status text should be like this:
+ * ServerAndClientTimeFilter.statustext=My Application, Server parsetime: ${servertime}, Client parsetime: ${clienttime}
  * 
  * @author jcompagner
  */
@@ -46,10 +54,16 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if(headIndex != -1 && bodyIndex != -1)
 		{
-
-			StringBuffer endScript = new StringBuffer("\n<script>\nwindow.defaultStatus='Client time: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's, Server time: ");
-			endScript.append( ((double)timeTaken)/1000);
-			endScript.append("s';\n</script>\n");
+			HashMap map = new HashMap(4);
+			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
+			map.put("servertime", ((double)timeTaken)/1000 + "s");
+			
+			String defaultValue = "Server parsetime: " + ((double)timeTaken)/1000 + "s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's";
+			
+			String txt = Application.get().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue);
+			StringBuffer endScript = new StringBuffer("\n<script>\nwindow.defaultStatus='");
+			endScript.append(txt);
+			endScript.append("';\n</script>\n");
 			responseBuffer.insert(bodyIndex-1, endScript);
 			StringBuffer beginScript = new StringBuffer("\n<script>\nvar clientTimeVariable = new Date().getTime();\n</script>\n");
 			responseBuffer.insert(headIndex+6, beginScript);
