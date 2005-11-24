@@ -17,6 +17,8 @@
  */
 package wicket.protocol.http;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Application;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.IStringIterator;
@@ -104,6 +107,47 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	        }
 	    }
 	}
+	
+	/**
+	 * @see wicket.Request#decodeURL(java.lang.String)
+	 */
+	public String decodeURL(final String url)
+	{
+		int startIndex = url.indexOf("x=");
+		if(startIndex != -1)
+		{
+			startIndex = startIndex +2;
+			final String secureParam;
+			final int endIndex = url.indexOf("&", startIndex);
+			try
+			{
+				if(endIndex == -1)
+				{
+					secureParam = URLDecoder.decode(url.substring(startIndex),Application.get().getSettings().getResponseRequestEncoding());
+				}
+				else
+				{
+					secureParam = URLDecoder.decode(url.substring(startIndex, endIndex),Application.get().getSettings().getResponseRequestEncoding());
+				}
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				// should never happen
+				throw new WicketRuntimeException(ex);
+			}
+			 
+			// Get the crypt implementation from the application
+			final ICrypt urlCrypt = Application.get().newCrypt();
+			
+		    // Decrypt the query string
+			final String queryString = urlCrypt.decrypt(secureParam);
+	
+			// The querystring might have been shortened (length reduced).
+			// In that case, lengthen the query string again. 
+			return rebuildUrl(queryString);
+		}
+		return url;
+	}
 
 	/**
 	 * In case the query string has been shortened prior to encryption,
@@ -117,8 +161,11 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	    queryString = Strings.replaceAll(queryString, "1=", "path=");
 	    queryString = Strings.replaceAll(queryString, "2=", "version=");
 	    queryString = Strings.replaceAll(queryString, "4=", "interface=IRedirectListener");
-	    queryString = Strings.replaceAll(queryString, "3=", "interface=");
-	    queryString = Strings.replaceAll(queryString, "5=", "bookmarkablePage=");
+	    queryString = Strings.replaceAll(queryString, "5=", "interface=IFormSubmitListener");
+	    queryString = Strings.replaceAll(queryString, "6=", "interface=IOnChangeListener");
+	    queryString = Strings.replaceAll(queryString, "7=", "interface=ILinkListener");
+	    queryString = Strings.replaceAll(queryString, "8=", "interface=");
+	    queryString = Strings.replaceAll(queryString, "9=", "bookmarkablePage=");
 
 	    return queryString;
 	}
