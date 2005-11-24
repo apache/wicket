@@ -46,6 +46,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Johan Compagner
  */
 public abstract class FormComponent extends WebMarkupContainer
 {

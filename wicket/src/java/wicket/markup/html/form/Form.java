@@ -105,6 +105,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  * @author Cameron Braid
+ * @author Johan Compagner
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
@@ -204,6 +205,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			String url = getRequest().getParameter(getHiddenFieldId());
 			if(!Strings.isEmpty(url))
 			{
+				//TODO refactor to generic code
 				new WebEventProcessorStrategy().dispatchEvent(getPage(), url);
 			}
 			else
