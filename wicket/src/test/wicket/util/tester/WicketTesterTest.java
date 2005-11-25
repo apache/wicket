@@ -78,7 +78,7 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(CreateBook.class);
 
 		// assert error message from validation
-		tester.assertErrorMessages(new String[] { "field 'id' is required", "field 'name' is required" });
+		tester.assertErrorMessages(new String[] { "id is required", "name is required" });
 	}
 
 	/**
