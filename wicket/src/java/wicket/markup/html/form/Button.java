@@ -111,6 +111,12 @@ public class Button extends FormComponent
 				{
 					Button.this.defaultFormProcessing = formerValue;
 				}
+
+				public String toString()
+				{
+					return "DefaultFormProcessingChange[component: " + getPath()
+							+ ", default processing: " + formerValue + "]";
+				}
 			});
 		}
 

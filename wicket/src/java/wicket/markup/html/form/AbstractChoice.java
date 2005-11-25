@@ -216,6 +216,12 @@ abstract class AbstractChoice extends FormComponent
 					{
 						AbstractChoice.this.choices = oldList;
 					}
+
+					public String toString()
+					{
+						return "ChoiceListChange[component: " + getPath() + ", old choices: "
+								+ oldList + "]";
+					}
 				});
 			}
 		}

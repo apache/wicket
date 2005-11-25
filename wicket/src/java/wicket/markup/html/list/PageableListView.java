@@ -215,6 +215,14 @@ public abstract class PageableListView extends ListView implements IPageable
 		{
 			setCurrentPage(currentPage);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "CurrentPageChange[currentPage: " + currentPage + "]";
+		}
 	}
 
 	/**
@@ -241,6 +249,14 @@ public abstract class PageableListView extends ListView implements IPageable
 		public void undo()
 		{
 			setRowsPerPage(rowsPerPage);
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "RowsPerPageChange[component: " + getPath() + ", prefix: " + rowsPerPage + "]";
 		}
 	}
 

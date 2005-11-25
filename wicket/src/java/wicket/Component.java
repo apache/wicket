@@ -338,6 +338,14 @@ public abstract class Component implements Serializable, IBehaviourListener
 		{
 			setModel(this.model);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "ComponentModelChange[component: " + getPath() + "]";
+		}
 	}
 
 	/**
@@ -399,6 +407,14 @@ public abstract class Component implements Serializable, IBehaviourListener
 		{
 			component.setEnabled(enabled);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "EnabledChange[component: " + component.getPath() + ",enabled: " + enabled + "]";
+		}
 	}
 
 	/**
@@ -431,6 +447,15 @@ public abstract class Component implements Serializable, IBehaviourListener
 		public void undo()
 		{
 			component.setVisible(visible);
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible
+					+ "]";
 		}
 	}
 

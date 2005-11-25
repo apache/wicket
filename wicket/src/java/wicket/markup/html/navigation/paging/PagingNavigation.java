@@ -141,6 +141,14 @@ public class PagingNavigation extends Loop
 		{
 			PagingNavigation.this.startIndex = startIndex;
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "StartIndexChange[component: " + getPath() + ", prefix: " + startIndex + "]";
+		}
 	}
 
 	/** The PageableListView this navigation is navigating. */

@@ -58,6 +58,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 {
 	private static final long serialVersionUID = 1L;
 
+	/** suffix change record. */
 	private class SuffixChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
@@ -76,14 +77,29 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		{
 			setSuffix(prevSuffix);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "SuffixChange[component: " + getPath() + ", suffix: " + prevSuffix + "]";
+		}
 	}
 
+	/**
+	 * Prefix change record.
+	 */
 	private class PrefixChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
 
-		final String prevPrefix;
+		private final String prevPrefix;
 
+		/**
+		 * Construct.
+		 * @param prevSuffix
+		 */
 		PrefixChange(String prevSuffix)
 		{
 			this.prevPrefix = prevSuffix;
@@ -95,6 +111,14 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		public void undo()
 		{
 			setPrefix(prevPrefix);
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "PrefixChange[component: " + getPath() + ", prefix: " + prevPrefix + "]";
 		}
 	}
 

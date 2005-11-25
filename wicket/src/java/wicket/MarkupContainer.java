@@ -433,6 +433,12 @@ public abstract class MarkupContainer extends Component
 				{
 					MarkupContainer.this.children = removedChildren;
 				}
+
+				public String toString()
+				{
+					return "RemoveAllChange[component: " + getPath() + ", removed Children: "
+							+ removedChildren + "]";
+				}
 			});
 			this.children = null;
 		}
