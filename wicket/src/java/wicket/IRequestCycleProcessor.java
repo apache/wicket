@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,9 +18,38 @@
 package wicket;
 
 /**
+ * <p>
  * The request cycle processor is responsible for handling the steps of a
- * request cycle. It's methods are called in a pre-defined order: TODO docme
- * further.
+ * request cycle. It's methods are called in a pre-defined order:
+ * <ul>
+ * <li> {@link #resolve(RequestCycle)} is called to get the request target. A
+ * request might refer to e.g. a bookmarkable page, a listener interface call on
+ * a component on a previously rendered page, a shared resource or e.g. a
+ * non-wicket resource that resides in the web application folder. </li>
+ * <li> {@link #processEvents(RequestCycle)} is called after the target is
+ * resolved. It is meant to handle/ distribute events like e.g. listener
+ * interface calls on components. During this processing, the request target may
+ * be changed (e.g. by calling setResponsePage). What actually happens is that
+ * {@link wicket.RequestCycle} holds a stack of targets, of which it will take
+ * to last addition as the recent one, but walks the whole stack in order to do
+ * cleaning up after the request is handled.</li>
+ * <li> {@link #respond(RequestCycle)} is called to create a response to the
+ * requesting client. Typically, the actual response handling is to be (or
+ * delegated) by the request target implementation, but different strategies
+ * might do as they seem fit. </li>
+ * <li> {@link #respond(Exception, RequestCycle)} is called whenever an uncaught
+ * exception occurs during the event handling or response phase so that an
+ * appropriate exception response can be generated. This method is guaranteed to
+ * be called whenever such an exception happens, but will never be called
+ * otherwise. </li>
+ * </ul>
+ * </p>
+ * <p>
+ * A convience implementation that makes breaking up this processor in smaller
+ * delegate strategies easier can be found as
+ * {@link wicket.request.compound.CompoundRequestCycleProcessor} (or
+ * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor}).
+ * </p>
  * 
  * @author hillenius
  */
@@ -31,9 +61,8 @@ public interface IRequestCycleProcessor
 	 * </p>
 	 * <p>
 	 * Implementors of this method should be careful not to mix this code with
-	 * event handling code; method
-	 * {@link #processEvents(RequestCycle)} is meant for that
-	 * purpose.
+	 * event handling code; method {@link #processEvents(RequestCycle)} is meant
+	 * for that purpose.
 	 * </p>
 	 * 
 	 * @param requestCycle
