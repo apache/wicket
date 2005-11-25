@@ -8,9 +8,11 @@
     <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
   </properties>
   <body>
+   
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
-      <action type="fix" dev="Johan Compagner">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
-      <action type="add" dev="Johan Compagner">Form will hold the values now in its own state until everything is validated</action>
+      <action type="add" dev="Johan Compagner" due-to="Christian Essl">added SubmitLink component, This is a <a href> that acts as a button, can be placed inside or outside the form to trigger the submit.</action>
+      <action type="fix" dev="Johan Compagner" due-to="Laurent PETIT">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
+      <action type="add" dev="Johan Compagner" due-to="Laurent PETIT">The Form will hold the values now in its own state until everything is (successfully) validated to the model(s)</action>
       <action type="add" dev="Johan Compagner">Form aware listeners, like OnChangeListener of DropDown, that one now uses the form submit to call the interface method</action>
       <action type="fix" dev="Johan Compagner" due-to="Maurice Marrink">localized null fixes and localized display value fixes, getID() shouldn't be appended. (that does the localizer)</action>
       <action type="add" dev="Johan Compagner">response filter support, 2 filters added: ServerTime and ServerClientTime, Can for example also be used for Xml Transformations</action>

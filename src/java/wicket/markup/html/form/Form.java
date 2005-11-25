@@ -120,7 +120,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/** True if the form has enctype of multipart/form-data */
 	private boolean multiPart = false;
 
-	private transient String cssId;
+	private String javascriptId;
 
 	/**
 	 * Constructs a form with no validation.
@@ -410,7 +410,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final Button findSubmittingButton()
 	{
-		return (Button)visitChildren(Button.class, new IVisitor()
+		Button button= (Button)visitChildren(Button.class, new IVisitor()
 		{
 			public Object component(final Component component)
 			{
@@ -421,11 +421,39 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				if (getRequest().getParameter(button.getInputName()) != null
 						|| getRequest().getParameter(button.getInputName() + ".x") != null)
 				{
+					if (!button.isVisible())
+					{
+						throw new WicketRuntimeException("Submit Button is not visible");
+					}
 					return button;
 				}
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+		if(button == null)
+		{
+			button = (Button)getPage().visitChildren(SubmitLink.class, new IVisitor()
+			{
+				public Object component(final Component component)
+				{
+					// Get button
+					final SubmitLink button = (SubmitLink)component;
+
+					// Check for button-name or button-name.x request string
+					if (button.getSubmitLinkForm() == Form.this && (getRequest().getParameter(button.getInputName()) != null
+							|| getRequest().getParameter(button.getInputName() + ".x") != null))
+					{
+						if (!button.isVisible())
+						{
+							throw new WicketRuntimeException("Submit Button is not visible");
+						}
+						return button;
+					}
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
+		return button;
 	}
 
 	/**
@@ -512,30 +540,31 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 	}
 	
+	/**
+	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
+	 * that is generated for event dispatches.
+	 * 
+	 * @return The name and id of the hidden field.
+	 */
 	protected final String getHiddenFieldId()
 	{
-        return getCssId() + ":hiddenfield";		
+        return getJavascriptId() + ":hf:0";		
 	}
 
-	protected final String getCssId()
+	/**
+	 * Returns the javascript/css id of this form that will be used to generated the id="xxx" attribute.
+	 * it will be generated if not set already in the onComponentTag. Where it will be tried to load from
+	 * the markup first before it is generated. 
+	 * 
+	 * @return The javascript/css id of this form.
+	 */
+	protected final String getJavascriptId()
 	{
-		if(Strings.isEmpty(cssId))
+		if(Strings.isEmpty(javascriptId))
 		{
-			final StringBuffer inputName = new StringBuffer(getId());
-	        Component c = this;
-	        while (true)
-	        {
-	            c = c.getParent();
-	            if (c == null || c instanceof Page || inputName.length() > 100)
-	            {
-	                break;
-	            }
-	            inputName.append(':');
-	            inputName.append(c.getId());
-	        }
-			cssId = inputName.toString();
+			javascriptId = getPageRelativePath();
 		}
-		return cssId;
+		return javascriptId;
 	}
 
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
@@ -552,11 +581,21 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
-		cssId = (String)tag.getAttributes().get("id");
-		if(Strings.isEmpty(cssId))
+		// If the javascriptid is already generated then use that on even it was before the first render. 
+		// because there could be a component which already uses it to submit the forum.
+		// This should be fixed when we pre parse the markup so that we know the id is at front.
+		if(!Strings.isEmpty(javascriptId))
 		{
-			cssId = getCssId();
-			tag.put("id", cssId);
+			tag.put("id", javascriptId);
+		}
+		else
+		{
+			javascriptId = (String)tag.getAttributes().get("id");
+			if(Strings.isEmpty(javascriptId))
+			{
+				javascriptId = getJavascriptId();
+				tag.put("id", javascriptId);
+			}
 		}
 		tag.put("method", "post");
 		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
@@ -859,7 +898,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final String getJsForInterfaceUrl(String url)
 	{
-		return "document.getElementById('" + getHiddenFieldId()+ "').value='" + url+ "';document.getElementById('" + getCssId()+"').submit();";
+		return "document.getElementById('" + getHiddenFieldId()+ "').value='" + url+ "';document.getElementById('" + getJavascriptId()+"').submit();";
 	}
 	
 	static
