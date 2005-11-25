@@ -107,7 +107,7 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("ethod " + method.getName() + " of "
+			throw new WicketRuntimeException("method " + method.getName() + " of "
 					+ method.getDeclaringClass() + "targetted at component " + component
 					+ " threw an exception", e);
 		}
