@@ -16,32 +16,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.request;
+
+import wicket.Component;
+import wicket.IRequestTarget;
 
 /**
- * <p>
- * A request target is the base entity that is the subject of a request.
- * </p>
+ * Target that denotes a single component instance.
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTarget
+public interface IComponentRequestTarget extends IRequestTarget
 {
-	/**
-	 * Generate a response.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void respond(RequestCycle requestCycle);
 
 	/**
-	 * This method is alled on the end of a request cycle to indicate that
-	 * processing is done and that cleaning up of the subject(s) of this target
-	 * may be done.
+	 * Gets the component instance.
 	 * 
-	 * @param requestCycle
-	 *            the current request cycle
+	 * @return the component instance
 	 */
-	void cleanUp(RequestCycle requestCycle);
+	public abstract Component getComponent();
+
 }

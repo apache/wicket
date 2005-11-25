@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,12 +24,15 @@ import wicket.Component;
 import wicket.Page;
 
 /**
+ * Default implementation of {@link wicket.request.IInterfaceCallRequestTarget}.
  * Target that denotes a page instance and a call to a component on that page
  * using an listener interface method.
  * 
  * @author Eelco Hillenius
  */
 public class InterfaceCallRequestTarget extends PageRequestTarget
+		implements
+			IInterfaceCallRequestTarget
 {
 	/** the target component. */
 	private final Component component;
@@ -64,9 +68,7 @@ public class InterfaceCallRequestTarget extends PageRequestTarget
 	}
 
 	/**
-	 * Gets the target component.
-	 * 
-	 * @return the target component
+	 * @see wicket.request.IInterfaceCallRequestTarget#getComponent()
 	 */
 	public Component getComponent()
 	{
@@ -74,9 +76,7 @@ public class InterfaceCallRequestTarget extends PageRequestTarget
 	}
 
 	/**
-	 * Gets listener method.
-	 * 
-	 * @return the listener method
+	 * @see wicket.request.IInterfaceCallRequestTarget#getListenerMethod()
 	 */
 	public Method getListenerMethod()
 	{

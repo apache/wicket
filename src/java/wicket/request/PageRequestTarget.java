@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,18 +20,17 @@ package wicket.request;
 
 import javax.servlet.ServletException;
 
-import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.WicketRuntimeException;
 
 /**
- * Target that denotes a page instance.
+ * Default implementation of {@link IPageRequestTarget}. Target that denotes a
+ * page instance.
  * 
  * @author Eelco Hillenius
  */
-public class PageRequestTarget implements IRequestTarget
+public class PageRequestTarget implements IPageRequestTarget
 {
 	/** the page instance. */
 	private final Page page;
@@ -51,9 +52,7 @@ public class PageRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the page instance.
-	 * 
-	 * @return the page instance
+	 * @see wicket.request.IPageRequestTarget#getPage()
 	 */
 	public final Page getPage()
 	{
@@ -83,16 +82,6 @@ public class PageRequestTarget implements IRequestTarget
 			// Let page render itself
 			page.doRender();
 		}
-	}
-
-	/**
-	 * Returns the session to synchronize on.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return Session.get();
 	}
 
 	/**
