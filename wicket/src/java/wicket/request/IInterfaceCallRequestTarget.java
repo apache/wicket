@@ -16,32 +16,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.request;
+
+import java.lang.reflect.Method;
+
+import wicket.Component;
 
 /**
- * <p>
- * A request target is the base entity that is the subject of a request.
- * </p>
+ * Target that denotes a page instance and a call to a component on that page
+ * using an listener interface method.
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTarget
+public interface IInterfaceCallRequestTarget extends IPageRequestTarget, ISessionSynchronizable
 {
-	/**
-	 * Generate a response.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void respond(RequestCycle requestCycle);
 
 	/**
-	 * This method is alled on the end of a request cycle to indicate that
-	 * processing is done and that cleaning up of the subject(s) of this target
-	 * may be done.
+	 * Gets the target component.
 	 * 
-	 * @param requestCycle
-	 *            the current request cycle
+	 * @return the target component
 	 */
-	void cleanUp(RequestCycle requestCycle);
+	public abstract Component getComponent();
+
+	/**
+	 * Gets listener method.
+	 * 
+	 * @return the listener method
+	 */
+	public abstract Method getListenerMethod();
+
 }

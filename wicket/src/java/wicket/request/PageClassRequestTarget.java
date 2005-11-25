@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,19 +18,18 @@
  */
 package wicket.request;
 
-import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.Session;
 
 /**
- * Target that denotes a page that is to be created from the provided page
- * class. This is typically used for redirects to bookmarkable pages.
+ * Default implementation of {@link IPageClassRequestTarget}. Target that
+ * denotes a page that is to be created from the provided page class. This is
+ * typically used for redirects to bookmarkable pages.
  * 
  * @author Eelco Hillenius
  */
-public class PageClassRequestTarget implements IRequestTarget
+public class PageClassRequestTarget implements IPageClassRequestTarget
 {
 	/** the class of the page. */
 	private final Class pageClass;
@@ -92,19 +92,7 @@ public class PageClassRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Returns the session to synchronize on.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return Session.get();
-	}
-
-	/**
-	 * Gets the page class.
-	 * 
-	 * @return the page class
+	 * @see wicket.request.IPageClassRequestTarget#getPageClass()
 	 */
 	public Class getPageClass()
 	{
@@ -112,9 +100,7 @@ public class PageClassRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the optional page parameters.
-	 * 
-	 * @return the page parameters or null
+	 * @see wicket.request.IPageClassRequestTarget#getPageParameters()
 	 */
 	public PageParameters getPageParameters()
 	{

@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -69,20 +70,30 @@ public class SharedResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Returns null because we don't need to do anything thread safe.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
+	}
+
+	/**
+	 * Gets the shared resource.
+	 * 
+	 * @return the shared resource
+	 */
+	public final Resource getResource()
+	{
+		return resource;
+	}
+
+	/**
+	 * Gets the key of the resource.
+	 * 
+	 * @return the key of the resource
+	 */
+	public final String getResourceKey()
+	{
+		return resourceKey;
 	}
 
 	/**

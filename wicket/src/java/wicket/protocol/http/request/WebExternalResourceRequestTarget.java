@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: WebExternalResourceRequestTarget.java,v 1.1 2005/11/24 20:59:02 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -106,16 +107,6 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 			throw new WicketRuntimeException("Cannot load static content for request "
 					+ requestCycle.getRequest(), e);
 		}
-	}
-
-	/**
-	 * Returns null because we don't need to do anything thread safe.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return null;
 	}
 
 	/**

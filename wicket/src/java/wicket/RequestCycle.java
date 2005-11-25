@@ -32,6 +32,9 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ComponentRequestTarget;
+import wicket.request.IPageClassRequestTarget;
+import wicket.request.IPageRequestTarget;
+import wicket.request.ISessionSynchronizable;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.util.lang.Classes;
@@ -194,7 +197,7 @@ public abstract class RequestCycle
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	// TODO use a more efficient implementation, maybe with a default size of 3
-	private Stack/* <IRequestTarget> */requestTargets = new Stack();
+	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/**
 	 * True if request should be redirected to the resulting page instead of
@@ -392,24 +395,7 @@ public abstract class RequestCycle
 			// set it as the current target, on the top of the stack
 			setRequestTarget(target);
 
-			// see whether we need to do synchronization
-			Object synchronizeLock = target.getSynchronizationLock();
-
-			// if the lock is not-null, synchronize the rest of the request
-			// cycle processing
-			if (synchronizeLock != null)
-			{
-				synchronized (synchronizeLock)
-				{
-					processEventsAndRespond(processor);
-				}
-			}
-			else
-			{
-				// no lock means no synchronization (e.g. when handling static
-				// resources or external resources)
-				processEventsAndRespond(processor);
-			}
+			processEventsAndRespondWithSync(processor);
 		}
 		finally
 		{
@@ -445,24 +431,7 @@ public abstract class RequestCycle
 			// set it as the current target, on the top of the stack
 			setRequestTarget(target);
 
-			// see whether we need to do synchronization
-			Object synchronizeLock = target.getSynchronizationLock();
-
-			// if the lock is not-null, synchronize the rest of the request
-			// cycle processing
-			if (synchronizeLock != null)
-			{
-				synchronized (synchronizeLock)
-				{
-					processEventsAndRespond(processor);
-				}
-			}
-			else
-			{
-				// no lock means no synchronization (e.g. when handling static
-				// resources or external resources)
-				processEventsAndRespond(processor);
-			}
+			processEventsAndRespondWithSync(processor);
 		}
 		finally
 		{
@@ -528,7 +497,36 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Call the even processing and and respond methods on the request
+	 * Call the event processing and and respond methods on the request
+	 * processor and apply synchronization if needed.
+	 * 
+	 * @param processor
+	 *            the request processor
+	 */
+	private void processEventsAndRespondWithSync(IRequestCycleProcessor processor)
+	{
+		// see whether we need to do synchronization
+		Object synchronizeLock = getSynchronizationLock();
+
+		// if the lock is not-null, synchronize the rest of the request
+		// cycle processing
+		if (synchronizeLock != null)
+		{
+			synchronized (synchronizeLock)
+			{
+				processEventsAndRespond(processor);
+			}
+		}
+		else
+		{
+			// no lock means no synchronization (e.g. when handling static
+			// resources or external resources)
+			processEventsAndRespond(processor);
+		}
+	}
+
+	/**
+	 * Call the event processing and and respond methods on the request
 	 * processor.
 	 * 
 	 * @param processor
@@ -551,6 +549,28 @@ public abstract class RequestCycle
 			log.error(e.getMessage(), e);
 			processor.respond(e, this);
 		}
+	}
+
+	/**
+	 * Gets the lock for synchronizing the request cycle processing other than
+	 * resolving this target. If this method returns null, no synchronization
+	 * will be used. Typically, if synchonization is wanted, this method should
+	 * return an instance of the current session. The latter would be the case
+	 * for e.g. a page request target. Non-synchornization is desirable for
+	 * instance with static resources or external resources.
+	 * 
+	 * @return the lock to use for synchronizing the event handling and
+	 *         rendering states of the request handling, or null if
+	 *         synchronization should not be done.
+	 */
+	private Object getSynchronizationLock()
+	{
+		if (getRequestTarget() instanceof ISessionSynchronizable)
+		{
+			return getSession();
+		}
+
+		return null;
 	}
 
 	/**
@@ -657,7 +677,7 @@ public abstract class RequestCycle
 		IRequestTarget target = (IRequestTarget)getRequestTarget();
 		if (target != null && (target instanceof PageRequestTarget))
 		{
-			return ((PageRequestTarget)target).getPage();
+			return ((IPageRequestTarget)target).getPage();
 		}
 		return null;
 	}
@@ -672,9 +692,9 @@ public abstract class RequestCycle
 	public final Class getResponsePageClass()
 	{
 		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof PageClassRequestTarget))
+		if (target != null && (target instanceof IPageClassRequestTarget))
 		{
-			return ((PageClassRequestTarget)target).getPageClass();
+			return ((IPageClassRequestTarget)target).getPageClass();
 		}
 		return null;
 	}

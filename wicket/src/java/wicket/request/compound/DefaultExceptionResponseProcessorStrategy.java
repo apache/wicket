@@ -27,7 +27,7 @@ import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.request.PageRequestTarget;
+import wicket.request.IPageRequestTarget;
 
 /**
  * Default implementation of response processor strategy that just calls
@@ -67,9 +67,9 @@ public final class DefaultExceptionResponseProcessorStrategy implements IExcepti
 				// Show internal error page
 				final IPageFactory pageFactory;
 				IRequestTarget requestTarget = requestCycle.getRequestTarget();
-				if (requestTarget instanceof PageRequestTarget)
+				if (requestTarget instanceof IPageRequestTarget)
 				{
-					pageFactory = session.getPageFactory(((PageRequestTarget)requestTarget)
+					pageFactory = session.getPageFactory(((IPageRequestTarget)requestTarget)
 							.getPage());
 				}
 				else

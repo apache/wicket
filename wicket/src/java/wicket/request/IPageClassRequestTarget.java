@@ -16,32 +16,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.request;
+
+import wicket.IRequestTarget;
+import wicket.PageParameters;
 
 /**
- * <p>
- * A request target is the base entity that is the subject of a request.
- * </p>
+ * Target that denotes a page that is to be created from the provided page
+ * class. This is typically used for redirects to bookmarkable pages.
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTarget
+public interface IPageClassRequestTarget extends IRequestTarget
 {
-	/**
-	 * Generate a response.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void respond(RequestCycle requestCycle);
 
 	/**
-	 * This method is alled on the end of a request cycle to indicate that
-	 * processing is done and that cleaning up of the subject(s) of this target
-	 * may be done.
+	 * Gets the page class.
 	 * 
-	 * @param requestCycle
-	 *            the current request cycle
+	 * @return the page class
 	 */
-	void cleanUp(RequestCycle requestCycle);
+	Class getPageClass();
+
+	/**
+	 * Gets the optional page parameters.
+	 * 
+	 * @return the page parameters or null
+	 */
+	PageParameters getPageParameters();
 }

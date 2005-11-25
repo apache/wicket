@@ -16,32 +16,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.request;
 
 /**
- * <p>
- * A request target is the base entity that is the subject of a request.
- * </p>
+ * Tagging interface that denotes that a request target needs to be synchronized
+ * on the session.If a {@link wicket.IRequestTarget} implements this interface,
+ * the event handling and response steps of the request cycle processing will be
+ * synchronized on the session object.
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTarget
+public interface ISessionSynchronizable
 {
-	/**
-	 * Generate a response.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void respond(RequestCycle requestCycle);
-
-	/**
-	 * This method is alled on the end of a request cycle to indicate that
-	 * processing is done and that cleaning up of the subject(s) of this target
-	 * may be done.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void cleanUp(RequestCycle requestCycle);
 }

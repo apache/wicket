@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -115,16 +116,6 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 		{
 			throw new WicketRuntimeException(e);
 		}
-	}
-
-	/**
-	 * Returns null because we don't need to do anything thread safe.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return null;
 	}
 
 	/**

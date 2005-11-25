@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,16 +19,15 @@
 package wicket.request;
 
 import wicket.Component;
-import wicket.IRequestTarget;
 import wicket.RequestCycle;
-import wicket.Session;
 
 /**
+ * Default implementation of {@link wicket.request.IComponentRequestTarget}.
  * Target that denotes a single component instance.
  * 
  * @author Eelco Hillenius
  */
-public class ComponentRequestTarget implements IRequestTarget
+public class ComponentRequestTarget implements IComponentRequestTarget
 {
 	/** the component instance. */
 	private final Component component;
@@ -49,9 +49,7 @@ public class ComponentRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the component instance.
-	 * 
-	 * @return the component instance
+	 * @see wicket.request.IComponentRequestTarget#getComponent()
 	 */
 	public final Component getComponent()
 	{
@@ -65,16 +63,6 @@ public class ComponentRequestTarget implements IRequestTarget
 	{
 		// Let page render itself
 		component.render();
-	}
-
-	/**
-	 * Returns the session to synchronize on.
-	 * 
-	 * @see wicket.IRequestTarget#getSynchronizationLock()
-	 */
-	public Object getSynchronizationLock()
-	{
-		return Session.get();
 	}
 
 	/**
