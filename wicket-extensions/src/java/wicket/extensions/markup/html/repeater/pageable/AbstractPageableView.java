@@ -210,6 +210,12 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 				{
 					itemReuseStrategy = old;
 				}
+
+				public String toString()
+				{
+					return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " + old
+							+ "]";
+				}
 			});
 		}
 		itemReuseStrategy = strategy;
@@ -326,6 +332,12 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 				{
 					itemsPerPage = old;
 				}
+
+				public String toString()
+				{
+					return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " + old
+							+ "]";
+				}
 			});
 		}
 
@@ -406,6 +418,11 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 				public void undo()
 				{
 					currentPage = old;
+				}
+				public String toString()
+				{
+					return "CurrentPageChange[component: " + getPath() + ", currentPage: "
+							+ old + "]";
 				}
 			});
 		}

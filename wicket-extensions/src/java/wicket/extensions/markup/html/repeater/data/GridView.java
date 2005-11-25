@@ -125,6 +125,12 @@ public abstract class GridView extends AbstractDataView
 				{
 					columns = old;
 				}
+
+				public String toString()
+				{
+					return "GridViewColumnsChange[component: " + getPath() + ", removed columns: "
+							+ old + "]";
+				}
 			});
 			columns = cols;
 		}
@@ -165,6 +171,12 @@ public abstract class GridView extends AbstractDataView
 				public void undo()
 				{
 					GridView.this.rows = old;
+				}
+
+				public String toString()
+				{
+					return "GridViewRowsChange[component: " + getPath() + ", removed rows: " + old
+							+ "]";
 				}
 			});
 			this.rows = rows;

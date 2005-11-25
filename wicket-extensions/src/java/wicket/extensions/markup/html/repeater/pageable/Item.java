@@ -72,6 +72,11 @@ public class Item extends WebMarkupContainer
 			{
 				Item.this.index = oldIndex;
 			}
+
+			public String toString()
+			{
+				return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
+			}
 		});
 		this.index = index;
 	}
