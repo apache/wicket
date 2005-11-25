@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
+import wicket.request.ComponentRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.util.lang.Classes;
@@ -346,12 +347,29 @@ public abstract class RequestCycle
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
+	 * Responds to a request to re-render a single component.
+	 * 
+	 * @param component
+	 *            to be re-rendered
+	 * @throws ServletException
+	 */
+	public final void request(final Component component) throws ServletException
+	{
+		request(new ComponentRequestTarget(component));
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
 	 * Responds to a request.
 	 * 
 	 * @throws ServletException
 	 */
 	public final void request() throws ServletException
 	{
+		// prepare the request
+		prepare();
+
 		// get the processor we delegate the handling of the request
 		// cycle behaviour to
 		IRequestCycleProcessor processor = getRequestCycleProcessor();
@@ -359,13 +377,6 @@ public abstract class RequestCycle
 		{
 			throw new WicketRuntimeException("request cycle processor must be not-null");
 		}
-
-		// Attach thread local resources for request
-		threadAttach();
-
-		// Response is beginning
-		internalOnBeginRequest();
-		onBeginRequest();
 
 		try
 		{
@@ -402,42 +413,118 @@ public abstract class RequestCycle
 		}
 		finally
 		{
-			// clean up target stack; calling cleanUp has effects like
-			for (Iterator i = requestTargets.iterator(); i.hasNext();)
-			{
-				IRequestTarget t = (IRequestTarget)i.next();
-				try
-				{
-					t.cleanUp(this);
-				}
-				catch (RuntimeException e)
-				{
-					log.error("there was an error cleaning up target " + t + ".", e);
-				}
-			}
-
-			// Response is ending
-			try
-			{
-				internalOnEndRequest();
-			}
-			catch (RuntimeException e)
-			{
-				log.error("Exception occurred during internalOnEndRequest", e);
-			}
-
-			try
-			{
-				onEndRequest();
-			}
-			catch (RuntimeException e)
-			{
-				log.error("Exception occurred during onEndRequest", e);
-			}
-
-			// Release thread local resources
-			threadDetach();
+			cleanUp();
 		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Responds to a request with the request target.
+	 * 
+	 * @param target
+	 *            request target
+	 * 
+	 * @throws ServletException
+	 */
+	public final void request(IRequestTarget target) throws ServletException
+	{
+		// prepare the request
+		prepare();
+
+		// get the processor we delegate the handling of the request
+		// cycle behaviour to
+		IRequestCycleProcessor processor = getRequestCycleProcessor();
+		if (processor == null)
+		{
+			throw new WicketRuntimeException("request cycle processor must be not-null");
+		}
+
+		try
+		{
+			// set it as the current target, on the top of the stack
+			setRequestTarget(target);
+
+			// see whether we need to do synchronization
+			Object synchronizeLock = target.getSynchronizationLock();
+
+			// if the lock is not-null, synchronize the rest of the request
+			// cycle processing
+			if (synchronizeLock != null)
+			{
+				synchronized (synchronizeLock)
+				{
+					processEventsAndRespond(processor);
+				}
+			}
+			else
+			{
+				// no lock means no synchronization (e.g. when handling static
+				// resources or external resources)
+				processEventsAndRespond(processor);
+			}
+		}
+		finally
+		{
+			cleanUp();
+		}
+	}
+
+	/**
+	 * Prepare the request cycle.
+	 */
+	private void prepare()
+	{
+		// Attach thread local resources for request
+		threadAttach();
+
+		// Response is beginning
+		internalOnBeginRequest();
+		onBeginRequest();
+	}
+
+	/**
+	 * Clean up the request cycle.
+	 */
+	private void cleanUp()
+	{
+		// clean up target stack; calling cleanUp has effects like
+		// NOTE: don't remove the targets as testing code might need them
+		// furthermore, the targets will be cg-ed with this cycle too
+		for (Iterator i = requestTargets.iterator(); i.hasNext();)
+		{
+			IRequestTarget t = (IRequestTarget)i.next();
+			try
+			{
+				t.cleanUp(this);
+			}
+			catch (RuntimeException e)
+			{
+				log.error("there was an error cleaning up target " + t + ".", e);
+			}
+		}
+
+		// Response is ending
+		try
+		{
+			internalOnEndRequest();
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during internalOnEndRequest", e);
+		}
+
+		try
+		{
+			onEndRequest();
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during onEndRequest", e);
+		}
+
+		// Release thread local resources
+		threadDetach();
 	}
 
 	/**
@@ -485,81 +572,6 @@ public abstract class RequestCycle
 	public final IRequestTarget getRequestTarget()
 	{
 		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Responds to a request to re-render a single component.
-	 * 
-	 * @param component
-	 *            to be re-rendered
-	 * @throws ServletException
-	 * @deprecated replace this method by integrating it with
-	 *             IRequestCycleProcessor
-	 */
-	public final void request(final Component component) throws ServletException
-	{
-		// Serialize renderings on the session object so that only one page
-		// can be rendered at a time for a given session.
-		synchronized (session)
-		{
-			try
-			{
-				// Attach thread local resources for request
-				threadAttach();
-
-				// Response is beginning
-				internalOnBeginRequest();
-				onBeginRequest();
-
-				component.render();
-			}
-			catch (RuntimeException e)
-			{
-				log.error(e.getMessage(), e);
-				IRequestCycleProcessor processor = getRequestCycleProcessor();
-				processor.respond(e, this);
-			}
-			finally
-			{
-				// // make sure the invokerPage is ended correctly.
-				// try
-				// {
-				// if (invokePage != null)
-				// {
-				// invokePage.internalEndRequest();
-				// }
-				// }
-				// catch (RuntimeException e)
-				// {
-				// log.error("Exception occurred during
-				// invokerPage.internalEndRequest", e);
-				// }
-
-				// Response is ending
-				try
-				{
-					internalOnEndRequest();
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during internalOnEndRequest", e);
-				}
-
-				try
-				{
-					onEndRequest();
-				}
-				catch (RuntimeException e)
-				{
-					log.error("Exception occurred during onEndRequest", e);
-				}
-
-				// Release thread local resources
-				threadDetach();
-			}
-		}
 	}
 
 	/**
