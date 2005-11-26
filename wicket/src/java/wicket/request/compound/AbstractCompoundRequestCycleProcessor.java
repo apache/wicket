@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: AbstractCompoundRequestCycleProcessor.java,v 1.2 2005/11/25 22:03:33
+ * eelco12 Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,8 +42,11 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 	 */
 	public IRequestTarget resolve(RequestCycle requestCycle)
 	{
+		IRequestParametersFactory parametersFactory = getRequestParameterFactory();
+		RequestParameters requestParameters = parametersFactory.newParameters(requestCycle
+				.getRequest());
 		IRequestTargetResolverStrategy strategy = getRequestTargetResolverStrategy();
-		return strategy.resolve(requestCycle);
+		return strategy.resolve(requestCycle, requestParameters);
 	}
 
 	/**
@@ -74,6 +76,13 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 		IExceptionResponseStrategy strategy = getExceptionResponseStrategy();
 		strategy.respond(requestCycle, e);
 	}
+
+	/**
+	 * Gets the request parameter factory for digesting the request.
+	 * 
+	 * @return the request parameter factory for digesting the request
+	 */
+	protected abstract IRequestParametersFactory getRequestParameterFactory();
 
 	/**
 	 * Gets the strategy for the resolve method.

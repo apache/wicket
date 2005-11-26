@@ -29,9 +29,10 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.request.WebEventProcessorStrategy;
-import wicket.protocol.http.request.WebTargetResolverStrategy;
+import wicket.protocol.http.request.WebRequestParametersFactory;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.compound.CompoundRequestCycleProcessor;
+import wicket.request.compound.DefaultRequestTargetResolverStrategy;
 import wicket.response.BufferedResponse;
 
 /**
@@ -235,7 +236,8 @@ public class WebRequestCycle extends RequestCycle
 		if (requestCycleProcessor == null)
 		{
 			requestCycleProcessor = new CompoundRequestCycleProcessor(
-					new WebTargetResolverStrategy(), new WebEventProcessorStrategy());
+					new WebRequestParametersFactory(), new DefaultRequestTargetResolverStrategy(),
+					new WebEventProcessorStrategy());
 		}
 		return requestCycleProcessor;
 	}

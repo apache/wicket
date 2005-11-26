@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: IRequestTargetResolverStrategy.java,v 1.2 2005/11/25 22:03:33 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,8 +35,12 @@ public interface IRequestTargetResolverStrategy
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
+	 * @param requestParameters
+	 *            Object that abstracts common request parameters. It consists
+	 *            of possible optional parameters that can be translated from
+	 *            e.g. servlet request parameters
 	 * @return the root component
 	 * @see AbstractCompoundRequestCycleProcessor#resolve(RequestCycle)
 	 */
-	IRequestTarget resolve(RequestCycle requestCycle);
+	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
 }

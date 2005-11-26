@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,18 +17,18 @@
  */
 package wicket.request;
 
-import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 
 /**
- * Target that denotes a shared {@link wicket.Resource}.
+ * Default implementation of {@link ISharedResourceRequestTarget}. Target that
+ * denotes a shared {@link wicket.Resource}.
  * 
  * @author Eelco Hillenius
  */
-public class SharedResourceRequestTarget implements IRequestTarget
+public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 {
 	/** the key of the resource. */
 	private final String resourceKey;
@@ -77,9 +76,7 @@ public class SharedResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the shared resource.
-	 * 
-	 * @return the shared resource
+	 * @see wicket.request.ISharedResourceRequestTarget#getResource()
 	 */
 	public final Resource getResource()
 	{
@@ -87,9 +84,7 @@ public class SharedResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the key of the resource.
-	 * 
-	 * @return the key of the resource
+	 * @see wicket.request.ISharedResourceRequestTarget#getResourceKey()
 	 */
 	public final String getResourceKey()
 	{

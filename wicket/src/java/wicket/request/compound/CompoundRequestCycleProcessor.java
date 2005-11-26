@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +26,9 @@ package wicket.request.compound;
  */
 public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleProcessor
 {
+	/** the strategy for constructing request parameters. */
+	private final IRequestParametersFactory requestParameterFactory;
+
 	/** the strategy for the target resolver method. */
 	private final IRequestTargetResolverStrategy requestTargetResolverStrategy;
 
@@ -42,25 +44,29 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	/**
 	 * Construct using the given strategies and
 	 * {@link DefaultResponseProcessorStrategy} and
-	 * {@link DefaultExceptionResponseProcessorStrategy}.
+	 * {@link DefaultExceptionResponseStrategy}.
 	 * 
+	 * @param requestParameterFactory
+	 *            the strategy for constructing request parameters
 	 * @param requestTargetResolverStrategy
 	 *            the strategy for the target resolver method
 	 * @param eventProcessorStrategy
 	 *            the strategy for the event processor method
 	 */
-	public CompoundRequestCycleProcessor(
+	public CompoundRequestCycleProcessor(IRequestParametersFactory requestParameterFactory,
 			IRequestTargetResolverStrategy requestTargetResolverStrategy,
 			IEventProcessorStrategy eventProcessorStrategy)
 	{
-		this(requestTargetResolverStrategy, eventProcessorStrategy,
+		this(requestParameterFactory, requestTargetResolverStrategy, eventProcessorStrategy,
 				new DefaultResponseProcessorStrategy(),
-				new DefaultExceptionResponseProcessorStrategy());
+				new DefaultExceptionResponseStrategy());
 	}
 
 	/**
 	 * Construct using the given strategies.
 	 * 
+	 * @param requestParameterFactory
+	 *            the strategy for constructing request parameters
 	 * @param requestTargetResolverStrategy
 	 *            the strategy for the target resolver method
 	 * @param eventProcessorStrategy
@@ -70,15 +76,24 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * @param exceptionResponseStrategy
 	 *            the strategy for the exception response method
 	 */
-	public CompoundRequestCycleProcessor(
+	public CompoundRequestCycleProcessor(IRequestParametersFactory requestParameterFactory,
 			IRequestTargetResolverStrategy requestTargetResolverStrategy,
 			IEventProcessorStrategy eventProcessorStrategy, IResponseStrategy responseStrategy,
 			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
+		this.requestParameterFactory = requestParameterFactory;
 		this.requestTargetResolverStrategy = requestTargetResolverStrategy;
 		this.eventProcessorStrategy = eventProcessorStrategy;
 		this.responseStrategy = responseStrategy;
 		this.exceptionResponseStrategy = exceptionResponseStrategy;
+	}
+
+	/**
+	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getRequestParameterFactory()
+	 */
+	protected IRequestParametersFactory getRequestParameterFactory()
+	{
+		return requestParameterFactory;
 	}
 
 	/**
