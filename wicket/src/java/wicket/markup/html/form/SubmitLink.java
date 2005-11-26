@@ -18,16 +18,7 @@
  */
 package wicket.markup.html.form;
 
-import wicket.AttributeModifier;
-import wicket.Component;
-import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.Button;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.TextField;
-import wicket.model.AbstractReadOnlyModel;
-import wicket.model.CompoundPropertyModel;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. 
@@ -38,28 +29,28 @@ import wicket.model.CompoundPropertyModel;
  * Second way is to use the Form constructor then that form will be used to submit to.</p>
  * 
  * <pre>
-        Form f = new Form("linkForm", new CompoundPropertyModel(mod));
-        f.add(new TextField("value1"));
-        f.add(new SubmitLink("link1") {
-            protected void onSubmit() {
-                System.out.println("Link1 was clicked, value1 is: "
-                        + mod.getValue1());
-            };
-        });
-        add(new SubmitLink("link2",f) {
-            protected void onSubmit() {
-                System.out.println("Link2 was clicked, value1 is: "
-                        + mod.getValue1());
-            };
-        });
-
-    <form wicket:id="linkForm" >
-        <input wicket:id="value1" type="text" size="30"/>
-        <a wicket:id="link1">Press link1 to submit</a>
-        <input type="submit" value="Send"/>
-    </form>
-      <a wicket:id="link2">Press link 2 to submit</a>
-    
+ *       Form f = new Form("linkForm", new CompoundPropertyModel(mod));
+ *       f.add(new TextField("value1"));
+ *       f.add(new SubmitLink("link1") {
+ *           protected void onSubmit() {
+ *               System.out.println("Link1 was clicked, value1 is: "
+ *                       + mod.getValue1());
+ *           };
+ *       });
+ *       add(new SubmitLink("link2",f) {
+ *           protected void onSubmit() {
+ *               System.out.println("Link2 was clicked, value1 is: "
+ *                       + mod.getValue1());
+ *           };
+ *       });
+ *
+ *    <form wicket:id="linkForm" >
+ *       <input wicket:id="value1" type="text" size="30"/>
+ *       <a wicket:id="link1">Press link1 to submit</a>
+ *       <input type="submit" value="Send"/>
+ *   </form>
+ *     <a wicket:id="link2">Press link 2 to submit</a>
+ *   
  * </pre>
  * @author chris
  * @author jcompagner
@@ -75,7 +66,8 @@ public class SubmitLink extends Button
      * 
      * @param id The id of the submitlink.
      */
-    public SubmitLink(String id){
+    public SubmitLink(String id)
+    {
         super(id);
     }
     
@@ -92,11 +84,16 @@ public class SubmitLink extends Button
      * @param id The id of the submitlink.
 	 * @param form The form which this submitlink must submit.
      */
-    public SubmitLink(String id, Form form){
+    public SubmitLink(String id, Form form)
+    {
         super(id);
         this.form = form;
     }
 
+    /**
+     * @inheritDoc
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+     */
     protected void onComponentTag(ComponentTag tag)
     {
         checkComponentTag(tag, "a");
@@ -124,13 +121,12 @@ public class SubmitLink extends Button
 		return sb.toString();
     }
 
-
 	/**
 	 * @return the Form for which this submit link submits
 	 */
 	public final Form getSubmitLinkForm()
 	{
-		if(form == null)
+		if (form == null)
 		{
 			form = getForm();
 		}

@@ -94,17 +94,19 @@ public class RadioGroup extends FormComponent
 			{
 				throw new WicketRuntimeException(
 						"submitted http post value ["
-								+ path
-								+ "] for RadioGroup component ["
-								+ getPath()
-								+ "] is illegal because it does not contain relative path to a Radio componnet. "
-								+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+						+ path
+						+ "] for RadioGroup component ["
+						+ getPath()
+						+ "] is illegal because it does not contain relative path to a Radio componnet. "
+						+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 			}
 
 			
 			// assign the value of the group's model
 			setModelObject(choice.getModelObject());
-		} else {
+		} 
+		else 
+		{
 			// no choice selected - set model object to null
 			setModelObject(null);
 		}
