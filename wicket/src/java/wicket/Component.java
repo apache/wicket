@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.197 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -251,15 +251,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** boolean whether this component was rendered once for tracking changes. */
 	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
-	/**
-	 * If true, a full render is required and a component re-render is not
-	 * possible.
-	 */
-	private static final short FLAG_NEEDS_FULL_RENDER = 0x2000;
-
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
-			| FLAG_NEEDS_FULL_RENDER;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED 
+			| FLAG_ENABLED;
 
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
@@ -1074,18 +1068,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * If true, a markup stream is not assigned yet and hence the component can
-	 * not be re-rendered yet. A full render cycle which assigns the markup
-	 * stream is required first.
-	 * 
-	 * @return if true, requires full render cycle
-	 */
-	protected boolean isRequiresFullRender()
-	{
-		return getFlag(FLAG_NEEDS_FULL_RENDER);
-	}
-
-	/**
 	 * @return Returns the isVersioned.
 	 */
 	public boolean isVersioned()
@@ -1286,8 +1268,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		// If yet unknown, set the markup stream position with the current
-		// position
+		// If yet unknown, set the markup stream position with the current position
 		// of markupStream. Else set the markupStream.setCurrentPosition based
 		// on the position already known to the component.
 		validateMarkupStream(markupStream);
@@ -1424,7 +1405,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * of markupStream. Else set the markupStream.setCurrentPosition based the
 	 * position already known to the component.
 	 * <p>
-	 * Note: Parameter markupStream.getCurrentPosition() will be update, if
+	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
 	 * re-render is allowed.
 	 * 
 	 * @param markupStream
@@ -1433,39 +1414,27 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		// Allow the component to be re-rendered without a page. Partial
 		// re-rendering is a requirement of AJAX.
-		if (getFlag(FLAG_NEEDS_FULL_RENDER) == true)
+		final Page page = getPage();
+		if (this.isAuto() || (page != null) && page.isRequiresFullRender())
 		{
 			// Remember the position while rendering the component the first
 			// time
 			this.markupStreamPosition = markupStream.getCurrentIndex();
-			setFlag(FLAG_NEEDS_FULL_RENDER, false);
 		}
 		else if (this.markupStreamPosition < 0)
 		{
-			throw new WicketRuntimeException(
-					"The markup stream of the component should be known by now, but isn't: "
-							+ this.toString());
+			// ListItems are created on the fly, which is why we can not throw an exception.
+			// Because they are created on the fly (similar to autoAdd), they can 
+			// not be re-rendered  
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+//			throw new WicketRuntimeException(
+//					"The markup stream of the component should be known by now, but isn't: " 
+//					+ this.toString());
 		}
 		else
 		{
 			// Re-set the markups index to the beginning of the component tag
 			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
-	}
-
-	/**
-	 * If true, the component requires a full (page level) render cycle to
-	 * assign the markup to the component. Only if the markup has been assigned,
-	 * the component can be re-rendered (AJAX)
-	 * 
-	 * @param fullRender
-	 */
-	protected void setRequiresFullRender(final boolean fullRender)
-	{
-		setFlag(FLAG_NEEDS_FULL_RENDER, fullRender);
-		if (fullRender == true)
-		{
-			this.markupStreamPosition = -1;
 		}
 	}
 

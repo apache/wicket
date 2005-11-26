@@ -853,16 +853,17 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
-		if ((markupStream != null) && (markupStream.equalMarkup(this.markupStream) == false))
+		if ((this instanceof Page) 
+				&& (markupStream != null) 
+				&& (markupStream.equalMarkup(this.markupStream) == false))
 		{
-			visitChildren(new IVisitor()
-					{
-						public Object component(Component component)
-						{
-							component.setRequiresFullRender(true);
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
+			// The Page requires at least on complete render cycle in order
+			// to assign markup streams to all components. Only than
+			// a per-component re-render is possible.
+			if (getPage() != null)
+			{
+				getPage().setRequiresFullRender(true);
+			}
 		}
 
 		this.markupStream = markupStream;

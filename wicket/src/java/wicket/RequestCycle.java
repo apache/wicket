@@ -358,6 +358,11 @@ public abstract class RequestCycle
 	 */
 	public final void request(final Component component) throws ServletException
 	{
+		if (component.isAuto())
+		{
+			throw new WicketRuntimeException("Auto-added components can not be re-rendered");
+		}
+		
 		request(new ComponentRequestTarget(component));
 	}
 

@@ -183,6 +183,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
+	/** If true, a full render is required and a component re-render is not possible. */
+	private boolean needsFullRender = true;
+
 	private static class MetaDataEntry
 	{
 		Component component;
@@ -270,6 +273,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 				// Check rendering if it happened fully
 				checkRendering();
+				
+				// Allow per-component re-render after the page has been rendered
+				// completely at least once.
+				setRequiresFullRender(false);
 			}
 			finally
 			{
@@ -1202,5 +1209,28 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Allow XmlHttpRequest calls
 		RequestCycle.registerRequestListenerInterface(IBehaviourListener.class);
+	}
+
+	/**
+	 * If true, a markup stream is not assigned yet to at least one component
+	 * of the hierachie and hence not any one of the components of the page
+	 * can be re-rendered yet. A full render cycle which assigns the markup stream 
+	 * is required first.
+	 * 
+	 * @return if true, requires full render cycle
+	 */
+	public boolean isRequiresFullRender()
+	{
+		return this.needsFullRender;
+	}
+
+	/**
+	 * @see #isRequiresFullRender()
+	 *  
+	 * @param fullRender
+	 */
+	protected void setRequiresFullRender(final boolean fullRender)
+	{
+		this.needsFullRender = fullRender;
 	}
 }
