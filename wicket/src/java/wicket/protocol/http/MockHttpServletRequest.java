@@ -1014,6 +1014,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToRedirectString(final String redirect)
 	{
+		parameters.clear();
+		
 		final String paramPart = redirect.substring(redirect.indexOf('?') + 1);
 		final String[] paramTuples = paramPart.split("&");
 		for (int t = 0; t < paramTuples.length; t++)

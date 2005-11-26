@@ -183,8 +183,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
-	/** If true, a full render is required and a component re-render is not possible. */
-	private boolean needsFullRender = true;
+	/**
+	 * If false, a full render is required and a component re-render is not
+	 * possible.
+	 */
+	private boolean allowReRender = false;
 
 	private static class MetaDataEntry
 	{
@@ -235,6 +238,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final void doRender()
 	{
+		// Make sure it is realy empty
+		renderedComponents = null;
+		
 		// check access much earlier then in onRender!
 		// if false in onRender then checkRendering below fails anyway!!
 		if (checkAccess())
@@ -273,10 +279,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 				// Check rendering if it happened fully
 				checkRendering();
-				
-				// Allow per-component re-render after the page has been rendered
-				// completely at least once.
-				setRequiresFullRender(false);
+
+				// Allow per-component re-render after the page has been
+				// rendered completely at least once.
+				setAllowReRender(true);
 			}
 			finally
 			{
@@ -1092,17 +1098,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				((Component)unrenderedAutoComponents.get(i)).remove();
 			}
 
-			// Get rid of set
-			renderedComponents = null;
-
 			// Throw exception if any errors were found
 			if (unrenderedComponents.getCount() > 0)
 			{
+				// Get rid of set
+				renderedComponents = null;
+			
 				// Throw exception
 				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
 						+ buffer.toString());
 			}
 		}
+
+		// Get rid of set
+		renderedComponents = null;
 	}
 
 	/**
@@ -1212,25 +1221,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * If true, a markup stream is not assigned yet to at least one component
-	 * of the hierachie and hence not any one of the components of the page
-	 * can be re-rendered yet. A full render cycle which assigns the markup stream 
-	 * is required first.
+	 * If false, a markup stream is not assigned yet to at least one component of
+	 * the hierachie and hence not any one of the components of the page can be
+	 * re-rendered yet. A full render cycle which assigns the markup stream is
+	 * required first.
 	 * 
 	 * @return if true, requires full render cycle
 	 */
-	public boolean isRequiresFullRender()
+	public boolean isAllowReRender()
 	{
-		return this.needsFullRender;
+		return this.allowReRender;
 	}
 
 	/**
-	 * @see #isRequiresFullRender()
-	 *  
-	 * @param fullRender
+	 * @see #isAllowReRender()
+	 * 
+	 * @param allowReRender
 	 */
-	protected void setRequiresFullRender(final boolean fullRender)
+	protected void setAllowReRender(final boolean allowReRender)
 	{
-		this.needsFullRender = fullRender;
+		this.allowReRender = allowReRender;
 	}
 }
