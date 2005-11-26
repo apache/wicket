@@ -15,14 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.protocol.http.request;
+package wicket.request.compound;
 
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.ApplicationPages;
@@ -36,84 +33,59 @@ import wicket.Resource;
 import wicket.Session;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.request.InterfaceCallRequestTarget;
+import wicket.protocol.http.request.WebErrorCodeResponseTarget;
+import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
+import wicket.request.InterfaceCallRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
-import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.util.string.Strings;
 
 /**
- * TODO docme.
+ * Default target resolver strategy. Relies on the
+ * {@link wicket.request.compound.IRequestParametersFactory} doing the parameter
+ * digesting.
  * 
  * @author Eelco Hillenius
  */
-public final class WebTargetResolverStrategy implements IRequestTargetResolverStrategy
+public final class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
-	/** log. */
-	private static Log log = LogFactory.getLog(WebTargetResolverStrategy.class);
-
 	/**
 	 * Construct.
 	 */
-	public WebTargetResolverStrategy()
+	public DefaultRequestTargetResolverStrategy()
 	{
 	}
 
 	/**
-	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle)
+	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
+	 *      RequestParameters)
 	 */
-	public final IRequestTarget resolve(RequestCycle requestCycle)
+	public final IRequestTarget resolve(RequestCycle requestCycle,
+			RequestParameters requestParameters)
 	{
-		final WebRequestCycle webRequestCycle = (WebRequestCycle)requestCycle;
-		final WebRequest webRequest = webRequestCycle.getWebRequest();
-
-
-		String componentPath = webRequest.getParameter("path");
+		String pathInfo = requestCycle.getRequest().getPath();
 		// See whether this request points to a rendered page
-		if (componentPath != null)
+		if (requestParameters.getComponentPath() != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("resolving to previously rendered page");
-			}
-			return resolveRenderedPage(webRequestCycle, componentPath);
+			return resolveRenderedPage(requestCycle, requestParameters);
 		}
-
 		// see whether this request points to a bookmarkable page
-		final String bookmarkablePageParameter = webRequest.getParameter("bookmarkablePage");
-
-		if (bookmarkablePageParameter != null)
+		else if (requestParameters.getBookmarkablePageAlias() != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("resolving to bookmarkable page");
-			}
-			return resolveBookmarkablePage(webRequestCycle, bookmarkablePageParameter);
+			return resolveBookmarkablePage(requestCycle, requestParameters);
 		}
-
-		String pathInfo = webRequest.getPath();
+		// see whether this request points to a shared resource
+		else if (requestParameters.getResourceKey() != null)
+		{
+			return resolveSharedResource(requestCycle, requestParameters);
+		}
 		// see whether this request points to the home page
-		if (Strings.isEmpty(pathInfo) || ("/".equals(pathInfo)))
+		else if (Strings.isEmpty(pathInfo) || ("/".equals(pathInfo)))
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("resolving to home page");
-			}
-			return resolveHomePageTarget(webRequestCycle);
-		}
-		else if (pathInfo.startsWith("/resources/"))
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("resolving to shared resource");
-			}
-			final String resourceKey = pathInfo.substring("/resources/".length());
-			return resolveSharedResource(webRequestCycle, resourceKey);
+			return resolveHomePageTarget(requestCycle, requestParameters);
 		}
 
 		// if we get here, we have no regconized Wicket target, and thus
@@ -125,32 +97,28 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 		// NOTE: we NEED to put the '/' in front as otherwise some versions
 		// of application servers (e.g. Jetty 5.1.x) will fail for requests
 		// like '/mysubdir/myfile.css'
-		final String url = '/' + webRequest.getRelativeURL();
+		final String url = '/' + requestCycle.getRequest().getRelativeURL();
 		return new WebExternalResourceRequestTarget(url);
 	}
 
 	/**
 	 * Resolves to a shared resource target.
 	 * 
-	 * @param webRequestCycle
+	 * @param requestCycle
 	 *            the current request cycle
-	 * @param resourceKey
-	 *            the key of the shared resource
+	 * @param requestParameters
+	 *            the request parameters object
 	 * @return the shared resource as a request target
 	 */
-	private IRequestTarget resolveSharedResource(final WebRequestCycle webRequestCycle,
-			final String resourceKey)
+	private IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
+			RequestParameters requestParameters)
 	{
-		final Session session = webRequestCycle.getSession();
-		final Application application = session.getApplication();
-		SharedResources sharedResources = application.getSharedResources();
-		Resource resource = sharedResources.get(resourceKey);
+		final Application application = Application.get();
+		final String resourceKey = requestParameters.getResourceKey();
+		final SharedResources sharedResources = application.getSharedResources();
+		final Resource resource = sharedResources.get(resourceKey);
 		if (resource == null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Could not find resource referenced by key " + resourceKey);
-			}
 			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
 					"Unable to load resource " + resourceKey);
 		}
@@ -163,24 +131,19 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 	 * target. If no corresponding page could be found, a expired page target
 	 * will be returned.
 	 * 
-	 * @param webRequestCycle
+	 * @param requestCycle
 	 *            the current request cycle
-	 * @param componentPath
-	 *            the component path
+	 * @param requestParameters
+	 *            the request parameters object
 	 * @return the previously rendered page as a request target
 	 */
-	private IRequestTarget resolveRenderedPage(WebRequestCycle webRequestCycle,
-			final String componentPath)
+	private IRequestTarget resolveRenderedPage(RequestCycle requestCycle,
+			RequestParameters requestParameters)
 	{
-		final WebRequest webRequest = webRequestCycle.getWebRequest();
-		final String pageMapName = webRequest.getParameter("pagemap");
-		// Get version number
-		final String versionNumberString = webRequest.getParameter("version");
-		final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
-				.parseInt(versionNumberString);
-
-		final Session session = webRequestCycle.getSession();
-		final Page page = session.getPage(pageMapName, componentPath, versionNumber);
+		final String componentPath = requestParameters.getComponentPath();
+		final Session session = requestCycle.getSession();
+		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+				requestParameters.getVersionNumber());
 
 		// Does page exist?
 		if (page != null)
@@ -188,10 +151,10 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			// Assume cluster needs to be updated now, unless listener
 			// invocation change this (for example, with a simple page
 			// redirect)
-			webRequestCycle.setUpdateCluster(true);
+			requestCycle.setUpdateCluster(true);
 
 			// see whether this resolves to a component call or just the page
-			final String interfaceName = getInterfaceName(webRequest);
+			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
 			{
 				if (interfaceName.equals("IRedirectListener"))
@@ -200,7 +163,7 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 				}
 				else
 				{
-					final Method listenerMethod = webRequestCycle
+					final Method listenerMethod = requestCycle
 							.getRequestInterfaceMethod(interfaceName);
 					if (listenerMethod == null)
 					{
@@ -238,40 +201,24 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 	}
 
 	/**
-	 * Gets the name of the interface to invoke.
-	 * 
-	 * @param webRequest
-	 *            the web request object
-	 * @return the name of the interface to invoke
-	 */
-	private String getInterfaceName(final WebRequest webRequest)
-	{
-		String interfaceName = webRequest.getParameter("interface");
-		if (interfaceName == null)
-		{
-			interfaceName = "IRedirectListener";
-		}
-		return interfaceName;
-	}
-
-	/**
 	 * Resolves to a bookmarkable page target.
 	 * 
-	 * @param webRequestCycle
+	 * @param requestCycle
 	 *            the current request cycle
-	 * @param bookmarkablePageParameter
-	 *            the bookmarkable page parameter
+	 * @param requestParameters
+	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
-	private IRequestTarget resolveBookmarkablePage(WebRequestCycle webRequestCycle,
-			final String bookmarkablePageParameter)
+	private IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
+			RequestParameters requestParameters)
 	{
+		final String bookmarkablePageAlias = requestParameters.getBookmarkablePageAlias();
 		final IRequestTarget requestTarget;
-		final Session session = webRequestCycle.getSession();
+		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
 
 		// first see whether we have a logical mapping
-		Class pageClass = application.getPages().classForAlias(bookmarkablePageParameter);
+		Class pageClass = application.getPages().classForAlias(bookmarkablePageAlias);
 
 		// nope, we don't have a logical mapping, so this should be a
 		// full class name
@@ -279,7 +226,7 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 		{
 			try
 			{
-				pageClass = session.getClassResolver().resolveClass(bookmarkablePageParameter);
+				pageClass = session.getClassResolver().resolveClass(bookmarkablePageAlias);
 			}
 			catch (RuntimeException e)
 			{
@@ -291,45 +238,48 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 		try
 		{
 			Page newPage = session.getPageFactory().newPage(pageClass,
-					new PageParameters(webRequestCycle.getRequest().getParameterMap()));
+					new PageParameters(requestParameters.getParameters()));
 
 			// the response might have been set in the constructor of
 			// the bookmarkable page
-			if (webRequestCycle.getResponsePage() == null)
+			if (requestCycle.getResponsePage() == null)
 			{
 				requestTarget = new PageRequestTarget(newPage);
 			}
 			else
 			{
-				requestTarget = new PageRequestTarget(webRequestCycle.getResponsePage());
+				requestTarget = new PageRequestTarget(requestCycle.getResponsePage());
 			}
 
 			// as we have a new page, we should update the cluster
 			// TODO abstract this so that we can decide by looking
 			// at the kind of target and we don't have to bother
 			// users with it?
-			webRequestCycle.setUpdateCluster(true);
+			requestCycle.setUpdateCluster(true);
 
 			return requestTarget;
 		}
 		catch (RuntimeException e)
 		{
 			throw new WicketRuntimeException("Unable to instantiate Page class: "
-					+ bookmarkablePageParameter + ". See below for details.", e);
+					+ bookmarkablePageAlias + ". See below for details.", e);
 		}
 	}
 
 	/**
 	 * Resolves to a home page target.
 	 * 
-	 * @param webRequestCycle
+	 * @param requestCycle
 	 *            the current request cycle.
+	 * @param requestParameters
+	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
-	private IRequestTarget resolveHomePageTarget(WebRequestCycle webRequestCycle)
+	private IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
+			RequestParameters requestParameters)
 	{
 		final IRequestTarget requestTarget;
-		final Session session = webRequestCycle.getSession();
+		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
 		try
 		{
@@ -342,12 +292,12 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			}
 			else
 			{
-				final PageParameters parameters = new PageParameters(webRequestCycle
-						.getWebRequest().getParameterMap());
+				final PageParameters parameters = new PageParameters(requestParameters
+						.getParameters());
 				Page newPage = session.getPageFactory().newPage(homePage, parameters);
 
 				// check if the home page didn't set a page by itself
-				if (webRequestCycle.getResponsePage() == null)
+				if (requestCycle.getResponsePage() == null)
 				{
 					if (homePageStrategy == ApplicationPages.PAGE_REDIRECT)
 					{
@@ -357,13 +307,13 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 						ApplicationSettings.RenderStrategy strategy = session.getApplication()
 								.getSettings().getRenderStrategy();
 						boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER || strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
-						webRequestCycle.setRedirect(issueRedirect);
+						requestCycle.setRedirect(issueRedirect);
 					}
 					requestTarget = new PageRequestTarget(newPage);
 				}
 				else
 				{
-					requestTarget = new PageRequestTarget(webRequestCycle.getResponsePage());
+					requestTarget = new PageRequestTarget(requestCycle.getResponsePage());
 				}
 			}
 
@@ -371,7 +321,7 @@ public final class WebTargetResolverStrategy implements IRequestTargetResolverSt
 			// TODO abstract this so that we can decide by looking
 			// at the kind of target and we don't have to bother
 			// users with it?
-			webRequestCycle.setUpdateCluster(true);
+			requestCycle.setUpdateCluster(true);
 
 			return requestTarget;
 		}

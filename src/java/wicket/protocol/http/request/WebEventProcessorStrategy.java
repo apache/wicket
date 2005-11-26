@@ -35,6 +35,8 @@ import wicket.util.string.Strings;
 
 /**
  * TODO docme
+ * NOTE: this target can only be used in a servlet environment
+ * with {@link wicket.protocol.http.WebRequestCycle}s.
  * 
  * @author Eelco Hillenius
  */

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,7 +36,7 @@ public abstract class Request
 	 * Construct.
 	 */
 	public Request()
-	{		
+	{
 	}
 
 	/**
@@ -52,7 +52,7 @@ public abstract class Request
 	{
 		return url;
 	}
-	
+
 	/**
 	 * @return The locale for this request
 	 */
@@ -62,7 +62,7 @@ public abstract class Request
 	 * Gets a given (query) parameter by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter value
 	 */
 	public abstract String getParameter(final String key);
@@ -78,18 +78,27 @@ public abstract class Request
 	 * Gets an array of multiple parameters by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter values
 	 */
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the URL of this request for local use.
-	 *
-	 * @return The request URL for local use
+	 * Retrieves the absolute URL of this request for local use.
+	 * 
+	 * @return The absolute request URL for local use
 	 */
 	public abstract String getURL();
-	
+
+	/**
+	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
+	 * url without the context path and without a leading '/'). Use this method
+	 * e.g. to load resources using the servlet context.
+	 * 
+	 * @return Request URL
+	 */
+	public abstract String getRelativeURL();
+
 	/**
 	 * @return Path info for request
 	 */

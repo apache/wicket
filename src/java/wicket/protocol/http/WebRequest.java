@@ -46,14 +46,6 @@ public abstract class WebRequest extends Request
 	public abstract String getContextPath();
 
 	/**
-	 * Gets the relative url (url without the context path and without a leading
-	 * '/'). Use this method to load resources using the servlet context.
-	 * 
-	 * @return Request URL
-	 */
-	public abstract String getRelativeURL();
-
-	/**
 	 * Gets the servlet path.
 	 * 
 	 * @return Servlet path
