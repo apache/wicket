@@ -862,7 +862,7 @@ public abstract class MarkupContainer extends Component
 			// a per-component re-render is possible.
 			if (getPage() != null)
 			{
-				getPage().setRequiresFullRender(true);
+				getPage().setAllowReRender(false);
 			}
 		}
 

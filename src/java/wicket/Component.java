@@ -1415,7 +1415,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		// Allow the component to be re-rendered without a page. Partial
 		// re-rendering is a requirement of AJAX.
 		final Page page = getPage();
-		if (this.isAuto() || (page != null) && page.isRequiresFullRender())
+		if (this.isAuto() || (page != null) && (page.isAllowReRender() == false))
 		{
 			// Remember the position while rendering the component the first
 			// time
