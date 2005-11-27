@@ -34,6 +34,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
@@ -853,17 +854,18 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
-		if ((this instanceof Page) 
+		if ( (this instanceof Page || this instanceof Panel) 
 				&& (markupStream != null) 
 				&& (markupStream.equalMarkup(this.markupStream) == false))
 		{
-			// The Page requires at least on complete render cycle in order
-			// to assign markup streams to all components. Only than
-			// a per-component re-render is possible.
-			if (getPage() != null)
+			visitChildren(new IVisitor()
 			{
-				getPage().setAllowReRender(false);
-			}
+				public Object component(Component component)
+				{
+					component.markStreamPositionInvalid();
+					return CONTINUE_TRAVERSAL;
+				}
+			});
 		}
 
 		this.markupStream = markupStream;
