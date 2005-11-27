@@ -304,6 +304,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	private transient boolean renderAllowed = true;
 
+	private transient boolean rendering;
+
 	/**
 	 * Change record of a model.
 	 */
@@ -1227,31 +1229,40 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public final void render()
 	{
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
+		
+		rendering = true;
 
-		// Determine if component is visible using it's authorization status
-		// and the isVisible property.
-		if (renderAllowed && isVisible())
+		try
 		{
-			// Rendering is beginning
-			if (log.isDebugEnabled())
+			// Determine if component is visible using it's authorization status
+			// and the isVisible property.
+			if (renderAllowed && isVisible())
 			{
-				log.debug("Begin render " + this);
+				// Rendering is beginning
+				if (log.isDebugEnabled())
+				{
+					log.debug("Begin render " + this);
+				}
+	
+				// Call implementation to render component
+				onRender();
+	
+				// Component has been rendered
+				rendered();
+	
+				if (log.isDebugEnabled())
+				{
+					log.debug("End render " + this);
+				}
 			}
-
-			// Call implementation to render component
-			onRender();
-
-			// Component has been rendered
-			rendered();
-
-			if (log.isDebugEnabled())
+			else
 			{
-				log.debug("End render " + this);
+				findMarkupStream().skipComponent();
 			}
 		}
-		else
+		finally
 		{
-			findMarkupStream().skipComponent();
+			rendering = false;
 		}
 	}
 
@@ -1414,8 +1425,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		// Allow the component to be re-rendered without a page. Partial
 		// re-rendering is a requirement of AJAX.
-		final Page page = getPage();
-		if (this.isAuto() || (page != null) && (page.isAllowReRender() == false))
+		final Component parent = getParent();
+		if (this.isAuto() || (parent != null && parent.isRendering()) )
 		{
 			// Remember the position while rendering the component the first
 			// time
@@ -1423,19 +1434,23 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 		else if (this.markupStreamPosition < 0)
 		{
-			// ListItems are created on the fly, which is why we can not throw an exception.
-			// Because they are created on the fly (similar to autoAdd), they can 
-			// not be re-rendered  
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-//			throw new WicketRuntimeException(
-//					"The markup stream of the component should be known by now, but isn't: " 
-//					+ this.toString());
+			throw new WicketRuntimeException(
+					"The markup stream of the component should be known by now, but isn't: " 
+					+ this.toString());
 		}
 		else
 		{
 			// Re-set the markups index to the beginning of the component tag
 			markupStream.setCurrentIndex(this.markupStreamPosition);
 		}
+	}
+
+	/**
+	 * @return boolean if this component is currently rendering itself
+	 */
+	private boolean isRendering()
+	{
+		return rendering;
 	}
 
 	/**
@@ -2488,5 +2503,26 @@ public abstract class Component implements Serializable, IBehaviourListener
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
+	}
+
+	/**
+	 * Invalidates the markupstream position, called when the markup did change
+	 */
+	protected final void markStreamPositionInvalid()
+	{
+		markupStreamPosition = -1;
+	}
+
+	/**
+	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * <p>
+	 * @param b Boolean to set the rendering
+	 * @return the previous value of the rendering.
+	 */
+	public final boolean setRendering(boolean b)
+	{
+		boolean tmp = rendering;
+		rendering = b;
+		return tmp;
 	}
 }

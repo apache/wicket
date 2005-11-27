@@ -379,7 +379,15 @@ public class WebPage extends Page implements IHeaderRenderer
 				{
 					if (component instanceof IHeaderContributor)
 					{
-						((IHeaderContributor)component).renderHead(container);
+						boolean previousValue = component.setRendering(true);
+						try
+						{
+							((IHeaderContributor)component).renderHead(container);
+						}
+						finally
+						{
+							component.setRendering(previousValue);
+						}
 					}
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
