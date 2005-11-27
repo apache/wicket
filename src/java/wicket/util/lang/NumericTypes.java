@@ -19,7 +19,7 @@
 /**
  * 
  */
-package wicket.util.object;
+package wicket.util.lang;
 
 //--------------------------------------------------------------------------
 //Copyright (c) 1998-2004, Drew Davidson and Luke Blanshard

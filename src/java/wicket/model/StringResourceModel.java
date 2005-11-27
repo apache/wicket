@@ -24,7 +24,7 @@ import wicket.Component;
 import wicket.Localizer;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.util.string.interpolator.OgnlVariableInterpolator;
+import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
  * This model class encapsulates the full power of localization support within
@@ -335,7 +335,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 				}
 				else if (model != null && parameters[i] instanceof String)
 				{
-					realParams[i] = OgnlVariableInterpolator.interpolate((String)parameters[i],
+					realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
 							model.getObject(component));
 				}
 				else
@@ -400,7 +400,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	{
 		if (model != null)
 		{
-			return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject(component));
+			return PropertyVariableInterpolator.interpolate(resourceKey, model.getObject(component));
 		}
 		else
 		{

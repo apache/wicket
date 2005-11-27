@@ -32,7 +32,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
-import wicket.util.object.OgnlOps;
+import wicket.util.lang.Objects;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -91,7 +91,7 @@ public final class Converter implements IConverter
 		{
 			if(value == null || "".equals(value)) return null;
 			
-			return OgnlOps.convertValue(value, c);
+			return Objects.convertValue(value, c);
 		}
 
 		public Locale getLocale()

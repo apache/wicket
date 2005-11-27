@@ -23,7 +23,7 @@ import java.util.MissingResourceException;
 
 import wicket.model.IModel;
 import wicket.resource.IStringResourceLoader;
-import wicket.util.string.interpolator.OgnlVariableInterpolator;
+import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
  * Utility class that encapsulates all of the localization related functionality
@@ -223,7 +223,7 @@ public class Localizer
 	{
 		if (string != null && model != null)
 		{
-			return OgnlVariableInterpolator.interpolate(string, model.getObject(component));
+			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
 		}
 		return string;
 	}
