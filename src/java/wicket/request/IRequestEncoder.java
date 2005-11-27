@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,7 +43,13 @@ public interface IRequestEncoder
 	RequestParameters decode(Request request);
 
 	/**
+	 * <p>
 	 * Gets the url that will point to the provided request target.
+	 * </p>
+	 * <p>
+	 * If an implementation supports mounting, it should return the mounted path
+	 * for the provided request target if any.
+	 * </p>
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle (for efficient access)
@@ -53,4 +59,32 @@ public interface IRequestEncoder
 	 * @return the url to the provided target
 	 */
 	String encode(RequestCycle requestCycle, IRequestTarget requestTarget);
+
+	/**
+	 * Gets the request target that was registered with the given path.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the request target or null if nothing was mounted with the given
+	 *         path
+	 */
+	IRequestTarget getPathMount(String path);
+
+	/**
+	 * Mounts a request target with the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the request target with
+	 * @param requestTarget
+	 *            the request target
+	 */
+	void mountPath(String path, IRequestTarget requestTarget);
+
+	/**
+	 * Unmounts a request target.
+	 * 
+	 * @param path
+	 *            the path to unmount
+	 */
+	void unmountPath(String path);
 }

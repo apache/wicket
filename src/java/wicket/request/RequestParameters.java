@@ -68,7 +68,7 @@ public class RequestParameters implements Serializable
 	private String resourceKey;
 
 	/** the path info. */
-	private String pathInfo;
+	private String path;
 
 	/**
 	 * Construct.
@@ -251,9 +251,9 @@ public class RequestParameters implements Serializable
 	 * 
 	 * @return path info
 	 */
-	public String getPathInfo()
+	public String getPath()
 	{
-		return pathInfo;
+		return path;
 	}
 
 	/**
@@ -262,9 +262,9 @@ public class RequestParameters implements Serializable
 	 * @param pathInfo
 	 *            path info
 	 */
-	public void setPathInfo(String pathInfo)
+	public void setPath(String pathInfo)
 	{
-		this.pathInfo = pathInfo;
+		this.path = pathInfo;
 	}
 
 	/**
