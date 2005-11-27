@@ -374,7 +374,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 		 * added/deleted between requests
 		 */
 
-		if (page > getPageCount())
+		if (page >= getPageCount())
 		{
 			page = Math.max(page - 1, 0);
 			setCurrentPage(page);
@@ -389,9 +389,9 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	 */
 	public final void setCurrentPage(int page)
 	{
-		if (page < 0 || page > getPageCount())
+		if (page < 0 || page >= getPageCount())
 		{
-			throw new IndexOutOfBoundsException("argument [page]="+page+", must be 0<=page<="+getPageCount());
+			throw new IndexOutOfBoundsException("argument [page]="+page+", must be 0<=page<"+getPageCount());
 		}
 
 		if (currentPage != page)
@@ -451,7 +451,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	// /////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Iterator adapter that makes sure the only the specified max number of
+	 * Iterator adapter that makes sure only the specified max number of
 	 * items can be accessed from its delegate.
 	 */
 	private static class CappedIteratorAdapter implements Iterator
