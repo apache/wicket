@@ -206,7 +206,7 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * @see wicket.RequestCycle#getRequestCycleProcessor()
 	 */
-	protected IRequestCycleProcessor getRequestCycleProcessor()
+	public IRequestCycleProcessor getRequestCycleProcessor()
 	{
 		if (requestCycleProcessor == null)
 		{

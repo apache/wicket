@@ -45,7 +45,10 @@ import wicket.request.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Default target resolver strategy.
+ * Default target resolver strategy. It tries to lookup any registered mount
+ * with {@link wicket.request.IRequestEncoder} and in case no mount was found,
+ * it uses the {@link wicket.request.RequestParameters} object for default
+ * resolving.
  * 
  * @author Eelco Hillenius
  */
@@ -65,7 +68,16 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 	public final IRequestTarget resolve(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		String pathInfo = requestCycle.getRequest().getPath();
+		String path = requestCycle.getRequest().getPath();
+
+		// first, see whether we can find any mount
+		IRequestTarget mounted = requestCycle.getRequestCycleProcessor().getRequestEncoder()
+				.getPathMount(path);
+		if (mounted != null)
+		{
+			return mounted;
+		}
+
 		// See whether this request points to a rendered page
 		if (requestParameters.getComponentPath() != null)
 		{
@@ -82,7 +94,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			return resolveSharedResource(requestCycle, requestParameters);
 		}
 		// see whether this request points to the home page
-		else if (Strings.isEmpty(pathInfo) || ("/".equals(pathInfo)))
+		else if (Strings.isEmpty(path) || ("/".equals(path)))
 		{
 			return resolveHomePageTarget(requestCycle, requestParameters);
 		}

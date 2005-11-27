@@ -864,7 +864,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the processor for delegated request cycle handling
 	 */
-	protected abstract IRequestCycleProcessor getRequestCycleProcessor();
+	public abstract IRequestCycleProcessor getRequestCycleProcessor();
 
 	/**
 	 * Redirects browser to the given page. NOTE: Usually, you should never call

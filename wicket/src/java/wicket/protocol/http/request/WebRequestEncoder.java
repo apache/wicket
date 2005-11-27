@@ -50,17 +50,15 @@ public class WebRequestEncoder implements IRequestEncoder
 	/** log. */
 	private Log log = LogFactory.getLog(WebRequestEncoder.class);
 
-	//TODO this is not right yet: get rid of it and make it more general
-	// based on request targets
 	/**
-	 * map of path mounts for bookmarkable pages.
+	 * map of path mounts for request targets on paths.
 	 */
-	private Map/* <String,String> */bookmarkablePageMounts = new HashMap();
+	private Map/* <String,IRequestTarget> */mountsOnPath = new HashMap();
 
 	/**
-	 * map of path mounts for shared resources.
+	 * map of path mounts for request targets on targets.
 	 */
-	private Map/* <String,String> */sharedResourceMounts = new HashMap();
+	private Map/* <IRequestTarget, String> */mountsOnTarget = new HashMap();
 
 	/**
 	 * Construct.
@@ -79,9 +77,83 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
-		// TODO implement mounting in a more generic way, and check mounts first
-		// TODO handle more options
-		return encode(requestCycle, (IPageClassRequestTarget)requestTarget);
+		// first check whether the target was mounted
+		// NOTE: it is important that request target object properly
+		// implement their identity for this to work
+		// TODO make sure our default implementations do this
+		String mountPath = (String)mountsOnTarget.get(requestTarget);
+		if (mountPath != null)
+		{
+			return mountPath;
+		}
+
+		if (requestTarget instanceof IPageClassRequestTarget)
+		{
+			return encode(requestCycle, (IPageClassRequestTarget)requestTarget);
+		}
+		// TODO handle more
+
+		throw new WicketRuntimeException("unable to encode " + requestTarget);
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#decode(wicket.Request)
+	 */
+	public final RequestParameters decode(Request request)
+	{
+		RequestParameters parameters = new RequestParameters();
+		String pathInfo = getRequestPath(request);
+		parameters.setPath(pathInfo);
+		addPageParameters(request, parameters);
+		addBookmarkablePageParameters(request, parameters);
+		addResourceParameters(request, parameters);
+		return parameters;
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#getPathMount(java.lang.String)
+	 */
+	public final IRequestTarget getPathMount(String path)
+	{
+		return (IRequestTarget)mountsOnPath.get(path);
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#mountPath(java.lang.String,
+	 *      wicket.IRequestTarget)
+	 */
+	public final void mountPath(String path, IRequestTarget requestTarget)
+	{
+		if (mountsOnPath.containsKey(path))
+		{
+			throw new WicketRuntimeException(path + " is already mounted for "
+					+ mountsOnPath.get(path));
+		}
+		mountsOnPath.put(path, requestTarget);
+		mountsOnTarget.put(requestTarget, path);
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#unmountPath(java.lang.String)
+	 */
+	public final void unmountPath(String path)
+	{
+		IRequestTarget target = (IRequestTarget)mountsOnPath.remove(path);
+		mountsOnTarget.remove(target);
+	}
+
+	/**
+	 * Gets the request info path. This is an overridable method in order to
+	 * provide users with a means to implement e.g. a path encryption scheme.
+	 * This method by default returns {@link Request#getPath()}.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return the path info object, possibly processed
+	 */
+	protected String getRequestPath(Request request)
+	{
+		return request.getPath();
 	}
 
 	/**
@@ -131,138 +203,6 @@ public class WebRequestEncoder implements IRequestEncoder
 			}
 		}
 		return requestCycle.getResponse().encodeURL(buffer.toString());
-	}
-
-	/**
-	 * @see wicket.request.IRequestEncoder#decode(wicket.Request)
-	 */
-	public final RequestParameters decode(Request request)
-	{
-		RequestParameters parameters = new RequestParameters();
-		String pathInfo = getRequestPath(request);
-		parameters.setPathInfo(pathInfo);
-
-		addPageParameters(request, parameters);
-
-		String alias = getBookmarkablePageAlias(pathInfo);
-		if (alias != null)
-		{
-			parameters.setBookmarkablePageAlias(alias);
-		}
-		else
-		{
-			addBookmarkablePageParameters(request, parameters);
-		}
-
-		String key = getSharedResourceKey(pathInfo);
-		if (key != null)
-		{
-			parameters.setResourceKey(key);
-		}
-		else
-		{
-			addResourceParameters(request, parameters);
-		}
-
-		return parameters;
-	}
-
-	/**
-	 * Mounts a bookmarkable page alias to the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page alias on
-	 * @param bookmarkablePageAlias
-	 *            the bookmarkable page alias
-	 */
-	public final void mountBookmarkablePage(String path, String bookmarkablePageAlias)
-	{
-		if (sharedResourceMounts.containsKey(path))
-		{
-			throw new WicketRuntimeException(path + " is already mounted as a shared resource");
-		}
-		bookmarkablePageMounts.put(path, bookmarkablePageAlias);
-	}
-
-	/**
-	 * Unmounts a bookmarkable page alias.
-	 * 
-	 * @param path
-	 *            the path of the bookmarkable page to unmount
-	 */
-	public final void unmountBookmarkablePage(String path)
-	{
-		bookmarkablePageMounts.remove(path);
-	}
-
-	/**
-	 * Gets the bookmarkable page alias that was mounted at the provided path if
-	 * any.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the mounted bookmarkable page alias or null if no alias was
-	 *         mounted on this path
-	 */
-	public String getBookmarkablePageAlias(String path)
-	{
-		return (String)bookmarkablePageMounts.get(path);
-	}
-
-	/**
-	 * Mounts a shared resource key to the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page alias on
-	 * @param sharedResourceKey
-	 *            the shared resource key
-	 */
-	public final void mountSharedResourceKey(String path, String sharedResourceKey)
-	{
-		if (sharedResourceMounts.containsKey(path))
-		{
-			throw new WicketRuntimeException(path + " is already mounted as a shared resource");
-		}
-		sharedResourceMounts.put(path, sharedResourceKey);
-	}
-
-	/**
-	 * Unmounts a bookmarkable page alias.
-	 * 
-	 * @param path
-	 *            the path of the shared resource key to unmount
-	 */
-	public final void unmountSharedResourceKey(String path)
-	{
-		sharedResourceMounts.remove(path);
-	}
-
-	/**
-	 * Gets the shared resource key that was mounted at the provided path if
-	 * any.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the mounted shared resource key or null if no resource key was
-	 *         mounted on this path
-	 */
-	public String getSharedResourceKey(String path)
-	{
-		return (String)bookmarkablePageMounts.get(path);
-	}
-
-	/**
-	 * Gets the request info path. This is an overridable method in order to
-	 * provide users with a means to implement e.g. a path encryption scheme.
-	 * This method by default returns {@link Request#getPath()}.
-	 * 
-	 * @param request
-	 *            the request
-	 * @return the path info object, possibly processed
-	 */
-	protected String getRequestPath(Request request)
-	{
-		return request.getPath();
 	}
 
 	/**
