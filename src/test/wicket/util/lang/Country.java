@@ -19,48 +19,29 @@
 /**
  * 
  */
-package wicket.util.object;
+package wicket.util.lang;
 
 /**
  * @author jcompagner
  *
  */
-public class Address
+public class Country
 {
-	private String street;
-	private int number;
-
+	private final String name;
+	
 	/**
-	 * @return The Street
+	 * @param name
 	 */
-	public String getStreet()
+	public Country(String name)
 	{
-		return this.street;
-	}
-
-	/**
-	 * @param street
-	 */
-	public void setStreet(String street)
-	{
-		this.street = street;
-	}
-
-	/**
-	 * @return number
-	 */
-	public int getNumber()
-	{
-		return this.number;
-	}
-
-	/**
-	 * @param number
-	 */
-	public void setNumber(int number)
-	{
-		this.number = number;
+		this.name = name;
 	}
 	
-	
+	/**
+	 * @return The name
+	 */
+	public String getName()
+	{
+		return name;
+	}
 }

@@ -18,7 +18,7 @@
 /**
  * 
  */
-package wicket.util.object;
+package wicket.util.lang;
 
 import java.util.ArrayList;
 import java.util.List;

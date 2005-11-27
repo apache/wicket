@@ -19,7 +19,7 @@
 /**
  * 
  */
-package wicket.util.object;
+package wicket.util.lang;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import junit.framework.TestCase;
  * @author jcompagner
  *
  */
-public class ObjectsTest extends TestCase
+public class PropertyResolverTest extends TestCase
 {
 	private static final Converter CONVERTER = new Converter(Locale.US);
 	
