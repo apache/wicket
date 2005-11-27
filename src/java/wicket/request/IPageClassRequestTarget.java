@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,7 +28,6 @@ import wicket.PageParameters;
  */
 public interface IPageClassRequestTarget extends IRequestTarget
 {
-
 	/**
 	 * Gets the page class.
 	 * 
@@ -43,4 +41,11 @@ public interface IPageClassRequestTarget extends IRequestTarget
 	 * @return the page parameters or null
 	 */
 	PageParameters getPageParameters();
+
+	/**
+	 * Gets the optional page map name.
+	 * 
+	 * @return the optional page map name
+	 */
+	String getPageMapName();
 }

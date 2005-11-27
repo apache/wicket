@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.101 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -352,6 +352,10 @@ public abstract class RequestCycle
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Responds to a request to re-render a single component.
+	 * </p>
+	 * <p>
+	 * NOTE: This method is typically only used for testing purposes.
+	 * </p>
 	 * 
 	 * @param component
 	 *            to be re-rendered
@@ -776,26 +780,6 @@ public abstract class RequestCycle
 		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
 				+ Thread.currentThread().getName() + "}";
 	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public String urlFor(final Class pageClass, final PageParameters parameters)
-	{
-		IRequestCycleProcessor processor = safeGetRequestProcessor();
-		return processor.getRequestEncoder().encode(this,
-				new PageClassRequestTarget(pageClass, parameters));
-	}
-
 
 	/**
 	 * Looks up an request interface method by name.

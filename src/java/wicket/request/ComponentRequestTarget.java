@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,6 +23,9 @@ import wicket.RequestCycle;
 /**
  * Default implementation of {@link wicket.request.IComponentRequestTarget}.
  * Target that denotes a single component instance.
+ * <p>
+ * NOTE: This target is typically only used for testing purposes.
+ * </p>
  * 
  * @author Eelco Hillenius
  */

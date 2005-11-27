@@ -29,14 +29,12 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.Resource;
 import wicket.Session;
-import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
-import wicket.request.InterfaceCallRequestTarget;
+import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
@@ -124,16 +122,8 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 	private IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final Application application = Application.get();
 		final String resourceKey = requestParameters.getResourceKey();
-		final SharedResources sharedResources = application.getSharedResources();
-		final Resource resource = sharedResources.get(resourceKey);
-		if (resource == null)
-		{
-			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-					"Unable to load resource " + resourceKey);
-		}
-		return new SharedResourceRequestTarget(resourceKey, resource);
+		return new SharedResourceRequestTarget(resourceKey);
 	}
 
 	/**
@@ -195,7 +185,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 						throw new WicketRuntimeException(
 								"Calling listener methods on components that are not visible is not allowed");
 					}
-					return new InterfaceCallRequestTarget(page, component, listenerMethod);
+					return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
 				}
 			}
 			else

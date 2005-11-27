@@ -39,7 +39,13 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.protocol.http.request.WebEventProcessorStrategy;
+import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.PageClassRequestTarget;
+import wicket.request.SharedResourceRequestTarget;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -98,6 +104,9 @@ public abstract class WebApplication extends Application
 
 	/** Map of redirects in progress per session */
 	private Map redirectMap = Collections.synchronizedMap(new HashMap());
+
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
 
 	/**
 	 * Constructor.
@@ -369,14 +378,15 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-     * Create a request cylce factory which is used by default by WebSession.
-     * You may provide your own default factory by subclassing WebApplication
-     * or your may subclass WebSession to create a session specific request
-     * cycle factory.
-     * 
-     * @see WebSession#getRequestCycleFactory()
-     *
-	 * @return Request cycle factory 
+	 * Create a request cylce factory which is used by default by WebSession.
+	 * You may provide your own default factory by subclassing WebApplication
+	 * and overriding this method or your may subclass WebSession to create a
+	 * session specific request cycle factory.
+	 * 
+	 * @see WebSession#getRequestCycleFactory()
+	 * @see IRequestCycleFactory
+	 * 
+	 * @return Request cycle factory
 	 */
 	protected IRequestCycleFactory getDefaultRequestCycleFactory()
 	{
@@ -392,5 +402,93 @@ public abstract class WebApplication extends Application
 							(WebResponse)response);
 				}
 			};
+	}
+
+	/**
+	 * Sets the default request cycle processor which is used by default by
+	 * WebRequestCycle. You may provide your own processor by using this method
+	 * or you may subclass (Web)RequestCycle and provide your implementation
+	 * with it. If you decide to go with the latter, you should be aware that
+	 * mounting paths using WebApplication's methods will not automatically work
+	 * for you.
+	 * 
+	 * @see WebRequestCycle#getRequestCycleProcessor()
+	 * @see IRequestCycleProcessor
+	 * 
+	 * @param requestCycleProcessor
+	 *            the request cycle processor
+	 */
+	protected void setDefaultRequestCycleProcessor(IRequestCycleProcessor requestCycleProcessor)
+	{
+		if (requestCycleProcessor == null)
+		{
+			throw new NullPointerException("argument requestCycleProcessor must be non-null");
+		}
+		this.requestCycleProcessor = requestCycleProcessor;
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization).
+	 * 
+	 * @return the default request cycle processor
+	 */
+	protected final IRequestCycleProcessor getDefaultRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
+					new WebEventProcessorStrategy());
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
+	 * Mounts a bookmarkable page class to the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param bookmarkablePageClass
+	 *            the bookmarkable page class to mount
+	 */
+	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
+	{
+		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
+				new PageClassRequestTarget(bookmarkablePageClass));
+	}
+
+	/**
+	 * Unmounts a bookmarkable page classs.
+	 * 
+	 * @param path
+	 *            the path of the bookmarkable page class to unmount
+	 */
+	public final void unmountBookmarkablePage(String path)
+	{
+		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
+	}
+
+	/**
+	 * Mounts a shared resource key to the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page alias on
+	 * @param sharedResourceKey
+	 *            the shared resource key
+	 */
+	public final void mountSharedResourceKey(String path, String sharedResourceKey)
+	{
+		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
+				new SharedResourceRequestTarget(sharedResourceKey));
+	}
+
+	/**
+	 * Unmounts a shared resource key.
+	 * 
+	 * @param path
+	 *            the path of the shared resource key to unmount
+	 */
+	public final void unmountSharedResourceKey(String path)
+	{
+		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
 	}
 }

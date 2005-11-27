@@ -27,16 +27,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.IComponentRequestTarget;
+import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageClassRequestTarget;
+import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
+import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
+import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
@@ -70,12 +78,17 @@ public class WebRequestEncoder implements IRequestEncoder
 	/**
 	 * Encode the given request target. If a mount is found, that mounted url
 	 * will be returned. Otherwise, one of the delegation methods will be
-	 * called.
+	 * called. In case you are using custom targets that are not part of the
+	 * default target hierarchy, you need to override
+	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called
+	 * after the defaults have been tried. When that doesn't provide a url
+	 * either, and exception will be thrown saying that encoding could not be
+	 * done.
 	 * 
 	 * @see wicket.request.IRequestEncoder#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
-	public String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
+	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		// NOTE: it is important that request target object properly
@@ -91,9 +104,48 @@ public class WebRequestEncoder implements IRequestEncoder
 		{
 			return encode(requestCycle, (IPageClassRequestTarget)requestTarget);
 		}
+		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
+		{
+			return encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
+		}
+		else if (requestTarget instanceof ISharedResourceRequestTarget)
+		{
+			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+		}
 		// TODO handle more
+		else if (requestTarget instanceof IPageRequestTarget)
+		{
 
+		}
+
+		// fallthough for non-default request targets
+		String url = doEncode(requestCycle, requestTarget);
+		if (url != null)
+		{
+			return url;
+		}
+
+		// this method was not able to produce a url; throw an exception
 		throw new WicketRuntimeException("unable to encode " + requestTarget);
+	}
+
+	/**
+	 * In case you are using custom targets that are not part of the default
+	 * target hierarchy, you need to override this method, which will be called
+	 * after the defaults have been tried. When this doesn't provide a url
+	 * either (returns null), an exception will be thrown by the encode method
+	 * saying that encoding could not be done.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle (for efficient access)
+	 * 
+	 * @param requestTarget
+	 *            the request target
+	 * @return the url to the provided target
+	 */
+	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
+	{
+		return null;
 	}
 
 	/**
@@ -165,18 +217,42 @@ public class WebRequestEncoder implements IRequestEncoder
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected String encode(RequestCycle requestCycle, IPageClassRequestTarget requestTarget)
+	protected final String encode(RequestCycle requestCycle, IPageClassRequestTarget requestTarget)
 	{
+		// TODO get home page strategy and mounting in here
+
 		final Class pageClass = requestTarget.getPageClass();
 		final PageParameters parameters = requestTarget.getPageParameters();
-		final StringBuffer buffer = urlPrefix(requestCycle);
-		buffer.append("?bookmarkablePage=");
+		final StringBuffer url = urlPrefix(requestCycle);
+		url.append("?bookmarkablePage=");
 		String pageReference = requestCycle.getApplication().getPages().aliasForClass(pageClass);
 		if (pageReference == null)
 		{
 			pageReference = pageClass.getName();
 		}
-		buffer.append(pageReference);
+		url.append(pageReference);
+
+		String pageMapName = requestTarget.getPageMapName();
+		if (pageMapName == null)
+		{
+			IRequestTarget currentTarget = requestCycle.getRequestTarget();
+			if (currentTarget instanceof IPageRequestTarget)
+			{
+				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
+				final PageMap pageMap = currentPage.getPageMap();
+				if (!pageMap.isDefault())
+				{
+					url.append("&pagemap=");
+					url.append(pageMap.getName());
+				}
+			}
+		}
+		else
+		{
+			url.append("&pagemap=");
+			url.append(pageMapName);
+		}
+
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
@@ -195,14 +271,85 @@ public class WebRequestEncoder implements IRequestEncoder
 					{
 						log.error(ex.getMessage(), ex);
 					}
-					buffer.append('&');
-					buffer.append(key);
-					buffer.append('=');
-					buffer.append(escapedValue);
+					url.append('&');
+					url.append(key);
+					url.append('=');
+					url.append(escapedValue);
 				}
 			}
 		}
-		return requestCycle.getResponse().encodeURL(buffer.toString());
+
+		return requestCycle.getResponse().encodeURL(url.toString());
+	}
+
+	/**
+	 * Encode a listener interface target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected final String encode(RequestCycle requestCycle,
+			IListenerInterfaceRequestTarget requestTarget)
+	{
+		final StringBuffer url = urlPrefix(requestCycle);
+		url.append("?path=");
+		Component component = requestTarget.getComponent();
+		url.append(component.getPath());
+		Page currentPage = component.getPage();
+		final PageMap pageMap = currentPage.getPageMap();
+		if (!pageMap.isDefault())
+		{
+			url.append("&pagemap=");
+			url.append(pageMap.getName());
+		}
+		int versionNumber = component.getPage().getCurrentVersionNumber();
+		if (versionNumber > 0)
+		{
+			url.append("&version=");
+			url.append(versionNumber);
+		}
+
+		String listenerName = Classes.name(requestTarget.getListenerMethod().getDeclaringClass());
+		if (!"IRedirectListener".equals(listenerName))
+		{
+			url.append("&interface=");
+			url.append(listenerName);
+		}
+
+		return requestCycle.getResponse().encodeURL(url.toString());
+
+	}
+
+	/**
+	 * Encode a shared resource target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected final String encode(RequestCycle requestCycle,
+			ISharedResourceRequestTarget requestTarget)
+	{
+		String prefix = urlPrefix(requestCycle).toString();
+		String resourceKey = requestTarget.getResourceKey();
+		if ((resourceKey == null) || (resourceKey.trim().length() == 0))
+		{
+			return prefix;
+		}
+		else
+		{
+			if (prefix.endsWith("/") || resourceKey.startsWith("/"))
+			{
+				return prefix + resourceKey;
+			}
+
+			return prefix + "/" + resourceKey;
+		}
 	}
 
 	/**
@@ -231,6 +378,7 @@ public class WebRequestEncoder implements IRequestEncoder
 				interfaceName = "IRedirectListener";
 			}
 			parameters.setInterfaceName(interfaceName);
+			parameters.setBehaviourId(request.getParameter("behaviourId"));
 		}
 	}
 

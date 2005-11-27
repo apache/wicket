@@ -55,6 +55,12 @@ public class RequestParameters implements Serializable
 	/** any callable interface name (e.g. {@link ILinkListener}). */
 	private String interfaceName;
 
+	/**
+	 * in case this request points to a dispatched call to a behaviour that is
+	 * coupled to a component, this is the registration id of the behaviour.
+	 */
+	private String behaviourId;
+
 	/** any id of a non-page target component. */
 	private String componentId;
 
@@ -268,6 +274,27 @@ public class RequestParameters implements Serializable
 	}
 
 	/**
+	 * Gets the component registration id of any behaviour.
+	 * 
+	 * @return behaviourId the id
+	 */
+	public String getBehaviourId()
+	{
+		return behaviourId;
+	}
+
+	/**
+	 * Sets the component registration id of any behaviour.
+	 * 
+	 * @param behaviourId
+	 *            the id
+	 */
+	public void setBehaviourId(String behaviourId)
+	{
+		this.behaviourId = behaviourId;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
@@ -280,6 +307,7 @@ public class RequestParameters implements Serializable
 			b.append(" versionNumber=").append(getVersionNumber());
 			b.append(" interfaceName=").append(getInterfaceName());
 			b.append(" componentId=").append(getComponentId());
+			b.append(" behaviourId=").append(getBehaviourId());
 		}
 		if (getBookmarkablePageAlias() != null)
 		{

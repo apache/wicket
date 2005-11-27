@@ -1190,12 +1190,12 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public void onRequest()
 	{
-		String id = getRequest().getParameter("id");
+		String id = getRequest().getParameter("behaviourId");
 
 		if (id == null)
 		{
 			throw new WicketRuntimeException(
-					"parameter id was not provided: unable to locate listener");
+					"parameter behaviourId was not provided: unable to locate listener");
 		}
 
 		int IdAsInt = Integer.parseInt(id);
@@ -1203,7 +1203,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 		if (behaviourListener == null)
 		{
-			throw new WicketRuntimeException("no behaviour listener found with id " + id);
+			throw new WicketRuntimeException("no behaviour listener found with behaviourId " + id);
 		}
 
 		behaviourListener.onRequest();
@@ -1736,7 +1736,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 					+ " was not registered with this component");
 		}
 
-		return urlFor(IBehaviourListener.class) + "&id=" + index;
+		return urlFor(IBehaviourListener.class) + "&behaviourId=" + index;
 	}
 
 	/**

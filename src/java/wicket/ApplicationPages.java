@@ -243,6 +243,7 @@ public class ApplicationPages
 	 * @param pageClass
 	 *            The class to get the alias for
 	 * @return the alias of the page class
+	 * @deprecated use the mounting mechanism of request encoder instead
 	 */
 	public final String aliasForClass(final Class pageClass)
 	{
@@ -268,6 +269,7 @@ public class ApplicationPages
 	 *            the alias to look up
 	 * @return The page class for the given alias or null if no mapping was
 	 *         found
+	 * @deprecated use the mounting mechanism of request encoder instead
 	 */
 	public final Class classForAlias(final String alias)
 	{
@@ -295,6 +297,7 @@ public class ApplicationPages
 	 *            class of the page to map
 	 * @param alias
 	 *            the alias or logical name of the bookmarkable page
+	 * @deprecated use the mounting mechanism of request encoder instead
 	 */
 	public final void putClassAlias(Class pageClass, String alias)
 	{

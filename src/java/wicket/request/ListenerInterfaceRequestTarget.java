@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,21 +23,24 @@ import wicket.Component;
 import wicket.Page;
 
 /**
- * Default implementation of {@link wicket.request.IInterfaceCallRequestTarget}.
+ * Default implementation of {@link wicket.request.IListenerInterfaceRequestTarget}.
  * Target that denotes a page instance and a call to a component on that page
  * using an listener interface method.
  * 
  * @author Eelco Hillenius
  */
-public class InterfaceCallRequestTarget extends PageRequestTarget
+public class ListenerInterfaceRequestTarget extends PageRequestTarget
 		implements
-			IInterfaceCallRequestTarget
+			IListenerInterfaceRequestTarget
 {
 	/** the target component. */
 	private final Component component;
 
 	/** the listener method. */
 	private final Method listenerMethod;
+
+	/** optionally the id of the behaviour to dispatch to. */
+	private final String behaviourId;
 
 	/**
 	 * Construct.
@@ -50,25 +52,47 @@ public class InterfaceCallRequestTarget extends PageRequestTarget
 	 * @param listenerMethod
 	 *            the listener method
 	 */
-	public InterfaceCallRequestTarget(Page page, Component component, Method listenerMethod)
+	public ListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod)
+	{
+		this(page, component, listenerMethod, null);
+	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param page
+	 *            the page instance
+	 * @param component
+	 *            the target component
+	 * @param listenerMethod
+	 *            the listener method
+	 * @param behaviourId
+	 *            optionally the id of the behaviour to dispatch to
+	 */
+	public ListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod,
+			String behaviourId)
 	{
 		super(page);
-		this.component = component;
 
 		if (component == null)
 		{
 			throw new NullPointerException("argument component must be not null");
 		}
+
+		this.component = component;
+
 		if (listenerMethod == null)
 		{
 			throw new NullPointerException("argument listenerMethod must be not null");
 		}
 
 		this.listenerMethod = listenerMethod;
+		this.behaviourId = behaviourId;
 	}
 
 	/**
-	 * @see wicket.request.IInterfaceCallRequestTarget#getComponent()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getComponent()
 	 */
 	public Component getComponent()
 	{
@@ -76,7 +100,7 @@ public class InterfaceCallRequestTarget extends PageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IInterfaceCallRequestTarget#getListenerMethod()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getListenerMethod()
 	 */
 	public Method getListenerMethod()
 	{
@@ -84,12 +108,26 @@ public class InterfaceCallRequestTarget extends PageRequestTarget
 	}
 
 	/**
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviourId()
+	 */
+	public String getBehaviourId()
+	{
+		return behaviourId;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return getPage().toString() + "->" + component.getId() + "->"
-				+ listenerMethod.getDeclaringClass() + "." + listenerMethod.getName();
+		StringBuffer b = new StringBuffer().append(getPage().toString()).append("->").append(
+				getComponent().getId()).append("->")
+				.append(getListenerMethod().getDeclaringClass()).append(".").append(
+						getListenerMethod().getName());
+		if (getBehaviourId() != null)
+		{
+			b.append(" (behaviour ").append(getBehaviourId()).append(")");
+		}
+		return b.toString();
 	}
-
 }
