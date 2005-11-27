@@ -17,9 +17,10 @@
  */
 package wicket.request.compound;
 
-import wicket.IRequestCycleProcessor;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.RequestParameters;
 
 /**
  * A request cycle processor implementatation that delegates to pluggable
@@ -38,19 +39,17 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 	}
 
 	/**
-	 * @see wicket.IRequestCycleProcessor#resolve(wicket.RequestCycle)
+	 * @see wicket.request.IRequestCycleProcessor#resolve(wicket.RequestCycle,
+	 *      RequestParameters)
 	 */
-	public IRequestTarget resolve(RequestCycle requestCycle)
+	public IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters)
 	{
-		IRequestParametersFactory parametersFactory = getRequestParameterFactory();
-		RequestParameters requestParameters = parametersFactory.newParameters(requestCycle
-				.getRequest());
 		IRequestTargetResolverStrategy strategy = getRequestTargetResolverStrategy();
 		return strategy.resolve(requestCycle, requestParameters);
 	}
 
 	/**
-	 * @see wicket.IRequestCycleProcessor#processEvents(wicket.RequestCycle)
+	 * @see wicket.request.IRequestCycleProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{
@@ -59,7 +58,7 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 	}
 
 	/**
-	 * @see wicket.IRequestCycleProcessor#respond(wicket.RequestCycle)
+	 * @see wicket.request.IRequestCycleProcessor#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
@@ -68,7 +67,7 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 	}
 
 	/**
-	 * @see wicket.IRequestCycleProcessor#respond(java.lang.Exception,
+	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.Exception,
 	 *      wicket.RequestCycle)
 	 */
 	public void respond(Exception e, RequestCycle requestCycle)
@@ -76,13 +75,6 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 		IExceptionResponseStrategy strategy = getExceptionResponseStrategy();
 		strategy.respond(requestCycle, e);
 	}
-
-	/**
-	 * Gets the request parameter factory for digesting the request.
-	 * 
-	 * @return the request parameter factory for digesting the request
-	 */
-	protected abstract IRequestParametersFactory getRequestParameterFactory();
 
 	/**
 	 * Gets the strategy for the resolve method.

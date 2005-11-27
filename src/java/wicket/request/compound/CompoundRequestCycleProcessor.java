@@ -17,6 +17,8 @@
  */
 package wicket.request.compound;
 
+import wicket.request.IRequestEncoder;
+
 /**
  * Default implementation of {@link
  * wicket.request.compound.AbstractCompoundRequestCycleProcessor} that expects
@@ -27,7 +29,7 @@ package wicket.request.compound;
 public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleProcessor
 {
 	/** the strategy for constructing request parameters. */
-	private final IRequestParametersFactory requestParameterFactory;
+	private final IRequestEncoder requestEncoder;
 
 	/** the strategy for the target resolver method. */
 	private final IRequestTargetResolverStrategy requestTargetResolverStrategy;
@@ -42,24 +44,19 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	private final IExceptionResponseStrategy exceptionResponseStrategy;
 
 	/**
-	 * Construct using the given strategies and
-	 * {@link DefaultResponseProcessorStrategy} and
-	 * {@link DefaultExceptionResponseStrategy}.
+	 * Construct using the given strategies and {@link DefaultResponseProcessor}
+	 * and {@link DefaultExceptionResponseProcessor}.
 	 * 
-	 * @param requestParameterFactory
+	 * @param requestEncoder
 	 *            the strategy for constructing request parameters
-	 * @param requestTargetResolverStrategy
-	 *            the strategy for the target resolver method
 	 * @param eventProcessorStrategy
 	 *            the strategy for the event processor method
 	 */
-	public CompoundRequestCycleProcessor(IRequestParametersFactory requestParameterFactory,
-			IRequestTargetResolverStrategy requestTargetResolverStrategy,
+	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
 			IEventProcessorStrategy eventProcessorStrategy)
 	{
-		this(requestParameterFactory, requestTargetResolverStrategy, eventProcessorStrategy,
-				new DefaultResponseProcessorStrategy(),
-				new DefaultExceptionResponseStrategy());
+		this(requestEncoder, new DefaultRequestTargetResolver(), eventProcessorStrategy,
+				new DefaultResponseProcessor(), new DefaultExceptionResponseProcessor());
 	}
 
 	/**
@@ -76,12 +73,12 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * @param exceptionResponseStrategy
 	 *            the strategy for the exception response method
 	 */
-	public CompoundRequestCycleProcessor(IRequestParametersFactory requestParameterFactory,
+	public CompoundRequestCycleProcessor(IRequestEncoder requestParameterFactory,
 			IRequestTargetResolverStrategy requestTargetResolverStrategy,
 			IEventProcessorStrategy eventProcessorStrategy, IResponseStrategy responseStrategy,
 			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
-		this.requestParameterFactory = requestParameterFactory;
+		this.requestEncoder = requestParameterFactory;
 		this.requestTargetResolverStrategy = requestTargetResolverStrategy;
 		this.eventProcessorStrategy = eventProcessorStrategy;
 		this.responseStrategy = responseStrategy;
@@ -89,11 +86,11 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	}
 
 	/**
-	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getRequestParameterFactory()
+	 * @see wicket.request.IRequestCycleProcessor#getRequestEncoder()
 	 */
-	protected IRequestParametersFactory getRequestParameterFactory()
+	public final IRequestEncoder getRequestEncoder()
 	{
-		return requestParameterFactory;
+		return requestEncoder;
 	}
 
 	/**

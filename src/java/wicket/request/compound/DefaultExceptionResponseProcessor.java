@@ -37,13 +37,13 @@ import wicket.request.IPageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultExceptionResponseStrategy implements IExceptionResponseStrategy
+public final class DefaultExceptionResponseProcessor implements IExceptionResponseStrategy
 {
 
 	/**
 	 * Construct.
 	 */
-	public DefaultExceptionResponseStrategy()
+	public DefaultExceptionResponseProcessor()
 	{
 	}
 

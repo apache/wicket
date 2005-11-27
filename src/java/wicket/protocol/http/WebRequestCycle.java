@@ -24,15 +24,14 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.ApplicationSettings;
 import wicket.IRedirectListener;
-import wicket.IRequestCycleProcessor;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.request.WebEventProcessorStrategy;
-import wicket.protocol.http.request.WebRequestParametersFactory;
+import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.IRequestCycleProcessor;
 import wicket.request.compound.CompoundRequestCycleProcessor;
-import wicket.request.compound.DefaultRequestTargetResolverStrategy;
 import wicket.response.BufferedResponse;
 
 /**
@@ -205,38 +204,13 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Creates a prefix for a url.
-	 * 
-	 * @return Prefix for URLs including the context path and servlet path.
-	 */
-	protected StringBuffer urlPrefix()
-	{
-		final StringBuffer buffer = new StringBuffer();
-		final WebRequest request = getWebRequest();
-		if (request != null)
-		{
-			final String contextPath = request.getContextPath();
-			buffer.append(contextPath);
-			String path = request.getServletPath();
-			if (path == null || "".equals(path))
-			{
-				path = "/";
-			}
-			buffer.append(path);
-		}
-
-		return buffer;
-	}
-
-	/**
 	 * @see wicket.RequestCycle#getRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor getRequestCycleProcessor()
 	{
 		if (requestCycleProcessor == null)
 		{
-			requestCycleProcessor = new CompoundRequestCycleProcessor(
-					new WebRequestParametersFactory(), new DefaultRequestTargetResolverStrategy(),
+			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
 					new WebEventProcessorStrategy());
 		}
 		return requestCycleProcessor;

@@ -40,22 +40,21 @@ import wicket.request.InterfaceCallRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
+import wicket.request.RequestParameters;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Default target resolver strategy. Relies on the
- * {@link wicket.request.compound.IRequestParametersFactory} doing the parameter
- * digesting.
+ * Default target resolver strategy.
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
+public final class DefaultRequestTargetResolver implements IRequestTargetResolverStrategy
 {
 	/**
 	 * Construct.
 	 */
-	public DefaultRequestTargetResolverStrategy()
+	public DefaultRequestTargetResolver()
 	{
 	}
 
