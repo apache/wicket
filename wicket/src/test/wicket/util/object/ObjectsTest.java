@@ -30,6 +30,7 @@ import java.util.Map;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.Converter;
+import wicket.util.lang.PropertyResolver;
 import junit.framework.TestCase;
 
 /**
@@ -54,11 +55,11 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testSimpleExpression() throws Exception
 	{
-		String name = (String)Objects.getValue("name", person);
+		String name = (String)PropertyResolver.getValue("name", person);
 		assertNull(name);
 		
-		Objects.setValue("name", person, "wicket", CONVERTER);
-		name = (String)Objects.getValue("name", person);
+		PropertyResolver.setValue("name", person, "wicket", CONVERTER);
+		name = (String)PropertyResolver.getValue("name", person);
 		assertEquals(name, "wicket");
 	}
 
@@ -68,8 +69,8 @@ public class ObjectsTest extends TestCase
 	public void testPathExpression() throws Exception
 	{
 		person.setAddress(new Address());
-		Objects.setValue("address.street", person, "wicket-street",CONVERTER);
-		String street = (String)Objects.getValue("address.street", person);
+		PropertyResolver.setValue("address.street", person, "wicket-street",CONVERTER);
+		String street = (String)PropertyResolver.getValue("address.street", person);
 		assertEquals(street, "wicket-street");
 		
 	}
@@ -79,7 +80,7 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testNull() throws Exception
 	{
-		String street = (String)Objects.getValue("address.street", person);
+		String street = (String)PropertyResolver.getValue("address.street", person);
 		assertNull(street);
 	}
 	
@@ -88,13 +89,13 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testNullCreation() throws Exception
 	{
-		Objects.setValue("address.street", person, "wicket-street",CONVERTER);
-		String street = (String)Objects.getValue("address.street", person);
+		PropertyResolver.setValue("address.street", person, "wicket-street",CONVERTER);
+		String street = (String)PropertyResolver.getValue("address.street", person);
 		assertEquals(street, "wicket-street");
 
 		try
 		{
-			Objects.setValue("country.name", person, "US",CONVERTER);
+			PropertyResolver.setValue("country.name", person, "US",CONVERTER);
 			throw new Exception("name can't be set on a country that doesn't have default constructor");
 		}
 		catch (WicketRuntimeException ex)
@@ -107,12 +108,12 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testGetterOnly() throws Exception
 	{
-		Objects.setValue("country", person, new Country("US"),CONVERTER);
-		Objects.getValue("country.name", person);
+		PropertyResolver.setValue("country", person, new Country("US"),CONVERTER);
+		PropertyResolver.getValue("country.name", person);
 		
 		try
 		{
-			Objects.setValue("country.name", person, "NL",CONVERTER);
+			PropertyResolver.setValue("country.name", person, "NL",CONVERTER);
 		}
 		catch (WicketRuntimeException ex)
 		{
@@ -125,13 +126,13 @@ public class ObjectsTest extends TestCase
 	public void testPathExpressionWithConversion() throws Exception
 	{
 		person.setAddress(new Address());
-		Objects.setValue("address.number", person, "10",CONVERTER);
-		Integer number = (Integer)Objects.getValue("address.number", person);
+		PropertyResolver.setValue("address.number", person, "10",CONVERTER);
+		Integer number = (Integer)PropertyResolver.getValue("address.number", person);
 		assertEquals(number, new Integer(10));
 		
 		try
 		{
-			Objects.setValue("address.number", person, "10a",CONVERTER);
+			PropertyResolver.setValue("address.number", person, "10a",CONVERTER);
 			throw new Exception("Conversion error should be thrown");
 		}
 		catch (ConversionException ex)
@@ -146,10 +147,10 @@ public class ObjectsTest extends TestCase
 	public void testMapLookup() throws Exception
 	{
 		Address address = new Address();
-		Objects.setValue("addressMap", person, new HashMap(), CONVERTER);
-		Objects.setValue("addressMap.address", person, address, CONVERTER);
-		Objects.setValue("addressMap.address.street", person, "wicket-street", CONVERTER);
-		String street = (String)Objects.getValue("addressMap.address.street", person);
+		PropertyResolver.setValue("addressMap", person, new HashMap(), CONVERTER);
+		PropertyResolver.setValue("addressMap.address", person, address, CONVERTER);
+		PropertyResolver.setValue("addressMap.address.street", person, "wicket-street", CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressMap.address.street", person);
 		assertEquals(street, "wicket-street");
 	}
 	
@@ -158,15 +159,15 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testListLookup() throws Exception
 	{
-		Objects.setValue("addressList", person, new ArrayList(), CONVERTER);
-		Objects.setValue("addressList.0", person, new Address(), CONVERTER);
-		Objects.setValue("addressList.10", person, new Address(), CONVERTER);
-		Objects.setValue("addressList.1", person, new Address(), CONVERTER);
-		Objects.setValue("addressList.1.street", person, "wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressList", person, new ArrayList(), CONVERTER);
+		PropertyResolver.setValue("addressList.0", person, new Address(), CONVERTER);
+		PropertyResolver.setValue("addressList.10", person, new Address(), CONVERTER);
+		PropertyResolver.setValue("addressList.1", person, new Address(), CONVERTER);
+		PropertyResolver.setValue("addressList.1.street", person, "wicket-street", CONVERTER);
 		
-		String street = (String)Objects.getValue("addressList.0.street", person);
+		String street = (String)PropertyResolver.getValue("addressList.0.street", person);
 		assertNull(street);
-		street = (String)Objects.getValue("addressList.1.street", person);
+		street = (String)PropertyResolver.getValue("addressList.1.street", person);
 		assertEquals(street, "wicket-street");
 	}
 	
@@ -175,13 +176,13 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testArrayLookup() throws Exception
 	{
-		Objects.setValue("addressArray", person, new Address[] {new Address(),null}, CONVERTER);
-		Objects.setValue("addressArray.0.street", person, "wicket-street", CONVERTER);
-		String street = (String)Objects.getValue("addressArray.0.street", person);
+		PropertyResolver.setValue("addressArray", person, new Address[] {new Address(),null}, CONVERTER);
+		PropertyResolver.setValue("addressArray.0.street", person, "wicket-street", CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressArray.0.street", person);
 		assertEquals(street, "wicket-street");
 
-		Objects.setValue("addressArray.1.street", person, "wicket-street", CONVERTER);
-		street = (String)Objects.getValue("addressArray.1.street", person);
+		PropertyResolver.setValue("addressArray.1.street", person, "wicket-street", CONVERTER);
+		street = (String)PropertyResolver.getValue("addressArray.1.street", person);
 		assertEquals(street, "wicket-street");
 	}	
 
@@ -190,13 +191,13 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testArrayLookupByBrackets() throws Exception
 	{
-		Objects.setValue("addressArray", person, new Address[] {new Address(),null}, CONVERTER);
-		Objects.setValue("addressArray[0].street", person, "wicket-street", CONVERTER);
-		String street = (String)Objects.getValue("addressArray[0].street", person);
+		PropertyResolver.setValue("addressArray", person, new Address[] {new Address(),null}, CONVERTER);
+		PropertyResolver.setValue("addressArray[0].street", person, "wicket-street", CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressArray[0].street", person);
 		assertEquals(street, "wicket-street");
 
-		Objects.setValue("addressArray[1].street", person, "wicket-street", CONVERTER);
-		street = (String)Objects.getValue("addressArray[1].street", person);
+		PropertyResolver.setValue("addressArray[1].street", person, "wicket-street", CONVERTER);
+		street = (String)PropertyResolver.getValue("addressArray[1].street", person);
 		assertEquals(street, "wicket-street");
 	}	
 	
@@ -205,9 +206,9 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testPropertyByIndexLookup() throws Exception
 	{
-		Objects.setValue("addressAt.0", person, new Address(), CONVERTER);
-		Objects.setValue("addressAt.0.street", person, "wicket-street", CONVERTER);
-		String street = (String)Objects.getValue("addressAt.0.street", person);
+		PropertyResolver.setValue("addressAt.0", person, new Address(), CONVERTER);
+		PropertyResolver.setValue("addressAt.0.street", person, "wicket-street", CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressAt.0.street", person);
 		assertEquals(street, "wicket-street");
 	}
 	
@@ -220,9 +221,9 @@ public class ObjectsTest extends TestCase
 		addresses.add(new Address());
 		addresses.add(new Address());
 		person.setAddressList(addresses);
-		Object size = Objects.getValue("addressList.size", person);
+		Object size = PropertyResolver.getValue("addressList.size", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)Objects.getValue("addressList.size()", person);
+		size = (Integer)PropertyResolver.getValue("addressList.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -236,9 +237,9 @@ public class ObjectsTest extends TestCase
 		addresses.put("size",address);
 		addresses.put("test",new Address());
 		person.setAddressMap(addresses);
-		Object addressFromMap = Objects.getValue("addressMap.size", person);
+		Object addressFromMap = PropertyResolver.getValue("addressMap.size", person);
 		assertEquals(addressFromMap, address);
-		Object size = (Integer)Objects.getValue("addressMap.size()", person);
+		Object size = (Integer)PropertyResolver.getValue("addressMap.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -248,9 +249,9 @@ public class ObjectsTest extends TestCase
 	public void testArraytSizeLookup() throws Exception
 	{
 		person.setAddressArray(new Address[] {new Address(), new Address()});
-		Object size = Objects.getValue("addressArray.length", person);
+		Object size = PropertyResolver.getValue("addressArray.length", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)Objects.getValue("addressArray.size", person);
+		size = (Integer)PropertyResolver.getValue("addressArray.size", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -261,7 +262,7 @@ public class ObjectsTest extends TestCase
 	{
 		Address[] addresses = new Address[] {new Address(), new Address()};
 		person.setAddressArray(addresses);
-		Object value = Objects.getValue("getAddressArray()", person);
+		Object value = PropertyResolver.getValue("getAddressArray()", person);
 		assertEquals(value, addresses);
 	}
 	
@@ -271,13 +272,13 @@ public class ObjectsTest extends TestCase
 	public void testField() throws Exception
 	{
 		Address address = new Address();
-		Objects.setValue("address2", person, address , CONVERTER);
-		Address address2 = (Address)Objects.getValue("address2", person);
+		PropertyResolver.setValue("address2", person, address , CONVERTER);
+		Address address2 = (Address)PropertyResolver.getValue("address2", person);
 		assertEquals(address, address2);
 		
 		try
 		{
-			Objects.setValue("address3", person, address , CONVERTER);
+			PropertyResolver.setValue("address3", person, address , CONVERTER);
 			throw new RuntimeException("Shoudln't come here");
 		}
 		catch (RuntimeException ex)

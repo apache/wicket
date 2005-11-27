@@ -18,7 +18,7 @@
 package wicket.model;
 
 import wicket.Component;
-import wicket.util.object.Objects;
+import wicket.util.lang.PropertyResolver;
 import wicket.util.string.Strings;
 
 /**
@@ -131,7 +131,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 		final Object modelObject = modelObject(component);
 		if (modelObject != null)
 		{
-			return Objects.getValue(expression, modelObject);
+			return PropertyResolver.getValue(expression, modelObject);
 		}
 		return null;
 	}
@@ -184,7 +184,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 			}
 
 			// Let OGNL set the value
-			Objects.setValue(expression, modelObject, object, component.getConverter());
+			PropertyResolver.setValue(expression, modelObject, object, component.getConverter());
 		}
 	}
 

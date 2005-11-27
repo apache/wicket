@@ -18,7 +18,7 @@
  */
 package wicket.markup.html.form;
 
-import wicket.util.object.Objects;
+import wicket.util.lang.PropertyResolver;
 
 /**
  * Default implementation of {@link wicket.markup.html.form.IChoiceRenderer}. Usage:
@@ -103,7 +103,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 		Object returnValue = object;
 		if ((displayExpression != null) && (object != null))
 		{
-			returnValue = Objects.getValue(displayExpression, object);
+			returnValue = PropertyResolver.getValue(displayExpression, object);
 		}
 		
 		if (returnValue == null)
@@ -129,7 +129,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 		    return "";
 		}
 		
-		Object returnValue = Objects.getValue(idExpression, object);
+		Object returnValue = PropertyResolver.getValue(idExpression, object);
 		if (returnValue == null)
 		{
 		    return "";

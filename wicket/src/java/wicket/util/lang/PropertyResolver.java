@@ -19,7 +19,7 @@
 /**
  * 
  */
-package wicket.util.object;
+package wicket.util.lang;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -59,7 +59,7 @@ import wicket.util.string.Strings;
  * 
  * @author jcompagner
  */
-public class Objects
+public class PropertyResolver
 {
 	private final static Map classesToGetAndSetters = new ConcurrentHashMap(64);
 
@@ -495,7 +495,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -503,7 +503,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
@@ -512,7 +512,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -532,7 +532,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -540,7 +540,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
@@ -566,7 +566,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -586,7 +586,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -594,7 +594,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
@@ -604,7 +604,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(java.lang.Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -630,7 +630,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -638,7 +638,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
@@ -647,7 +647,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(java.lang.Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -683,7 +683,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -706,7 +706,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object,
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
@@ -746,7 +746,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(java.lang.Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -785,7 +785,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public final Object getValue(final Object object)
 		{
@@ -873,7 +873,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(java.lang.Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -921,7 +921,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#getValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#getValue(java.lang.Object)
 		 */
 		public Object getValue(Object object)
 		{
@@ -936,7 +936,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#newValue(java.lang.Object)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#newValue(java.lang.Object)
 		 */
 		public Object newValue(Object object)
 		{
@@ -955,7 +955,7 @@ public class Objects
 		}
 
 		/**
-		 * @see wicket.util.object.Objects.IGetAndSet#setValue(java.lang.Object, java.lang.Object, wicket.util.convert.IConverter)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object, java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
 		{

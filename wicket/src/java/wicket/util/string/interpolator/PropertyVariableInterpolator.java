@@ -17,7 +17,7 @@
  */
 package wicket.util.string.interpolator;
 
-import wicket.util.object.Objects;
+import wicket.util.lang.PropertyResolver;
 
 /**
  * Interpolates values into strings that are produced by interpreting OGNL
@@ -34,7 +34,7 @@ import wicket.util.object.Objects;
  * 
  * @author Jonathan Locke
  */
-public final class OgnlVariableInterpolator extends VariableInterpolator
+public final class PropertyVariableInterpolator extends VariableInterpolator
 {
 	/** The model to introspect on with OGNL */
 	private final Object model;
@@ -47,7 +47,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
 	 * @param model
 	 *            The root model to apply ognl expressions to
 	 */
-	private OgnlVariableInterpolator(final String string, final Object model)
+	private PropertyVariableInterpolator(final String string, final Object model)
 	{
 		super(string);
 		this.model = model;
@@ -68,7 +68,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
 		if (string.indexOf("${") != -1)
 		{
 			// do ognl variable interpolation
-			return new OgnlVariableInterpolator(string, object).toString();
+			return new PropertyVariableInterpolator(string, object).toString();
 		}
 
 		// Return simple string
@@ -84,7 +84,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
 	 */
 	protected String getValue(final String variableName)
 	{
-		Object value = Objects.getValue(variableName, model);
+		Object value = PropertyResolver.getValue(variableName, model);
 		return (value != null) ? value.toString() : null;
 	}
 }
