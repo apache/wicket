@@ -119,7 +119,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public String urlFor(final String pageMapName, final Class pageClass,
+	public final String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
 		if (pageClass == null)
@@ -200,7 +200,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public String urlFor(final Component component, final Class listenerInterface)
+	public final String urlFor(final Component component, final Class listenerInterface)
 	{
 		// Ensure that component instanceof listenerInterface
 		if (!listenerInterface.isAssignableFrom(component.getClass()))
@@ -243,7 +243,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 *            The path
 	 * @return The url for the path
 	 */
-	public String urlFor(final String path)
+	public final String urlFor(final String path)
 	{
 		String prefix = urlPrefix(getWebRequestCycle()).toString();
 		if ((path == null) || (path.trim().length() == 0))

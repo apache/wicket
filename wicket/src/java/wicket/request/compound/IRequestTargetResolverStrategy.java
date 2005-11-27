@@ -19,10 +19,11 @@ package wicket.request.compound;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.request.RequestParameters;
 
 /**
  * Strategy interface for implementing
- * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#resolve(RequestCycle)}.
+ * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#resolve(RequestCycle, RequestParameters)}.
  * 
  * @author Eelco Hillenius
  */
@@ -40,7 +41,7 @@ public interface IRequestTargetResolverStrategy
 	 *            of possible optional parameters that can be translated from
 	 *            e.g. servlet request parameters
 	 * @return the root component
-	 * @see AbstractCompoundRequestCycleProcessor#resolve(RequestCycle)
+	 * @see AbstractCompoundRequestCycleProcessor#resolve(RequestCycle, RequestParameters)
 	 */
 	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
 }

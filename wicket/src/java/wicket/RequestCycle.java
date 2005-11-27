@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.95 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,9 +17,7 @@
  */
 package wicket;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,9 +32,12 @@ import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ComponentRequestTarget;
 import wicket.request.IPageClassRequestTarget;
 import wicket.request.IPageRequestTarget;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.IRequestEncoder;
 import wicket.request.ISessionSynchronizable;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
+import wicket.request.RequestParameters;
 import wicket.util.lang.Classes;
 
 /**
@@ -362,7 +363,7 @@ public abstract class RequestCycle
 		{
 			throw new WicketRuntimeException("Auto-added components can not be re-rendered");
 		}
-		
+
 		request(new ComponentRequestTarget(component));
 	}
 
@@ -378,18 +379,20 @@ public abstract class RequestCycle
 		// prepare the request
 		prepare();
 
-		// get the processor we delegate the handling of the request
-		// cycle behaviour to
-		IRequestCycleProcessor processor = getRequestCycleProcessor();
-		if (processor == null)
-		{
-			throw new WicketRuntimeException("request cycle processor must be not-null");
-		}
+		IRequestCycleProcessor processor = null;
 
 		try
 		{
-			// resolve the target of the request
-			IRequestTarget target = processor.resolve(this);
+			// get the processor we delegate the handling of the request
+			// cycle behaviour to
+			processor = safeGetRequestProcessor();
+
+			// get the request parameters object using the request encoder of
+			// the processor
+			final RequestParameters requestParameters = getRequestParameters(processor);
+
+			// resolve the target of the request using the request parameters
+			final IRequestTarget target = processor.resolve(this, requestParameters);
 
 			if (target == null)
 			{
@@ -400,10 +403,23 @@ public abstract class RequestCycle
 			// set it as the current target, on the top of the stack
 			setRequestTarget(target);
 
-			processEventsAndRespondWithSync(processor);
+			// determine what kind of synchronization is to be used, and
+			// handle any events with that
+			processEventsAndRespond(processor);
+		}
+		catch (Exception e)
+		{
+			// try to play nicely and let the request processor handle the
+			// exception response. If that doesn't work, any runtime exception
+			// will automatically be bubbled up
+			if (processor != null)
+			{
+				processor.respond(e, this);
+			}
 		}
 		finally
 		{
+			// clean up the request
 			cleanUp();
 		}
 	}
@@ -423,23 +439,39 @@ public abstract class RequestCycle
 		// prepare the request
 		prepare();
 
-		// get the processor we delegate the handling of the request
-		// cycle behaviour to
-		IRequestCycleProcessor processor = getRequestCycleProcessor();
-		if (processor == null)
-		{
-			throw new WicketRuntimeException("request cycle processor must be not-null");
-		}
+		IRequestCycleProcessor processor = null;
 
 		try
 		{
+			// get the processor we delegate the handling of the request
+			// cycle behaviour to
+			processor = safeGetRequestProcessor();
+
+			// get the request parameters object using the request encoder of
+			// the processor
+			final RequestParameters requestParameters = getRequestParameters(processor);
+
 			// set it as the current target, on the top of the stack
 			setRequestTarget(target);
 
-			processEventsAndRespondWithSync(processor);
+			// determine what kind of synchronization is to be used, and
+			// handle any events with that
+			processEventsAndRespond(processor);
+		}
+		catch (Exception e)
+		{
+			// try to play nicely and let the request processor handle the
+			// exception response. If that doesn't work, any runtime exception
+			// will automatically be bubbled up
+			if (processor != null)
+			{
+				log.error(e.getMessage(), e);
+				processor.respond(e, this);
+			}
 		}
 		finally
 		{
+			// clean up the request
 			cleanUp();
 		}
 	}
@@ -502,13 +534,43 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the request parameters object using the instance of
+	 * {@link IRequestEncoder} of the provided request cycle processor.
+	 * 
+	 * @param processor
+	 *            the request cycle processor
+	 * @return the request parameters object
+	 */
+	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
+	{
+		// get the request encoder to decode the request parameters
+		final IRequestEncoder encoder = processor.getRequestEncoder();
+		if (encoder == null)
+		{
+			throw new WicketRuntimeException("request encoder must be not-null (provided by "
+					+ processor + ")");
+		}
+
+		// decode the request parameters into a strongly typed parameters
+		// object that is to be used by the target resolving
+		final RequestParameters requestParameters = encoder.decode(getRequest());
+
+		if (requestParameters == null)
+		{
+			throw new WicketRuntimeException("request parameters must be not-null (provided by "
+					+ encoder + ")");
+		}
+		return requestParameters;
+	}
+
+	/**
 	 * Call the event processing and and respond methods on the request
 	 * processor and apply synchronization if needed.
 	 * 
 	 * @param processor
 	 *            the request processor
 	 */
-	private void processEventsAndRespondWithSync(IRequestCycleProcessor processor)
+	private final void processEventsAndRespond(IRequestCycleProcessor processor)
 	{
 		// see whether we need to do synchronization
 		Object synchronizeLock = getSynchronizationLock();
@@ -519,40 +581,23 @@ public abstract class RequestCycle
 		{
 			synchronized (synchronizeLock)
 			{
-				processEventsAndRespond(processor);
+				// let the processor handle/ issue any events
+				processor.processEvents(this);
+
+				// generate a response
+				processor.respond(this);
 			}
 		}
 		else
 		{
 			// no lock means no synchronization (e.g. when handling static
 			// resources or external resources)
-			processEventsAndRespond(processor);
-		}
-	}
 
-	/**
-	 * Call the event processing and and respond methods on the request
-	 * processor.
-	 * 
-	 * @param processor
-	 *            the request processor
-	 */
-	private void processEventsAndRespond(IRequestCycleProcessor processor)
-	{
-		try
-		{
 			// let the processor handle/ issue any events
 			processor.processEvents(this);
 
 			// generate a response
 			processor.respond(this);
-
-		}
-		catch (RuntimeException e)
-		{
-			// Handle any runtime exception
-			log.error(e.getMessage(), e);
-			processor.respond(e, this);
 		}
 	}
 
@@ -715,6 +760,13 @@ public abstract class RequestCycle
 		this.updateCluster = updateCluster;
 	}
 
+	/**
+	 * @return The start time for this request
+	 */
+	public final long getStartTime()
+	{
+		return startTime;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -739,44 +791,11 @@ public abstract class RequestCycle
 	 */
 	public String urlFor(final Class pageClass, final PageParameters parameters)
 	{
-		if (pageClass == null)
-		{
-			throw new NullPointerException("argument pageClass may not be null");
-		}
-
-		final StringBuffer buffer = urlPrefix();
-		buffer.append("?bookmarkablePage=");
-		String pageReference = application.getPages().aliasForClass(pageClass);
-		if (pageReference == null)
-			pageReference = pageClass.getName();
-		buffer.append(pageReference);
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-				final String value = parameters.getString(key);
-				if (value != null)
-				{
-					String escapedValue = value;
-					try
-					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get()
-								.getSettings().getResponseRequestEncoding());
-					}
-					catch (UnsupportedEncodingException ex)
-					{
-						// log?
-					}
-					buffer.append('&');
-					buffer.append(key);
-					buffer.append('=');
-					buffer.append(escapedValue);
-				}
-			}
-		}
-		return getResponse().encodeURL(buffer.toString());
+		IRequestCycleProcessor processor = safeGetRequestProcessor();
+		return processor.getRequestEncoder().encode(this,
+				new PageClassRequestTarget(pageClass, parameters));
 	}
+
 
 	/**
 	 * Looks up an request interface method by name.
@@ -861,13 +880,6 @@ public abstract class RequestCycle
 	public abstract void redirectTo(final Page page) throws ServletException;
 
 	/**
-	 * Creates a prefix for a url.
-	 * 
-	 * @return Prefix for URLs including the context path and servlet path.
-	 */
-	protected abstract StringBuffer urlPrefix();
-
-	/**
 	 * Attach thread
 	 */
 	private final void threadAttach()
@@ -908,10 +920,18 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @return The start time for this request
+	 * Safe version of {@link #getRequestCycleProcessor()} that throws an
+	 * exception when the processor is null.
+	 * 
+	 * @return the request processor
 	 */
-	public long getStartTime()
+	private IRequestCycleProcessor safeGetRequestProcessor()
 	{
-		return startTime;
+		IRequestCycleProcessor processor = getRequestCycleProcessor();
+		if (processor == null)
+		{
+			throw new WicketRuntimeException("request cycle processor must be not-null");
+		}
+		return processor;
 	}
 }

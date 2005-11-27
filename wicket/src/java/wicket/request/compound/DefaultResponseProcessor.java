@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,24 +18,29 @@
  */
 package wicket.request.compound;
 
-import wicket.Request;
+import wicket.RequestCycle;
 
 /**
- * Implementations of this interface are responsible for digesting the incomming
- * request and create a suitable
- * {@link wicket.request.compound.RequestParameters} object for it.
+ * Default implementation of response processor strategy that just calls
+ * {@link wicket.IRequestTarget#respond(RequestCycle)}.
  * 
- * @author hillenius
+ * @author Eelco Hillenius
  */
-public interface IRequestParametersFactory
+public final class DefaultResponseProcessor implements IResponseStrategy
 {
+
 	/**
-	 * Analyze the request and create a corresponding request paramters object
-	 * for it.
-	 * 
-	 * @param request
-	 *            the incomming request
-	 * @return a request parameters object that corresponds to the request
+	 * Construct.
 	 */
-	RequestParameters newParameters(Request request);
+	public DefaultResponseProcessor()
+	{
+	}
+
+	/**
+	 * @see wicket.request.compound.IResponseStrategy#respond(wicket.RequestCycle)
+	 */
+	public void respond(RequestCycle requestCycle)
+	{
+		requestCycle.getRequestTarget().respond(requestCycle);
+	}
 }

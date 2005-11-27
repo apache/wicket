@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.compound;
+package wicket.request;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -23,9 +23,19 @@ import java.util.Map;
 import wicket.markup.html.link.ILinkListener;
 
 /**
+ * <p>
  * Object that abstracts common request parameters. It consists of possible
  * optional parameters that can be translated from e.g. servlet request
- * parameters.
+ * parameters and serves of a strongly typed variant of these that is to be
+ * created by the {@link wicket.request.IRequestCycleProcessor}'s
+ * {@link wicket.request.IRequestEncoder}.
+ * </p>
+ * <p>
+ * Though this object can be extended and hence more parameter options can be
+ * used, anything other than in this implementation must be supported by
+ * specific {@link wicket.request.IRequestCycleProcessor} implementations and
+ * thus are not supported by default implementations.
+ * </p>
  * 
  * @author Eelco Hillenius
  */
