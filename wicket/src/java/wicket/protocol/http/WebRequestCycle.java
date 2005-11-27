@@ -54,12 +54,6 @@ public class WebRequestCycle extends RequestCycle
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/**
-	 * cached request cycle processor that will be lazily loaded (if the get
-	 * method is not overriden).
-	 */
-	private transient IRequestCycleProcessor requestCycleProcessor;
-
-	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
 	 * 
@@ -204,15 +198,15 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * By default returns the WebApplication's default request cycle processor.
+	 * NOTE: if you decide to override this method to provide a custom processor
+	 * per request cycle, any mounts done via WebApplication will not work
+	 * unless you deliberately put effort in it to make it work.
+	 * 
 	 * @see wicket.RequestCycle#getRequestCycleProcessor()
 	 */
 	public IRequestCycleProcessor getRequestCycleProcessor()
 	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
-					new WebEventProcessorStrategy());
-		}
-		return requestCycleProcessor;
+		return ((WebApplication)getApplication()).getDefaultRequestCycleProcessor();
 	}
 }

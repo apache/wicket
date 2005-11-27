@@ -19,7 +19,6 @@
 package wicket.request;
 
 import wicket.IRequestTarget;
-import wicket.Resource;
 
 /**
  * Target that denotes a shared {@link wicket.Resource}.
@@ -28,14 +27,6 @@ import wicket.Resource;
  */
 public interface ISharedResourceRequestTarget extends IRequestTarget
 {
-
-	/**
-	 * Gets the shared resource.
-	 * 
-	 * @return the shared resource
-	 */
-	public abstract Resource getResource();
-
 	/**
 	 * Gets the key of the resource.
 	 * 

@@ -17,27 +17,23 @@
  */
 package wicket.markup.html;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
-import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
-import wicket.ApplicationPages;
 import wicket.Component;
-import wicket.IBehaviourListener;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.PageParameters;
-import wicket.WicketRuntimeException;
+import wicket.RequestCycle;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.ListenerInterfaceRequestTarget;
+import wicket.request.PageClassRequestTarget;
+import wicket.request.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
 
 /**
@@ -122,70 +118,10 @@ public class WebPage extends Page implements IHeaderRenderer
 	public final String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
-		if (pageClass == null)
-		{
-			throw new NullPointerException("argument pageClass may not be null");
-		}
-
-		final WebRequestCycle cycle = getWebRequestCycle();
-		final StringBuffer buffer = urlPrefix(cycle);
-		if (pageMapName == null)
-		{
-			appendPageMapName(buffer);
-		}
-		else
-		{
-			buffer.append("?pagemap=");
-			buffer.append(pageMapName);
-			buffer.append('&');
-		}
-		ApplicationPages pages = getApplicationPages();
-
-		// "bookmarkablePage=xxx" is required if PageParameters exist,
-		// some sort of redirection takes place, or if we're not dealing
-		// with the homepage.
-		if ((parameters != null && !parameters.isEmpty())
-				|| pages.getHomePageRenderStrategy() != ApplicationPages.NO_REDIRECT
-				|| !pages.getHomePage().equals(pageClass))
-		{
-			buffer.append("bookmarkablePage=");
-			String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
-			if (pageReference == null)
-			{
-				pageReference = pageClass.getName();
-			}
-			buffer.append(pageReference);
-		}
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-				final String value = parameters.getString(key);
-				if (value != null)
-				{
-					String escapedValue = value;
-					try
-					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get()
-								.getSettings().getResponseRequestEncoding());
-					}
-					catch (UnsupportedEncodingException ex)
-					{
-						log.error("WebPage.urlFor: unable to escape value: " + ex.getMessage());
-					}
-					buffer.append('&');
-					buffer.append(key);
-					buffer.append('=');
-					buffer.append(escapedValue);
-				}
-			}
-		}
-		if (buffer.charAt(buffer.length() - 1) == '?')
-		{
-			buffer.deleteCharAt(buffer.length() - 1);
-		}
-		return cycle.getResponse().encodeURL(buffer.toString());
+		RequestCycle requestCycle = getRequestCycle();
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle, new PageClassRequestTarget(pageMapName, pageClass, parameters));
+		return url;
 	}
 
 	/**
@@ -202,63 +138,29 @@ public class WebPage extends Page implements IHeaderRenderer
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
-		// Ensure that component instanceof listenerInterface
-		if (!listenerInterface.isAssignableFrom(component.getClass()))
-		{
-			throw new WicketRuntimeException("The component " + component + " of class "
-					+ component.getClass() + " does not implement " + listenerInterface);
-		}
-
-		// Buffer for composing URL
-		final WebRequestCycle cycle = getWebRequestCycle();
-		final StringBuffer buffer = urlPrefix(cycle);
-		appendPageMapName(buffer);
-		buffer.append("path=");
-		buffer.append(component.getPath());
-		int versionNumber = component.getPage().getCurrentVersionNumber();
-		if (versionNumber > 0)
-		{
-			buffer.append("&version=");
-			buffer.append(versionNumber);
-		}
-		String listenerName = Classes.name(listenerInterface);
-		if (!"IRedirectListener".equals(listenerName))
-		{
-			buffer.append("&interface=");
-			buffer.append(listenerName);
-		}
-
-		// add an extra parameter for regconition in case we are targetting a
-		// dispatched handler
-		if (IBehaviourListener.class.isAssignableFrom(listenerInterface))
-		{
-			buffer.append("&dispatched=true");
-		}
-
-		return cycle.getResponse().encodeURL(buffer.toString());
+		RequestCycle requestCycle = getRequestCycle();
+		String interfaceName = Classes.name(listenerInterface);
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle,
+				new ListenerInterfaceRequestTarget(this, component, requestCycle
+						.getRequestInterfaceMethod(interfaceName)));
+		return url;
 	}
 
 	/**
-	 * @param path
-	 *            The path
-	 * @return The url for the path
+	 * Returns a URL that references a shared resource through the provided
+	 * resource key.
+	 * 
+	 * @param resourceKey
+	 *            The application global key of the shared resource
+	 * @return The url for the shared resource
 	 */
-	public final String urlFor(final String path)
+	public final String urlFor(final String resourceKey)
 	{
-		String prefix = urlPrefix(getWebRequestCycle()).toString();
-		if ((path == null) || (path.trim().length() == 0))
-		{
-			return prefix;
-		}
-		else
-		{
-			if (prefix.endsWith("/") || path.startsWith("/"))
-			{
-				return prefix + path;
-			}
-
-			return prefix + "/" + path;
-		}
+		RequestCycle requestCycle = getRequestCycle();
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle, new SharedResourceRequestTarget(resourceKey));
+		return url;
 	}
 
 	/**
@@ -296,53 +198,6 @@ public class WebPage extends Page implements IHeaderRenderer
 	protected final BookmarkablePageLink homePageLink(final String id)
 	{
 		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
-	}
-
-	/**
-	 * Appends any pagemap name to the buffer
-	 * 
-	 * @param buffer
-	 *            The string buffer to append to
-	 */
-	private void appendPageMapName(final StringBuffer buffer)
-	{
-		final PageMap pageMap = getPageMap();
-		if (!pageMap.isDefault())
-		{
-			buffer.append("?pagemap=");
-			buffer.append(pageMap.getName());
-			buffer.append('&');
-		}
-		else
-		{
-			buffer.append('?');
-		}
-	}
-
-	/**
-	 * Creates a prefix for a url.
-	 * 
-	 * @param cycle
-	 *            The web request cycle
-	 * @return Prefix for URLs including the context path and servlet path.
-	 */
-	private StringBuffer urlPrefix(final WebRequestCycle cycle)
-	{
-		final StringBuffer buffer = new StringBuffer();
-		final WebRequest request = cycle.getWebRequest();
-		if (request != null)
-		{
-			final String contextPath = request.getContextPath();
-			buffer.append(contextPath);
-			String path = request.getServletPath();
-			if (path == null || "".equals(path))
-			{
-				path = "/";
-			}
-			buffer.append(path);
-		}
-
-		return buffer;
 	}
 
 	/**

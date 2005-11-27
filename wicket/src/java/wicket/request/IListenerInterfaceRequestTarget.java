@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +27,7 @@ import wicket.Component;
  * 
  * @author Eelco Hillenius
  */
-public interface IInterfaceCallRequestTarget extends IPageRequestTarget, ISessionSynchronizable
+public interface IListenerInterfaceRequestTarget extends IPageRequestTarget, ISessionSynchronizable
 {
 
 	/**
@@ -36,13 +35,21 @@ public interface IInterfaceCallRequestTarget extends IPageRequestTarget, ISessio
 	 * 
 	 * @return the target component
 	 */
-	public abstract Component getComponent();
+	Component getComponent();
 
 	/**
 	 * Gets listener method.
 	 * 
 	 * @return the listener method
 	 */
-	public abstract Method getListenerMethod();
+	Method getListenerMethod();
+
+	/**
+	 * Gets the optional behaviour id in case this call points a dispatched
+	 * method (i.e. a coupled behaviour such as an {@link wicket.AjaxHandler}).
+	 * 
+	 * @return the optional behaviour id
+	 */
+	String getBehaviourId();
 
 }

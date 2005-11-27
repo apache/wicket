@@ -27,7 +27,7 @@ import wicket.RequestCycle;
  * 
  * @author Eelco Hillenius
  */
-public class RedirectPageRequestTarget extends InterfaceCallRequestTarget
+public class RedirectPageRequestTarget extends ListenerInterfaceRequestTarget
 {
 	/**
 	 * Construct.

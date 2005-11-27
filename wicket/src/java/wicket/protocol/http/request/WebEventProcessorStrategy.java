@@ -28,7 +28,7 @@ import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebRequest;
-import wicket.request.InterfaceCallRequestTarget;
+import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
 import wicket.request.compound.IEventProcessorStrategy;
 import wicket.util.string.Strings;
@@ -56,9 +56,9 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 	{
 		IRequestTarget target = requestCycle.getRequestTarget();
 
-		if (target instanceof InterfaceCallRequestTarget)
+		if (target instanceof ListenerInterfaceRequestTarget)
 		{
-			InterfaceCallRequestTarget callTarget = (InterfaceCallRequestTarget)target;
+			ListenerInterfaceRequestTarget callTarget = (ListenerInterfaceRequestTarget)target;
 			final Page page = callTarget.getPage();
 
 			if (!(target instanceof RedirectPageRequestTarget))

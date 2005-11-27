@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,6 +36,9 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	/** optional page parameters. */
 	private final PageParameters pageParameters;
 
+	/** optional page map name. */
+	private final String pageMapName;
+
 	/**
 	 * Construct.
 	 * 
@@ -45,7 +47,21 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public PageClassRequestTarget(Class pageClass)
 	{
-		this(pageClass, null);
+		this(null, pageClass);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageMapName
+	 *            optional page map name
+	 * 
+	 * @param pageClass
+	 *            the class of the page
+	 */
+	public PageClassRequestTarget(String pageMapName, Class pageClass)
+	{
+		this(null, pageClass, null);
 	}
 
 	/**
@@ -57,6 +73,21 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 *            optional page parameters
 	 */
 	public PageClassRequestTarget(Class pageClass, PageParameters pageParameters)
+	{
+		this(null, pageClass, pageParameters);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageMapName
+	 *            optional page map name
+	 * @param pageClass
+	 *            the class of the page
+	 * @param pageParameters
+	 *            optional page parameters
+	 */
+	public PageClassRequestTarget(String pageMapName, Class pageClass, PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -70,6 +101,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 		}
 		this.pageClass = pageClass;
 		this.pageParameters = pageParameters;
+		this.pageMapName = pageMapName;
 	}
 
 	/**
@@ -79,7 +111,9 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	{
 		if (pageClass != null)
 		{
-			String redirectUrl = requestCycle.urlFor(pageClass, pageParameters);
+			IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
+			String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
+					new PageClassRequestTarget(pageClass, pageParameters));
 			requestCycle.getResponse().redirect(redirectUrl);
 		}
 	}
@@ -105,6 +139,14 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
+	}
+
+	/**
+	 * @see wicket.request.IPageClassRequestTarget#getPageMapName()
+	 */
+	public String getPageMapName()
+	{
+		return pageMapName;
 	}
 
 	/**

@@ -33,21 +33,15 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/** the key of the resource. */
 	private final String resourceKey;
 
-	/** the resource. */
-	private final Resource resource;
-
 	/**
 	 * Construct.
 	 * 
 	 * @param resourceKey
 	 *            the key of the resource
-	 * @param resource
-	 *            the resource
 	 */
-	public SharedResourceRequestTarget(String resourceKey, Resource resource)
+	public SharedResourceRequestTarget(String resourceKey)
 	{
 		this.resourceKey = resourceKey;
-		this.resource = resource;
 	}
 
 	/**
@@ -73,14 +67,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
-	}
-
-	/**
-	 * @see wicket.request.ISharedResourceRequestTarget#getResource()
-	 */
-	public final Resource getResource()
-	{
-		return resource;
 	}
 
 	/**
