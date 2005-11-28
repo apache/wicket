@@ -25,15 +25,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.ListenerInterfaceRequestTarget;
-import wicket.request.PageClassRequestTarget;
-import wicket.request.SharedResourceRequestTarget;
-import wicket.util.lang.Classes;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -98,68 +93,6 @@ public class WebPage extends Page implements IHeaderRenderer
 	protected WebPage(final IModel model)
 	{
 		super(model);
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageMapName
-	 *            Name of pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
-				requestCycle, new PageClassRequestTarget(pageMapName, pageClass, parameters));
-		return url;
-	}
-
-	/**
-	 * Returns a URL that references a given interface on a component. When the
-	 * URL is requested from the server at a later time, the interface will be
-	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
-	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param listenerInterface
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component and interface to call
-	 */
-	public final String urlFor(final Component component, final Class listenerInterface)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		String interfaceName = Classes.name(listenerInterface);
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
-				requestCycle,
-				new ListenerInterfaceRequestTarget(this, component, requestCycle
-						.getRequestInterfaceMethod(interfaceName)));
-		return url;
-	}
-
-	/**
-	 * Returns a URL that references a shared resource through the provided
-	 * resource key.
-	 * 
-	 * @param resourceKey
-	 *            The application global key of the shared resource
-	 * @return The url for the shared resource
-	 */
-	public final String urlFor(final String resourceKey)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
-				requestCycle, new SharedResourceRequestTarget(resourceKey));
-		return url;
 	}
 
 	/**

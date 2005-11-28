@@ -34,6 +34,9 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.request.ListenerInterfaceRequestTarget;
+import wicket.request.PageClassRequestTarget;
+import wicket.request.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
 import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.StringValue;
@@ -591,36 +594,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets a url that invokes the given listener interface on the given
-	 * component. The listener interface can be any interface with a single
-	 * method taking no arguments which has been registered with a call to
-	 * {@link RequestCycle#registerRequestListenerInterface(Class)}. The
-	 * component must implement the given interface.
-	 * 
-	 * @param component
-	 *            Component implementing listener interface
-	 * @param listenerInterface
-	 *            The listener interface to invoke when the URL is requested
-	 * @return A URL that encodes an interface to call on a given component
-	 */
-	public abstract String urlFor(final Component component, final Class listenerInterface);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * 
-	 * @param path
-	 *            The path
-	 * @return The url for the path
-	 */
-	public abstract String urlFor(final String path);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets the url for the given page class using the given parameters.
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
 	 * 
 	 * @param pageMapName
 	 *            Name of pagemap to use
@@ -630,9 +607,54 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public abstract String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters);
+	public final String urlFor(final String pageMapName, final Class pageClass,
+			final PageParameters parameters)
+	{
+		RequestCycle requestCycle = getRequestCycle();
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle, new PageClassRequestTarget(pageMapName, pageClass, parameters));
+		return url;
+	}
 
+	/**
+	 * Returns a URL that references a given interface on a component. When the
+	 * URL is requested from the server at a later time, the interface will be
+	 * called. A URL returned by this method will not be stable across sessions
+	 * and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param listenerInterface
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public final String urlFor(final Component component, final Class listenerInterface)
+	{
+		RequestCycle requestCycle = getRequestCycle();
+		String interfaceName = Classes.name(listenerInterface);
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle,
+				new ListenerInterfaceRequestTarget(this, component, requestCycle
+						.getRequestInterfaceMethod(interfaceName)));
+		return url;
+	}
+
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource key.
+	 * 
+	 * @param resourceKey
+	 *            The application global key of the shared resource
+	 * @return The url for the shared resource
+	 */
+	public final String urlFor(final String resourceKey)
+	{
+		RequestCycle requestCycle = getRequestCycle();
+		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+				requestCycle, new SharedResourceRequestTarget(resourceKey));
+		return url;
+	}
+	
 	/**
 	 * Whether access is allowed to this page. If the page is not allowed you
 	 * must redirect to a another page, else you will get a blank page.
