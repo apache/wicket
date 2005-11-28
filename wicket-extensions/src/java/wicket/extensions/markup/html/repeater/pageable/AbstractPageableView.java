@@ -130,7 +130,7 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 		super.internalOnEndRequest();
 		clearCachedItemCount();
 	}
-	
+
 	/**
 	 * Add items to the view. Prior to this all items were removed so every
 	 * request this function starts from a clean slate.
@@ -389,9 +389,10 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	 */
 	public final void setCurrentPage(int page)
 	{
-		if (page < 0 || page >= getPageCount())
+		if (page < 0 || (page >= getPageCount() && getPageCount() > 0))
 		{
-			throw new IndexOutOfBoundsException("argument [page]="+page+", must be 0<=page<"+getPageCount());
+			throw new IndexOutOfBoundsException("argument [page]=" + page + ", must be 0<=page<"
+					+ getPageCount());
 		}
 
 		if (currentPage != page)
@@ -451,8 +452,8 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	// /////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Iterator adapter that makes sure only the specified max number of
-	 * items can be accessed from its delegate.
+	 * Iterator adapter that makes sure only the specified max number of items
+	 * can be accessed from its delegate.
 	 */
 	private static class CappedIteratorAdapter implements Iterator
 	{
