@@ -22,8 +22,6 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.Application;
-import wicket.ApplicationPages;
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
