@@ -21,6 +21,9 @@ have path mounting (or nice urls) work really nice:
 	
 	Juergen, if you are reading this... would this be doable? See any problems
 	with it?
+	
+	Igor> possibly use html's base tag to avoid having to rewrite urls in a
+	      post processing step.
 
 3) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
