@@ -37,7 +37,6 @@ import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.IComponentRequestTarget;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageClassRequestTarget;
 import wicket.request.IPageRequestTarget;
@@ -91,13 +90,11 @@ public class WebRequestEncoder implements IRequestEncoder
 	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		// NOTE: it is important that request target object properly
-		// implement their identity for this to work
-		// TODO make sure our default implementations do this
 		String mountPath = (String)mountsOnTarget.get(requestTarget);
 		if (mountPath != null)
 		{
-			return mountPath;
+			final StringBuffer url = urlPrefix(requestCycle);
+			return url.append(mountPath).toString();
 		}
 
 		if (requestTarget instanceof IPageClassRequestTarget)
@@ -163,19 +160,27 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#getPathMount(java.lang.String)
-	 */
-	public final IRequestTarget getPathMount(String path)
-	{
-		return (IRequestTarget)mountsOnPath.get(path);
-	}
-
-	/**
 	 * @see wicket.request.IRequestEncoder#mountPath(java.lang.String,
 	 *      wicket.IRequestTarget)
 	 */
 	public final void mountPath(String path, IRequestTarget requestTarget)
 	{
+		if (path == null)
+		{
+			throw new NullPointerException("argument path must be not-null");
+		}
+
+		if (requestTarget == null)
+		{
+			throw new NullPointerException("argument requestTarget must be not-null");
+		}
+
+		// sanity check
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+
 		if (mountsOnPath.containsKey(path))
 		{
 			throw new WicketRuntimeException(path + " is already mounted for "
@@ -190,8 +195,35 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final void unmountPath(String path)
 	{
+		if (path == null)
+		{
+			throw new NullPointerException("argument path must be not-null");
+		}
+
+		// sanity check
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+
 		IRequestTarget target = (IRequestTarget)mountsOnPath.remove(path);
 		mountsOnTarget.remove(target);
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#getMountedTarget(java.lang.String)
+	 */
+	public final IRequestTarget getMountedTarget(String path)
+	{
+		return (IRequestTarget)mountsOnPath.get(path);
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#getMountedPath(wicket.IRequestTarget)
+	 */
+	public final String getMountedPath(IRequestTarget requestTarget)
+	{
+		return (String)mountsOnTarget.get(requestTarget);
 	}
 
 	/**
@@ -219,13 +251,11 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	protected final String encode(RequestCycle requestCycle, IPageClassRequestTarget requestTarget)
 	{
-		// TODO get home page strategy and mounting in here
-
 		final Class pageClass = requestTarget.getPageClass();
 		final PageParameters parameters = requestTarget.getPageParameters();
 		final StringBuffer url = urlPrefix(requestCycle);
 		url.append("?bookmarkablePage=");
-		String pageReference = requestCycle.getApplication().getPages().aliasForClass(pageClass);
+		String pageReference = pageClass.getName();
 		if (pageReference == null)
 		{
 			pageReference = pageClass.getName();
@@ -394,7 +424,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
 	{
-		parameters.setBookmarkablePageAlias(request.getParameter("bookmarkablePage"));
+		parameters.setBookmarkablePageClass(request.getParameter("bookmarkablePage"));
 		parameters.setParameters(request.getParameterMap());
 	}
 

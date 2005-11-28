@@ -41,6 +41,11 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public SharedResourceRequestTarget(String resourceKey)
 	{
+		if (resourceKey == null)
+		{
+			throw new NullPointerException("argument resourceKey must be not-null");
+		}
+
 		this.resourceKey = resourceKey;
 	}
 
@@ -75,6 +80,29 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	public final String getResourceKey()
 	{
 		return resourceKey;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof SharedResourceRequestTarget)
+		{
+			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
+			return resourceKey.equals(that.resourceKey);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "SharedResourceRequestTarget".hashCode();
+		result += resourceKey.hashCode();
+		return 17 * result;
 	}
 
 	/**

@@ -61,16 +61,6 @@ public interface IRequestEncoder
 	String encode(RequestCycle requestCycle, IRequestTarget requestTarget);
 
 	/**
-	 * Gets the request target that was registered with the given path.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the request target or null if nothing was mounted with the given
-	 *         path
-	 */
-	IRequestTarget getPathMount(String path);
-
-	/**
 	 * Mounts a request target with the given path.
 	 * 
 	 * @param path
@@ -87,4 +77,23 @@ public interface IRequestEncoder
 	 *            the path to unmount
 	 */
 	void unmountPath(String path);
+
+	/**
+	 * Gets the request target that was registered with the given path.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the request target or null if nothing was mounted with the given
+	 *         path
+	 */
+	IRequestTarget getMountedTarget(String path);
+
+	/**
+	 * Gets the path that the provided request target was registered with.
+	 * 
+	 * @param requestTarget
+	 *            the request target
+	 * @return the path that the provided request target was registered with
+	 */
+	String getMountedPath(IRequestTarget requestTarget);
 }

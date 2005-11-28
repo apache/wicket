@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,22 +15,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.pub;
+package wicket.examples.niceurl;
 
-import wicket.examples.WicketExampleApplication;
+import wicket.PageParameters;
+import wicket.examples.WicketExamplePage;
+
 
 /**
- * WicketServlet class for the linkomatic example.
+ * Simple bookmarkable page.
  * 
- * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public class PubApplication extends WicketExampleApplication
+public class Page1 extends WicketExamplePage
 {
 	/**
 	 * Constructor
+	 * 
+	 * @param parameters
 	 */
-	public PubApplication()
+	public Page1(PageParameters parameters)
 	{
-		getPages().setHomePage(Home.class);
 	}
 }

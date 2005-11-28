@@ -51,14 +51,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IComponentRequestTarget#getComponent()
-	 */
-	public final Component getComponent()
-	{
-		return component;
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -68,10 +60,41 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
+	 * @see wicket.request.IComponentRequestTarget#getComponent()
+	 */
+	public final Component getComponent()
+	{
+		return component;
+	}
+
+	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof ComponentRequestTarget)
+		{
+			ComponentRequestTarget that = (ComponentRequestTarget)obj;
+			return component.equals(that.component);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "ComponentRequestTarget".hashCode();
+		result += component.hashCode();
+		return 17 * result;
 	}
 
 	/**

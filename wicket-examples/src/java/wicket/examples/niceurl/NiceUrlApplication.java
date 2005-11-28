@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,22 +15,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.pub;
+package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for the linkomatic example.
+ * Application class for this example.
  * 
- * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public class PubApplication extends WicketExampleApplication
+public class NiceUrlApplication extends WicketExampleApplication
 {
 	/**
-	 * Constructor
+	 * Construct.
 	 */
-	public PubApplication()
+	public NiceUrlApplication()
 	{
+		super();
 		getPages().setHomePage(Home.class);
+		mountBookmarkablePage("/the/homepage/path", Home.class);
+		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 	}
 }

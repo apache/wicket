@@ -29,7 +29,6 @@ import wicket.RequestCycle;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
-import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;

@@ -34,6 +34,7 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
+import wicket.request.IRequestEncoder;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
@@ -70,11 +71,12 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 
 		// first, see whether we can find any mount
 		IRequestTarget mounted = requestCycle.getRequestCycleProcessor().getRequestEncoder()
-				.getPathMount(path);
+				.getMountedTarget(path);
 		if (mounted != null)
 		{
+			// the path was mounted, so return that directly
 			return mounted;
-		}
+		} // else try different methods
 
 		// See whether this request points to a rendered page
 		if (requestParameters.getComponentPath() != null)
@@ -82,7 +84,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			return resolveRenderedPage(requestCycle, requestParameters);
 		}
 		// see whether this request points to a bookmarkable page
-		else if (requestParameters.getBookmarkablePageAlias() != null)
+		else if (requestParameters.getBookmarkablePageClass() != null)
 		{
 			return resolveBookmarkablePage(requestCycle, requestParameters);
 		}
@@ -149,11 +151,6 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 		// Does page exist?
 		if (page != null)
 		{
-			// Assume cluster needs to be updated now, unless listener
-			// invocation change this (for example, with a simple page
-			// redirect)
-			requestCycle.setUpdateCluster(true);
-
 			// see whether this resolves to a component call or just the page
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
@@ -213,27 +210,19 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 	private IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final String bookmarkablePageAlias = requestParameters.getBookmarkablePageAlias();
+		final String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		final IRequestTarget requestTarget;
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
-
-		// first see whether we have a logical mapping
-		Class pageClass = application.getPages().classForAlias(bookmarkablePageAlias);
-
-		// nope, we don't have a logical mapping, so this should be a
-		// full class name
-		if (pageClass == null)
+		final Class pageClass;
+		try
 		{
-			try
-			{
-				pageClass = session.getClassResolver().resolveClass(bookmarkablePageAlias);
-			}
-			catch (RuntimeException e)
-			{
-				return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-						"Unable to load Bookmarkable Page");
-			}
+			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
+		}
+		catch (RuntimeException e)
+		{
+			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
+					"Unable to load Bookmarkable Page");
 		}
 
 		try
@@ -252,18 +241,12 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 				requestTarget = new PageRequestTarget(requestCycle.getResponsePage());
 			}
 
-			// as we have a new page, we should update the cluster
-			// TODO abstract this so that we can decide by looking
-			// at the kind of target and we don't have to bother
-			// users with it?
-			requestCycle.setUpdateCluster(true);
-
 			return requestTarget;
 		}
 		catch (RuntimeException e)
 		{
 			throw new WicketRuntimeException("Unable to instantiate Page class: "
-					+ bookmarkablePageAlias + ". See below for details.", e);
+					+ bookmarkablePageClass + ". See below for details.", e);
 		}
 	}
 
@@ -284,47 +267,29 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 		final Application application = session.getApplication();
 		try
 		{
-			Class homePage = application.getPages().getHomePage();
-			ApplicationPages.HomePageRenderStrategy homePageStrategy = application.getPages()
-					.getHomePageRenderStrategy();
-			if (homePageStrategy == ApplicationPages.BOOKMARK_REDIRECT)
-			{
-				requestTarget = new PageClassRequestTarget(homePage);
-			}
-			else
-			{
-				final PageParameters parameters = new PageParameters(requestParameters
-						.getParameters());
-				Page newPage = session.getPageFactory().newPage(homePage, parameters);
+			// get the home page class
+			Class homePageClass = application.getPages().getHomePage();
+			// and create a dummy target for looking up whether the home page is
+			// mounted
+			PageClassRequestTarget pokeTarget = new PageClassRequestTarget(homePageClass);
+			IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
+					.getRequestEncoder();
+			String path = requestEncoder.getMountedPath(pokeTarget);
 
-				// check if the home page didn't set a page by itself
-				if (requestCycle.getResponsePage() == null)
-				{
-					if (homePageStrategy == ApplicationPages.PAGE_REDIRECT)
-					{
-						// see if we have to redirect the render part by default
-						// so that a homepage has the same url as a post or
-						// get to that page.
-						ApplicationSettings.RenderStrategy strategy = session.getApplication()
-								.getSettings().getRenderStrategy();
-						boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER || strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
-						requestCycle.setRedirect(issueRedirect);
-					}
-					requestTarget = new PageRequestTarget(newPage);
-				}
-				else
-				{
-					requestTarget = new PageRequestTarget(requestCycle.getResponsePage());
-				}
+			if (path != null)
+			{
+				// the home page was mounted at the given path.
+				// Issue a redirect to that path
+				requestCycle.setRedirect(true);
+				// our poke target is good enough
+				return pokeTarget;
 			}
 
-			// as we have a new page, we should update the cluster
-			// TODO abstract this so that we can decide by looking
-			// at the kind of target and we don't have to bother
-			// users with it?
-			requestCycle.setUpdateCluster(true);
-
-			return requestTarget;
+			// else the home page was not mounted; render it now so
+			// that we will keep a clean path
+			final PageParameters parameters = new PageParameters(requestParameters.getParameters());
+			Page newPage = session.getPageFactory().newPage(homePageClass, parameters);
+			return new PageRequestTarget(newPage);
 		}
 		catch (WicketRuntimeException e)
 		{

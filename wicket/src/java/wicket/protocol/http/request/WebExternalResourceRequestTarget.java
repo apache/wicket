@@ -58,6 +58,11 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	 */
 	public WebExternalResourceRequestTarget(String url)
 	{
+		if (url == null)
+		{
+			throw new NullPointerException("argument url must be not null");
+		}
+
 		this.url = url;
 	}
 
@@ -110,6 +115,15 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Gets the url to the external resource.
+	 * @return the url to the external resource
+	 */
+	public final String getUrl()
+	{
+		return url;
+	}
+
+	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
@@ -117,10 +131,33 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof WebExternalResourceRequestTarget)
+		{
+			WebExternalResourceRequestTarget that = (WebExternalResourceRequestTarget)obj;
+			return url.equals(that.url);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "WebExternalResourceRequestTarget".hashCode();
+		result += url.hashCode();
+		return 17 * result;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return url;
+		return "WebExternalResourceRequestTarget{" + url + "}";
 	}
 }

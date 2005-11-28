@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +20,11 @@ package wicket;
 /**
  * <p>
  * A request target is the base entity that is the subject of a request.
+ * </p>
+ * <p>
+ * It is very important (for mounting) that implementations implement
+ * {@link java.lang.Object#equals(java.lang.Object)} and
+ * {@link java.lang.Object#hashCode()} in a consistent way.
  * </p>
  * 
  * @author Eelco Hillenius

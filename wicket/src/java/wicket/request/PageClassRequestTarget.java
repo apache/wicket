@@ -17,6 +17,7 @@
  */
 package wicket.request;
 
+import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
@@ -100,7 +101,15 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;
-		this.pageParameters = pageParameters;
+		if (pageParameters != null && (!pageParameters.isEmpty()))
+		{
+			this.pageParameters = pageParameters;
+		}
+		else
+		{
+			this.pageParameters = null; // only set when non-empty
+			// to avoid problems with hashing and equals
+		}
 		this.pageMapName = pageMapName;
 	}
 
@@ -111,10 +120,25 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	{
 		if (pageClass != null)
 		{
-			IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
-			String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
-					new PageClassRequestTarget(pageClass, pageParameters));
-			requestCycle.getResponse().redirect(redirectUrl);
+			if (requestCycle.getRedirect())
+			{
+				IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
+				String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
+						new PageClassRequestTarget(pageClass, pageParameters));
+				requestCycle.getResponse().redirect(redirectUrl);
+			}
+			else
+			{
+				requestCycle.setUpdateCluster(true);
+
+				// construct a new instance using the default page factory
+				IPageFactory pageFactory = requestCycle.getApplication().getSettings()
+						.getDefaultPageFactory();
+				final Page page = pageFactory.newPage(pageClass, pageParameters);
+
+				// let the page render itself
+				page.render();
+			}
 		}
 	}
 
@@ -128,7 +152,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	/**
 	 * @see wicket.request.IPageClassRequestTarget#getPageClass()
 	 */
-	public Class getPageClass()
+	public final Class getPageClass()
 	{
 		return pageClass;
 	}
@@ -136,7 +160,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	/**
 	 * @see wicket.request.IPageClassRequestTarget#getPageParameters()
 	 */
-	public PageParameters getPageParameters()
+	public final PageParameters getPageParameters()
 	{
 		return pageParameters;
 	}
@@ -144,9 +168,57 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	/**
 	 * @see wicket.request.IPageClassRequestTarget#getPageMapName()
 	 */
-	public String getPageMapName()
+	public final String getPageMapName()
 	{
 		return pageMapName;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		boolean equal = false;
+		if (obj instanceof PageClassRequestTarget)
+		{
+			PageClassRequestTarget that = (PageClassRequestTarget)obj;
+			if (pageClass.equals(that.pageClass))
+			{
+				boolean parametersMatch = false;
+				if (pageParameters != null)
+				{
+					parametersMatch = (that.pageParameters != null && pageParameters
+							.equals(that.pageParameters));
+				}
+				else
+				{
+					parametersMatch = (that.pageParameters == null);
+				}
+				boolean mapMatch = false;
+				if (pageMapName != null)
+				{
+					mapMatch = (that.pageMapName != null && pageMapName.equals(that.pageMapName));
+				}
+				else
+				{
+					mapMatch = (that.pageMapName == null);
+				}
+				equal = parametersMatch && mapMatch;
+			}
+		}
+		return equal;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "PageClassRequestTarget".hashCode();
+		result += pageClass.hashCode();
+		result += pageParameters != null ? pageParameters.hashCode() : 0;
+		result += pageMapName != null ? pageMapName.hashCode() : 0;
+		return 17 * result;
 	}
 
 	/**
@@ -154,6 +226,6 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public String toString()
 	{
-		return pageClass.getName();
+		return "PageClassRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName() + "}";
 	}
 }
