@@ -34,6 +34,8 @@ public class EmptyDataProvider implements ISortableDataProvider
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final SortState sortState=new SortState(SortState.NONE, 0);
+	
 	private static EmptyDataProvider INSTANCE = new EmptyDataProvider();
 
 	/**
@@ -64,7 +66,7 @@ public class EmptyDataProvider implements ISortableDataProvider
 	 */
 	public SortState getSortState(String property)
 	{
-		return null;
+		return sortState;
 	}
 
 	/**
