@@ -64,8 +64,8 @@ public class RequestParameters implements Serializable
 	/** any id of a non-page target component. */
 	private String componentId;
 
-	/** any page class alias, like used for bookmarkable pages. */
-	private String bookmarkablePageAlias;
+	/** any bookmarkable page class. */
+	private String bookmarkablePageClass;
 
 	/** free-to-use map of non-reserved parameters. */
 	private Map parameters;
@@ -85,24 +85,24 @@ public class RequestParameters implements Serializable
 	}
 
 	/**
-	 * Gets any page class alias, like used for bookmarkable pages.
+	 * Gets any bookmarkable page class.
 	 * 
-	 * @return any page class alias, like used for bookmarkable pages
+	 * @return any bookmarkable page class
 	 */
-	public String getBookmarkablePageAlias()
+	public String getBookmarkablePageClass()
 	{
-		return bookmarkablePageAlias;
+		return bookmarkablePageClass;
 	}
 
 	/**
-	 * Sets any page class alias, like used for bookmarkable pages.
+	 * Sets any bookmarkable page class.
 	 * 
-	 * @param bookmarkablePageAlias
-	 *            any page class alias, like used for bookmarkable pages
+	 * @param bookmarkablePageClass
+	 *            any bookmarkable page class
 	 */
-	public void setBookmarkablePageAlias(String bookmarkablePageAlias)
+	public void setBookmarkablePageClass(String bookmarkablePageClass)
 	{
-		this.bookmarkablePageAlias = bookmarkablePageAlias;
+		this.bookmarkablePageClass = bookmarkablePageClass;
 	}
 
 	/**
@@ -309,9 +309,9 @@ public class RequestParameters implements Serializable
 			b.append(" componentId=").append(getComponentId());
 			b.append(" behaviourId=").append(getBehaviourId());
 		}
-		if (getBookmarkablePageAlias() != null)
+		if (getBookmarkablePageClass() != null)
 		{
-			b.append(" bookmarkablePageAlias=").append(getBookmarkablePageAlias());
+			b.append(" bookmarkablePageClass=").append(getBookmarkablePageClass());
 		}
 		if (getParameters() != null)
 		{

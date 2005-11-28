@@ -72,26 +72,6 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets errorCode.
-	 * 
-	 * @return errorCode
-	 */
-	public int getErrorCode()
-	{
-		return errorCode;
-	}
-
-	/**
-	 * Gets message.
-	 * 
-	 * @return message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
-
-	/**
 	 * Respond by sending the set errorCode and optionally the message to the
 	 * browser.
 	 * 
@@ -119,6 +99,26 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
+	 * Gets the servlet error code.
+	 * 
+	 * @return the servlet error code
+	 */
+	public final int getErrorCode()
+	{
+		return errorCode;
+	}
+
+	/**
+	 * Gets the optional message to send to the client.
+	 * 
+	 * @return the optional message to send to the client
+	 */
+	public final String getMessage()
+	{
+		return message;
+	}
+
+	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
@@ -126,10 +126,46 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		boolean equal = false;
+		if (obj instanceof WebErrorCodeResponseTarget)
+		{
+			WebErrorCodeResponseTarget that = (WebErrorCodeResponseTarget)obj;
+			if (errorCode == that.errorCode)
+			{
+				if (message != null)
+				{
+					equal = (that.message != null && message.equals(that.message));
+				}
+				else
+				{
+					equal = (that.message == null);
+				}
+			}
+		}
+		return equal;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "WebErrorCodeResponseTarget".hashCode();
+		result += message != null ? message.hashCode() : 0;
+		result += errorCode;
+		return 17 * result;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return getErrorCode() + ((message != null) ? " (" + message + ")" : "");
+		return "WebErrorCodeResponseTarget@" + hashCode() + "{errorCode=" + getErrorCode()
+				+ ((message != null) ? " (" + message + ")" : "" + "}");
 	}
 }

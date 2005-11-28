@@ -202,7 +202,7 @@ public class SharedResources
 	public static String path(final Application application, final Class scope, final String path,
 			final Locale locale, final String style)
 	{
-		return application.getPages().aliasForClass(scope) + '/' + path(path, locale, style);
+		return scope.getName() + '/' + path(path, locale, style);
 	}
 
 	/**

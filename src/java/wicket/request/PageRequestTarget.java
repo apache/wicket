@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,14 +51,6 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IPageRequestTarget#getPage()
-	 */
-	public final Page getPage()
-	{
-		return page;
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -85,11 +76,42 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
+	 * @see wicket.request.IPageRequestTarget#getPage()
+	 */
+	public final Page getPage()
+	{
+		return page;
+	}
+
+	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
 		page.internalEndRequest();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof PageRequestTarget)
+		{
+			PageRequestTarget that = (PageRequestTarget)obj;
+			return page.equals(that.page);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "PageRequestTarget".hashCode();
+		result += page.hashCode();
+		return 17 * result;
 	}
 
 	/**

@@ -18,11 +18,7 @@
 package wicket;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import wicket.util.lang.EnumeratedType;
 
 /**
  * Holder for specifying Wicket page classes that have special meaning to an
@@ -50,46 +46,6 @@ import wicket.util.lang.EnumeratedType;
  */
 public class ApplicationPages
 {
-	/**
-	 * Enumerated type for different ways of handling the rendering/ redirecting
-	 * of the homepage.
-	 */
-	public static final class HomePageRenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-		
-		HomePageRenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
-
-	/**
-	 * Use this homepage strategy if you don't want to redirect so the url just
-	 * stays '/' .
-	 */
-	public static final HomePageRenderStrategy NO_REDIRECT = new HomePageRenderStrategy(
-			"no-redirect");
-
-	/**
-	 * Use this homepage strategy if you want to redirect the homepage to a
-	 * bookmarkable url like: bookmarkablePage=mybookmarkablepage This is the
-	 * same as calling: setResponsePage(MyPage.class);.
-	 */
-	public static final HomePageRenderStrategy BOOKMARK_REDIRECT = new HomePageRenderStrategy(
-			"bookmark-redirect");
-
-	/**
-	 * Use this homepage strategy if you want to redirect the homepage just as a
-	 * normal page would be in wicket (when you submit a form on the page or
-	 * when you do in the code: setResponsePage(new MyPage()); If you have set
-	 * the overall Redirect Strategy to ONE_PASS_RENDER then the homepage
-	 * response will honor that. Then it is the same as setting the homepage
-	 * strategy to NO_REDIRECT. This one is the default used by wicket.
-	 */
-	public static final HomePageRenderStrategy PAGE_REDIRECT = new HomePageRenderStrategy(
-			"page-redirect");
-
 	/** Home page class */
 	private Class homePage;
 
@@ -98,12 +54,6 @@ public class ApplicationPages
 
 	/** The error page displayed when an expired page is accessed. */
 	private Class pageExpiredErrorPage;
-
-	/**
-	 * What homepage strategy should be used (no redirect/redirect to
-	 * bookmarkable/redirect to page) The default is redirect to page.
-	 */
-	private HomePageRenderStrategy homePageRenderStrategy = PAGE_REDIRECT;
 
 	/** A map where aliases for bookmarkable page classes are stored. */
 	private final Map classAliases = new HashMap();
@@ -125,17 +75,6 @@ public class ApplicationPages
 		}
 
 		return homePage;
-	}
-
-	/**
-	 * Gets home page redirect strategy.
-	 * 
-	 * @return Returns the homePage.
-	 * @see ApplicationPages#setHomePageRenderStrategy(HomePageRenderStrategy)
-	 */
-	public final HomePageRenderStrategy getHomePageRenderStrategy()
-	{
-		return homePageRenderStrategy;
 	}
 
 	/**
@@ -172,27 +111,6 @@ public class ApplicationPages
 	{
 		checkPageClass(homePage);
 		this.homePage = homePage;
-		return this;
-	}
-
-	/**
-	 * Sets home page strategy. Set one of the ApplicationPages.NO_REDIRECT,
-	 * ApplicationPages.BOOKMARK_REDIRECT or ApplicationPages.PAGE_REDIRECT
-	 * 
-	 * @param homePageStrategy
-	 *            The homepage redirect strategy that has to be used
-	 * 
-	 * @return This
-	 */
-	public final ApplicationPages setHomePageRenderStrategy(
-			final HomePageRenderStrategy homePageStrategy)
-	{
-		if (homePageStrategy == null)
-		{
-			throw new NullPointerException("argument homePageStrategy may not be null");
-		}
-
-		this.homePageRenderStrategy = homePageStrategy;
 		return this;
 	}
 
@@ -234,91 +152,6 @@ public class ApplicationPages
 
 		this.pageExpiredErrorPage = pageExpiredErrorPage;
 		return this;
-	}
-
-	/**
-	 * Returns the alias for the given page class or null if no alias was found.
-	 * Returns null when argument pageClass is null.
-	 * 
-	 * @param pageClass
-	 *            The class to get the alias for
-	 * @return the alias of the page class
-	 * @deprecated use the mounting mechanism of request encoder instead
-	 */
-	public final String aliasForClass(final Class pageClass)
-	{
-		if (pageClass == null)
-		{
-			return null;
-		}
-
-		String alias = (String)classAliases.get(pageClass);
-		if (alias == null)
-		{
-			alias = pageClass.getName();
-		}
-		return alias;
-	}
-
-
-	/**
-	 * Returns the page class for the given alias or null if the alias is not
-	 * mapped. Returns null if argument alias is null.
-	 * 
-	 * @param alias
-	 *            the alias to look up
-	 * @return The page class for the given alias or null if no mapping was
-	 *         found
-	 * @deprecated use the mounting mechanism of request encoder instead
-	 */
-	public final Class classForAlias(final String alias)
-	{
-		if (alias == null)
-		{
-			return null;
-		}
-
-		for (Iterator i = classAliases.entrySet().iterator(); i.hasNext();)
-		{
-			Map.Entry entry = (Entry)i.next();
-			if (entry.getValue().equals(alias))
-			{
-				return (Class)entry.getKey();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Use this method to add logical names to your bookmarkable pages. E.g.
-	 * "test" could map to "com.mycomp.MyPage".
-	 * 
-	 * @param pageClass
-	 *            class of the page to map
-	 * @param alias
-	 *            the alias or logical name of the bookmarkable page
-	 * @deprecated use the mounting mechanism of request encoder instead
-	 */
-	public final void putClassAlias(Class pageClass, String alias)
-	{
-		if (pageClass == null)
-		{
-			throw new NullPointerException("argument pageClass may not be null");
-		}
-
-		if (alias == null)
-		{
-			throw new NullPointerException("argument alias may not be null");
-		}
-
-		if (classAliases.containsValue(alias))
-		{
-			throw new WicketRuntimeException("can't set the same alias name twice");
-		}
-		else
-		{
-			classAliases.put(pageClass, alias);
-		}
 	}
 
 	/**
