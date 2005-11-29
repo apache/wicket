@@ -32,6 +32,8 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
+import wicket.request.IPageClassRequestTarget;
+import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
@@ -209,7 +211,6 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			RequestParameters requestParameters)
 	{
 		final String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
-		final IRequestTarget requestTarget;
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
 		final Class pageClass;
@@ -230,13 +231,12 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 
 			// the response might have been set in the constructor of
 			// the bookmarkable page
-			if (requestCycle.getResponsePage() == null)
+			IRequestTarget requestTarget = requestCycle.getRequestTarget();
+
+			// is it possible that there is already another request target at this point then the 2 below?
+			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IPageClassRequestTarget) )
 			{
 				requestTarget = new PageRequestTarget(newPage);
-			}
-			else
-			{
-				requestTarget = new PageRequestTarget(requestCycle.getResponsePage());
 			}
 
 			return requestTarget;
@@ -260,7 +260,6 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 	private IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final IRequestTarget requestTarget;
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
 		try
@@ -287,8 +286,17 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			// that we will keep a clean path
 			final PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			Page newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			return new PageRequestTarget(newPage);
-		}
+			// the response might have been set in the constructor of the home page
+			IRequestTarget requestTarget = requestCycle.getRequestTarget();
+
+			// is it possible that there is already another request target at this point then the 2 below?
+			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IPageClassRequestTarget) )
+			{
+				requestTarget = new PageRequestTarget(newPage);
+			}
+
+			return requestTarget;
+			}
 		catch (WicketRuntimeException e)
 		{
 			throw new WicketRuntimeException("Could not create home page", e);
