@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.10 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -268,22 +268,6 @@ public abstract class AjaxHandler
 	{
 		bodyOnloadContribHolder.set(null);
 		headContribHolder.set(null);
-	}
-
-	/**
-	 * Configures the response, default by setting the content type and length.
-	 * 
-	 * @param response
-	 *            the response
-	 * @param resourceStream
-	 *            the resource stream that will be rendered
-	 */
-	protected void configure(final Response response, final IResourceStream resourceStream)
-	{
-		// Configure response with content type of resource
-		response.setContentType(getResponseType() + ";charset=" + response.getCharacterEncoding());
-		// and the content length
-		response.setContentLength((int)resourceStream.length());
 	}
 
 	/**
