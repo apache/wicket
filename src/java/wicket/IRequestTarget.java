@@ -26,6 +26,8 @@ package wicket;
  * {@link java.lang.Object#equals(java.lang.Object)} and
  * {@link java.lang.Object#hashCode()} in a consistent way.
  * </p>
+ * Typically, implementations of IRequestTarget are not meant to be used more
+ * than once.
  * 
  * @author Eelco Hillenius
  */
