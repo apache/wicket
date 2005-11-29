@@ -413,6 +413,9 @@ public abstract class RequestCycle
 		}
 		catch (Exception e)
 		{
+			// probably our last chance the exception can be logged
+			log.error(e.getMessage(), e);
+
 			// try to play nicely and let the request processor handle the
 			// exception response. If that doesn't work, any runtime exception
 			// will automatically be bubbled up
@@ -464,6 +467,9 @@ public abstract class RequestCycle
 		}
 		catch (Exception e)
 		{
+			// probably our last chance the exception can be logged
+			log.error(e.getMessage(), e);
+
 			// try to play nicely and let the request processor handle the
 			// exception response. If that doesn't work, any runtime exception
 			// will automatically be bubbled up
