@@ -119,7 +119,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public String toString()
 	{
-		return page.toString();
+		return "PageRequestTarget@" + hashCode() + "{page=" + page + "}";
 	}
 
 }

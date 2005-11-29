@@ -23,9 +23,6 @@ import wicket.RequestCycle;
 /**
  * Default implementation of {@link wicket.request.IComponentRequestTarget}.
  * Target that denotes a single component instance.
- * <p>
- * NOTE: This target is typically only used for testing purposes.
- * </p>
  * 
  * @author Eelco Hillenius
  */
@@ -55,7 +52,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		// Let page render itself
+		// Let component render itself
 		component.render();
 	}
 
@@ -102,7 +99,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 */
 	public String toString()
 	{
-		return component.toString();
+		return "ComponentRequestTarget@" + hashCode() + "{" + component + "}";
 	}
 
 }

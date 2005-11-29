@@ -118,4 +118,58 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	public void cleanUp(RequestCycle requestCycle)
 	{
 	}
+
+	/**
+	 * Gets the resource stream for the response.
+	 * 
+	 * @return the resource stream for the response
+	 */
+	public final IResourceStream getResourceStream()
+	{
+		return resourceStream;
+	}
+
+	/**
+	 * Gets the response type, eg 'text/html'.
+	 * 
+	 * @return the response type, eg 'text/html'
+	 */
+	public final String getResponseType()
+	{
+		return responseType;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof ResourceStreamRequestTarget)
+		{
+			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
+			return resourceStream.equals(that.resourceStream)
+					&& responseType.equals(that.responseType);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "ResourceStreamRequestTarget".hashCode();
+		result += resourceStream.hashCode();
+		result += responseType.hashCode();
+		return 17 * result;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "ResourceStreamRequestTarget@" + hashCode() + "{resourceStream=" + resourceStream
+				+ ",responseType=" + responseType + "}";
+	}
 }

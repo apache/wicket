@@ -110,6 +110,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public String toString()
 	{
-		return resourceKey;
+		return "SharedResourceRequestTarget@" + hashCode() + "{" + resourceKey + "}";
 	}
 }
