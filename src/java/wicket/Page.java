@@ -34,6 +34,8 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.request.IPageClassRequestTarget;
+import wicket.request.IPageRequestTarget;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
@@ -287,27 +289,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// one.
 		else
 		{
-			// TODO fix
-			// final RequestCycle requestCycle = getRequestCycle();
-			// final Page responsePage = requestCycle.getResponsePage();
-			// if (responsePage != null && responsePage != this)
-			// {
-			// responsePage.doRender();
-			// }
-			// else
-			// {
-			// final Class pageClass = requestCycle.getResponsePageClass();
-			// if (pageClass != null)
-			// {
-			// final PageParameters pageParameters = requestCycle
-			// .getResponsePagePageParameters();
-			// String redirectUrl = requestCycle.urlFor(pageClass,
-			// pageParameters);
-			// getResponse().redirect(redirectUrl);
-			// }
-			// }
-			// // for this page the request is also over.
-			// internalEndRequest();
+			IRequestTarget requestTarget = getRequestCycle().getRequestTarget();
+			if(requestTarget instanceof IPageRequestTarget)
+			{
+				if( ((IPageRequestTarget)requestTarget).getPage() != this )
+				{
+					requestTarget.respond(getRequestCycle());
+				}
+			}
+			else if(requestTarget instanceof IPageClassRequestTarget)
+			{
+				if( ((IPageClassRequestTarget)requestTarget).getPageClass() != getClass() )
+				{
+					requestTarget.respond(getRequestCycle());
+				}
+			}
 		}
 	}
 
