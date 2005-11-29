@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.request.EmptyRequestTarget;
-import wicket.util.io.Streams;
+import wicket.request.ResourceStreamRequestTarget;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -49,7 +48,7 @@ public abstract class AjaxHandler
 	private Component component;
 
 	/** The actual raw resource this class is rendering */
-	protected IResourceStream resourceStream;
+	private IResourceStream resourceStream;
 
 	/** thread local for onload contributions. */
 	private static final ThreadLocal bodyOnloadContribHolder = new ThreadLocal();
@@ -176,11 +175,18 @@ public abstract class AjaxHandler
 	protected abstract String getImplementationId();
 
 	/**
-	 * Gets the response to render to the requester.
+	 * Gets the response to render to the requester. This is used by AjaxHandler
+	 * default request target implementation,
+	 * {@link wicket.request.ResourceStreamRequestTarget}. If you override
+	 * {@link #respond()} and provide another kind of target, this method will
+	 * not be used.
 	 * 
 	 * @return the response to render to the requester
 	 */
-	protected abstract IResourceStream getResponse();
+	protected IResourceStream getResponse()
+	{
+		return null;
+	}
 
 	/**
 	 * Do a one time (per page) header contribution that is the same for all
@@ -342,6 +348,31 @@ public abstract class AjaxHandler
 	}
 
 	/**
+	 * Respond to this request. If you override this method, make sure you set a
+	 * proper request target (call
+	 * {@link RequestCycle#setRequestTarget(IRequestTarget)}. If
+	 * {@link #getResponse()} returns a non-null resource stream, this
+	 * implementation will set the target to
+	 * {@link wicket.request.ResourceStreamRequestTarget}. If
+	 * {@link #getResponse()} returns null, the target will be set to an
+	 * instance of {@link EmptyRequestTarget}.
+	 */
+	protected void respond()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		IResourceStream resourceStream = getResponse();
+		if (resourceStream != null)
+		{
+			requestCycle.setRequestTarget(new ResourceStreamRequestTarget(resourceStream,
+					getResponseType()));
+		}
+		else
+		{
+			requestCycle.setRequestTarget(new EmptyRequestTarget());
+		}
+	}
+
+	/**
 	 * Writes the given string to the header container.
 	 * 
 	 * @param container
@@ -352,69 +383,5 @@ public abstract class AjaxHandler
 	private final void write(HtmlHeaderContainer container, String s)
 	{
 		container.getResponse().write(s);
-	}
-
-	/**
-	 * Responds on the event request.
-	 */
-	private final void respond()
-	{
-		try
-		{
-			// Get request cycle
-			final RequestCycle cycle = RequestCycle.get();
-
-			// The cycle's page is set to null so that it won't be rendered back
-			// to
-			// the client since the resource being requested has nothing to do
-			// with pages
-			cycle.setRequestTarget(new EmptyRequestTarget());
-
-			resourceStream = getResponse();
-			if (resourceStream == null)
-			{
-				throw new WicketRuntimeException("Could not get resource stream");
-			}
-
-			// Get servlet response to use when responding with resource
-			final Response response = cycle.getResponse();
-
-			configure(response, resourceStream);
-
-			// Respond with resource
-			respond(response);
-		}
-		finally
-		{
-			resourceStream = null;
-		}
-	}
-
-	/**
-	 * Respond.
-	 * 
-	 * @param response
-	 *            the response to write to
-	 */
-	private final void respond(final Response response)
-	{
-		try
-		{
-			final OutputStream out = response.getOutputStream();
-			try
-			{
-				Streams.copy(resourceStream.getInputStream(), out);
-			}
-			finally
-			{
-				resourceStream.close();
-				out.flush();
-			}
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Unable to render resource stream " + resourceStream,
-					e);
-		}
 	}
 }
