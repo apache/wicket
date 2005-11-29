@@ -157,9 +157,10 @@ public class ListenerInterfaceRequestTarget extends PageRequestTarget
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer().append(getPage().toString()).append("->").append(
-				getComponent().getId()).append("->")
-				.append(getListenerMethod().getDeclaringClass()).append(".").append(
+		StringBuffer b = new StringBuffer().append("ListenerInterfaceRequestTarget@").append(
+				hashCode()).append(getPage().toString()).append("->")
+				.append(getComponent().getId()).append("->").append(
+						getListenerMethod().getDeclaringClass()).append(".").append(
 						getListenerMethod().getName());
 		if (getBehaviourId() != null)
 		{

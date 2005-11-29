@@ -352,7 +352,7 @@ public abstract class AjaxHandler
 		}
 		else
 		{
-			requestCycle.setRequestTarget(new EmptyRequestTarget());
+			requestCycle.setRequestTarget(EmptyRequestTarget.getInstance());
 		}
 	}
 

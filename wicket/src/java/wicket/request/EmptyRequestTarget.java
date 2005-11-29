@@ -29,13 +29,27 @@ import wicket.RequestCycle;
  */
 public final class EmptyRequestTarget implements IRequestTarget
 {
+	/** immutable hashcode. */
+	private static final int HASH = 17 * 3214424;
+
+	/** singleton instance. */
+	private static final EmptyRequestTarget instance = new EmptyRequestTarget();
 
 	/**
 	 * Construct.
 	 */
-	public EmptyRequestTarget()
+	private EmptyRequestTarget()
 	{
-		super();
+	}
+
+	/**
+	 * Gets the singleton instance.
+	 * 
+	 * @return the singleton instance
+	 */
+	public static final EmptyRequestTarget getInstance()
+	{
+		return instance;
 	}
 
 	/**
@@ -54,4 +68,31 @@ public final class EmptyRequestTarget implements IRequestTarget
 	{
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof EmptyRequestTarget)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return HASH;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "EmptyRequestTarget";
+	}
 }
