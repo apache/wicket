@@ -17,38 +17,59 @@
  */
 package wicket.examples.repeater;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
- * page that demonstrates dataview and sorting
+ * page that demonstrates a RefreshingView
  * 
- * @see wicket.extensions.markup.html.repeater.data.DataView
- * @see wicket.extensions.markup.html.repeater.data.sort.OrderByBorder
- * @see wicket.extensions.markup.html.repeater.data.sort.OrderByLink
+ * @see RefreshingView
  * 
  * @author igor
  * 
  */
-public class SortingPage extends BasePage
+public class RefreshingPage extends BasePage
 {
 	/**
-	 * constructor
+	 * Constructor
 	 */
-	public SortingPage()
+	public RefreshingPage()
 	{
-		final DataView dataView = new DataView("sorting", new SortableContactDataProvider())
+		final List contacts=new ArrayList(10);
+		
+		// populate list of contacts to be displayed
+		ContactDataProvider dp=new ContactDataProvider();
+		Iterator it=dp.iterator(0, 10);
+		while (it.hasNext()) {
+			contacts.add(dp.model(it.next()));
+		}
+		
+		// create the refreshing view
+		RefreshingView view = new RefreshingView("view")
 		{
+			/**
+			 * Return an iterator over models for items in the view
+			 */
+			protected Iterator getItemModels()
+			{
+				return contacts.iterator();
+			}
 
+			
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
+				item.add(new Label("itemid", item.getId()));
 				item.add(new ActionPanel("actions", item.getModel()));
 				item.add(new Label("contactid", String.valueOf(contact.getId())));
 				item.add(new Label("firstname", contact.getFirstName()));
@@ -68,16 +89,19 @@ public class SortingPage extends BasePage
 
 			}
 
+
 		};
 
-		dataView.setItemsPerPage(8);
+		add(view);
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dataView));
+		add(new Link("refreshLink") {
 
-		add(new OrderByBorder("orderByLastName", "lastName", dataView));
-
-		add(dataView);
-
-		add(new PagingNavigator("navigator", dataView));
+			public void onClick()
+			{
+				// noop
+				
+			}
+			
+		});
 	}
 }

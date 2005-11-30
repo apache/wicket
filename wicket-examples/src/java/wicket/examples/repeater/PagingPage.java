@@ -20,7 +20,7 @@ package wicket.examples.repeater;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.pageable.Item;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.AbstractReadOnlyModel;

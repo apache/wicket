@@ -19,7 +19,7 @@ package wicket.examples.repeater;
 
 import wicket.extensions.markup.html.repeater.data.GridView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
-import wicket.extensions.markup.html.repeater.pageable.Item;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 
