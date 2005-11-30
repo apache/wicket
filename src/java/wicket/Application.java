@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,6 +41,7 @@ import wicket.markup.html.WicketMessageResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
+import wicket.request.IRequestCycleProcessor;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.crypt.ICrypt;
@@ -168,10 +169,18 @@ public abstract class Application
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
 
-	/** List of response filters @see {@link IResponseFilter}*/
+	/**
+	 * List of {@link IResponseFilter}s.
+	 */
+	// TODO revisit... I don't think everyone agrees with
+	// this (e.g. why not use servlet filters to acchieve the same)
+	// and if we want to support this, it could more elegantly
+	// be made part of e.g. request targets or a request processing
+	// strategy
 	private List responseFilters;
 
-	private static ThreadLocal applicationObjects = new ThreadLocal();
+	/** thread local holder of the application object. */
+	private static final ThreadLocal CURRENT = new ThreadLocal();
 
 	/**
 	 * Get application for current session.
@@ -180,7 +189,7 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		return (Application)applicationObjects.get();
+		return (Application)CURRENT.get();
 	}
 
 	/**
@@ -191,7 +200,7 @@ public abstract class Application
 	 */
 	public static void set(Application application)
 	{
-		applicationObjects.set(application);
+		CURRENT.set(application);
 	}
 
 	/**
@@ -488,29 +497,44 @@ public abstract class Application
 	protected abstract ISessionFactory getSessionFactory();
 
 	/**
-	 * Adds a response filer to the list. Filters are evaluated in the order they have been added.
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
 	 * 
-	 * @param responseFilter The {@link IResponseFilter} that is added
+	 * @return the default request cycle processor
+	 */
+	protected abstract IRequestCycleProcessor getDefaultRequestCycleProcessor();
+
+	/**
+	 * Adds a response filer to the list. Filters are evaluated in the order
+	 * they have been added.
+	 * 
+	 * @param responseFilter
+	 *            The {@link IResponseFilter} that is added
 	 */
 	public final void addResponseFilter(IResponseFilter responseFilter)
 	{
-		if(responseFilters == null) responseFilters = new ArrayList(3);
+		if (responseFilters == null)
+			responseFilters = new ArrayList(3);
 		responseFilters.add(responseFilter);
 	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
-	 * Loops over all the response filters that were set (if any) with the give response
-	 * returns the response buffer itself if there where now filters or the response buffer
-	 * that was created/returned by the filter(s)  
+	 * Loops over all the response filters that were set (if any) with the give
+	 * response returns the response buffer itself if there where now filters or
+	 * the response buffer that was created/returned by the filter(s)
 	 * 
-	 * @param responseBuffer  The response buffer to be filtered
+	 * @param responseBuffer
+	 *            The response buffer to be filtered
 	 * @return Returns the filtered string buffer.
 	 */
 	public final StringBuffer filterResponse(StringBuffer responseBuffer)
 	{
-		if(responseFilters == null) return responseBuffer;
+		if (responseFilters == null)
+			return responseBuffer;
 		for (int i = 0; i < responseFilters.size(); i++)
 		{
 			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
@@ -518,6 +542,7 @@ public abstract class Application
 		}
 		return responseBuffer;
 	}
+
 	/**
 	 * Allows for initialization of the application by a subclass.
 	 */
