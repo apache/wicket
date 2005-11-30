@@ -19,8 +19,11 @@ package wicket.request;
 
 import java.lang.reflect.Method;
 
+import wicket.Application;
+import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.Page;
+import wicket.RequestCycle;
 
 /**
  * Default implementation of
@@ -30,19 +33,8 @@ import wicket.Page;
  * 
  * @author Eelco Hillenius
  */
-public class ListenerInterfaceRequestTarget extends PageRequestTarget
-		implements
-			IListenerInterfaceRequestTarget
+public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceRequestTarget
 {
-	/** the target component. */
-	private final Component component;
-
-	/** the listener method. */
-	private final Method listenerMethod;
-
-	/** optionally the id of the behaviour to dispatch to. */
-	private final String behaviourId;
-
 	/**
 	 * Construct.
 	 * 
@@ -74,98 +66,27 @@ public class ListenerInterfaceRequestTarget extends PageRequestTarget
 	public ListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod,
 			String behaviourId)
 	{
-		super(page);
-
-		if (component == null)
-		{
-			throw new NullPointerException("argument component must be not null");
-		}
-
-		this.component = component;
-
-		if (listenerMethod == null)
-		{
-			throw new NullPointerException("argument listenerMethod must be not null");
-		}
-
-		this.listenerMethod = listenerMethod;
-		this.behaviourId = behaviourId;
+		super(page,component,listenerMethod,behaviourId);
 	}
-
+	
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getComponent()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#processEvents(wicket.RequestCycle)
 	 */
-	public final Component getComponent()
+	public final void processEvents(final RequestCycle requestCycle)
 	{
-		return component;
-	}
+		// Assume cluster needs to be updated now, unless listener
+		// invocation changes this
+		requestCycle.setUpdateCluster(true);
 
-	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getListenerMethod()
-	 */
-	public final Method getListenerMethod()
-	{
-		return listenerMethod;
-	}
+		// Clear all feedback messages if it isn't a redirect
+		getPage().getFeedbackMessages().clear();
 
-	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviourId()
-	 */
-	public final String getBehaviourId()
-	{
-		return behaviourId;
-	}
+		final Application application = requestCycle.getApplication();
+		// and see if we have to redirect the render part by default
+		ApplicationSettings.RenderStrategy strategy = application.getSettings().getRenderStrategy();
+		boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER || strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj)
-	{
-		boolean equal = false;
-		if (obj instanceof ListenerInterfaceRequestTarget)
-		{
-			ListenerInterfaceRequestTarget that = (ListenerInterfaceRequestTarget)obj;
-			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
-			{
-				if (behaviourId != null)
-				{
-					return behaviourId.equals(that.behaviourId);
-				}
-				else
-				{
-					return that.behaviourId == null;
-				}
-			}
-		}
-		return equal;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode()
-	{
-		int result = "ListenerInterfaceRequestTarget".hashCode();
-		result += component.hashCode();
-		result += listenerMethod.hashCode();
-		result += behaviourId != null ? behaviourId.hashCode() : 0;
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer b = new StringBuffer().append("ListenerInterfaceRequestTarget@").append(
-				hashCode()).append(getPage().toString()).append("->")
-				.append(getComponent().getId()).append("->").append(
-						getListenerMethod().getDeclaringClass()).append(".").append(
-						getListenerMethod().getName());
-		if (getBehaviourId() != null)
-		{
-			b.append(" (behaviour ").append(getBehaviourId()).append(")");
-		}
-		return b.toString();
+		requestCycle.setRedirect(issueRedirect);
+		invokeInterface(getComponent(), getListenerMethod(), getPage());
 	}
 }
