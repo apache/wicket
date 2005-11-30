@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.ServletException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -2084,28 +2082,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	protected void onSessionAttach()
 	{
-	}
-
-	/**
-	 * Redirects browser to the given page. note: usually, you should never call
-	 * this method directly, but work with {@link #setResponsePage(Page)} or
-	 * {@link #setResponsePage(Class)} instead. this method is part of wicket's
-	 * internal behaviour and should only be used when you want to circumvent
-	 * the normal framework behaviour and issue the redirect directly.
-	 * 
-	 * @param page
-	 *            The page to redirect to
-	 */
-	protected void redirectTo(final Page page)
-	{
-		try
-		{
-			getRequestCycle().redirectTo(page);
-		}
-		catch (ServletException ex)
-		{
-			throw new WicketRuntimeException(ex);
-		}
 	}
 
 	/**

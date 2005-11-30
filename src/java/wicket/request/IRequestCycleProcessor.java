@@ -85,7 +85,7 @@ public interface IRequestCycleProcessor
 	 * @param requestParameters
 	 *            The request parameters object as decoded by this processor's
 	 *            {@link IRequestEncoder}.
-	 * @return the request target
+	 * @return the request target; has to be non-null!
 	 */
 	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
 

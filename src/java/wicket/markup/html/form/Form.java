@@ -38,7 +38,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.request.WebEventProcessorStrategy;
+import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;
@@ -206,7 +206,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			if(!Strings.isEmpty(url))
 			{
 				//TODO refactor to generic code
-				new WebEventProcessorStrategy().dispatchEvent(getPage(), url);
+				new DefaultEventProcessorStrategy().dispatchEvent(getPage(), url);
 			}
 			else
 			{

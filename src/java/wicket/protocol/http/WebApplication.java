@@ -39,13 +39,13 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
-import wicket.protocol.http.request.WebEventProcessorStrategy;
 import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.request.compound.CompoundRequestCycleProcessor;
+import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -437,7 +437,7 @@ public abstract class WebApplication extends Application
 		if (requestCycleProcessor == null)
 		{
 			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
-					new WebEventProcessorStrategy());
+					new DefaultEventProcessorStrategy());
 		}
 		return requestCycleProcessor;
 	}

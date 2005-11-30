@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +25,11 @@ import wicket.Page;
  * 
  * @author Eelco Hillenius
  */
-public interface IPageRequestTarget extends IRequestTarget, ISessionSynchronizable
+public interface IPageRequestTarget
+		extends
+			IRequestTarget,
+			ISessionSynchronizable,
+			IAccessCheckingTarget
 {
 
 	/**
@@ -34,6 +37,6 @@ public interface IPageRequestTarget extends IRequestTarget, ISessionSynchronizab
 	 * 
 	 * @return the page instance
 	 */
-	public abstract Page getPage();
+	Page getPage();
 
 }

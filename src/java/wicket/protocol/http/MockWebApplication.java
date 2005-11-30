@@ -260,6 +260,7 @@ public class MockWebApplication extends WebApplication
 		setupRequestAndResponse();
 
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		getWicketSession().setRequestCycle(cycle);
 
 		cycle.request(component);
 	}

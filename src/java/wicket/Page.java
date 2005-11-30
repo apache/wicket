@@ -18,6 +18,7 @@
 package wicket;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,10 +33,10 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.request.IPageClassRequestTarget;
-import wicket.request.IPageRequestTarget;
+import wicket.request.IRequestEncoder;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
@@ -239,71 +240,46 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// Make sure it is realy empty
 		renderedComponents = null;
-		
-		// check access much earlier then in onRender!
-		// if false in onRender then checkRendering below fails anyway!!
-		if (checkAccess())
+
+		// Add/touch the response page in the session (its pagemap).
+		session.touch(this);
+
+		// Set form component values from cookies
+		setFormComponentValuesFromCookies();
+
+		try
 		{
-			// Add/touch the response page in the session (its pagemap).
-			session.touch(this);
+			// We have to initialize the page's request now
 
-			// Set form component values from cookies
-			setFormComponentValuesFromCookies();
-
-			try
+			// First, give priority to IFeedback instances, as they have to
+			// collect their messages before components like ListViews
+			// remove any child components
+			visitChildren(IFeedback.class, new IVisitor()
 			{
-				// We have to initialize the page's request now
-
-				// First, give priority to IFeedback instances, as they have to
-				// collect their messages before components like ListViews
-				// remove any child components
-				visitChildren(IFeedback.class, new IVisitor()
+				public Object component(Component component)
 				{
-					public Object component(Component component)
-					{
-						((IFeedback)component).updateFeedback();
-						component.internalBeginRequest();
-						return IVisitor.CONTINUE_TRAVERSAL;
-					}
-				});
+					((IFeedback)component).updateFeedback();
+					component.internalBeginRequest();
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
 
-				// Now, do the initialization for the other components
-				internalBeginRequest();
+			// Now, do the initialization for the other components
+			internalBeginRequest();
 
-				// Handle request by rendering page
-				render();
+			// Handle request by rendering page
+			render();
 
-				// Size profiling for pages
-				// dumpSize();
+			// Size profiling for pages
+			// dumpSize();
 
-				// Check rendering if it happened fully
-				checkRendering();
-			}
-			finally
-			{
-				// The request is over
-				internalEndRequest();
-			}
+			// Check rendering if it happened fully
+			checkRendering();
 		}
-		// Test if the response page is set by the checkAccess and render that
-		// one.
-		else
+		finally
 		{
-			IRequestTarget requestTarget = getRequestCycle().getRequestTarget();
-			if(requestTarget instanceof IPageRequestTarget)
-			{
-				if( ((IPageRequestTarget)requestTarget).getPage() != this )
-				{
-					requestTarget.respond(getRequestCycle());
-				}
-			}
-			else if(requestTarget instanceof IPageClassRequestTarget)
-			{
-				if( ((IPageClassRequestTarget)requestTarget).getPageClass() != getClass() )
-				{
-					requestTarget.respond(getRequestCycle());
-				}
-			}
+			// The request is over
+			internalEndRequest();
 		}
 	}
 
@@ -580,6 +556,39 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Called just before a component's listener method (the provided method
+	 * argument) is called. This method may be used to set up dependencies,
+	 * enforce authorization, etc. NOTE: if this method fails, the method will
+	 * not be excuted. Method
+	 * {@link WebPage#afterCallComponent(Component, Method)} will always be
+	 * called.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param method
+	 *            the method of that component that is to be called
+	 */
+	public void beforeCallComponent(final Component component, final Method method)
+	{
+	}
+
+	/**
+	 * Called right after a component's listener method (the provided method
+	 * argument) was called. This method may be used to clean up dependencies,
+	 * do logging, etc. NOTE: this method will also be called when
+	 * {@link WebPage#beforeCallComponent(Component, Method)} or the method
+	 * invocation itself failed.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param method
+	 *            the method of that component that is to be called
+	 */
+	public void afterCallComponent(final Component component, final Method method)
+	{
+	}
+
+	/**
 	 * Get the string representation of this container.
 	 * 
 	 * @return String representation of this container
@@ -607,7 +616,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			final PageParameters parameters)
 	{
 		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor().getRequestEncoder();
+		String url = requestEncoder.encode(
 				requestCycle, new PageClassRequestTarget(pageMapName, pageClass, parameters));
 		return url;
 	}
@@ -628,7 +638,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		RequestCycle requestCycle = getRequestCycle();
 		String interfaceName = Classes.name(listenerInterface);
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor().getRequestEncoder();
+		String url = requestEncoder.encode(
 				requestCycle,
 				new ListenerInterfaceRequestTarget(this, component, requestCycle
 						.getRequestInterfaceMethod(interfaceName)));
@@ -650,8 +661,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				requestCycle, new SharedResourceRequestTarget(resourceKey));
 		return url;
 	}
-	
+
 	/**
+	 * <p>
 	 * Whether access is allowed to this page. If the page is not allowed you
 	 * must redirect to a another page, else you will get a blank page.
 	 * Redirecting to another page can be done in a few ways:
@@ -661,10 +673,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * it is done you will have to specify where you will go next</li>
 	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
 	 * directly, no redirect wil happen</li>
+	 * </p>
+	 * <p>
+	 * NOTE: this method is not meant to be called by framework clients.
+	 * </p>
 	 * 
 	 * @return true if access is allowed, false otherwise
 	 */
-	protected boolean checkAccess()
+	public boolean checkAccess()
 	{
 		return ACCESS_ALLOWED;
 	}
@@ -821,7 +837,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			setFlag(FLAG_IS_RENDERING, false);
 		}
 	}
-	
+
 	/*
 	 * @param component The component that was added
 	 */
@@ -1111,7 +1127,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			{
 				// Get rid of set
 				renderedComponents = null;
-			
+
 				// Throw exception
 				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
 						+ buffer.toString());

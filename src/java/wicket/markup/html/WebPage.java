@@ -17,8 +17,6 @@
  */
 package wicket.markup.html;
 
-import java.lang.reflect.Method;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -235,38 +233,5 @@ public class WebPage extends Page implements IHeaderRenderer
 		}
 
 		super.onEndRequest();
-	}
-
-	/**
-	 * Called just before a component's listener method (the provided method
-	 * argument) is called. This method may be used to set up dependencies,
-	 * enforce authorization, etc. NOTE: if this method fails, the method will
-	 * not be excuted. Method
-	 * {@link WebPage#afterCallComponent(Component, Method)} will always be
-	 * called.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
-	 */
-	public void beforeCallComponent(final Component component, final Method method)
-	{
-	}
-
-	/**
-	 * Called right after a component's listener method (the provided method
-	 * argument) was called. This method may be used to clean up dependencies,
-	 * do logging, etc. NOTE: this method will also be called when
-	 * {@link WebPage#beforeCallComponent(Component, Method)} or the method
-	 * invocation itself failed.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
-	 */
-	public void afterCallComponent(final Component component, final Method method)
-	{
 	}
 }

@@ -36,6 +36,6 @@ public interface IComponentRequestTarget extends IRequestTarget
 	 * 
 	 * @return the component instance
 	 */
-	public abstract Component getComponent();
+	Component getComponent();
 
 }

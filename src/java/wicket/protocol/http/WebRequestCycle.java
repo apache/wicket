@@ -17,8 +17,6 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.ServletException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -100,9 +98,8 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @param page
 	 *            The page to redirect to
-	 * @throws ServletException
 	 */
-	public void redirectTo(final Page page) throws ServletException
+	public final void redirectTo(final Page page)
 	{
 		String redirectUrl = null;
 
@@ -161,8 +158,6 @@ public class WebRequestCycle extends RequestCycle
 					redirectResponse.close();
 
 					redirectUrl = page.urlFor(page, IRedirectListener.class);
-					// TODO adouma: no Portlets support yet so typecasted for
-					// Servlet env.
 					((WebApplication)application).addRedirect(((ServletWebRequest)getWebRequest())
 							.getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
@@ -173,7 +168,6 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(currentResponse);
 				log.error(ex.getMessage(), ex);
 				IRequestCycleProcessor processor = getRequestCycleProcessor();
-				// TODO integrate with IRequestCycleProcessor
 				processor.respond(ex, this);
 				return;
 			}
