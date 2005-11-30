@@ -20,7 +20,6 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Comparator;
 
-import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -29,9 +28,9 @@ import wicket.version.undo.Change;
  * Container that holds components in a AbstractPageableView. One Item
  * represents one entire row of the view. Users should add all containing
  * components to the Item instead of the view, this is accomplished by
- * implementing AbstractPageableView.populateItem(DataItem item).
+ * implementing refreshingView.populateItem(Item item).
  * 
- * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView
+ * @see RefreshingView
  * 
  * @author Igor Vaynberg
  */

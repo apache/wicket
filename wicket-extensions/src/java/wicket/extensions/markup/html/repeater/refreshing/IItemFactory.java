@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.refreshing;
 
-import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.model.IModel;
 
 /**
