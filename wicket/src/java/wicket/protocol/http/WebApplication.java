@@ -102,11 +102,11 @@ public abstract class WebApplication extends Application
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
-	/** Map of redirects in progress per session */
-	private Map redirectMap = Collections.synchronizedMap(new HashMap());
-
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
+
+	/** Map of redirects in progress per session */
+	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
 	/**
 	 * Constructor.
@@ -405,34 +405,14 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Sets the default request cycle processor which is used by default by
-	 * WebRequestCycle. You may provide your own processor by using this method
-	 * or you may subclass (Web)RequestCycle and provide your implementation
-	 * with it. If you decide to go with the latter, you should be aware that
-	 * mounting paths using WebApplication's methods will not automatically work
-	 * for you.
-	 * 
-	 * @see WebRequestCycle#getRequestCycleProcessor()
-	 * @see IRequestCycleProcessor
-	 * 
-	 * @param requestCycleProcessor
-	 *            the request cycle processor
-	 */
-	protected void setDefaultRequestCycleProcessor(IRequestCycleProcessor requestCycleProcessor)
-	{
-		if (requestCycleProcessor == null)
-		{
-			throw new NullPointerException("argument requestCycleProcessor must be non-null");
-		}
-		this.requestCycleProcessor = requestCycleProcessor;
-	}
-
-	/**
-	 * Gets the default request cycle processor (with lazy initialization).
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
 	 * 
 	 * @return the default request cycle processor
 	 */
-	protected final IRequestCycleProcessor getDefaultRequestCycleProcessor()
+	protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
 	{
 		if (requestCycleProcessor == null)
 		{
