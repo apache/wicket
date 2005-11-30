@@ -5,25 +5,50 @@
 
 <web-app>
 
-    <display-name>Wicket Sandbox</display-name>  
+	<display-name>Wicket Sandbox</display-name>
 
-    <servlet>
-        <servlet-name>ObjectEditApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>objectedit.ObjectEditApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <filter>
+      <filter-name>WicketSessionFilter</filter-name>
+      <filter-class>wicket.protocol.http.servlet.WicketSessionFilter</filter-class>
+      <init-param>
+        <param-name>servletPath</param-name>
+        <param-value>sessiontest</param-value>
+      </init-param>
+    </filter>
 
-    <servlet-mapping>
-        <servlet-name>ObjectEditApplication</servlet-name>
-        <url-pattern>/objectedit/*</url-pattern>
-    </servlet-mapping>
+    <filter-mapping>
+        <filter-name>WicketSessionFilter</filter-name>
+        <url-pattern>/servlet/sessiontest</url-pattern>
+    </filter-mapping>
 
-    <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+	<servlet>
+		<servlet-name>SessionApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>session.SessionApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>WicketSessionServlet</servlet-name>
+		<servlet-class>session.WicketSessionServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SessionApplication</servlet-name>
+		<url-pattern>/sessiontest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WicketSessionServlet</servlet-name>
+		<url-pattern>/servlet/sessiontest</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>
