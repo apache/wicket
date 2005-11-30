@@ -27,7 +27,6 @@ import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
