@@ -95,6 +95,15 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
+
+		// do the same test twice. Igor reported a problem with that, so we have to test it.
+	    border = (Border)application.getLastRenderedPage().get("myBorder2");
+	    assertNotNull(border);
+		application.rerender(border);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
 		
 	    WebMarkupContainer container = (WebMarkupContainer)application.getLastRenderedPage().get("test");
 	    assertNotNull(container);

@@ -27,6 +27,9 @@ public class HomePagePageRedirect extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public HomePagePageRedirect()
 	{
 		setResponsePage(new RedirectPage());
