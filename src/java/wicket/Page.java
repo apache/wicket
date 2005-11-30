@@ -274,10 +274,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// dumpSize();
 
 			// Check rendering if it happened fully
-			checkRendering();
+			checkRendering(this);
 		}
 		finally
 		{
+
 			// The request is over
 			internalEndRequest();
 		}
@@ -1075,8 +1076,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * Throw an exception if not all components rendered.
+	 * @param renderedContainer The page itself if it was a full page render or the container that was rendered standalone 
 	 */
-	private final void checkRendering()
+	private final void checkRendering(final MarkupContainer renderedContainer)
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
@@ -1086,7 +1088,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			final Count unrenderedComponents = new Count();
 			final List unrenderedAutoComponents = new ArrayList();
 			final StringBuffer buffer = new StringBuffer();
-			visitChildren(new IVisitor()
+			renderedContainer.visitChildren(new IVisitor()
 			{
 				public Object component(final Component component)
 				{
@@ -1242,6 +1244,40 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Allow XmlHttpRequest calls
 		RequestCycle.registerRequestListenerInterface(IBehaviourListener.class);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * This method is called when a component will be rendered standalone.
+	 * 
+	 * @param component 
+	 * 
+	 */
+	public final void startComponentRender(Component component)
+	{
+		renderedComponents = null;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * This method is called when a component was rendered standalone.
+	 * If it is a markupcontainer then the rendering for that container is checked.
+	 * 
+	 * @param component 
+	 * 
+	 */
+	public final void endComponentRender(Component component)
+	{
+		if(component instanceof MarkupContainer)
+		{
+			checkRendering( (MarkupContainer) component );
+		}
+		else
+		{
+			renderedComponents = null;
+		}
 	}
 
 }
