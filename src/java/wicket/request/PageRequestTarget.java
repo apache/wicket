@@ -82,9 +82,9 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IAccessCheckingTarget#checkAccess()
+	 * @see wicket.request.IAccessCheckingTarget#checkAccess(RequestCycle)
 	 */
-	public boolean checkAccess()
+	public boolean checkAccess(RequestCycle requestCycle)
 	{
 		return page.checkAccess();
 	}
