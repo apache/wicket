@@ -37,6 +37,9 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	/** optional page parameters. */
 	private final PageParameters pageParameters;
 
+	/** the page that was created in response for cleanup */
+	private Page page;
+	
 	/** optional page map name. */
 	private final String pageMapName;
 
@@ -114,6 +117,30 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	}
 
 	/**
+	 * @see wicket.request.IAccessCheckingTarget#checkAccess(RequestCycle)
+	 */
+	public boolean checkAccess(RequestCycle requestCycle)
+	{
+		Page page = getPage(requestCycle);
+		if(page != null)
+		{
+			return page.checkAccess();
+		}
+		return true;
+	}
+	
+	
+	private Page getPage(RequestCycle requestCycle)
+	{
+		if(page == null && pageClass != null && !requestCycle.getRedirect())
+		{
+			// construct a new instance using the default page factory
+			IPageFactory pageFactory = requestCycle.getApplication().getSettings().getDefaultPageFactory();
+			page = pageFactory.newPage(pageClass, pageParameters);
+		}
+		return page;
+	}
+	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -131,13 +158,10 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 			{
 				requestCycle.setUpdateCluster(true);
 
-				// construct a new instance using the default page factory
-				IPageFactory pageFactory = requestCycle.getApplication().getSettings()
-						.getDefaultPageFactory();
-				final Page page = pageFactory.newPage(pageClass, pageParameters);
+				page = getPage(requestCycle);
 
 				// let the page render itself
-				page.render();
+				page.doRender();
 			}
 		}
 	}
@@ -147,6 +171,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
+		// don't have to call page.internalEndRequest() because page.doRender() is always called for this target
 	}
 
 	/**
