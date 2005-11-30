@@ -2,14 +2,14 @@
  * $Id$
  * $Revision$
  * $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,33 +18,36 @@
  */
 package wicket.request;
 
+import java.lang.reflect.Method;
+
+import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 
 /**
- * Specialization of page request that denotes that we are actually handling a
- * redirect request of a page.
- * 
- * @author Eelco Hillenius
+ * TODO DOC
+ * @author jcompagner
  */
-public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestTarget
+public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceRequestTarget
 {
+
 	/**
 	 * Construct.
-	 * 
 	 * @param page
-	 *            the target of the redirect handling
+	 * @param component
+	 * @param listenerMethod
 	 */
-	public RedirectPageRequestTarget(Page page)
+	public FormSubmitInterfaceRequestTarget(Page page, Component component, Method listenerMethod)
 	{
-		super(page,page,RequestCycle.get().getRequestInterfaceMethod("IRedirectListener"));
+		super(page, component, listenerMethod);
 	}
-	
+
 	/**
 	 * @see wicket.request.IListenerInterfaceRequestTarget#processEvents(wicket.RequestCycle)
 	 */
-	public final void processEvents(final RequestCycle requestCycle)
+	public void processEvents(RequestCycle requestCycle)
 	{
 		invokeInterface(getComponent(), getListenerMethod(), getPage());
-	}	
+	}
+
 }

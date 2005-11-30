@@ -20,6 +20,7 @@ package wicket.request;
 import java.lang.reflect.Method;
 
 import wicket.Component;
+import wicket.RequestCycle;
 
 /**
  * Target that denotes a page instance and a call to a component on that page
@@ -51,5 +52,14 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget, ISe
 	 * @return the optional behaviour id
 	 */
 	String getBehaviourId();
-
+	
+	
+	/**
+	 * After a page is restored, this method is responsible for calling any
+	 * event handling code based on the request.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 */
+	void processEvents(final RequestCycle requestCycle);
 }
