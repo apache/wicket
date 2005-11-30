@@ -55,11 +55,13 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 * 
 	 * @param s
 	 *            The string to add
+	 * @return this for chaining
 	 */
-	public void append(final String s)
+	public StringBufferResourceStream append(final String s)
 	{
 		buffer.append(s);
 		setLastModified(Time.now());
+		return this;
 	}
 
 	/**
