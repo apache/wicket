@@ -39,8 +39,9 @@ public interface IAccessCheckingTarget
 	 * it is done you will have to specify where you will go next</li>
 	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
 	 * directly, no redirect wil happen</li>
+	 * @param requestCycle 
 	 * 
 	 * @return true if access is allowed, false otherwise
 	 */
-	boolean checkAccess();
+	boolean checkAccess(RequestCycle requestCycle);
 }
