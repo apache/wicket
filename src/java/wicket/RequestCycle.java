@@ -423,10 +423,13 @@ public abstract class RequestCycle
 	{
 		try
 		{
+			// get the processor
+			IRequestCycleProcessor processor = safeGetRequestProcessor();
+
 			// TODO catch infinite loops
 			while (currentStep < DONE)
 			{
-				step();
+				step(processor);
 				currentStep++;
 			}
 		}
@@ -443,13 +446,13 @@ public abstract class RequestCycle
 		}
 	}
 
-	/** handle the current step in the request processing. */
-	private final void step()
+	/** handle the current step in the request processing. 
+	 * @param processor the cycle processor that can be used
+	 */
+	private final void step(IRequestCycleProcessor processor)
 	{
 		try
 		{
-			// get the processor
-			IRequestCycleProcessor processor = safeGetRequestProcessor();
 			switch (currentStep)
 			{
 				case PREPARE_REQUEST : {
@@ -477,35 +480,34 @@ public abstract class RequestCycle
 					{
 						throw new WicketRuntimeException(
 								"the processor did not resolve to any request target");
-					}
-
+					} 
+					requestTargets.push(target);
+					break;
+				}
+				case CHECK_ACCESS:
+				{
 					// manually set step to check access
-					currentStep = CHECK_ACCESS;
+
+					IRequestTarget target = getRequestTarget();
 
 					if (target instanceof IAccessCheckingTarget)
 					{
-						((IAccessCheckingTarget)target).checkAccess();
+						((IAccessCheckingTarget)target).checkAccess(this);
 					}
 
 					// check access or earlier (like in a component constructor) might
 					// have called setRequestTarget. If that is the case, put that one
 					// on top; otherwise put our resolved target on top
 					IRequestTarget otherTarget = getRequestTarget();
-					if (otherTarget != null)
+					if (otherTarget != target)
 					{
+						// The new target has to be checked again set the current step back one.
+						currentStep = CHECK_ACCESS-1;
 						// swap targets
 						requestTargets.pop();
 						requestTargets.push(target);
 						requestTargets.push(otherTarget);
 					}
-					else
-					{
-						// set it as the current target, on the top of the stack
-						// NOTE: don't do the checking that is done in
-						// setRequestTarget
-						requestTargets.push(target);
-					}
-
 					break;
 				}
 				case PROCESS_EVENTS : {
@@ -545,7 +547,6 @@ public abstract class RequestCycle
 			// probably our last chance the exception can be logged
 			log.error(e.getMessage(), e);
 
-			IRequestCycleProcessor processor = safeGetRequestProcessor();
 			// try to play nicely and let the request processor handle the
 			// exception response. If that doesn't work, any runtime exception
 			// will automatically be bubbled up
