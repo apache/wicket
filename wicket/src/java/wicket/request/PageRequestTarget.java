@@ -17,11 +17,8 @@
  */
 package wicket.request;
 
-import javax.servlet.ServletException;
-
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
 
 /**
  * Default implementation of {@link IPageRequestTarget}. Target that denotes a
@@ -59,14 +56,7 @@ public class PageRequestTarget implements IPageRequestTarget
 		if (requestCycle.getRedirect())
 		{
 			// Redirect to the page
-			try
-			{
-				requestCycle.redirectTo(page);
-			}
-			catch (ServletException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
+			requestCycle.redirectTo(page);
 		}
 		else
 		{
@@ -89,6 +79,14 @@ public class PageRequestTarget implements IPageRequestTarget
 	public void cleanUp(RequestCycle requestCycle)
 	{
 		page.internalEndRequest();
+	}
+
+	/**
+	 * @see wicket.request.IAccessCheckingTarget#checkAccess()
+	 */
+	public boolean checkAccess()
+	{
+		return page.checkAccess();
 	}
 
 	/**
@@ -121,5 +119,4 @@ public class PageRequestTarget implements IPageRequestTarget
 	{
 		return "PageRequestTarget@" + hashCode() + "{page=" + page + "}";
 	}
-
 }

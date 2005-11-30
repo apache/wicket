@@ -98,7 +98,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
     /**
      * @see wicket.Page#checkAccess()
      */
-    protected boolean checkAccess()
+    public boolean checkAccess()
     {
         // Is user signed in?
         if (getLibrarySession().isSignedIn())

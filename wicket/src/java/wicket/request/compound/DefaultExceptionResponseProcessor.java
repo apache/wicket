@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: DefaultExceptionResponseProcessor.java,v 1.1 2005/11/27 09:20:16 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +16,6 @@
  * the License.
  */
 package wicket.request.compound;
-
-import javax.servlet.ServletException;
 
 import wicket.Application;
 import wicket.ApplicationSettings;
@@ -96,14 +93,7 @@ public final class DefaultExceptionResponseProcessor implements IExceptionRespon
 			// We generally want to redirect the response because we
 			// were in the middle of rendering and the page may end up
 			// looking like spaghetti otherwise
-			try
-			{
-				requestCycle.redirectTo(requestCycle.getResponsePage());
-			}
-			catch (ServletException ex)
-			{
-				throw new WicketRuntimeException(ex);
-			}
+			requestCycle.redirectTo(requestCycle.getResponsePage());
 		}
 	}
 }

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.protocol.http.request;
+package wicket.request.compound;
 
 import java.lang.reflect.Method;
 
@@ -24,28 +24,24 @@ import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
+import wicket.Request;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.WebPage;
-import wicket.protocol.http.WebRequest;
 import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
-import wicket.request.compound.IEventProcessorStrategy;
 import wicket.util.string.Strings;
 
 /**
  * TODO docme
- * NOTE: this target can only be used in a servlet environment
- * with {@link wicket.protocol.http.WebRequestCycle}s.
  * 
  * @author Eelco Hillenius
  */
-public final class WebEventProcessorStrategy implements IEventProcessorStrategy
+public final class DefaultEventProcessorStrategy implements IEventProcessorStrategy
 {
 	/**
 	 * Construct.
 	 */
-	public WebEventProcessorStrategy()
+	public DefaultEventProcessorStrategy()
 	{
 	}
 
@@ -97,10 +93,7 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 	protected final void invokeInterface(final Component component, final Method method,
 			final Page page)
 	{
-		if (page instanceof WebPage)
-		{
-			((WebPage)page).beforeCallComponent(component, method);
-		}
+		page.beforeCallComponent(component, method);
 
 		try
 		{
@@ -115,10 +108,7 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 		}
 		finally
 		{
-			if (page instanceof WebPage)
-			{
-				((WebPage)page).afterCallComponent(component, method);
-			}
+			page.afterCallComponent(component, method);
 		}
 	}
 
@@ -178,13 +168,13 @@ public final class WebEventProcessorStrategy implements IEventProcessorStrategy
 	/**
 	 * Gets the name of the interface to invoke.
 	 * 
-	 * @param webRequest
-	 *            the web request object
+	 * @param request
+	 *            the request object
 	 * @return the name of the interface to invoke
 	 */
-	private String getInterfaceName(final WebRequest webRequest)
+	private String getInterfaceName(final Request request)
 	{
-		String interfaceName = webRequest.getParameter("interface");
+		String interfaceName = request.getParameter("interface");
 		if (interfaceName == null)
 		{
 			interfaceName = "IRedirectListener";

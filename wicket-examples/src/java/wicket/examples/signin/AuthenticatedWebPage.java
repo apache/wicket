@@ -40,7 +40,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
     /**
      * @see wicket.Page#checkAccess()
      */
-    protected boolean checkAccess()
+    public boolean checkAccess()
     {
         // Is a user signed into this cycle's session?
         boolean signedIn = getSignInSession().isSignedIn();

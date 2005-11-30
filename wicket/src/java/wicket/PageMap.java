@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,6 +20,7 @@ package wicket;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import wicket.request.IRequestCycleProcessor;
 import wicket.util.collections.MostRecentlyUsedMap;
 
 /**
@@ -32,7 +33,7 @@ import wicket.util.collections.MostRecentlyUsedMap;
 public final class PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Default page map name */
 	public static final String defaultName = "main";
 
@@ -174,12 +175,13 @@ public final class PageMap implements Serializable
 		pages.put(page.getId(), page);
 		return (Page)pages.getRemovedValue();
 	}
-	
+
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * The current request's url is saved for future use by method continueToOriginalDestination();
-	 * Only use this method when you plan to continue to the current url at some later time;
-	 * otherwise just use setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's url is saved for future use by method
+	 * continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current url at some later time; otherwise just use
+	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
 	 * call redirectTo.
 	 * 
 	 * @param page
@@ -187,8 +189,10 @@ public final class PageMap implements Serializable
 	 */
 	final void redirectToInterceptPage(final Page page)
 	{
-		interceptContinuationURL = page.getResponse().encodeURL(page.getRequest().getURL());
-		page.redirectTo(page);
+		final RequestCycle cycle = session.getRequestCycle();
+		IRequestCycleProcessor processor = cycle.getRequestCycleProcessor();
+		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
+		cycle.redirectTo(page);
 		session.dirty();
 	}
 
@@ -224,13 +228,13 @@ public final class PageMap implements Serializable
 	 */
 	final void visitPages(final IVisitor visitor)
 	{
-	    if (pages != null)
-	    {
+		if (pages != null)
+		{
 			for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
 			{
 				visitor.page((Page)iterator.next());
 			}
-	    }
+		}
 	}
 
 	/**

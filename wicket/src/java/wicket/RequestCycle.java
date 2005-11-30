@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ComponentRequestTarget;
+import wicket.request.IAccessCheckingTarget;
 import wicket.request.IPageClassRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
@@ -181,6 +182,9 @@ public abstract class RequestCycle
 	/** Map from request interface Class to Method. */
 	private static final Map listenerRequestInterfaceMethods = new HashMap();
 
+	/** The current stage of event processing. */
+	private int currentStep = NOT_STARTED;
+
 	/** The application object. */
 	protected final Application application;
 
@@ -199,6 +203,9 @@ public abstract class RequestCycle
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	// TODO use a more efficient implementation, maybe with a default size of 3
 	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
+
+	/** the current request parameters (if any). */
+	private transient RequestParameters requestParameters;
 
 	/**
 	 * True if request should be redirected to the resulting page instead of
@@ -380,55 +387,11 @@ public abstract class RequestCycle
 	 */
 	public final void request() throws ServletException
 	{
-		// prepare the request
-		prepare();
+		// set start step
+		currentStep = PREPARE_REQUEST;
 
-		IRequestCycleProcessor processor = null;
-
-		try
-		{
-			// get the processor we delegate the handling of the request
-			// cycle behaviour to
-			processor = safeGetRequestProcessor();
-
-			// get the request parameters object using the request encoder of
-			// the processor
-			final RequestParameters requestParameters = getRequestParameters(processor);
-
-			// resolve the target of the request using the request parameters
-			final IRequestTarget target = processor.resolve(this, requestParameters);
-
-			if (target == null)
-			{
-				throw new WicketRuntimeException(
-						"the processor did not resolve to any request target");
-			}
-
-			// set it as the current target, on the top of the stack
-			setRequestTarget(target);
-
-			// determine what kind of synchronization is to be used, and
-			// handle any events with that
-			processEventsAndRespond(processor);
-		}
-		catch (Exception e)
-		{
-			// probably our last chance the exception can be logged
-			log.error(e.getMessage(), e);
-
-			// try to play nicely and let the request processor handle the
-			// exception response. If that doesn't work, any runtime exception
-			// will automatically be bubbled up
-			if (processor != null)
-			{
-				processor.respond(e, this);
-			}
-		}
-		finally
-		{
-			// clean up the request
-			cleanUp();
-		}
+		// loop through steps
+		steps();
 	}
 
 	/**
@@ -443,46 +406,153 @@ public abstract class RequestCycle
 	 */
 	public final void request(IRequestTarget target) throws ServletException
 	{
-		// prepare the request
-		prepare();
+		// set it as the current target, on the top of the stack
+		requestTargets.push(target);
 
-		IRequestCycleProcessor processor = null;
+		// set start step
+		currentStep = PROCESS_EVENTS;
 
+		// loop through steps
+		steps();
+	}
+
+	/**
+	 * Loop through the processing steps starting from the current one.
+	 */
+	private final void steps()
+	{
 		try
 		{
-			// get the processor we delegate the handling of the request
-			// cycle behaviour to
-			processor = safeGetRequestProcessor();
+			// TODO catch infinite loops
+			while (currentStep < DONE)
+			{
+				step();
+				currentStep++;
+			}
+		}
+		finally
+		{
+			// set step manually to clean up
+			currentStep = CLEANUP_REQUEST;
 
-			// get the request parameters object using the request encoder of
-			// the processor
-			final RequestParameters requestParameters = getRequestParameters(processor);
+			// clean up the request
+			cleanUp();
 
-			// set it as the current target, on the top of the stack
-			setRequestTarget(target);
+			// set step manually to done
+			currentStep = DONE;
+		}
+	}
 
-			// determine what kind of synchronization is to be used, and
-			// handle any events with that
-			processEventsAndRespond(processor);
+	/** handle the current step in the request processing. */
+	private final void step()
+	{
+		try
+		{
+			// get the processor
+			IRequestCycleProcessor processor = safeGetRequestProcessor();
+			switch (currentStep)
+			{
+				case PREPARE_REQUEST : {
+
+					// prepare the request
+					prepare();
+
+					break;
+				}
+				case DECODE_PARAMETERS : {
+
+					// get the request parameters object using the request
+					// encoder of the processor
+					requestParameters = getRequestParameters(processor);
+
+					break;
+				}
+				case RESOLVE_TARGET : {
+
+					// resolve the target of the request using the request
+					// parameters
+					final IRequestTarget target = processor.resolve(this, requestParameters);
+					// has to result in a request target
+					if (target == null)
+					{
+						throw new WicketRuntimeException(
+								"the processor did not resolve to any request target");
+					}
+
+					// manually set step to check access
+					currentStep = CHECK_ACCESS;
+
+					if (target instanceof IAccessCheckingTarget)
+					{
+						((IAccessCheckingTarget)target).checkAccess();
+					}
+
+					// check access or earlier (like in a component constructor) might
+					// have called setRequestTarget. If that is the case, put that one
+					// on top; otherwise put our resolved target on top
+					IRequestTarget otherTarget = getRequestTarget();
+					if (otherTarget != null)
+					{
+						// swap targets
+						requestTargets.pop();
+						requestTargets.push(target);
+						requestTargets.push(otherTarget);
+					}
+					else
+					{
+						// set it as the current target, on the top of the stack
+						// NOTE: don't do the checking that is done in
+						// setRequestTarget
+						requestTargets.push(target);
+					}
+
+					break;
+				}
+				case PROCESS_EVENTS : {
+
+					// determine what kind of synchronization is to be used, and
+					// handle any events with that and generate a response in
+					// that same block
+					// NOTE: because of synchronization, we need to take the
+					// steps PROCESS_EVENS and RESPOND together
+					processEventsAndRespond(processor);
+
+					break;
+				}
+				case RESPOND : {
+
+					// generate a response
+					// NOTE: we reach this block when during event processing
+					// and response generation the request target was changed,
+					// causing the request processing to go BACK to RESPOND.
+					// Note that we could still be in a session-synchronized
+					// block here, so be very careful not to do other
+					// synchronization (possibly introducing a deadlock)
+					processor.respond(this);
+
+					break;
+				}
+				default : {
+					// nothing
+				}
+			}
 		}
 		catch (Exception e)
 		{
+			// set step manually to handle exception
+			currentStep = HANDLE_EXCEPTION;
+
 			// probably our last chance the exception can be logged
 			log.error(e.getMessage(), e);
 
+			IRequestCycleProcessor processor = safeGetRequestProcessor();
 			// try to play nicely and let the request processor handle the
 			// exception response. If that doesn't work, any runtime exception
 			// will automatically be bubbled up
 			if (processor != null)
 			{
-				log.error(e.getMessage(), e);
 				processor.respond(e, this);
 			}
-		}
-		finally
-		{
-			// clean up the request
-			cleanUp();
 		}
 	}
 
@@ -594,6 +664,9 @@ public abstract class RequestCycle
 				// let the processor handle/ issue any events
 				processor.processEvents(this);
 
+				// set current stage manually this time
+				currentStep = RESPOND;
+
 				// generate a response
 				processor.respond(this);
 			}
@@ -605,6 +678,9 @@ public abstract class RequestCycle
 
 			// let the processor handle/ issue any events
 			processor.processEvents(this);
+
+			// set current stage manually this time
+			currentStep = RESPOND;
 
 			// generate a response
 			processor.respond(this);
@@ -642,6 +718,18 @@ public abstract class RequestCycle
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
 		requestTargets.push(requestTarget);
+
+		// change the current step to a step that will handle the
+		// new target if need be
+		if (currentStep > RESPOND)
+		{
+			// we are not actually doing event processing again,
+			// but since we are still in the loop here, the next
+			// actual value will be RESPOND again
+			currentStep = PROCESS_EVENTS;
+		}
+		// NOTE: if we are at PROCESS_EVENTS, leave it as we don't
+		// want to re-execute that step again
 	}
 
 	/**
@@ -865,9 +953,8 @@ public abstract class RequestCycle
 	 * 
 	 * @param page
 	 *            The page to redirect to
-	 * @throws ServletException
 	 */
-	public abstract void redirectTo(final Page page) throws ServletException;
+	public abstract void redirectTo(final Page page);
 
 	/**
 	 * Attach thread
@@ -924,4 +1011,57 @@ public abstract class RequestCycle
 		}
 		return processor;
 	}
+
+	// internal ints for processing status; keep here to be out of sight a bit
+
+	/**
+	 * No processing has been done.
+	 */
+	private static final int NOT_STARTED = 0;
+
+	/**
+	 * Starting the actual request processing.
+	 */
+	private static final int PREPARE_REQUEST = 1;
+
+	/**
+	 * Decoding request parameters into a strongly typed
+	 * {@link RequestParameters} object.
+	 */
+	private static final int DECODE_PARAMETERS = 2;
+
+	/**
+	 * Resolving the {@link RequestParameters} object to a request target.
+	 */
+	private static final int RESOLVE_TARGET = 3;
+
+	/**
+	 * Checking access after resolving.
+	 */
+	private static final int CHECK_ACCESS = 4;
+
+	/**
+	 * Dispatching and handling of events.
+	 */
+	private static final int PROCESS_EVENTS = 5;
+
+	/**
+	 * Responding using the currently set {@link IRequestTarget}.
+	 */
+	private static final int RESPOND = 6;
+
+	/**
+	 * Responding to an uncaught exception.
+	 */
+	private static final int HANDLE_EXCEPTION = 7;
+
+	/**
+	 * Cleaning up after responding to a request.
+	 */
+	private static final int CLEANUP_REQUEST = 8;
+
+	/**
+	 * Request cycle processing is done.
+	 */
+	private static final int DONE = 9;
 }
