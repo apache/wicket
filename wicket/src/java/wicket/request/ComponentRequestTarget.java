@@ -18,6 +18,7 @@
 package wicket.request;
 
 import wicket.Component;
+import wicket.Page;
 import wicket.RequestCycle;
 
 /**
@@ -26,7 +27,7 @@ import wicket.RequestCycle;
  * 
  * @author Eelco Hillenius
  */
-public class ComponentRequestTarget implements IComponentRequestTarget
+public class ComponentRequestTarget implements IComponentRequestTarget, ISessionSynchronizable
 {
 	/** the component instance. */
 	private final Component component;
@@ -52,8 +53,20 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
+		
+		Page page = component.getPage();
+		if(page != null)
+		{
+			page.startComponentRender(component);
+		}
 		// Let component render itself
 		component.render();
+		
+		if(page != null)
+		{
+			page.endComponentRender(component);
+		}
+		
 	}
 
 	/**
