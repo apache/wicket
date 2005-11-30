@@ -21,7 +21,7 @@ package wicket.extensions.markup.html.repeater.pageable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -41,13 +41,13 @@ import wicket.version.undo.Change;
  * components.
  * </p>
  * 
- * @see wicket.extensions.markup.html.repeater.OrderedRepeatingView
+ * @see wicket.extensions.markup.html.repeater.refreshing.RefreshingView
  * @see wicket.markup.html.navigation.paging.IPageable
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractPageableView extends OrderedRepeatingView implements IPageable
+public abstract class AbstractPageableView extends RefreshingView implements IPageable
 
 {
 	/**
@@ -69,14 +69,6 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	 */
 	private int cachedItemCount;
 
-	/**
-	 * The item reuse strategy that will be used to recycle items when the page
-	 * is changed or the view is redrawn.
-	 * 
-	 * @see IItemReuseStrategy
-	 */
-	private IItemReuseStrategy itemReuseStrategy;
-
 
 	/** @see wicket.Component#Component(String, IModel) */
 	public AbstractPageableView(String id, IModel model)
@@ -94,65 +86,29 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	}
 
 
-	protected void internalOnBeginRequest()
+	/**
+	 * This method retrieves the subset of models for items in the current page
+	 * and allows RefreshingView to generate items.
+	 * 
+	 * @return iterator over models for items in the current page
+	 */
+	protected Iterator getItemModels()
 	{
-		super.internalOnBeginRequest();
+		int offset = getViewOffset();
+		int size = getViewSize();
 
-		if (isVisibleInHierarchy())
-		{
-			int offset = getViewOffset();
-			int size = getViewSize();
+		Iterator models = getItemModels(offset, size);
 
-			IItemFactory itemFactory = new IItemFactory()
-			{
+		models = new CappedIteratorAdapter(models, size);
 
-				public Item newItem(int index, IModel model)
-				{
-					String id = AbstractPageableView.this.newChildId();
-					Item item = AbstractPageableView.this.newItem(id, index, model);
-					AbstractPageableView.this.populateItem(item);
-					return item;
-				}
-
-			};
-
-			Iterator models = getItemModels(offset, size);
-			models = new CappedIteratorAdapter(models, size);
-
-			Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
-			removeAll();
-			addItems(items);
-		}
+		return models;
 	}
 
+	
 	protected void internalOnEndRequest()
 	{
 		super.internalOnEndRequest();
 		clearCachedItemCount();
-
-	}
-
-	/**
-	 * Add items to the view. Prior to this all items were removed so every
-	 * request this function starts from a clean slate.
-	 * 
-	 * @param items
-	 *            item instances to be added to this view
-	 */
-	protected void addItems(Iterator items)
-	{
-		while (items.hasNext())
-		{
-			add((Item)items.next());
-		}
-	}
-
-	/**
-	 * @return iterator over item instances that exist as children of this view
-	 */
-	public Iterator getItems()
-	{
-		return iterator();
 	}
 
 	/**
@@ -165,104 +121,6 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	 * @return an iterator over models for items in the current page
 	 */
 	protected abstract Iterator getItemModels(int offset, int size);
-
-	// /////////////////////////////////////////////////////////////////////////
-	// ITEM GENERATION
-	// /////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * @return currently set item reuse strategy. Defaults to
-	 *         <code>DefaultItemReuseStrategy</code> if none was set.
-	 * 
-	 * @see DefaultItemReuseStrategy
-	 */
-	public IItemReuseStrategy getItemReuseStrategy()
-	{
-		if (itemReuseStrategy == null)
-		{
-			return DefaultItemReuseStrategy.getInstance();
-		}
-		return itemReuseStrategy;
-	}
-
-	/**
-	 * Sets the item reuse strategy.
-	 * 
-	 * @param strategy
-	 *            item reuse strategy
-	 */
-	public void setItemReuseStrategy(IItemReuseStrategy strategy)
-	{
-		if (strategy == null)
-		{
-			throw new IllegalArgumentException();
-		}
-
-		if (!strategy.equals(itemReuseStrategy))
-		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-
-				private final IItemReuseStrategy old = itemReuseStrategy;
-
-				public void undo()
-				{
-					itemReuseStrategy = old;
-				}
-
-				public String toString()
-				{
-					return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " + old
-							+ "]";
-				}
-			});
-		}
-		itemReuseStrategy = strategy;
-	}
-
-	/**
-	 * Factory method for Item container. Item containers are simple
-	 * MarkupContainer used to aggregate the user added components for a row
-	 * inside the view.
-	 * 
-	 * @see Item
-	 * @param id
-	 *            component id for the new data item
-	 * @param index
-	 *            the index of the new data item
-	 * @param model
-	 *            the model for the new data item
-	 * 
-	 * @return DataItem created DataItem
-	 */
-	protected Item newItem(final String id, int index, final IModel model)
-	{
-		return new Item(id, index, model);
-	}
-
-	/**
-	 * Populate the given Item container.
-	 * <p>
-	 * <b>be carefull</b> to add any components to the item and not the view
-	 * itself. So, don't do:
-	 * 
-	 * <pre>
-	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
-	 * </pre>
-	 * 
-	 * but:
-	 * 
-	 * <pre>
-	 * item.add(new Label(&quot;foo&quot;, &quot;bar&quot;));
-	 * </pre>
-	 * 
-	 * </p>
-	 * 
-	 * @param item
-	 *            The item to populate
-	 */
-	protected abstract void populateItem(final Item item);
 
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -297,7 +155,6 @@ public abstract class AbstractPageableView extends OrderedRepeatingView implemen
 	// /////////////////////////////////////////////////////////////////////////
 	// PAGING
 	// /////////////////////////////////////////////////////////////////////////
-
 
 	/**
 	 * @return maximum number of items that will be shown per page

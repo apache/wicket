@@ -26,9 +26,8 @@ import wicket.WicketRuntimeException;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.pageable.Item;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
@@ -176,7 +175,7 @@ public class AbstractDataTable extends Panel
 					header = new WebMarkupContainer("header");
 				}
 				item.add(header);
-				header.add(new Label("label", column.getDisplayModel()));
+				header.add(column.getHeader("label"));
 			}
 
 		});

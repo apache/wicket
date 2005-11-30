@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.io.Serializable;
 
+import wicket.Component;
 import wicket.markup.html.list.ListItem;
 import wicket.model.IModel;
 
@@ -30,11 +31,15 @@ import wicket.model.IModel;
 public interface IColumn extends Serializable
 {
 	/**
-	 * Retrieves the model used to display the name of the header
+	 * Returns the component that will be used as the header for the column.
 	 * 
-	 * @return display model
+	 * This component will be contained in &lt;span&gt; tags.
+	 * 
+	 * @param componentId component id for the returned Component
+	 * 
+	 * @return component that will be used as the header for the column
 	 */
-	IModel getDisplayModel();
+	Component getHeader(String componentId);
 
 	/**
 	 * Method used to populate a cell in the generated table.

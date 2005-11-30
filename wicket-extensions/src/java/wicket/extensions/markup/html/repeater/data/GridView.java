@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
-import wicket.extensions.markup.html.repeater.pageable.Item;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 

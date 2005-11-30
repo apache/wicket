@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.pageable;
+package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.pageable.IItemReuseStrategy#getItems(wicket.extensions.markup.html.repeater.pageable.IItemFactory,
+	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
 	public Iterator getItems(final IItemFactory factory, final Iterator newModels,

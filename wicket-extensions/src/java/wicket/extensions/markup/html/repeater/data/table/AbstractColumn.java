@@ -18,6 +18,8 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.Component;
+import wicket.markup.html.basic.Label;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -53,7 +55,7 @@ public abstract class AbstractColumn implements IColumn
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getDisplayModel()
+	 * @return returns display model to be used for the header component
 	 */
 	public IModel getDisplayModel()
 	{
@@ -75,4 +77,14 @@ public abstract class AbstractColumn implements IColumn
 	{
 		return sortProperty != null;
 	}
+
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
+	 */
+	public Component getHeader(String componentId)
+	{
+		return new Label(componentId, getDisplayModel());
+	}
+
+
 }
