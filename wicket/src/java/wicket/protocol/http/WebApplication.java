@@ -41,10 +41,10 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
-import wicket.request.IPageParamsEncoder;
+import wicket.request.IPageParametersEncoder;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.PageClassRequestTarget;
-import wicket.request.PairPageParamsEncoder;
+import wicket.request.PairPageParametersEncoder;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
@@ -110,7 +110,7 @@ public abstract class WebApplication extends Application
 	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
 	/** default page param encoder used for mounted pages */
-	private IPageParamsEncoder defaultPageParamEncoder = new PairPageParamsEncoder();
+	private IPageParametersEncoder defaultPageParamEncoder = new PairPageParametersEncoder();
 
 	/**
 	 * Constructor.

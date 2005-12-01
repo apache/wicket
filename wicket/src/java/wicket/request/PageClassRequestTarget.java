@@ -37,7 +37,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	private final String mountPath;
 
 	/** page parameters encoder, if any */
-	private final IPageParamsEncoder paramsEncoder;
+	private final IPageParametersEncoder paramsEncoder;
 
 	/** the class of the page. */
 	private final Class pageClass;
@@ -136,7 +136,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param path
 	 * @param encoder
 	 */
-	public PageClassRequestTarget(Class pageClass, String path, IPageParamsEncoder encoder)
+	public PageClassRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder)
 	{
 		pageMapName = null;
 		pageParameters = null;
@@ -152,7 +152,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * 
 	 * @return assigned page parameters encoder
 	 */
-	public IPageParamsEncoder getParamsEncoder()
+	public IPageParametersEncoder getParamsEncoder()
 	{
 		return paramsEncoder;
 	}
