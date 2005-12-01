@@ -289,26 +289,11 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
-		if (obj!=null&&(obj instanceof PageClassRequestTarget))
+		if (obj != null && (obj instanceof PageClassRequestTarget))
 		{
 			PageClassRequestTarget that = (PageClassRequestTarget)obj;
 			if (pageClass.equals(that.pageClass))
 			{
-/*				boolean parametersMatch = false;
-				if (isMounted() || that.isMounted())
-				{
-					parametersMatch = true;
-				}
-				else if (pageParameters != null)
-				{
-					parametersMatch = (that.pageParameters != null && pageParameters
-							.equals(that.pageParameters));
-				}
-				else
-				{
-					parametersMatch = (that.pageParameters == null);
-				}
-*/				boolean parametersMatch=true;
 				boolean mapMatch = false;
 				if (pageMapName != null)
 				{
@@ -318,7 +303,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 				{
 					mapMatch = (that.pageMapName == null);
 				}
-				equal = parametersMatch && mapMatch;
+				equal = mapMatch;
 			}
 		}
 		return equal;
@@ -331,7 +316,6 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	{
 		int result = "PageClassRequestTarget".hashCode();
 		result += pageClass.hashCode();
-		//result += pageParameters != null ? pageParameters.hashCode() : 0;
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
 		return 17 * result;
 	}
@@ -341,7 +325,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public String toString()
 	{
-		// TODO add mounting vars
-		return "PageClassRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName() + "}";
+		return "PageClassRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
+				+ ", mountPath=" + mountPath + "}";
 	}
 }
