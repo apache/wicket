@@ -3,15 +3,7 @@ Work in progress...
 There's a couple of things that need to be fixed to
 have path mounting (or nice urls) work really nice:
 
-1) I removed the page class alias mechanism, as it was misused for other
-	things than just pages. Actually, it was mostly used to shorten keys
-	of shared resources. Resources can now be mounted on a path directly,
-	but we probably want some in-between mechanism that works like the
-	page class aliases, but than at least clearer defined and maybe something
-	that can take partial paths into accounts. Until it is clear what we
-	want however, let's keep this 'feature' out for now
-
-2) The disadvantage of working with paths is that all images, stylesheets etc
+1) The disadvantage of working with paths is that all images, stylesheets etc
 	get messed up. I think we could and should provide some magic to fix this
 	transparently. Something like a filter that post-processes generated HTML
 	(not only components as there might be a bunch of non-component tags too)
@@ -25,16 +17,19 @@ have path mounting (or nice urls) work really nice:
 	Igor> possibly use html's base tag to avoid having to rewrite urls in a
 	      post processing step.
 
-3) Though we have the basic mounting working now, the next neat thing on the list
+	Eelco> you still have to know the web context name for that to work, right?
+
+2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
 	to mount a page map to a path (e.g. /mymap) so that everything in that page
 	map will have that path part in it. E.g. you could have urls that look like:
 	http://localhost:8080/wicket-examples/navomatic/mypagemap/?bookmarkablePage=wicket.examples.navomatic.Page2
+	or http://localhost:8080/wicket-examples/navomatic/my2ndpagemap/my/page/param1/value1
 	Urls like that gives users extra options to integrate with 'legacy' techniques
 	like some authorization packages.
 	
-4) The reference back to index.html needs to be fixed; related to 2).
+3) The reference back to index.html needs to be fixed; related to 2).
 
 
 - Eelco
