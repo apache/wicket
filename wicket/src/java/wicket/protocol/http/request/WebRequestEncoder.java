@@ -105,7 +105,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			// encode page parameters into the url
 			if (requestTarget instanceof PageClassRequestTarget) {
 				PageClassRequestTarget pageTarget=(PageClassRequestTarget)requestTarget;
-				PageClassRequestTarget mountedTarget=(PageClassRequestTarget)getMountedTarget(mountPath);
+				PageClassRequestTarget mountedTarget=(PageClassRequestTarget)targetForPath(mountPath);
 				
 				url.append(mountedTarget.getParamsEncoder().encode(pageTarget.getPageParameters()));
 			}
@@ -226,9 +226,9 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#getMountedTarget(java.lang.String)
+	 * @see wicket.request.IRequestEncoder#targetForPath(java.lang.String)
 	 */
-	public final IRequestTarget getMountedTarget(String path)
+	public final IRequestTarget targetForPath(String path)
 	{
 		if (path==null) {
 			return (IRequestTarget)mountsOnPath.get(null);
@@ -248,9 +248,9 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#getMountedPath(wicket.IRequestTarget)
+	 * @see wicket.request.IRequestEncoder#pathForTarget(wicket.IRequestTarget)
 	 */
-	public final String getMountedPath(IRequestTarget requestTarget)
+	public final String pathForTarget(IRequestTarget requestTarget)
 	{
 		return (String)mountsOnTarget.get(requestTarget);
 	}
