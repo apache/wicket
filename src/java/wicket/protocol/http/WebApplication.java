@@ -45,7 +45,6 @@ import wicket.request.IPageParamsEncoder;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.PairPageParamsEncoder;
-import wicket.request.SharedResourceRequestTarget;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
@@ -71,15 +70,15 @@ import wicket.util.time.Time;
  * init() method. For example:
  * 
  * <pre>
- * 
- *       public void init()
- *       {
- *           String webXMLParameter = getWicketServlet()
- *               .getInitParameter(&quot;myWebXMLParameter&quot;);
- *           URL schedulersConfig = getWicketServlet().getServletContext()
- *               .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *           ...
  *  
+ *        public void init()
+ *        {
+ *            String webXMLParameter = getWicketServlet()
+ *                .getInitParameter(&quot;myWebXMLParameter&quot;);
+ *            URL schedulersConfig = getWicketServlet().getServletContext()
+ *                .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *            ...
+ *   
  * </pre>
  * 
  * @see WicketServlet
@@ -111,8 +110,8 @@ public abstract class WebApplication extends Application
 	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
 	/** default page param encoder used for mounted pages */
-	private IPageParamsEncoder defaultPageParamEncoder=new PairPageParamsEncoder();
-	
+	private IPageParamsEncoder defaultPageParamEncoder = new PairPageParamsEncoder();
+
 	/**
 	 * Constructor.
 	 */
@@ -133,9 +132,9 @@ public abstract class WebApplication extends Application
 	{
 		if (wicketServlet == null)
 		{
-			throw new IllegalStateException("wicketServlet is not set yet. Any code in your" +
-					" Application object that uses the wicketServlet instance should be put" +
-					" in the init() method instead of your constructor");
+			throw new IllegalStateException("wicketServlet is not set yet. Any code in your"
+					+ " Application object that uses the wicketServlet instance should be put"
+					+ " in the init() method instead of your constructor");
 		}
 		return wicketServlet;
 	}
@@ -222,15 +221,16 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param request
 	 *            The http request object
-	 * @param create 
-	 * 			  Should the session be created if not there.
+	 * @param create
+	 *            Should the session be created if not there.
 	 * @return The session object
 	 */
 	final WebSession getSession(final WebRequest request, boolean create)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest().getSession(true);
-		if (!create && (httpSession == null)) 
+		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest()
+				.getSession(true);
+		if (!create && (httpSession == null))
 		{
 			return null;
 		}
@@ -247,11 +247,11 @@ public abstract class WebApplication extends Application
 		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
 		if (webSession == null)
 		{
-			if (!create) 
+			if (!create)
 			{
 				return null;
 			}
-			
+
 			// Create session using session factory
 			final Session session = getSessionFactory().newSession();
 			if (session instanceof WebSession)
@@ -358,20 +358,20 @@ public abstract class WebApplication extends Application
 		}
 		sessionMap.put(requestUri, renderedResponse);
 	}
-	
+
 	/**
 	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings.
-	 * DO NOT CALL THIS METHOD YOURSELF. Use getSettings instead.
+	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
+	 * instead.
 	 * 
 	 * @return An instanceof an ApplicaitonSettings class
-	 *
+	 * 
 	 * @see wicket.Application#createApplicationSettings()
 	 */
 	public ApplicationSettings createApplicationSettings()
 	{
-		return new ApplicationSettings(this) 
-		{	
+		return new ApplicationSettings(this)
+		{
 			/**
 			 * @see wicket.ApplicationSettings#newResourceFinder()
 			 */
@@ -396,17 +396,16 @@ public abstract class WebApplication extends Application
 	protected IRequestCycleFactory getDefaultRequestCycleFactory()
 	{
 		return new IRequestCycleFactory()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public RequestCycle newRequestCycle(Session session, Request request, Response response)
 			{
-				private static final long serialVersionUID = 1L;
-	
-				public RequestCycle newRequestCycle(Session session, Request request,
-						Response response)
-				{
-					// Respond to request
-					return new WebRequestCycle((WebSession)session, (WebRequest)request,
-							(WebResponse)response);
-				}
-			};
+				// Respond to request
+				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+						(WebResponse)response);
+			}
+		};
 	}
 
 	/**
@@ -448,31 +447,6 @@ public abstract class WebApplication extends Application
 	 *            the path of the bookmarkable page class to unmount
 	 */
 	public final void unmountBookmarkablePage(String path)
-	{
-		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
-	}
-
-	/**
-	 * Mounts a shared resource key to the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page alias on
-	 * @param sharedResourceKey
-	 *            the shared resource key
-	 */
-	public final void mountSharedResourceKey(String path, String sharedResourceKey)
-	{
-		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
-				new SharedResourceRequestTarget(sharedResourceKey));
-	}
-
-	/**
-	 * Unmounts a shared resource key.
-	 * 
-	 * @param path
-	 *            the path of the shared resource key to unmount
-	 */
-	public final void unmountSharedResourceKey(String path)
 	{
 		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
 	}

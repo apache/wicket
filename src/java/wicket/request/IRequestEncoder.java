@@ -86,7 +86,7 @@ public interface IRequestEncoder
 	 * @return the request target or null if nothing was mounted with the given
 	 *         path
 	 */
-	IRequestTarget getMountedTarget(String path);
+	IRequestTarget targetForPath(String path);
 
 	/**
 	 * Gets the path that the provided request target was registered with.
@@ -95,5 +95,5 @@ public interface IRequestEncoder
 	 *            the request target
 	 * @return the path that the provided request target was registered with
 	 */
-	String getMountedPath(IRequestTarget requestTarget);
+	String pathForTarget(IRequestTarget requestTarget);
 }

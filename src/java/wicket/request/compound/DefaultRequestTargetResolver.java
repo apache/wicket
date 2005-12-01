@@ -71,7 +71,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 
 		// first, see whether we can find any mount
 		IRequestTarget mounted = requestCycle.getRequestCycleProcessor().getRequestEncoder()
-				.getMountedTarget(path);
+				.targetForPath(path);
 		if (mounted != null)
 		{
 			// the path was mounted, so return that directly
@@ -271,7 +271,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			PageClassRequestTarget pokeTarget = new PageClassRequestTarget(homePageClass);
 			IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
 					.getRequestEncoder();
-			String path = requestEncoder.getMountedPath(pokeTarget);
+			String path = requestEncoder.pathForTarget(pokeTarget);
 
 			if (path != null)
 			{
