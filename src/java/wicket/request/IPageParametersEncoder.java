@@ -32,7 +32,7 @@ import wicket.Request;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IPageParamsEncoder
+public interface IPageParametersEncoder
 {
 	/**
 	 * Encodes PageParameters into a url fragment

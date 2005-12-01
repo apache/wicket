@@ -33,11 +33,11 @@ import wicket.PageParameters;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class PairPageParamsEncoder implements IPageParamsEncoder
+public class PairPageParametersEncoder implements IPageParametersEncoder
 {
 
 	/**
-	 * @see wicket.request.IPageParamsEncoder#encode(wicket.PageParameters)
+	 * @see wicket.request.IPageParametersEncoder#encode(wicket.PageParameters)
 	 */
 	public String encode(PageParameters parameters)
 	{
@@ -55,7 +55,7 @@ public class PairPageParamsEncoder implements IPageParamsEncoder
 	}
 
 	/**
-	 * @see wicket.request.IPageParamsEncoder#decode(java.lang.String)
+	 * @see wicket.request.IPageParametersEncoder#decode(java.lang.String)
 	 */
 	public PageParameters decode(String urlFragment)
 	{
