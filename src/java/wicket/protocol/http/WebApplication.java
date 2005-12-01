@@ -436,8 +436,26 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
+		mountBookmarkablePage(path, bookmarkablePageClass, getSettings()
+						.getPageParametersEncoder());
+	}
+
+	/**
+	 * Mounts a bookmarkable page class to the given path with the provided page
+	 * parameters encoder
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param bookmarkablePageClass
+	 *            the bookmarkable page class to mount
+	 * @param encoder
+	 *            page parameters encoder that will be used for this mount
+	 */
+	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
+			IPageParametersEncoder encoder)
+	{
 		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
-				new PageClassRequestTarget(bookmarkablePageClass, path, defaultPageParamEncoder));
+				new PageClassRequestTarget(bookmarkablePageClass, path, encoder));
 	}
 
 	/**

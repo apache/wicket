@@ -26,6 +26,8 @@ import java.util.Locale;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.request.IPageParametersEncoder;
+import wicket.request.PairPageParametersEncoder;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
@@ -266,7 +268,7 @@ public class ApplicationSettings
 
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
-	
+
 	/** Default factory to create new Page objects */
 	private IPageFactory defaultPageFactory = new DefaultPageFactory();
 
@@ -290,14 +292,14 @@ public class ApplicationSettings
 	 */
 	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
-	/** 
-	 * In order to do proper form parameter decoding it is important that the 
-	 * response and the following request have the same encoding. 
-	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
-	 * for additional information.
+	/**
+	 * In order to do proper form parameter decoding it is important that the
+	 * response and the following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
+	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
-	    
+
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = null;
 
@@ -309,7 +311,7 @@ public class ApplicationSettings
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
-	
+
 	/** In order to remove <?xml?> from output as required by IE quirks mode */
 	private boolean stripXmlDeclarationFromOutput;
 
@@ -334,6 +336,9 @@ public class ApplicationSettings
 	/** Factory for producing validator error message resource keys */
 	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
 
+	/** default page param encoder used for mounted pages */
+	private IPageParametersEncoder pageParametersEncoder = new PairPageParametersEncoder();
+
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -341,7 +346,7 @@ public class ApplicationSettings
 	public static final class RenderStrategy extends EnumeratedType
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		RenderStrategy(final String name)
 		{
 			super(name);
@@ -354,7 +359,7 @@ public class ApplicationSettings
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		UnexpectedExceptionDisplay(final String name)
 		{
 			super(name);
@@ -492,8 +497,7 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * If true, automatic link resolution is enabled.
-	 * Disabled by default.
+	 * If true, automatic link resolution is enabled. Disabled by default.
 	 * 
 	 * @see wicket.AutoLinkResolver
 	 * @see wicket.markup.parser.filter.WicketLinkTagHandler
@@ -583,7 +587,7 @@ public class ApplicationSettings
 	{
 		return defaultLocale;
 	}
-	
+
 	/**
 	 * Gets the default factory to be used when creating pages
 	 * 
@@ -606,12 +610,12 @@ public class ApplicationSettings
 
 	/**
 	 * @since 1.1
-	 * @return Returns default encoding of markup files. If null, the 
-	 * 		operating system provided encoding will be used. 
+	 * @return Returns default encoding of markup files. If null, the operating
+	 *         system provided encoding will be used.
 	 */
 	public final String getDefaultMarkupEncoding()
 	{
-	    return defaultMarkupEncoding;
+		return defaultMarkupEncoding;
 	}
 
 	/**
@@ -696,9 +700,9 @@ public class ApplicationSettings
 	 */
 	public final boolean getStripXmlDeclarationFromOutput()
 	{
-	    return this.stripXmlDeclarationFromOutput;
+		return this.stripXmlDeclarationFromOutput;
 	}
-	
+
 	/**
 	 * @return Whether to throw an exception when a missing resource is
 	 *         requested
@@ -889,17 +893,17 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Set default encoding for markup files. If null, the encoding
-	 * provided by the operating system will be used.
+	 * Set default encoding for markup files. If null, the encoding provided by
+	 * the operating system will be used.
 	 * 
 	 * @since 1.1
 	 * @param encoding
 	 */
 	public final void setDefaultMarkupEncoding(final String encoding)
 	{
-	    this.defaultMarkupEncoding = encoding;
+		this.defaultMarkupEncoding = encoding;
 	}
-	
+
 	/**
 	 * Sets the maximum number of pages held in a session. If a page is added to
 	 * a user's session when the session is full, the oldest page in the session
@@ -1046,15 +1050,16 @@ public class ApplicationSettings
 		this.stripWicketTags = stripWicketTags;
 		return this;
 	}
-	
+
 	/**
 	 * 
 	 * @since 1.1
-	 * @param strip if true, xml declaration will be stripped from output
+	 * @param strip
+	 *            if true, xml declaration will be stripped from output
 	 */
 	public final void setStripXmlDeclarationFromOutput(final boolean strip)
 	{
-	    this.stripXmlDeclarationFromOutput = strip;
+		this.stripXmlDeclarationFromOutput = strip;
 	}
 
 	/**
@@ -1145,10 +1150,10 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * In order to do proper form parameter decoding it is important that the 
-	 * response and the following request have the same encoding. 
-	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
-	 * for additional information.
+	 * In order to do proper form parameter decoding it is important that the
+	 * response and the following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
+	 * additional information.
 	 * 
 	 * @return The request and response encoding
 	 */
@@ -1156,22 +1161,23 @@ public class ApplicationSettings
 	{
 		return responseRequestEncoding;
 	}
-	
+
 	/**
-	 * In order to do proper form parameter decoding it is important that the 
-	 * response and the following request have the same encoding. 
-	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
-	 * for additional information.
+	 * In order to do proper form parameter decoding it is important that the
+	 * response and the following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
+	 * additional information.
 	 * 
 	 * Default encoding: UTF-8
 	 * 
-	 * @param responseRequestEncoding The request and response encoding to be used.
+	 * @param responseRequestEncoding
+	 *            The request and response encoding to be used.
 	 */
 	public final void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
 	}
-	
+
 	/**
 	 * This method is used to replace the default IValidatorResourceKeyFactory
 	 * implementation with a user specific one
@@ -1206,6 +1212,30 @@ public class ApplicationSettings
 	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
 	{
 		return validatorResourceKeyFactory.newKey(validator, formComponent);
+	}
+
+	/**
+	 * Returns the implementation of IPageParameterEncoder that will be used by
+	 * default for mounted pages.
+	 * 
+	 * @return implementation of IPageParameterEncoder that will be used by
+	 *         default for mounted pages
+	 */
+	public IPageParametersEncoder getPageParametersEncoder()
+	{
+		return pageParametersEncoder;
+	}
+
+	/**
+	 * Sets the implementation of IPageParameterEncoder that will be used by
+	 * default for bookmarkable pages.
+	 * 
+	 * @param encoder
+	 *            IPageParameterEncoder implementation
+	 */
+	public void setPageParametersEncoder(IPageParametersEncoder encoder)
+	{
+		this.pageParametersEncoder = encoder;
 	}
 
 }
