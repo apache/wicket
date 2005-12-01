@@ -35,5 +35,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 		getPages().setHomePage(Home.class);
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
+		mountBookmarkablePage("/path/to/page2", Page2.class);
 	}
 }

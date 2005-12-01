@@ -34,6 +34,8 @@ public class Home extends WicketExamplePage
 	{
 		// Link to Page1 is a simple external page link
 		add(new BookmarkablePageLink("page1Link", Page1.class));
+		
+		add(new BookmarkablePageLink("page2Link", Page2.class));
 	}
 
 	/**

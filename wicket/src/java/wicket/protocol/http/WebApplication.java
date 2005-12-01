@@ -41,8 +41,10 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.IPageParamsEncoder;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.PageClassRequestTarget;
+import wicket.request.PairPageParamsEncoder;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
@@ -108,6 +110,9 @@ public abstract class WebApplication extends Application
 	/** Map of redirects in progress per session */
 	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
+	/** default page param encoder used for mounted pages */
+	private IPageParamsEncoder defaultPageParamEncoder=new PairPageParamsEncoder();
+	
 	/**
 	 * Constructor.
 	 */
@@ -433,7 +438,7 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
 		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
-				new PageClassRequestTarget(bookmarkablePageClass));
+				new PageClassRequestTarget(bookmarkablePageClass, path, defaultPageParamEncoder));
 	}
 
 	/**
