@@ -19,9 +19,13 @@ package wicket.protocol.http.request;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +46,7 @@ import wicket.request.IPageClassRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISharedResourceRequestTarget;
+import wicket.request.PageClassRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -60,7 +65,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	/**
 	 * map of path mounts for request targets on paths.
 	 */
-	private Map/* <String,IRequestTarget> */mountsOnPath = new HashMap();
+	private SortedMap/* <String,IRequestTarget> */mountsOnPath = new TreeMap(lengthComparator);
 
 	/**
 	 * map of path mounts for request targets on targets.
@@ -94,7 +99,18 @@ public class WebRequestEncoder implements IRequestEncoder
 		if (mountPath != null)
 		{
 			final StringBuffer url = urlPrefix(requestCycle);
-			return url.append(mountPath).toString();
+			
+			url.append(mountPath);
+			
+			// encode page parameters into the url
+			if (requestTarget instanceof PageClassRequestTarget) {
+				PageClassRequestTarget pageTarget=(PageClassRequestTarget)requestTarget;
+				PageClassRequestTarget mountedTarget=(PageClassRequestTarget)getMountedTarget(mountPath);
+				
+				url.append(mountedTarget.getParamsEncoder().encode(pageTarget.getPageParameters()));
+			}
+			
+			return url.toString();
 		}
 
 		if (requestTarget instanceof IPageClassRequestTarget)
@@ -125,7 +141,6 @@ public class WebRequestEncoder implements IRequestEncoder
 		// this method was not able to produce a url; throw an exception
 		throw new WicketRuntimeException("unable to encode " + requestTarget);
 	}
-
 	/**
 	 * In case you are using custom targets that are not part of the default
 	 * target hierarchy, you need to override this method, which will be called
@@ -215,7 +230,21 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget getMountedTarget(String path)
 	{
-		return (IRequestTarget)mountsOnPath.get(path);
+		if (path==null) {
+			return (IRequestTarget)mountsOnPath.get(null);
+		}
+		
+		Iterator it = mountsOnPath.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry entry = (Entry)it.next();
+			String key = (String)entry.getKey();
+			if (path.startsWith(key))
+			{
+				return (IRequestTarget)entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -473,4 +502,27 @@ public class WebRequestEncoder implements IRequestEncoder
 
 		return buffer;
 	}
+
+	/** Comparator implementation that sorts longest strings first */
+	private static final Comparator lengthComparator = new Comparator()
+	{
+
+		public int compare(Object o1, Object o2)
+		{
+			// longer first
+			if (o1==o2) {
+				return 0;
+			} else if (o1==null) {
+				return 1;
+			} else if (o2==null) {
+				return -1;
+			} else {
+				String lhs = (String)o1;
+				String rhs = (String)o2;
+				return rhs.length() - lhs.length();
+			}
+		}
+
+	};
+
 }

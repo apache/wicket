@@ -20,17 +20,25 @@ package wicket.request;
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.Request;
 import wicket.RequestCycle;
 
 /**
  * Default implementation of {@link IPageClassRequestTarget}. Target that
  * denotes a page that is to be created from the provided page class. This is
- * typically used for redirects to bookmarkable pages.
+ * typically used for redirects to bookmarkable pages or mounted pages.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class PageClassRequestTarget implements IPageClassRequestTarget
 {
+	/** the page this target was mounted on, if any */
+	private final String mountPath;
+
+	/** page parameters encoder, if any */
+	private final IPageParamsEncoder paramsEncoder;
+
 	/** the class of the page. */
 	private final Class pageClass;
 
@@ -39,7 +47,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 
 	/** the page that was created in response for cleanup */
 	private Page page;
-	
+
 	/** optional page map name. */
 	private final String pageMapName;
 
@@ -114,6 +122,49 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 			// to avoid problems with hashing and equals
 		}
 		this.pageMapName = pageMapName;
+
+		mountPath = null;
+		paramsEncoder = null;
+	}
+
+	// TODO create a one for all constructor
+
+	/**
+	 * Constructor used to create a mounted page class request target
+	 * 
+	 * @param pageClass
+	 * @param path
+	 * @param encoder
+	 */
+	public PageClassRequestTarget(Class pageClass, String path, IPageParamsEncoder encoder)
+	{
+		pageMapName = null;
+		pageParameters = null;
+
+		this.pageClass = pageClass;
+		mountPath = path;
+		paramsEncoder = encoder;
+	}
+
+
+	/**
+	 * Returns assigned page parameters encoder
+	 * 
+	 * @return assigned page parameters encoder
+	 */
+	public IPageParamsEncoder getParamsEncoder()
+	{
+		return paramsEncoder;
+	}
+
+	/**
+	 * Method to check if this target has been mounted
+	 * 
+	 * @return true if this target is mounted, false otherwise
+	 */
+	public boolean isMounted()
+	{
+		return mountPath != null;
 	}
 
 	/**
@@ -122,24 +173,49 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	public boolean checkAccess(RequestCycle requestCycle)
 	{
 		Page page = getPage(requestCycle);
-		if(page != null)
+		if (page != null)
 		{
 			return page.checkAccess();
 		}
 		return true;
 	}
-	
-	
+
+
 	private Page getPage(RequestCycle requestCycle)
 	{
-		if(page == null && pageClass != null && !requestCycle.getRedirect())
+		if (page == null && pageClass != null && !requestCycle.getRedirect())
 		{
-			// construct a new instance using the default page factory
-			IPageFactory pageFactory = requestCycle.getApplication().getSettings().getDefaultPageFactory();
-			page = pageFactory.newPage(pageClass, pageParameters);
+			page = newPage(pageClass, requestCycle);
 		}
 		return page;
 	}
+
+	/**
+	 * Constructs a new instance of a page given its class name
+	 * 
+	 * @param pageClass
+	 *            class name of the page to be created
+	 * @param requestCycle
+	 *            request cycle
+	 * @return new instance of page
+	 */
+	protected Page newPage(Class pageClass, RequestCycle requestCycle)
+	{
+		PageParameters params = pageParameters;
+		if (isMounted())
+		{
+			// decode page parameters from url
+			Request request = requestCycle.getRequest();
+			String urlFragment = request.getPath().substring(mountPath.length());
+			params = paramsEncoder.decode(urlFragment);
+
+		}
+		// construct a new instance using the default page factory
+		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
+				.getDefaultPageFactory();
+		return pageFactory.newPage(pageClass, params);
+	}
+
 	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
@@ -171,7 +247,16 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
-		// don't have to call page.internalEndRequest() because page.doRender() is always called for this target
+		if (isMounted())
+		{
+			// if this is a mounted page we clean it so that a refresh in the
+			// browser will recreate the page
+			// TODO same should be done for bookmarkable pages, are all pages
+			// accessed through here bookmarkable or mounted?
+			page = null;
+		}
+		// don't have to call page.internalEndRequest() because page.doRender()
+		// is always called for this target
 	}
 
 	/**
@@ -204,13 +289,17 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
-		if (obj instanceof PageClassRequestTarget)
+		if (obj!=null&&(obj instanceof PageClassRequestTarget))
 		{
 			PageClassRequestTarget that = (PageClassRequestTarget)obj;
 			if (pageClass.equals(that.pageClass))
 			{
-				boolean parametersMatch = false;
-				if (pageParameters != null)
+/*				boolean parametersMatch = false;
+				if (isMounted() || that.isMounted())
+				{
+					parametersMatch = true;
+				}
+				else if (pageParameters != null)
 				{
 					parametersMatch = (that.pageParameters != null && pageParameters
 							.equals(that.pageParameters));
@@ -219,6 +308,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 				{
 					parametersMatch = (that.pageParameters == null);
 				}
+*/				boolean parametersMatch=true;
 				boolean mapMatch = false;
 				if (pageMapName != null)
 				{
@@ -241,7 +331,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	{
 		int result = "PageClassRequestTarget".hashCode();
 		result += pageClass.hashCode();
-		result += pageParameters != null ? pageParameters.hashCode() : 0;
+		//result += pageParameters != null ? pageParameters.hashCode() : 0;
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
 		return 17 * result;
 	}
@@ -251,6 +341,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 */
 	public String toString()
 	{
+		// TODO add mounting vars
 		return "PageClassRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName() + "}";
 	}
 }
