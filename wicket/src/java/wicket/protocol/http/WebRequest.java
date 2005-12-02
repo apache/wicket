@@ -20,6 +20,8 @@ package wicket.protocol.http;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import wicket.Request;
 import wicket.util.lang.Bytes;
 
@@ -86,6 +88,13 @@ public abstract class WebRequest extends Request
 	 * @return Map of parameters
 	 */
 	public abstract Map getParameterMap();
+
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	public abstract HttpServletRequest getHttpServletRequest();
 
 	/**
 	 * Gets the request parameters with the given key.

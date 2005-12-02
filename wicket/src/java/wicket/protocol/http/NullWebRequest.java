@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import wicket.util.lang.Bytes;
 
 /**
@@ -95,6 +97,16 @@ class NullWebRequest extends WebRequest
 	public String getURL()
 	{
 		return "[No request URL]";
+	}
+
+	/**
+	 * Always returns null.
+	 * 
+	 * @see wicket.protocol.http.WebRequest#getHttpServletRequest()
+	 */
+	public HttpServletRequest getHttpServletRequest()
+	{
+		return null;
 	}
 
 	/**
