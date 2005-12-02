@@ -70,15 +70,15 @@ import wicket.util.time.Time;
  * init() method. For example:
  * 
  * <pre>
- *    
- *          public void init()
- *          {
- *              String webXMLParameter = getWicketServlet()
- *                  .getInitParameter(&quot;myWebXMLParameter&quot;);
- *              URL schedulersConfig = getWicketServlet().getServletContext()
- *                  .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *              ...
- *     
+ *        
+ *              public void init()
+ *              {
+ *                  String webXMLParameter = getWicketServlet()
+ *                      .getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                  URL schedulersConfig = getWicketServlet().getServletContext()
+ *                      .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                  ...
+ *         
  * </pre>
  * 
  * @see WicketServlet
@@ -367,15 +367,15 @@ public abstract class WebApplication extends Application
 	final WebSession getSession(final WebRequest request, boolean create)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = ((WebRequest)request).getHttpServletRequest().getSession(
-				true);
+		final HttpSession httpSession = request.getHttpServletRequest().getSession(create);
+
 		if (!create && (httpSession == null))
 		{
 			return null;
 		}
 
-		// Namespacing for session attributes is provided by adding the servlet
-		// path
+		// Namespacing for session attributes is provided by
+		// adding the servlet path
 		final String sessionAttributePrefix = "wicket-" + request.getServletPath();
 
 		// The actual attribute for the session is
