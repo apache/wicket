@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.25 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.request.ClientInfo;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -141,6 +142,12 @@ public abstract class Session implements Serializable
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
+
+	/**
+	 * Cached instance of agent info which is typically designated by calling
+	 * {@link RequestCycle#newClientInfo()}.
+	 */
+	private ClientInfo agentInfo;
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -348,11 +355,31 @@ public abstract class Session implements Serializable
 	{
 		return style;
 	}
-	
+
 	/**
-	 * Invalidates this session
+	 * Invalidates this session.
 	 */
 	public abstract void invalidate();
+
+	/**
+	 * Lazily gets the new agent info object for this session. Typically, this
+	 * method will call {@link RequestCycle#newClientInfo()} to get the info
+	 * object based on the current request, and then caches the returned object;
+	 * we can expect the client to stay the same for the whole session, and
+	 * implementations of {@link RequestCycle#newClientInfo()} might be
+	 * relatively expensive.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	public ClientInfo getClientInfo()
+	{
+		if (agentInfo == null)
+		{
+//			agentInfo = getRequestCycle().newClientInfo();
+			return getRequestCycle().newClientInfo();
+		}
+		return agentInfo;
+	}
 
 	/**
 	 * Creates a new page map with a given name
@@ -413,7 +440,7 @@ public abstract class Session implements Serializable
 		});
 	}
 
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -444,7 +471,7 @@ public abstract class Session implements Serializable
 	 * Enforce resetting the markup positions of all components.
 	 */
 	private final void resetMarkupPositions()
-	{	
+	{
 	}
 
 	/**
@@ -480,7 +507,7 @@ public abstract class Session implements Serializable
 		// If state is dirty
 		if (dirty)
 		{
-			if (log.isDebugEnabled()) 
+			if (log.isDebugEnabled())
 			{
 				log.debug("updateCluster(): Session is dirty.  Replicating.");
 			}
@@ -567,7 +594,7 @@ public abstract class Session implements Serializable
 	protected void attach()
 	{
 	}
-	
+
 	/**
 	 * Any detach logic for session subclasses.
 	 */
@@ -757,9 +784,9 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-		
+
 		pageState.pageMapName = page.getPageMap().getName();
-		
+
 		// For this session the page is in the pagemap.
 		pageState.addedToSession = true;
 
@@ -797,9 +824,9 @@ public abstract class Session implements Serializable
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * The page will be 'touched' in the session.
-	 * If it wasn't added yet to the pagemap, it will be added
-	 * to the page map else it will set this page to the front.
+	 * The page will be 'touched' in the session. If it wasn't added yet to the
+	 * pagemap, it will be added to the page map else it will set this page to
+	 * the front.
 	 * 
 	 * If another page was removed because of this it will be cleaned up.
 	 * 

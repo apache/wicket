@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
+import wicket.request.ClientInfo;
 import wicket.request.ComponentRequestTarget;
 import wicket.request.IAccessCheckingTarget;
 import wicket.request.IPageClassRequestTarget;
@@ -446,8 +447,11 @@ public abstract class RequestCycle
 		}
 	}
 
-	/** handle the current step in the request processing. 
-	 * @param processor the cycle processor that can be used
+	/**
+	 * handle the current step in the request processing.
+	 * 
+	 * @param processor
+	 *            the cycle processor that can be used
 	 */
 	private final void step(IRequestCycleProcessor processor)
 	{
@@ -480,12 +484,11 @@ public abstract class RequestCycle
 					{
 						throw new WicketRuntimeException(
 								"the processor did not resolve to any request target");
-					} 
+					}
 					requestTargets.push(target);
 					break;
 				}
-				case CHECK_ACCESS:
-				{
+				case CHECK_ACCESS : {
 					// manually set step to check access
 
 					IRequestTarget target = getRequestTarget();
@@ -495,14 +498,17 @@ public abstract class RequestCycle
 						((IAccessCheckingTarget)target).checkAccess(this);
 					}
 
-					// check access or earlier (like in a component constructor) might
-					// have called setRequestTarget. If that is the case, put that one
+					// check access or earlier (like in a component constructor)
+					// might
+					// have called setRequestTarget. If that is the case, put
+					// that one
 					// on top; otherwise put our resolved target on top
 					IRequestTarget otherTarget = getRequestTarget();
 					if (otherTarget != target)
 					{
-						// The new target has to be checked again set the current step back one.
-						currentStep = CHECK_ACCESS-1;
+						// The new target has to be checked again set the
+						// current step back one.
+						currentStep = CHECK_ACCESS - 1;
 						// swap targets
 						requestTargets.pop();
 						requestTargets.push(target);
@@ -936,6 +942,30 @@ public abstract class RequestCycle
 	 */
 	protected void onEndRequest()
 	{
+	}
+
+	/**
+	 * Creates a new agent info object based on this request. Typically, this
+	 * method is called once by the session and the returned object will be
+	 * cached in the session after that call; we can expect the client to stay
+	 * the same for the whole session, and implementations of
+	 * {@link #newClientInfo()} might be relatively expensive.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	protected abstract ClientInfo newClientInfo();
+
+	/**
+	 * Gets the new agent info object for this session. This method calls
+	 * {@link Session#getClientInfo()}, which may or may not cache the client
+	 * info object and typically calls {@link #newClientInfo()} when no client
+	 * info object was cached.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	public final ClientInfo getClientInfo()
+	{
+		return getSession().getClientInfo();
 	}
 
 	/**

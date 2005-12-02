@@ -25,7 +25,8 @@ import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.protocol.http.request.WebClientInfo;
+import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.response.BufferedResponse;
 
@@ -158,7 +159,7 @@ public class WebRequestCycle extends RequestCycle
 					redirectResponse.close();
 
 					redirectUrl = page.urlFor(page, IRedirectListener.class);
-					((WebApplication)application).addRedirect(((ServletWebRequest)getWebRequest())
+					((WebApplication)application).addRedirect(getWebRequest()
 							.getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
@@ -186,6 +187,14 @@ public class WebRequestCycle extends RequestCycle
 		}
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
+	}
+
+	/**
+	 * @see wicket.RequestCycle#newClientInfo()
+	 */
+	protected ClientInfo newClientInfo()
+	{
+		return new WebClientInfo(this);
 	}
 
 	/**

@@ -228,7 +228,7 @@ public abstract class WebApplication extends Application
 	final WebSession getSession(final WebRequest request, boolean create)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest()
+		final HttpSession httpSession = ((WebRequest)request).getHttpServletRequest()
 				.getSession(true);
 		if (!create && (httpSession == null))
 		{
