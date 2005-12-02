@@ -24,6 +24,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
+import wicket.util.lang.Objects;
 
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
@@ -87,20 +88,11 @@ public class SelectOption extends WebMarkupContainer
 		// if it does mark the option as selected
 		Object selected=select.getModelObject();
 
-		// check for npe in select's model object
-		if (selected == null)
-		{
-			throw new WicketRuntimeException(
-					"Select ["
-							+ select.getPath()
-							+ "] contains a null model object, must be an object of type java.lang.Object or java.util.Collection (in case of multi-valued select element");
-		}
-
 		boolean isSelected=false;
 		
 		Object value=getModelObject();
 		
-		if (selected instanceof Collection) {
+		if (selected!=null && selected instanceof Collection) {
 			
 			if (value instanceof Collection) {
 				isSelected=selected.equals(value);
@@ -108,7 +100,7 @@ public class SelectOption extends WebMarkupContainer
 				isSelected=((Collection)selected).contains(value);
 			}
 		} else {
-			isSelected=selected.equals(value);
+			isSelected=Objects.equal(selected,value);
 		}
 		
 		if (isSelected)
