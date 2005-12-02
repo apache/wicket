@@ -35,7 +35,15 @@ public class InternalErrorPage extends WebPage
 	{
 		add(homePageLink("homePageLink"));
 	}
-	
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
 	/**
 	 * @see wicket.Page#isErrorPage()
 	 */

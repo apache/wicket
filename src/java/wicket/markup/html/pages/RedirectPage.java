@@ -93,4 +93,12 @@ public final class RedirectPage extends WebPage
 	{
 		this(page.urlFor(page, IRedirectListener.class), waitBeforeRedirectInSeconds);
 	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
 }
