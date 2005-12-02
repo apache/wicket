@@ -26,7 +26,6 @@ import wicket.RequestCycle;
 import wicket.markup.html.form.FormComponent;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.time.Time;
 
 /**
@@ -184,8 +183,7 @@ public class CookieValuePersister implements IValuePersister
     {
         try
         {
-        	// TODO adouma: no Portlet support yet
-            return ((ServletWebRequest)getWebRequest()).getHttpServletRequest().getCookies();
+            return getWebRequest().getHttpServletRequest().getCookies();
         }
         catch (NullPointerException ex)
         {
