@@ -105,6 +105,14 @@ public class ExceptionErrorPage extends WebPage
 	}
 
 	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
+	/**
 	 * Get access to the root cause of the exception
 	 * 
 	 * @return root cause
