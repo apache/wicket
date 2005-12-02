@@ -173,50 +173,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create a request cylce factory which is used by default by WebSession.
-	 * You may provide your own default factory by subclassing WebApplication
-	 * and overriding this method or your may subclass WebSession to create a
-	 * session specific request cycle factory.
-	 * 
-	 * @see WebSession#getRequestCycleFactory()
-	 * @see IRequestCycleFactory
-	 * 
-	 * @return Request cycle factory
-	 */
-	protected IRequestCycleFactory getDefaultRequestCycleFactory()
-	{
-		return new IRequestCycleFactory()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public RequestCycle newRequestCycle(Session session, Request request, Response response)
-			{
-				// Respond to request
-				return new WebRequestCycle((WebSession)session, (WebRequest)request,
-						(WebResponse)response);
-			}
-		};
-	}
-
-	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
-	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
-					new DefaultEventProcessorStrategy());
-		}
-		return requestCycleProcessor;
-	}
-
-	/**
 	 * Mounts a bookmarkable page class to the given path.
 	 * 
 	 * @param path
@@ -355,6 +311,50 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * Create a request cylce factory which is used by default by WebSession.
+	 * You may provide your own default factory by subclassing WebApplication
+	 * and overriding this method or your may subclass WebSession to create a
+	 * session specific request cycle factory.
+	 * 
+	 * @see WebSession#getRequestCycleFactory()
+	 * @see IRequestCycleFactory
+	 * 
+	 * @return Request cycle factory
+	 */
+	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		return new IRequestCycleFactory()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public RequestCycle newRequestCycle(Session session, Request request, Response response)
+			{
+				// Respond to request
+				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+						(WebResponse)response);
+			}
+		};
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
+					new DefaultEventProcessorStrategy());
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
 	 * Gets a WebSession object from the HttpServletRequest, creating a new one
 	 * if it doesn't already exist.
 	 * 
@@ -426,7 +426,7 @@ public abstract class WebApplication extends Application
 	 * @param requestUri
 	 * @return The Redirect map or null when there are no redirects.
 	 */
-	BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
+	final BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
 	{
 		String sessionId = request.getSession(true).getId();
 		Map sessionMap = (Map)bufferedResponses.get(sessionId);
@@ -448,7 +448,7 @@ public abstract class WebApplication extends Application
 	 * @param renderedResponse
 	 *            the response to buffer
 	 */
-	void addBufferedResponse(HttpServletRequest request, String requestUri,
+	final void addBufferedResponse(HttpServletRequest request, String requestUri,
 			BufferedResponse renderedResponse)
 	{
 		String sessionId = request.getSession(true).getId();
