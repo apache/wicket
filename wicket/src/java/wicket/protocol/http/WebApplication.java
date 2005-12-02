@@ -428,12 +428,16 @@ public abstract class WebApplication extends Application
 	 */
 	final BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
 	{
-		String sessionId = request.getSession(true).getId();
-		Map sessionMap = (Map)bufferedResponses.get(sessionId);
-		if (sessionMap != null)
+		HttpSession httpSession = request.getSession(false);
+		if (httpSession != null)
 		{
-			sessionMap.put("last-time-used", Time.now());
-			return (BufferedResponse)sessionMap.remove(requestUri);
+			String sessionId = httpSession.getId();
+			Map sessionMap = (Map)bufferedResponses.get(sessionId);
+			if (sessionMap != null)
+			{
+				sessionMap.put("last-time-used", Time.now());
+				return (BufferedResponse)sessionMap.remove(requestUri);
+			}
 		}
 		return null;
 	}
