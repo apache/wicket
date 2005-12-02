@@ -159,7 +159,7 @@ public class WebRequestCycle extends RequestCycle
 					redirectResponse.close();
 
 					redirectUrl = page.urlFor(page, IRedirectListener.class);
-					((WebApplication)application).addRedirect(getWebRequest()
+					((WebApplication)application).addBufferedResponse(getWebRequest()
 							.getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
