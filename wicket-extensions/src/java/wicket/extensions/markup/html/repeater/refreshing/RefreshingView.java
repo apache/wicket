@@ -11,14 +11,14 @@ import wicket.version.undo.Change;
  * subclasses. Items are refreshed every request, making this view well suited
  * for displaying dynamic data.
  * <p>
- * The view is populated by implementing the <code>getItemModels()</code> method
- * and providing an iterator that returns models for items to be added to the
- * view. RefreshingView builds the items that will be rendered by looping over
- * the models and calling the
- * <code>newItem(String id, int index, IModel model)</code> to generate the
- * child item container followed by <code>populateItem(Component item)</code>
- * to let the user populate the newly created item container with custom
- * components.
+ * The view is populated by implementing {@link RefreshingView#getItemModels() }
+ * and {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds
+ * the items that will be rendered by looping over the models retrieved from
+ * {@link RefreshingView#getItemModels() } and calling the
+ * {@link RefreshingView#newItem(String, int, IModel) } to generate the child
+ * item container followed by a call to
+ * {@link RefreshingView#populateItem(Item) } to let the user populate the newly
+ * created item container with custom components.
  * </p>
  * <p>
  * The provided {@link ModelIteratorAdapter} can make implementing
