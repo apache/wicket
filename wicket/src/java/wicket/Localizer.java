@@ -19,10 +19,16 @@ package wicket;
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.model.IModel;
+import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.IStringResourceLoader;
+import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
@@ -32,12 +38,19 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * <code>Application</code> object.
  * 
  * @author Chris Turner
+ * @author Juergen Donnerstag
  * @see Application#getLocalizer()
  */
 public class Localizer
 {
+	/** Log */
+	private static final Log log = LogFactory.getLog(Localizer.class);
+
 	/** The application and its settings to use to control the utils. */
 	private Application application;
+
+	/** Because properties search can be expensive, we cache the value */
+	private Map cachedValues = new ConcurrentReaderHashMap();
 
 	/**
 	 * Create the utils instance class backed by the configuration information
@@ -49,9 +62,31 @@ public class Localizer
 	public Localizer(final Application application)
 	{
 		this.application = application;
+
+		// Register a listener to the properties factory which is invoked after
+		// a properties file has been reloaded.
+		application.getPropertiesFactory().addListener(new IPropertiesReloadListener()
+		{
+			public void propertiesLoaded(final String key)
+			{
+				// Remove all cached values. Unfortunately I did not yet
+				// find a proper way (which is easy and clean to implement)
+				// which selectively removes just the cache entries
+				// affected. Hence they all get removed. Actually that
+				// is less worse as it may sound, because type
+				// Properties does cache them as well. We only have
+				// to walk the properties resolution path once again.
+				// And, the feature of reloading the properties file
+				// is usually activated during development only and 
+				// for production. Hence, it affect development only.
+				cachedValues.clear();
+			}
+		});
 	}
 
 	/**
+	 * @see #getString(String, Component, IModel, Locale, String, String)
+	 * 
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -60,7 +95,6 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that
 	 *             exception should be thrown
-	 * @see #getString(String, Component, String)
 	 */
 	public String getString(final String key, final Component component)
 			throws MissingResourceException
@@ -69,31 +103,7 @@ public class Localizer
 	}
 
 	/**
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for (optional)
-	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
-	 *            (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 * @see #getString(String, Component, IModel, String)
-	 */
-	public String getString(final String key, final Component component, final IModel model)
-			throws MissingResourceException
-	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
-	}
-
-	/**
-	 * Get the localized string using all of the supplied parameters. This
-	 * method is left public to allow developers full control over string
-	 * resource loading. However, it is recommended that one of the other
-	 * convenience methods in the class are used as they handle all of the work
-	 * related to obtaining the current user locale and style information.
+	 * @see #getString(String, Component, IModel, Locale, String, String)
 	 * 
 	 * @param key
 	 *            The key to obtain the resource for
@@ -102,65 +112,19 @@ public class Localizer
 	 * @param model
 	 *            The model to use for OGNL substitutions in the strings
 	 *            (optional)
-	 * @param locale
-	 *            The locale to get the resource for (optional)
-	 * @param style
-	 *            The style to get the resource for (optional) (see {@link wicket.Session})
-	 * @param defaultValue
-	 *            The default value (optional)
 	 * @return The string resource
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that
 	 *             exception should be thrown
 	 */
-	public String getString(final String key, final Component component, final IModel model,
-			final Locale locale, final String style, final String defaultValue)
+	public String getString(final String key, final Component component, final IModel model)
 			throws MissingResourceException
 	{
-		// The string to return
-		String string = null;
-
-		// Get application settings
-		final ApplicationSettings settings = application.getSettings();
-
-		// Search each loader in turn and return the string if it is found
-		for (final Iterator iterator = settings.getStringResourceLoaders().iterator(); iterator
-				.hasNext();)
-		{
-			IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
-			string = loader.loadStringResource(component, key, locale, style);
-			if (string != null)
-			{
-				return substituteOgnl(component, string, model);
-			}
-		}
-
-		// Resource not found, so handle missing resources based on application
-		// configuration
-		if (settings.getUseDefaultOnMissingResource() && defaultValue != null)
-		{
-			return defaultValue;
-		}
-
-		if (settings.getThrowExceptionOnMissingResource())
-		{
-			throw new MissingResourceException("Unable to find resource: " + key, getClass()
-					.getName(), key);
-		}
-		else
-		{
-			return "[Warning: String resource for '" + key + "' not found]";
-		}
+		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
 	}
 
 	/**
-	 * Get the localized string for the given component. The component may be
-	 * null in which case the component string resource loader will not be used.
-	 * It the component is not null then it must be a component that has already
-	 * been added to a page, either directly or via a parent container. The
-	 * locale and style are obtained from the current user session. If the model
-	 * is not null then OGNL substitution will be carried out on the string,
-	 * using the object contained within the model.
+	 * @see #getString(String, Component, IModel, Locale, String, String)
 	 * 
 	 * @param key
 	 *            The key to obtain the resource for
@@ -184,11 +148,7 @@ public class Localizer
 	}
 
 	/**
-	 * Get the localized string for the given component. The component may be
-	 * null in which case the component string resource loader will not be used.
-	 * It the component is not null then it must be a component that has already
-	 * been added to a page, either directly or via a parent container. The
-	 * locale and style are obtained from the current user session.
+	 * @see #getString(String, Component, IModel, Locale, String, String)
 	 * 
 	 * @param key
 	 *            The key to obtain the resource for
@@ -209,6 +169,92 @@ public class Localizer
 	}
 
 	/**
+	 * Get the localized string using all of the supplied parameters. This
+	 * method is left public to allow developers full control over string
+	 * resource loading. However, it is recommended that one of the other
+	 * convenience methods in the class are used as they handle all of the work
+	 * related to obtaining the current user locale and style information.
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for OGNL substitutions in the strings
+	 *            (optional)
+	 * @param locale
+	 *            The locale to get the resource for (optional)
+	 * @param style
+	 *            The style to get the resource for (optional) (see
+	 *            {@link wicket.Session})
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final IModel model,
+			final Locale locale, final String style, final String defaultValue)
+			throws MissingResourceException
+	{
+		// The key value
+		String string = null;
+
+		// Get application settings
+		final ApplicationSettings settings = application.getSettings();
+
+		// If value is cached already ...
+		String id = createCacheId(component, locale, style, key);
+		if (cachedValues.containsKey(id))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Found message key in cache: " + id);
+			}
+			string = (String)cachedValues.get(id);
+		}
+		else
+		{
+			// Search each loader in turn and return the string if it is found
+			final Iterator iterator = settings.getStringResourceLoaders().iterator();;
+			while (iterator.hasNext())
+			{
+				IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
+				string = loader.loadStringResource(component, key, locale, style);
+
+				if (string != null)
+				{
+					this.cachedValues.put(id, string);
+					break;
+				}
+			}
+		}
+
+		if (string != null)
+		{
+			return substituteOgnl(component, string, model);
+		}
+
+		// Resource not found, so handle missing resources based on application
+		// configuration
+		if (settings.getUseDefaultOnMissingResource() && (defaultValue != null))
+		{
+			return defaultValue;
+		}
+
+		if (settings.getThrowExceptionOnMissingResource())
+		{
+			throw new MissingResourceException("Unable to find resource: " + key, getClass()
+					.getName(), key);
+		}
+		else
+		{
+			return "[Warning: String resource for '" + key + "' not found]";
+		}
+	}
+
+	/**
 	 * Helper method to handle OGNL variable substituion in strings.
 	 * 
 	 * @param component
@@ -226,5 +272,36 @@ public class Localizer
 			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
 		}
 		return string;
+	}
+
+	/**
+	 * Helper method to create a unique id for caching previously loaded
+	 * resources.
+	 * 
+	 * @param component
+	 *            The component that the resources are being loaded for
+	 * @param locale
+	 *            The locale of the resources
+	 * @param style
+	 *            The style of the resources (see {@link wicket.Session})
+	 * @param key
+	 *            The message key
+	 * @return The unique cache id
+	 */
+	private String createCacheId(final Component component, final Locale locale,
+			final String style, final String key)
+	{
+		String id = application.getPropertiesFactory().createResourceKey(
+				component != null ? component.getClass() : null, locale, style)
+				+ '.' + key;
+		return id;
+	}
+
+	/**
+	 * Remove all cached properties
+	 */
+	public final void clearCache()
+	{
+		this.cachedValues.clear();
 	}
 }

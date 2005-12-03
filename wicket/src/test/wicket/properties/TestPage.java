@@ -58,6 +58,7 @@ public class TestPage extends WebPage
 		form2.add(panel2);
 		panel2.add(new MyTextField("text5", "input-5"));
 		panel2.add(new MyTextField("text6", "input-6"));
+		panel2.add(new MyTextField("text8", "input-8"));
 	}
 	
 	/**
@@ -121,6 +122,15 @@ public class TestPage extends WebPage
 	public TextField getText7()
 	{
 		return (TextField) get("form1:text7");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText8()
+	{
+		return (TextField) get("form2:panel2:text8");
 	}
 	
 	/**

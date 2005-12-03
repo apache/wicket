@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,6 +42,7 @@ import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.request.IRequestCycleProcessor;
+import wicket.resource.PropertiesFactory;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.crypt.ICrypt;
@@ -179,6 +180,9 @@ public abstract class Application
 	// strategy
 	private List responseFilters;
 
+	/** The factory to be used for the property files */
+	private PropertiesFactory propertiesFactory;
+	
 	/** thread local holder of the application object. */
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
@@ -213,9 +217,6 @@ public abstract class Application
 
 		// Construct markup cache fot this application
 		this.markupCache = new MarkupCache(this);
-
-		// Construct localizer for this application
-		this.localizer = new Localizer(this);
 
 		// Create shared resources repository
 		this.sharedResources = new SharedResources(this);
@@ -278,10 +279,19 @@ public abstract class Application
 	}
 
 	/**
+	 * Get the application's localizer.
+	 * <p>
+	 * Note: please @see ApplicationSettings#addStringResourceLoader(IStringResourceLoader)
+	 * for means of extending the way Wicket resolves keys to localized messages.
+	 *   
 	 * @return The application wide localizer instance
 	 */
 	public final Localizer getLocalizer()
 	{
+		if (localizer == null)
+		{
+			this.localizer = new Localizer(this);
+		}
 		return localizer;
 	}
 
@@ -516,7 +526,9 @@ public abstract class Application
 	public final void addResponseFilter(IResponseFilter responseFilter)
 	{
 		if (responseFilters == null)
+		{
 			responseFilters = new ArrayList(3);
+		}
 		responseFilters.add(responseFilter);
 	}
 
@@ -534,7 +546,9 @@ public abstract class Application
 	public final StringBuffer filterResponse(StringBuffer responseBuffer)
 	{
 		if (responseFilters == null)
+		{
 			return responseBuffer;
+		}
 		for (int i = 0; i < responseFilters.size(); i++)
 		{
 			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
@@ -668,5 +682,19 @@ public abstract class Application
 				throw new WicketRuntimeException("Unable to initialize " + className, e);
 			}
 		}
+	}
+	
+	/**
+	 * Get the property factory which will be used to load properties files
+	 * 
+	 * @return PropertiesFactory
+	 */
+	public PropertiesFactory getPropertiesFactory()
+	{
+		if (propertiesFactory == null)
+		{
+			propertiesFactory = new PropertiesFactory();
+		}
+		return propertiesFactory;
 	}
 }

@@ -24,32 +24,29 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.util.value.ValueMap;
 
 /**
  * This string resource loader attempts to find a single resource bundle that
  * has the same name and location as the application. If this bundle is found
- * then strings are obtained from here. This implemnentation is fully aware of
+ * then strings are obtained from here. This implementation is fully aware of
  * both locale and style values when trying to obtain the appropriate bundle.
  * 
  * @author Chris Turner
+ * @author Juergen Donnerstag
  */
-public class ClassStringResourceLoader 
-	extends AbstractStringResourceLoader
-	implements IStringResourceLoader
+public class ClassStringResourceLoader extends AbstractStringResourceLoader
+		implements
+			IStringResourceLoader
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
 
-	/** Wickets application object */
-	private final Application application;
-	
 	/** The application we are loading for. */
 	private final Class clazz;
 
 	/**
 	 * Create and initialise the resource loader.
-	 *
+	 * 
 	 * @param application
 	 *            Wickets application object
 	 * @param clazz
@@ -57,21 +54,23 @@ public class ClassStringResourceLoader
 	 */
 	public ClassStringResourceLoader(final Application application, final Class clazz)
 	{
+		super(application);
+		
 		if (clazz == null)
 		{
 			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
 		}
-		this.application = application;
 		this.clazz = clazz;
 	}
 
 	/**
-	 * Get the string resource for the given combination of key, locale and
-	 * style. The information is obtained from a single application-wide
-	 * resource bundle.
+	 * If component not null, than call the default implementation (@see
+	 * AbstractStringResourceLoader#loadStringResource(Component, String,
+	 * Locale, String), else use the class provided to the constructor to load
+	 * the resource requested.
 	 * 
 	 * @param component
-	 *            Not used - can be null
+	 *            The component to use to find resources to be loaded
 	 * @param key
 	 *            The key to obtain the string for
 	 * @param locale
@@ -80,30 +79,34 @@ public class ClassStringResourceLoader
 	 * @param style
 	 *            The (optional) style identifying the resource set to select
 	 *            the strings from (see {@link wicket.Session})
-	 * @return The string resource value or null if resource not loaded
+	 * @return The string resource value or null if resource not found
 	 */
-	public final String loadStringResource(final Component component, final String key,
+	public String loadStringResource(final Component component, final String key,
 			final Locale locale, final String style)
 	{
-		// Locate previously loaded resources from the cache
-		final String id = createCacheId(clazz, style, locale);
-		ValueMap strings = getResourceCache(id);
-		if (strings == null)
+		if (component == null)
 		{
-			// No resources previously loaded, attempt to load them
-			strings = loadResources(clazz, style, locale, id);
+			return loadStringResourceByClass(this.clazz, key, locale, style);
 		}
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("Try to load resource from: " + id + "; key: " + key);
-		}
-		String value = strings.getString(key);
-		if (value != null && log.isDebugEnabled())
-		{
-			log.debug("Found resource from: " + id + "; key: " + key);
-		}
-		
-		return value;
+		return super.loadStringResource(component, key, locale, style);
+	}
+
+	/**
+	 * @param clazz
+	 *            The class to use to find resources to be loaded
+	 * @param locale
+	 *            The locale identifying the resource set to select the strings
+	 *            from
+	 * @param style
+	 *            The (optional) style identifying the resource set to select
+	 *            the strings from (see {@link wicket.Session})
+	 * @return The string resource value or null if resource not found
+	 */
+	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
+	{
+		// Use this.class instead of the clazz provided to the method. Hence
+		// replacing a component class with a fixed class.
+		return application.getPropertiesFactory().get(application, this.clazz, style, locale);
 	}
 }
