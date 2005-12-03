@@ -13,15 +13,21 @@ import wicket.version.undo.Change;
  * <p>
  * The view is populated by overriding the <code>getItemModels()</code> method
  * and providing an iterator that returns models for items to be added to the
- * view. RefreshingView builds the items that will be rendered by
- * looping over the models and calling the
+ * view. RefreshingView builds the items that will be rendered by looping over
+ * the models and calling the
  * <code>newItem(String id, int index, IModel model)</code> to generate the
  * child item container followed by <code>populateItem(Component item)</code>
  * to let the user populate the newly created item container with custom
  * components.
  * </p>
+ * <p>
+ * The provided {@link ModelIteratorAdapter} can make implementing
+ * {@link RefreshingView#getItemModels() } easier if you have an iterator over
+ * item objects.
+ * </p>
  * 
  * @see wicket.extensions.markup.html.repeater.OrderedRepeatingView
+ * @see ModelIteratorAdapter
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
