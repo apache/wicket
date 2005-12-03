@@ -44,7 +44,6 @@ import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IPageParametersEncoder;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.PageClassRequestTarget;
-import wicket.request.PairPageParametersEncoder;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
@@ -111,9 +110,6 @@ public abstract class WebApplication extends Application
 	 * responses are temporarily stored
 	 */
 	private Map bufferedResponses = Collections.synchronizedMap(new HashMap());
-
-	/** default page param encoder used for mounted pages */
-	private IPageParametersEncoder defaultPageParamEncoder = new PairPageParametersEncoder();
 
 	/**
 	 * Constructor.

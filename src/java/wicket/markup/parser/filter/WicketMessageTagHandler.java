@@ -1,6 +1,6 @@
 /*
- * $Id: WicketRemoveTagHandler.java,v 1.4 2005/01/23 17:45:03 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,10 +32,10 @@ import wicket.markup.parser.IMarkupFilter;
 /**
  * THIS IS EXPERIMENTAL ONLY AND DISABLED BY DEFAULT
  * <p>
- * This is a markup inline filter. It identifies wicket:message attributes
- * and replaces the attributes referenced. E.g. wicket:message="value=key"
- * would replace or add the attribute "value" with the message associated
- * with "key". The 
+ * This is a markup inline filter. It identifies wicket:message attributes and
+ * replaces the attributes referenced. E.g. wicket:message="value=key" would
+ * replace or add the attribute "value" with the message associated with "key".
+ * The
  * 
  * @author Juergen Donnerstag
  */
@@ -43,16 +43,19 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 {
 	/** Logging */
 	private final static Log log = LogFactory.getLog(WicketMessageTagHandler.class);
-	
+
 	/** TODO Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTR_NAME = "wicket:message";
 
-	/** globally enable wicket:message; If accepted by user, we should use an apps setting */
+	/**
+	 * globally enable wicket:message; If accepted by user, we should use an
+	 * apps setting
+	 */
 	public static boolean enable = false;
-	
+
 	/** The MarkupContainer requesting the information */
 	private final MarkupContainer container;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -83,16 +86,18 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		final String wicketMessageAttribute = tag.getAttributes().getString(WICKET_MESSAGE_ATTR_NAME);
+		final String wicketMessageAttribute = tag.getAttributes().getString(
+				WICKET_MESSAGE_ATTR_NAME);
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
 			if (this.container == null)
 			{
-				throw new ParseException("Found "
-						+ WICKET_MESSAGE_ATTR_NAME 
-						+ " but the message can not be resolved, because the associated Page is not known."
-						+ " This might be caused by using the wrong MarkupParser constructor"
-						, tag.getPos());
+				throw new ParseException(
+						"Found "
+								+ WICKET_MESSAGE_ATTR_NAME
+								+ " but the message can not be resolved, because the associated Page is not known."
+								+ " This might be caused by using the wrong MarkupParser constructor",
+						tag.getPos());
 			}
 
 			StringTokenizer attrTokenizer = new StringTokenizer(wicketMessageAttribute, ",");
@@ -107,22 +112,21 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				StringTokenizer valueTokenizer = new StringTokenizer(text, "=");
 				if (valueTokenizer.countTokens() != 2)
 				{
-					throw new ParseException(
-							"Wrong format of wicket:message attribute value. " + text + "; Must be: key=value[, key=value]", 
-							tag.getPos());
-				}
-				
-				String attrName = valueTokenizer.nextToken();
-				String messageKey = valueTokenizer.nextToken();
-				if ((attrName == null) || (attrName.trim().length() == 0) || (messageKey == null) || (messageKey.trim().length() == 0))
-				{
-					throw new ParseException(
-							"Wrong format of wicket:message attribute value. " + text + "; Must be: key=value[, key=value]", 
-							tag.getPos());
+					throw new ParseException("Wrong format of wicket:message attribute value. "
+							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String value = container.getApplication().getLocalizer().getString(
-						messageKey, container, "");
+				String attrName = valueTokenizer.nextToken();
+				String messageKey = valueTokenizer.nextToken();
+				if ((attrName == null) || (attrName.trim().length() == 0) || (messageKey == null)
+						|| (messageKey.trim().length() == 0))
+				{
+					throw new ParseException("Wrong format of wicket:message attribute value. "
+							+ text + "; Must be: key=value[, key=value]", tag.getPos());
+				}
+
+				String value = container.getApplication().getLocalizer().getString(messageKey,
+						container, "");
 
 				if (value.length() > 0)
 				{
@@ -140,7 +144,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				}
 			}
 		}
-		
+
 		return tag;
 	}
 }

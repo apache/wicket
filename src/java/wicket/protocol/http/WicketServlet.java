@@ -108,6 +108,9 @@ import wicket.util.time.Time;
 public class WicketServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** The URL path prefix expected for (so called) resources (not html pages). */
+	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
 	/**
 	 * The name of the context parameter that specifies application factory
@@ -306,16 +309,13 @@ public class WicketServlet extends HttpServlet
 				final Class factoryClass = getClass().getClassLoader().loadClass(
 						appFactoryClassName);
 
-				if (IWebApplicationFactory.class.isAssignableFrom(factoryClass))
-				{
-					// instantiate the factory
-					return (IWebApplicationFactory)factoryClass.newInstance();
-				}
-				else
-				{
-					throw new WicketRuntimeException("Application factory class "
-							+ appFactoryClassName + " must implement IWebApplicationFactory");
-				}
+				// instantiate the factory
+				return (IWebApplicationFactory)factoryClass.newInstance();
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Application factory class "
+						+ appFactoryClassName + " must implement IWebApplicationFactory");
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -342,9 +342,9 @@ public class WicketServlet extends HttpServlet
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getPathInfo();
-		if ((pathInfo != null) && pathInfo.startsWith("/resources/"))
+		if ((pathInfo != null) && pathInfo.startsWith(RESOURCES_PATH_PREFIX))
 		{
-			final String resourceReferenceKey = pathInfo.substring("/resources/".length());
+			final String resourceReferenceKey = pathInfo.substring(RESOURCES_PATH_PREFIX.length());
 			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
