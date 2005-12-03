@@ -307,7 +307,7 @@ public class ApplicationSettings
 	private Duration resourcePollFrequency = null;
 
 	/** Chain of string resource loaders to use */
-	private List stringResourceLoaders = new ArrayList(2);
+	private List stringResourceLoaders = new ArrayList(4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
@@ -376,7 +376,7 @@ public class ApplicationSettings
 	public ApplicationSettings(final Application application)
 	{
 		this.application = application;
-		stringResourceLoaders.add(new ComponentStringResourceLoader());
+		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
 	}
 

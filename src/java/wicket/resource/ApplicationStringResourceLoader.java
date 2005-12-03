@@ -26,6 +26,7 @@ import wicket.Application;
  * both locale and style values when trying to obtain the appropriate bundle.
  * 
  * @author Chris Turner
+ * @author Juergen Donnerstag
  */
 public class ApplicationStringResourceLoader extends ClassStringResourceLoader
 {
