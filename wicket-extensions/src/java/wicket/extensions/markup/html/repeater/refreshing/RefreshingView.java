@@ -11,7 +11,7 @@ import wicket.version.undo.Change;
  * subclasses. Items are refreshed every request, making this view well suited
  * for displaying dynamic data.
  * <p>
- * The view is populated by overriding the <code>getItemModels()</code> method
+ * The view is populated by implementing the <code>getItemModels()</code> method
  * and providing an iterator that returns models for items to be added to the
  * view. RefreshingView builds the items that will be rendered by looping over
  * the models and calling the
