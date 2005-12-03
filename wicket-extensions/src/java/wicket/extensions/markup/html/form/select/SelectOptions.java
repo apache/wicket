@@ -1,5 +1,6 @@
 package wicket.extensions.markup.html.form.select;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -9,6 +10,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Component that makes it easy to produce a list of SelectOption components
@@ -34,6 +36,18 @@ public class SelectOptions extends OrderedRepeatingView
 		super(id, model);
 		this.renderer = renderer;
 		setRenderBodyOnly(true);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param elements 
+	 * @param renderer
+	 */
+	public SelectOptions(String id, Collection elements, IOptionRenderer renderer)
+	{
+		this(id, new Model((Serializable)elements), renderer);
 	}
 
 	/**
