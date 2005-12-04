@@ -19,6 +19,8 @@ have path mounting (or nice urls) work really nice:
 
 	Eelco> you still have to know the web context name for that to work, right?
 
+    Igor> no, you can get that out of the http servlet request
+    
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
