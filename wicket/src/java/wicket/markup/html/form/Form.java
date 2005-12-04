@@ -199,12 +199,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (handleMultiPart())
 		{
-
 			// Tells FormComponents that a new user input has come
 			registerNewUserInput();
 			
 			String url = getRequest().getParameter(getHiddenFieldId());
-			if(!Strings.isEmpty(url))
+			if (!Strings.isEmpty(url))
 			{
 				dispatchEvent(getPage(), url);
 			}
@@ -430,7 +429,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		if(button == null)
+		
+		if (button == null)
 		{
 			button = (Button)getPage().visitChildren(SubmitLink.class, new IVisitor()
 			{
@@ -560,17 +560,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final String getJavascriptId()
 	{
-		if(Strings.isEmpty(javascriptId))
+		if (Strings.isEmpty(javascriptId))
 		{
 			javascriptId = getPageRelativePath();
 		}
 		return javascriptId;
 	}
 
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	/**
+	 * Append an additional hidden input tag to support anchor tags that can 
+	 * submit a form
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
 		String nameAndId = getHiddenFieldId();
-        getResponse().write("<input type=\"hidden\" name=\""+ nameAndId+ "\" id=\"" + nameAndId + "\">");
+        getResponse().write("<input type=\"hidden\" name=\""+ nameAndId+ "\" id=\"" + nameAndId + "\"/>");
         super.onComponentTagBody(markupStream, openTag);
     }	
 
@@ -584,14 +593,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// If the javascriptid is already generated then use that on even it was before the first render. 
 		// because there could be a component which already uses it to submit the forum.
 		// This should be fixed when we pre parse the markup so that we know the id is at front.
-		if(!Strings.isEmpty(javascriptId))
+		if (!Strings.isEmpty(javascriptId))
 		{
 			tag.put("id", javascriptId);
 		}
 		else
 		{
 			javascriptId = (String)tag.getAttributes().get("id");
-			if(Strings.isEmpty(javascriptId))
+			if (Strings.isEmpty(javascriptId))
 			{
 				javascriptId = getJavascriptId();
 				tag.put("id", javascriptId);
@@ -892,10 +901,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			indexOfInterface += "interface=".length();
 			int indexOfPathEnd = decodedUrl.indexOf("&", indexOfPath);
 			if (indexOfPathEnd == -1)
+			{
 				indexOfPathEnd = decodedUrl.length();
+			}
 			int indexOfInterfaceEnd = decodedUrl.indexOf("&", indexOfInterface);
 			if (indexOfInterfaceEnd == -1)
+			{
 				indexOfInterfaceEnd = decodedUrl.length();
+			}
 
 			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
 			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
@@ -910,7 +923,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			Method method = requestCycle.getRequestInterfaceMethod(interfaceName);
 			if (method != null)
 			{
-				new FormSubmitInterfaceRequestTarget(page,component,method).processEvents(requestCycle);
+				new FormSubmitInterfaceRequestTarget(page, component, method).processEvents(requestCycle);
 			}
 		}
 		else
@@ -948,7 +961,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final String getJsForInterfaceUrl(String url)
 	{
-		return "document.getElementById('" + getHiddenFieldId()+ "').value='" + url+ "';document.getElementById('" + getJavascriptId()+"').submit();";
+		return "document.getElementById('" + getHiddenFieldId()+ "').value='" 
+			+ url+ "';document.getElementById('" + getJavascriptId()+"').submit();";
 	}
 	
 	static
