@@ -55,13 +55,14 @@ public abstract class WebRequest extends Request
 	public abstract String getServletPath();
 
 	/**
-	 * Create a runtime context type specific (e.g. Servlet or Portlet) MultipartWebRequest wrapper
-	 * for handling multipart content uploads.
+	 * Create a runtime context type specific (e.g. Servlet or Portlet)
+	 * MultipartWebRequest wrapper for handling multipart content uploads.
 	 * 
-	 * @param maxSize the maximum size this request may be
+	 * @param maxSize
+	 *            the maximum size this request may be
 	 * @return new WebRequest wrapper implementing MultipartWebRequest
 	 */
-    public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
+	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
 
 	/**
 	 * Returns the preferred <code>Locale</code> that the client will accept
@@ -90,13 +91,6 @@ public abstract class WebRequest extends Request
 	public abstract Map getParameterMap();
 
 	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	public abstract HttpServletRequest getHttpServletRequest();
-
-	/**
 	 * Gets the request parameters with the given key.
 	 * 
 	 * @param key
@@ -107,8 +101,9 @@ public abstract class WebRequest extends Request
 
 	/**
 	 * Retrieves the URL of this request for local use.
-	 *
-	 * @return The request URL for local use, which is the context path + the relative url
+	 * 
+	 * @return The request URL for local use, which is the context path + the
+	 *         relative url
 	 */
 	public String getURL()
 	{
@@ -122,4 +117,18 @@ public abstract class WebRequest extends Request
 		 */
 		return getContextPath() + '/' + getRelativeURL();
 	}
+
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * <p>
+	 * WARNING: it is a bad idea to depend on the http servlet request directly.
+	 * Please use the classes and methods that are exposed by Wicket (such as
+	 * {@link wicket.Session} instead. Send an email to the mailing list in case
+	 * it is not clear how to do things or you think you miss funcionality which
+	 * causes you to depend on this directly.
+	 * </p>
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	public abstract HttpServletRequest getHttpServletRequest();
 }

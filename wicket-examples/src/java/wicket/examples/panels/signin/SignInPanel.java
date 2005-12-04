@@ -17,7 +17,6 @@
  */
 package wicket.examples.panels.signin;
 
-import wicket.Page;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -75,18 +74,17 @@ public abstract class SignInPanel extends Panel
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField("username", new PropertyModel(properties,
-					"username")));
-			add(password = new PasswordTextField("password", new PropertyModel(
-					properties, "password")));
+			add(username = new TextField("username", new PropertyModel(properties, "username")));
+			add(password = new PasswordTextField("password", new PropertyModel(properties,
+					"password")));
 
 			// MarkupContainer row for remember me checkbox
 			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(
-					SignInPanel.this, "rememberMe")));
+			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(SignInPanel.this,
+					"rememberMe")));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -105,17 +103,10 @@ public abstract class SignInPanel extends Panel
 				// If login has been called because the user was not yet
 				// logged in, than continue to the original destination,
 				// otherwise to the Home page
-				if (getPage().continueToOriginalDestination())
+				if (!getPage().continueToOriginalDestination())
 				{
-					// HTTP redirect response has been committed. No more data
-					// shall be written to the response.
-					setResponsePage((Page)null);
-				}
-				else
-				{
-					setResponsePage(getApplicationSettings().getDefaultPageFactory()
-							.newPage(getApplicationPages().getHomePage(),
-									(PageParameters) null));
+					setResponsePage(getApplicationSettings().getDefaultPageFactory().newPage(
+							getApplicationPages().getHomePage(), (PageParameters)null));
 				}
 			}
 			else

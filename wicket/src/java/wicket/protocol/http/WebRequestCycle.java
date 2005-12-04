@@ -158,9 +158,12 @@ public class WebRequestCycle extends RequestCycle
 					// here on.
 					redirectResponse.close();
 
-					redirectUrl = page.urlFor(page, IRedirectListener.class);
-					((WebApplication)application).addBufferedResponse(getWebRequest()
-							.getHttpServletRequest(), redirectUrl, redirectResponse);
+					StringBuffer b = new StringBuffer(page.urlFor(page, IRedirectListener.class));
+					b.append((b.indexOf("?") == -1) ? "?bid=" : "&bid=");
+					String bufferId = String.valueOf(WebRequestCycle.this.hashCode());
+					b.append(bufferId);
+					redirectUrl = b.toString();
+					((WebApplication)application).addBufferedResponse(bufferId, redirectResponse);
 				}
 			}
 			catch (RuntimeException ex)

@@ -138,7 +138,7 @@ public class WicketSessionFilter implements Filter
 			log.debug("servlet path set to " + servletPath);
 		}
 
-		sessionKey = "wicket-" + servletPath + "-" + Session.sessionAttributeName;
+		sessionKey = "wicket-" + servletPath + "-" + Session.SESSION_ATTRIBUTE_NAME;
 
 		if (log.isDebugEnabled())
 		{
