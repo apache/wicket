@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.request.ClientInfo;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 
 /**
@@ -87,7 +90,8 @@ import wicket.util.string.Strings;
  * creates custom Session subclasses that have typesafe properties specific to
  * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
- * method is provided.
+ * method is provided. In a clustered environment, you should take care to
+ * 
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver (
  * {@link IClassResolver}) implementation that is used to locate classes for
@@ -101,14 +105,15 @@ import wicket.util.string.Strings;
  * necessary.
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public abstract class Session implements Serializable
 {
 	/** Name of session attribute under which this session is stored */
-	public static final String sessionAttributeName = "session";
+	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/** Separator for component paths. */
-	private static final char componentPathSeparator = ':';
+	private static final char COMPONENT_PATH_SEPERATOR = ':';
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
@@ -121,6 +126,9 @@ public abstract class Session implements Serializable
 
 	/** Application that this is a session of. */
 	private transient Application application;
+
+	/** session listeners. */
+	private List/* <ISessionListener> */listeners = new ArrayList();
 
 	/** The converter instance. */
 	private transient IConverter converter;
@@ -269,7 +277,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Retrieve the page for the first path component from this session
-		Page page = getPage(pageMapName, Strings.firstPathComponent(path, componentPathSeparator));
+		Page page = getPage(pageMapName, Strings.firstPathComponent(path, COMPONENT_PATH_SEPERATOR));
 
 		// Is there a page with the right id at all?
 		if (page != null)
@@ -375,7 +383,7 @@ public abstract class Session implements Serializable
 	{
 		if (agentInfo == null)
 		{
-//			agentInfo = getRequestCycle().newClientInfo();
+			// agentInfo = getRequestCycle().newClientInfo();
 			return getRequestCycle().newClientInfo();
 		}
 		return agentInfo;
@@ -516,7 +524,7 @@ public abstract class Session implements Serializable
 			this.dirty = false;
 
 			// Set attribute.
-			setAttribute(sessionAttributeName, this);
+			setAttribute(SESSION_ATTRIBUTE_NAME, this);
 		}
 		else
 		{
@@ -589,6 +597,49 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Adds a session attribute listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
+	public void add(ISessionAttributeListener listener)
+	{
+		synchronized (listeners)
+		{
+			listeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes a session attribute listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
+	public void remove(ISessionAttributeListener listener)
+	{
+		synchronized (listeners)
+		{
+			if (!listeners.remove(listener))
+			{
+				throw new WicketRuntimeException("listener " + listener + " was not registered");
+			}
+		}
+	}
+
+	/**
+	 * Gets the unique id for this session (or a constant defining this is
+	 * constant. By default returns the hasCode of this object as a String.
+	 * 
+	 * @return the unique id for this session (or a constant defining this is
+	 *         constant
+	 */
+	public String getId()
+	{
+		return String.valueOf(hashCode());
+	}
+
+	/**
 	 * Any attach logic for session subclasses.
 	 */
 	protected void attach()
@@ -601,13 +652,6 @@ public abstract class Session implements Serializable
 	protected void detach()
 	{
 	}
-
-	/**
-	 * @param name
-	 *            The name of the attribute to store
-	 * @return The value of the attribute
-	 */
-	protected abstract Object getAttribute(final String name);
 
 	/**
 	 * @return List of attributes for this session
@@ -635,18 +679,198 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * @param name
-	 *            The name of the attribute to remove
-	 */
-	protected abstract void removeAttribute(final String name);
-
-	/**
+	 * Gets the attribute value with the given name
+	 * 
 	 * @param name
 	 *            The name of the attribute to store
-	 * @param object
-	 *            The attribute value
+	 * @return The value of the attribute
 	 */
-	protected abstract void setAttribute(final String name, final Object object);
+	protected final Object getAttribute(final String name)
+	{
+		return doGetAttribute(name);
+	}
+
+	/**
+	 * Adds or replaces the attribute with the given name and value.
+	 * 
+	 * @param name
+	 *            the name of the attribute
+	 * @param value
+	 *            the value of the attribute
+	 */
+	protected final void setAttribute(String name, Object value)
+	{
+		// get the old value if any
+		Object oldValue = getAttribute(name);
+
+		// fire the appropriate event
+		if (oldValue == null)
+		{
+			fireAttributeAdded(name, value);
+		}
+		else
+		{
+			fireAttributeReplaced(name, value, oldValue);
+		}
+
+		// set the actual attribute
+		doSetAttribute(name, value);
+
+		// Do some extra profiling/ debugging. This can be a great help
+		// just for testing whether your webbapp will behave when using
+		// session replication
+		if (log.isDebugEnabled())
+		{
+			long t1 = System.currentTimeMillis();
+			Object test = null;
+			byte[] serialized;
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(value);
+				serialized = out.toByteArray();
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
+			long t2 = System.currentTimeMillis();
+			log.debug("attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
+					+ Bytes.bytes(serialized.length));
+		}
+	}
+
+	/**
+	 * Removes the attribute with the given name.
+	 * 
+	 * @param name
+	 *            the name of the attribute to remove
+	 */
+	protected final void removeAttribute(String name)
+	{
+		// get the old value if any
+		Object oldValue = getAttribute(name);
+
+		if (oldValue != null)
+		{
+			fireAttributeRemoved(name);
+
+			doRemoveAttribute(name);
+		}
+		else
+		{
+			log.warn("attribute " + name + " could not be removed as it didn't exist in " + this);
+		}
+	}
+
+	/**
+	 * Internal implementation of {@link #setAttribute(String, Object)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 * @see #setAttribute(String, Object)
+	 */
+	protected abstract void doSetAttribute(String name, Object value);
+
+	/**
+	 * Internal implementation of {@link #getAttribute(String)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @return the attribute value
+	 * @see #getAttribute(String)
+	 */
+	protected abstract Object doGetAttribute(String name);
+
+	/**
+	 * Internal implementation of {@link #removeAttribute(String)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @see #removeAttribute(String)
+	 */
+	protected abstract void doRemoveAttribute(String name);
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeAdded(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 */
+	protected final void fireAttributeAdded(String name, Object value)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, value);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeAdded(evt);
+			}
+		}
+	}
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeReplaced(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 * @param oldValue
+	 *            the old attribute value
+	 */
+	protected final void fireAttributeReplaced(String name, Object value, Object oldValue)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, oldValue);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeReplaced(evt);
+			}
+		}
+	}
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeRemoved(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 */
+	protected final void fireAttributeRemoved(String name)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeRemoved(evt);
+			}
+		}
+	}
+
+	/**
+	 * Returns the registered listeners.
+	 * 
+	 * @return the list with listeners, never null
+	 */
+	protected final List getListeners()
+	{
+		return listeners;
+	}
 
 	/**
 	 * Marks session state as dirty

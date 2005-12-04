@@ -137,7 +137,7 @@ public class MockWebApplication extends WebApplication
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
 		servletResponse = new MockHttpServletResponse();
 		wicketRequest = newWebRequest(servletRequest);
-		wicketSession = getSession(wicketRequest, true);
+		wicketSession = getSession(wicketRequest);
 		ApplicationSettings settings = getSettings();
 		settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
 	}
@@ -297,7 +297,7 @@ public class MockWebApplication extends WebApplication
 					.getWebRequest()).getHttpServletRequest();
 
 			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-			wicketSession = getSession(wicketRequest, true);
+			wicketSession = getSession(wicketRequest);
 			try
 			{
 				new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
@@ -365,7 +365,7 @@ public class MockWebApplication extends WebApplication
 		servletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
 		wicketRequest = new ServletWebRequest(servletRequest);
-		wicketSession = getSession(wicketRequest, true);
+		wicketSession = getSession(wicketRequest);
 		wicketResponse = new WebResponse(servletResponse);
 	}
 

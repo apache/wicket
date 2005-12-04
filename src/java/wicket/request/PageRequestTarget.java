@@ -60,6 +60,8 @@ public class PageRequestTarget implements IPageRequestTarget
 		}
 		else
 		{
+			requestCycle.setUpdateCluster(true);
+
 			// Let page render itself
 			page.doRender();
 		}

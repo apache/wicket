@@ -69,16 +69,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-            public void invalidate()
-            {
-            }
-
-			protected Object getAttribute(String name)
-			{
-				return null;
-			}
-
-			protected void setAttribute(String name, Object object)
+			public void invalidate()
 			{
 			}
 
@@ -87,14 +78,24 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 				return null;
 			}
 
-			protected void removeAttribute(String name)
-			{
-			}
-
 			protected IRequestCycleFactory getRequestCycleFactory()
 			{
 				return null;
 			}
+
+			protected void doSetAttribute(String name, Object value)
+			{
+			}
+
+			protected Object doGetAttribute(String name)
+			{
+				return null;
+			}
+
+			protected void doRemoveAttribute(String name)
+			{
+			}
+
 		});
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();

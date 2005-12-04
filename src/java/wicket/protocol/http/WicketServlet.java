@@ -144,17 +144,8 @@ public class WicketServlet extends HttpServlet
 		// try to see if there is a redirect stored
 		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
-			// TODO should we test here for
-			// queryString.indexOf("IRedirectListener") ?
-			// only such urls should have a bufferedresponse.
-			String requestUri = servletRequest.getRequestURI();
-			if (servletRequest.getQueryString() != null)
-			{
-				requestUri += "?" + servletRequest.getQueryString();
-			}
-
-			BufferedResponse bufferedResponse = webApplication.getBufferedResponse(servletRequest,
-					requestUri);
+			String bufferId = servletRequest.getParameter("bid");
+			BufferedResponse bufferedResponse = webApplication.popBufferedResponse(bufferId);
 
 			if (bufferedResponse != null)
 			{
@@ -162,9 +153,6 @@ public class WicketServlet extends HttpServlet
 				servletResponse.setContentLength(bufferedResponse.getContentLength());
 				servletResponse.setContentType(bufferedResponse.getContentType());
 
-				// PrintWriter pw = servletResponse.getWriter();
-				// pw.write(bufferedResponse.getString());
-				// pw.close();
 				final OutputStream out = servletResponse.getOutputStream();
 				out.write(bufferedResponse.getBytes());
 				out.close();
@@ -200,7 +188,7 @@ public class WicketServlet extends HttpServlet
 		// create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 		// Get session for request
-		final WebSession session = webApplication.getSession(request, true);
+		final WebSession session = webApplication.getSession(request);
 
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.

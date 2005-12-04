@@ -19,9 +19,7 @@ package wicket.protocol.http;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,8 +47,6 @@ import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
-import wicket.util.time.Duration;
-import wicket.util.time.Time;
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -69,15 +65,15 @@ import wicket.util.time.Time;
  * init() method. For example:
  * 
  * <pre>
- *        
- *              public void init()
- *              {
- *                  String webXMLParameter = getWicketServlet()
- *                      .getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  URL schedulersConfig = getWicketServlet().getServletContext()
- *                      .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                  ...
- *         
+ *                         
+ *                               public void init()
+ *                               {
+ *                                   String webXMLParameter = getWicketServlet()
+ *                                       .getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                                   URL schedulersConfig = getWicketServlet().getServletContext()
+ *                                       .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                                   ...
+ *                          
  * </pre>
  * 
  * @see WicketServlet
@@ -85,6 +81,8 @@ import wicket.util.time.Time;
  * @see wicket.ApplicationPages
  * @author Jonathan Locke
  * @author Chris Turner
+ * @author Johan Compagner
+ * @uahtor Eelco Hillenius
  */
 public abstract class WebApplication extends Application
 {
@@ -110,6 +108,12 @@ public abstract class WebApplication extends Application
 	 * responses are temporarily stored
 	 */
 	private Map bufferedResponses = Collections.synchronizedMap(new HashMap());
+
+	/**
+	 * the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
+	 */
+	private String sessionAttributePrefix;
 
 	/**
 	 * Constructor.
@@ -356,37 +360,28 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param request
 	 *            The http request object
-	 * @param create
-	 *            Should the session be created if not there.
 	 * @return The session object
 	 */
-	final WebSession getSession(final WebRequest request, boolean create)
+	final WebSession getSession(final WebRequest request)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getHttpServletRequest().getSession(create);
-
-		if (!create && (httpSession == null))
-		{
-			return null;
-		}
-
-		// Namespacing for session attributes is provided by
-		// adding the servlet path
-		final String sessionAttributePrefix = "wicket-" + request.getServletPath();
+		// do not create it as we try to defer the actual
+		// creation as long as we can
+		final HttpSession httpSession = request.getHttpServletRequest().getSession(false);
 
 		// The actual attribute for the session is
-		// "wicket-<servlet-path>-session"
-		final String sessionAttribute = sessionAttributePrefix + "-" + Session.sessionAttributeName;
+		// "wicket-<servletName>-session"
+		final String sessionAttribute = sessionAttributePrefix + Session.SESSION_ATTRIBUTE_NAME;
 
-		// Get Session abstraction from httpSession attribute
-		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
+		WebSession webSession = null;
+		if (httpSession != null)
+		{
+			// Get Session abstraction from httpSession attribute
+			webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
+		}
+
 		if (webSession == null)
 		{
-			if (!create)
-			{
-				return null;
-			}
-
 			// Create session using session factory
 			final Session session = getSessionFactory().newSession();
 			if (session instanceof WebSession)
@@ -402,76 +397,66 @@ public abstract class WebApplication extends Application
 			// Set the client Locale for this session
 			webSession.setLocale(request.getLocale());
 
-			// Save this session in the HttpSession using the attribute name
-			httpSession.setAttribute(sessionAttribute, webSession);
+			if (httpSession != null)
+			{
+				// Save this session in the HttpSession using the attribute name
+				httpSession.setAttribute(sessionAttribute, webSession);
+			}
 		}
 
 		// Set application on session
 		webSession.setApplication(this);
 
 		// Set session attribute name and attach/reattach http servlet session
-		webSession.init(httpSession, sessionAttributePrefix);
+		webSession.init(getSessionAttributePrefix(request));
 
 		return webSession;
 	}
 
 	/**
-	 * Returns the redirect map where the buffered render pages are stored in.
+	 * Gets the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
 	 * 
 	 * @param request
-	 * @param requestUri
-	 * @return The Redirect map or null when there are no redirects.
+	 *            the request
+	 * 
+	 * @return the prefix for storing variables in the actual session
 	 */
-	final BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
+	public final String getSessionAttributePrefix(final WebRequest request)
 	{
-		HttpSession httpSession = request.getSession(false);
-		if (httpSession != null)
+		if (sessionAttributePrefix == null)
 		{
-			String sessionId = httpSession.getId();
-			Map sessionMap = (Map)bufferedResponses.get(sessionId);
-			if (sessionMap != null)
-			{
-				sessionMap.put("last-time-used", Time.now());
-				return (BufferedResponse)sessionMap.remove(requestUri);
-			}
+			sessionAttributePrefix = "wicket-" + request.getServletPath() + "-";
 		}
-		return null;
+		// Namespacing for session attributes is provided by
+		// adding the servlet path
+		return sessionAttributePrefix;
+	}
+
+	/**
+	 * Returns the redirect map where the buffered render pages are stored in
+	 * and removes it immediately.
+	 * 
+	 * @param bufferId
+	 *            the id of the buffer as passed in as a request parameter
+	 * @return the buffered response or null if not found (when this request is
+	 *         on a different box than the original request came in
+	 */
+	final BufferedResponse popBufferedResponse(String bufferId)
+	{
+		return (BufferedResponse)bufferedResponses.remove(bufferId);
 	}
 
 	/**
 	 * Add a buffered response to the redirect buffer.
 	 * 
-	 * @param request
-	 *            servlet request
-	 * @param requestUri
-	 *            uri
+	 * @param bufferId
+	 *            the id that should be used for storing the buffer
 	 * @param renderedResponse
 	 *            the response to buffer
 	 */
-	final void addBufferedResponse(HttpServletRequest request, String requestUri,
-			BufferedResponse renderedResponse)
+	final void addBufferedResponse(String bufferId, BufferedResponse renderedResponse)
 	{
-		String sessionId = request.getSession(true).getId();
-		Map sessionMap = (Map)bufferedResponses.get(sessionId);
-		if (sessionMap == null)
-		{
-			sessionMap = new HashMap(4);
-			final Time now = Time.now();
-			sessionMap.put("last-time-used", now);
-			synchronized (bufferedResponses)
-			{
-				for (Iterator i = bufferedResponses.entrySet().iterator(); i.hasNext();)
-				{
-					Map.Entry entry = (Entry)i.next();
-					final Time lastTimeUsed = (Time)((Map)entry.getValue()).get("last-time-used");
-					if (now.subtract(lastTimeUsed).greaterThan(Duration.minutes(5)))
-					{
-						i.remove();
-					}
-				}
-				bufferedResponses.put(sessionId, sessionMap);
-			}
-		}
-		sessionMap.put(requestUri, renderedResponse);
+		bufferedResponses.put(bufferId, renderedResponse);
 	}
 }

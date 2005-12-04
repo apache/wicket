@@ -41,7 +41,6 @@ import wicket.request.ListenerInterfaceRequestTarget;
 import wicket.request.PageClassRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
-import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.undo.Change;
@@ -912,24 +911,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		{
 			versionManager.componentStateChanging(change);
 		}
-	}
-
-	/**
-	 * Quick way to dump size of page without the whole session it's attached to
-	 */
-	final void dumpSize()
-	{
-		PageMap oldPageMap = this.pageMap;
-		Session oldSession = this.session;
-
-		this.pageMap = null;
-		this.session = null;
-
-		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
-				+ ObjectProfiler.sizeof(this));
-
-		this.pageMap = oldPageMap;
-		this.session = oldSession;
 	}
 
 	/**
