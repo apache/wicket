@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,30 +29,32 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.protocol.http.WebRequestCycle;
 
 /**
- * This is a markup inline filter which by default is not added to the list
- * of markup filters. It can be added by means of subclassing 
- * Application.newMarkupParser() like 
+ * This is a markup inline filter which by default is not added to the list of
+ * markup filters. It can be added by means of subclassing
+ * Application.newMarkupParser() like
+ * 
  * <pre>
- *     public class MyApplication extends Application
- *     {
- *         ...
- * 	       public MarkupParser newMarkupParser()
+ *         public class MyApplication extends Application
  *         {
- *             final MarkupParser parser = new MarkupParser(new XmlPullParser())
- *                 {
- *                     public void initFilterChain()
+ *             ...
+ *     	       public MarkupParser newMarkupParser()
+ *             {
+ *                 final MarkupParser parser = new MarkupParser(new XmlPullParser())
  *                     {
- *                         appendMarkupFilter(new PrependContextPathHandler());
- *                     }
- *                 };
- *             parser.configure(getSettings());
- *             return parser;
- *             }
+ *                         public void initFilterChain()
+ *                         {
+ *                             appendMarkupFilter(new PrependContextPathHandler());
+ *                         }
+ *                     };
+ *                 parser.configure(getSettings());
+ *                 return parser;
+ *                 }
  * </pre>
  * 
- * The purpose of the filter is to prepend the servlets context path to all
- * href and src attributes found in the markup, no matter whether the tag
- * is a wicket tag or not.
+ * The purpose of the filter is to prepend the web apps context path to all href
+ * and src attributes found in the markup which contain a relative URL like
+ * "myDir/myPage.gif". It is applied to all tags (attributes) no matter whether
+ * the tag is a wicket tag or not.
  * 
  * @author Juergen Donnerstag
  */
@@ -66,7 +68,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 
 	/** The application's servlet context path */
 	private String contextPath;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -102,16 +104,21 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 			{
 				contextPath = "";
 			}
+			else if (contextPath.endsWith("/") == false)
+			{
+				contextPath += "/";
+			}
 		}
 
 		if (contextPath.length() > 0)
 		{
-			// Modify all relevant attributes 
-			for (int i=0; i < attributeNames.length; i++)
+			// Modify all relevant attributes
+			for (int i = 0; i < attributeNames.length; i++)
 			{
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
-				if ((attrValue != null) && attrValue.startsWith("/"))
+				if ((attrValue != null) && (attrValue.startsWith("/") == false)
+						&& (attrValue.contains(":") == false))
 				{
 					String url = contextPath + attrValue;
 					tag.getAttributes().put(attrName, url);
@@ -119,7 +126,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 				}
 			}
 		}
-		
+
 		return tag;
 	}
 }
