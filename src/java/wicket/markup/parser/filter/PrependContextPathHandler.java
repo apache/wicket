@@ -34,21 +34,21 @@ import wicket.protocol.http.WebRequestCycle;
  * Application.newMarkupParser() like
  * 
  * <pre>
- *         public class MyApplication extends Application
- *         {
- *             ...
- *     	       public MarkupParser newMarkupParser()
- *             {
- *                 final MarkupParser parser = new MarkupParser(new XmlPullParser())
- *                     {
- *                         public void initFilterChain()
- *                         {
- *                             appendMarkupFilter(new PrependContextPathHandler());
- *                         }
- *                     };
- *                 parser.configure(getSettings());
- *                 return parser;
- *                 }
+ *          public class MyApplication extends Application
+ *          {
+ *              ...
+ *      	       public MarkupParser newMarkupParser()
+ *              {
+ *                  final MarkupParser parser = new MarkupParser(new XmlPullParser())
+ *                      {
+ *                          public void initFilterChain()
+ *                          {
+ *                              appendMarkupFilter(new PrependContextPathHandler());
+ *                          }
+ *                      };
+ *                  parser.configure(getSettings());
+ *                  return parser;
+ *                  }
  * </pre>
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
@@ -118,7 +118,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
 				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-						&& (attrValue.contains(":") == false))
+						&& (attrValue.indexOf(":") < 0))
 				{
 					String url = contextPath + attrValue;
 					tag.getAttributes().put(attrName, url);
