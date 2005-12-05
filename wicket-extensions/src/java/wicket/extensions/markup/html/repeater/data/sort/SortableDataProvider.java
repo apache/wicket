@@ -18,203 +18,71 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import wicket.extensions.markup.html.repeater.data.IDataProvider;
 
 /**
- * A {@link ISortableDataProvider} that allows sorting on columns.
  * 
  * @author Igor Vaynberg
- * @author Phil Kulak
  */
-public abstract class SortableDataProvider implements ISortableDataProvider
+public abstract class SortableDataProvider implements IDataProvider, ISortStateLocator
 {
-	private LinkedList/* <SortParam> */sort = new LinkedList();
-
-	private int maxColumns = 1;
-
-	private SortParam defaultSort;
+	private SingleSortState state = new SingleSortState();
 
 	/**
-	 * Removes all sorting fields.
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator#getSortState()
 	 */
-	public void clearSort()
+	public final ISortState getSortState()
 	{
-		sort.clear();
+		return state;
 	}
 
 	/**
-	 * Sets the sort parameter to use when no other fields are set.
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator#setSortState(wicket.extensions.markup.html.repeater.data.sort.ISortState)
+	 */
+	public final void setSortState(ISortState state)
+	{
+		if (!(state instanceof SingleSortState))
+		{
+			throw new IllegalArgumentException(
+					"argument [state] must be an instance of SingleSortState, but it is ["
+							+ state.getClass().getName() + "]:[" + state.toString() + "]");
+		}
+		this.state = (SingleSortState)state;
+	}
+
+	/**
+	 * Returns current sort state
 	 * 
-	 * @param property
-	 *            the name of the property to sort on
-	 * @param ascending
-	 *            true for ascending, false for descending
-	 */
-	public void setDefaultSort(String property, boolean ascending)
-	{
-		defaultSort = new SortParam(property, ascending);
-	}
-
-	/**
-	 * Sets the maximum number of columns to sort on.
-	 * 
-	 * @param maxColumns
-	 *            max number of columns
-	 */
-	public void setMaxColumns(int maxColumns)
-	{
-		if (maxColumns < 0)
-		{
-			throw new IllegalStateException("Max columns must be positive.");
-		}
-
-		// Trim if needed.
-		while (maxColumns < sort.size())
-		{
-			sort.removeLast();
-		}
-
-		this.maxColumns = maxColumns;
-	}
-
-	/**
-	 * Adds the sort parameter to the end of the list.
-	 * 
-	 * @param sp
-	 *            the parameter to add
-	 */
-	public void addSort(SortParam sp)
-	{
-		if (maxColumns == 0)
-		{
-			return;
-		}
-		if (sort.size() >= maxColumns)
-		{
-			sort.removeLast();
-		}
-		sort.addFirst(sp);
-	}
-
-	/**
-	 * Adds the sort parameter to the front of the list.
-	 * 
-	 * @param property
-	 *            the name of the property to sort on
-	 * @param ascending
-	 *            true for ascending, false for descending
-	 */
-	public void addSort(String property, boolean ascending)
-	{
-		addSort(new SortParam(property, ascending));
-	}
-
-	/**
-	 * @see ISortableDataProvider#addSort(String)
-	 */
-	public void addSort(String property)
-	{
-		SortParam sp = findByProperty(property);
-		if (sp != null)
-		{
-			getSortList().remove(sp);
-			addSort(new SortParam(property, !sp.isAscending()));
-		}
-		else
-		{
-			addSort(new SortParam(property, true));
-		}
-	}
-
-	/**
-	 * @return the last sort added, null if none.
+	 * @return current sort state
 	 */
 	public SortParam getSort()
 	{
-		if (sort.size() == 0)
-		{
-			return null;
-		}
-		else
-		{
-			return (SortParam)sort.getFirst();
-		}
+		return state.getSort();
 	}
 
 	/**
-	 * @return the current list of sort parameters.
-	 */
-	public List getSortList()
-	{
-		if (sort.size() == 0 && defaultSort != null)
-		{
-			ArrayList ret = new ArrayList(1);
-			ret.add(defaultSort);
-			return ret;
-		}
-		return sort;
-	}
-
-	/**
-	 * Removes all previous sort fields and adds the one given.
+	 * Sets the current sort state
 	 * 
-	 * @param sp
-	 *            new sort param
+	 * @param param
+	 *            parameter containing new sorting information
 	 */
-	public void setSort(SortParam sp)
+	public void setSort(SortParam param)
 	{
-		clearSort();
-		addSort(sp);
+		state.setSort(param);
 	}
 
 	/**
-	 * Removes all previous sort fields and adds the one given.
+	 * Sets the current sort state
 	 * 
 	 * @param property
 	 *            sort property
 	 * @param ascending
-	 *            ascending flag
+	 *            sort direction
 	 */
 	public void setSort(String property, boolean ascending)
 	{
 		setSort(new SortParam(property, ascending));
 	}
 
-	/**
-	 * @see ISortableDataProvider#getSortState(String)
-	 */
-	public SortState getSortState(String property)
-	{
-		int level = -1;
 
-		for (Iterator i = sort.iterator(); i.hasNext();)
-		{
-			level++;
-			SortParam sortParam = (SortParam)i.next();
-			if (sortParam.getProperty().equals(property))
-			{
-				return new SortState(sortParam.isAscending()
-						? SortState.ASCENDING
-						: SortState.DESCENDING, level);
-			}
-		}
-		return new SortState(SortState.NONE, 0);
-	}
-
-	private SortParam findByProperty(String property)
-	{
-		Iterator it = getSortList().iterator();
-		while (it.hasNext())
-		{
-			SortParam sp = (SortParam)it.next();
-			if (sp.getProperty().equals(property))
-			{
-				return sp;
-			}
-		}
-		return null;
-	}
 }

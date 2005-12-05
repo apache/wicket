@@ -1,14 +1,8 @@
 <wicket:panel>
-<caption>
-	<div style="float: left;"><span wicket:id="navigatorLabel">[navigator-label]</span></div>
-	<div style="text-align: right;"><span wicket:id="navigator">[navigator]</span></div>
-</caption>
 <thead>
-	<tr class="headers">
-		<span wicket:id="headers">
-			<th wicket:id="header"><span wicket:id="label">[header-label]</span></th>
-		</span>
-	</tr>
+	<span wicket:id="topToolbars">
+		<span wicket:id="toolbar"></span>
+	</span>
 </thead>
 <tbody>
 	<tr wicket:id="rows">
@@ -17,4 +11,9 @@
 		</td>
 	</tr>
 </tbody>
+<tfoot>
+	<span wicket:id="bottomToolbars">
+		<span wicket:id="toolbar"></span>
+	</span>
+</tfoot>
 </wicket:panel>

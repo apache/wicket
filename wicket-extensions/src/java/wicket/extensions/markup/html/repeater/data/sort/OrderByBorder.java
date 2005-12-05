@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
-import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.markup.html.border.Border;
 
 /**
@@ -40,37 +39,59 @@ public class OrderByBorder extends Border
 
 	/**
 	 * @param id
-	 *            component id
-	 * @param sortProperty
-	 *            sort propert this link is responsible for
-	 * @param dataView
-	 *            data view whose sorting dataprovider will be updated by this
-	 *            link
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 * @param property
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 * @param stateLocator
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 * @param cssProvider
-	 *            implementation of DataView.ICssProvider
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 */
-	public OrderByBorder(String id, String sortProperty, DataView dataView,
+	public OrderByBorder(String id, String property, ISortStateLocator stateLocator,
 			OrderByLink.ICssProvider cssProvider)
 	{
 		super(id);
-		OrderByLink link = new OrderByLink("orderByLink", sortProperty, dataView,
-				OrderByLink.VoidCssProvider.getInstance());
+		OrderByLink link = new OrderByLink("orderByLink", property, stateLocator,
+				OrderByLink.VoidCssProvider.getInstance()) {
+			
+			private static final long serialVersionUID = 1L;
+
+			protected void onSortChanged()
+			{
+				OrderByBorder.this.onSortChanged();
+			}
+		};
 		add(link);
 		add(new OrderByLink.CssModifier(link, cssProvider));
 	}
 
 	/**
-	 * @param id
-	 *            component id
-	 * @param sortProperty
-	 *            sort propert this link is responsible for
-	 * @param dataView
-	 *            data view whose sorting dataprovider will be updated by this
-	 *            link
+	 * This method is a hook for subclasses to perform an action after sort has
+	 * changed
 	 */
-	public OrderByBorder(String id, String sortProperty, DataView dataView)
+	protected void onSortChanged()
 	{
-		this(id, sortProperty, dataView, OrderByLink.DefaultCssProvider.getInstance());
+		// noop
+	}
+
+	/**
+	 * @param id
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 * @param property
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 * @param stateLocator
+	 *            see
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 */
+	public OrderByBorder(String id, String property, ISortStateLocator stateLocator)
+	{
+		this(id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
 	}
 
 }

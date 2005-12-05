@@ -18,14 +18,15 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.Collections;
 import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.WicketRuntimeException;
+import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
+import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.list.ListItem;
@@ -45,22 +46,22 @@ import wicket.model.Model;
  * 
  * 
  * <pre>
- *    &lt;thead&gt;
- *        &lt;tr&gt;
- *            &lt;span wicket:id=&quot;headers&quot;&gt;
- *                &lt;th wicket:id=&quot;header&quot;&gt;
- *                    &lt;span wicket:id=&quot;label&quot;&gt;[header-label]&lt;/span&gt;
- *                &lt;/th&gt;
- *            &lt;/span&gt;
- *        &lt;/tr&gt;
- *    &lt;/thead&gt;
- *    &lt;tbody&gt;
- *        &lt;tr wicket:id=&quot;rows&quot;&gt;
- *            &lt;td wicket:id=&quot;cells&quot;&gt;
- *                &lt;span wicket:id=&quot;cell&quot;&gt;[cell]&lt;/span&gt;
- *            &lt;/td&gt;
- *        &lt;/tr&gt;
- *    &lt;/tbody&gt;
+ *       &lt;thead&gt;
+ *           &lt;tr&gt;
+ *               &lt;span wicket:id=&quot;headers&quot;&gt;
+ *                   &lt;th wicket:id=&quot;header&quot;&gt;
+ *                       &lt;span wicket:id=&quot;label&quot;&gt;[header-label]&lt;/span&gt;
+ *                   &lt;/th&gt;
+ *               &lt;/span&gt;
+ *           &lt;/tr&gt;
+ *       &lt;/thead&gt;
+ *       &lt;tbody&gt;
+ *           &lt;tr wicket:id=&quot;rows&quot;&gt;
+ *               &lt;td wicket:id=&quot;cells&quot;&gt;
+ *                   &lt;span wicket:id=&quot;cell&quot;&gt;[cell]&lt;/span&gt;
+ *               &lt;/td&gt;
+ *           &lt;/tr&gt;
+ *       &lt;/tbody&gt;
  * </pre>
  * 
  * 
@@ -69,12 +70,23 @@ import wicket.model.Model;
  */
 public class AbstractDataTable extends Panel
 {
+	/**
+	 * The component id that toolbars must be created with in order to be added
+	 * to the data table
+	 */
+	public static final String TOOLBAR_COMPONENT_ID = "toolbar";
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String CELL_ITEM_ID = "cell";
 
 	private final DataView dataView;
 
+	private List/* <IColumn> */columns;
+
+	private final OrderedRepeatingView topToolbars;
+	private final OrderedRepeatingView bottomToolbars;
+	
 	/**
 	 * Constructor
 	 * 
@@ -87,7 +99,7 @@ public class AbstractDataTable extends Panel
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public AbstractDataTable(String id, final List columns, ISortableDataProvider dataProvider,
+	public AbstractDataTable(String id, final List columns, IDataProvider dataProvider,
 			int rowsPerPage)
 	{
 		this(id, columns, new Model(dataProvider), rowsPerPage);
@@ -105,9 +117,11 @@ public class AbstractDataTable extends Panel
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public AbstractDataTable(String id, final List columns, IModel dataProvider, int rowsPerPage)
+	public AbstractDataTable(String id, List columns, IModel dataProvider, int rowsPerPage)
 	{
 		super(id);
+
+		this.columns = Collections.unmodifiableList(columns);
 
 		dataView = new DataView("rows", dataProvider)
 		{
@@ -128,7 +142,7 @@ public class AbstractDataTable extends Panel
 
 				}));
 
-				item.add(new ListView("cells", columns)
+				item.add(new ListView("cells", getColumns())
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -157,33 +171,95 @@ public class AbstractDataTable extends Panel
 
 		add(dataView);
 
-
-		add(new ListView("headers", columns)
-		{
+		topToolbars = new OrderedRepeatingView("topToolbars") {
 			private static final long serialVersionUID = 1L;
-
-			protected void populateItem(ListItem item)
+			
+			public boolean isVisible()
 			{
-				final IColumn column = (IColumn)item.getModelObject();
-				WebMarkupContainer header = null;
-				if (column.isSortable())
-				{
-					header = new OrderByBorder("header", column.getSortProperty(), dataView);
-				}
-				else
-				{
-					header = new WebMarkupContainer("header");
-				}
-				item.add(header);
-				header.add(column.getHeader("label"));
+				return size()>0;
 			}
+			
+		};
+		
+		bottomToolbars=new OrderedRepeatingView("bottomToolbars") {
 
-		});
+			private static final long serialVersionUID = 1L;
+			
+			public boolean isVisible()
+			{
+				return size()>0;
+			}
+		};
 
+		add(topToolbars);
+		add(bottomToolbars);
 	}
 
 	protected final DataView getDataView()
 	{
 		return dataView;
+	}
+
+	public final List/* <IColumn> */getColumns()
+	{
+		return columns;
+	}
+
+	/**
+	 * Adds a toolbar to the datatable that will be displayed before the data
+	 * 
+	 * @param toolbar
+	 *            toolbar to be added
+	 * 
+	 * @see Toolbar
+	 */
+	public void addTopToolbar(Toolbar toolbar)
+	{
+		addToolbar(toolbar, topToolbars);
+	}
+
+	/**
+	 * Adds a toolbar to the datatable that will be displayed after the data
+	 * 
+	 * @param toolbar
+	 *            toolbar to be added
+	 * 
+	 * @see Toolbar
+	 */
+	public void addBottomToolbar(Toolbar toolbar)
+	{
+		addToolbar(toolbar, bottomToolbars);
+	}
+
+	private void addToolbar(Toolbar toolbar, OrderedRepeatingView container) {
+		if (toolbar==null) {
+			throw new IllegalArgumentException("argument [toolbar] cannot be null");
+		}
+		
+		if (!toolbar.getId().equals(TOOLBAR_COMPONENT_ID))
+		{
+			throw new IllegalArgumentException(
+					"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
+		}
+		
+		// create a container item for the toolbar (required by repeating view)
+		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
+		item.setRenderBodyOnly(true);
+		item.add(toolbar);
+		
+		container.add(item);
+
+		
+	}
+	
+	
+	/**
+	 * Sets the current page
+	 * 
+	 * @param page
+	 */
+	public final void setCurrentPage(int page)
+	{
+		getDataView().setCurrentPage(page);
 	}
 }

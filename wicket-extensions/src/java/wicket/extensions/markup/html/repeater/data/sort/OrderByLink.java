@@ -22,97 +22,157 @@ import java.io.Serializable;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider.SortState;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractModel;
 import wicket.model.IModel;
+import wicket.util.lang.Objects;
+import wicket.version.undo.Change;
 
 /**
- * A link that changes the ordering on a field of a PageableDataView.
+ * A component that represents a sort header. When the link is clicked it will
+ * toggle the state of a sortable property within the sort state object.
  * 
  * @author Phil Kulak
- * @author Igor Vaynberg
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class OrderByLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 
-	private String sortProperty;
+	/** sortable property */
+	private String property;
 
-	private DataView list;
+	/** locator for sort state object */
+	private ISortStateLocator stateLocator;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            the id of the link
-	 * @param sortProperty
-	 *            the field of the list
-	 * @param list
-	 *            the DataView that contains a ISortableDataProvider
+	 *            the component id of the link
+	 * @param property
+	 *            the name of the sortable property this link represents. this
+	 *            value will be used as parameter for sort state object methods.
+	 *            sort state object will be located via the stateLocator
+	 *            argument.
+	 * @param stateLocator
+	 *            locator used to locate sort state object that this will use to
+	 *            read/write state of sorted properties
 	 */
-	public OrderByLink(String id, String sortProperty, DataView list)
+	public OrderByLink(String id, String property, ISortStateLocator stateLocator)
 	{
-		this(id, sortProperty, list, DefaultCssProvider.getInstance());
+		this(id, property, stateLocator, DefaultCssProvider.getInstance());
 	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            the id of the link
-	 * @param sortProperty
-	 *            the field of the list
-	 * @param list
-	 *            the DataView that contains a ISortableDataProvider
+	 *            the component id of the link
+	 * @param property
+	 *            the name of the sortable property this link represents. this
+	 *            value will be used as parameter for sort state object methods.
+	 *            sort state object will be located via the stateLocator
+	 *            argument.
+	 * @param stateLocator
+	 *            locator used to locate sort state object that this will use to
+	 *            read/write state of sorted properties
 	 * @param cssProvider
-	 *            CSS provider used to generate value of class attribute for
-	 *            link
+	 *            CSS provider that will be used generate the value of class
+	 *            attribute for this link
+	 * 
 	 * @see OrderByLink.ICssProvider
 	 * 
 	 */
-	public OrderByLink(String id, String sortProperty, DataView list, ICssProvider cssProvider)
+	public OrderByLink(String id, String property, ISortStateLocator stateLocator,
+			ICssProvider cssProvider)
 	{
 		super(id);
 
-		if (!(list.getModelObject() instanceof ISortableDataProvider))
+		if (cssProvider == null)
 		{
-			throw new IllegalStateException("An OrderByLink must point to a "
-					+ "DataView that uses an ISortableDataProvider as it's model.");
+			throw new IllegalArgumentException("argument [cssProvider] cannot be null");
 		}
 
-		this.sortProperty = sortProperty;
-		this.list = list;
+		if (property == null)
+		{
+			throw new IllegalArgumentException("argument [sortProperty] cannot be null");
+		}
 
+		this.property = property;
+		this.stateLocator = stateLocator;
 		add(new CssModifier(this, cssProvider));
 	}
 
 	/**
 	 * @see wicket.markup.html.link.Link
 	 */
-	public void onClick()
+	public final void onClick()
 	{
 		sort();
+		onSortChanged();
 	}
 
 	/**
-	 * Resort data provider according to this link
+	 * This method is a hook for subclasses to perform an action after sort has
+	 * changed
+	 */
+	protected void onSortChanged()
+	{
+		// noop
+	}
+
+	/**
+	 * Re-sort data provider according to this link
 	 * 
 	 * @return this
 	 */
-	public OrderByLink sort()
+	public final OrderByLink sort()
 	{
-		ISortableDataProvider dataProvider = (ISortableDataProvider)list.getModelObject();
+		// version the old state
+		Change change = new SortStateChange();
+		addStateChange(change);
 
-		// Add the ordering to the list.
-		list.modelChanging();
-		dataProvider.addSort(sortProperty);
-		list.setCurrentPage(0);
-		list.modelChanged();
+		ISortState state = stateLocator.getSortState();
+
+		int oldDir = state.getPropertyState(property);
+
+		int newDir = ISortState.ASCENDING;
+
+		if (oldDir == ISortState.ASCENDING)
+		{
+			newDir = ISortState.DESCENDING;
+		}
+
+		state.setPropertyState(property, newDir);
 
 		return this;
 	}
+
+	private final class SortStateChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final ISortState old = (ISortState)Objects.clone(stateLocator.getSortState());
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			stateLocator.setSortState(old);
+			System.out.println("undid change " + toString());
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "[StateOrderChange old=" + old.toString() + "]";
+		}
+	}
+
 
 	/**
 	 * Uses the specified ICssProvider to add css class attributes to the link.
@@ -144,12 +204,9 @@ public class OrderByLink extends Link
 
 				public Object getObject(Component component)
 				{
-					final DataView list = link.list;
-					final ISortableDataProvider dataProvider = (ISortableDataProvider)list
-							.getModelObject();
-					final SortState state = dataProvider.getSortState(link.sortProperty);
 
-					return provider.getClassAttributeValue(state);
+					final ISortState sortState = link.stateLocator.getSortState();
+					return provider.getClassAttributeValue(sortState, link.property);
 				}
 
 				public void setObject(Component component, Object object)
@@ -183,17 +240,20 @@ public class OrderByLink extends Link
 	{
 		/**
 		 * @param state
-		 *            the state to represent as a string
-		 * @return the value of the "class" attribute for the given sort state
+		 *            current sort state
+		 * @param property
+		 *            sort property represented by the {@link OrderByLink}
+		 * @return the value of the "class" attribute for the given sort
+		 *         state/sort property combination
 		 */
-		public String getClassAttributeValue(SortState state);
+		public String getClassAttributeValue(ISortState state, String property);
 	}
 
 
 	/**
 	 * Easily constructible implementation of ICSSProvider
 	 * 
-	 * @author igor
+	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
 	public static class CssProvider implements ICssProvider
@@ -222,28 +282,24 @@ public class OrderByLink extends Link
 		}
 
 		/**
-		 * @see ICssProvider#getClassAttributeValue(SortState)
+		 * @see wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider#getClassAttributeValue(wicket.extensions.markup.html.repeater.data.sort.ISortState,
+		 *      java.lang.String)
 		 */
-		public String getClassAttributeValue(SortState state)
+		public String getClassAttributeValue(ISortState state, String property)
 		{
-			if (state.getState() == SortState.ASCENDING)
+			int dir = state.getPropertyState(property);
+			if (dir == ISortState.ASCENDING)
 			{
-				return ascending + getLevelAppend(state.getLevel());
+				return ascending;
 			}
-			if (state.getState() == SortState.DESCENDING)
+			else if (dir == ISortState.DESCENDING)
 			{
-				return descending + getLevelAppend(state.getLevel());
+				return descending;
 			}
-			return none;
-		}
-
-		private String getLevelAppend(int level)
-		{
-			if (level == 0)
+			else
 			{
-				return "";
+				return none;
 			}
-			return "_" + Integer.toString(level);
 		}
 	}
 
@@ -269,7 +325,7 @@ public class OrderByLink extends Link
 
 		private VoidCssProvider()
 		{
-			super(null, null, null);
+			super("", "", "");
 		}
 	}
 
