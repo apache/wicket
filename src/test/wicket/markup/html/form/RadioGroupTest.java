@@ -116,8 +116,6 @@ public class RadioGroupTest extends WicketTestCase
 
 		MockPage page = new MockPage(new PageParameters());
 
-		page.getSession().setRequestCycle(cycle);
-
 		// create component hierarchy
 
 		final Form form = new Form("form", new CompoundPropertyModel(modelObject));
