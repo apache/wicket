@@ -38,7 +38,7 @@ public class SortableContactDataProvider extends SortableDataProvider
 	public SortableContactDataProvider()
 	{
 		// set default sort
-		addSort("firstName");
+		setSort("firstName", true);
 	}
 
 	protected ContactsDatabase getContactsDB()

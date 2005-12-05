@@ -43,7 +43,8 @@ public class SortingPage extends BasePage
 	 */
 	public SortingPage()
 	{
-		final DataView dataView = new DataView("sorting", new SortableContactDataProvider())
+		SortableContactDataProvider dp=new SortableContactDataProvider();
+		final DataView dataView = new DataView("sorting", dp)
 		{
 
 			protected void populateItem(final Item item)
@@ -72,9 +73,9 @@ public class SortingPage extends BasePage
 
 		dataView.setItemsPerPage(8);
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dataView));
+		add(new OrderByBorder("orderByFirstName", "firstName", dp));
 
-		add(new OrderByBorder("orderByLastName", "lastName", dataView));
+		add(new OrderByBorder("orderByLastName", "lastName", dp));
 
 		add(dataView);
 
