@@ -255,10 +255,10 @@ public class ApplicationSettings
 	private Class cryptClass = SunJceCrypt.class;
 
 	/** Default markup for after a disabled link */
-	private String defaultAfterDisabledLink = "</i>";
+	private String defaultAfterDisabledLink = "</em>";
 
 	/** Default markup for before a disabled link */
-	private String defaultBeforeDisabledLink = "<i>";
+	private String defaultBeforeDisabledLink = "<em>";
 
 	/** Default class resolver to find classes */
 	private IClassResolver defaultClassResolver = new DefaultClassResolver();
