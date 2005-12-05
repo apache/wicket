@@ -17,8 +17,6 @@
  */
 package wicket.resource;
 
-import java.util.Locale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,13 +40,5 @@ public class ComponentStringResourceLoader extends AbstractStringResourceLoader
 	public ComponentStringResourceLoader(final Application application)
 	{
 		super(application);
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
-	{
-		return application.getPropertiesFactory().get(application, clazz, style, locale);
 	}
 }
