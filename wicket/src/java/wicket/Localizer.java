@@ -53,7 +53,7 @@ public class Localizer
 	private Map cachedValues = new ConcurrentReaderHashMap();
 
 	/** ConcurrentReaderHashMap does not allow null values. This is a substitute */
-	private static final Object NULL = new Object();
+	private static final String NULL = new String();
 
 	/**
 	 * Create the utils instance class backed by the configuration information

@@ -61,5 +61,8 @@ public class ValidatorPropertiesTest extends TestCase
 		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage().getMessage());
 		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage().getMessage());
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
+		
+		// Test caching
+		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
 	}
 }
