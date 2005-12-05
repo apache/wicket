@@ -104,7 +104,7 @@ public class IncrementalTableNavigationTest extends TestCase
 		// note that we DO NOT expect the third element as this is not on the current page
 		body.addExpectedChild(ulTable);
 
-		body.addExpectedChild(new Tag("span").addExpectedChild(new Tag("i")
+		body.addExpectedChild(new Tag("span").addExpectedChild(new Tag("em")
 				.addExpectedChild(new TextContent("Prev"))));
 
 		body.addExpectedChild(new Tag("a").addExpectedChild(new TextContent("NextNext")));
