@@ -21,6 +21,8 @@ have path mounting (or nice urls) work really nice:
 
     Igor> no, you can get that out of the http servlet request
     
+    Eelco> Erm. I meant the servlet path :)
+    
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
