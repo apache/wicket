@@ -23,6 +23,9 @@ have path mounting (or nice urls) work really nice:
     
     Eelco> Erm. I meant the servlet path :)
     
+	Igor> see the attached base component below, it reconstructs the entire path.
+		  specifically the buildBaseHref() function.
+
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
@@ -37,3 +40,47 @@ have path mounting (or nice urls) work really nice:
 
 
 - Eelco
+
+==============================================================
+
+**
+ * Base tag that makes sure all links with relative paths are relative to the context root
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ */
+public class BaseTag extends WebComponent {
+
+    public BaseTag(String id) {
+        super(id);
+    }
+   
+    @Override
+    protected void onComponentTag(ComponentTag tag) {
+        checkComponentTag(tag, "base");
+        String href=buildBaseHref();
+        tag.put("href", href);
+    }
+   
+    private String buildBaseHref() {
+        RequestCycle cycle=getRequestCycle();
+        ServletWebRequest request=(ServletWebRequest) cycle.getRequest();
+        HttpServletRequest req=request.getHttpServletRequest();
+       
+        StringBuffer href = new StringBuffer();
+
+        String scheme = req.getScheme();
+
+        href.append(scheme);
+        href.append("://");
+        href.append(req.getServerName());
+
+        if(req.getServerPort()!=80) {       
+            href.append(":");
+            href.append(req.getServerPort());
+        }
+        href.append(req.getContextPath());
+        href.append("/");
+       
+        return href.toString();
+    }
+}
