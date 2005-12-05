@@ -52,6 +52,9 @@ public class Localizer
 	/** Because properties search can be expensive, we cache the value */
 	private Map cachedValues = new ConcurrentReaderHashMap();
 
+	/** ConcurrentReaderHashMap does not allow null values. This is a substitute */
+	private static final Object NULL = new Object();
+
 	/**
 	 * Create the utils instance class backed by the configuration information
 	 * contained within the supplied settings object.
@@ -77,7 +80,7 @@ public class Localizer
 				// Properties does cache them as well. We only have
 				// to walk the properties resolution path once again.
 				// And, the feature of reloading the properties file
-				// is usually activated during development only and 
+				// is usually activated during development only and
 				// for production. Hence, it affect development only.
 				cachedValues.clear();
 			}
@@ -213,21 +216,35 @@ public class Localizer
 				log.debug("Found message key in cache: " + id);
 			}
 			string = (String)cachedValues.get(id);
+			if (string == NULL)
+			{
+				string = null;
+			}
 		}
 		else
 		{
 			// Search each loader in turn and return the string if it is found
-			final Iterator iterator = settings.getStringResourceLoaders().iterator();;
+			final Iterator iterator = settings.getStringResourceLoaders().iterator();
 			while (iterator.hasNext())
 			{
 				IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
 				string = loader.loadStringResource(component, key, locale, style);
-
 				if (string != null)
 				{
-					this.cachedValues.put(id, string);
 					break;
 				}
+			}
+
+			// cache all values, not matter the key has been found or not
+			if (string != null)
+			{
+				this.cachedValues.put(id, string);
+			}
+			else
+			{
+				// ConcurrentReaderHashMap does not allow null values. This is a
+				// substitute
+				this.cachedValues.put(id, NULL);
 			}
 		}
 
