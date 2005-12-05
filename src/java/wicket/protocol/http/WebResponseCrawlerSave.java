@@ -30,6 +30,7 @@ import wicket.util.value.ValueMap;
  * It extends WebResponse and encodes wicket's URL to make them crawler save.
  *  
  * @author Juergen Donnerstag
+ * @deprecated replace by using {@link wicket.request.IRequestEncoder}
  */
 public class WebResponseCrawlerSave extends WebResponse
 {
