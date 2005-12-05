@@ -92,21 +92,13 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 		return super.loadStringResource(component, key, locale, style);
 	}
 
+
 	/**
-	 * @param clazz
-	 *            The class to use to find resources to be loaded
-	 * @param locale
-	 *            The locale identifying the resource set to select the strings
-	 *            from
-	 * @param style
-	 *            The (optional) style identifying the resource set to select
-	 *            the strings from (see {@link wicket.Session})
-	 * @return The string resource value or null if resource not found
+	 * @inheritDoc
 	 */
-	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
+	protected String loadStringResourceByClass(Class clazz, final String key,
+			final Locale locale, final String style)
 	{
-		// Use this.class instead of the clazz provided to the method. Hence
-		// replacing a component class with a fixed class.
-		return application.getPropertiesFactory().get(application, this.clazz, style, locale);
+		 return super.loadStringResourceByClass(this.clazz, key, locale, style);
 	}
 }

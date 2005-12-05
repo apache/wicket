@@ -200,6 +200,10 @@ public abstract class AbstractStringResourceLoader
 			}
 
 			prefixKey = Strings.afterFirst(prefixKey, '.');
+			if (prefixKey.equals(key))
+			{
+				break;
+			}
 		}
 
 		// Return the resource value (may be null if resource was not found)
@@ -223,7 +227,7 @@ public abstract class AbstractStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	protected final String loadStringResourceByClass(Class clazz, final String key,
+	protected String loadStringResourceByClass(Class clazz, final String key,
 			final Locale locale, final String style)
 	{
 		String value = null;
@@ -278,8 +282,10 @@ public abstract class AbstractStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	protected abstract Properties getProperties(final Class clazz, final Locale locale,
-			final String style);
+	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
+	{
+		return application.getPropertiesFactory().get(application, clazz, style, locale);
+	}
 
 	/**
 	 * Check the supplied class to see if it is one that we shouldn't bother
