@@ -992,10 +992,6 @@ public abstract class RequestCycle
 	 */
 	private final void threadAttach()
 	{
-		// Set this request cycle as the active request cycle for the
-		// session for easy access by the page being rendered and any
-		// components on that page
-		session.setRequestCycle(this);
 	}
 
 	/**
@@ -1018,10 +1014,6 @@ public abstract class RequestCycle
 
 		// Clear ThreadLocal reference
 		CURRENT.set(null);
-
-		// Set the active request cycle back to null since we are
-		// done rendering the requested page
-		session.setRequestCycle(null);
 
 		// This thread is no longer attached to a Session
 		Session.set(null);

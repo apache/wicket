@@ -133,9 +133,6 @@ public abstract class Session implements Serializable
 	/** The converter instance. */
 	private transient IConverter converter;
 
-	/** Active request cycle */
-	private transient RequestCycle cycle;
-
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
@@ -351,7 +348,7 @@ public abstract class Session implements Serializable
 	 */
 	public final RequestCycle getRequestCycle()
 	{
-		return cycle;
+		return RequestCycle.get();
 	}
 
 	/**
@@ -480,19 +477,6 @@ public abstract class Session implements Serializable
 	 */
 	private final void resetMarkupPositions()
 	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Sets the currently active request cycle for this session.
-	 * 
-	 * @param cycle
-	 *            The request cycle
-	 */
-	public final void setRequestCycle(final RequestCycle cycle)
-	{
-		this.cycle = cycle;
 	}
 
 	/**

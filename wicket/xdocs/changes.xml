@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="fix" dev="Martijn Dashorst" issue="1373547">Race condition with Session and RequestCycle</action>
       <action type="add" dev="Juergen Donnerstag">Properties files, like markup files already, are now automatically reloaded if modified.</action>
       <action type="add" dev="Johan Compagner" due-to="Christian Essl">added SubmitLink component, This is a &lt;a href&gt; that acts as a button, can be placed inside or outside the form to trigger the submit.</action>
       <action type="fix" dev="Johan Compagner" due-to="Laurent PETIT">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
