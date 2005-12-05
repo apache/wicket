@@ -189,7 +189,7 @@ public abstract class AbstractStringResourceLoader
 			// locale and the style.
 			// prefixKey = component relativ path + component id
 			value = loadStringResourceByClass(cc, prefixKey, locale, style);
-			if (value == null)
+			if ((value == null) && (prefixKey.equals(key) == false))
 			{
 				value = loadStringResourceByClass(cc, key, locale, style);
 			}
@@ -200,10 +200,6 @@ public abstract class AbstractStringResourceLoader
 			}
 
 			prefixKey = Strings.afterFirst(prefixKey, '.');
-			if (prefixKey.equals(key))
-			{
-				break;
-			}
 		}
 
 		// Return the resource value (may be null if resource was not found)
