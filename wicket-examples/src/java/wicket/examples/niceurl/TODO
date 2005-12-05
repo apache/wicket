@@ -26,6 +26,11 @@ have path mounting (or nice urls) work really nice:
 	Igor> see the attached base component below, it reconstructs the entire path.
 		  specifically the buildBaseHref() function.
 
+	Eelco> Yep, I understand that you can do it like this. My point was that you can't use the
+			base tag without anything extra - like using a Wicket component
+			
+	Eelco> Is this an alternative to the dev list? :)
+
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
