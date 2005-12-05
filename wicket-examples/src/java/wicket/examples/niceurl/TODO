@@ -31,6 +31,8 @@ have path mounting (or nice urls) work really nice:
 			
 	Eelco> Is this an alternative to the dev list? :)
 
+	Igor> You started it!
+	
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
