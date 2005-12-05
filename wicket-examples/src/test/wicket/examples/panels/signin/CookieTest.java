@@ -113,8 +113,6 @@ public class CookieTest extends TestCase
 		        application.getWicketSession(), 
 		        application.getWicketRequest(),
 		        application.getWicketResponse());
-
-        application.getWicketSession().setRequestCycle(cycle);
     }
 
     /**
