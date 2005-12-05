@@ -98,7 +98,7 @@ public class PagedTableTest extends TestCase
 
 		Tag ulNav = new Tag("ul");
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new Tag("i").addExpectedChild(new Tag("span")
+				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("1"))))));
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
 				"span").addExpectedChild(new TextContent("2")))));
@@ -137,7 +137,7 @@ public class PagedTableTest extends TestCase
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
 				"span").addExpectedChild(new TextContent("1")))));
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new Tag("i").addExpectedChild(new Tag("span")
+				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("2"))))));
 
 		body.addExpectedChild(ulNav);
