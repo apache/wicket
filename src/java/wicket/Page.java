@@ -615,11 +615,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
+		IRequestTarget target = new PageClassRequestTarget(pageMapName, pageClass, parameters);
 		RequestCycle requestCycle = getRequestCycle();
-		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor().getRequestEncoder();
-		String url = requestEncoder.encode(
-				requestCycle, new PageClassRequestTarget(pageMapName, pageClass, parameters));
-		return url;
+		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
+				.getRequestEncoder();
+		return requestEncoder.encode(requestCycle, target);
 	}
 
 	/**
@@ -636,14 +636,28 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
-		RequestCycle requestCycle = getRequestCycle();
 		String interfaceName = Classes.name(listenerInterface);
-		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor().getRequestEncoder();
-		String url = requestEncoder.encode(
-				requestCycle,
-				new ListenerInterfaceRequestTarget(this, component, requestCycle
-						.getRequestInterfaceMethod(interfaceName)));
-		return url;
+		RequestCycle requestCycle = getRequestCycle();
+		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
+				.getRequestInterfaceMethod(interfaceName));
+		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
+				.getRequestEncoder();
+		return requestEncoder.encode(requestCycle, target);
+	}
+
+	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * @return a URL that references the given request target
+	 */
+	public final String urlFor(final IRequestTarget requestTarget)
+	{
+		RequestCycle requestCycle = getRequestCycle();
+		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
+				.getRequestEncoder();
+		return requestEncoder.encode(requestCycle, requestTarget);
 	}
 
 	/**
@@ -1057,7 +1071,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * Throw an exception if not all components rendered.
-	 * @param renderedContainer The page itself if it was a full page render or the container that was rendered standalone 
+	 * 
+	 * @param renderedContainer
+	 *            The page itself if it was a full page render or the container
+	 *            that was rendered standalone
 	 */
 	private final void checkRendering(final MarkupContainer renderedContainer)
 	{
@@ -1232,7 +1249,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * 
 	 * This method is called when a component will be rendered standalone.
 	 * 
-	 * @param component 
+	 * @param component
 	 * 
 	 */
 	public final void startComponentRender(Component component)
@@ -1243,17 +1260,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * This method is called when a component was rendered standalone.
-	 * If it is a markupcontainer then the rendering for that container is checked.
+	 * This method is called when a component was rendered standalone. If it is
+	 * a markupcontainer then the rendering for that container is checked.
 	 * 
-	 * @param component 
+	 * @param component
 	 * 
 	 */
 	public final void endComponentRender(Component component)
 	{
-		if(component instanceof MarkupContainer)
+		if (component instanceof MarkupContainer)
 		{
-			checkRendering( (MarkupContainer) component );
+			checkRendering((MarkupContainer)component);
 		}
 		else
 		{

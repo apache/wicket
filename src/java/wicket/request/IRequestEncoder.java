@@ -30,7 +30,7 @@ import wicket.RequestCycle;
  */
 // TODO just returning a string with encode is probably not enough in the long
 // term if we ever want to support things like client state saving.
-public interface IRequestEncoder
+public interface IRequestEncoder extends IRequestTargetPathMounter
 {
 	/**
 	 * Analyze the request and create a corresponding request parameters object
@@ -59,41 +59,4 @@ public interface IRequestEncoder
 	 * @return the url to the provided target
 	 */
 	String encode(RequestCycle requestCycle, IRequestTarget requestTarget);
-
-	/**
-	 * Mounts a request target with the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the request target with
-	 * @param requestTarget
-	 *            the request target
-	 */
-	void mountPath(String path, IRequestTarget requestTarget);
-
-	/**
-	 * Unmounts a request target.
-	 * 
-	 * @param path
-	 *            the path to unmount
-	 */
-	void unmountPath(String path);
-
-	/**
-	 * Gets the request target that was registered with the given path.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the request target or null if nothing was mounted with the given
-	 *         path
-	 */
-	IRequestTarget targetForPath(String path);
-
-	/**
-	 * Gets the path that the provided request target was registered with.
-	 * 
-	 * @param requestTarget
-	 *            the request target
-	 * @return the path that the provided request target was registered with
-	 */
-	String pathForTarget(IRequestTarget requestTarget);
 }

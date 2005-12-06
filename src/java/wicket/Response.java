@@ -59,6 +59,8 @@ public abstract class Response
 	 * @param url
 	 *            The URL to encode
 	 * @return The encoded url
+	 * @deprecated this conflicts with the use of IRequestEncoder. We should get
+	 *             rid of encodeURL in favor of IRequestEncoder
 	 */
 	public String encodeURL(final String url)
 	{

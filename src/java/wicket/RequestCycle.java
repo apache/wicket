@@ -587,13 +587,16 @@ public abstract class RequestCycle
 		for (Iterator i = requestTargets.iterator(); i.hasNext();)
 		{
 			IRequestTarget t = (IRequestTarget)i.next();
-			try
+			if (t != null)
 			{
-				t.cleanUp(this);
-			}
-			catch (RuntimeException e)
-			{
-				log.error("there was an error cleaning up target " + t + ".", e);
+				try
+				{
+					t.cleanUp(this);
+				}
+				catch (RuntimeException e)
+				{
+					log.error("there was an error cleaning up target " + t + ".", e);
+				}
 			}
 		}
 
