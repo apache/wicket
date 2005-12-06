@@ -40,6 +40,7 @@ import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
 import wicket.request.RequestParameters;
+import wicket.request.ResourceRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
@@ -51,7 +52,7 @@ import wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultRequestTargetResolver implements IRequestTargetResolverStrategy
+public class DefaultRequestTargetResolver implements IRequestTargetResolverStrategy
 {
 	/**
 	 * Construct.
@@ -155,35 +156,7 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
 			{
-				if (interfaceName.equals("IRedirectListener"))
-				{
-					return new RedirectPageRequestTarget(page);
-				}
-				else
-				{
-					final Method listenerMethod = requestCycle
-							.getRequestInterfaceMethod(interfaceName);
-					if (listenerMethod == null)
-					{
-						throw new WicketRuntimeException("Attempt to access unknown interface "
-								+ interfaceName);
-					}
-					String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
-					if (Strings.isEmpty(componentPart))
-					{
-						// we have an interface that is not redirect, but no
-						// component... that must be wrong
-						throw new WicketRuntimeException("when trying to call " + listenerMethod
-								+ ", a component must be provided");
-					}
-					final Component component = page.get(componentPart);
-					if (!component.isVisible())
-					{
-						throw new WicketRuntimeException(
-								"Calling listener methods on components that are not visible is not allowed");
-					}
-					return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
-				}
+				return resolveListenerInterfaceTarget(requestCycle,  page, componentPath, interfaceName);
 			}
 			else
 			{
@@ -195,6 +168,52 @@ public final class DefaultRequestTargetResolver implements IRequestTargetResolve
 			// Page was expired from session, probably because backtracking
 			// limit was reached
 			return new ExpiredPageClassRequestTarget();
+		}
+	}
+
+	/**
+	 * Resolves the RequestTarget for the given interface.
+	 * This method can be overriden if some special interface needs to resolve to its own target.
+	 * 
+	 * @param requestCycle The current RequestCycle object
+	 * @param page The page object which holds the component for which this interface is called on.
+	 * @param componentPath The component path for looking up the component in the page.
+	 * @param interfaceName The interface to resolve.
+	 * @return The RequestTarget that was resolved
+	 */
+	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle, final Page page, final String componentPath, final String interfaceName)
+	{
+		if (interfaceName.equals("IRedirectListener"))
+		{
+			return new RedirectPageRequestTarget(page);
+		}
+		else
+		{
+			final Method listenerMethod = requestCycle.getRequestInterfaceMethod(interfaceName);
+			if (listenerMethod == null)
+			{
+				throw new WicketRuntimeException("Attempt to access unknown interface "
+						+ interfaceName);
+			}
+			String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
+			if (Strings.isEmpty(componentPart))
+			{
+				// we have an interface that is not redirect, but no
+				// component... that must be wrong
+				throw new WicketRuntimeException("when trying to call " + listenerMethod
+						+ ", a component must be provided");
+			}
+			final Component component = page.get(componentPart);
+			if (!component.isVisible())
+			{
+				throw new WicketRuntimeException(
+						"Calling listener methods on components that are not visible is not allowed");
+			}
+			if (interfaceName.equals("IResourceListener"))
+			{
+				return new ResourceRequestTarget(page,component,listenerMethod);
+			}
+			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
 		}
 	}
 
