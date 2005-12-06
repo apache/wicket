@@ -25,7 +25,7 @@ import wicket.Application;
  * 
  * @author Eelco Hillenius
  */
-public class ExpiredPageClassRequestTarget extends PageClassRequestTarget
+public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
 {
 
 	/**

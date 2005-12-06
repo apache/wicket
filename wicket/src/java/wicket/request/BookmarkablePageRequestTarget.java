@@ -24,14 +24,14 @@ import wicket.Request;
 import wicket.RequestCycle;
 
 /**
- * Default implementation of {@link IPageClassRequestTarget}. Target that
+ * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that
  * denotes a page that is to be created from the provided page class. This is
  * typically used for redirects to bookmarkable pages or mounted pages.
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public class PageClassRequestTarget implements IPageClassRequestTarget
+public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget
 {
 	/** the page this target was mounted on, if any */
 	private final String mountPath;
@@ -57,7 +57,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public PageClassRequestTarget(Class pageClass)
+	public BookmarkablePageRequestTarget(Class pageClass)
 	{
 		this(null, pageClass);
 	}
@@ -71,7 +71,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public PageClassRequestTarget(String pageMapName, Class pageClass)
+	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass)
 	{
 		this(null, pageClass, null);
 	}
@@ -84,7 +84,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public PageClassRequestTarget(Class pageClass, PageParameters pageParameters)
+	public BookmarkablePageRequestTarget(Class pageClass, PageParameters pageParameters)
 	{
 		this(null, pageClass, pageParameters);
 	}
@@ -99,7 +99,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public PageClassRequestTarget(String pageMapName, Class pageClass, PageParameters pageParameters)
+	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -136,7 +136,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	 * @param path
 	 * @param encoder
 	 */
-	public PageClassRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder)
+	public BookmarkablePageRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder)
 	{
 		pageMapName = null;
 		pageParameters = null;
@@ -227,7 +227,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 			{
 				IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
 				String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
-						new PageClassRequestTarget(pageClass, pageParameters));
+						new BookmarkablePageRequestTarget(pageClass, pageParameters));
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -260,7 +260,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IPageClassRequestTarget#getPageClass()
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageClass()
 	 */
 	public final Class getPageClass()
 	{
@@ -268,7 +268,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IPageClassRequestTarget#getPageParameters()
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageParameters()
 	 */
 	public final PageParameters getPageParameters()
 	{
@@ -276,7 +276,7 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IPageClassRequestTarget#getPageMapName()
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageMapName()
 	 */
 	public final String getPageMapName()
 	{
@@ -289,9 +289,9 @@ public class PageClassRequestTarget implements IPageClassRequestTarget
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
-		if (obj != null && (obj instanceof PageClassRequestTarget))
+		if (obj != null && (obj instanceof BookmarkablePageRequestTarget))
 		{
-			PageClassRequestTarget that = (PageClassRequestTarget)obj;
+			BookmarkablePageRequestTarget that = (BookmarkablePageRequestTarget)obj;
 			if (pageClass.equals(that.pageClass))
 			{
 				boolean mapMatch = false;

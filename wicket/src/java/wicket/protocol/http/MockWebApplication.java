@@ -37,7 +37,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
-import wicket.request.IPageClassRequestTarget;
+import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -333,9 +333,9 @@ public class MockWebApplication extends WebApplication
 				{
 					lastRenderedPage = ((IPageRequestTarget)target).getPage();
 				}
-				else if (target instanceof IPageClassRequestTarget)
+				else if (target instanceof IBookmarkablePageRequestTarget)
 				{
-					IPageClassRequestTarget pageClassRequestTarget = (IPageClassRequestTarget)target;
+					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
 					Class pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);

@@ -42,11 +42,11 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.request.IListenerInterfaceRequestTarget;
-import wicket.request.IPageClassRequestTarget;
+import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISharedResourceRequestTarget;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -103,9 +103,9 @@ public class WebRequestEncoder implements IRequestEncoder
 			url.append(mountPath);
 			
 			// encode page parameters into the url
-			if (requestTarget instanceof PageClassRequestTarget) {
-				PageClassRequestTarget pageTarget=(PageClassRequestTarget)requestTarget;
-				PageClassRequestTarget mountedTarget=(PageClassRequestTarget)targetForPath(mountPath);
+			if (requestTarget instanceof BookmarkablePageRequestTarget) {
+				BookmarkablePageRequestTarget pageTarget=(BookmarkablePageRequestTarget)requestTarget;
+				BookmarkablePageRequestTarget mountedTarget=(BookmarkablePageRequestTarget)targetForPath(mountPath);
 				
 				url.append(mountedTarget.getParamsEncoder().encode(pageTarget.getPageParameters()));
 			}
@@ -113,9 +113,9 @@ public class WebRequestEncoder implements IRequestEncoder
 			return url.toString();
 		}
 
-		if (requestTarget instanceof IPageClassRequestTarget)
+		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			return encode(requestCycle, (IPageClassRequestTarget)requestTarget);
+			return encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -278,7 +278,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle, IPageClassRequestTarget requestTarget)
+	protected final String encode(RequestCycle requestCycle, IBookmarkablePageRequestTarget requestTarget)
 	{
 		final Class pageClass = requestTarget.getPageClass();
 		final PageParameters parameters = requestTarget.getPageParameters();

@@ -38,7 +38,7 @@ import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.request.IRequestEncoder;
 import wicket.request.ListenerInterfaceRequestTarget;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringValue;
@@ -615,7 +615,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
-		IRequestTarget target = new PageClassRequestTarget(pageMapName, pageClass, parameters);
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass, parameters);
 		RequestCycle requestCycle = getRequestCycle();
 		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
 				.getRequestEncoder();

@@ -26,7 +26,7 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public interface IPageClassRequestTarget extends IRequestTarget, ISessionSynchronizable, IAccessCheckingTarget
+public interface IBookmarkablePageRequestTarget extends IRequestTarget, ISessionSynchronizable, IAccessCheckingTarget
 {
 	/**
 	 * Gets the page class.

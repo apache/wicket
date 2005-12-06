@@ -32,11 +32,11 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.ExpiredPageClassRequestTarget;
-import wicket.request.IPageClassRequestTarget;
+import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ListenerInterfaceRequestTarget;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
 import wicket.request.RequestParameters;
@@ -253,7 +253,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 
 			// is it possible that there is already another request target at this point then the 2 below?
-			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IPageClassRequestTarget) )
+			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget) )
 			{
 				requestTarget = new PageRequestTarget(newPage);
 			}
@@ -287,7 +287,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			Class homePageClass = application.getPages().getHomePage();
 			// and create a dummy target for looking up whether the home page is
 			// mounted
-			PageClassRequestTarget pokeTarget = new PageClassRequestTarget(homePageClass);
+			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(homePageClass);
 			IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
 					.getRequestEncoder();
 			String path = requestEncoder.pathForTarget(pokeTarget);
@@ -309,7 +309,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 
 			// is it possible that there is already another request target at this point then the 2 below?
-			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IPageClassRequestTarget) )
+			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget) )
 			{
 				requestTarget = new PageRequestTarget(newPage);
 			}
