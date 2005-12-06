@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,6 +26,7 @@ import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -36,7 +37,7 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebSession;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 
 /**
  * <p>
@@ -143,9 +144,12 @@ public class BrowserInfoPage extends WebPage
 		WebComponent meta = new WebComponent("meta");
 		PageParameters parameters = new PageParameters();
 		parameters.put("cto", continueTo);
-		String url = urlFor(new PageClassRequestTarget(BrowserInfoPage.class, parameters));
+		String url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class, parameters));
 		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));
 		add(meta);
+		WebMarkupContainer link = new WebMarkupContainer("link");
+		link.add(new AttributeModifier("href", true, new Model(url)));
+		add(link);
 		add(new PostBackForm("postback"));
 	}
 

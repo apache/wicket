@@ -28,7 +28,10 @@
 		</script>
 	</head>
 	<body onload="javascript:submitform();">
-		<form name="postback" wicket:id="postback" style="visibility: hidden;">
+		If you see this, it means that both javascript and meta-refresh are not support by
+		your browser configuration. Please click <a wicket:id="link" href="#">this link</a> to
+		continue to the original destination.
+		<form name="postback" wicket:id="postback" style="position:absolute; left: -10000px;">
 			<input type="text" wicket:id="navigatorAppName" value="test" />
 			<input type="text" wicket:id="navigatorAppVersion" value="test" />
 			<input type="text" wicket:id="navigatorAppCodeName" />
