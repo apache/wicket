@@ -93,7 +93,7 @@ public class Localizer
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
-	 *            The component to get the resource for (optional)
+	 *            The component to get the resource for
 	 * @return The string resource
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that
@@ -111,7 +111,7 @@ public class Localizer
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
-	 *            The component to get the resource for (optional)
+	 *            The component to get the resource for
 	 * @param model
 	 *            The model to use for OGNL substitutions in the strings
 	 *            (optional)
@@ -132,7 +132,7 @@ public class Localizer
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
-	 *            The component to get the resource for (optional)
+	 *            The component to get the resource for
 	 * @param model
 	 *            The model to use for OGNL substitutions in the strings
 	 *            (optional)
@@ -156,7 +156,7 @@ public class Localizer
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
-	 *            The component to get the resource for (optional)
+	 *            The component to get the resource for
 	 * @param defaultValue
 	 *            The default value (optional)
 	 * @return The string resource
