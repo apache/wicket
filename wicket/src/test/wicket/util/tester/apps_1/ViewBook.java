@@ -19,6 +19,7 @@ package wicket.util.tester.apps_1;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.PropertyModel;
 
 /**
@@ -37,5 +38,6 @@ public class ViewBook extends WebPage
 	{
 		add(new Label("id", new PropertyModel(book, "id")));
 		add(new Label("name", new PropertyModel(book, "name")));
+		add(new BookmarkablePageLink("link", CreateBook.class));
 	}
 }

@@ -162,4 +162,14 @@ public class BookmarkablePageLink extends Link
 		}
 		return getPage().urlFor(pageMapName, pageClass, parameters);
 	}
+	
+	/**
+	 * Get tge page class registered with the link
+	 * 
+	 * @return Page class
+	 */
+	public final Class getPageClass()
+	{
+		return this.pageClass;
+	}
 }
