@@ -23,7 +23,7 @@ import java.util.List;
 import wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import wicket.markup.html.list.ListItem;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -47,7 +47,7 @@ public class DataTablePage extends BasePage
 		columns.add(new AbstractColumn(new Model("Actions"))
 		{
 
-			public void populateItem(ListItem cellItem, String componentId, IModel model)
+			public void populateItem(Item cellItem, String componentId, IModel model)
 			{
 				cellItem.add(new ActionPanel(componentId, model));
 			}
