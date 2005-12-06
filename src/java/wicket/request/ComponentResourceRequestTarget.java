@@ -31,7 +31,7 @@ import wicket.WicketRuntimeException;
  * 
  * @author jcompagner
  */
-public final class ResourceRequestTarget implements IRequestTarget, IAccessCheckingTarget, ISessionSynchronizable
+public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessCheckingTarget, ISessionSynchronizable
 {
 
 	private final Page page;
@@ -44,7 +44,7 @@ public final class ResourceRequestTarget implements IRequestTarget, IAccessCheck
 	 * @param component
 	 * @param listenerMethod
 	 */
-	public ResourceRequestTarget(Page page, Component component, Method listenerMethod)
+	public ComponentResourceRequestTarget(Page page, Component component, Method listenerMethod)
 	{
 		this.page = page;
 		this.component = component;
@@ -96,9 +96,9 @@ public final class ResourceRequestTarget implements IRequestTarget, IAccessCheck
 	 */
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof ResourceRequestTarget)
+		if (obj instanceof ComponentResourceRequestTarget)
 		{
-			ResourceRequestTarget that = (ResourceRequestTarget)obj;
+			ComponentResourceRequestTarget that = (ComponentResourceRequestTarget)obj;
 			return page.equals(that.page) && component.equals(that.component);
 		}
 		return false;

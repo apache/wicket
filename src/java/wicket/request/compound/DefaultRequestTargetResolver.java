@@ -40,7 +40,7 @@ import wicket.request.PageClassRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RedirectPageRequestTarget;
 import wicket.request.RequestParameters;
-import wicket.request.ResourceRequestTarget;
+import wicket.request.ComponentResourceRequestTarget;
 import wicket.request.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
@@ -211,7 +211,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			}
 			if (interfaceName.equals("IResourceListener"))
 			{
-				return new ResourceRequestTarget(page,component,listenerMethod);
+				return new ComponentResourceRequestTarget(page,component,listenerMethod);
 			}
 			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
 		}
