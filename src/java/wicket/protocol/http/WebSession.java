@@ -32,6 +32,7 @@ import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.SessionAttributeEvent;
+import wicket.WicketRuntimeException;
 
 /**
  * Session subclass for HTTP protocol which holds an HttpSession object and
@@ -289,6 +290,10 @@ public class WebSession extends Session
 	 */
 	final void init(final String sessionAttributePrefix)
 	{
+		if (sessionAttributePrefix == null)
+		{
+			throw new NullPointerException("argument sessionAttributePrefix must be not null");
+		}
 		// Set session attribute name
 		this.sessionAttributePrefix = sessionAttributePrefix;
 
