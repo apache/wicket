@@ -104,4 +104,28 @@ public class WicketTesterTest extends TestCase
 		// assert previous page expired.
 		tester.assertExpirePreviousPage();
 	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testBookmarkableLink() throws Exception
+	{
+		MyMockApplication tester = new MyMockApplication();
+
+		// for WebPage without default constructor, I define a TestPageSource to
+		// let the page be instatiated lately.
+		tester.startPage(new TestPageSource()
+		{
+			public Page getTestPage()
+			{
+				Book mockBook = new Book("xxId", "xxName");
+				return new ViewBook(mockBook);
+			}
+		});
+
+		// assertion
+		tester.assertRenderedPage(ViewBook.class);
+		tester.clickLink("link");
+		tester.assertRenderedPage(CreateBook.class);
+	}
 }

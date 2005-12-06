@@ -54,6 +54,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ILinkListener;
 import wicket.util.lang.Classes;
 import wicket.util.value.ValueMap;
@@ -926,33 +927,41 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToComponent(final Component component)
 	{
-		parameters.put("path", component.getPath());
-		parameters.put("version", "" + component.getPage().getCurrentVersionNumber());
-		Class c = null;
-		if (component instanceof IRedirectListener)
+		if (component instanceof BookmarkablePageLink)
 		{
-			c = IRedirectListener.class;
+			Class clazz = ((BookmarkablePageLink)component).getPageClass();
+			parameters.put("bookmarkablePage", clazz.getName());
 		}
-		else if (component instanceof IResourceListener)
+		else
 		{
-			c = IResourceListener.class;
-		}
-		else if (component instanceof IFormSubmitListener)
-		{
-			c = IFormSubmitListener.class;
-		}
-		else if (component instanceof ILinkListener)
-		{
-			c = ILinkListener.class;
-		}
-		else if (component instanceof IOnChangeListener)
-		{
-			c = IOnChangeListener.class;
-		}
-
-		if (c != null)
-		{
-			parameters.put("interface", Classes.name(c));
+			parameters.put("path", component.getPath());
+			parameters.put("version", "" + component.getPage().getCurrentVersionNumber());
+			Class c = null;
+			if (component instanceof IRedirectListener)
+			{
+				c = IRedirectListener.class;
+			}
+			else if (component instanceof IResourceListener)
+			{
+				c = IResourceListener.class;
+			}
+			else if (component instanceof IFormSubmitListener)
+			{
+				c = IFormSubmitListener.class;
+			}
+			else if (component instanceof ILinkListener)
+			{
+				c = ILinkListener.class;
+			}
+			else if (component instanceof IOnChangeListener)
+			{
+				c = IOnChangeListener.class;
+			}
+	
+			if (c != null)
+			{
+				parameters.put("interface", Classes.name(c));
+			}
 		}
 	}
 
