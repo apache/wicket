@@ -65,15 +65,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                         
- *                               public void init()
- *                               {
- *                                   String webXMLParameter = getWicketServlet()
- *                                       .getInitParameter(&quot;myWebXMLParameter&quot;);
- *                                   URL schedulersConfig = getWicketServlet().getServletContext()
- *                                       .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                                   ...
- *                          
+ * 
+ * public void init()
+ * {
+ * 	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ * 	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ * 	...
+ * 
  * </pre>
  * 
  * @see WicketServlet
@@ -371,7 +369,8 @@ public abstract class WebApplication extends Application
 
 		// The actual attribute for the session is
 		// "wicket-<servletName>-session"
-		final String sessionAttribute = sessionAttributePrefix + Session.SESSION_ATTRIBUTE_NAME;
+		final String sessionAttribute = getSessionAttributePrefix(request)
+				+ Session.SESSION_ATTRIBUTE_NAME;
 
 		WebSession webSession = null;
 		if (httpSession != null)
@@ -426,7 +425,12 @@ public abstract class WebApplication extends Application
 	{
 		if (sessionAttributePrefix == null)
 		{
-			sessionAttributePrefix = "wicket-" + request.getServletPath() + "-";
+			String servletPath = request.getServletPath();
+			if (servletPath == null)
+			{
+				throw new WicketRuntimeException("unable to retrieve servlet path");
+			}
+			sessionAttributePrefix = "wicket-" + servletPath + "-";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
