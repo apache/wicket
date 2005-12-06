@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 import junit.framework.Assert;
 
 import org.apache.commons.logging.Log;
@@ -149,7 +151,7 @@ import wicket.util.lang.Classes;
  * </pre>
  * 
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
- * {@link wicket.util.tester.TestPageSource} to provide testing page instance
+ * {@link wicket.util.tester.ITestPageSource} to provide testing page instance
  * for WicketTester. This is necessary because <code>YourPage</code> uses a
  * custom constructor, which is very common for transfering model data, can not
  * be instansiated by reflection. Finally, we use
@@ -210,7 +212,7 @@ public class WicketTester extends MockWebApplication
 	 *            a page factory that creating test page instance
 	 * @return Page rendered page
 	 */
-	public final Page startPage(TestPageSource testPageSource)
+	public final Page startPage(ITestPageSource testPageSource)
 	{
 		getPages().setHomePage(DummyHomePage.class);
 		setupRequestAndResponse();
@@ -230,7 +232,22 @@ public class WicketTester extends MockWebApplication
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
+		//getServletRequest().getSession().getPageMap(null);
 		processRequestCycle();
+	}
+	
+	/**
+	 * Render the page
+	 * 
+	 * @param page
+	 * @return The page rendered
+	 * @throws ServletException
+	 */
+	public final Page startPage(final Page page) throws ServletException
+	{
+		getPages().setHomePage(DummyHomePage.class);
+		rerender(page);
+		return getLastRenderedPage();
 	}
 
 	/**
@@ -250,7 +267,7 @@ public class WicketTester extends MockWebApplication
 
 	/**
 	 * Render a panel defined in <code>TestPanelSource</code>. The usage is
-	 * similar with {@link #startPage(TestPageSource)}. Please note that
+	 * similar with {@link #startPage(ITestPageSource)}. Please note that
 	 * testing panel must use supplied <code>panelId<code> as component id.
 	 * 
 	 * <pre>
@@ -270,7 +287,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Panel startPanel(final TestPanelSource testPanelSource)
 	{
-		return (Panel)startPage(new TestPageSource()
+		return (Panel)startPage(new ITestPageSource()
 		{
 			public Page getTestPage()
 			{
@@ -289,7 +306,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Panel startPanel(final Class panelClass)
 	{
-		return (Panel)startPage(new TestPageSource()
+		return (Panel)startPage(new ITestPageSource()
 		{
 			public Page getTestPage()
 			{

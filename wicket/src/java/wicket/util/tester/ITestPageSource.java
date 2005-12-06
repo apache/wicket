@@ -24,7 +24,7 @@ import wicket.Page;
  * 
  * @author Ingram Chen
  */
-public abstract interface TestPageSource
+public abstract interface ITestPageSource
 {
 	/**
 	 * Define a page instance source for WicketTester

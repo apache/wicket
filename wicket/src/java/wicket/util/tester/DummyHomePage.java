@@ -30,7 +30,7 @@ public class DummyHomePage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** ?? TODO ?? */
-	private TestPageSource testPageSource;
+	private ITestPageSource testPageSource;
 
 	/** ?? TODO ?? */
 	private Link testPageLink;
@@ -48,7 +48,7 @@ public class DummyHomePage extends WebPage
 	 * 
 	 * @param testPageSource
 	 */
-	public void setTestPageSource(TestPageSource testPageSource)
+	public void setTestPageSource(ITestPageSource testPageSource)
 	{
 		this.testPageSource = testPageSource;
 	}

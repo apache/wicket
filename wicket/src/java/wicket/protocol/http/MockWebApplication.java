@@ -258,10 +258,13 @@ public class MockWebApplication extends WebApplication
 	public void rerender(final Component component) throws ServletException
 	{
 		setupRequestAndResponse();
-
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
-
 		cycle.request(component);
+		
+		if (component instanceof Page)
+		{
+			this.lastRenderedPage = (Page)component;
+		}
 	}
 
 	/**
