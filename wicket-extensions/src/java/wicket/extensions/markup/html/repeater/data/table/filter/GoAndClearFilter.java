@@ -4,7 +4,7 @@ import wicket.markup.html.form.Button;
 import wicket.model.IModel;
 import wicket.model.Model;
 
-public class ClearAndGoFilter extends GoFilter
+public class GoAndClearFilter extends GoFilter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -13,11 +13,11 @@ public class ClearAndGoFilter extends GoFilter
 	private final Button clear;
 	
 	
-	public ClearAndGoFilter(String id) {
+	public GoAndClearFilter(String id) {
 		this(id, defaultGoModel, defaultClearModel);
 	}
 	
-	public ClearAndGoFilter(String id, IModel goModel, IModel clearModel)
+	public GoAndClearFilter(String id, IModel goModel, IModel clearModel)
 	{
 		super(id, goModel);
 		

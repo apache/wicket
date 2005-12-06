@@ -1,5 +1,7 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.Component;
+import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebMarkupContainer;
@@ -21,37 +23,40 @@ public class HeadersToolbar extends Toolbar
 			final ISortStateLocator stateLocator)
 	{
 		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
-		add(new ListView("headers", table.getColumns())
-		{
-			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(ListItem item)
+		OrderedRepeatingView headers=new OrderedRepeatingView("headers");
+		add(headers);
+		IColumn[] cols=table.getColumns();
+		
+		for (int i=0;i<cols.length;i++) {
+			WebMarkupContainer item=new WebMarkupContainer(headers.newChildId());
+			headers.add(item);
+			
+			IColumn column=cols[i];
+			WebMarkupContainer header=null;
+			if (column.isSortable())
 			{
-				final IColumn column = (IColumn)item.getModelObject();
-				WebMarkupContainer header = null;
-				if (column.isSortable())
+				header = new OrderByBorder("header", column.getSortProperty(), stateLocator)
 				{
-					header = new OrderByBorder("header", column.getSortProperty(), stateLocator)
+
+					private static final long serialVersionUID = 1L;
+
+					protected void onSortChanged()
 					{
+						//TODO this is a bit nasty, add setcurrentpage to abstract table?
+						table.setCurrentPage(0);
+					}
+				};
 
-						private static final long serialVersionUID = 1L;
-
-						protected void onSortChanged()
-						{
-							table.setCurrentPage(0);
-						}
-					};
-
-				}
-				else
-				{
-					header = new WebMarkupContainer("header");
-				}
-				item.add(header);
-				header.add(column.getHeader("label"));
 			}
-
-		});
+			else
+			{
+				header = new WebMarkupContainer("header");
+			}
+			item.add(header);
+			header.add(column.getHeader("label"));
+		}			
+			
 	}
 
 }

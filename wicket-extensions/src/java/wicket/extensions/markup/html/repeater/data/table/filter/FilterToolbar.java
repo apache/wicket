@@ -32,12 +32,12 @@ public class FilterToolbar extends Toolbar
 		OrderedRepeatingView filters=new OrderedRepeatingView("filters");
 		form.add(filters);
 		
-		List cols=table.getColumns();
-		for (int i=0;i<cols.size();i++) {
+		IColumn[] cols=table.getColumns();
+		for (int i=0;i<cols.length;i++) {
 			WebMarkupContainer item=new WebMarkupContainer(filters.newChildId());
 			item.setRenderBodyOnly(true);
 			
-			IColumn col=(IColumn)cols.get(i);
+			IColumn col=cols[i];
 			if (col instanceof IFilteredColumn) {
 				IFilteredColumn filteredCol=(IFilteredColumn)col;
 				item.add(filteredCol.getFilter("filter", form));

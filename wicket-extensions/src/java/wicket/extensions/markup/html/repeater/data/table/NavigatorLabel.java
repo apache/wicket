@@ -41,7 +41,7 @@ public class NavigatorLabel extends Label
 	 * @param dataView
 	 *            dataview
 	 */
-	public NavigatorLabel(final String id, final DataView dataView)
+	public NavigatorLabel(final String id, final AbstractDataTable dataView)
 	{
 		super(id, new AbstractReadOnlyModel()
 		{

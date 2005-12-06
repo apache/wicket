@@ -17,18 +17,15 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import java.io.Serializable;
-
 import wicket.Component;
-import wicket.markup.html.list.ListItem;
-import wicket.model.IModel;
+import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 
 /**
  * An inteface that represents a column in the DataTable component
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public interface IColumn extends Serializable
+public interface IColumn extends ICellPopulator
 {
 	/**
 	 * Returns the component that will be used as the header for the column.
@@ -40,24 +37,6 @@ public interface IColumn extends Serializable
 	 * @return component that will be used as the header for the column
 	 */
 	Component getHeader(String componentId);
-
-	/**
-	 * Method used to populate a cell in the generated table.
-	 * 
-	 * <b>Implementation MUST add a component to the cellItem argument using the
-	 * component id provided by componentId argument, otherwise a
-	 * WicketRuntimeException will be thrown</b>
-	 * 
-	 * @param cellItem
-	 *            the list item representing the current table cell being
-	 *            rendered
-	 * @param componentId
-	 *            the id of the component used to render the cell (only one
-	 *            component can be added to the cell)
-	 * @param model
-	 *            the object that represents the current row being processed
-	 */
-	void populateItem(final ListItem cellItem, final String componentId, final IModel model);
 
 	/**
 	 * Returns the name of the property that this header sorts. If null is

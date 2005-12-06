@@ -2,6 +2,8 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
 import wicket.extensions.markup.html.repeater.data.DataView;
+import wicket.extensions.markup.html.repeater.data.grid.AbstractDataGridView;
+import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebComponent;
@@ -11,13 +13,6 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.Model;
 
-/**
- * Toolbars that displays column headers. If the column is sortable a sortable
- * header will be displayed.
- * 
- * @author igor
- * 
- */
 public class NavigationToolbar extends Toolbar
 {
 	private static final long serialVersionUID = 1L;
@@ -27,10 +22,10 @@ public class NavigationToolbar extends Toolbar
 		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
 		WebMarkupContainer span=new WebMarkupContainer("span");
 		add(span);
-		span.add(new AttributeModifier("colspan", true, new Model(String.valueOf(table.getColumns().size()))));
+		span.add(new AttributeModifier("colspan", true, new Model(String.valueOf(table.getColumns().length))));
 		
-		span.add(newPagingNavigator("navigator", table.getDataView()));
-		span.add(newNavigatorLabel("navigatorLabel", table.getDataView()));
+		span.add(newPagingNavigator("navigator", table));
+		span.add(newNavigatorLabel("navigatorLabel", table));
 	}
 	
 	/**
@@ -43,7 +38,7 @@ public class NavigationToolbar extends Toolbar
 	 *            dataview used by datatable
 	 * @return paging navigator that will be used by the datatable
 	 */
-	protected PagingNavigator newPagingNavigator(String navigatorId, final DataView dataView)
+	protected PagingNavigator newPagingNavigator(String navigatorId, final AbstractDataTable dataView)
 	{
 		return new PagingNavigator(navigatorId, dataView)
 		{
@@ -67,7 +62,7 @@ public class NavigationToolbar extends Toolbar
 	 * @return navigator label that will be used by the datatable
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(String navigatorId, final DataView dataView)
+	protected WebComponent newNavigatorLabel(String navigatorId, final AbstractDataTable dataView)
 	{
 		return new NavigatorLabel(navigatorId, dataView);
 	}

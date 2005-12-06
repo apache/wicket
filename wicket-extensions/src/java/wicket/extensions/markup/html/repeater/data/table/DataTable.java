@@ -39,20 +39,41 @@ public class DataTable extends AbstractDataTable
 	 * @param id
 	 *            component id
 	 * @param columns
-	 *            list of IColumn objects
+	 *            list of columns
 	 * @param dataProvider
 	 *            data provider
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, final List columns, SortableDataProvider dataProvider,
+	public DataTable(String id, final List/* <IColumn> */columns, SortableDataProvider dataProvider,
+			int rowsPerPage)
+	{
+		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
+				rowsPerPage);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            component id
+	 * @param columns
+	 *            array of columns
+	 * @param dataProvider
+	 *            data provider
+	 * @param rowsPerPage
+	 *            number of rows per page
+	 */
+	public DataTable(String id, final IColumn[] columns, SortableDataProvider dataProvider,
 			int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
-		
+
 		addTopToolbar(new NavigationToolbar(this));
 		addTopToolbar(new HeadersToolbar(this, dataProvider));
+		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
+	
 
 }

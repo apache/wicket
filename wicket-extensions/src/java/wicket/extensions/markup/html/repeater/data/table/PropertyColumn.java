@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.model.IModel;
@@ -73,7 +74,7 @@ public class PropertyColumn extends AbstractColumn
 	 * 
 	 * @see IColumn#populateItem(ListItem, String, IModel)
 	 */
-	public void populateItem(ListItem item, String componentId, IModel model)
+	public void populateItem(Item item, String componentId, IModel model)
 	{
 		item.add(new Label(componentId, createLabelModel(model)));
 	}

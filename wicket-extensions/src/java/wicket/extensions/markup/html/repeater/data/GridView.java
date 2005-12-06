@@ -68,28 +68,6 @@ public abstract class GridView extends AbstractDataView
 		super(id, dataProvider);
 	}
 
-	/**
-	 * @param id
-	 *            component id
-	 * @param model
-	 *            component model - model object must be instance of
-	 *            IDataProvider
-	 */
-	public GridView(String id, IModel model)
-	{
-		super(id, model);
-	}
-
-	/**
-	 * @param id
-	 *            component id
-	 */
-	public GridView(String id)
-	{
-		super(id);
-		// TODO Auto-generated constructor stub
-	}
-
 
 	/**
 	 * @return number of columns
@@ -250,6 +228,13 @@ public abstract class GridView extends AbstractDataView
 
 	}
 
+	/**
+	 * @return data provider
+	 */
+	public IDataProvider getDataProvider() {
+		return internalGetDataProvider();
+	}
+	
 	/**
 	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
 	 */

@@ -43,15 +43,8 @@ import wicket.model.Model;
  */
 public abstract class AbstractDataView extends AbstractPageableView
 {
-	/**
-	 * @param id
-	 *            component id
-	 */
-	public AbstractDataView(String id)
-	{
-		super(id);
-	}
-
+	private IDataProvider dataProvider;
+	
 	/**
 	 * @param id
 	 *            component id
@@ -60,35 +53,23 @@ public abstract class AbstractDataView extends AbstractPageableView
 	 */
 	public AbstractDataView(String id, IDataProvider dataProvider)
 	{
-		super(id, new Model(dataProvider));
+		super(id);
+		//TODO if dataprovider==null illegal arg
+		this.dataProvider=dataProvider;
 	}
-
-
-	/**
-	 * @param id
-	 *            component id
-	 * @param model
-	 *            component model
-	 */
-	public AbstractDataView(String id, IModel model)
-	{
-		super(id, model);
-	}
-
 
 	/**
 	 * @return data provider associated with this view
 	 */
-	protected final IDataProvider getDataProvider()
+	protected final IDataProvider internalGetDataProvider()
 	{
-		IDataProvider dataProvider = (IDataProvider)getModelObject();
-		return (dataProvider != null) ? dataProvider : EmptyDataProvider.getInstance();
+		return dataProvider;
 	}
 
 
 	protected final Iterator getItemModels(int offset, int count)
 	{
-		return new ModelIterator(getDataProvider(), offset, count);
+		return new ModelIterator(internalGetDataProvider(), offset, count);
 	}
 
 	/**
@@ -151,7 +132,7 @@ public abstract class AbstractDataView extends AbstractPageableView
 
 	protected final int internalGetItemCount()
 	{
-		return getDataProvider().size();
+		return internalGetDataProvider().size();
 	}
 
 }
