@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,7 +19,8 @@ package wicket.examples.hellobrowser;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
-import wicket.model.PropertyModel;
+import wicket.protocol.http.ClientProperties;
+import wicket.protocol.http.request.WebClientInfo;
 
 /**
  * Client snooping page.
@@ -29,20 +30,24 @@ import wicket.model.PropertyModel;
 public class HelloBrowser extends WicketExamplePage
 {
 	/**
-	 * Constructor
+	 * Construct.
 	 */
 	public HelloBrowser()
 	{
-		// add a label that uses a property model for the client info object
-		// (so that the getClientInfo method is called when rendering)
-		// when this method is called for the first time, it will result in the
-		// calls RequestCycle.getClientInfo -> Session.getClientInfo ->
+		// add a label that outputs a the client info object; it will result in
+		// the calls RequestCycle.getClientInfo -> Session.getClientInfo ->
 		// RequestCycle.newClientInfo. this is done once by default and
 		// afterwards cached in the session object. This application uses
 		// a custom requestcycle that overrides newClientInfo to not only
 		// look at the user-agent request header, but also snoops javascript
 		// properties by redirecting to a special page.
 
-		add(new Label("clientinfo", new PropertyModel(this, "requestCycle.clientInfo.properties")));
+		// don't use a property model here or anything else that is resolved
+		// during rendering, as changing the request target during rendering
+		// is not allowed.
+		ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
+				.getProperties();
+
+		add(new Label("clientinfo", properties.toString()));
 	}
 }
