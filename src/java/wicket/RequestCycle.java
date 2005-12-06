@@ -32,12 +32,12 @@ import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
 import wicket.request.ComponentRequestTarget;
 import wicket.request.IAccessCheckingTarget;
-import wicket.request.IPageClassRequestTarget;
+import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISessionSynchronizable;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.PageRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.util.lang.Classes;
@@ -727,6 +727,16 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
+		// if we are already responding, we can't change the request target
+		// as that would either have no effect, or - in case we would set
+		// the currentStep back to PROCESS_EVENTS, we would have double
+		// output (and it is not Wicket's intention to work as Servlet filters)
+		if (currentStep >= RESPOND)
+		{
+			throw new WicketRuntimeException(
+					"you cannot change the request cycle after rendering has commenced");
+		}
+
 		if (log.isDebugEnabled())
 		{
 			if (!requestTargets.isEmpty())
@@ -741,23 +751,6 @@ public abstract class RequestCycle
 		}
 
 		requestTargets.push(requestTarget);
-
-		// change the current step to a step that will handle the
-		// new target if need be
-		if (currentStep >= RESPOND)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("rewinding request processing to PROCESS_EVENTS");
-			}
-
-			// we are not actually doing event processing again,
-			// but since we are still in the loop here, the next
-			// actual value will be RESPOND again
-			currentStep = PROCESS_EVENTS;
-		}
-		// NOTE: if we are at PROCESS_EVENTS, leave it as we don't
-		// want to re-execute that step again
 	}
 
 	/**
@@ -826,7 +819,7 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
 	{
-		IRequestTarget target = new PageClassRequestTarget(pageClass, pageParameters);
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
 		setRequestTarget(target);
 	}
 
@@ -861,16 +854,16 @@ public abstract class RequestCycle
 	/**
 	 * Gets the page class that is to be instantiated and rendered for this
 	 * request in case the last set request target is of type
-	 * {@link PageClassRequestTarget}.
+	 * {@link BookmarkablePageRequestTarget}.
 	 * 
 	 * @return the page class or null
 	 */
 	public final Class getResponsePageClass()
 	{
 		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof IPageClassRequestTarget))
+		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
 		{
-			return ((IPageClassRequestTarget)target).getPageClass();
+			return ((IBookmarkablePageRequestTarget)target).getPageClass();
 		}
 		return null;
 	}
