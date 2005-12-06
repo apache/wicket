@@ -44,7 +44,7 @@ public class WicketTesterTest extends TestCase
 
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
-		tester.startPage(new TestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			public Page getTestPage()
 			{
@@ -104,6 +104,7 @@ public class WicketTesterTest extends TestCase
 		// assert previous page expired.
 		tester.assertExpirePreviousPage();
 	}
+	
 	/**
 	 * 
 	 * @throws Exception
@@ -114,7 +115,7 @@ public class WicketTesterTest extends TestCase
 
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
-		tester.startPage(new TestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			public Page getTestPage()
 			{
@@ -122,6 +123,24 @@ public class WicketTesterTest extends TestCase
 				return new ViewBook(mockBook);
 			}
 		});
+
+		// assertion
+		tester.assertRenderedPage(ViewBook.class);
+		tester.clickLink("link");
+		tester.assertRenderedPage(CreateBook.class);
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testPageConstructor() throws Exception
+	{
+		MyMockApplication tester = new MyMockApplication();
+		
+		Book mockBook = new Book("xxId", "xxName");
+		Page page = new ViewBook(mockBook);
+		tester.startPage(page);
 
 		// assertion
 		tester.assertRenderedPage(ViewBook.class);
