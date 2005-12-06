@@ -152,7 +152,7 @@ public abstract class Session implements Serializable
 	 * Cached instance of agent info which is typically designated by calling
 	 * {@link RequestCycle#newClientInfo()}.
 	 */
-	private ClientInfo agentInfo;
+	private ClientInfo clientInfo;
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -367,23 +367,36 @@ public abstract class Session implements Serializable
 	public abstract void invalidate();
 
 	/**
-	 * Lazily gets the new agent info object for this session. Typically, this
-	 * method will call {@link RequestCycle#newClientInfo()} to get the info
-	 * object based on the current request, and then caches the returned object;
-	 * we can expect the client to stay the same for the whole session, and
-	 * implementations of {@link RequestCycle#newClientInfo()} might be
-	 * relatively expensive.
+	 * Gets the client info object for this session. This method lazily gets the
+	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
+	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
+	 * the info object based on the current request when no client info object
+	 * was set yet, and then caches the returned object; we can expect the
+	 * client to stay the same for the whole session, and implementations of
+	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
 	 * 
-	 * @return the agent info object based on this request
+	 * 
+	 * @return the client info object based on this request
 	 */
 	public ClientInfo getClientInfo()
 	{
-		if (agentInfo == null)
+		if (clientInfo == null)
 		{
-			// agentInfo = getRequestCycle().newClientInfo();
-			return getRequestCycle().newClientInfo();
+			this.clientInfo = getRequestCycle().newClientInfo();
 		}
-		return agentInfo;
+		return clientInfo;
+	}
+
+	/**
+	 * Sets the client info object for this session. This will only work when
+	 * {@link #getClientInfo()} is not overriden.
+	 * 
+	 * @param clientInfo
+	 *            the client info object
+	 */
+	public final void setClientInfo(ClientInfo clientInfo)
+	{
+		this.clientInfo = clientInfo;
 	}
 
 	/**

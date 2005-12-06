@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +28,7 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.request.ClientInfo;
 
 /**
- * Default agent info object for web applications.
+ * Default client info object for web applications.
  * 
  * Based on <code>nextapp.echo2.webrender.ClientAnalyzerProcessor</code> from
  * collegue java webapplication framework <a
@@ -44,7 +44,10 @@ public class WebClientInfo extends ClientInfo
 	private static Log log = LogFactory.getLog(WebClientInfo.class);
 
 	/**
-	 * The user agent string from the User-Agent header, app.
+	 * The user agent string from the User-Agent header, app. Theoretically,
+	 * this might differ from {@link ClientProperties#NAVIGATOR_JAVA_ENABLED}
+	 * property, which is not set until an actual reply from a browser (e.g.
+	 * using {@link wicket.markup.html.pages.BrowserInfoPage} is set.
 	 */
 	private final String userAgent;
 
@@ -132,8 +135,7 @@ public class WebClientInfo extends ClientInfo
 			properties.setProperty(ClientProperties.BROWSER_MOZILLA, Boolean.TRUE);
 			if (browserFireFox)
 			{
-				properties
-						.setProperty(ClientProperties.BROWSER_MOZILLA_FIREFOX, Boolean.TRUE);
+				properties.setProperty(ClientProperties.BROWSER_MOZILLA_FIREFOX, Boolean.TRUE);
 			}
 		}
 		else if (browserInternetExplorer)
@@ -172,30 +174,26 @@ public class WebClientInfo extends ClientInfo
 			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_Z_INDEX, Boolean.TRUE);
 			properties.setProperty(ClientProperties.QUIRK_IE_TEXTAREA_NEWLINE_OBLITERATION,
 					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_PERCENT_WIDTH,
+			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_PERCENT_WIDTH, Boolean.TRUE);
+			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_LIST_DOM_UPDATE, Boolean.TRUE);
+			properties.setProperty(ClientProperties.QUIRK_IE_TABLE_PERCENT_WIDTH_SCROLLBAR_ERROR,
 					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_LIST_DOM_UPDATE,
+			properties.setProperty(ClientProperties.QUIRK_CSS_BACKGROUND_ATTACHMENT_USE_FIXED,
 					Boolean.TRUE);
-			properties.setProperty(
-					ClientProperties.QUIRK_IE_TABLE_PERCENT_WIDTH_SCROLLBAR_ERROR, Boolean.TRUE);
-			properties.setProperty(
-					ClientProperties.QUIRK_CSS_BACKGROUND_ATTACHMENT_USE_FIXED, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_CSS_BORDER_COLLAPSE_INSIDE,
-					Boolean.TRUE);
+			properties.setProperty(ClientProperties.QUIRK_CSS_BORDER_COLLAPSE_INSIDE, Boolean.TRUE);
 			properties.setProperty(ClientProperties.QUIRK_CSS_BORDER_COLLAPSE_FOR_0_PADDING,
 					Boolean.TRUE);
 			if (majorVersion < 7)
 			{
-				properties.setProperty(
-						ClientProperties.PROPRIETARY_IE_PNG_ALPHA_FILTER_REQUIRED, Boolean.TRUE);
+				properties.setProperty(ClientProperties.PROPRIETARY_IE_PNG_ALPHA_FILTER_REQUIRED,
+						Boolean.TRUE);
 			}
 		}
 		if (browserMozilla)
 		{
-			properties.setProperty(ClientProperties.QUIRK_MOZILLA_TEXT_INPUT_REPAINT,
+			properties.setProperty(ClientProperties.QUIRK_MOZILLA_TEXT_INPUT_REPAINT, Boolean.TRUE);
+			properties.setProperty(ClientProperties.QUIRK_MOZILLA_PERFORMANCE_LARGE_DOM_REMOVE,
 					Boolean.TRUE);
-			properties.setProperty(
-					ClientProperties.QUIRK_MOZILLA_PERFORMANCE_LARGE_DOM_REMOVE, Boolean.TRUE);
 		}
 
 		if (log.isDebugEnabled())

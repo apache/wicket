@@ -93,7 +93,10 @@ public class WebSession extends Session
 				// create the actual httpSession (in case it didn't exist yet)
 				WebSession.this.httpSession = getHttpSession(true);
 
-				log.info("created http session " + WebSession.this.httpSession.getId());
+				if (log.isDebugEnabled())
+				{
+					log.info("created http session " + WebSession.this.httpSession.getId());
+				}
 			}
 		}
 

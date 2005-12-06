@@ -888,6 +888,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @param url
 	 *            The url which describes the component path and the interface
 	 *            to be called.
+	 * @deprecated refactor this to use the {@link wicket.request.IRequestEncoder}
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{

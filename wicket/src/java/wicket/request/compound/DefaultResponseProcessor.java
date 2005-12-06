@@ -18,6 +18,7 @@
  */
 package wicket.request.compound;
 
+import wicket.IRequestTarget;
 import wicket.RequestCycle;
 
 /**
@@ -41,6 +42,10 @@ public final class DefaultResponseProcessor implements IResponseStrategy
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		requestCycle.getRequestTarget().respond(requestCycle);
+		IRequestTarget requestTarget = requestCycle.getRequestTarget();
+		if (requestTarget != null)
+		{
+			requestTarget.respond(requestCycle);
+		}
 	}
 }

@@ -38,6 +38,16 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>HelloBrowserApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
     <servlet>
         <servlet-name>StockQuoteApplication</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -290,6 +300,11 @@
 	<servlet-mapping>
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<url-pattern>/helloworld/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>HelloBrowserApplication</servlet-name>
+		<url-pattern>/hellobrowser/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

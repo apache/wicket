@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.request.IRequestCycleProcessor;
+import wicket.request.IRequestEncoder;
 import wicket.util.collections.MostRecentlyUsedMap;
 
 /**
@@ -143,6 +144,8 @@ public final class PageMap implements Serializable
 
 			// Reset interception URL
 			interceptContinuationURL = null;
+
+			// TODO why this?
 			session.dirty();
 			return true;
 		}
@@ -191,8 +194,13 @@ public final class PageMap implements Serializable
 	{
 		final RequestCycle cycle = session.getRequestCycle();
 		IRequestCycleProcessor processor = cycle.getRequestCycleProcessor();
+		IRequestEncoder encoder = processor.getRequestEncoder();
+		// TODO this conflicts with the use of IRequestEncoder. We should get
+		// rid of encodeURL in favor of IRequestEncoder
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
+
+		// TODO why this?
 		session.dirty();
 	}
 
