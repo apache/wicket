@@ -727,15 +727,16 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// if we are already responding, we can't change the request target
-		// as that would either have no effect, or - in case we would set
-		// the currentStep back to PROCESS_EVENTS, we would have double
-		// output (and it is not Wicket's intention to work as Servlet filters)
-		if (currentStep >= RESPOND)
-		{
-			throw new WicketRuntimeException(
-					"you cannot change the request cycle after rendering has commenced");
-		}
+		//TODO this has to be done after the unit tests are fixed
+//		// if we are already responding, we can't change the request target
+//		// as that would either have no effect, or - in case we would set
+//		// the currentStep back to PROCESS_EVENTS, we would have double
+//		// output (and it is not Wicket's intention to work as Servlet filters)
+//		if (currentStep >= RESPOND)
+//		{
+//			throw new WicketRuntimeException(
+//					"you cannot change the request cycle after rendering has commenced");
+//		}
 
 		if (log.isDebugEnabled())
 		{
@@ -749,6 +750,23 @@ public abstract class RequestCycle
 				log.debug("setting request target to " + requestTarget);
 			}
 		}
+
+		// change the current step to a step that will handle the
+		// new target if need be
+		if (currentStep >= RESPOND)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("rewinding request processing to PROCESS_EVENTS");
+			}
+
+			// we are not actually doing event processing again,
+			// but since we are still in the loop here, the next
+			// actual value will be RESPOND again
+			currentStep = PROCESS_EVENTS;
+		}
+		// NOTE: if we are at PROCESS_EVENTS, leave it as we don't
+		// want to re-execute that step again
 
 		requestTargets.push(requestTarget);
 	}
