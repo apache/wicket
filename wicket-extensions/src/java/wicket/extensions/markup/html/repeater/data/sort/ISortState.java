@@ -1,8 +1,9 @@
 package wicket.extensions.markup.html.repeater.data.sort;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface ISortState
+public interface ISortState extends Serializable
 {
 	public static final int ASCENDING = 1;
 	public static final int DESCENDING = -1;

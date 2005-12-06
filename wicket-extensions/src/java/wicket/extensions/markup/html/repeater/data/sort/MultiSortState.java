@@ -32,6 +32,11 @@ import java.util.List;
 //TODO finish
 /*public */class MultiSortState implements ISortState
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private LinkedList/* <SortParam> */sort = new LinkedList();
 
 	private int maxColumns = 1;
