@@ -41,7 +41,7 @@ import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IPageParametersEncoder;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.PageClassRequestTarget;
+import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.response.BufferedResponse;
@@ -200,7 +200,7 @@ public abstract class WebApplication extends Application
 			IPageParametersEncoder encoder)
 	{
 		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path,
-				new PageClassRequestTarget(bookmarkablePageClass, path, encoder));
+				new BookmarkablePageRequestTarget(bookmarkablePageClass, path, encoder));
 	}
 
 	/**
