@@ -17,42 +17,24 @@
  */
 package wicket.request;
 
-import java.lang.reflect.Method;
-
-import wicket.Component;
+import wicket.RequestCycle;
 
 /**
- * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * Targets that implement this interface announce that they can process events.
+ * This interface is not meant to be used on its own, but rather to be mixed in
+ * with other interfaces, like
+ * {@link wicket.request.IListenerInterfaceRequestTarget}.
  * 
  * @author Eelco Hillenius
  */
-public interface IListenerInterfaceRequestTarget
-		extends
-			IPageRequestTarget,
-			ISessionSynchronizable,
-			IEventProcessingRequestTarget
+public interface IEventProcessingRequestTarget
 {
-
 	/**
-	 * Gets the target component.
+	 * After a page is restored, this method is responsible for calling any
+	 * event handling code based on the request.
 	 * 
-	 * @return the target component
+	 * @param requestCycle
+	 *            the current request cycle
 	 */
-	Component getComponent();
-
-	/**
-	 * Gets listener method.
-	 * 
-	 * @return the listener method
-	 */
-	Method getListenerMethod();
-
-	/**
-	 * Gets the optional behaviour id in case this call points a dispatched
-	 * method (i.e. a coupled behaviour such as an {@link wicket.AjaxHandler}).
-	 * 
-	 * @return the optional behaviour id
-	 */
-	String getBehaviourId();
+	void processEvents(final RequestCycle requestCycle);
 }
