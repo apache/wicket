@@ -727,12 +727,30 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
+		if (log.isDebugEnabled())
+		{
+			if (!requestTargets.isEmpty())
+			{
+				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				log.debug("replacing request target " + former + " with " + requestTarget);
+			}
+			else
+			{
+				log.debug("setting request target to " + requestTarget);
+			}
+		}
+
 		requestTargets.push(requestTarget);
 
 		// change the current step to a step that will handle the
 		// new target if need be
-		if (currentStep > RESPOND)
+		if (currentStep >= RESPOND)
 		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("rewinding request processing to PROCESS_EVENTS");
+			}
+
 			// we are not actually doing event processing again,
 			// but since we are still in the loop here, the next
 			// actual value will be RESPOND again
