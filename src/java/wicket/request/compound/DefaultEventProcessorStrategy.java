@@ -17,17 +17,27 @@
  */
 package wicket.request.compound;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
-import wicket.request.IListenerInterfaceRequestTarget;
+import wicket.request.IEventProcessingRequestTarget;
 
 /**
- * TODO docme
+ * The default event processing strategy looks whether the current target is of
+ * type {@link wicket.request.IEventProcessingRequestTarget} and, if so, calls
+ * method
+ * {@link wicket.request.IEventProcessingRequestTarget#processEvents(RequestCycle)}
+ * on them.
  * 
  * @author Eelco Hillenius
  */
 public final class DefaultEventProcessorStrategy implements IEventProcessorStrategy
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(DefaultEventProcessorStrategy.class);
+
 	/**
 	 * Construct.
 	 */
@@ -42,9 +52,14 @@ public final class DefaultEventProcessorStrategy implements IEventProcessorStrat
 	{
 		IRequestTarget target = requestCycle.getRequestTarget();
 
-		if (target instanceof IListenerInterfaceRequestTarget)
+		if (target instanceof IEventProcessingRequestTarget)
 		{
-			((IListenerInterfaceRequestTarget)target).processEvents(requestCycle);
+			if (log.isDebugEnabled())
+			{
+				log.debug("commencing event handling for " + target);
+			}
+
+			((IEventProcessingRequestTarget)target).processEvents(requestCycle);
 		}
 	}
 }
