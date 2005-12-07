@@ -325,7 +325,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public int hashCode()
 	{
-		int result = "PageClassRequestTarget".hashCode();
+		int result = "BookmarkablePageRequestTarget".hashCode();
 		result += pageClass.hashCode();
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
 		return 17 * result;
@@ -336,7 +336,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public String toString()
 	{
-		return "PageClassRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
+		return "BookmarkablePageRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
 				+ ", mountPath=" + mountPath + "}";
 	}
 }
