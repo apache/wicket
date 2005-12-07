@@ -32,7 +32,6 @@ import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.SessionAttributeEvent;
-import wicket.WicketRuntimeException;
 
 /**
  * Session subclass for HTTP protocol which holds an HttpSession object and
@@ -78,6 +77,9 @@ public class WebSession extends Session
 	 */
 	private final class FirstAttributeSessionListener implements ISessionAttributeListener
 	{
+		/** The default serial version uid*/
+		private static final long serialVersionUID = 1L;
+		
 		/** we start this session clean. */
 		private boolean clean = true;
 
