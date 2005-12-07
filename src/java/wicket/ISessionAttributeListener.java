@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 
 /**
  * Implementations are notified of attribute change events broadcasted by
@@ -24,7 +26,7 @@ package wicket;
  * 
  * @author Eelco Hillenius
  */
-public interface ISessionAttributeListener
+public interface ISessionAttributeListener extends Serializable
 {
 	/**
 	 * Notification that an attribute is about to be added to a session. Called
