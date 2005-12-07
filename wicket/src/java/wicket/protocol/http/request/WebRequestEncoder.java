@@ -65,6 +65,25 @@ public class WebRequestEncoder implements IRequestEncoder
 	/**
 	 * map of path mounts for request targets on paths.
 	 */
+	/*
+	 * mountsOnPath is sorted by longest paths first to improve resolution of
+	 * possible path conflicts.
+	 * 
+	 * For example:
+	 * 
+	 * we mount Page1 on /page and Page2 on /page/test
+	 * 
+	 * Page1 uses a parameters encoder that only encodes parameter values
+	 * 
+	 * now suppose we want to access Page1 with a single paramter param="test".
+	 * we have a url collission since both pages can be access with /page/test
+	 * 
+	 * the sorting by longest path first guarantees that the iterator will
+	 * return the mount /page/test before it returns mount /page therefore
+	 * giving deterministic behaviour to path resolution by always trying to
+	 * match the longest possible path first
+	 */
+
 	private SortedMap/* <String,IRequestTarget> */mountsOnPath = new TreeMap(lengthComparator);
 
 	/**
@@ -99,17 +118,18 @@ public class WebRequestEncoder implements IRequestEncoder
 		if (mountPath != null)
 		{
 			final StringBuffer url = urlPrefix(requestCycle);
-			
+
 			url.append(mountPath);
-			
+
 			// encode page parameters into the url
-			if (requestTarget instanceof BookmarkablePageRequestTarget) {
-				BookmarkablePageRequestTarget pageTarget=(BookmarkablePageRequestTarget)requestTarget;
-				BookmarkablePageRequestTarget mountedTarget=(BookmarkablePageRequestTarget)targetForPath(mountPath);
-				
+			if (requestTarget instanceof BookmarkablePageRequestTarget)
+			{
+				BookmarkablePageRequestTarget pageTarget = (BookmarkablePageRequestTarget)requestTarget;
+				BookmarkablePageRequestTarget mountedTarget = (BookmarkablePageRequestTarget)targetForPath(mountPath);
+
 				url.append(mountedTarget.getParamsEncoder().encode(pageTarget.getPageParameters()));
 			}
-			
+
 			return url.toString();
 		}
 
@@ -141,6 +161,7 @@ public class WebRequestEncoder implements IRequestEncoder
 		// this method was not able to produce a url; throw an exception
 		throw new WicketRuntimeException("unable to encode " + requestTarget);
 	}
+
 	/**
 	 * In case you are using custom targets that are not part of the default
 	 * target hierarchy, you need to override this method, which will be called
@@ -230,10 +251,11 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
-		if (path==null) {
+		if (path == null)
+		{
 			return (IRequestTarget)mountsOnPath.get(null);
 		}
-		
+
 		Iterator it = mountsOnPath.entrySet().iterator();
 		while (it.hasNext())
 		{
@@ -278,7 +300,8 @@ public class WebRequestEncoder implements IRequestEncoder
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle, IBookmarkablePageRequestTarget requestTarget)
+	protected final String encode(RequestCycle requestCycle,
+			IBookmarkablePageRequestTarget requestTarget)
 	{
 		final Class pageClass = requestTarget.getPageClass();
 		final PageParameters parameters = requestTarget.getPageParameters();
@@ -510,21 +533,23 @@ public class WebRequestEncoder implements IRequestEncoder
 		public int compare(Object o1, Object o2)
 		{
 			// longer first
-			if (o1==o2) {
+			if (o1 == o2)
+			{
 				return 0;
-			} else if (o1==null) {
+			}
+			else if (o1 == null)
+			{
 				return 1;
-			} else if (o2==null) {
+			}
+			else if (o2 == null)
+			{
 				return -1;
-			} else {
+			}
+			else
+			{
 				String lhs = (String)o1;
 				String rhs = (String)o2;
-				int dx=rhs.length() - lhs.length();
-				if (dx==0) {
-					return lhs.compareTo(rhs);
-				} else {
-					return dx;
-				}
+				return 0 - lhs.compareTo(rhs);
 			}
 		}
 
