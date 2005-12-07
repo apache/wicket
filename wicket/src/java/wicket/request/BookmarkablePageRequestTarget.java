@@ -312,7 +312,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (pageClass.equals(that.pageClass))
 			{
 				boolean mapMatch = false;
-				boolean pathMatch = false;
 				
 				if (pageMapName != null)
 				{
@@ -323,12 +322,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 					mapMatch = (that.pageMapName == null);
 				}
 				
-				if (mountPath!=null) {
-					pathMatch=(that.mountPath != null && mountPath.equals(that.mountPath));
-				} else {
-					pathMatch=(that.mountPath==null);
-				}
-				equal = mapMatch&&pathMatch;
+				equal = mapMatch;
 			}
 		}
 		return equal;
@@ -342,7 +336,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		int result = "BookmarkablePageRequestTarget".hashCode();
 		result += pageClass.hashCode();
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
-		result += mountPath != null ? mountPath.hashCode() : 0;
 		return 17 * result;
 	}
 
