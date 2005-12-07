@@ -519,7 +519,12 @@ public class WebRequestEncoder implements IRequestEncoder
 			} else {
 				String lhs = (String)o1;
 				String rhs = (String)o2;
-				return rhs.length() - lhs.length();
+				int dx=rhs.length() - lhs.length();
+				if (dx==0) {
+					return lhs.compareTo(rhs);
+				} else {
+					return dx;
+				}
 			}
 		}
 
