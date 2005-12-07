@@ -136,9 +136,20 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param path
 	 * @param encoder
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder)
+	public BookmarkablePageRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder) {
+		this(null, pageClass, path, encoder);
+	}
+
+	/**
+	 * Constructor used to create a mounted page class request target for a certain pagemap
+	 * @param pageMapName 
+	 * @param pageClass
+	 * @param path
+	 * @param encoder
+	 */
+	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, String path, IPageParametersEncoder encoder)
 	{
-		pageMapName = null;
+		this.pageMapName = pageMapName;
 		pageParameters = null;
 
 		this.pageClass = pageClass;
