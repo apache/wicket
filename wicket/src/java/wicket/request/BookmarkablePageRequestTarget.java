@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BookmarkablePageRequestTarget.java,v 1.3 2005/12/07 00:52:26 ivaynberg
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,9 +24,9 @@ import wicket.Request;
 import wicket.RequestCycle;
 
 /**
- * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that
- * denotes a page that is to be created from the provided page class. This is
- * typically used for redirects to bookmarkable pages or mounted pages.
+ * Default implementation of {@link IBookmarkablePageRequestTarget}. Target
+ * that denotes a page that is to be created from the provided page class. This
+ * is typically used for redirects to bookmarkable pages or mounted pages.
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
@@ -99,7 +99,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, PageParameters pageParameters)
+	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass,
+			PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -136,18 +137,23 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param path
 	 * @param encoder
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass, String path, IPageParametersEncoder encoder) {
+	public BookmarkablePageRequestTarget(Class pageClass, String path,
+			IPageParametersEncoder encoder)
+	{
 		this(null, pageClass, path, encoder);
 	}
 
 	/**
-	 * Constructor used to create a mounted page class request target for a certain pagemap
-	 * @param pageMapName 
+	 * Constructor used to create a mounted page class request target for a
+	 * certain pagemap
+	 * 
+	 * @param pageMapName
 	 * @param pageClass
 	 * @param path
 	 * @param encoder
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, String path, IPageParametersEncoder encoder)
+	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, String path,
+			IPageParametersEncoder encoder)
 	{
 		this.pageMapName = pageMapName;
 		pageParameters = null;
@@ -306,6 +312,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (pageClass.equals(that.pageClass))
 			{
 				boolean mapMatch = false;
+				boolean pathMatch = false;
+				
 				if (pageMapName != null)
 				{
 					mapMatch = (that.pageMapName != null && pageMapName.equals(that.pageMapName));
@@ -314,7 +322,13 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 				{
 					mapMatch = (that.pageMapName == null);
 				}
-				equal = mapMatch;
+				
+				if (mountPath!=null) {
+					pathMatch=(that.mountPath != null && mountPath.equals(that.mountPath));
+				} else {
+					pathMatch=(that.mountPath==null);
+				}
+				equal = mapMatch&&pathMatch;
 			}
 		}
 		return equal;
@@ -328,6 +342,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		int result = "BookmarkablePageRequestTarget".hashCode();
 		result += pageClass.hashCode();
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
+		result += mountPath != null ? mountPath.hashCode() : 0;
 		return 17 * result;
 	}
 
