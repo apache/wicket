@@ -21,6 +21,4 @@ public abstract class FilteredPropertyColumn extends PropertyColumn implements I
 		// TODO Auto-generated constructor stub
 	}
 
-	public abstract Component getFilter(String componentId, Form form);
-
 }

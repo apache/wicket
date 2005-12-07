@@ -35,6 +35,10 @@ public class GoAndClearFilter extends GoFilter
 		add(clear);
 	}
 	
+	public Button getClearButton() {
+		return clear;
+	}
+	
 	protected void onClearSubmit() {
 		
 	}

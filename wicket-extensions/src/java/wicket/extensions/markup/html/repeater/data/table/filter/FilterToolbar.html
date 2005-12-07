@@ -1,9 +1,34 @@
+<wicket:head>
+
+	<script>
+
+	function _filter_focus(ctrl, recName) {
+		var form=ctrl.form;
+		form[recName].value=ctrl.id;
+	}
+	
+	function _filter_focus_restore(id) {
+		var recorder=document.getElementById(id);
+		if (recorder!=null) {
+			var focused=recorder.value;
+			if (focused!="") {
+				document.getElementById(focused).focus();
+			}
+		}
+	}
+	</script>
+
+</wicket:head>
 <wicket:panel>
 <tr class="filters-tr">
 	<form wicket:id="filterForm">
+		<input type="hidden" name="hidden" wicket:id="hidden"/>
 		<span wicket:id="filters">
 			<td wicket:id="filter" class="filter-td">[filter]</td>
 		</span>
 	</form>
+
+	<span wicket:id="focus-restore">[call to focus restore script]</span>
+
 </tr>
 </wicket:panel>
