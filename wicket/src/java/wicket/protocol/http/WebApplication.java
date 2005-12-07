@@ -235,6 +235,10 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String pageMapName, String path,
 			Class bookmarkablePageClass, IPageParametersEncoder encoder)
 	{
+		if (encoder==null) {
+			throw new IllegalArgumentException("page parameters encoder cannot be null");
+		}
+
 		getDefaultRequestCycleProcessor().getRequestEncoder()
 				.mountPath(
 						path,
