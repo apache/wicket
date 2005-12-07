@@ -161,7 +161,6 @@ public class OrderByLink extends Link
 		public void undo()
 		{
 			stateLocator.setSortState(old);
-			System.out.println("undid change " + toString());
 		}
 
 		/**
