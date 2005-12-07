@@ -34,7 +34,6 @@ import wicket.util.string.Strings;
  * query string. Thus it hides the details from the user.
  *  
  * @author Juergen Donnerstag
- * @deprecated replace by using {@link wicket.request.IRequestEncoder}
  */
 public class WebResponseWithCryptedUrl extends WebResponse
 {
