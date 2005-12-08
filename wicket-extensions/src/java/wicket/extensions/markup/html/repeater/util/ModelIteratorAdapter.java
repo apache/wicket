@@ -24,8 +24,8 @@ import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.model.IModel;
 
 /**
- * Iterator adapter that wraps adaptee's elements with a model. Makes it easy to
- * implement {@link RefreshingView#getItemModels() }
+ * Iterator adapter that wraps adaptee's elements with a model. Convinient when
+ * implementing {@link RefreshingView}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
