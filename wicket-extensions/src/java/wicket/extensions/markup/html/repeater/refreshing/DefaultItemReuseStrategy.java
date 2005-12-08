@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * 
  * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy
  * 
- * @author igor
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public class DefaultItemReuseStrategy implements IItemReuseStrategy

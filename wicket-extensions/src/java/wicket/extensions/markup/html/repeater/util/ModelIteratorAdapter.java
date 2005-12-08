@@ -16,10 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.refreshing;
+package wicket.extensions.markup.html.repeater.util;
 
 import java.util.Iterator;
 
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.model.IModel;
 
 /**

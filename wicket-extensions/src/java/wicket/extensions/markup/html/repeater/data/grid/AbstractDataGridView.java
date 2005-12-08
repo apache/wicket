@@ -22,46 +22,45 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.WicketRuntimeException;
-import wicket.extensions.markup.html.repeater.data.AbstractDataView;
+import wicket.extensions.markup.html.repeater.data.DataViewBase;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
+import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
 import wicket.model.IModel;
 import wicket.model.Model;
 
-/*
+/**
+ * Acts as a base for data-grid views. Unlike a data view a data-grid view
+ * populates both rows and columns. The columns are populated by an array of
+ * provided ICellPopulator objects.
  * 
- * Example:
- * <pre>
- * <code>
- * add(new DataGridViewBase("rows", columns, dataprovider));
+ * @see DataGridView
  * 
- * &lt;table cellspacing="0" cellpadding="2" border="1"&gt;
- *   &lt;tr wicket:id="rows"&gt;
- *     &lt;td wicket:id="cells"&gt;
- *       &lt;span wicket:id="cell"&gt;cell content goes here&lt;/span&gt;
- *     &lt;/td&gt;
- *   &lt;/tr&gt;
- * &lt;/table&gt;
- * </code>
- * </pre>
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
-public abstract class AbstractDataGridView extends AbstractDataView
+public abstract class AbstractDataGridView extends DataViewBase
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final String CELL_REPEATER_ID="cells";
+	private static final String CELL_REPEATER_ID = "cells";
 	private static final String CELL_ITEM_ID = "cell";
 
 	private ICellPopulator[] populators;
-	
+
+	private transient ArrayIteratorAdapter populatorsIteratorCache;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 *            component id
+	 * @param populators
+	 *            array of ICellPopulator objects that will be used to populate
+	 *            cell items
 	 * @param dataProvider
-	 *            imodel for data provider
+	 *            data provider
 	 */
 	public AbstractDataGridView(String id, ICellPopulator[] populators, IDataProvider dataProvider)
 	{
@@ -70,24 +69,49 @@ public abstract class AbstractDataGridView extends AbstractDataView
 		this.populators = populators;
 	}
 
+	/**
+	 * Returns iterator over ICellPopulator elements in the populators array.
+	 * This method caches the iterator implemenation in a transient member
+	 * instance.
+	 * 
+	 * @return iterator over ICellPopulator elements in the populators array
+	 */
+	private Iterator getPopulatorsIterator()
+	{
+		if (populatorsIteratorCache == null)
+		{
+			populatorsIteratorCache = new ArrayIteratorAdapter(internalGetPopulators())
+			{
+
+				protected IModel model(Object object)
+				{
+					return new Model((Serializable)object);
+				}
+
+			};
+		}
+		else
+		{
+			populatorsIteratorCache.reset();
+		}
+		return populatorsIteratorCache;
+	}
+
+
 	protected final void populateItem(Item item)
 	{
 		final IModel rowModel = item.getModel();
 
+		// TODO does this need to be a refreshing view? since the rows is a
+		// refreshing view this will be recreated anyways. maybe can se
+		// orderedrepeatingview instead to simplify.
 		item.add(new RefreshingView(CELL_REPEATER_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
 			protected Iterator getItemModels()
 			{
-				return new ArrayIteratorAdapter(internalGetPopulators()) {
-
-					protected IModel model(Object object)
-					{
-						return new Model((Serializable)object);
-					}
-					
-				};
+				return getPopulatorsIterator();
 			}
 
 			protected void populateItem(Item item)
@@ -98,16 +122,16 @@ public abstract class AbstractDataGridView extends AbstractDataView
 				if (item.get("cell") == null)
 				{
 					throw new WicketRuntimeException(populator.getClass().getName()
-							+ ".populateItem() failed to add a component with id ["
-							+ CELL_ITEM_ID + "] to the provided [cellItem] argument");
+							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
+							+ "] to the provided [cellItem] argument");
 				}
 
 				internalPostProcessCellItem(item);
-				
+
 			}
 
 		});
-		
+
 		internalPostProcessRowItem(item);
 	}
 
@@ -115,12 +139,14 @@ public abstract class AbstractDataGridView extends AbstractDataView
 	{
 		return populators;
 	}
-	
-	protected void internalPostProcessCellItem(Item item) {
-		//noop
+
+	protected void internalPostProcessCellItem(Item item)
+	{
+		// noop
 	}
-	
-	protected void internalPostProcessRowItem(Item item) {
+
+	protected void internalPostProcessRowItem(Item item)
+	{
 		// noop
 	}
 }

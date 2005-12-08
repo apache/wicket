@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.data.sort;
+package wicket.extensions.markup.html.repeater.util;
 
 import java.io.Serializable;
 
 /**
- * Parameter to specify sorting state of a property
+ * Represents sorting information of a property
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */

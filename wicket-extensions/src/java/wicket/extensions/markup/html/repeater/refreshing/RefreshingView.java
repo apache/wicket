@@ -3,13 +3,14 @@ package wicket.extensions.markup.html.repeater.refreshing;
 import java.util.Iterator;
 
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 
 /**
  * An abstract repeater view that provides refreshing functionality to its
- * subclasses. Items are refreshed every request, making this view well suited
- * for displaying dynamic data.
+ * subclasses. The view is refreshed every request, making it well suited for
+ * displaying dynamic data.
  * <p>
  * The view is populated by implementing {@link RefreshingView#getItemModels() }
  * and {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds
@@ -26,7 +27,7 @@ import wicket.version.undo.Change;
  * item objects.
  * </p>
  * 
- * @see wicket.extensions.markup.html.repeater.OrderedRepeatingView
+ * @see OrderedRepeatingView
  * @see ModelIteratorAdapter
  * 
  * @author Igor Vaynberg (ivaynberg)

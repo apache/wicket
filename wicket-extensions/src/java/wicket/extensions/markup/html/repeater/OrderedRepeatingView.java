@@ -30,7 +30,9 @@ import wicket.model.IModel;
  * A repeater view that renders all of its children, using its body markup, in
  * the order they were added.
  * 
- * @see wicket.extensions.markup.html.repeater.RepeatingView
+ * For an example see {@link RepeatingView}
+ * 
+ * @see RepeatingView
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 

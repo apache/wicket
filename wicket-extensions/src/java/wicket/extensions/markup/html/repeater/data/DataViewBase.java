@@ -21,41 +21,42 @@ package wicket.extensions.markup.html.repeater.data;
 import java.util.Iterator;
 
 import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
-import wicket.model.IModel;
-import wicket.model.Model;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
+import wicket.markup.html.navigation.paging.IPageable;
 
 /**
- * Base class for data views. Builds on AbstractPageableView to make it possible
- * to provide data via the IDataProvider as opposed to AbstravtPageableView's
- * builtin method.
- * <p>
- * <u>Notice:</u> The provided implementation of the IDataProvider is stored as
- * the model object of the dataview so it is unwise to provide an anonymous
- * implementation of the IDataProvider because it will serialize its outer class
- * if and when the model of the dataview is serialized.</u>
+ * Base class for data views.
  * 
- * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView
- * @see wicket.Component#modelChanging()
- * @see wicket.Component#modelChanged()
+ * Data views aim to make it very simple to populate your repeating view from a
+ * database by utilizing {@link IDataProvider} to act as an interface between
+ * the database and the dataview.
  * 
- * @author igor
+ * @see IDataProvider
+ * @see DataView
+ * @see IPageable
+ * @see RefreshingView
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractDataView extends AbstractPageableView
+public abstract class DataViewBase extends AbstractPageableView
 {
 	private IDataProvider dataProvider;
-	
+
 	/**
 	 * @param id
 	 *            component id
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public AbstractDataView(String id, IDataProvider dataProvider)
+	public DataViewBase(String id, IDataProvider dataProvider)
 	{
 		super(id);
-		//TODO if dataprovider==null illegal arg
-		this.dataProvider=dataProvider;
+		if (dataProvider == null)
+		{
+			throw new IllegalArgumentException("argument [dataProvider] cannot be null");
+		}
+		this.dataProvider = dataProvider;
 	}
 
 	/**
@@ -76,7 +77,7 @@ public abstract class AbstractDataView extends AbstractPageableView
 	 * Helper class that converts input from IDataProvider to an iterator over
 	 * view items.
 	 * 
-	 * @author igor
+	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
 	private static final class ModelIterator implements Iterator

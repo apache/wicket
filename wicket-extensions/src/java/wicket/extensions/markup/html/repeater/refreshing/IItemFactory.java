@@ -26,7 +26,7 @@ import wicket.model.IModel;
  * 
  * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView
  * 
- * @author igor
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public interface IItemFactory

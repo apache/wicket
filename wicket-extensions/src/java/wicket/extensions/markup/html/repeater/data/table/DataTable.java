@@ -19,7 +19,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
-import wicket.extensions.markup.html.repeater.data.sort.SortableDataProvider;
+import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 
 /**
  * Provides a default implementation of AbstractDataTable with a paging

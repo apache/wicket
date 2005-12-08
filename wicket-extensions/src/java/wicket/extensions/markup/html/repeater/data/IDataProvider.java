@@ -24,11 +24,30 @@ import java.util.Iterator;
 import wicket.model.IModel;
 
 /**
- * Interface used to provide data to subclasses of AbstractDataView
+ * Interface used to provide data to data views
+ * <p>
+ * Example:
  * 
- * @see wicket.extensions.markup.html.repeater.data.AbstractDataView
- * @see wicket.extensions.markup.html.repeater.data.DataView
- * @see wicket.extensions.markup.html.repeater.data.GridView
+ * <pre>
+ *   class UsersProvider implements IDataProvider() {
+ *     
+ *     Iterator iterator(int first, int count) {
+ *       ((MyApplication)Application.get()).getUserDao().iterator(first, count);
+ *     }
+ *     
+ *     int size() {
+ *       ((MyApplication)Application.get()).getUserDao().getCount();
+ *     }
+ *     
+ *     IModel model(Object object) {
+ *       return new DetachableUserModel((User)object);
+ *     }
+ *   }
+ * </pre>
+ * 
+ * @see DataViewBase
+ * @see DataView
+ * @see GridView
  * 
  * @author Igor Vaynberg
  * 

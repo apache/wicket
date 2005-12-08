@@ -23,7 +23,6 @@ import java.util.Iterator;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.model.IModel;
 import wicket.version.undo.Change;
 
 /**
@@ -50,7 +49,7 @@ import wicket.version.undo.Change;
  * @author Christian Essl
  * 
  */
-public abstract class GridView extends AbstractDataView
+public abstract class GridView extends DataViewBase
 {
 
 	private int columns = 1;

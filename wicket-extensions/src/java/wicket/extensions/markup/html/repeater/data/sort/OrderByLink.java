@@ -135,7 +135,7 @@ public class OrderByLink extends Link
 
 		ISortState state = stateLocator.getSortState();
 
-		int oldDir = state.getPropertyState(property);
+		int oldDir = state.getPropertySortOrder(property);
 
 		int newDir = ISortState.ASCENDING;
 
@@ -144,7 +144,7 @@ public class OrderByLink extends Link
 			newDir = ISortState.DESCENDING;
 		}
 
-		state.setPropertyState(property, newDir);
+		state.setPropertySortOrder(property, newDir);
 
 		return this;
 	}
@@ -286,7 +286,7 @@ public class OrderByLink extends Link
 		 */
 		public String getClassAttributeValue(ISortState state, String property)
 		{
-			int dir = state.getPropertyState(property);
+			int dir = state.getPropertySortOrder(property);
 			if (dir == ISortState.ASCENDING)
 			{
 				return ascending;

@@ -16,11 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.data.sort;
+package wicket.extensions.markup.html.repeater.util;
 
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
+import wicket.extensions.markup.html.repeater.data.sort.ISortState;
+import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 
 /**
+ * Convinience implementation of a data provider that can also act as a locator
+ * for a {@link SingleSortState} object.
+ * 
+ * Most times it is convenient to keep sort and filtering information inside the
+ * data provider implementation because it makes that information easy to access
+ * within the data provider.
  * 
  * @author Igor Vaynberg
  */

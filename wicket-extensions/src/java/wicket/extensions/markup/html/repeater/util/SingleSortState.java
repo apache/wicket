@@ -1,7 +1,8 @@
-package wicket.extensions.markup.html.repeater.data.sort;
+package wicket.extensions.markup.html.repeater.util;
 
 import java.io.Serializable;
 
+import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 
 /**
  * Implementation of ISortState that can keep track of sort information for a
@@ -17,10 +18,10 @@ public class SingleSortState implements ISortState, Serializable
 	SortParam param;
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertyState(java.lang.String,
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(java.lang.String,
 	 *      int)
 	 */
-	public void setPropertyState(String property, int dir)
+	public void setPropertySortOrder(String property, int dir)
 	{
 		if (property == null)
 		{
@@ -31,16 +32,16 @@ public class SingleSortState implements ISortState, Serializable
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertyState(java.lang.String)
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
 	 */
-	public int getPropertyState(String property)
+	public int getPropertySortOrder(String property)
 	{
 		if (property == null)
 		{
 			throw new IllegalArgumentException("argument [property] cannot be null");
 		}
 
-		if (param == null||!param.getProperty().equals(property))
+		if (param == null || !param.getProperty().equals(property))
 		{
 			return NONE;
 		}
@@ -79,7 +80,7 @@ public class SingleSortState implements ISortState, Serializable
 	 */
 	public String toString()
 	{
-			return "[SingleSortState sort="+((param==null)?"null":param.toString())+"]";
+		return "[SingleSortState sort=" + ((param == null) ? "null" : param.toString()) + "]";
 	}
 
 }

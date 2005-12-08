@@ -25,14 +25,14 @@ import wicket.model.IModel;
 import wicket.version.undo.Change;
 
 /**
- * Container that holds components in a AbstractPageableView. One Item
- * represents one entire row of the view. Users should add all containing
- * components to the Item instead of the view, this is accomplished by
- * implementing refreshingView.populateItem(Item item).
+ * Container that holds components in a RefreshingView. One Item represents one
+ * entire row of the view. Users should add all containing components to the
+ * Item instead of the view, this is accomplished by implementing
+ * refreshingView.populateItem(Item item).
  * 
  * @see RefreshingView
  * 
- * @author Igor Vaynberg
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class Item extends WebMarkupContainer
 {
@@ -104,9 +104,9 @@ public class Item extends WebMarkupContainer
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class ByIndexComparator implements Comparator
+	public static class IndexComparator implements Comparator
 	{
-		private static final Comparator instance = new ByIndexComparator();
+		private static final Comparator instance = new IndexComparator();
 
 		/**
 		 * @return static instance of the comparator

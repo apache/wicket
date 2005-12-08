@@ -16,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.data;
+package wicket.extensions.markup.html.repeater.util;
 
 import java.util.Collections;
 import java.util.Iterator;
 
+import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.model.IModel;
 
 /**

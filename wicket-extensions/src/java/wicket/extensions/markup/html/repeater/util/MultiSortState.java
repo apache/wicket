@@ -16,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.markup.html.repeater.data.sort;
+package wicket.extensions.markup.html.repeater.util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 
 /**
  * THIS IS NOT DONE YET
@@ -215,13 +216,13 @@ import java.util.List;
 		return null;
 	}
 
-	public void setPropertyState(String property, int state)
+	public void setPropertySortOrder(String property, int state)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
-	public int getPropertyState(String property)
+	public int getPropertySortOrder(String property)
 	{
 		// TODO Auto-generated method stub
 		return 0;

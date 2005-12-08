@@ -2,8 +2,8 @@ package wicket.extensions.markup.html.repeater.data.sort;
 
 
 /**
- * Locator interface for ISortState. OrderByLink uses this interface to locate
- * and version ISortState objects.
+ * Locator interface for ISortState implementations. OrderByLink uses this
+ * interface to locate and version ISortState objects.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

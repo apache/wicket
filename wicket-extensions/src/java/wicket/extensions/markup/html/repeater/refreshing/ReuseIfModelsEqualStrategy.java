@@ -28,6 +28,12 @@ import wicket.model.IModel;
  * Reuse strategy that will reuse an old item if its model is equal to a model
  * inside the newModels iterator. Useful when state needs to be kept across
  * requests for as long as the item is visible within the view.
+ * <p>
+ * Notice that the <u>model</u> and not the <u>model object</u> needs to
+ * implement the equals method. Most of the time it is a good idea to forward
+ * teh equals call to the object, however if a detachable model is used it is
+ * often enough to compare object ids models point to ( this saves the mdoel
+ * from loading the object).
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

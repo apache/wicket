@@ -18,16 +18,52 @@
  */
 package wicket.extensions.markup.html.repeater.data;
 
-import wicket.model.IModel;
+import wicket.markup.html.navigation.paging.IPageable;
+
 
 /**
- * DataView is a pageable repeating view that uses the specified implementation
- * of IDataProvider to populate itself.
+ * DataView is a basic implementation of AbstractDataView.
  * 
- * @author igor
+ * Data views aim to make it very simple to populate your repeating view from a
+ * database by utilizing {@link IDataProvider} to act as an interface between
+ * the database and the dataview.
+ * 
+ * 
+ * 
+ * <p>
+ * Example:
+ * 
+ * <pre>
+ *    &lt;tbody&gt;
+ *      &lt;tr wicket:id=&quot;rows&quot;&gt;
+ *        &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *        ...    
+ * </pre>
+ * 
+ * <p>
+ * Though this example is about a HTML table, DataView is not at all limited to
+ * HTML tables. Any kind of list can be rendered using DataView.
+ * <p>
+ * And the related Java code:
+ * 
+ * <pre>
+ * add(new DataView(&quot;rows&quot;, dataProvider)
+ * {
+ * 	public void populateItem(final Item item)
+ * 	{
+ * 		final UserDetails user = (UserDetails)item.getModelObject();
+ * 		item.add(new Label(&quot;id&quot;, user.getId()));
+ * 	}
+ * });
+ * </pre>
+ * 
+ * @see IDataProvider
+ * @see IPageable
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class DataView extends AbstractDataView
+public abstract class DataView extends DataViewBase
 {
 
 	/**
@@ -59,11 +95,12 @@ public abstract class DataView extends AbstractDataView
 	{
 		return internalGetItemsPerPage();
 	}
-	
+
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider() {
+	public IDataProvider getDataProvider()
+	{
 		return internalGetDataProvider();
 	}
 
