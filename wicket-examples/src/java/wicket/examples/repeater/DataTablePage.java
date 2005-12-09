@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import wicket.extensions.markup.html.repeater.data.table.DataTable;
+import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.model.IModel;
@@ -30,7 +30,7 @@ import wicket.model.Model;
 /**
  * demo page for the datatable component
  * 
- * @see wicket.extensions.markup.html.repeater.data.table.DataTable
+ * @see wicket.extensions.markup.html.repeater.data.table.DefaultDataTable
  * @author igor
  * 
  */
@@ -59,7 +59,7 @@ public class DataTablePage extends BasePage
 		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
 
-		add(new DataTable("table", columns, new SortableContactDataProvider(), 8));
+		add(new DefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
 
 
 	}

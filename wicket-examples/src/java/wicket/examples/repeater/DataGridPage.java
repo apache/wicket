@@ -24,7 +24,7 @@ import wicket.extensions.markup.html.repeater.data.grid.PropertyPopulator;
 /**
  * demo page for the datatable component
  * 
- * @see wicket.extensions.markup.html.repeater.data.table.DataTable
+ * @see wicket.extensions.markup.html.repeater.data.table.DefaultDataTable
  * @author igor
  * 
  */
