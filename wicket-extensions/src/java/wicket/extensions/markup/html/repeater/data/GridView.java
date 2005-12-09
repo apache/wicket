@@ -34,13 +34,13 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *                      
- *                      
- *                      &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                      &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
- *                      wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
- *                      
- *                      
+ *                       
+ *                       
+ *                       &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                       &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
+ *                       wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
+ *                       
+ *                       
  * </pre>
  * 
  * <p>
@@ -90,25 +90,28 @@ public abstract class GridView extends DataViewBase
 			throw new IllegalArgumentException();
 		}
 
-		if (columns != cols && isVersioned())
+		if (columns != cols)
 		{
-			addStateChange(new Change()
+			if (isVersioned())
 			{
-				private static final long serialVersionUID = 1L;
-
-				final int old = columns;
-
-				public void undo()
+				addStateChange(new Change()
 				{
-					columns = old;
-				}
+					private static final long serialVersionUID = 1L;
 
-				public String toString()
-				{
-					return "GridViewColumnsChange[component: " + getPath() + ", removed columns: "
-							+ old + "]";
-				}
-			});
+					final int old = columns;
+
+					public void undo()
+					{
+						columns = old;
+					}
+
+					public String toString()
+					{
+						return "GridViewColumnsChange[component: " + getPath()
+								+ ", removed columns: " + old + "]";
+					}
+				});
+			}
 			columns = cols;
 		}
 		updateItemsPerPage();

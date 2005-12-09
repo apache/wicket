@@ -270,23 +270,26 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 		if (currentPage != page)
 		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-
-				private final int old = currentPage;
-
-				public void undo()
+			if (isVersioned()) {
+				addStateChange(new Change()
 				{
-					currentPage = old;
-				}
+					private static final long serialVersionUID = 1L;
+	
+					private final int old = currentPage;
+	
+					public void undo()
+					{
+						currentPage = old;
+					}
+	
+					public String toString()
+					{
+						return "CurrentPageChange[component: " + getPath() + ", currentPage: " + old
+								+ "]";
+					}
+				});
 
-				public String toString()
-				{
-					return "CurrentPageChange[component: " + getPath() + ", currentPage: " + old
-							+ "]";
-				}
-			});
+			}
 		}
 		currentPage = page;
 	}
