@@ -106,10 +106,8 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void postProcessRowItem(Item item)
+			protected void postProcessRowItem(final Item item)
 			{
-				final int idx = item.getIndex();
-
 				final IModel model = new AbstractReadOnlyModel()
 				{
 
@@ -117,7 +115,7 @@ public class DataTable extends Panel implements IPageable
 
 					public Object getObject(Component component)
 					{
-						return (idx % 2 == 0) ? "odd" : "even";
+						return (item.getIndex() % 2 == 0) ? "odd" : "even";
 					}
 
 
