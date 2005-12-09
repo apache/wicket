@@ -27,7 +27,7 @@ import wicket.model.IModel;
  * database.
  * 
  * @see wicket.extensions.markup.html.repeater.data.IDataProvider
- * @see wicket.extensions.markup.html.repeater.data.AbstractDataView
+ * @see wicket.extensions.markup.html.repeater.data.DataViewBase
  * 
  * @author igor
  * 
