@@ -1,52 +1,61 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.data.grid.AbstractDataGridView;
-import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
-import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.Model;
 
-public class NavigationToolbar extends Toolbar
+/**
+ * Toolbar that displays links used to navigate the pages of the datatable as
+ * well as a message about which rows are being displayed and their total number
+ * in the data table.
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
+public class NavigationToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
-	public NavigationToolbar(final AbstractDataTable table)
+	/**
+	 * Constructor
+	 * 
+	 * @param table
+	 *            data table this toolbar will be attached to
+	 */
+	public NavigationToolbar(final DataTable table)
 	{
-		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
-		WebMarkupContainer span=new WebMarkupContainer("span");
+		super(table);
+
+		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
-		span.add(new AttributeModifier("colspan", true, new Model(String.valueOf(table.getColumns().length))));
-		
+		span.add(new AttributeModifier("colspan", true, new Model(String
+				.valueOf(table.getColumns().length))));
+
 		span.add(newPagingNavigator("navigator", table));
 		span.add(newNavigatorLabel("navigatorLabel", table));
 	}
-	
+
 	/**
 	 * Factory method used to create the paging navigator that will be used by
 	 * the datatable
 	 * 
 	 * @param navigatorId
 	 *            component id the navigator should be created with
-	 * @param dataView
+	 * @param table
 	 *            dataview used by datatable
-	 * @return paging navigator that will be used by the datatable
+	 * @return paging navigator that will be used to navigate the data table
 	 */
-	protected PagingNavigator newPagingNavigator(String navigatorId, final AbstractDataTable dataView)
+	protected PagingNavigator newPagingNavigator(String navigatorId, final DataTable table)
 	{
-		return new PagingNavigator(navigatorId, dataView)
+		return new PagingNavigator(navigatorId, table)
 		{
 			private static final long serialVersionUID = 1L;
 
 			public boolean isVisible()
 			{
-				return dataView.getItemCount() > 0;
+				return table.getRowCount() > 0;
 			}
 		};
 	}
@@ -57,14 +66,23 @@ public class NavigationToolbar extends Toolbar
 	 * 
 	 * @param navigatorId
 	 *            component id navigator label should be created with
-	 * @param dataView
+	 * @param table
 	 *            dataview used by datatable
-	 * @return navigator label that will be used by the datatable
+	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(String navigatorId, final AbstractDataTable dataView)
+	protected WebComponent newNavigatorLabel(String navigatorId, final DataTable table)
 	{
-		return new NavigatorLabel(navigatorId, dataView);
+		return new NavigatorLabel(navigatorId, table);
 	}
 
+	/**
+	 * Hides this toolbar when no rows are visible
+	 * 
+	 * @see wicket.Component#isVisible()
+	 */
+	public boolean isVisible()
+	{
+		return getTable().getRowCount() > 0;
+	}
 }

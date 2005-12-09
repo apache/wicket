@@ -129,9 +129,12 @@ public class OrderByLink extends Link
 	 */
 	public final OrderByLink sort()
 	{
-		// version the old state
-		Change change = new SortStateChange();
-		addStateChange(change);
+		if (isVersioned())
+		{
+			// version the old state
+			Change change = new SortStateChange();
+			addStateChange(change);
+		}
 
 		ISortState state = stateLocator.getSortState();
 

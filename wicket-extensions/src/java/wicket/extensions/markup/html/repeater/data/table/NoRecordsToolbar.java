@@ -8,7 +8,19 @@ import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 
-public class NoRecordsToolbar extends Toolbar
+/**
+ * A toolbar that displays a "no records found" message when the data table
+ * contains no rows.
+ * <p>
+ * The message can be overridden by providing a resource with key
+ * <code>datatable.no-records-found</code>
+ * 
+ * @see DefaultDataTable
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
+public class NoRecordsToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
@@ -24,31 +36,43 @@ public class NoRecordsToolbar extends Toolbar
 	};
 
 
-	public NoRecordsToolbar(final AbstractDataTable table)
+	/**
+	 * Constructor
+	 * 
+	 * @param table
+	 *            data table this toolbar will be attached to
+	 */
+	public NoRecordsToolbar(final DataTable table)
 	{
 		this(table, DEFAULT_MESSAGE_MODEL);
 	}
 
-	public NoRecordsToolbar(final AbstractDataTable table, IModel messageModel)
+	/**
+	 * @param table
+	 *            data table this toolbar will be attached to
+	 * @param messageModel
+	 *            model that will be used to display the "no records found"
+	 *            message
+	 */
+	public NoRecordsToolbar(final DataTable table, IModel messageModel)
 	{
-		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
-		WebMarkupContainer tr=new WebMarkupContainer("tr") {
-
-			private static final long serialVersionUID = 1L;
-			
-			public boolean isVisible()
-			{
-				return table.getItemCount()==0;
-			}
-			
-		};
-		add(tr);
-		
+		super(table);
 		WebMarkupContainer td = new WebMarkupContainer("td");
-		tr.add(td);
-		
-		td.add(new AttributeModifier("colspan", true, new Model(String.valueOf(table.getColumns().length))));
+		add(td);
+
+		td.add(new AttributeModifier("colspan", true, new Model(String
+				.valueOf(table.getColumns().length))));
 		td.add(new Label("msg", messageModel));
+	}
+
+	/**
+	 * Only shows this toolbar when there are no rows
+	 * 
+	 * @see wicket.Component#isVisible()
+	 */
+	public boolean isVisible()
+	{
+		return getTable().getRowCount() == 0;
 	}
 
 }

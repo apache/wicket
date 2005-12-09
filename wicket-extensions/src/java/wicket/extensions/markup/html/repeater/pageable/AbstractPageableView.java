@@ -104,7 +104,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		return models;
 	}
 
-	
+
 	protected void internalOnEndRequest()
 	{
 		super.internalOnEndRequest();
@@ -159,7 +159,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	/**
 	 * @return maximum number of items that will be shown per page
 	 */
-	protected final int internalGetItemsPerPage()
+	protected final int internalGetRowsPerPage()
 	{
 		return itemsPerPage;
 	}
@@ -170,7 +170,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 * 
 	 * @param items
 	 */
-	protected final void internalSetItemsPerPage(int items)
+	protected final void internalSetRowsPerPage(int items)
 	{
 		if (items < 1)
 		{
@@ -179,23 +179,26 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 		if (itemsPerPage != items)
 		{
-			addStateChange(new Change()
+			if (isVersioned())
 			{
-				private static final long serialVersionUID = 1L;
-
-				final int old = itemsPerPage;
-
-				public void undo()
+				addStateChange(new Change()
 				{
-					itemsPerPage = old;
-				}
+					private static final long serialVersionUID = 1L;
 
-				public String toString()
-				{
-					return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " + old
-							+ "]";
-				}
-			});
+					final int old = itemsPerPage;
+
+					public void undo()
+					{
+						itemsPerPage = old;
+					}
+
+					public String toString()
+					{
+						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: "
+								+ old + "]";
+					}
+				});
+			}
 		}
 
 		itemsPerPage = items;
@@ -213,7 +216,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	/**
 	 * @return total item count
 	 */
-	public final int getItemCount()
+	public final int getRowCount()
 	{
 		if (!isVisibleInHierarchy())
 		{
@@ -293,8 +296,8 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	public final int getPageCount()
 	{
-		int total = getItemCount();
-		int page = internalGetItemsPerPage();
+		int total = getRowCount();
+		int page = internalGetRowsPerPage();
 		int count = total / page;
 
 		if (page * count < total)
@@ -311,7 +314,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	protected int getViewOffset()
 	{
-		return getCurrentPage() * internalGetItemsPerPage();
+		return getCurrentPage() * internalGetRowsPerPage();
 	}
 
 
@@ -320,7 +323,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	protected int getViewSize()
 	{
-		return Math.min(internalGetItemsPerPage(), getItemCount() - getViewOffset());
+		return Math.min(internalGetRowsPerPage(), getRowCount() - getViewOffset());
 	}
 
 	// /////////////////////////////////////////////////////////////////////////

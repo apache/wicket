@@ -20,15 +20,14 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
 
 /**
- * Label that provides Showing x to y of z message given a dataview.
+ * Label that provides Showing x to y of z message given for a DataTable
  * 
- * @author igor
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public class NavigatorLabel extends Label
@@ -38,10 +37,10 @@ public class NavigatorLabel extends Label
 	/**
 	 * @param id
 	 *            component id
-	 * @param dataView
+	 * @param table
 	 *            dataview
 	 */
-	public NavigatorLabel(final String id, final AbstractDataTable dataView)
+	public NavigatorLabel(final String id, final DataTable table)
 	{
 		super(id, new AbstractReadOnlyModel()
 		{
@@ -49,9 +48,9 @@ public class NavigatorLabel extends Label
 
 			public Object getObject(Component component)
 			{
-				int of = dataView.getItemCount();
-				int from = dataView.getCurrentPage() * dataView.getItemsPerPage();
-				int to = Math.min(of, from + dataView.getItemsPerPage());
+				int of = table.getRowCount();
+				int from = table.getCurrentPage() * table.getRowsPerPage();
+				int to = Math.min(of, from + table.getRowsPerPage());
 
 				from++;
 

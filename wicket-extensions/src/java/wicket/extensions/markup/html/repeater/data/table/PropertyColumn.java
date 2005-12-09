@@ -18,16 +18,28 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
 /**
  * A convinience implementation of column that adds a label to the cell whose
- * model is determined by the provided OGNL property expression that is
- * evaluated agains the current row model.
+ * model is determined by the provided woclet property expression (same as used
+ * by {@link PropertyModel}) that is evaluated against the current row's model
+ * object
+ * <p>
+ * Example
+ * 
+ * <pre>
+ * columns[0] = new PropertyColumn(new Model(&quot;First Name&quot;), &quot;name.first&quot;);
+ * </pre>
+ * 
+ * The above will attach a label to the cell with a property model for the
+ * expression &quot;name.first&quot;
+ * 
+ * @see PropertyModel
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
@@ -36,7 +48,7 @@ public class PropertyColumn extends AbstractColumn
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String ognlExpression;
+	private final String propertyExpression;
 
 	/**
 	 * Creates a property column that is also sortable
@@ -45,13 +57,13 @@ public class PropertyColumn extends AbstractColumn
 	 *            display model
 	 * @param sortProperty
 	 *            sort property
-	 * @param ognlExpression
-	 *            OGNL property expression
+	 * @param propertyExpression
+	 *            wicket property expression used by PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String sortProperty, String ognlExpression)
+	public PropertyColumn(IModel displayModel, String sortProperty, String propertyExpression)
 	{
 		super(displayModel, sortProperty);
-		this.ognlExpression = ognlExpression;
+		this.propertyExpression = propertyExpression;
 	}
 
 	/**
@@ -59,20 +71,21 @@ public class PropertyColumn extends AbstractColumn
 	 * 
 	 * @param displayModel
 	 *            display model
-	 * @param ognlExpression
-	 *            OGNL property expression
+	 * @param propertyExpressions
+	 *            wicket property expression
+	 * @see PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String ognlExpression)
+	public PropertyColumn(IModel displayModel, String propertyExpressions)
 	{
 		super(displayModel, null);
-		this.ognlExpression = ognlExpression;
+		this.propertyExpression = propertyExpressions;
 	}
 
 	/**
 	 * Implementation of populateItem which adds a label to the cell whose model
 	 * is the provided OGNL property expression evaluated agains rowModelObject
 	 * 
-	 * @see IColumn#populateItem(ListItem, String, IModel)
+	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */
 	public void populateItem(Item item, String componentId, IModel model)
 	{
@@ -81,15 +94,15 @@ public class PropertyColumn extends AbstractColumn
 
 	protected IModel createLabelModel(IModel embeddedModel)
 	{
-		return new PropertyModel(embeddedModel, ognlExpression);
+		return new PropertyModel(embeddedModel, propertyExpression);
 	}
 
 	/**
-	 * @return ognl expression
+	 * @return wicket property expression
 	 */
-	public String getOgnlExpression()
+	public String getPropertyExpression()
 	{
-		return ognlExpression;
+		return propertyExpression;
 	}
 
 }

@@ -63,22 +63,28 @@ public class Item extends WebMarkupContainer
 	 */
 	public void setIndex(int index)
 	{
-		final int oldIndex = this.index;
-		addStateChange(new Change()
+		if (this.index != index)
 		{
-			private static final long serialVersionUID = 1L;
-
-			public void undo()
+			if (isVersioned())
 			{
-				Item.this.index = oldIndex;
-			}
+				addStateChange(new Change()
+				{
+					final int oldIndex = Item.this.index;
+					private static final long serialVersionUID = 1L;
 
-			public String toString()
-			{
-				return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
+					public void undo()
+					{
+						Item.this.index = oldIndex;
+					}
+
+					public String toString()
+					{
+						return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
+					}
+				});
 			}
-		});
-		this.index = index;
+			this.index = index;
+		}
 	}
 
 	/**

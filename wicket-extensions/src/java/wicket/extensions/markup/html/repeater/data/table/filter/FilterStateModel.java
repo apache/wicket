@@ -21,7 +21,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class FilterStateModel extends AbstractModel
+class FilterStateModel extends AbstractModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,13 +39,6 @@ public class FilterStateModel extends AbstractModel
 		this.locator = locator;
 	}
 
-	/**
-	 * @return the underlying IFilterStateLocator
-	 */
-	public IFilterStateLocator getLocator() {
-		return locator;
-	}
-	
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */

@@ -216,12 +216,18 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(java.lang.String, int)
+	 */
 	public void setPropertySortOrder(String property, int state)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
+	 */
 	public int getPropertySortOrder(String property)
 	{
 		// TODO Auto-generated method stub

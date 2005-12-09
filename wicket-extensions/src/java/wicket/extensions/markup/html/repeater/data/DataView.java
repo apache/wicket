@@ -85,7 +85,7 @@ public abstract class DataView extends DataViewBase
 	 */
 	public void setItemsPerPage(int items)
 	{
-		internalSetItemsPerPage(items);
+		internalSetRowsPerPage(items);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class DataView extends DataViewBase
 	 */
 	public int getItemsPerPage()
 	{
-		return internalGetItemsPerPage();
+		return internalGetRowsPerPage();
 	}
 
 	/**

@@ -34,13 +34,13 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *           
- *           
- *           &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *           &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
- *           wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
- *           
- *           
+ *                      
+ *                      
+ *                      &lt;tbody&gt; &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                      &lt;td wicket:id=&quot;cols&quot;&gt; &lt;span
+ *                      wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt; ...
+ *                      
+ *                      
  * </pre>
  * 
  * <p>
@@ -90,7 +90,7 @@ public abstract class GridView extends DataViewBase
 			throw new IllegalArgumentException();
 		}
 
-		if (columns != cols)
+		if (columns != cols && isVersioned())
 		{
 			addStateChange(new Change()
 			{
@@ -139,25 +139,30 @@ public abstract class GridView extends DataViewBase
 
 		if (this.rows != rows)
 		{
-			addStateChange(new Change()
+			if (isVersioned())
 			{
-				private static final long serialVersionUID = 1L;
-
-				final int old = GridView.this.rows;
-
-				public void undo()
+				addStateChange(new Change()
 				{
-					GridView.this.rows = old;
-				}
+					private static final long serialVersionUID = 1L;
 
-				public String toString()
-				{
-					return "GridViewRowsChange[component: " + getPath() + ", removed rows: " + old
-							+ "]";
-				}
-			});
+					final int old = GridView.this.rows;
+
+					public void undo()
+					{
+						GridView.this.rows = old;
+					}
+
+					public String toString()
+					{
+						return "GridViewRowsChange[component: " + getPath() + ", removed rows: "
+								+ old + "]";
+					}
+				});
+			}
 			this.rows = rows;
 		}
+		// TODO can this be moved into the this.rows!=rows if block for
+		// optimization?
 		updateItemsPerPage();
 		return this;
 	}
@@ -166,9 +171,9 @@ public abstract class GridView extends DataViewBase
 	{
 		int items = Integer.MAX_VALUE;
 
-		// need to check for overflow
-
 		long result = (long)rows * (long)columns;
+
+		// overflow check
 		int desiredHiBits = -((int)(result >>> 31) & 1);
 		int actualHiBits = (int)(result >>> 32);
 
@@ -177,7 +182,7 @@ public abstract class GridView extends DataViewBase
 			items = (int)result;
 		}
 
-		internalSetItemsPerPage(items);
+		internalSetRowsPerPage(items);
 
 	}
 
@@ -230,10 +235,11 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider() {
+	public IDataProvider getDataProvider()
+	{
 		return internalGetDataProvider();
 	}
-	
+
 	/**
 	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
 	 */

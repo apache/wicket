@@ -208,25 +208,28 @@ public abstract class RefreshingView extends OrderedRepeatingView
 
 		if (!strategy.equals(itemReuseStrategy))
 		{
-			addStateChange(new Change()
+			if (isVersioned())
 			{
-				private static final long serialVersionUID = 1L;
-
-				private final IItemReuseStrategy old = itemReuseStrategy;
-
-				public void undo()
+				addStateChange(new Change()
 				{
-					itemReuseStrategy = old;
-				}
+					private static final long serialVersionUID = 1L;
 
-				public String toString()
-				{
-					return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " + old
-							+ "]";
-				}
-			});
+					private final IItemReuseStrategy old = itemReuseStrategy;
+
+					public void undo()
+					{
+						itemReuseStrategy = old;
+					}
+
+					public String toString()
+					{
+						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: "
+								+ old + "]";
+					}
+				});
+			}
+			itemReuseStrategy = strategy;
 		}
-		itemReuseStrategy = strategy;
 	}
 
 

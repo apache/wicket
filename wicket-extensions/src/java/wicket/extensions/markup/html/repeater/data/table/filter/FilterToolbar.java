@@ -1,28 +1,27 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.Component;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
-import wicket.extensions.markup.html.repeater.data.table.AbstractDataTable;
+import wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
+import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
-import wicket.extensions.markup.html.repeater.data.table.Toolbar;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.HiddenField;
-import wicket.model.Model;
 
 /**
- * Toolbar that creates form components used to filter data in the data table it
- * is attached to.
+ * Toolbar that creates a form to hold form components used to filter data in
+ * the data table. Form components are provided by columns that implement
+ * IFilteredColumn.
  * 
  * @author Igor Vaynberg (ivaynber)
  * 
  */
-public class FilterToolbar extends Toolbar
+public class FilterToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
-	  
+	private static final String FILTER_COMPONENT_ID = "filter";
+
 	/**
 	 * Constructor
 	 * 
@@ -32,9 +31,9 @@ public class FilterToolbar extends Toolbar
 	 *            locator responsible for finding object used to store filter's
 	 *            state
 	 */
-	public FilterToolbar(final AbstractDataTable table, final IFilterStateLocator stateLocator)
+	public FilterToolbar(final DataTable table, final IFilterStateLocator stateLocator)
 	{
-		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
+		super(table);
 
 		if (table == null)
 		{
@@ -47,7 +46,7 @@ public class FilterToolbar extends Toolbar
 
 		// create the form used to contain all filter components
 
-		final FilterForm form = new FilterForm("filterForm", stateLocator)
+		final FilterForm form = new FilterForm("filter-form", stateLocator)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -57,23 +56,22 @@ public class FilterToolbar extends Toolbar
 			}
 		};
 		add(form);
-		
-		
-		add(new WebMarkupContainer("focus-restore") {
 
-			/**
-			 * 
-			 */
+		// add javascript to restore focus to a filter component
+
+		add(new WebMarkupContainer("focus-restore")
+		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				String script="<script>_filter_focus_restore('"+form.getHiddenInputCssId()+"');</script>";
+				String script = "<script>_filter_focus_restore('"
+						+ form.getFocusTrackerFieldCssId() + "');</script>";
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});
 
-		// populate the toolbar with components provided by columns
+		// populate the toolbar with components provided by filtered columns
 
 		OrderedRepeatingView filters = new OrderedRepeatingView("filters");
 		form.add(filters);
@@ -85,21 +83,35 @@ public class FilterToolbar extends Toolbar
 			item.setRenderBodyOnly(true);
 
 			IColumn col = cols[i];
+			Component filter = null;
+
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn filteredCol = (IFilteredColumn)col;
-				item.add(filteredCol.getFilter("filter", form));
+				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
+			}
+
+			if (filter == null)
+			{
+				filter = new NoFilter(FILTER_COMPONENT_ID);
 			}
 			else
 			{
-				item.add(new NoFilter("filter"));
+				if (!filter.getId().equals(FILTER_COMPONENT_ID))
+				{
+					throw new IllegalStateException(
+							"filter component returned  with an invalid component id. invalid component id ["
+									+ filter.getId() + "] required component id ["
+									+ FILTER_COMPONENT_ID + "] generating column ["
+									+ col.toString() + "] ");
+				}
 			}
+
+			item.add(filter);
 
 			filters.add(item);
 		}
 
 	}
-	
-	
 
 }

@@ -32,10 +32,10 @@ import wicket.extensions.markup.html.repeater.refreshing.Item;
  * 
  * <pre>
  * 
- * ICellPopulator[] columns = new ICellPopulator[5];
+ * ICellPopulator[] columns = new ICellPopulator[2];
  * 
- * columns[1] = new PropertyPopulator(&quot;firstName&quot;);
- * columns[2] = new PropertyPopulator(&quot;lastName&quot;);
+ * columns[0] = new PropertyPopulator(&quot;firstName&quot;);
+ * columns[1] = new PropertyPopulator(&quot;lastName&quot;);
  * 
  * add(new DataGridView(&quot;rows&quot;, columns, new UserProvider()));
  * 
@@ -166,17 +166,17 @@ public class DataGridView extends AbstractDataGridView
 	 *            number of items to display per page
 	 * 
 	 */
-	public void setItemsPerPage(int items)
+	public void setRowsPerPage(int items)
 	{
-		internalSetItemsPerPage(items);
+		internalSetRowsPerPage(items);
 	}
 
 	/**
 	 * @return number of items displayed per page
 	 */
-	public int getItemsPerPage()
+	public int getRowsPerPage()
 	{
-		return internalGetItemsPerPage();
+		return internalGetRowsPerPage();
 	}
 
 	/**

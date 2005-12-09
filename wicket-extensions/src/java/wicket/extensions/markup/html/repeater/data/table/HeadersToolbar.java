@@ -1,39 +1,50 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable
  * header will be displayed.
  * 
- * @author igor
+ * @see DefaultDataTable
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class HeadersToolbar extends Toolbar
+public class HeadersToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
-	public HeadersToolbar(final AbstractDataTable table,
-			final ISortStateLocator stateLocator)
+	/**
+	 * Constructor
+	 * 
+	 * @param table
+	 *            data table this toolbar will be attached to
+	 * @param stateLocator
+	 *            locator for the ISortState implementation used by sortable
+	 *            headers
+	 */
+	public HeadersToolbar(final DataTable table, final ISortStateLocator stateLocator)
 	{
-		super(AbstractDataTable.TOOLBAR_COMPONENT_ID);
+		super(table);
 
-		OrderedRepeatingView headers=new OrderedRepeatingView("headers");
+		OrderedRepeatingView headers = new OrderedRepeatingView("headers");
 		add(headers);
-		IColumn[] cols=table.getColumns();
-		
-		for (int i=0;i<cols.length;i++) {
-			WebMarkupContainer item=new WebMarkupContainer(headers.newChildId());
+		IColumn[] cols = table.getColumns();
+
+		for (int i = 0; i < cols.length; i++)
+		{
+			// TODO is this extra component really necessary? can we not simply
+			// use the repeater's body without the need for the id in the
+			// markup?
+			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
 			headers.add(item);
-			
-			IColumn column=cols[i];
-			WebMarkupContainer header=null;
+
+			IColumn column = cols[i];
+			WebMarkupContainer header = null;
 			if (column.isSortable())
 			{
 				header = new OrderByBorder("header", column.getSortProperty(), stateLocator)
@@ -43,7 +54,6 @@ public class HeadersToolbar extends Toolbar
 
 					protected void onSortChanged()
 					{
-						//TODO this is a bit nasty, add setcurrentpage to abstract table?
 						table.setCurrentPage(0);
 					}
 				};
@@ -55,8 +65,8 @@ public class HeadersToolbar extends Toolbar
 			}
 			item.add(header);
 			header.add(column.getHeader("label"));
-		}			
-			
+		}
+
 	}
 
 }

@@ -21,7 +21,7 @@ import wicket.Component;
 import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 
 /**
- * An inteface that represents a column in the DataTable component
+ * An inteface that represents a column in the {@link DefaultDataTable}
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
@@ -32,7 +32,8 @@ public interface IColumn extends ICellPopulator
 	 * 
 	 * This component will be contained in &lt;span&gt; tags.
 	 * 
-	 * @param componentId component id for the returned Component
+	 * @param componentId
+	 *            component id for the returned Component
 	 * 
 	 * @return component that will be used as the header for the column
 	 */
