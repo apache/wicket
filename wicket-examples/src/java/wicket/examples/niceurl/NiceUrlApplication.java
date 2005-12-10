@@ -18,6 +18,7 @@
 package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.examples.niceurl.mounted.Page3;
 
 /**
  * Application class for this example.
@@ -33,8 +34,22 @@ public class NiceUrlApplication extends WicketExampleApplication
 	{
 		super();
 		getPages().setHomePage(Home.class);
+
+		// mount single bookmarkable pages
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
+
+		// mount a whole page at once (all bookmarkable pages,
+		// the relative class name will be part of the url
+
+		// maybe not the neatest sight, but for package mounting it makes
+		// sense to use one of the (important) classes in your package, so
+		// that any refactoring (like a package rename) will automatically
+		// be applied here. Furthermore, be carefull with
+		// Package.getPackage(String) as that might return null when
+		// no class of that package is loaded yet
+		Package package1 = Page3.class.getPackage();
+		mountPackage("/my/mounted/package", package1);
 	}
 }

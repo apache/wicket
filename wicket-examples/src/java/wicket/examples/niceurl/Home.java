@@ -18,6 +18,9 @@
 package wicket.examples.niceurl;
 
 import wicket.examples.WicketExamplePage;
+import wicket.examples.niceurl.mounted.Page3;
+import wicket.examples.niceurl.mounted.Page4;
+import wicket.examples.niceurl.mounted.Page5;
 import wicket.markup.html.link.BookmarkablePageLink;
 
 /**
@@ -32,10 +35,14 @@ public class Home extends WicketExamplePage
 	 */
 	public Home()
 	{
-		// Link to Page1 is a simple external page link
+		// references to single mounts
 		add(new BookmarkablePageLink("page1Link", Page1.class));
-		
 		add(new BookmarkablePageLink("page2Link", Page2.class));
+
+		// references to package mounts
+		add(new BookmarkablePageLink("page3Link", Page3.class));
+		add(new BookmarkablePageLink("page4Link", Page4.class));
+		add(new BookmarkablePageLink("page5Link", Page5.class));
 	}
 
 	/**
