@@ -22,13 +22,13 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
-import wicket.request.IEventProcessingRequestTarget;
+import wicket.request.target.mixin.IEventProcessor;
 
 /**
  * The default event processing strategy looks whether the current target is of
- * type {@link wicket.request.IEventProcessingRequestTarget} and, if so, calls
+ * type {@link wicket.request.target.mixin.IEventProcessor} and, if so, calls
  * method
- * {@link wicket.request.IEventProcessingRequestTarget#processEvents(RequestCycle)}
+ * {@link wicket.request.target.mixin.IEventProcessor#processEvents(RequestCycle)}
  * on them.
  * 
  * @author Eelco Hillenius
@@ -52,14 +52,14 @@ public final class DefaultEventProcessorStrategy implements IEventProcessorStrat
 	{
 		IRequestTarget target = requestCycle.getRequestTarget();
 
-		if (target instanceof IEventProcessingRequestTarget)
+		if (target instanceof IEventProcessor)
 		{
 			if (log.isDebugEnabled())
 			{
 				log.debug("commencing event handling for " + target);
 			}
 
-			((IEventProcessingRequestTarget)target).processEvents(requestCycle);
+			((IEventProcessor)target).processEvents(requestCycle);
 		}
 	}
 }

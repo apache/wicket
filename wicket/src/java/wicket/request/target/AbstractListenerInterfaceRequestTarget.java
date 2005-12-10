@@ -15,13 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import java.lang.reflect.Method;
 
 import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
+import wicket.request.IListenerInterfaceRequestTarget;
+import wicket.request.target.mixin.IEventProcessor;
 
 /**
  * The abstract implementation of
@@ -34,7 +36,8 @@ import wicket.WicketRuntimeException;
  */
 public abstract class AbstractListenerInterfaceRequestTarget extends PageRequestTarget
 		implements
-			IListenerInterfaceRequestTarget
+			IListenerInterfaceRequestTarget,
+			IEventProcessor
 {
 	/** the target component. */
 	private final Component component;
@@ -55,7 +58,8 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 * @param listenerMethod
 	 *            the listener method
 	 */
-	public AbstractListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod)
+	public AbstractListenerInterfaceRequestTarget(Page page, Component component,
+			Method listenerMethod)
 	{
 		this(page, component, listenerMethod, null);
 	}
@@ -73,8 +77,8 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 * @param behaviourId
 	 *            optionally the id of the behaviour to dispatch to
 	 */
-	public AbstractListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod,
-			String behaviourId)
+	public AbstractListenerInterfaceRequestTarget(Page page, Component component,
+			Method listenerMethod, String behaviourId)
 	{
 		super(page);
 
@@ -93,7 +97,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		this.listenerMethod = listenerMethod;
 		this.behaviourId = behaviourId;
 	}
-	
+
 	/**
 	 * Invokes a given interface on a component.
 	 * 
@@ -124,7 +128,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		{
 			page.afterCallComponent(component, method);
 		}
-	}	
+	}
 
 	/**
 	 * @see wicket.request.IListenerInterfaceRequestTarget#getComponent()
@@ -191,10 +195,9 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(
-				hashCode()).append(getPage().toString()).append("->")
-				.append(getComponent().getId()).append("->").append(
-						getListenerMethod().getDeclaringClass()).append(".").append(
+		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
+				.append(getPage().toString()).append("->").append(getComponent().getId()).append(
+						"->").append(getListenerMethod().getDeclaringClass()).append(".").append(
 						getListenerMethod().getName());
 		if (getBehaviourId() != null)
 		{

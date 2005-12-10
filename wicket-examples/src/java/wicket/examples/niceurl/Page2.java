@@ -24,16 +24,15 @@ import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 
-
 /**
- * Simple bookmarkable page.
+ * Simple bookmarkable page that displays page parameters.
  * 
- * @author Eelco Hillenius
+ * @author Igor Vaynberg
  */
 public class Page2 extends WicketExamplePage
 {
-	private Random random=new Random();
-	
+	private Random random = new Random();
+
 	/**
 	 * Constructor
 	 * 
@@ -41,26 +40,28 @@ public class Page2 extends WicketExamplePage
 	 */
 	public Page2(PageParameters parameters)
 	{
-		String p1="CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param1")) {
-			p1=parameters.getString("param1");
+		String p1 = "CANNOT RESOLVE FROM URL";
+		if (parameters.containsKey("param1"))
+		{
+			p1 = parameters.getString("param1");
 		}
-		String p2="CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param2")) {
-			p2=parameters.getString("param2");
+		String p2 = "CANNOT RESOLVE FROM URL";
+		if (parameters.containsKey("param2"))
+		{
+			p2 = parameters.getString("param2");
 		}
 
 		add(new Label("p1", p1));
 		add(new Label("p2", p2));
-		
-		String newP1=String.valueOf(random.nextInt());
-		String newP2=String.valueOf(random.nextInt());
-		
-		PageParameters params=new PageParameters();
+
+		String newP1 = String.valueOf(random.nextInt());
+		String newP2 = String.valueOf(random.nextInt());
+
+		PageParameters params = new PageParameters();
 		params.put("param1", newP1);
 		params.put("param2", newP2);
-		
-		BookmarkablePageLink link=new BookmarkablePageLink("refreshLink", Page2.class, params);
+
+		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page2.class, params);
 		add(link);
 	}
 }

@@ -30,16 +30,15 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
-import wicket.request.ComponentRequestTarget;
-import wicket.request.IAccessCheckingTarget;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.IRequestEncoder;
-import wicket.request.ISessionSynchronizable;
-import wicket.request.BookmarkablePageRequestTarget;
-import wicket.request.PageRequestTarget;
 import wicket.request.RequestParameters;
+import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.request.target.ComponentRequestTarget;
+import wicket.request.target.PageRequestTarget;
+import wicket.request.target.mixin.IAccessChecker;
 import wicket.util.lang.Classes;
 
 /**
@@ -493,9 +492,9 @@ public abstract class RequestCycle
 
 					IRequestTarget target = getRequestTarget();
 
-					if (target instanceof IAccessCheckingTarget)
+					if (target instanceof IAccessChecker)
 					{
-						((IAccessCheckingTarget)target).checkAccess(this);
+						((IAccessChecker)target).checkAccess(this);
 					}
 
 					// check access or earlier (like in a component constructor)
@@ -711,7 +710,7 @@ public abstract class RequestCycle
 	 */
 	private Object getSynchronizationLock()
 	{
-		if (getRequestTarget() instanceof ISessionSynchronizable)
+		if (getRequestTarget().synchronizeOnSession(this))
 		{
 			return getSession();
 		}

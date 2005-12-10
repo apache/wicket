@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IBookmarkablePageRequestTarget.java,v 1.1 2005/12/06 22:17:44 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +26,7 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public interface IBookmarkablePageRequestTarget extends IRequestTarget, ISessionSynchronizable, IAccessCheckingTarget
+public interface IBookmarkablePageRequestTarget extends IRequestTarget
 {
 	/**
 	 * Gets the page class.

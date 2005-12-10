@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import wicket.Page;
 import wicket.RequestCycle;
@@ -41,7 +41,7 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	}
 	
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#processEvents(wicket.RequestCycle)
+	 * @see wicket.request.target.mixin.IEventProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{

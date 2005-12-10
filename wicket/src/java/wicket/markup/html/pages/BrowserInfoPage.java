@@ -37,7 +37,7 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebSession;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
-import wicket.request.BookmarkablePageRequestTarget;
+import wicket.request.target.BookmarkablePageRequestTarget;
 
 /**
  * <p>

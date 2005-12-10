@@ -39,7 +39,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.FormSubmitInterfaceRequestTarget;
+import wicket.request.target.FormSubmitInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;

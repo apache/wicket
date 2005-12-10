@@ -15,12 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.request.ISharedResourceRequestTarget;
 
 /**
  * Default implementation of {@link ISharedResourceRequestTarget}. Target that
@@ -72,6 +73,14 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 */
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	{
+		return false;
 	}
 
 	/**

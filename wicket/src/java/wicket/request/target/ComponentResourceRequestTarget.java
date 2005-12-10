@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import java.lang.reflect.Method;
 
@@ -25,13 +25,14 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.request.target.mixin.IAccessChecker;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener event request.
  * 
  * @author jcompagner
  */
-public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessCheckingTarget, ISessionSynchronizable
+public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessChecker
 {
 
 	private final Page page;
@@ -84,7 +85,15 @@ public final class ComponentResourceRequestTarget implements IRequestTarget, IAc
 	}
 
 	/**
-	 * @see wicket.request.IAccessCheckingTarget#checkAccess(RequestCycle)
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 */
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	{
+		return true;
+	}
+
+	/**
+	 * @see wicket.request.target.mixin.IAccessChecker#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{
