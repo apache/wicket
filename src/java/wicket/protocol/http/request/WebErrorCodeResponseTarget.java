@@ -126,6 +126,14 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 */
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	{
+		return false;
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj)

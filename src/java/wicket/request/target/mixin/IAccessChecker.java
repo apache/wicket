@@ -15,9 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.mixin;
 
 import wicket.RequestCycle;
+import wicket.request.RequestParameters;
 
 /**
  * {@link wicket.IRequestTarget}s that extend this interface, will have this
@@ -27,7 +28,7 @@ import wicket.RequestCycle;
  * 
  * @author Eelco Hillenius
  */
-public interface IAccessCheckingTarget
+public interface IAccessChecker
 {
 	/**
 	 * Whether access is allowed to this target. If the page is not allowed you

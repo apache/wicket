@@ -27,11 +27,7 @@ import wicket.Component;
  * 
  * @author Eelco Hillenius
  */
-public interface IListenerInterfaceRequestTarget
-		extends
-			IPageRequestTarget,
-			ISessionSynchronizable,
-			IEventProcessingRequestTarget
+public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 {
 
 	/**

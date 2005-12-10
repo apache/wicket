@@ -15,13 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.Request;
 import wicket.RequestCycle;
+import wicket.request.IBookmarkablePageRequestTarget;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.target.mixin.IAccessChecker;
 
 /**
  * Default implementation of {@link IBookmarkablePageRequestTarget}. Target
@@ -31,14 +33,11 @@ import wicket.RequestCycle;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget
+public class BookmarkablePageRequestTarget
+		implements
+			IBookmarkablePageRequestTarget,
+			IAccessChecker
 {
-	/** the page this target was mounted on, if any */
-	private final String mountPath;
-
-	/** page parameters encoder, if any */
-	private final IPageParametersEncoder paramsEncoder;
-
 	/** the class of the page. */
 	private final Class pageClass;
 
@@ -113,79 +112,22 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;
-		if (pageParameters != null && (!pageParameters.isEmpty()))
-		{
-			this.pageParameters = pageParameters;
-		}
-		else
-		{
-			this.pageParameters = null; // only set when non-empty
-			// to avoid problems with hashing and equals
-		}
+		this.pageParameters = pageParameters;
 		this.pageMapName = pageMapName;
-
-		mountPath = null;
-		paramsEncoder = null;
 	}
 
-	// TODO create a one for all constructor
-
 	/**
-	 * Constructor used to create a mounted page class request target
-	 * 
-	 * @param pageClass
-	 * @param path
-	 * @param encoder
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass, String path,
-			IPageParametersEncoder encoder)
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
 	{
-		this(null, pageClass, path, encoder);
+		// we need to lock when we are not redirecting, i.e. we are
+		// actually rendering the page
+		return !requestCycle.getRedirect();
 	}
 
 	/**
-	 * Constructor used to create a mounted page class request target for a
-	 * certain pagemap
-	 * 
-	 * @param pageMapName
-	 * @param pageClass
-	 * @param path
-	 * @param encoder
-	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass, String path,
-			IPageParametersEncoder encoder)
-	{
-		this.pageMapName = pageMapName;
-		pageParameters = null;
-
-		this.pageClass = pageClass;
-		mountPath = path;
-		paramsEncoder = encoder;
-	}
-
-
-	/**
-	 * Returns assigned page parameters encoder
-	 * 
-	 * @return assigned page parameters encoder
-	 */
-	public IPageParametersEncoder getParamsEncoder()
-	{
-		return paramsEncoder;
-	}
-
-	/**
-	 * Method to check if this target has been mounted
-	 * 
-	 * @return true if this target is mounted, false otherwise
-	 */
-	public boolean isMounted()
-	{
-		return mountPath != null;
-	}
-
-	/**
-	 * @see wicket.request.IAccessCheckingTarget#checkAccess(RequestCycle)
+	 * @see wicket.request.target.mixin.IAccessChecker#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{
@@ -197,8 +139,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		return true;
 	}
 
-
-	private Page getPage(RequestCycle requestCycle)
+	/**
+	 * Gets a newly constructed page if we are not in a redirect.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * @return the page
+	 */
+	private final Page getPage(RequestCycle requestCycle)
 	{
 		if (page == null && pageClass != null && !requestCycle.getRedirect())
 		{
@@ -219,14 +167,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	protected Page newPage(Class pageClass, RequestCycle requestCycle)
 	{
 		PageParameters params = pageParameters;
-		if (isMounted())
-		{
-			// decode page parameters from url
-			Request request = requestCycle.getRequest();
-			String urlFragment = request.getPath().substring(mountPath.length());
-			params = paramsEncoder.decode(urlFragment);
 
-		}
+		// TODO ? the parameters should already have been resolved ?
+		/*
+		 * if (isMounted()) { //decode page parameters from url Request request =
+		 * requestCycle.getRequest(); String urlFragment =
+		 * request.getPath().substring(mountPath.length()); params =
+		 * paramsEncoder.decode(urlFragment); }
+		 */
 		// construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
 				.getDefaultPageFactory();
@@ -264,16 +212,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
-		if (isMounted())
-		{
-			// if this is a mounted page we clean it so that a refresh in the
-			// browser will recreate the page
-			// TODO same should be done for bookmarkable pages, are all pages
-			// accessed through here bookmarkable or mounted?
-			page = null;
-		}
-		// don't have to call page.internalEndRequest() because page.doRender()
-		// is always called for this target
+		page = null;
 	}
 
 	/**
@@ -312,7 +251,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (pageClass.equals(that.pageClass))
 			{
 				boolean mapMatch = false;
-				
+
 				if (pageMapName != null)
 				{
 					mapMatch = (that.pageMapName != null && pageMapName.equals(that.pageMapName));
@@ -321,7 +260,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 				{
 					mapMatch = (that.pageMapName == null);
 				}
-				
+
 				equal = mapMatch;
 			}
 		}
@@ -345,6 +284,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	public String toString()
 	{
 		return "BookmarkablePageRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
-				+ ", mountPath=" + mountPath + "}";
+				+ "}";
 	}
 }

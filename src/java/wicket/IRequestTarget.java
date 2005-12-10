@@ -50,4 +50,17 @@ public interface IRequestTarget
 	 *            the current request cycle
 	 */
 	void cleanUp(RequestCycle requestCycle);
+
+	/**
+	 * Whether a request target needs to be synchronized on the session.If a
+	 * {@link wicket.IRequestTarget} implements this interface, the event
+	 * handling and response steps of the request cycle processing will be
+	 * synchronized on the session object.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * 
+	 * @return whether this target should be synchronized on the user's session
+	 */
+	boolean synchronizeOnSession(RequestCycle requestCycle);
 }

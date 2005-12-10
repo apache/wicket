@@ -15,36 +15,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
+import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.request.IComponentRequestTarget;
 
 /**
- * Default implementation of {@link IPageRequestTarget}. Target that denotes a
- * page instance.
+ * Default implementation of {@link wicket.request.IComponentRequestTarget}.
+ * Target that denotes a single component instance.
  * 
  * @author Eelco Hillenius
  */
-public class PageRequestTarget implements IPageRequestTarget
+public class ComponentRequestTarget implements IComponentRequestTarget
 {
-	/** the page instance. */
-	private final Page page;
+	/** the component instance. */
+	private final Component component;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param page
-	 *            the page instance
+	 * @param component
+	 *            the component instance
 	 */
-	public PageRequestTarget(Page page)
+	public ComponentRequestTarget(Component component)
 	{
-		if (page == null)
+		if (component == null)
 		{
-			throw new NullPointerException("argument page must be not null");
+			throw new NullPointerException("argument component must be not null");
 		}
 
-		this.page = page;
+		this.component = component;
 	}
 
 	/**
@@ -52,27 +54,28 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		// Should page be redirected to?
-		if (requestCycle.getRedirect())
+		
+		Page page = component.getPage();
+		if(page != null)
 		{
-			// Redirect to the page
-			requestCycle.redirectTo(page);
+			page.startComponentRender(component);
 		}
-		else
+		// Let component render itself
+		component.render();
+		
+		if(page != null)
 		{
-			requestCycle.setUpdateCluster(true);
-
-			// Let page render itself
-			page.doRender();
+			page.endComponentRender(component);
 		}
+		
 	}
 
 	/**
-	 * @see wicket.request.IPageRequestTarget#getPage()
+	 * @see wicket.request.IComponentRequestTarget#getComponent()
 	 */
-	public final Page getPage()
+	public final Component getComponent()
 	{
-		return page;
+		return component;
 	}
 
 	/**
@@ -80,15 +83,14 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
-		page.internalEndRequest();
 	}
 
 	/**
-	 * @see wicket.request.IAccessCheckingTarget#checkAccess(RequestCycle)
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
 	 */
-	public boolean checkAccess(RequestCycle requestCycle)
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
 	{
-		return page.checkAccess();
+		return true;
 	}
 
 	/**
@@ -96,10 +98,10 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof PageRequestTarget)
+		if (obj instanceof ComponentRequestTarget)
 		{
-			PageRequestTarget that = (PageRequestTarget)obj;
-			return page.equals(that.page);
+			ComponentRequestTarget that = (ComponentRequestTarget)obj;
+			return component.equals(that.component);
 		}
 		return false;
 	}
@@ -109,8 +111,8 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public int hashCode()
 	{
-		int result = "PageRequestTarget".hashCode();
-		result += page.hashCode();
+		int result = "ComponentRequestTarget".hashCode();
+		result += component.hashCode();
 		return 17 * result;
 	}
 
@@ -119,6 +121,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public String toString()
 	{
-		return "PageRequestTarget@" + hashCode() + "{page=" + page + "}";
+		return "ComponentRequestTarget@" + hashCode() + "{" + component + "}";
 	}
+
 }

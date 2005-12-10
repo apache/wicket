@@ -25,11 +25,7 @@ import wicket.Page;
  * 
  * @author Eelco Hillenius
  */
-public interface IPageRequestTarget
-		extends
-			IRequestTarget,
-			ISessionSynchronizable,
-			IAccessCheckingTarget
+public interface IPageRequestTarget extends IRequestTarget
 {
 
 	/**

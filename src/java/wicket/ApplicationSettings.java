@@ -26,8 +26,6 @@ import java.util.Locale;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.IValidator;
-import wicket.request.IPageParametersEncoder;
-import wicket.request.PairPageParametersEncoder;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
@@ -335,9 +333,6 @@ public class ApplicationSettings
 
 	/** Factory for producing validator error message resource keys */
 	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
-
-	/** default page param encoder used for mounted pages */
-	private IPageParametersEncoder pageParametersEncoder = new PairPageParametersEncoder();
 
 	/**
 	 * Enumerated type for different ways of handling the render part of
@@ -1213,29 +1208,4 @@ public class ApplicationSettings
 	{
 		return validatorResourceKeyFactory.newKey(validator, formComponent);
 	}
-
-	/**
-	 * Returns the implementation of IPageParameterEncoder that will be used by
-	 * default for mounted pages.
-	 * 
-	 * @return implementation of IPageParameterEncoder that will be used by
-	 *         default for mounted pages
-	 */
-	public IPageParametersEncoder getPageParametersEncoder()
-	{
-		return pageParametersEncoder;
-	}
-
-	/**
-	 * Sets the implementation of IPageParameterEncoder that will be used by
-	 * default for bookmarkable pages.
-	 * 
-	 * @param encoder
-	 *            IPageParameterEncoder implementation
-	 */
-	public void setPageParametersEncoder(IPageParametersEncoder encoder)
-	{
-		this.pageParametersEncoder = encoder;
-	}
-
 }

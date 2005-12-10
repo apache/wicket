@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import java.lang.reflect.Method;
 
@@ -26,10 +26,8 @@ import wicket.Page;
 import wicket.RequestCycle;
 
 /**
- * Default implementation of
- * {@link wicket.request.IListenerInterfaceRequestTarget}. Target that denotes
- * a page instance and a call to a component on that page using an listener
- * interface method.
+ * Target that denotes a page instance and a call to a component on that page
+ * using an listener interface method.
  * 
  * @author Eelco Hillenius
  */
@@ -66,11 +64,11 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	public ListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod,
 			String behaviourId)
 	{
-		super(page,component,listenerMethod,behaviourId);
+		super(page, component, listenerMethod, behaviourId);
 	}
-	
+
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#processEvents(wicket.RequestCycle)
+	 * @see wicket.request.target.mixin.IEventProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{

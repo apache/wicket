@@ -25,8 +25,8 @@ import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
-import wicket.request.EmptyRequestTarget;
-import wicket.request.ResourceStreamRequestTarget;
+import wicket.request.target.EmptyRequestTarget;
+import wicket.request.target.ResourceStreamRequestTarget;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -177,7 +177,7 @@ public abstract class AjaxHandler
 	/**
 	 * Gets the response to render to the requester. This is used by AjaxHandler
 	 * default request target implementation,
-	 * {@link wicket.request.ResourceStreamRequestTarget}. If you override
+	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If you override
 	 * {@link #respond()} and provide another kind of target, this method will
 	 * not be used.
 	 * 
@@ -337,7 +337,7 @@ public abstract class AjaxHandler
 	 * {@link RequestCycle#setRequestTarget(IRequestTarget)}. If
 	 * {@link #getResponse()} returns a non-null resource stream, this
 	 * implementation will set the target to
-	 * {@link wicket.request.ResourceStreamRequestTarget}. If
+	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If
 	 * {@link #getResponse()} returns null, the target will be set to an
 	 * instance of {@link EmptyRequestTarget}.
 	 */

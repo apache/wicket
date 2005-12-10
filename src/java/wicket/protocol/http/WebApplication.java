@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.46 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,11 +39,11 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.request.WebRequestEncoder;
 import wicket.protocol.http.servlet.ServletWebRequest;
-import wicket.request.IPageParametersEncoder;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
+import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
+import wicket.request.target.mixin.IMountEncoder;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -65,13 +65,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *    
- *    public void init()
- *    {
- *    	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *    	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *    	...
- *                               
+ *             
+ *             public void init()
+ *             {
+ *             	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *             	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *             	...
+ *                                        
  * </pre>
  * 
  * @see WicketServlet
@@ -181,42 +181,25 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
-		mountBookmarkablePage(path, bookmarkablePageClass, getSettings().getPageParametersEncoder());
+		mountBookmarkablePage(null, path, bookmarkablePageClass,
+				new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
 
 	/**
-	 * Mounts a bookmarkable page class to the given path with the provided page
-	 * parameters encoder
-	 * 
+	 * Mounts a bookmarkable page class to the given pagemap and path with the
+	 * provided page parameters encoder
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
-	 * @param encoder
-	 *            page parameters encoder that will be used for this mount
+	 * @param pageMapName
+	 *            pagemap name this mount is for
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
-			IPageParametersEncoder encoder)
+			String pageMapName)
 	{
-		mountBookmarkablePage(null, path, bookmarkablePageClass, encoder);
-	}
-
-	/**
-	 * Mounts a bookmarkable page class to the given pagemap and path with the
-	 * provided page parameters encoder
-	 * 
-	 * @param pageMapName
-	 *            pagemap name this mount is for
-	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param bookmarkablePageClass
-	 *            the bookmarkable page class to mount
-	 */
-	public final void mountBookmarkablePage(String pageMapName, String path,
-			Class bookmarkablePageClass)
-	{
-		mountBookmarkablePage(pageMapName, path, bookmarkablePageClass, getSettings()
-				.getPageParametersEncoder());
+		mountBookmarkablePage(pageMapName, path, bookmarkablePageClass,
+				new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, pageMapName));
 	}
 
 	/**
@@ -230,20 +213,16 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 * @param encoder
-	 *            page parameters encoder that will be used for this mount
+	 *            the encoder that will be used for this mount
 	 */
-	public final void mountBookmarkablePage(String pageMapName, String path,
-			Class bookmarkablePageClass, IPageParametersEncoder encoder)
+	private final void mountBookmarkablePage(String pageMapName, String path,
+			Class bookmarkablePageClass, IMountEncoder encoder)
 	{
-		if (encoder==null) {
-			throw new IllegalArgumentException("page parameters encoder cannot be null");
+		if (encoder == null)
+		{
+			throw new NullPointerException("encoder must be not null");
 		}
-
-		getDefaultRequestCycleProcessor().getRequestEncoder()
-				.mountPath(
-						path,
-						new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, path,
-								encoder));
+		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path, encoder);
 	}
 
 	/**

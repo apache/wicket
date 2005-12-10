@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target;
 
 import java.io.OutputStream;
 
@@ -89,6 +89,14 @@ public class StringRequestTarget implements IRequestTarget
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 */
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	{
+		return false;
 	}
 
 	/**

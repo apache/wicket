@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
 package wicket.request;
 
 import wicket.IRequestTarget;
+import wicket.request.target.mixin.IMountEncoder;
 
 /**
  * Defines the contract for mounting request targets to paths.
@@ -31,10 +32,11 @@ public interface IRequestTargetPathMounter
 	 * 
 	 * @param path
 	 *            the path to mount the request target with
-	 * @param requestTarget
-	 *            the request target
+	 * @param encoder
+	 *            the mount encoder to use for encoding and decoding targets and
+	 *            mount paths
 	 */
-	void mountPath(String path, IRequestTarget requestTarget);
+	void mountPath(String path, IMountEncoder encoder);
 
 	/**
 	 * Unmounts a request target.
@@ -45,7 +47,7 @@ public interface IRequestTargetPathMounter
 	void unmountPath(String path);
 
 	/**
-	 * Gets the request target that was registered with the given path.
+	 * Gets the request target that conforms to the given path.
 	 * 
 	 * @param path
 	 *            the path
@@ -55,11 +57,20 @@ public interface IRequestTargetPathMounter
 	IRequestTarget targetForPath(String path);
 
 	/**
-	 * Gets the path that the provided request target was registered with.
+	 * Gets the encoder that was mounted on the provided path if any.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the encoder that was mounted on the provided path if any
+	 */
+	IMountEncoder encoderForPath(String path);
+
+	/**
+	 * Gets the path that the provided request target conforms to.
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 * @return the path that the provided request target was registered with
+	 * @return the path that the provided request target conforms ti
 	 */
 	String pathForTarget(IRequestTarget requestTarget);
 }

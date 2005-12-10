@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.mixin;
 
 import wicket.RequestCycle;
 
@@ -27,7 +27,7 @@ import wicket.RequestCycle;
  * 
  * @author Eelco Hillenius
  */
-public interface IEventProcessingRequestTarget
+public interface IEventProcessor
 {
 	/**
 	 * After a page is restored, this method is responsible for calling any

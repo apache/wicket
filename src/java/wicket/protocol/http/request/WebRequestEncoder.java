@@ -20,7 +20,6 @@ package wicket.protocol.http.request;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -41,13 +40,13 @@ import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IBookmarkablePageRequestTarget;
+import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISharedResourceRequestTarget;
-import wicket.request.BookmarkablePageRequestTarget;
 import wicket.request.RequestParameters;
+import wicket.request.target.mixin.IMountEncoder;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
@@ -60,42 +59,56 @@ import wicket.util.string.Strings;
 public class WebRequestEncoder implements IRequestEncoder
 {
 	/** log. */
-	private Log log = LogFactory.getLog(WebRequestEncoder.class);
+	private static Log log = LogFactory.getLog(WebRequestEncoder.class);
 
 	/**
-	 * map of path mounts for request targets on paths.
-	 */
-	/*
+	 * map of path mounts for mount encoders on paths.
+	 * <p>
 	 * mountsOnPath is sorted by longest paths first to improve resolution of
-	 * possible path conflicts.
-	 * 
-	 * For example:
-	 * 
-	 * we mount Page1 on /page and Page2 on /page/test
-	 * 
-	 * Page1 uses a parameters encoder that only encodes parameter values
-	 * 
+	 * possible path conflicts. <br />
+	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
+	 * Page1 uses a parameters encoder that only encodes parameter values <br />
 	 * now suppose we want to access Page1 with a single paramter param="test".
 	 * we have a url collission since both pages can be access with /page/test
-	 * 
+	 * <br />
 	 * the sorting by longest path first guarantees that the iterator will
 	 * return the mount /page/test before it returns mount /page therefore
 	 * giving deterministic behaviour to path resolution by always trying to
-	 * match the longest possible path first
+	 * match the longest possible path first.
+	 * </p>
 	 */
+	private SortedMap/* <String,IMountEncoder> */mountsOnPath = new TreeMap(lengthComparator);
 
-	private SortedMap/* <String,IRequestTarget> */mountsOnPath = new TreeMap(lengthComparator);
-
-	/**
-	 * map of path mounts for request targets on targets.
-	 */
-	private Map/* <IRequestTarget, String> */mountsOnTarget = new HashMap();
+	/** cached url prefix. */
+	private String urlPrefix;
 
 	/**
 	 * Construct.
 	 */
 	public WebRequestEncoder()
 	{
+	}
+
+	/**
+	 * Gets the mount encoder for the given request target if any.
+	 * 
+	 * @param requestTarget
+	 *            the request target to match
+	 * @return the mount encoder if any
+	 */
+	protected IMountEncoder getMountEncoder(IRequestTarget requestTarget)
+	{
+		// TODO optimize algoritm if possible and/ or cache lookup results
+		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
+		{
+			IMountEncoder encoder = (IMountEncoder)i.next();
+			if (encoder.matches(requestTarget))
+			{
+				return encoder;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -113,26 +126,16 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
+
 		// first check whether the target was mounted
-		String mountPath = (String)mountsOnTarget.get(requestTarget);
-		if (mountPath != null)
+		IMountEncoder encoder = getMountEncoder(requestTarget);
+		if (encoder != null)
 		{
-			final StringBuffer url = urlPrefix(requestCycle);
-
-			url.append(mountPath);
-
-			// encode page parameters into the url
-			if (requestTarget instanceof BookmarkablePageRequestTarget)
-			{
-				BookmarkablePageRequestTarget pageTarget = (BookmarkablePageRequestTarget)requestTarget;
-				BookmarkablePageRequestTarget mountedTarget = (BookmarkablePageRequestTarget)targetForPath(mountPath);
-
-				url.append(mountedTarget.getParamsEncoder().encode(pageTarget.getPageParameters()));
-			}
-
-			return url.toString();
+			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
+			return urlPrefix(requestCycle) + pathForTarget(requestTarget);
 		}
 
+		// no mount found; go on with default processing
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			return encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
@@ -144,11 +147,6 @@ public class WebRequestEncoder implements IRequestEncoder
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
 			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
-		}
-		// TODO handle more
-		else if (requestTarget instanceof IPageRequestTarget)
-		{
-
 		}
 
 		// fallthough for non-default request targets
@@ -196,19 +194,19 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#mountPath(java.lang.String,
-	 *      wicket.IRequestTarget)
+	 * @see wicket.request.IRequestTargetPathMounter#mountPath(java.lang.String,
+	 *      wicket.request.target.mixin.IMountEncoder)
 	 */
-	public final void mountPath(String path, IRequestTarget requestTarget)
+	public final void mountPath(String path, IMountEncoder encoder)
 	{
 		if (path == null)
 		{
 			throw new NullPointerException("argument path must be not-null");
 		}
 
-		if (requestTarget == null)
+		if (encoder == null)
 		{
-			throw new NullPointerException("argument requestTarget must be not-null");
+			throw new NullPointerException("argument encoder must be not-null");
 		}
 
 		// sanity check
@@ -222,8 +220,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			throw new WicketRuntimeException(path + " is already mounted for "
 					+ mountsOnPath.get(path));
 		}
-		mountsOnPath.put(path, requestTarget);
-		mountsOnTarget.put(requestTarget, path);
+		mountsOnPath.put(path, encoder);
 	}
 
 	/**
@@ -242,8 +239,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			path = "/" + path;
 		}
 
-		IRequestTarget target = (IRequestTarget)mountsOnPath.remove(path);
-		mountsOnTarget.remove(target);
+		mountsOnPath.remove(path);
 	}
 
 	/**
@@ -251,9 +247,18 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
+		IMountEncoder encoder = encoderForPath(path);
+		return (encoder != null) ? encoder.decode(path) : null;
+	}
+
+	/**
+	 * @see wicket.request.IRequestTargetPathMounter#encoderForPath(java.lang.String)
+	 */
+	public final IMountEncoder encoderForPath(String path)
+	{
 		if (path == null)
 		{
-			return (IRequestTarget)mountsOnPath.get(null);
+			return (IMountEncoder)mountsOnPath.get(null);
 		}
 
 		Iterator it = mountsOnPath.entrySet().iterator();
@@ -263,7 +268,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			String key = (String)entry.getKey();
 			if (path.startsWith(key))
 			{
-				return (IRequestTarget)entry.getValue();
+				return (IMountEncoder)entry.getValue();
 			}
 		}
 		return null;
@@ -274,7 +279,13 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final String pathForTarget(IRequestTarget requestTarget)
 	{
-		return (String)mountsOnTarget.get(requestTarget);
+		// first check whether the target was mounted
+		IMountEncoder encoder = getMountEncoder(requestTarget);
+		if (encoder != null)
+		{
+			return encoder.encode(requestTarget);
+		}
+		return null;
 	}
 
 	/**
@@ -304,15 +315,14 @@ public class WebRequestEncoder implements IRequestEncoder
 			IBookmarkablePageRequestTarget requestTarget)
 	{
 		final Class pageClass = requestTarget.getPageClass();
+		final Class homePageClass = requestCycle.getApplication().getPages().getHomePage();
+
+		// TODO fix homepage class
+
 		final PageParameters parameters = requestTarget.getPageParameters();
-		final StringBuffer url = urlPrefix(requestCycle);
+		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
 		url.append("?bookmarkablePage=");
-		String pageReference = pageClass.getName();
-		if (pageReference == null)
-		{
-			pageReference = pageClass.getName();
-		}
-		url.append(pageReference);
+		url.append(pageClass.getName());
 
 		String pageMapName = requestTarget.getPageMapName();
 		if (pageMapName == null)
@@ -376,7 +386,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	protected final String encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
-		final StringBuffer url = urlPrefix(requestCycle);
+		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
 		url.append("?path=");
 		Component component = requestTarget.getComponent();
 		url.append(component.getPath());
@@ -476,7 +486,8 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
 	{
-		parameters.setBookmarkablePageClass(request.getParameter("bookmarkablePage"));
+		String pageClass = request.getParameter("bookmarkablePage");
+		parameters.setBookmarkablePageClass(pageClass);
 		parameters.setParameters(request.getParameterMap());
 	}
 
@@ -500,36 +511,38 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * Creates a prefix for a url.
+	 * Gets prefix.
 	 * 
 	 * @param requestCycle
-	 *            the current request cycle
+	 *            the request cycle
 	 * 
-	 * @return Prefix for URLs including the context path and servlet path.
+	 * @return prefix
 	 */
-	protected StringBuffer urlPrefix(RequestCycle requestCycle)
+	protected final String urlPrefix(RequestCycle requestCycle)
 	{
-		final StringBuffer buffer = new StringBuffer();
-		final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
-		if (request != null)
+		if (urlPrefix == null)
 		{
-			final String contextPath = request.getContextPath();
-			buffer.append(contextPath);
-			String path = request.getServletPath();
-			if (path == null || "".equals(path))
+			final StringBuffer buffer = new StringBuffer();
+			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
+			if (request != null)
 			{
-				path = "/";
+				final String contextPath = request.getContextPath();
+				buffer.append(contextPath);
+				String path = request.getServletPath();
+				if (path == null || "".equals(path))
+				{
+					path = "/";
+				}
+				buffer.append(path);
 			}
-			buffer.append(path);
+			urlPrefix = buffer.toString();
 		}
-
-		return buffer;
+		return urlPrefix;
 	}
 
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
 	{
-
 		public int compare(Object o1, Object o2)
 		{
 			// longer first
@@ -554,5 +567,4 @@ public class WebRequestEncoder implements IRequestEncoder
 		}
 
 	};
-
 }

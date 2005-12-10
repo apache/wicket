@@ -31,17 +31,17 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import wicket.request.ExpiredPageClassRequestTarget;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
-import wicket.request.ListenerInterfaceRequestTarget;
-import wicket.request.BookmarkablePageRequestTarget;
-import wicket.request.PageRequestTarget;
-import wicket.request.RedirectPageRequestTarget;
 import wicket.request.RequestParameters;
-import wicket.request.ComponentResourceRequestTarget;
-import wicket.request.SharedResourceRequestTarget;
+import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.request.target.ComponentResourceRequestTarget;
+import wicket.request.target.ExpiredPageClassRequestTarget;
+import wicket.request.target.ListenerInterfaceRequestTarget;
+import wicket.request.target.PageRequestTarget;
+import wicket.request.target.RedirectPageRequestTarget;
+import wicket.request.target.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
