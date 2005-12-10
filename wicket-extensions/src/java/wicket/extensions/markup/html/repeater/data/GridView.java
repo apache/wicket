@@ -31,8 +31,7 @@ import wicket.version.undo.Change;
  * items in a table with ie 3 columns where the table is filled left to right
  * top-down so that for each third item a new row is created.
  * <p>
- * Example:
- * 
+ * Example wicket markup (not final output)
  * <pre>
  * &lt;tbody&gt;
  *   &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
