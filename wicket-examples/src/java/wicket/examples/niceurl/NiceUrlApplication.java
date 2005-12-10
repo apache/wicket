@@ -40,7 +40,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
 
-		// mount a whole page at once (all bookmarkable pages,
+		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
 
 		// maybe not the neatest sight, but for package mounting it makes
