@@ -31,18 +31,20 @@ import wicket.version.undo.Change;
  * items in a table with ie 3 columns where the table is filled left to right
  * top-down so that for each third item a new row is created.
  * <p>
- * Example wicket markup (not final output)
+ * Example
  * <pre>
  * &lt;tbody&gt;
- *   &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *     &lt;td wicket:id=&quot;cols&quot;&gt;
- *       &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
+ *   &lt;tr wicket:id="rows" class"even"&gt;
+ *     &lt;td wicket:id="cols"&gt;
+ *       &lt;span wicket:id="id"&gt;Test ID&lt;/span&gt;
  *     &lt;/td&gt;
  *   &lt;/tr&gt;
  * &lt;/tbody&gt;  
  * </pre>
- * 
- * <p>
+ * and in java:
+ * <pre>
+ * add(new GridView("rows", dataProvider).setColumns(3));
+ * </pre>
  * 
  * @author Igor Vaynberg
  * @author Christian Essl
@@ -74,7 +76,6 @@ public abstract class GridView extends DataViewBase
 	{
 		return columns;
 	}
-
 	/**
 	 * Sets number of columns
 	 * 
