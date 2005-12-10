@@ -44,6 +44,7 @@ import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
 import wicket.request.target.mixin.IMountEncoder;
+import wicket.request.target.mixin.PackagePathMountEncoder;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -65,13 +66,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *               
- *               public void init()
- *               {
- *               	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *               	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *               	...
- *                                          
+ *                   
+ *                   public void init()
+ *                   {
+ *                   	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                   	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                   	...
+ *                                              
  * </pre>
  * 
  * @see WicketServlet
@@ -181,13 +182,11 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
-		mountBookmarkablePage(path, new BookmarkablePagePathMountEncoder(path,
-				bookmarkablePageClass, null));
+		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
 
 	/**
-	 * Mounts a bookmarkable page class to the given pagemap and path with the
-	 * provided page parameters encoder
+	 * Mounts a bookmarkable page class to the given pagemap and path.
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
@@ -199,8 +198,21 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
 			String pageMapName)
 	{
-		mountBookmarkablePage(path, new BookmarkablePagePathMountEncoder(path,
-				bookmarkablePageClass, pageMapName));
+		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
+				pageMapName));
+	}
+
+	/**
+	 * Mounts all bookmarkable pages at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param packageToMount
+	 *            the package of which all bookmarkable pages should be mounted
+	 */
+	public final void mountPackage(String path, Package packageToMount)
+	{
+		mountPath(path, new PackagePathMountEncoder(path, packageToMount));
 	}
 
 	/**
@@ -211,7 +223,7 @@ public abstract class WebApplication extends Application
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mountBookmarkablePage(String path, IMountEncoder encoder)
+	public final void mountPath(String path, IMountEncoder encoder)
 	{
 		if (encoder == null)
 		{
@@ -226,7 +238,7 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path of the bookmarkable page class to unmount
 	 */
-	public final void unmountBookmarkablePage(String path)
+	public final void unmountPath(String path)
 	{
 		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
 	}

@@ -19,44 +19,34 @@ package wicket.request.target.mixin;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
+import wicket.Session;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.util.lang.Classes;
 
 /**
- * Encodes and decodes mounts for a single bookmarkable page class.
+ * Encodes and decodes mounts for a whole package.
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
+public class PackagePathMountEncoder extends AbstractPathMountEncoder
 {
-	/** bookmarkable page class. */
-	private final Class bookmarkablePageClass;
-
-	/** page map name. */
-	private final String pageMapName;
+	/** package for this mount. */
+	private final Package mountedPackage;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param mountPath
 	 *            the mount path
-	 * @param bookmarkablePageClass
-	 *            the class of the bookmarkable page
-	 * @param pageMapName
-	 *            the page map name if any
+	 * @param mountedPackage
+	 *            package for this mount (might be null in case the class is
+	 *            part of the default package
 	 */
-	public BookmarkablePagePathMountEncoder(final String mountPath,
-			final Class bookmarkablePageClass, String pageMapName)
+	public PackagePathMountEncoder(final String mountPath, Package mountedPackage)
 	{
 		super(mountPath);
-
-		if (bookmarkablePageClass == null)
-		{
-			throw new NullPointerException("argument bookmarkablePageClass must be not null");
-		}
-
-		this.bookmarkablePageClass = bookmarkablePageClass;
-		this.pageMapName = pageMapName;
+		this.mountedPackage = mountedPackage;
 	}
 
 	/**
@@ -72,7 +62,7 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 		StringBuffer url = new StringBuffer();
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		// TODO what to do with the page map?
+		url.append("/").append(Classes.name(target.getPageClass()));
 		appendPageParameters(url, target.getPageParameters());
 		return url.toString();
 	}
@@ -82,7 +72,22 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 	 */
 	public IRequestTarget decode(String urlFragment)
 	{
-		String parametersFragment = urlFragment.substring(getMountPath().length());
+		String remainder = urlFragment.substring(getMountPath().length());
+		final String parametersFragment;
+		int ix = remainder.indexOf('/', 1);
+		if (ix == -1)
+		{
+			ix = remainder.length();
+			parametersFragment = "";
+		}
+		else
+		{
+			parametersFragment = remainder.substring(ix);
+		}
+		String packageName = ((mountedPackage == null) ? "" : mountedPackage.getName() + ".");
+		final String bookmarkablePageClassName = packageName + remainder.substring(1, ix);
+		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
+				bookmarkablePageClassName);
 		PageParameters parameters = decodePageParameters(parametersFragment);
 		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
 				bookmarkablePageClass, parameters);
@@ -97,16 +102,13 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if (bookmarkablePageClass.equals(target.getPageClass()))
+			if (mountedPackage == null)
 			{
-				if (this.pageMapName == null)
-				{
-					return target.getPageMapName() == null;
-				}
-				else
-				{
-					return this.pageMapName.equals(target.getPageMapName());
-				}
+				return target.getPageClass().getPackage() == null;
+			}
+			else if (mountedPackage.equals(target.getPageClass().getPackage()))
+			{
+				return true;
 			}
 		}
 		return false;
