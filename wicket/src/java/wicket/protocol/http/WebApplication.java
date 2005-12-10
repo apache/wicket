@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.57 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -65,13 +65,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *             
- *             public void init()
- *             {
- *             	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *             	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *             	...
- *                                        
+ *               
+ *               public void init()
+ *               {
+ *               	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *               	...
+ *                                          
  * </pre>
  * 
  * @see WicketServlet
@@ -181,13 +181,14 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
-		mountBookmarkablePage(null, path, bookmarkablePageClass,
-				new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
+		mountBookmarkablePage(path, new BookmarkablePagePathMountEncoder(path,
+				bookmarkablePageClass, null));
 	}
 
 	/**
 	 * Mounts a bookmarkable page class to the given pagemap and path with the
 	 * provided page parameters encoder
+	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param bookmarkablePageClass
@@ -198,25 +199,19 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
 			String pageMapName)
 	{
-		mountBookmarkablePage(pageMapName, path, bookmarkablePageClass,
-				new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, pageMapName));
+		mountBookmarkablePage(path, new BookmarkablePagePathMountEncoder(path,
+				bookmarkablePageClass, pageMapName));
 	}
 
 	/**
-	 * Mounts a bookmarkable page class to the given pagemap and path with the
-	 * provided page parameters encoder
+	 * Mounts an encoder at the given path.
 	 * 
-	 * @param pageMapName
-	 *            pagemap name this mount is for
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
-	 * @param bookmarkablePageClass
-	 *            the bookmarkable page class to mount
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	private final void mountBookmarkablePage(String pageMapName, String path,
-			Class bookmarkablePageClass, IMountEncoder encoder)
+	public final void mountBookmarkablePage(String path, IMountEncoder encoder)
 	{
 		if (encoder == null)
 		{
