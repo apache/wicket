@@ -20,8 +20,6 @@ package wicket.markup;
 
 import java.util.List;
 
-import wicket.util.resource.IResourceStream;
-
 /**
  * Holds markup as a resource (the stream that the markup came from) and 
  * a list of MarkupElements (the markup itself). 
@@ -40,7 +38,7 @@ public final class Markup
 	private /* final */ List markup;
 	
 	/** The markup's resource stream for diagnostic purposes */
-	private final IResourceStream resource;
+	private final MarkupResourceStream resource;
 	
 	/** If found in the markup, the <?xml ...?> string */
 	private final String xmlDeclaration;
@@ -50,9 +48,6 @@ public final class Markup
 
 	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
 	private final String wicketNamespace;
-	
-	/** The Class of the directly associated component/container */
-	private Class containerClass;
     
     /** Markup has been searched for the header, but it doesn't contain any */
     public final static int NO_HEADER_FOUND = -1;
@@ -71,7 +66,7 @@ public final class Markup
 	 * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
 	 * @param wicketNamespace Wicket namespace taken from xmlns:wicket="http://wicket.sourceforge.net"
 	 */
-	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, 
+	Markup(final MarkupResourceStream resource, final List markup, final String xmlDeclaration, 
 	        final String encoding, final String wicketNamespace)
 	{
 		this.resource = resource;
@@ -125,26 +120,6 @@ public final class Markup
 	}
 	
 	/**
-	 * Set the component/container's class directly associated with the markup
-	 * 
-	 * @param containerClass
-	 */
-	void setContainerClass(final Class containerClass)
-	{
-	    this.containerClass = containerClass;
-	}
-
-	/**
-	 * Get the component/container's class directly associated with the markup
-	 * 
-	 * @return The component's class
-	 */
-	Class getContainerClass()
-	{
-	    return this.containerClass;
-	}
-	
-	/**
 	 * @return String representation of markup list
 	 */
 	public String toString()
@@ -172,7 +147,7 @@ public final class Markup
 	 * Gets the resource that contains this markup
 	 * @return The resource where this markup came from
 	 */
-	IResourceStream getResource()
+	MarkupResourceStream getResource()
 	{
 		return resource;
 	}

@@ -378,7 +378,7 @@ public class MarkupStream
 	 */
 	public Class getContainerClass()
 	{
-	    return markup.getContainerClass();
+	    return markup.getResource().getMarkupClass();
 	}
 	
 	/**
