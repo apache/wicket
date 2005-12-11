@@ -66,13 +66,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                       
- *                       public void init()
- *                       {
- *                       	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                       	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                       	...
- *                                                  
+ *                           
+ *                           public void init()
+ *                           {
+ *                           	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                           	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                           	...
+ *                                                      
  * </pre>
  * 
  * @see WicketServlet
@@ -171,6 +171,42 @@ public abstract class WebApplication extends Application
 		}
 	}
 
+	/**
+	 * Checks mount path is valid.
+	 * 
+	 * @param path
+	 *            mount path
+	 */
+	private void checkMountPath(String path)
+	{
+		if (path == null)
+		{
+			throw new IllegalArgumentException("mounting path cannot be null");
+		}
+		if (!path.startsWith("/"))
+		{
+			throw new IllegalArgumentException("mounting path has to start with '/'");
+		}
+	}
+
+	/**
+	 * Checks the package that will be mounted is valid
+	 * 
+	 * @param mountPackage
+	 *            package to be mounted
+	 */
+	private void checkMountPackage(Package mountPackage)
+	{
+		if (mountPackage == null)
+		{
+			throw new IllegalArgumentException("mounting package cannot be null");
+		}
+		if (mountPackage.getName() == null || mountPackage.getName().length() == 0)
+		{
+			throw new IllegalArgumentException("mounting package name cannot be empty");
+		}
+
+	}
 
 	/**
 	 * Mounts a bookmarkable page class to the given path.
@@ -182,10 +218,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
-		if (!path.startsWith("/"))
-		{
-			path = "/" + path;
-		}
+		checkMountPath(path);
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
 
@@ -202,11 +235,7 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
 			String pageMapName)
 	{
-		if (!path.startsWith("/"))
-		{
-			path = "/" + path;
-		}
-
+		checkMountPath(path);
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
 				pageMapName));
 	}
@@ -221,11 +250,8 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPackage(String path, Package packageToMount)
 	{
-		if (!path.startsWith("/"))
-		{
-			path = "/" + path;
-		}
-
+		checkMountPath(path);
+		checkMountPackage(packageToMount);
 		mountPath(path, new PackagePathMountEncoder(path, packageToMount));
 	}
 
@@ -239,18 +265,13 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPath(String path, IMountEncoder encoder)
 	{
-		// TODO here it is too late to fix the path if it doesnt start with a /
-		// because by this time the encoder is created and it probably has its
-		// own reference to the path. so if we fix the path the encoder's path
-		// and the mount path might not be the same. should we throw an error
-		// here?
-		// 
-		// possible solution might be to add getMountPath() to IMountEncoder and
-		// use that in RequestEncoder.mountPath() instead of passing it in.
+		checkMountPath(path);
+
 		if (encoder == null)
 		{
 			throw new NullPointerException("encoder must be not null");
 		}
+
 		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path, encoder);
 	}
 
@@ -262,6 +283,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void unmountPath(String path)
 	{
+		checkMountPath(path);
 		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
 	}
 
