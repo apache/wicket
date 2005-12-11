@@ -36,7 +36,7 @@ import wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class SingleChoiceFilter extends AbstractFilter
+public class ChoiceFilter extends AbstractFilter
 {
 	private static final long serialVersionUID = 1L;
 	private static final IChoiceRenderer defaultRenderer = new ChoiceRenderer();
@@ -50,7 +50,7 @@ public class SingleChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public SingleChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
+	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
 			boolean autoSubmit)
 	{
 		this(id, model, form, choices, defaultRenderer, autoSubmit);
@@ -63,7 +63,7 @@ public class SingleChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public SingleChoiceFilter(String id, IModel model, FilterForm form, List choices,
+	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
 			boolean autoSubmit)
 	{
 		this(id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
@@ -77,7 +77,7 @@ public class SingleChoiceFilter extends AbstractFilter
 	 * @param renderer
 	 * @param autoSubmit
 	 */
-	public SingleChoiceFilter(String id, IModel model, FilterForm form, List choices,
+	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
 			IChoiceRenderer renderer, boolean autoSubmit)
 	{
 		this(id, model, form, new Model((Serializable)choices), renderer, autoSubmit);
@@ -99,18 +99,20 @@ public class SingleChoiceFilter extends AbstractFilter
 	 *            if true this filter will submit the form on selection change
 	 * @see DropDownChoice
 	 */
-	public SingleChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
+	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
 			IChoiceRenderer renderer, boolean autoSubmit)
 	{
 		super(id, form);
 
 		choice = new DropDownChoice("filter", model, choices, renderer);
+		choice.setNullValid(true);
 		
 		if (autoSubmit)
 		{
 			choice.add(new AttributeModifier("onchange", true, new Model("this.form.submit();")));
 		}
 		enableFocusTracking(choice);
+		
 		add(choice);
 	}
 
@@ -122,4 +124,5 @@ public class SingleChoiceFilter extends AbstractFilter
 	{
 		return choice;
 	}
+	
 }

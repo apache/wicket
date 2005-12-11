@@ -105,7 +105,7 @@ public class GoAndClearFilter extends GoFilter
 	 * 
 	 */
 	protected void onClearSubmit(Button button) {
-		button.getForm().setModelObject(originalState);
+		button.getForm().setModelObject(Objects.clone(originalState));
 	}
 
 }
