@@ -61,7 +61,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		DummyPage page = new DummyPage();
 		page.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
-		Assert.assertNull("Missing resource should return null", loader.loadStringResource(c, "test.string.bad",
+		Assert.assertNull("Missing resource should return null", loader.loadStringResource(c.getClass(), "test.string.bad",
 				Locale.getDefault(), null));
 	}
 
@@ -77,36 +77,36 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	/**
 	 *
 	 */
-	public void testNonPageComponent()
-	{
-		Component c = new DummyComponent("hello", application)
-		{
-			private static final long serialVersionUID = 1L;
-		};
-		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
-		try
-		{
-			loader.loadStringResource(c, "test.string", Locale.getDefault(), null);
-			Assert.fail("IllegalStateException should be thrown");
-		}
-		catch (IllegalStateException e)
-		{
-			// Expected result since component is not attached to a Page
-		}
-	}
+//	public void testNonPageComponent()
+//	{
+//		Component c = new DummyComponent("hello", application)
+//		{
+//			private static final long serialVersionUID = 1L;
+//		};
+//		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
+//		try
+//		{
+//			loader.loadStringResource(c.getClass(), "test.string", Locale.getDefault(), null);
+//			Assert.fail("IllegalStateException should be thrown");
+//		}
+//		catch (IllegalStateException e)
+//		{
+//			// Expected result since component is not attached to a Page
+//		}
+//	}
 
-	/**
-	 *
-	 */
-	public void testPageEmbeddedComponentLoadFromPage()
-	{
-		DummyPage p = new DummyPage();
-		DummyComponent c = new DummyComponent("hello", application);
-		p.add(c);
-		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
-		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.loadStringResource(
-				c, "another.test.string", Locale.getDefault(), null));
-	}
+//	/**
+//	 *
+//	 */
+//	public void testPageEmbeddedComponentLoadFromPage()
+//	{
+//		DummyPage p = new DummyPage();
+//		DummyComponent c = new DummyComponent("hello", application);
+//		p.add(c);
+//		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
+//		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.loadStringResource(
+//				c.getClass(), "another.test.string", Locale.getDefault(), null));
+//	}
 
 	/**
 	 *
@@ -120,7 +120,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		panel.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertEquals("Valid resourse string should be found", "Component string", loader
-				.loadStringResource(c, "component.string", Locale.getDefault(), null));
+				.loadStringResource(c.getClass(), "component.string", Locale.getDefault(), null));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		DummyPage p = new DummyPage();
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.loadStringResource(
-				p, "another.test.string", Locale.getDefault(), null));
+				p.getClass(), "another.test.string", Locale.getDefault(), null));
 	}
 
 	/**
@@ -142,8 +142,8 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		DummySubClassPage p = new DummySubClassPage();
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertEquals("Valid resource string should be found", "SubClass Test String",
-				loader.loadStringResource(p, "subclass.test.string", Locale.getDefault(), null));
+				loader.loadStringResource(p.getClass(), "subclass.test.string", Locale.getDefault(), null));
 		Assert.assertEquals("Valid resource string should be found", "Another string",
-				loader.loadStringResource(p, "another.test.string", Locale.getDefault(), null));
+				loader.loadStringResource(p.getClass(), "another.test.string", Locale.getDefault(), null));
 	}
 }

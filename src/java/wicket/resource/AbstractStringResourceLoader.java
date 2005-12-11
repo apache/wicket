@@ -18,7 +18,6 @@
 package wicket.resource;
 
 import java.util.Locale;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +29,6 @@ import wicket.Page;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
-import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -142,69 +140,68 @@ public abstract class AbstractStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	public String loadStringResource(final Component component, final String key,
-			final Locale locale, final String style)
-	{
-		if (component == null)
-		{
-			return null;
-		}
-
-		if (component.getPage() == null)
-		{
-			throw new IllegalArgumentException("Component without associated Page: "
-					+ component.toString(true));
-		}
-
-		// Build search stack
-		Stack searchStack = new Stack();
-		searchStack.push(component);
-
-		String prefixKey = key;
-		if (!(component instanceof Page))
-		{
-			prefixKey = component.getId() + "." + key;
-			MarkupContainer c = component.getParent();
-			while (true)
-			{
-				searchStack.push(c);
-				if (c instanceof Page)
-				{
-					break;
-				}
-
-				prefixKey = c.getId() + "." + prefixKey;
-				c = c.getParent();
-			}
-		}
-
-		// Iterate through the search stack
-		String value = null;
-		while (!searchStack.isEmpty())
-		{
-			Component comp = (Component)searchStack.pop();
-			Class cc = comp.getClass();
-
-			// Load the resource associated with the class, the key, the
-			// locale and the style.
-			// prefixKey = component relativ path + component id
-			value = loadStringResourceByClass(cc, prefixKey, locale, style);
-			if ((value == null) && (prefixKey.equals(key) == false))
-			{
-				value = loadStringResourceByClass(cc, key, locale, style);
-			}
-
-			if (value != null)
-			{
-				break;
-			}
-
-			prefixKey = Strings.afterFirst(prefixKey, '.');
-		}
-
-		// Return the resource value (may be null if resource was not found)
-		return value;
-	}
+//	public String loadStringResource(final Component component, final String key,
+//			final Locale locale, final String style)
+//	{
+//		if (component == null)
+//		{
+//			return null;
+//		}
+//
+//		if (component.getPage() == null)
+//		{
+//			throw new IllegalArgumentException("Component without associated Page: "
+//					+ component.toString(true));
+//		}
+//
+//		// Build search stack
+//		Stack searchStack = new Stack();
+//		searchStack.push(component.getClass());
+//
+//		String prefixKey = key;
+//		if (!(component instanceof Page))
+//		{
+//			prefixKey = component.getId() + "." + key;
+//			MarkupContainer c = component.getParent();
+//			while (true)
+//			{
+//				searchStack.push(c.getClass());
+//				if (c instanceof Page)
+//				{
+//					break;
+//				}
+//
+//				prefixKey = c.getId() + "." + prefixKey;
+//				c = c.getParent();
+//			}
+//		}
+//
+//		// Iterate through the search stack
+//		String value = null;
+//		while (!searchStack.isEmpty())
+//		{
+//			Class cc = (Class)searchStack.pop();
+//
+//			// Load the resource associated with the class, the key, the
+//			// locale and the style.
+//			// prefixKey = component relativ path + component id
+//			value = loadStringResourceByClass(cc, prefixKey, locale, style);
+//			if ((value == null) && (prefixKey.equals(key) == false))
+//			{
+//				value = loadStringResourceByClass(cc, key, locale, style);
+//			}
+//
+//			if (value != null)
+//			{
+//				break;
+//			}
+//
+//			prefixKey = Strings.afterFirst(prefixKey, '.');
+//		}
+//
+//		// Return the resource value (may be null if resource was not found)
+//		return value;
+//	}
 
 	/**
 	 * Get the string resource for the given combination of class, key, locale
@@ -223,9 +220,14 @@ public abstract class AbstractStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	protected String loadStringResourceByClass(Class clazz, final String key,
+	public String loadStringResource(Class clazz, final String key,
 			final Locale locale, final String style)
 	{
+		if (clazz == null)
+		{
+			return null;
+		}
+		
 		String value = null;
 		while (value == null)
 		{

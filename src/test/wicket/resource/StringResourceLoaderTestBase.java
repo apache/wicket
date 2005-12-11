@@ -109,11 +109,11 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyNoStyleDefaultLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", Locale.getDefault(), null);
+		String s = loader.loadStringResource(component.getClass(), "test.string", Locale.getDefault(), null);
 		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 
 		// And do it again to ensure caching path is exercised
-		s = loader.loadStringResource(component, "test.string", Locale.getDefault(), null);
+		s = loader.loadStringResource(component.getClass(), "test.string", Locale.getDefault(), null);
 		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 	}
 
@@ -122,7 +122,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderInvalidKeyNoStyleDefaultLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(component, "unknown.string",
+		Assert.assertNull("Missing key should return null", loader.loadStringResource(component.getClass(), "unknown.string",
 				Locale.getDefault(), null));
 	}
 
@@ -131,7 +131,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyNoStyleAlternativeLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", new Locale("zz"), null);
+		String s = loader.loadStringResource(component.getClass(), "test.string", new Locale("zz"), null);
 		Assert.assertEquals("Resource should be loaded", "Flib flob", s);
 	}
 
@@ -140,7 +140,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderInvalidKeyNoStyleAlternativeLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(component, "unknown.string",
+		Assert.assertNull("Missing key should return null", loader.loadStringResource(component.getClass(), "unknown.string",
 				new Locale("zz"), null));
 	}
 
@@ -149,7 +149,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyStyleNoLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", null, "alt");
+		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt");
 		Assert.assertEquals("Resource should be loaded", "Alt test string", s);
 	}
 

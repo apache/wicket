@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.ApplicationSettings;
-import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
@@ -82,8 +81,8 @@ public class MarkupParser
     /** The markup handler chain: each filter has a specific task */
     private IMarkupFilter markupFilterChain;
 
-    /** The wicket component requesting the markup */
-    private MarkupContainer container;
+    /** The wicket component requesting the markup incl class name, locale and style */
+    private ContainerInfo containerInfo;
 
     /** The handler detecting wicket tags: wicket namespace */
     private WicketTagIdentifier detectWicketComponents;
@@ -115,12 +114,12 @@ public class MarkupParser
     /**
      * Constructor.
      * 
-     * @param container The wicket compoment requesting the markup
+     * @param containerInfo The wicket compoment requesting the markup
      * @param xmlParser The streaming xml parser to read and parse the markup
      */
-    public MarkupParser(final MarkupContainer container, final IXmlPullParser xmlParser)
+    public MarkupParser(final ContainerInfo containerInfo, final IXmlPullParser xmlParser)
     {
-        this.container = container;
+        this.containerInfo = containerInfo;
         this.xmlParser = xmlParser;
     }
 
@@ -156,17 +155,17 @@ public class MarkupParser
         filter = new WicketLinkTagHandler(this.automaticLinking, filter); 
         
         // Provided the wicket component requesting the markup is known ...
-        if (this.container != null)
+        if (this.containerInfo != null)
         {
         	if (WicketMessageTagHandler.enable)
         	{
-        		filter = new WicketMessageTagHandler(this.container, filter);
+        		filter = new WicketMessageTagHandler(this.containerInfo, filter);
         	}
         	
 	        filter = new BodyOnLoadHandler(filter);
 	
 	        // Pages require additional handlers
-	        if (container instanceof Page)
+	        if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 	        {
 	            filter = new HtmlHeaderSectionHandler(tagList, filter);
 	        }

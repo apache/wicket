@@ -17,7 +17,9 @@
  */
 package wicket;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -29,6 +31,7 @@ import wicket.model.IModel;
 import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
+import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
@@ -170,7 +173,7 @@ public class Localizer
 		return getString(key, component, null, component.getLocale(), component.getStyle(),
 				defaultValue);
 	}
-
+	
 	/**
 	 * Get the localized string using all of the supplied parameters. This
 	 * method is left public to allow developers full control over string
@@ -201,51 +204,34 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		// The key value
-		String string = null;
-
 		// Get application settings
 		final ApplicationSettings settings = application.getSettings();
 
 		// If value is cached already ...
-		String id = createCacheId(component, locale, style, key);
-		if (cachedValues.containsKey(id))
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Found message key in cache: " + id);
-			}
-			string = (String)cachedValues.get(id);
-			if (string == NULL)
-			{
-				string = null;
-			}
-		}
-		else
-		{
-			// Search each loader in turn and return the string if it is found
-			final Iterator iterator = settings.getStringResourceLoaders().iterator();
-			while (iterator.hasNext())
-			{
-				IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
-				string = loader.loadStringResource(component, key, locale, style);
-				if (string != null)
-				{
-					break;
-				}
-			}
+		Class clazz = (component != null ? component.getClass() : null);
+		String id = createCacheId(clazz, locale, style, key);
 
-			// cache all values, not matter the key has been found or not
-			if (string != null)
+		// The cached key value
+		String string = getCachedValue(id);
+		
+		// If not found in the cache
+		if (string == null)
+		{
+			final List searchStack;
+			final String path;
+			if (component != null)
 			{
-				this.cachedValues.put(id, string);
+				searchStack = getComponentStack(component);
+				path = Strings.replaceAll(component.getPageRelativePath(), ":", ".");
 			}
 			else
 			{
-				// ConcurrentReaderHashMap does not allow null values. This is a
-				// substitute
-				this.cachedValues.put(id, NULL);
+				searchStack = new ArrayList(0);
+				searchStack.add(Application.get().getClass());
+				path = null;
 			}
+
+			string = getString(key, path, searchStack, locale, style);
 		}
 
 		if (string != null)
@@ -262,13 +248,124 @@ public class Localizer
 
 		if (settings.getThrowExceptionOnMissingResource())
 		{
-			throw new MissingResourceException("Unable to find resource: " + key, getClass()
-					.getName(), key);
+			throw new MissingResourceException("Unable to find resource: " + key, 
+					(clazz != null ? getClass().getName() : ""), key);
 		}
 		else
 		{
 			return "[Warning: String resource for '" + key + "' not found]";
 		}
+	}
+	
+	/**
+	 * 
+	 * <p>
+	 * Note: This implementation does NOT allow variable (OGNL) substitution
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param searchStack
+	 *            A stack of classes to get the resource for
+	 * @param path
+	 *            The component id path relative to the page
+	 * @param locale
+	 *            The locale to get the resource for (optional)
+	 * @param style
+	 *            The style to get the resource for (optional) (see
+	 *            {@link wicket.Session})
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 */
+	public String getString(final String key, final String path, final List searchStack, 
+			final Locale locale, final String style)
+			throws MissingResourceException
+	{
+		if (searchStack == null)
+		{
+			throw new IllegalArgumentException(
+					"Parameter 'searchStack' must have at least one entry");
+		}
+
+		// The top element
+		Class componentClass = (searchStack.size() > 0 ? (Class) searchStack.get(0) : null); 
+		
+		// If value is cached already ...
+		String id = createCacheId(componentClass, locale, style, key);
+
+		// The cached key value
+		String string = getCachedValue(id);
+		
+		// If not found in the cache
+		if (string == null)
+		{
+			string = traverseResourceLoaders(key, path, searchStack, locale, style);
+			
+			// cache all values, not matter the key has been found or not
+			if (string != null)
+			{
+				this.cachedValues.put(id, string);
+			}
+			else
+			{
+				// ConcurrentReaderHashMap does not allow null values. This is a
+				// substitute
+				this.cachedValues.put(id, NULL);
+			}
+		}
+
+		return string;
+	}
+
+	/**
+     * For each StringResourceLoader registered with the application, load the 
+     * properties file associated with the classes in the searchStack, the locale
+     * and the style. The searchStack is traversed in reverse order.<p>
+     * The property is identified by the 'key' or 'path'+'key'. 'path' is
+     * shortened (last element removed) to always represent the page relative
+     * path of the original component associate with it.
+     * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param path
+	 *            The component id path relative to the page
+	 * @param searchStack
+	 *            A stack of classes to get the resource for
+	 * @param locale
+	 *            The locale to get the resource for (optional)
+	 * @param style
+	 *            The style to get the resource for (optional) (see
+	 *            {@link wicket.Session})
+	 * @return The string resource
+	 */
+	private String traverseResourceLoaders(final String key, final String path, 
+			final List searchStack, final Locale locale, final String style)
+	{
+		// Search each loader in turn and return the string if it is found
+		final Iterator iterator = application.getSettings().getStringResourceLoaders().iterator();
+		String string = null;
+		while (iterator.hasNext() && (string == null))
+		{
+			IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
+			
+			String prefix = path;
+			for (int i=searchStack.size() - 1; (i >= 0) && (string == null); i--)
+			{
+				Class clazz = (Class)searchStack.get(i);
+				string = loader.loadStringResource(clazz, key, locale, style);
+				if ((string == null) && (path != null) && (prefix.length() > 0))
+				{
+					string = loader.loadStringResource(clazz, prefix + '.' + key, locale, style);
+					if (string == null)
+					{
+						prefix = Strings.beforeLast(prefix, '.');
+					}
+				}
+			}
+		}
+
+		return string;
 	}
 
 	/**
@@ -295,8 +392,34 @@ public class Localizer
 	 * Helper method to create a unique id for caching previously loaded
 	 * resources.
 	 * 
-	 * @param component
-	 *            The component that the resources are being loaded for
+	 * @param cacheId
+	 *            The resources cache id
+	 * @return The unique cache id
+	 */
+	private String getCachedValue(final String cacheId)
+	{
+		String value = (String)cachedValues.get(cacheId);
+		if (value != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Found message key in cache: " + cacheId);
+			}
+			
+			if (value == NULL)
+			{
+				value = null;
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * Helper method to create a unique id for caching previously loaded
+	 * resources.
+	 * 
+	 * @param clazz
+	 *            The class that the resources is being loaded for
 	 * @param locale
 	 *            The locale of the resources
 	 * @param style
@@ -305,11 +428,11 @@ public class Localizer
 	 *            The message key
 	 * @return The unique cache id
 	 */
-	private String createCacheId(final Component component, final Locale locale,
+	private String createCacheId(final Class clazz, final Locale locale,
 			final String style, final String key)
 	{
 		String id = application.getPropertiesFactory().createResourceKey(
-				component != null ? component.getClass() : null, locale, style)
+				clazz, locale, style)
 				+ '.' + key;
 		return id;
 	}
@@ -320,5 +443,46 @@ public class Localizer
 	public final void clearCache()
 	{
 		this.cachedValues.clear();
+	}
+
+	/**
+	 * Traverse the component hierachy up to the Page and add each
+	 * component class to the list (stack) returned
+	 * 
+	 * @param component The component to evaluate
+	 * @return The stack of classes 
+	 */
+	private List getComponentStack(final Component component)
+	{
+		if (component == null)
+		{
+			return null;
+		}
+
+		if (component.getPage() == null)
+		{
+			throw new IllegalArgumentException("Component without associated Page: "
+					+ component.toString(true));
+		}
+
+		// Build search stack
+		List searchStack = new ArrayList();
+		searchStack.add(component.getClass());
+
+		if (!(component instanceof Page))
+		{
+			MarkupContainer container = component.getParent();
+			while (true)
+			{
+				searchStack.add(container.getClass());
+				if (container instanceof Page)
+				{
+					break;
+				}
+
+				container = container.getParent();
+			}
+		}
+		return searchStack;
 	}
 }
