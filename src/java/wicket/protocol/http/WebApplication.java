@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.57 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -66,13 +66,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                   
- *                   public void init()
- *                   {
- *                   	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                   	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                   	...
- *                                              
+ *                       
+ *                       public void init()
+ *                       {
+ *                       	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                       	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                       	...
+ *                                                  
  * </pre>
  * 
  * @see WicketServlet
@@ -182,8 +182,9 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
-		if (!path.startsWith("/")) {
-			path="/"+path;
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
 		}
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
@@ -201,8 +202,9 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
 			String pageMapName)
 	{
-		if (!path.startsWith("/")) {
-			path="/"+path;
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
 		}
 
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
@@ -219,8 +221,9 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPackage(String path, Package packageToMount)
 	{
-		if (!path.startsWith("/")) {
-			path="/"+path;
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
 		}
 
 		mountPath(path, new PackagePathMountEncoder(path, packageToMount));
@@ -236,6 +239,14 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPath(String path, IMountEncoder encoder)
 	{
+		// TODO here it is too late to fix the path if it doesnt start with a /
+		// because by this time the encoder is created and it probably has its
+		// own reference to the path. so if we fix the path the encoder's path
+		// and the mount path might not be the same. should we throw an error
+		// here?
+		// 
+		// possible solution might be to add getMountPath() to IMountEncoder and
+		// use that in RequestEncoder.mountPath() instead of passing it in.
 		if (encoder == null)
 		{
 			throw new NullPointerException("encoder must be not null");
