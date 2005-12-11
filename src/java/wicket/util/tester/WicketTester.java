@@ -247,7 +247,14 @@ public class WicketTester extends MockWebApplication
 	{
 		getPages().setHomePage(DummyHomePage.class);
 		rerender(page);
-		return getLastRenderedPage();
+		
+		Page last=getLastRenderedPage();
+		
+		getWicketSession().touch(page);
+		if (page!=last) {
+			getWicketSession().touch(last);
+		}
+		return last;
 	}
 
 	/**
