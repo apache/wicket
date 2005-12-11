@@ -38,7 +38,6 @@ import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
-import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 
@@ -81,14 +80,11 @@ public class MarkupParser
     /** The markup handler chain: each filter has a specific task */
     private IMarkupFilter markupFilterChain;
 
-    /** The wicket component requesting the markup incl class name, locale and style */
-    private ContainerInfo containerInfo;
-
     /** The handler detecting wicket tags: wicket namespace */
     private WicketTagIdentifier detectWicketComponents;
 
     /** The resource stream containing the markup. May be null */
-    private IResourceStream resource;
+    private MarkupResourceStream resource;
     
     /**
      * Constructor.
@@ -108,18 +104,6 @@ public class MarkupParser
      */
     public MarkupParser(final IXmlPullParser xmlParser)
     {
-        this.xmlParser = xmlParser;
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param containerInfo The wicket compoment requesting the markup
-     * @param xmlParser The streaming xml parser to read and parse the markup
-     */
-    public MarkupParser(final ContainerInfo containerInfo, final IXmlPullParser xmlParser)
-    {
-        this.containerInfo = containerInfo;
         this.xmlParser = xmlParser;
     }
 
@@ -155,17 +139,17 @@ public class MarkupParser
         filter = new WicketLinkTagHandler(this.automaticLinking, filter); 
         
         // Provided the wicket component requesting the markup is known ...
-        if (this.containerInfo != null)
+        if ((this.resource != null) && (this.resource.getContainerInfo() != null))
         {
         	if (WicketMessageTagHandler.enable)
         	{
-        		filter = new WicketMessageTagHandler(this.containerInfo, filter);
+        		filter = new WicketMessageTagHandler(this.resource.getContainerInfo(), filter);
         	}
         	
 	        filter = new BodyOnLoadHandler(filter);
 	
 	        // Pages require additional handlers
-	        if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
+	        if (Page.class.isAssignableFrom(this.resource.getContainerInfo().getContainerClass()))
 	        {
 	            filter = new HtmlHeaderSectionHandler(tagList, filter);
 	        }
@@ -225,7 +209,7 @@ public class MarkupParser
      * @throws IOException
      * @throws ResourceStreamNotFoundException
      */
-    final Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
+    final Markup readAndParse(final MarkupResourceStream resource) throws ParseException, IOException,
             ResourceStreamNotFoundException
     {
     	this.resource = resource;
