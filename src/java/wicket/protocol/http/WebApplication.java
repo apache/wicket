@@ -225,6 +225,10 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPath(String path, IMountEncoder encoder)
 	{
+		if (!path.startsWith("/")) {
+			path="/"+path;
+		}
+		
 		if (encoder == null)
 		{
 			throw new NullPointerException("encoder must be not null");
