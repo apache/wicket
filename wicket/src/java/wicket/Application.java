@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.BodyOnLoadResolver;
@@ -488,13 +489,13 @@ public abstract class Application
 	/**
 	 * Factory method that creates a markup parser.
 	 * 
-	 * @param container
-	 *            The wicket container requesting the markup
+	 * @param containerInfo
+	 *            The wicket container infos requesting the markup
 	 * @return A new MarkupParser
 	 */
-	public MarkupParser newMarkupParser(final MarkupContainer container)
+	public MarkupParser newMarkupParser(final ContainerInfo containerInfo)
 	{
-		final MarkupParser parser = new MarkupParser(container, new XmlPullParser(getSettings()
+		final MarkupParser parser = new MarkupParser(containerInfo, new XmlPullParser(getSettings()
 				.getDefaultMarkupEncoding()));
 
 		parser.configure(getSettings());

@@ -97,7 +97,7 @@ public class MarkupCache
 			final boolean throwException)
 	{
 		// Look for associated markup
-		Markup markup = getMarkup(container, container.getClass());
+		Markup markup = getMarkup(new ContainerInfo(container), container.getClass());
 
 		// If we found markup for this container
 		if (markup != Markup.NO_MARKUP)
@@ -123,13 +123,13 @@ public class MarkupCache
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, container.getClass()) != Markup.NO_MARKUP;
+		return getMarkup(new ContainerInfo(container), container.getClass()) != Markup.NO_MARKUP;
 	}
 
 	/**
 	 * Gets any (immutable) markup resource for this class.
 	 * 
-	 * @param container
+	 * @param containerInfo
 	 *            The container the markup should be associated with
 	 * @param clazz
 	 *            The class to get the associated markup for. If null, the the
@@ -137,15 +137,15 @@ public class MarkupCache
 	 *            container as well.
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container, Class clazz)
+	private final Markup getMarkup(final ContainerInfo containerInfo, Class clazz)
 	{
 		if (clazz == null)
 		{
-			clazz = container.getClass();
+			clazz = containerInfo.getContainerClass();
 		}
 		else
 		{
-			if (!clazz.isInstance(container))
+			if (!clazz.isAssignableFrom(containerInfo.getContainerClass()))
 			{
 				throw new WicketRuntimeException("Parameter clazz must be instance of container");
 			}
@@ -154,7 +154,7 @@ public class MarkupCache
 		synchronized (markupCache)
 		{
 			// Look up markup tag list by class, locale, style and markup type
-			final String key = markupKey(container, clazz);
+			final String key = markupKey(containerInfo, clazz);
 
 			Markup markup = (Markup)markupCache.get(key);
 
@@ -171,7 +171,7 @@ public class MarkupCache
 
 					// Look for markup resource for containerClass
 					markupResource = application.getResourceStreamLocator().locate(containerClass,
-							container.getStyle(), container.getLocale(), container.getMarkupType());
+							containerInfo.getStyle(), containerInfo.getLocale(), containerInfo.getFileExtension());
 
 					containerClass = containerClass.getSuperclass();
 				}
@@ -180,7 +180,7 @@ public class MarkupCache
 				if (markupResource != null)
 				{
 					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResource, clazz, container);
+					markup = loadMarkupAndWatchForChanges(key, markupResource, clazz, containerInfo);
 				}
 				else
 				{
@@ -206,23 +206,23 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @param containerClass
 	 *            The Class the associated stream is directly associated
-	 * @param container
+	 * @param containerInfo
 	 *            The container requesting the markup
 	 * @return The markup
 	 */
 	private final Markup loadMarkup(final String key, final IResourceStream markupResourceStream,
-			final Class containerClass, final MarkupContainer container)
+			final Class containerClass, final ContainerInfo containerInfo)
 	{
 		try
 		{
 		    // read and parse the markup
-			Markup markup = application.newMarkupParser(container).readAndParse(
+			Markup markup = application.newMarkupParser(containerInfo).readAndParse(
 					markupResourceStream);
 			markup.setContainerClass(containerClass);
 
 			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.
-			markup = checkForMarkupInheritance(key, markup, containerClass, container);
+			markup = checkForMarkupInheritance(key, markup, containerClass, containerInfo);
 
 			// add the markup to the cache
 			synchronized (markupCache)
@@ -268,13 +268,13 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @param containerClass
 	 *            The Class the associated stream is directly associated
-	 * @param container
+	 * @param containerInfo
 	 *            The container requesting the markup
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final String key,
 			final IResourceStream markupResourceStream, final Class containerClass,
-			final MarkupContainer container)
+			final ContainerInfo containerInfo)
 	{
 		// Watch file in the future
 		final ModificationWatcher watcher = application.getResourceWatcher();
@@ -285,7 +285,7 @@ public class MarkupCache
 				public void onChange()
 				{
 					log.info("Reloading markup from " + markupResourceStream);
-					loadMarkup(key, markupResourceStream, containerClass, container);
+					loadMarkup(key, markupResourceStream, containerClass, containerInfo);
 
 					// In case of an error or if markup does not exist ...
 					// if (markup == Markup.NO_MARKUP)
@@ -297,24 +297,25 @@ public class MarkupCache
 		}
 
 		log.info("Loading markup from " + markupResourceStream);
-		return loadMarkup(key, markupResourceStream, containerClass, container);
+		return loadMarkup(key, markupResourceStream, containerClass, containerInfo);
 	}
 
 	/**
 	 * Construct a proper key value for the cache
 	 * 
-	 * @param container
+	 * @param containerInfo
+	 *            The container requesting the markup
 	 * @param clazz
 	 *            The clazz to get the key for
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final String markupKey(final MarkupContainer container, final Class clazz)
+	private final String markupKey(final ContainerInfo containerInfo, final Class clazz)
 	{
 		final String classname = clazz.getName();
-		final Locale locale = container.getLocale();
-		final String style = container.getStyle();
-		final String markupType = container.getMarkupType();
+		final Locale locale = containerInfo.getLocale();
+		final String style = containerInfo.getStyle();
+		final String markupType = containerInfo.getFileExtension();
 		
 		final StringBuffer buffer = new StringBuffer(classname.length() + 32);
 		buffer.append(classname);
@@ -354,12 +355,12 @@ public class MarkupCache
 	 *            The markup to checked for inheritance
 	 * @param clazz
 	 *            The class directly associated with the markup
-	 * @param container
+	 * @param containerInfo
 	 *            The container associated with the markup
 	 * @return A markup object with the the base markup elements resolved.
 	 */
 	private Markup checkForMarkupInheritance(final String key, final Markup markup,
-			final Class clazz, final MarkupContainer container)
+			final Class clazz, final ContainerInfo containerInfo)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
@@ -371,12 +372,12 @@ public class MarkupCache
 		}
 
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container, clazz.getSuperclass());
+		final Markup baseMarkup = getMarkup(containerInfo, clazz.getSuperclass());
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
 					"Markup not found. Component class: "
-							+ (clazz != null ? clazz.getName() : container.getClass().getName())
+							+ (clazz != null ? clazz.getName() : containerInfo.getContainerClass().getName())
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
 		}
 
@@ -388,7 +389,7 @@ public class MarkupCache
 			public void onChange()
 			{
 				log.info("Reloading derived markup from " + markup.getResource());
-				loadMarkup(key, markup.getResource(), clazz, container);
+				loadMarkup(key, markup.getResource(), clazz, containerInfo);
 			}
 
 			/**

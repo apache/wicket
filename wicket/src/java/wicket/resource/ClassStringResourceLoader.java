@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.Component;
 
 /**
  * This string resource loader attempts to find a single resource bundle that
@@ -81,24 +80,23 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	public String loadStringResource(final Component component, final String key,
-			final Locale locale, final String style)
-	{
-		if (component == null)
-		{
-			return loadStringResourceByClass(this.clazz, key, locale, style);
-		}
-
-		return super.loadStringResource(component, key, locale, style);
-	}
-
+//	public String loadStringResource(final Component component, final String key,
+//			final Locale locale, final String style)
+//	{
+//		if (component == null)
+//		{
+//			return loadStringResourceByClass(this.clazz, key, locale, style);
+//		}
+//
+//		return super.loadStringResource(component, key, locale, style);
+//	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected String loadStringResourceByClass(Class clazz, final String key,
+	public String loadStringResource(Class clazz, final String key,
 			final Locale locale, final String style)
 	{
-		 return super.loadStringResourceByClass(this.clazz, key, locale, style);
+		 return super.loadStringResource(this.clazz, key, locale, style);
 	}
 }

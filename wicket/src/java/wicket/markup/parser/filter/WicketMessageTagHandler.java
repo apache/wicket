@@ -18,13 +18,16 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.MarkupContainer;
+import wicket.Application;
 import wicket.markup.ComponentTag;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -35,7 +38,6 @@ import wicket.markup.parser.IMarkupFilter;
  * This is a markup inline filter. It identifies wicket:message attributes and
  * replaces the attributes referenced. E.g. wicket:message="value=key" would
  * replace or add the attribute "value" with the message associated with "key".
- * The
  * 
  * @author Juergen Donnerstag
  */
@@ -53,21 +55,27 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 */
 	public static boolean enable = false;
 
-	/** The MarkupContainer requesting the information */
-	private final MarkupContainer container;
+	/** The MarkupContainer requesting the information incl. class, locale and style */
+	private final ContainerInfo containerInfo;
 
+	/** temporary storage unomdified while the object instance exists */
+	private final List searchStack;
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param container
-	 *            The container requesting the current markup
+	 * @param containerInfo
+	 *            The container requesting the current markup incl class, style and locale
 	 * @param parent
 	 *            The next MarkupFilter in the processing chain
 	 */
-	public WicketMessageTagHandler(final MarkupContainer container, final IMarkupFilter parent)
+	public WicketMessageTagHandler(final ContainerInfo containerInfo, final IMarkupFilter parent)
 	{
 		super(parent);
-		this.container = container;
+		this.containerInfo = containerInfo;
+
+		this.searchStack = new ArrayList();
+		searchStack.add(containerInfo.getContainerClass());
 	}
 
 	/**
@@ -90,7 +98,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				WICKET_MESSAGE_ATTR_NAME);
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
-			if (this.container == null)
+			if (this.containerInfo == null)
 			{
 				throw new ParseException(
 						"Found "
@@ -125,8 +133,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String value = container.getApplication().getLocalizer().getString(messageKey,
-						container, "");
+				String value = Application.get().getLocalizer().getString(messageKey,
+						null, searchStack, containerInfo.getLocale(), containerInfo.getStyle());
 
 				if (value.length() > 0)
 				{

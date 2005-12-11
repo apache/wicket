@@ -19,8 +19,6 @@ package wicket.resource;
 
 import java.util.Locale;
 
-import wicket.Component;
-
 /**
  * The string resource loader interface allows a strategy pattern to be applied
  * to the loading of resource strings for an application. The loader (or chain
@@ -56,7 +54,7 @@ public interface IStringResourceLoader
      * selected. The style allows the set of resources to select to be varied by
      * skin/brand.
      * 
-     * @param component
+     * @param clazz
      *            The component class to get the string resource for
      * @param key
      *            The key to obtain the string for
@@ -69,5 +67,5 @@ public interface IStringResourceLoader
      * @return The string resource value or null if the resource could not be
      *         loaded by this loader
      */
-    String loadStringResource(Component component, String key, Locale locale, String style);
+    String loadStringResource(Class clazz, String key, Locale locale, String style);
 }
