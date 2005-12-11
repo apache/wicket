@@ -182,6 +182,9 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
+		if (!path.startsWith("/")) {
+			path="/"+path;
+		}
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
 
@@ -198,6 +201,10 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
 			String pageMapName)
 	{
+		if (!path.startsWith("/")) {
+			path="/"+path;
+		}
+
 		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
 				pageMapName));
 	}
@@ -212,6 +219,10 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPackage(String path, Package packageToMount)
 	{
+		if (!path.startsWith("/")) {
+			path="/"+path;
+		}
+
 		mountPath(path, new PackagePathMountEncoder(path, packageToMount));
 	}
 
@@ -225,10 +236,6 @@ public abstract class WebApplication extends Application
 	 */
 	public final void mountPath(String path, IMountEncoder encoder)
 	{
-		if (!path.startsWith("/")) {
-			path="/"+path;
-		}
-		
 		if (encoder == null)
 		{
 			throw new NullPointerException("encoder must be not null");
