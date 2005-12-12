@@ -1,7 +1,6 @@
-
 <html xmlns:wicket>
 <body>
-	<wicket:panel>
+<wicket:panel>
   <table>
     <thead>
       <tr>
@@ -9,22 +8,22 @@
         <th>Email</th>
         <th>Status</th>
       </tr>
-	</thead>
+    </thead>
     <tbody>
-			<tr wicket:id="rows" class="even">
-				<td><span wicket:id="id">Test ID</span></td>
-				<td><span wicket:id="email">Test EMail</span></td>
-				<td><span wicket:id="status">Test Status</span></td>
-			</tr>
+      <tr wicket:id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+      </tr>
       <wicket:remove>
-		    <tr class="odd">
-		      <td>Test ID</td>
-		      <td>Test Email</td>
-		      <td>Test Status</td>
-		    </tr>
+        <tr class="odd">
+          <td>Test ID</td>
+          <td>Test Email</td>
+          <td>Test Status</td>
+        </tr>
       </wicket:remove>
     </tbody>
   </table>
-	</wicket:panel>
+</wicket:panel>
 </body>
 </html>
