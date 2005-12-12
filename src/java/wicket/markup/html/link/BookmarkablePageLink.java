@@ -70,6 +70,8 @@ public class BookmarkablePageLink extends Link
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
+		} else if (!Page.class.isAssignableFrom(pageClass)) {
+			throw new IllegalArgumentException("Page class must be derived from "+Page.class.getName());
 		}
 		this.pageClass = pageClass;
 		this.parameters = parameters;
