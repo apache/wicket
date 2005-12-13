@@ -1196,8 +1196,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 					"parameter behaviourId was not provided: unable to locate listener");
 		}
 
-		int IdAsInt = Integer.parseInt(id);
-		IBehaviourListener behaviourListener = (IBehaviourListener)behaviours.get(IdAsInt);
+		int idAsInt = Integer.parseInt(id);
+		IBehaviourListener behaviourListener = (IBehaviourListener)behaviours.get(idAsInt);
 
 		if (behaviourListener == null)
 		{
