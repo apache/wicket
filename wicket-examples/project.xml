@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>SNAPSHOT</currentVersion>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -152,7 +152,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description>The Wicket core classes</wicket.description>
@@ -163,7 +163,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description>The Wicket extensions classes</wicket.description>

@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>SNAPSHOT</currentVersion>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
@@ -129,7 +129,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description>This is the wicket library</wicket.description>
