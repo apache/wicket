@@ -78,7 +78,9 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 
 		// Clear all feedback messages if it isn't a redirect
 		getPage().getFeedbackMessages().clear();
-
+		
+		getPage().startComponentRender(getComponent());
+		
 		final Application application = requestCycle.getApplication();
 		// and see if we have to redirect the render part by default
 		ApplicationSettings.RenderStrategy strategy = application.getSettings().getRenderStrategy();
