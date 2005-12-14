@@ -34,21 +34,21 @@ import wicket.protocol.http.WebRequestCycle;
  * Application.newMarkupParser() like
  * 
  * <pre>
- * public class MyApplication extends Application
- * {
- *    ...
- *    public MarkupParser newMarkupParser()
+ *    public class MyApplication extends Application
  *    {
- *       final MarkupParser parser = new MarkupParser(new XmlPullParser())
+ *       ...
+ *       public MarkupParser newMarkupParser()
  *       {
- *          public void initFilterChain()
+ *          final MarkupParser parser = new MarkupParser(new XmlPullParser())
  *          {
- *             appendMarkupFilter(new PrependContextPathHandler());
- *          }
- *       };
- *       parser.configure(getSettings());
- *       return parser;
- *    }
+ *             public void initFilterChain()
+ *             {
+ *                appendMarkupFilter(new PrependContextPathHandler());
+ *             }
+ *          };
+ *          parser.configure(getSettings());
+ *          return parser;
+ *       }
  * </pre>
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
@@ -70,7 +70,17 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	private String contextPath;
 
 	/**
-	 * Construct.
+	 * Construct. This constructor will automatically resolve the context path.
+	 * This should work in most cases, and support the following clustering
+	 * scheme
+	 * 
+	 * <pre>
+	 *    node1.mydomain.com
+	 *    node2.mydomain.com
+	 *    node3.mydomain.com
+	 * </pre>
+	 * 
+	 * 
 	 */
 	public PrependContextPathHandler()
 	{
@@ -79,22 +89,26 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 
 	/**
 	 * Construct. In order to support cluster envs like
+	 * 
 	 * <pre>
-     * node1.mydomain.com
-     * node2.mydomain.com
-     * node3.mydomain.com
-     * </pre>
-     * and a balancer at <pre>mydomain.com</pre>. This kind of setup
-     * is supported by this contructor as you can provide your own
-     * (any) context path.
-     * 
-     * @param virtualContextPath  
-     *             The path to be used instead of the real context path
-  	 */
+	 *    node1.mydomain.com/mycontext1/
+	 *    node2.mydomain.com/mycontext2/
+	 *    node3.mydomain.com/mycontext3/
+	 *    mydomain.com/mycontext (load balancer)
+	 * </pre>
+	 * 
+	 * This kind of setup requires the user to specify the context path of the
+	 * load balancer so that the path is targetted for the load balancer and not
+	 * this cluster node.
+	 * 
+	 * 
+	 * @param virtualContextPath
+	 *            The path to be used instead of the real context path
+	 */
 	public PrependContextPathHandler(final String virtualContextPath)
 	{
 		super(null);
-		
+
 		this.contextPath = virtualContextPath;
 	}
 
