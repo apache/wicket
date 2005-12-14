@@ -1920,11 +1920,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * 
 	 * @return If true, the component tag will not be printed
 	 */
-	protected final boolean getRenderBodyOnly()
+	public final boolean getRenderBodyOnly()
 	{
 		return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
-
 
 	/**
 	 * Called when a null model is about to be retrieved in order to allow a
