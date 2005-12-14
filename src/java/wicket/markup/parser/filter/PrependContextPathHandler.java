@@ -34,21 +34,21 @@ import wicket.protocol.http.WebRequestCycle;
  * Application.newMarkupParser() like
  * 
  * <pre>
- *          public class MyApplication extends Application
+ * public class MyApplication extends Application
+ * {
+ *    ...
+ *    public MarkupParser newMarkupParser()
+ *    {
+ *       final MarkupParser parser = new MarkupParser(new XmlPullParser())
+ *       {
+ *          public void initFilterChain()
  *          {
- *              ...
- *      	       public MarkupParser newMarkupParser()
- *              {
- *                  final MarkupParser parser = new MarkupParser(new XmlPullParser())
- *                      {
- *                          public void initFilterChain()
- *                          {
- *                              appendMarkupFilter(new PrependContextPathHandler());
- *                          }
- *                      };
- *                  parser.configure(getSettings());
- *                  return parser;
- *                  }
+ *             appendMarkupFilter(new PrependContextPathHandler());
+ *          }
+ *       };
+ *       parser.configure(getSettings());
+ *       return parser;
+ *    }
  * </pre>
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
@@ -75,6 +75,27 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	public PrependContextPathHandler()
 	{
 		super(null);
+	}
+
+	/**
+	 * Construct. In order to support cluster envs like
+	 * <pre>
+     * node1.mydomain.com
+     * node2.mydomain.com
+     * node3.mydomain.com
+     * </pre>
+     * and a balancer at <pre>mydomain.com</pre>. This kind of setup
+     * is supported by this contructor as you can provide your own
+     * (any) context path.
+     * 
+     * @param virtualContextPath  
+     *             The path to be used instead of the real context path
+  	 */
+	public PrependContextPathHandler(final String virtualContextPath)
+	{
+		super(null);
+		
+		this.contextPath = virtualContextPath;
 	}
 
 	/**

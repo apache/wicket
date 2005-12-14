@@ -39,6 +39,7 @@ import wicket.markup.html.HtmlHeaderResolver;
 import wicket.markup.html.WicketLinkResolver;
 import wicket.markup.html.WicketMessageResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.request.IRequestCycleProcessor;
@@ -492,13 +493,39 @@ public abstract class Application
 	 */
 	public MarkupParser newMarkupParser()
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser(getSettings()
-				.getDefaultMarkupEncoding()));
-
+		final MarkupParser parser = new MarkupParser(new XmlPullParser(
+				getSettings().getDefaultMarkupEncoding()))
+		        {
+			    	public void initFilterChain()
+			        {
+			    		IMarkupFilter filters[] = getAdditionalMarkupHandler();
+			    		if (filters != null)
+			    		{
+			    			for (int i = 0; i < filters.length; i++)
+							{
+			    				appendMarkupFilter(filters[i]);		
+							}
+			    		}
+			        }
+		        };
+		        
 		parser.configure(getSettings());
 		return parser;
 	}
 
+	/**
+	 * If you want to add an additional IMarkupFilter to the MarkupParser, 
+	 * e.g. PrependContextPathHandler, simply add it to the list/array
+	 * returned.
+	 * @see #newMarkupParser()
+	 * 
+	 * @return List 
+	 */
+	public IMarkupFilter[] getAdditionalMarkupHandler()
+	{
+		return null;
+	}
+	
 	/**
 	 * @return Factory for creating sessions
 	 */
