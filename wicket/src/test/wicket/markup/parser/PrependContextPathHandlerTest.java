@@ -19,7 +19,6 @@
 package wicket.markup.parser;
 
 import wicket.WicketTestCase;
-import wicket.markup.MarkupParser;
 import wicket.markup.parser.filter.PrependContextPathHandler;
 import wicket.protocol.http.MockWebApplication;
 
@@ -46,19 +45,9 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	{
 		application = new MockWebApplication(null)
 		{
-			public MarkupParser newMarkupParser()
+			public IMarkupFilter[] getAdditionalMarkupHandler()
 			{
-				final MarkupParser parser = new MarkupParser(new XmlPullParser(getSettings()
-						.getDefaultMarkupEncoding()))
-			 	{
-					public void initFilterChain()
-					{
-						appendMarkupFilter(new PrependContextPathHandler());
-					}
-			 	};
-
-				parser.configure(getSettings());
-				return parser;
+				return new IMarkupFilter[] { new PrependContextPathHandler() };
 			}
 		};
 	}
