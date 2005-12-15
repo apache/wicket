@@ -163,28 +163,27 @@ public abstract class PageableListView extends ListView implements IPageable
 
 
 	/**
-	 * Prevent users from accidentially using it. Throw an
-	 * IllegalArgumentException.
+	 * Prevent users from accidentially using it.
 	 * 
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
+	 * @throws UnsupportedOperationException always
 	 */
-	public ListView setStartIndex(int startIndex) throws IllegalArgumentException
+	public ListView setStartIndex(int startIndex) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
 				"You must not use setStartIndex() with PageableListView");
 	}
 
 	/**
-	 * Prevent users from accidentially using it. Throw an
-	 * IllegalArgumentException.
+	 * Prevent users from accidentially using it.
 	 * 
 	 * @param size
 	 *            the view size
 	 * @return This
-	 * @throws IllegalArgumentException
+	 * @throws UnsupportedOperationException always
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
-	public ListView setViewSize(int size) throws IllegalArgumentException
+	public ListView setViewSize(int size) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
