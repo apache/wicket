@@ -113,7 +113,7 @@ public class TextField extends AbstractTextComponent
 			if (type != null)
 			{
 				// Set model to request string converted to the appropriate type
-				setModelObject(getConverter().convert(getInput(), type));
+				setModelObject(getConverter().convert(input, type));
 			}
 			else
 			{
