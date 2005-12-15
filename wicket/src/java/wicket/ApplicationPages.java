@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Holder for specifying Wicket page classes that have special meaning to an
@@ -54,9 +52,6 @@ public class ApplicationPages
 
 	/** The error page displayed when an expired page is accessed. */
 	private Class pageExpiredErrorPage;
-
-	/** A map where aliases for bookmarkable page classes are stored. */
-	private final Map classAliases = new HashMap();
 
 	/**
 	 * Gets home page class.
