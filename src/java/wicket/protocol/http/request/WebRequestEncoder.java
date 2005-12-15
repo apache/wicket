@@ -486,7 +486,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
 	{
-		String pageClass = request.getParameter("bookmarkablePage");
+		String pageClass = request.getParameter(PageParameters.BOOKMARKABLE_PAGE);
 		parameters.setBookmarkablePageClass(pageClass);
 		parameters.setParameters(request.getParameterMap());
 	}

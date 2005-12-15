@@ -50,6 +50,7 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
+import wicket.PageParameters;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmitListener;
@@ -916,7 +917,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToBookmarkablePage(final Page page, final Map params)
 	{
 		parameters.putAll(params);
-		parameters.put("bookmarkablePage", page.getClass().getName());
+		parameters.put(PageParameters.BOOKMARKABLE_PAGE, page.getClass().getName());
 	}
 
 	/**
@@ -930,7 +931,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put("bookmarkablePage", clazz.getName());
+			parameters.put(PageParameters.BOOKMARKABLE_PAGE, clazz.getName());
 		}
 		else
 		{
