@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Application;
+import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
@@ -165,7 +166,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	    queryString = Strings.replaceAll(queryString, "6=", "interface=IOnChangeListener");
 	    queryString = Strings.replaceAll(queryString, "7=", "interface=ILinkListener");
 	    queryString = Strings.replaceAll(queryString, "8=", "interface=");
-	    queryString = Strings.replaceAll(queryString, "9=", "bookmarkablePage=");
+	    queryString = Strings.replaceAll(queryString, "9=", PageParameters.BOOKMARKABLE_PAGE+"=");
 
 	    return queryString;
 	}

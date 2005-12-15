@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.PageParameters;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.Strings;
 
@@ -159,7 +160,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	    queryString = Strings.replaceAll(queryString, "interface=IOnChangeListener", "6=");
 	    queryString = Strings.replaceAll(queryString, "interface=ILinkListener", "7=");
 	    queryString = Strings.replaceAll(queryString, "interface=", "8=");
-	    queryString = Strings.replaceAll(queryString, "bookmarkablePage=", "9=");
+	    queryString = Strings.replaceAll(queryString, PageParameters.BOOKMARKABLE_PAGE+"=", "9=");
 
 	    // For debugging only: determine possibilities to further shorten
 	    // the query string
