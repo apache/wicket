@@ -1379,12 +1379,14 @@ public abstract class Component implements Serializable, IBehaviourListener
 			// think about it
 			// I (johan) changed the way Link.onComponentTag works. It will disable versioning for a the setEnabled call 
 			// // Tell the page that this component's enabled was changed
-			 final Page page = findPage();
-			 if (page != null)
-			 {
-				 addStateChange(new EnabledChange(this));
-			 }
-
+			if(isVersioned())
+			{
+				final Page page = findPage();
+				if (page != null)
+				{
+					 addStateChange(new EnabledChange(this));
+				}
+			}
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
 		}
