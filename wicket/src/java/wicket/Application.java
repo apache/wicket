@@ -194,7 +194,13 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		return (Application)CURRENT.get();
+		Application application = (Application)CURRENT.get();
+		if (application == null)
+		{
+			throw new WicketRuntimeException("there is not application attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return application;
 	}
 
 	/**
@@ -587,21 +593,6 @@ public abstract class Application
 	 */
 	protected void init()
 	{
-	}
-
-	/**
-	 * Template method that is called when a runtime exception is thrown, just
-	 * before the actual handling of the runtime exception.
-	 * 
-	 * @param page
-	 *            Any page context where the exception was thrown
-	 * @param e
-	 *            The exception
-	 * @return Any error page to redirect to
-	 */
-	protected Page onRuntimeException(final Page page, final RuntimeException e)
-	{
-		return null;
 	}
 
 	/**

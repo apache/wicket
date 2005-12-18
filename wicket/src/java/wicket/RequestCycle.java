@@ -370,6 +370,8 @@ public abstract class RequestCycle
 	 */
 	public final void request(final Component component) throws ServletException
 	{
+		checkReuse();
+
 		if (component.isAuto())
 		{
 			throw new WicketRuntimeException("Auto-added components can not be re-rendered");
@@ -387,6 +389,8 @@ public abstract class RequestCycle
 	 */
 	public final void request() throws ServletException
 	{
+		checkReuse();
+
 		// set start step
 		currentStep = PREPARE_REQUEST;
 
@@ -406,6 +410,8 @@ public abstract class RequestCycle
 	 */
 	public final void request(IRequestTarget target) throws ServletException
 	{
+		checkReuse();
+
 		// set it as the current target, on the top of the stack
 		requestTargets.push(target);
 
@@ -414,6 +420,20 @@ public abstract class RequestCycle
 
 		// loop through steps
 		steps();
+	}
+
+	/**
+	 * Checks whether no processing has been done yet and throws an exception
+	 * when a client tries to reuse this instance.
+	 */
+	private void checkReuse()
+	{
+		if (currentStep != NOT_STARTED)
+		{
+			throw new WicketRuntimeException(
+					"RequestCycles are non-reusable objects. This instance (" + this
+							+ ") already executed");
+		}
 	}
 
 	/**
@@ -567,9 +587,6 @@ public abstract class RequestCycle
 	 */
 	private void prepare()
 	{
-		// Attach thread local resources for request
-		threadAttach();
-
 		// Before the beginning of the response, we need to update
 		// our session based on any information that might be in
 		// session attributes
@@ -990,13 +1007,6 @@ public abstract class RequestCycle
 	public abstract void redirectTo(final Page page);
 
 	/**
-	 * Attach thread
-	 */
-	private final void threadAttach()
-	{
-	}
-
-	/**
 	 * Releases the current thread local related resources. The threadlocal of
 	 * this request cycle is reset. If we are in a 'redirect' state, we do not
 	 * want to lose our messages as - e.g. when handling a form - there's a fat
@@ -1014,11 +1024,8 @@ public abstract class RequestCycle
 			setRedirect(false);
 		}
 
-		// Clear ThreadLocal reference
+		// Clear ThreadLocal reference; makes sense as this object should not be reused
 		CURRENT.set(null);
-
-		// This thread is no longer attached to a Session
-		Session.set(null);
 	}
 
 	/**

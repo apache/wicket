@@ -404,25 +404,4 @@ public class MockWebApplication extends WebApplication
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}
-
-	/**
-	 * In case of an error, don't render the error page. Through the root
-	 * exception instead to be handled by the test case.
-	 * 
-	 * @param page
-	 * @param ex
-	 * @return Page
-	 */
-	protected Page onRuntimeException(final Page page, final RuntimeException ex)
-	{
-		if (rethrowRuntimeException)
-		{
-			log.info("Caught exception: " + ex.getMessage());
-			throw ex;
-		}
-		else
-		{
-			return super.onRuntimeException(page, ex);
-		}
-	}
 }
