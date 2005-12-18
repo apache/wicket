@@ -93,7 +93,8 @@ public final class DefaultExceptionResponseProcessor implements IExceptionRespon
 			// We generally want to redirect the response because we
 			// were in the middle of rendering and the page may end up
 			// looking like spaghetti otherwise
-			requestCycle.redirectTo(requestCycle.getResponsePage());
+			//requestCycle.redirectTo(requestCycle.getResponsePage());
+			requestCycle.setRedirect(true);
 		}
 	}
 }
