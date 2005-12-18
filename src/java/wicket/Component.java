@@ -769,26 +769,22 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final String getModelObjectAsString()
 	{
-		final IModel model = getModel();
-		if (model != null)
+		final Object modelObject = getModelObject();
+		if (modelObject != null)
 		{
-			final Object modelObject = model.getObject(this);
-			if (modelObject != null)
+			// Get converter
+			final IConverter converter = getConverter();
+
+			// Model string from property
+			final String modelString = (String)converter.convert(modelObject, String.class);
+
+			// If we should escape the markup
+			if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 			{
-				// Get converter
-				final IConverter converter = getConverter();
-
-				// Model string from property
-				final String modelString = (String)converter.convert(modelObject, String.class);
-
-				// If we should escape the markup
-				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
-				{
-					// Escape it
-					return Strings.escapeMarkup(modelString);
-				}
-				return modelString;
+				// Escape it
+				return Strings.escapeMarkup(modelString);
 			}
+			return modelString;
 		}
 		return "";
 	}
@@ -904,22 +900,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final Session getSession()
 	{
-		// Fetch page, if possible
-		final Page page = findPage();
-
-		// If this component is attached to a page
-		if (page != null)
-		{
-			// Get Session from Page (which should generally be
-			// faster than a thread local lookup via Session.get())
-			return page.getSessionInternal();
-		}
-		else
-		{
-			// Use ThreadLocal storage to get Session since this
-			// component is apparently not yet attached to a Page.
-			return Session.get();
-		}
+		return Session.get();
 	}
 
 	/**
@@ -1396,12 +1377,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 			// we probably don't need to support this, but I'll keep this
 			// commented so that we can
 			// think about it
+			// I (johan) changed the way Link.onComponentTag works. It will disable versioning for a the setEnabled call 
 			// // Tell the page that this component's enabled was changed
-			// final Page page = findPage();
-			// if (page != null)
-			// {
-			// addStateChange(new EnabledChange(this));
-			// }
+			 final Page page = findPage();
+			 if (page != null)
+			 {
+				 addStateChange(new EnabledChange(this));
+			 }
 
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);

@@ -182,9 +182,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
 
-	/** The session that this page is in. */
-	private transient Session session = null;
-
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
@@ -241,7 +238,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		renderedComponents = null;
 
 		// Add/touch the response page in the session (its pagemap).
-		session.touch(this);
+		getSession().touch(this);
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -950,25 +947,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * This method is not called getSession() because we want to ensure that
-	 * getSession() is final in Component.
-	 * 
-	 * @return Session for this page
-	 */
-	final Session getSessionInternal()
-	{
-		if (this.session == null)
-		{
-			this.session = Session.get();
-			if (this.session == null)
-			{
-				throw new IllegalStateException("Internal Error: Page not attached to session");
-			}
-		}
-		return this.session;
 	}
 
 	/**
