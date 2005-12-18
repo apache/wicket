@@ -197,7 +197,7 @@ public class BookmarkablePageRequestTarget
 			}
 			else
 			{
-				requestCycle.setUpdateCluster(true);
+				requestCycle.setUpdateSession(true);
 
 				page = getPage(requestCycle);
 

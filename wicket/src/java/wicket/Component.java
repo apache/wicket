@@ -1124,7 +1124,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public final void modelChanging()
 	{
 		// Call user code
-		internalOnModelChanging();
 		onModelChanging();
 
 		// Tell the page that our model changed
@@ -1992,16 +1991,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
 	protected void internalOnModelChanged()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called anytime a model is changed via setModel or setModelObject.
-	 */
-	protected void internalOnModelChanging()
 	{
 	}
 

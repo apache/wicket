@@ -505,9 +505,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Replicates this session to the cluster if it has changed.
+	 * Updates the session, e.g. for replication purposes.
 	 */
-	public void updateCluster()
+	protected void update()
 	{
 		// If state is dirty
 		if (dirty)

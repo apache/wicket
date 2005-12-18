@@ -197,7 +197,7 @@ public abstract class RequestCycle
 	/** The current response. */
 	protected Response response;
 
-	/** The original response the request cycle was created with */
+	/** The original response the request cycle was created with. */
 	private final Response originalResponse;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
@@ -213,8 +213,8 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** True if the cluster should be updated */
-	private boolean updateCluster;
+	/** True if the session should be updated (for clusterf purposes). */
+	private boolean updateSession;
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();;
@@ -570,8 +570,12 @@ public abstract class RequestCycle
 		// Attach thread local resources for request
 		threadAttach();
 
-		// Response is beginning
-		internalOnBeginRequest();
+		// Before the beginning of the response, we need to update
+		// our session based on any information that might be in
+		// session attributes
+		session.updateSession();
+
+		// event callback
 		onBeginRequest();
 	}
 
@@ -599,14 +603,16 @@ public abstract class RequestCycle
 			}
 		}
 
-		// Response is ending
-		try
+		if (updateSession)
 		{
-			internalOnEndRequest();
+			// At the end of our response, we need to set any session
+			// attributes that might be required to update the cluster
+			session.update();
 		}
-		catch (RuntimeException e)
+
+		if (getResponse() instanceof BufferedWebResponse)
 		{
-			log.error("Exception occurred during internalOnEndRequest", e);
+			((BufferedWebResponse)getResponse()).filter();
 		}
 
 		try
@@ -891,9 +897,9 @@ public abstract class RequestCycle
 	 * @param updateCluster
 	 *            The updateCluster to set.
 	 */
-	public void setUpdateCluster(boolean updateCluster)
+	public void setUpdateSession(boolean updateCluster)
 	{
-		this.updateCluster = updateCluster;
+		this.updateSession = updateCluster;
 	}
 
 	/**
@@ -924,41 +930,6 @@ public abstract class RequestCycle
 	public final Method getRequestInterfaceMethod(final String interfaceName)
 	{
 		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
-	 * THIS METHOD.
-	 * 
-	 * Called when the request cycle object is beginning its response
-	 */
-	protected final void internalOnBeginRequest()
-	{
-		// Before the beginning of the response, we need to update
-		// our session based on any information that might be in
-		// session attributes
-		session.updateSession();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
-	 * THIS METHOD.
-	 * 
-	 * Called when the request cycle object has finished its response
-	 */
-	protected final void internalOnEndRequest()
-	{
-		if (updateCluster)
-		{
-			// At the end of our response, we need to set any session
-			// attributes that might be required to update the cluster
-			session.updateCluster();
-		}
-
-		if (getResponse() instanceof BufferedWebResponse)
-		{
-			((BufferedWebResponse)getResponse()).filter();
-		}
 	}
 
 	/**
