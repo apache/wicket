@@ -312,6 +312,8 @@ public class MockWebApplication extends WebApplication
 		}
 		generateLastRenderedPage(cycle);
 
+		Session.set(getWicketSession());
+		
 		if (getLastRenderedPage() instanceof ExceptionErrorPage)
 		{
 			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
