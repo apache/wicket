@@ -883,6 +883,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChanging(final Component component)
 	{
+		checkHierarchyChange(component);
+
 		setDirty(true);
 		if (mayTrackChangesFor(component))
 		{
@@ -954,6 +956,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	final void componentStateChanging(final Component component, Change change)
 	{
+		checkHierarchyChange(component);
+
 		setDirty(true);
 		if (mayTrackChangesFor(component))
 		{
