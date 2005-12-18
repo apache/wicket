@@ -47,15 +47,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *    &lt;servlet&gt;
- *        &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *        &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *        &lt;init-param&gt;
- *            &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *            &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *        &lt;/init-param&gt;
- *        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
+ *     &lt;servlet&gt;
+ *         &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *         &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *         &lt;init-param&gt;
+ *             &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *             &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *         &lt;/init-param&gt;
+ *         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *     &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -67,10 +67,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *    &lt;init-param&gt;
- *      &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *        &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *    &lt;/init-param&gt;
+ *     &lt;init-param&gt;
+ *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *         &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *     &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -87,11 +87,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *    public void init() throws ServletException
- *    {
- *        ServletConfig config = getServletConfig();
- *        String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *        ...
+ *     public void init() throws ServletException
+ *     {
+ *         ServletConfig config = getServletConfig();
+ *         String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *         ...
  * </pre>
  * 
  * </p>
@@ -108,7 +108,7 @@ import wicket.util.time.Time;
 public class WicketServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The URL path prefix expected for (so called) resources (not html pages). */
 	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
@@ -144,8 +144,12 @@ public class WicketServlet extends HttpServlet
 		// try to see if there is a redirect stored
 		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
-			String bufferId = servletRequest.getParameter("bid");
-			BufferedResponse bufferedResponse = webApplication.popBufferedResponse(bufferId);
+			String sessionId = servletRequest.getSession(true).getId();
+			String queryString = servletRequest.getQueryString();
+			String requestUri = servletRequest.getRequestURI();
+			String bufferId = (queryString == null) ? requestUri : requestUri + "?" + queryString;
+			BufferedResponse bufferedResponse = webApplication.popBufferedResponse(sessionId,
+					bufferId);
 
 			if (bufferedResponse != null)
 			{
@@ -302,8 +306,8 @@ public class WicketServlet extends HttpServlet
 			}
 			catch (ClassCastException e)
 			{
-				throw new WicketRuntimeException("Application factory class "
-						+ appFactoryClassName + " must implement IWebApplicationFactory");
+				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
+						+ " must implement IWebApplicationFactory");
 			}
 			catch (ClassNotFoundException e)
 			{

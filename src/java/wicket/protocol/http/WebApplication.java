@@ -17,7 +17,6 @@
  */
 package wicket.protocol.http;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +45,7 @@ import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
 import wicket.request.target.mixin.IMountEncoder;
 import wicket.request.target.mixin.PackagePathMountEncoder;
 import wicket.response.BufferedResponse;
+import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
 
@@ -66,13 +66,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                           
- *                           public void init()
- *                           {
- *                           	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                           	URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                           	...
- *                                                      
+ *                                  
+ *    public void init()
+ *    {
+ *      	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *       URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *       ...
+ * 
  * </pre>
  * 
  * @see WicketServlet
@@ -106,7 +106,7 @@ public abstract class WebApplication extends Application
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
-	private Map bufferedResponses = Collections.synchronizedMap(new HashMap());
+	private Map bufferedResponses = new HashMap();
 
 	/**
 	 * the prefix for storing variables in the actual session (typically
@@ -516,26 +516,60 @@ public abstract class WebApplication extends Application
 	 * Returns the redirect map where the buffered render pages are stored in
 	 * and removes it immediately.
 	 * 
+	 * @param sessionId
+	 *            the session id
+	 * 
 	 * @param bufferId
 	 *            the id of the buffer as passed in as a request parameter
 	 * @return the buffered response or null if not found (when this request is
 	 *         on a different box than the original request came in
 	 */
-	final BufferedResponse popBufferedResponse(String bufferId)
+	final BufferedResponse popBufferedResponse(String sessionId, String bufferId)
 	{
-		return (BufferedResponse)bufferedResponses.remove(bufferId);
+		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		if (responsesPerSession != null)
+		{
+			BufferedResponse buffered = (BufferedResponse)responsesPerSession.remove(bufferId);
+			return buffered;
+		}
+		return null;
 	}
 
 	/**
 	 * Add a buffered response to the redirect buffer.
 	 * 
+	 * @param sessionId
+	 *            the session id
 	 * @param bufferId
 	 *            the id that should be used for storing the buffer
 	 * @param renderedResponse
 	 *            the response to buffer
 	 */
-	final void addBufferedResponse(String bufferId, BufferedResponse renderedResponse)
+	final void addBufferedResponse(String sessionId, String bufferId,
+			BufferedResponse renderedResponse)
 	{
-		bufferedResponses.put(bufferId, renderedResponse);
+		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		if (responsesPerSession == null)
+		{
+			responsesPerSession = new MostRecentlyUsedMap(4);
+			bufferedResponses.put(sessionId, responsesPerSession);
+		}
+		responsesPerSession.put(bufferId, renderedResponse);
+	}
+
+	/**
+	 * Cleans up any buffered response map for the client with the provided
+	 * session id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	final void clearBufferedResponses(String sessionId)
+	{
+		bufferedResponses.remove(sessionId);
+
+		// TODO implement call to this method: probably have to register a
+		// session listener?
+		// or take a cleaner thread instead of this method
 	}
 }
