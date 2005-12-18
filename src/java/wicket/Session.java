@@ -116,7 +116,7 @@ public abstract class Session implements Serializable
 	private static final char COMPONENT_PATH_SEPERATOR = ':';
 
 	/** Thread-local current session. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal CURRENT = new ThreadLocal();
 
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
@@ -175,7 +175,13 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		return (Session)current.get();
+		Session session = (Session)CURRENT.get();
+		if (session == null)
+		{
+			throw new WicketRuntimeException("there is not session attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return session;
 	}
 
 	/**
@@ -188,7 +194,11 @@ public abstract class Session implements Serializable
 	 */
 	public static void set(final Session session)
 	{
-		current.set(session);
+		if (session == null)
+		{
+			throw new NullPointerException("argument session must me not null");
+		}
+		CURRENT.set(session);
 	}
 
 	/**

@@ -161,6 +161,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 
+	static
+	{
+		// Allow calls through the IRedirectListener interface
+		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
+
+		// Allow XmlHttpRequest calls
+		RequestCycle.registerRequestListenerInterface(IBehaviourListener.class);
+	}
+
 	/** Used to create page-unique numbers */
 	private int autoIndex;
 
@@ -849,46 +858,74 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 	}
 
-	/*
-	 * @param component The component that was added
+	/**
+	 * A component was added.
+	 * 
+	 * @param component
+	 *            The component that was added
 	 */
 	final void componentAdded(final Component component)
 	{
+		checkHierarchyChange(component);
+
 		setDirty(true);
-		if (isVersioned(component))
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentAdded(component);
 		}
 	}
 
 	/**
+	 * A component's model changed.
+	 * 
 	 * @param component
 	 *            The component whose model is about to change
 	 */
 	final void componentModelChanging(final Component component)
 	{
 		setDirty(true);
-		if (isVersioned(component))
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentModelChanging(component);
 		}
 	}
 
 	/**
+	 * A component was removed.
+	 * 
 	 * @param component
 	 *            The component that was removed
 	 */
 	final void componentRemoved(final Component component)
 	{
+		checkHierarchyChange(component);
+
 		setDirty(true);
-		if (isVersioned(component))
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentRemoved(component);
 		}
 	}
 
 	/**
-	 * Adds a component to the set of rendered components
+	 * Checks whether the hierarchy may be changed at all, and throws an
+	 * exception if this is not the case.
+	 * 
+	 * @param component
+	 *            the component which is about to be added or removed
+	 */
+	private void checkHierarchyChange(Component component)
+	{
+		// Throw exception if modification is attempted during rendering
+		if ((!component.isAuto()) && getFlag(FLAG_IS_RENDERING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during render phase");
+		}
+	}
+
+	/**
+	 * Adds a component to the set of rendered components.
 	 * 
 	 * @param component
 	 *            The component that was rendered
@@ -918,7 +955,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentStateChanging(final Component component, Change change)
 	{
 		setDirty(true);
-		if (isVersioned(component))
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentStateChanging(change);
 		}
@@ -1156,70 +1193,47 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * For the given component, whether we may record changes.
+	 * 
 	 * @param component
 	 *            The component which is affected
 	 * @return True if the change is okay to report
 	 */
-	private final boolean isVersioned(final Component component)
+	private final boolean mayTrackChangesFor(final Component component)
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto())
+		if (component.isAuto() && (!component.isVersioned()))
 		{
 			return false;
 		}
 		else
 		{
-			// Throw exception if modification is attempted during rendering
-			if (getFlag(FLAG_IS_RENDERING))
+			// the component is versioned... are we tracking changes at all?
+			if (getFlag(FLAG_TRACK_CHANGES))
 			{
-				throw new WicketRuntimeException(
-						"Cannot modify component hierarchy during render phase");
-			}
+				// we are tracking changes... do we need to start new version?
+				if (!getFlag(FLAG_NEW_VERSION))
+				{
+					// if we have no version manager
+					if (versionManager == null)
+					{
+						// then install a new version manager
+						versionManager = newVersionManager();
+					}
 
-			// Start new version?
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				// Start new version
-				newVersion();
+					// start a new version
+					versionManager.beginVersion();
+					setFlag(FLAG_NEW_VERSION, true);
+				}
 
-				// Okay to record version information
+				// return true as we are ready for versioning
 				return true;
 			}
 
-			// Not tracking changes or component not versioned
+			// we are not tracking changes or the component not versioned
 			return false;
 		}
-	}
-
-	/**
-	 * Starts a new version of this page
-	 */
-	private final void newVersion()
-	{
-		// If we have no version manager
-		if (versionManager == null)
-		{
-			// then install a new version manager
-			versionManager = newVersionManager();
-		}
-
-		// If a new version has not yet been started
-		if (!getFlag(FLAG_NEW_VERSION))
-		{
-			// start a new version
-			versionManager.beginVersion();
-			setFlag(FLAG_NEW_VERSION, true);
-		}
-	}
-
-	static
-	{
-		// Allow calls through the IRedirectListener interface
-		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
-
-		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(IBehaviourListener.class);
 	}
 
 	/**
