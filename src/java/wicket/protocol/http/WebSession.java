@@ -167,13 +167,13 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Replicates this session to the cluster if it has changed.
+	 * Updates the session, e.g. for replication purposes.
 	 */
-	public final void updateCluster()
+	protected void update()
 	{
 		if (sessionInvalidated == false)
 		{
-			super.updateCluster();
+			super.update();
 		}
 	}
 

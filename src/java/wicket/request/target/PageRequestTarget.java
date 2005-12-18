@@ -65,7 +65,7 @@ public class PageRequestTarget
 		}
 		else
 		{
-			requestCycle.setUpdateCluster(true);
+			requestCycle.setUpdateSession(true);
 
 			// Let page render itself
 			page.doRender();

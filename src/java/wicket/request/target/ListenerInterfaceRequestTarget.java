@@ -74,7 +74,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	{
 		// Assume cluster needs to be updated now, unless listener
 		// invocation changes this
-		requestCycle.setUpdateCluster(true);
+		requestCycle.setUpdateSession(true);
 
 		// Clear all feedback messages if it isn't a redirect
 		getPage().getFeedbackMessages().clear();
