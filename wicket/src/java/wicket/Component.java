@@ -871,7 +871,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final RequestCycle getRequestCycle()
 	{
-		return getSession().getRequestCycle();
+		return RequestCycle.get();
 	}
 
 	/**

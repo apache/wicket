@@ -1207,7 +1207,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() && (!component.isVersioned()))
+		if (component.isAuto() || (!component.isVersioned()))
 		{
 			return false;
 		}
