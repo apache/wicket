@@ -282,7 +282,10 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		if (getAutoEnable())
 		{
 			// the link is enabled if this link doesn't link to the current page
+			boolean versionEnabled = isVersioned();
+			setVersioned(false);
 			setEnabled(!linksTo(getPage()));
+			setVersioned(versionEnabled);
 		}
 
 		// Set href to link to this link's linkClicked method
