@@ -42,8 +42,6 @@ public final class TimeTest extends TestCase
     {
         final Time start = Time.now();
 
-        Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
-
         final Time birthday = Time.parseDate("1966.06.01");
 
         Assert.assertEquals(1966, birthday.getYear());
