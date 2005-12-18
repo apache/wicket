@@ -158,12 +158,11 @@ public class WebRequestCycle extends RequestCycle
 					// here on.
 					redirectResponse.close();
 
-					StringBuffer b = new StringBuffer(page.urlFor(page, IRedirectListener.class));
-					b.append((b.indexOf("?") == -1) ? "?bid=" : "&bid=");
-					String bufferId = String.valueOf(WebRequestCycle.this.hashCode());
-					b.append(bufferId);
-					redirectUrl = b.toString();
-					((WebApplication)application).addBufferedResponse(bufferId, redirectResponse);
+					redirectUrl = page.urlFor(page, IRedirectListener.class);
+					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
+							.getId();
+					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl,
+							redirectResponse);
 				}
 			}
 			catch (RuntimeException ex)
@@ -193,14 +192,6 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @see wicket.RequestCycle#newClientInfo()
-	 */
-	protected ClientInfo newClientInfo()
-	{
-		return new WebClientInfo(this);
-	}
-
-	/**
 	 * By default returns the WebApplication's default request cycle processor.
 	 * NOTE: if you decide to override this method to provide a custom processor
 	 * per request cycle, any mounts done via WebApplication will not work
@@ -211,5 +202,13 @@ public class WebRequestCycle extends RequestCycle
 	public IRequestCycleProcessor getRequestCycleProcessor()
 	{
 		return ((WebApplication)getApplication()).getDefaultRequestCycleProcessor();
+	}
+
+	/**
+	 * @see wicket.RequestCycle#newClientInfo()
+	 */
+	protected ClientInfo newClientInfo()
+	{
+		return new WebClientInfo(this);
 	}
 }
