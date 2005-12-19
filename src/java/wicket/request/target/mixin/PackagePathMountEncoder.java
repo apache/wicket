@@ -32,21 +32,31 @@ import wicket.util.lang.Classes;
 public class PackagePathMountEncoder extends AbstractPathMountEncoder
 {
 	/** package for this mount. */
-	private final Package mountedPackage;
+	private final String mountedPackageName;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param mountPath
 	 *            the mount path
-	 * @param mountedPackage
-	 *            package for this mount (might be null in case the class is
-	 *            part of the default package
+	 * @param classOfPackageToMount
+	 *            class from which the package name must be extracted for this mount
 	 */
-	public PackagePathMountEncoder(final String mountPath, Package mountedPackage)
+	public PackagePathMountEncoder(final String mountPath, Class classOfPackageToMount)
 	{
 		super(mountPath);
-		this.mountedPackage = mountedPackage;
+		mountedPackageName = getPackageName(classOfPackageToMount);
+	}
+
+	private String getPackageName(Class classOfPackageToMount)
+	{
+		String className = classOfPackageToMount.getName();
+		int index = className.lastIndexOf(".");
+		if(index != -1)
+		{
+			return className.substring(0,index+1); // including '.';
+		}
+		return "";
 	}
 
 	/**
@@ -84,8 +94,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		String packageName = ((mountedPackage == null) ? "" : mountedPackage.getName() + ".");
-		final String bookmarkablePageClassName = packageName + remainder.substring(1, ix);
+		final String bookmarkablePageClassName = mountedPackageName + remainder.substring(1, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
 		PageParameters parameters = decodePageParameters(parametersFragment);
@@ -102,11 +111,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if (mountedPackage == null)
-			{
-				return target.getPageClass().getPackage() == null;
-			}
-			else if (mountedPackage.equals(target.getPageClass().getPackage()))
+			if ( mountedPackageName.equals(getPackageName(target.getPageClass())) )
 			{
 				return true;
 			}
