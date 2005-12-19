@@ -72,9 +72,9 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Marker value to have an attribute without a value added. */
-	public static final Object VALUELESS_ATTRIBUTE_ADD = new Object();
+	public static final Object VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
 	/** Marker value to have an attribute without a value removed. */
-	public static final Object VALUELESS_ATTRIBUTE_REMOVE = new Object();
+	public static final Object VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
 
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
@@ -246,11 +246,11 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 			final ValueMap attributes = tag.getAttributes();
 			final Object replacementValue = getReplacementOrNull(component);
 
-			if (replacementValue == VALUELESS_ATTRIBUTE_ADD)
+			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))
 			{
 				attributes.put(attribute, null);
 			}
-			else if (replacementValue == VALUELESS_ATTRIBUTE_REMOVE)
+			else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacementValue))
 			{
 				attributes.remove(attribute);
 			}
