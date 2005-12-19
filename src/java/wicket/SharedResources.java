@@ -133,6 +133,8 @@ public class SharedResources
 		}
 	}
 
+	private final Map classAliasMap = new HashMap();
+	
 	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
 	
@@ -202,9 +204,24 @@ public class SharedResources
 	public static String path(final Application application, final Class scope, final String path,
 			final Locale locale, final String style)
 	{
-		return scope.getName() + '/' + path(path, locale, style);
+		String alias = (String)application.getSharedResources().classAliasMap.get(scope);
+		if(alias == null) alias = scope.getName();
+		return alias + '/' + path(path, locale, style);
 	}
 
+	
+	/**
+	 * Sets an alias for a class so that a resource url can look like:
+	 * resources/images/Image.jpg instead of resources/wicket.resources.ResourceClass/Image.jpg
+	 *  
+	 * @param clz The class that has to be aliased.
+	 * @param alias The alias string. 
+	 */
+	public final void putClassAlias(Class clz, String alias)
+	{
+		classAliasMap.put(clz, alias);
+	}
+	
 	/**
 	 * @param scope
 	 *            Scope of resource
