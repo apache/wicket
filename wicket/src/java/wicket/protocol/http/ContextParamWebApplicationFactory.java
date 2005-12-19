@@ -38,6 +38,11 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	public WebApplication createApplication(WicketServlet servlet)
 	{
 		final String applicationClassName = servlet.getInitParameter(APP_CLASS_PARAM);
+
+		if (applicationClassName==null) {
+			throw new RuntimeException("servlet init param ["+APP_CLASS_PARAM+"] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["+WicketServlet.APP_FACT_PARAM+"] is missing");
+		}
+		
 		try
 		{
 			final Class applicationClass = getClass().getClassLoader().loadClass(
