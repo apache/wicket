@@ -44,7 +44,6 @@ public class HeaderSectionTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		application = new MockWebApplication(null);
-		application.setRethrowRuntimeException(true);
 	}
 	
 	/**

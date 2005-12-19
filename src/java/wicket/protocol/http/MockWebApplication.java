@@ -116,12 +116,6 @@ public class MockWebApplication extends WebApplication
 	private WebSession wicketSession;
 
 	/**
-	 * In case of an RuntimeException, Wicket usually renders a error page. In
-	 * some test cases however it is useful to get the exception instead.
-	 */
-	private boolean rethrowRuntimeException = false;
-
-	/**
 	 * Create the mock http application that can be used for testing.
 	 * 
 	 * @param path
@@ -371,17 +365,6 @@ public class MockWebApplication extends WebApplication
 		wicketRequest = new ServletWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
 		wicketResponse = new WebResponse(servletResponse);
-	}
-
-	/**
-	 * If true, runtime exception will not be handled by Wicket. Instead the
-	 * exception will be rethrown.
-	 * 
-	 * @param enable
-	 */
-	public void setRethrowRuntimeException(boolean enable)
-	{
-		this.rethrowRuntimeException = enable;
 	}
 
 	/**
