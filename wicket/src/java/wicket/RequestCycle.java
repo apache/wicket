@@ -564,7 +564,7 @@ public abstract class RequestCycle
 				}
 			}
 		}
-		catch (Exception e)
+		catch (RuntimeException e)
 		{
 			// set step manually to handle exception
 			currentStep = HANDLE_EXCEPTION;

@@ -67,10 +67,10 @@ public abstract class AbstractCompoundRequestCycleProcessor implements IRequestC
 	}
 
 	/**
-	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.Exception,
+	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.RuntimeException,
 	 *      wicket.RequestCycle)
 	 */
-	public void respond(Exception e, RequestCycle requestCycle)
+	public void respond(RuntimeException e, RequestCycle requestCycle)
 	{
 		IExceptionResponseStrategy strategy = getExceptionResponseStrategy();
 		strategy.respond(requestCycle, e);

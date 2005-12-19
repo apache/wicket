@@ -22,7 +22,7 @@ import wicket.RequestCycle;
 
 /**
  * Strategy interface for implementing
- * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#respond(Exception, RequestCycle)}.
+ * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#respond(RuntimeException, RequestCycle)}.
  * 
  * @author Eelco Hillenius
  */
