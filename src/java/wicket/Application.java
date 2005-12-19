@@ -42,7 +42,6 @@ import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
-import wicket.request.IRequestCycleProcessor;
 import wicket.resource.PropertiesFactory;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
@@ -536,16 +535,6 @@ public abstract class Application
 	 * @return Factory for creating sessions
 	 */
 	protected abstract ISessionFactory getSessionFactory();
-
-	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	protected abstract IRequestCycleProcessor getDefaultRequestCycleProcessor();
 
 	/**
 	 * Adds a response filer to the list. Filters are evaluated in the order
