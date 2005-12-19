@@ -192,25 +192,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Checks the package that will be mounted is valid
-	 * 
-	 * @param mountPackage
-	 *            package to be mounted
-	 */
-	private void checkMountPackage(Package mountPackage)
-	{
-		if (mountPackage == null)
-		{
-			throw new IllegalArgumentException("mounting package cannot be null");
-		}
-		if (mountPackage.getName() == null || mountPackage.getName().length() == 0)
-		{
-			throw new IllegalArgumentException("mounting package name cannot be empty");
-		}
-
-	}
-
-	/**
 	 * Mounts a bookmarkable page class to the given path.
 	 * 
 	 * @param path
@@ -247,14 +228,18 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
-	 * @param packageToMount
-	 *            the package of which all bookmarkable pages should be mounted
+	 * @param classOfPackageToMount
+	 *            the class for which package of which all bookmarkable pages or sharedresources should be mounted
 	 */
-	public final void mountPackage(String path, Package packageToMount)
+	public final void mountPackage(String path, Class classOfPackageToMount)
 	{
 		checkMountPath(path);
-		checkMountPackage(packageToMount);
-		mountPath(path, new PackagePathMountEncoder(path, packageToMount));
+		
+		if(classOfPackageToMount == null)
+		{
+			throw new NullPointerException("class for mounting a package can't be null");
+		}
+		mountPath(path, new PackagePathMountEncoder(path, classOfPackageToMount));
 	}
 
 	/**
