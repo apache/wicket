@@ -74,7 +74,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
 		this(requestEncoder, new DefaultRequestTargetResolver(), eventProcessorStrategy,
-				new DefaultResponseProcessor(), new DefaultExceptionResponseProcessor());
+				new DefaultResponseProcessor(), exceptionResponseStrategy);
 	}
 
 	/**
