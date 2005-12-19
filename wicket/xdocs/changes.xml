@@ -11,6 +11,7 @@
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
     </release>
     <release version="1.1.1" date="tbd" description="Wicket 1.1.1">
+      <action type="update" dev="Igor Vaynberg">Added check and better exception when servlet's init param is missing</action>
       <action type="update" dev="Igor Vaynberg" issue="1345198">Added label tags for generated input tags in CheckBoxMultipleChoice and RadioChoice</action>
       <action type="fix" dev="Juergen Donnerstag">Fixed autolink NPE problem</action>
       <action type="fix" dev="Igor Vaynberg" issue="1357755">Fixed bug in button that caused the value attirbute to disappear after form submit</action>
