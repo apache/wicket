@@ -72,9 +72,9 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Marker value to have an attribute without a value added. */
-	public static final Object VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
+	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
 	/** Marker value to have an attribute without a value removed. */
-	public static final Object VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
+	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
 
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
