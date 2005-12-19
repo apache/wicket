@@ -34,7 +34,7 @@ import wicket.request.IPageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultExceptionResponseProcessor implements IExceptionResponseStrategy
+public class DefaultExceptionResponseProcessor implements IExceptionResponseStrategy
 {
 
 	/**
@@ -46,18 +46,25 @@ public final class DefaultExceptionResponseProcessor implements IExceptionRespon
 
 	/**
 	 * @see wicket.request.compound.IExceptionResponseStrategy#respond(wicket.RequestCycle,
-	 *      java.lang.Exception)
+	 *      java.lang.RuntimeException)
 	 */
-	public void respond(RequestCycle requestCycle, Exception e)
+	public final void respond(RequestCycle requestCycle, RuntimeException e)
 	{
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
 		final ApplicationSettings settings = application.getSettings();
-		if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+		final Page responsePage = requestCycle.getResponsePage();
+
+		Page override = onRuntimeException(responsePage, e);
+		if (override != null)
+		{
+			requestCycle.setResponsePage(override);
+			requestCycle.setRedirect(true);
+		}
+		else if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
 			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
-			Page responsePage = requestCycle.getResponsePage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
@@ -93,8 +100,22 @@ public final class DefaultExceptionResponseProcessor implements IExceptionRespon
 			// We generally want to redirect the response because we
 			// were in the middle of rendering and the page may end up
 			// looking like spaghetti otherwise
-			//requestCycle.redirectTo(requestCycle.getResponsePage());
 			requestCycle.setRedirect(true);
 		}
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	protected Page onRuntimeException(Page page, RuntimeException e)
+	{
+		return null;
 	}
 }

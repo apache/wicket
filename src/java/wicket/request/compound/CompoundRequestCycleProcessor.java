@@ -44,7 +44,8 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	private final IExceptionResponseStrategy exceptionResponseStrategy;
 
 	/**
-	 * Construct using the given strategies and {@link DefaultResponseProcessor}
+	 * Construct using the given strategies and
+	 * {@link DefaultRequestTargetResolver}, {@link DefaultResponseProcessor}
 	 * and {@link DefaultExceptionResponseProcessor}.
 	 * 
 	 * @param requestEncoder
@@ -54,6 +55,23 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 */
 	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
 			IEventProcessorStrategy eventProcessorStrategy)
+	{
+		this(requestEncoder, eventProcessorStrategy, new DefaultExceptionResponseProcessor());
+	}
+
+	/**
+	 * Construct using the given strategies and
+	 * {@link DefaultRequestTargetResolver} and {@link DefaultResponseProcessor}.
+	 * 
+	 * @param requestEncoder
+	 *            the strategy for constructing request parameters
+	 * @param eventProcessorStrategy
+	 *            the strategy for the event processor method
+	 * @param exceptionResponseStrategy
+	 */
+	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
+			IEventProcessorStrategy eventProcessorStrategy,
+			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
 		this(requestEncoder, new DefaultRequestTargetResolver(), eventProcessorStrategy,
 				new DefaultResponseProcessor(), new DefaultExceptionResponseProcessor());

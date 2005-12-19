@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.64 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,6 +29,7 @@ import wicket.ApplicationSettings;
 import wicket.AutoLinkResolver;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -41,6 +42,7 @@ import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
+import wicket.request.compound.DefaultExceptionResponseProcessor;
 import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
 import wicket.request.target.mixin.IMountEncoder;
 import wicket.request.target.mixin.PackagePathMountEncoder;
@@ -66,13 +68,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                                  
- *    public void init()
- *    {
- *      	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *       URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *       ...
- * 
+ *                                    
+ *      public void init()
+ *      {
+ *        	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *         URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *         ...
+ *   
  * </pre>
  * 
  * @see WicketServlet
@@ -422,9 +424,30 @@ public abstract class WebApplication extends Application
 		if (requestCycleProcessor == null)
 		{
 			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
-					new DefaultEventProcessorStrategy());
+					new DefaultEventProcessorStrategy(), new DefaultExceptionResponseProcessor()
+					{
+						protected Page onRuntimeException(Page page, RuntimeException e)
+						{
+							return WebApplication.this.onRuntimeException(page, e);
+						}
+					});
 		}
 		return requestCycleProcessor;
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	protected Page onRuntimeException(Page page, RuntimeException e)
+	{
+		return null;
 	}
 
 	/**

@@ -41,7 +41,7 @@ import wicket.RequestCycle;
  * requesting client. Typically, the actual response handling is to be (or
  * delegated) by the request target implementation, but different strategies
  * might do as they seem fit. </li>
- * <li> {@link #respond(Exception, RequestCycle)} is called whenever an uncaught
+ * <li> {@link #respond(RuntimeException, RequestCycle)} is called whenever an uncaught
  * exception occurs during the event handling or response phase so that an
  * appropriate exception response can be generated. This method is guaranteed to
  * be called whenever such an exception happens, but will never be called
@@ -71,8 +71,8 @@ public interface IRequestCycleProcessor
 	/**
 	 * <p>
 	 * Resolves the request and returns the request target. Typically, the
-	 * resolver uses the {@link wicket.request.RequestParameters}
-	 * object that is passed in.
+	 * resolver uses the {@link wicket.request.RequestParameters} object that is
+	 * passed in.
 	 * </p>
 	 * <p>
 	 * Implementors of this method should be careful not to mix this code with
@@ -123,5 +123,5 @@ public interface IRequestCycleProcessor
 	 * @param requestCycle
 	 *            the current request cycle
 	 */
-	void respond(Exception e, RequestCycle requestCycle);
+	void respond(RuntimeException e, RequestCycle requestCycle);
 }

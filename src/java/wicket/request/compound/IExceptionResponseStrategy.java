@@ -22,7 +22,7 @@ import wicket.RequestCycle;
 
 /**
  * Strategy interface for implementing
- * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#respond(Exception, RequestCycle)}.
+ * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor#respond(RuntimeException, RequestCycle)}.
  * 
  * @author Eelco Hillenius
  */
@@ -38,5 +38,5 @@ public interface IExceptionResponseStrategy
 	 * @param e
 	 *            an uncaught exception
 	 */
-	void respond(RequestCycle requestCycle, Exception e);
+	void respond(RequestCycle requestCycle, RuntimeException e);
 }
