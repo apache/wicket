@@ -46,10 +46,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// maybe not the neatest sight, but for package mounting it makes
 		// sense to use one of the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
-		// be applied here. Furthermore, be carefull with
-		// Package.getPackage(String) as that might return null when
-		// no class of that package is loaded yet
-		Package package1 = Page3.class.getPackage();
-		mountPackage("/my/mounted/package", package1);
+		// be applied here. 
+		mountPackage("/my/mounted/package", Page3.class);
 	}
 }
