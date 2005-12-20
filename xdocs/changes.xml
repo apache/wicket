@@ -9,6 +9,12 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Eelco Hillenius,Igor Vanberg">Introduced mounting/ nice urls. Provided convenience methods for mounting bookmarkable pages and packages</action>
+      <action type="update" dev="Eelco Hillenius">Session.get/setAttribute are now final to support attaching attribute observers. Use doGet/SetAttribute instead.</action>
+      <action type="update" dev="Eelco Hillenius">Internals of RequestCycle are refactored. The processing is more formalized now, as defined in interface IRequestCycleProcessor. This interface is used by RequestCycle to delegate processing. The target of a request, like Page or e.g. shared resource, is abstracted in IRequestTarget, of which the current is set in RequestCycle.</action>
+      <action type="update" dev="Eelco Hillenius">AttributeModifier is now backed by IBehaviour. Behaviours are classes that can coorperate with Components. You attach them to components (Component.add) and they decide how to cooperate. Besides AttributeModifiers, AjaxHandlers extend IBehaviour. Let your behaviours implement IBehaviourListener to be able to recieve callbacks such as AjaxHandler does.</action>
+      <action type="update" dev="Eelco Hillenius">Made AjaxHandler easier to use; e.g. re-rendering a single component should be possible and easy now.</action>
+      <action type="update" dev="Eelco Hillenius">* Introduced wicket.protocol.http.servlet.WicketSessionFilter to intercepts the current session and set it in a thread local, so that non-wicket applications can reuse the session by just calling Session.get().</action>
       <action type="update" dev="Igor Vaynberg">Added check and better exception when servlet's init param is missing</action>
       <action type="add" dev="Juergen Donnerstag" issue="1351511">WicketTester now allows testing of already instantiated pages.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1365114">WicketTester and MockWebApplication now support BookmarkablePageLink</action>
@@ -17,7 +23,7 @@
       <action type="add" dev="Johan Compagner" due-to="Christian Essl">added SubmitLink component, This is a &lt;a href&gt; that acts as a button, can be placed inside or outside the form to trigger the submit.</action>
       <action type="fix" dev="Johan Compagner" due-to="Laurent PETIT">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
       <action type="add" dev="Johan Compagner" due-to="Laurent PETIT">The Form will hold the values now in its own state until everything is (successfully) validated to the model(s)</action>
-      <action type="add" dev="Johan Compagner">Form aware listeners, like OnChangeListener of DropDown, that one now uses the form submit to call the interface method</action>
+      <action type="add" dev="Johan Compagner">IOnChangeListeners, like DropDownChoice, now use the form submit to call the interface method</action>
       <action type="fix" dev="Johan Compagner" due-to="Maurice Marrink">localized null fixes and localized display value fixes, getID() shouldn't be appended. (that does the localizer)</action>
       <action type="add" dev="Johan Compagner">response filter support, 2 filters added: ServerTime and ServerClientTime, Can for example also be used for Xml Transformations</action>
       <action type="fix" dev="Johan Compagner" due-to="Anders Peterson">Fixed setModelObject() when the component has a root model.</action>
