@@ -29,7 +29,6 @@ import wicket.ApplicationSettings;
 import wicket.AutoLinkResolver;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
-import wicket.Page;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -409,21 +408,6 @@ public abstract class WebApplication extends Application
 			requestCycleProcessor = new DefaultWebRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
-	}
-
-	/**
-	 * Template method that is called when a runtime exception is thrown, just
-	 * before the actual handling of the runtime exception.
-	 * 
-	 * @param page
-	 *            Any page context where the exception was thrown
-	 * @param e
-	 *            The exception
-	 * @return Any error page to redirect to
-	 */
-	protected Page onRuntimeException(Page page, RuntimeException e)
-	{
-		return null;
 	}
 
 	/**
