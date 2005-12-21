@@ -17,7 +17,9 @@ import wicket.model.Model;
 public class NavigationToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
-
+	
+	private DataTable table;
+	
 	/**
 	 * Constructor
 	 * 
@@ -27,7 +29,8 @@ public class NavigationToolbar extends AbstractToolbar
 	public NavigationToolbar(final DataTable table)
 	{
 		super(table);
-
+		this.table=table;
+		
 		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
 		span.add(new AttributeModifier("colspan", true, new Model(String
@@ -36,7 +39,8 @@ public class NavigationToolbar extends AbstractToolbar
 		span.add(newPagingNavigator("navigator", table));
 		span.add(newNavigatorLabel("navigatorLabel", table));
 	}
-
+	
+	
 	/**
 	 * Factory method used to create the paging navigator that will be used by
 	 * the datatable
@@ -49,15 +53,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 */
 	protected PagingNavigator newPagingNavigator(String navigatorId, final DataTable table)
 	{
-		return new PagingNavigator(navigatorId, table)
-		{
-			private static final long serialVersionUID = 1L;
-
-			public boolean isVisible()
-			{
-				return table.getRowCount() > 0;
-			}
-		};
+		return new PagingNavigator(navigatorId, table);
 	}
 
 	/**
@@ -77,12 +73,12 @@ public class NavigationToolbar extends AbstractToolbar
 	}
 
 	/**
-	 * Hides this toolbar when no rows are visible
+	 * Hides this toolbar when no rows are visible or number of rows is set to Integer.MAX_VALUE
 	 * 
 	 * @see wicket.Component#isVisible()
 	 */
 	public boolean isVisible()
 	{
-		return getTable().getRowCount() > 0;
+		return table.getRowCount() > 0&&table.getRowsPerPage()<Integer.MAX_VALUE;
 	}
 }
