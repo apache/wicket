@@ -23,64 +23,60 @@ import wicket.request.IRequestEncoder;
  * Default implementation of {@link
  * wicket.request.compound.AbstractCompoundRequestCycleProcessor} that expects
  * the delegate strategies to be set once at construction time.
+ * <p>
+ * This class call the appropriate factory methods to lazily create the
+ * strategies if they were not set at construction time. After that the
+ * strategies are cached and used for multiple thread access. Hence, if you use
+ * this class, your strategies need to be thread safe. If this is not what you
+ * want, consider overriding one of the getXXX methods, in which case the newXXX
+ * methods will obviously not be used unless you call them directly.
+ * </p>
  * 
  * @author Eelco Hillenius
  */
 public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleProcessor
 {
-	/** the strategy for constructing request parameters. */
-	private final IRequestEncoder requestEncoder;
+	/** the cached strategy for constructing request parameters. */
+	private IRequestEncoder requestEncoder;
 
-	/** the strategy for the target resolver method. */
-	private final IRequestTargetResolverStrategy requestTargetResolverStrategy;
+	/** the cached strategy for the target resolver method. */
+	private IRequestTargetResolverStrategy requestTargetResolverStrategy;
 
-	/** the strategy for the event processor method. */
-	private final IEventProcessorStrategy eventProcessorStrategy;
+	/** the cached strategy for the event processor method. */
+	private IEventProcessorStrategy eventProcessorStrategy;
 
-	/** the strategy for the response method. */
-	private final IResponseStrategy responseStrategy;
+	/** the cached strategy for the response method. */
+	private IResponseStrategy responseStrategy;
 
-	/** the strategy for the exception response method. */
-	private final IExceptionResponseStrategy exceptionResponseStrategy;
+	/** the cached strategy for the exception response method. */
+	private IExceptionResponseStrategy exceptionResponseStrategy;
 
 	/**
-	 * Construct using the given strategies and
-	 * {@link DefaultRequestTargetResolver}, {@link DefaultResponseProcessor}
-	 * and {@link DefaultExceptionResponseProcessor}.
-	 * 
-	 * @param requestEncoder
-	 *            the strategy for constructing request parameters
-	 * @param eventProcessorStrategy
-	 *            the strategy for the event processor method
+	 * Default constructor. If you use this constructor, please note that it
+	 * will fall back on calling the factory methods (newXXX), which may or may
+	 * not provide a default. Some implementations need to be provided still; if
+	 * they are not, an exception will be thrown.
 	 */
-	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
-			IEventProcessorStrategy eventProcessorStrategy)
+	public CompoundRequestCycleProcessor()
 	{
-		this(requestEncoder, eventProcessorStrategy, new DefaultExceptionResponseProcessor());
 	}
 
 	/**
-	 * Construct using the given strategies and
-	 * {@link DefaultRequestTargetResolver} and {@link DefaultResponseProcessor}.
+	 * Constructor with the only strategy we don't have a default for.
 	 * 
 	 * @param requestEncoder
 	 *            the strategy for constructing request parameters
-	 * @param eventProcessorStrategy
-	 *            the strategy for the event processor method
-	 * @param exceptionResponseStrategy
 	 */
-	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
-			IEventProcessorStrategy eventProcessorStrategy,
-			IExceptionResponseStrategy exceptionResponseStrategy)
+	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder)
 	{
-		this(requestEncoder, new DefaultRequestTargetResolver(), eventProcessorStrategy,
-				new DefaultResponseProcessor(), exceptionResponseStrategy);
+		this.requestEncoder = requestEncoder;
 	}
 
 	/**
-	 * Construct using the given strategies.
+	 * Bulk constructor. Constructs using the given strategies; all of which may
+	 * be null in which case the factory methods will be used.
 	 * 
-	 * @param requestParameterFactory
+	 * @param requestEncoder
 	 *            the strategy for constructing request parameters
 	 * @param requestTargetResolverStrategy
 	 *            the strategy for the target resolver method
@@ -91,12 +87,12 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * @param exceptionResponseStrategy
 	 *            the strategy for the exception response method
 	 */
-	public CompoundRequestCycleProcessor(IRequestEncoder requestParameterFactory,
+	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
 			IRequestTargetResolverStrategy requestTargetResolverStrategy,
 			IEventProcessorStrategy eventProcessorStrategy, IResponseStrategy responseStrategy,
 			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
-		this.requestEncoder = requestParameterFactory;
+		this.requestEncoder = requestEncoder;
 		this.requestTargetResolverStrategy = requestTargetResolverStrategy;
 		this.eventProcessorStrategy = eventProcessorStrategy;
 		this.responseStrategy = responseStrategy;
@@ -104,42 +100,183 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	}
 
 	/**
+	 * Gets the cached request encoder instance or create one by calling
+	 * {@link #newRequestEncoder()}.
+	 * 
 	 * @see wicket.request.IRequestCycleProcessor#getRequestEncoder()
 	 */
-	public final IRequestEncoder getRequestEncoder()
+	public IRequestEncoder getRequestEncoder()
 	{
+		// lazily create
+		if (requestEncoder == null)
+		{
+			requestEncoder = newRequestEncoder();
+		}
+
+		// still null?
+		if (requestEncoder == null)
+		{
+			throw new IllegalStateException("no requestEncoder set");
+		}
+
+		// return the strategy
 		return requestEncoder;
 	}
 
 	/**
+	 * Overridable factory method for creating the request encoder. Called by
+	 * {@link #getRequestEncoder()}. <strong>as there is no generic default for
+	 * the request encoder, this method throws an exception by default. You
+	 * either have to provide an instance as a constructor argument, or override
+	 * this method or {@link #getRequestEncoder()}</strong>.
+	 * 
+	 * @return a new target resolver instance
+	 */
+	protected IRequestEncoder newRequestEncoder()
+	{
+		throw new IllegalStateException(
+				"there is no default for the request encoder. Please provide your strategy by either "
+						+ "providing it as a constructor argument, or by overriding newRequestEncoder "
+						+ "or getRequestEncoder");
+	}
+
+	/**
+	 * Gets the cached target resolver instance or create one by calling
+	 * {@link #newRequestTargetResolverStrategy()}.
+	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getRequestTargetResolverStrategy()
 	 */
-	protected final IRequestTargetResolverStrategy getRequestTargetResolverStrategy()
+	protected IRequestTargetResolverStrategy getRequestTargetResolverStrategy()
 	{
+		// lazily create
+		if (requestTargetResolverStrategy == null)
+		{
+			requestTargetResolverStrategy = newRequestTargetResolverStrategy();
+		}
+
+		// still null?
+		if (requestTargetResolverStrategy == null)
+		{
+			throw new IllegalStateException("no requestTargetResolverStrategy set");
+		}
+
+		// return the strategy
 		return requestTargetResolverStrategy;
 	}
 
 	/**
+	 * Overridable factory method for creating the target resolver strategy.
+	 * Called by {@link #getRequestTargetResolverStrategy()}.
+	 * 
+	 * @return a new target resolver instance
+	 */
+	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
+	{
+		return new DefaultRequestTargetResolver();
+	}
+
+	/**
+	 * Gets the cached event processor instance or create one by calling
+	 * {@link #newEventProcessorStrategy()}.
+	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getEventProcessorStrategy()
 	 */
-	protected final IEventProcessorStrategy getEventProcessorStrategy()
+	protected IEventProcessorStrategy getEventProcessorStrategy()
 	{
+		// lazily create
+		if (eventProcessorStrategy == null)
+		{
+			eventProcessorStrategy = newEventProcessorStrategy();
+		}
+
+		// still null?
+		if (eventProcessorStrategy == null)
+		{
+			throw new IllegalStateException("no eventProcessorStrategy set");
+		}
+
+		// return the strategy
 		return eventProcessorStrategy;
 	}
 
 	/**
+	 * Overridable factory method for creating the event processor. Called by
+	 * {@link #getEventProcessorStrategy()}.
+	 * 
+	 * @return a new event processor instance
+	 */
+	protected IEventProcessorStrategy newEventProcessorStrategy()
+	{
+		return new DefaultEventProcessorStrategy();
+	}
+
+	/**
+	 * Gets the cached response strategy instance or create one by calling
+	 * {@link #newResponseStrategy()}.
+	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getResponseStrategy()
 	 */
-	protected final IResponseStrategy getResponseStrategy()
+	protected IResponseStrategy getResponseStrategy()
 	{
+		// lazily create
+		if (responseStrategy == null)
+		{
+			responseStrategy = newResponseStrategy();
+		}
+
+		// still null?
+		if (responseStrategy == null)
+		{
+			throw new IllegalStateException("no responseStrategy set");
+		}
+
+		// return the strategy
 		return responseStrategy;
 	}
 
 	/**
+	 * Overridable factory method for creating the response strategy. Called by
+	 * {@link #getResponseStrategy()}.
+	 * 
+	 * @return a new response strategy instance
+	 */
+	protected IResponseStrategy newResponseStrategy()
+	{
+		return new DefaultResponseProcessor();
+	}
+
+	/**
+	 * Gets the cached exception response strategy instance or create one by
+	 * calling {@link #newExceptionResponseStrategy()}.
+	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getExceptionResponseStrategy()
 	 */
-	protected final IExceptionResponseStrategy getExceptionResponseStrategy()
+	protected IExceptionResponseStrategy getExceptionResponseStrategy()
 	{
+		// lazily create
+		if (exceptionResponseStrategy == null)
+		{
+			exceptionResponseStrategy = newExceptionResponseStrategy();
+		}
+
+		// still null?
+		if (exceptionResponseStrategy == null)
+		{
+			throw new IllegalStateException("no exceptionResponseStrategy set");
+		}
+
+		// return the strategy
 		return exceptionResponseStrategy;
+	}
+
+	/**
+	 * Overridable factory method for creating the exception response strategy.
+	 * Called by {@link #getExceptionResponseStrategy()}.
+	 * 
+	 * @return a new response strategy instance
+	 */
+	protected IExceptionResponseStrategy newExceptionResponseStrategy()
+	{
+		return new DefaultExceptionResponseProcessor();
 	}
 }

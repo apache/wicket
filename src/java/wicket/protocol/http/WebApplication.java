@@ -43,6 +43,7 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.DefaultEventProcessorStrategy;
 import wicket.request.compound.DefaultExceptionResponseProcessor;
+import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
 import wicket.request.target.mixin.IMountEncoder;
 import wicket.request.target.mixin.PackagePathMountEncoder;
@@ -68,13 +69,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                                    
- *      public void init()
- *      {
- *        	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *         URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *         ...
- *   
+ *                                     
+ *       public void init()
+ *       {
+ *         	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *          URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *          ...
+ *    
  * </pre>
  * 
  * @see WicketServlet
@@ -229,13 +230,14 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param classOfPackageToMount
-	 *            the class for which package of which all bookmarkable pages or sharedresources should be mounted
+	 *            the class for which package of which all bookmarkable pages or
+	 *            sharedresources should be mounted
 	 */
 	public final void mountPackage(String path, Class classOfPackageToMount)
 	{
 		checkMountPath(path);
-		
-		if(classOfPackageToMount == null)
+
+		if (classOfPackageToMount == null)
 		{
 			throw new NullPointerException("class for mounting a package can't be null");
 		}
@@ -408,14 +410,19 @@ public abstract class WebApplication extends Application
 	{
 		if (requestCycleProcessor == null)
 		{
-			requestCycleProcessor = new CompoundRequestCycleProcessor(new WebRequestEncoder(),
-					new DefaultEventProcessorStrategy(), new DefaultExceptionResponseProcessor()
+			requestCycleProcessor = new DefaultWebRequestCycleProcessor()
+			{
+				protected IExceptionResponseStrategy newExceptionResponseStrategy()
+				{
+					return new DefaultExceptionResponseProcessor()
 					{
 						protected Page onRuntimeException(Page page, RuntimeException e)
 						{
 							return WebApplication.this.onRuntimeException(page, e);
 						}
-					});
+					};
+				}
+			};
 		}
 		return requestCycleProcessor;
 	}
