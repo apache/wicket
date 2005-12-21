@@ -103,14 +103,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 		// if we get here, we have no regconized Wicket target, and thus
 		// regard this as a external (non-wicket) resource request on
 		// this server
-
-		// Get the relative URL we need for loading the resource from
-		// the servlet context
-		// NOTE: we NEED to put the '/' in front as otherwise some versions
-		// of application servers (e.g. Jetty 5.1.x) will fail for requests
-		// like '/mysubdir/myfile.css'
-		final String url = '/' + requestCycle.getRequest().getRelativeURL();
-		return new WebExternalResourceRequestTarget(url);
+		return resolveExternalResource(requestCycle);
 	}
 
 	/**
@@ -122,10 +115,10 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 	 *            the request parameters object
 	 * @return the shared resource as a request target
 	 */
-	private IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
+	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final String resourceKey = requestParameters.getResourceKey();
+		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(resourceKey);
 	}
 
@@ -141,22 +134,23 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 	 *            the request parameters object
 	 * @return the previously rendered page as a request target
 	 */
-	private IRequestTarget resolveRenderedPage(RequestCycle requestCycle,
+	protected IRequestTarget resolveRenderedPage(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final String componentPath = requestParameters.getComponentPath();
-		final Session session = requestCycle.getSession();
-		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+		String componentPath = requestParameters.getComponentPath();
+		Session session = requestCycle.getSession();
+		Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
 				requestParameters.getVersionNumber());
 
 		// Does page exist?
 		if (page != null)
 		{
 			// see whether this resolves to a component call or just the page
-			final String interfaceName = requestParameters.getInterfaceName();
+			String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
 			{
-				return resolveListenerInterfaceTarget(requestCycle,  page, componentPath, interfaceName);
+				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+						interfaceName);
 			}
 			else
 			{
@@ -172,16 +166,22 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 	}
 
 	/**
-	 * Resolves the RequestTarget for the given interface.
-	 * This method can be overriden if some special interface needs to resolve to its own target.
+	 * Resolves the RequestTarget for the given interface. This method can be
+	 * overriden if some special interface needs to resolve to its own target.
 	 * 
-	 * @param requestCycle The current RequestCycle object
-	 * @param page The page object which holds the component for which this interface is called on.
-	 * @param componentPath The component path for looking up the component in the page.
-	 * @param interfaceName The interface to resolve.
+	 * @param requestCycle
+	 *            The current RequestCycle object
+	 * @param page
+	 *            The page object which holds the component for which this
+	 *            interface is called on.
+	 * @param componentPath
+	 *            The component path for looking up the component in the page.
+	 * @param interfaceName
+	 *            The interface to resolve.
 	 * @return The RequestTarget that was resolved
 	 */
-	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle, final Page page, final String componentPath, final String interfaceName)
+	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle,
+			final Page page, final String componentPath, final String interfaceName)
 	{
 		if (interfaceName.equals("IRedirectListener"))
 		{
@@ -189,7 +189,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 		}
 		else
 		{
-			final Method listenerMethod = requestCycle.getRequestInterfaceMethod(interfaceName);
+			Method listenerMethod = requestCycle.getRequestInterfaceMethod(interfaceName);
 			if (listenerMethod == null)
 			{
 				throw new WicketRuntimeException("Attempt to access unknown interface "
@@ -203,7 +203,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 				throw new WicketRuntimeException("when trying to call " + listenerMethod
 						+ ", a component must be provided");
 			}
-			final Component component = page.get(componentPart);
+			Component component = page.get(componentPart);
 			if (!component.isVisible())
 			{
 				throw new WicketRuntimeException(
@@ -211,7 +211,7 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			}
 			if (interfaceName.equals("IResourceListener"))
 			{
-				return new ComponentResourceRequestTarget(page,component,listenerMethod);
+				return new ComponentResourceRequestTarget(page, component, listenerMethod);
 			}
 			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
 		}
@@ -226,13 +226,13 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
-	private IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
+	protected IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
-		final Session session = requestCycle.getSession();
-		final Application application = session.getApplication();
-		final Class pageClass;
+		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
+		Session session = requestCycle.getSession();
+		Application application = session.getApplication();
+		Class pageClass;
 		try
 		{
 			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
@@ -252,8 +252,9 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 			// the bookmarkable page
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 
-			// is it possible that there is already another request target at this point then the 2 below?
-			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget) )
+			// is it possible that there is already another request target at
+			// this point then the 2 below?
+			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
 			{
 				requestTarget = new PageRequestTarget(newPage);
 			}
@@ -276,18 +277,19 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
-	private IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
+	protected IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
 			RequestParameters requestParameters)
 	{
-		final Session session = requestCycle.getSession();
-		final Application application = session.getApplication();
+		Session session = requestCycle.getSession();
+		Application application = session.getApplication();
 		try
 		{
 			// get the home page class
 			Class homePageClass = application.getPages().getHomePage();
 			// and create a dummy target for looking up whether the home page is
 			// mounted
-			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(homePageClass);
+			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(
+					homePageClass);
 			IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
 					.getRequestEncoder();
 			String path = requestEncoder.pathForTarget(pokeTarget);
@@ -303,22 +305,42 @@ public class DefaultRequestTargetResolver implements IRequestTargetResolverStrat
 
 			// else the home page was not mounted; render it now so
 			// that we will keep a clean path
-			final PageParameters parameters = new PageParameters(requestParameters.getParameters());
+			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			Page newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			// the response might have been set in the constructor of the home page
+			// the response might have been set in the constructor of the home
+			// page
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 
-			// is it possible that there is already another request target at this point then the 2 below?
-			if ( !(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget) )
+			// is it possible that there is already another request target at
+			// this point then the 2 below?
+			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
 			{
 				requestTarget = new PageRequestTarget(newPage);
 			}
 
 			return requestTarget;
-			}
+		}
 		catch (WicketRuntimeException e)
 		{
 			throw new WicketRuntimeException("Could not create home page", e);
 		}
+	}
+
+	/**
+	 * Resolves to an external resource.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @return the external resource request target
+	 */
+	protected IRequestTarget resolveExternalResource(RequestCycle requestCycle)
+	{
+		// Get the relative URL we need for loading the resource from
+		// the servlet context
+		// NOTE: we NEED to put the '/' in front as otherwise some versions
+		// of application servers (e.g. Jetty 5.1.x) will fail for requests
+		// like '/mysubdir/myfile.css'
+		final String url = '/' + requestCycle.getRequest().getRelativeURL();
+		return new WebExternalResourceRequestTarget(url);
 	}
 }
