@@ -114,7 +114,7 @@ public final class PageMap implements Serializable
 	/**
 	 * @return The next id for this pagemap
 	 */
-	final int getNextId()
+	final int nextId()
 	{
 		session.dirty();
 		return this.pageId++;
