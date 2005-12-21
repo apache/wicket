@@ -749,16 +749,17 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		//TODO this has to be done after the unit tests are fixed
-//		// if we are already responding, we can't change the request target
-//		// as that would either have no effect, or - in case we would set
-//		// the currentStep back to PROCESS_EVENTS, we would have double
-//		// output (and it is not Wicket's intention to work as Servlet filters)
-//		if (currentStep >= RESPOND)
-//		{
-//			throw new WicketRuntimeException(
-//					"you cannot change the request cycle after rendering has commenced");
-//		}
+		// TODO this has to be done after the unit tests are fixed
+		// // if we are already responding, we can't change the request target
+		// // as that would either have no effect, or - in case we would set
+		// // the currentStep back to PROCESS_EVENTS, we would have double
+		// // output (and it is not Wicket's intention to work as Servlet
+		// filters)
+		// if (currentStep >= RESPOND)
+		// {
+		// throw new WicketRuntimeException(
+		// "you cannot change the request cycle after rendering has commenced");
+		// }
 
 		if (log.isDebugEnabled())
 		{
@@ -1007,6 +1008,24 @@ public abstract class RequestCycle
 	public abstract void redirectTo(final Page page);
 
 	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception. This is called by
+	 * {@link wicket.request.compound.DefaultExceptionResponseProcessor}, hence
+	 * if that strategy is replaced by another one, there is no guarantee this
+	 * method is called.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	public Page onRuntimeException(Page page, RuntimeException e)
+	{
+		return null;
+	}
+
+	/**
 	 * Releases the current thread local related resources. The threadlocal of
 	 * this request cycle is reset. If we are in a 'redirect' state, we do not
 	 * want to lose our messages as - e.g. when handling a form - there's a fat
@@ -1024,7 +1043,8 @@ public abstract class RequestCycle
 			setRedirect(false);
 		}
 
-		// Clear ThreadLocal reference; makes sense as this object should not be reused
+		// Clear ThreadLocal reference; makes sense as this object should not be
+		// reused
 		CURRENT.set(null);
 	}
 

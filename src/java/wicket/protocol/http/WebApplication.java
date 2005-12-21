@@ -39,8 +39,6 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.DefaultExceptionResponseProcessor;
-import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
 import wicket.request.target.mixin.IMountEncoder;
 import wicket.request.target.mixin.PackagePathMountEncoder;
@@ -67,13 +65,13 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                                     
- *       public void init()
- *       {
- *         	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *          URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *          ...
- *    
+ *                                      
+ *        public void init()
+ *        {
+ *          	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *           URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *           ...
+ *     
  * </pre>
  * 
  * @see WicketServlet
@@ -408,19 +406,7 @@ public abstract class WebApplication extends Application
 	{
 		if (requestCycleProcessor == null)
 		{
-			requestCycleProcessor = new DefaultWebRequestCycleProcessor()
-			{
-				protected IExceptionResponseStrategy newExceptionResponseStrategy()
-				{
-					return new DefaultExceptionResponseProcessor()
-					{
-						protected Page onRuntimeException(Page page, RuntimeException e)
-						{
-							return WebApplication.this.onRuntimeException(page, e);
-						}
-					};
-				}
-			};
+			requestCycleProcessor = new DefaultWebRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
 	}
