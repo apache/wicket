@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="fix" dev="Igor Vaynberg" issue="1375590">FormComponentFeedback* components are not xhtml compliant</action>
       <action type="add" dev="Eelco Hillenius,Igor Vanberg">Introduced mounting/ nice urls. Provided convenience methods for mounting bookmarkable pages and packages</action>
       <action type="update" dev="Eelco Hillenius">Session.get/setAttribute are now final to support attaching attribute observers. Use doGet/SetAttribute instead.</action>
       <action type="update" dev="Eelco Hillenius">Internals of RequestCycle are refactored. The processing is more formalized now, as defined in interface IRequestCycleProcessor. This interface is used by RequestCycle to delegate processing. The target of a request, like Page or e.g. shared resource, is abstracted in IRequestTarget, of which the current is set in RequestCycle.</action>
