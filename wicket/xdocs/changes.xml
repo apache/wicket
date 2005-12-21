@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="update" dev="Eelco Hillenius">moved WebApplication.onRuntimeException(Page page, RuntimeException e) to RequestCycle, which is a much more logical place for it, and has a more natural grouping with onBeginRequest and onEndRequest</action>
       <action type="fix" dev="Igor Vaynberg" issue="1375598">ListView now creates Change objects instead of cloning the whole list on up/down/remove links</action>
       <action type="fix" dev="Igor Vaynberg" issue="1375590">FormComponentFeedback* components are now xhtml compliant</action>
       <action type="add" dev="Eelco Hillenius,Igor Vanberg">Introduced mounting/ nice urls. Provided convenience methods for mounting bookmarkable pages and packages</action>

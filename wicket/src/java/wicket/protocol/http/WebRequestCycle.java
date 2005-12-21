@@ -193,9 +193,14 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * By default returns the WebApplication's default request cycle processor.
-	 * NOTE: if you decide to override this method to provide a custom processor
-	 * per request cycle, any mounts done via WebApplication will not work
-	 * unless you deliberately put effort in it to make it work.
+	 * Typically, you don't override this method but instead override
+	 * {@link WebApplication#getDefaultRequestCycleProcessor()}.
+	 * <p>
+	 * <strong>if you decide to override this method to provide a custom
+	 * processor per request cycle, any mounts done via WebApplication will not
+	 * work and and {@link #onRuntimeException(Page, RuntimeException)} is not
+	 * called unless you deliberately put effort in it to make it work.</strong>
+	 * </p>
 	 * 
 	 * @see wicket.RequestCycle#getRequestCycleProcessor()
 	 */

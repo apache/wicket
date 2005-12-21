@@ -29,8 +29,11 @@ import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.request.IPageRequestTarget;
 
 /**
- * Default implementation of response processor strategy that just calls
- * {@link wicket.IRequestTarget#respond(RequestCycle)}.
+ * Default implementation of
+ * {@link wicket.request.compound.IExceptionResponseStrategy}. Depending on the
+ * setting it returns a (pluggable) exception page or a blank page, and it
+ * passes the exception through to the current request cycle by calling
+ * {@link wicket.RequestCycle#onRuntimeException(Page, RuntimeException)}.
  * 
  * @author Eelco Hillenius
  */
@@ -105,8 +108,14 @@ public class DefaultExceptionResponseProcessor implements IExceptionResponseStra
 	}
 
 	/**
-	 * Template method that is called when a runtime exception is thrown, just
-	 * before the actual handling of the runtime exception.
+	 * This method is called when a runtime exception is thrown, just before the
+	 * actual handling of the runtime exception. This implemention passes the
+	 * call through to
+	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)}. Note
+	 * that if you override this method or provide a whole new implementation of
+	 * {@link IExceptionResponseStrategy} alltogether,
+	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)} will not
+	 * be supported.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
@@ -116,6 +125,6 @@ public class DefaultExceptionResponseProcessor implements IExceptionResponseStra
 	 */
 	protected Page onRuntimeException(Page page, RuntimeException e)
 	{
-		return null;
+		return RequestCycle.get().onRuntimeException(page, e);
 	}
 }
