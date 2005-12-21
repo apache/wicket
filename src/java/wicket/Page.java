@@ -1190,7 +1190,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
 				"pagemap") : null);
 
-		setId(getPageMap().getNextId());
+		setId(getPageMap().nextId());
 
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
