@@ -564,6 +564,22 @@ public abstract class Session implements Serializable
 	/**
 	 * Updates this session using changed state information that may have been
 	 * replicated to this node on a cluster.
+	 * 
+	 * @deprecated to be replaced by a pull way of working. The whole point of
+	 *             this method is that it should recreate any pages that might
+	 *             have come from a cluster. The problem with this is that it is
+	 *             inefficient compared to just pulling from the session when
+	 *             you need it. Furthermore if you use a smart clustering tech
+	 *             that only sends data when you need it, this implementation is
+	 *             a problem as it simply iterates all session attributes thus
+	 *             triggering such a mechanism to send all data. Bad, bad. We
+	 *             should rewrite this stuff to just pull a {@link PageState}
+	 *             object when we need it. If we combine this with always
+	 *             storing PageState objects instead of as currently is the case
+	 *             the page instances, we get better abstraction/ more
+	 *             flexibility too, and made clustering transparent (it /is/
+	 *             after all something your application server should
+	 *             transparently do for you).
 	 */
 	public final void updateSession()
 	{
