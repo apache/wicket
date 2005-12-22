@@ -198,7 +198,7 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
-		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
+		mount(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
 	}
 
 	/**
@@ -215,7 +215,7 @@ public abstract class WebApplication extends Application
 			String pageMapName)
 	{
 		checkMountPath(path);
-		mountPath(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
+		mount(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
 				pageMapName));
 	}
 
@@ -236,7 +236,7 @@ public abstract class WebApplication extends Application
 		{
 			throw new NullPointerException("class for mounting a package can't be null");
 		}
-		mountPath(path, new PackagePathMountEncoder(path, classOfPackageToMount));
+		mount(path, new PackagePathMountEncoder(path, classOfPackageToMount));
 	}
 
 	/**
@@ -247,7 +247,7 @@ public abstract class WebApplication extends Application
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mountPath(String path, IMountEncoder encoder)
+	public final void mount(String path, IMountEncoder encoder)
 	{
 		checkMountPath(path);
 
@@ -260,12 +260,12 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Unmounts a bookmarkable page classs.
+	 * Unmounts whatever encoder is mounted at a given path.
 	 * 
 	 * @param path
-	 *            the path of the bookmarkable page class to unmount
+	 *            the path of the encoder to unmount
 	 */
-	public final void unmountPath(String path)
+	public final void unmount(String path)
 	{
 		checkMountPath(path);
 		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);

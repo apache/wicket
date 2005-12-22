@@ -194,10 +194,10 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetPathMounter#mountPath(java.lang.String,
+	 * @see wicket.request.IRequestTargetPathMounter#mount(java.lang.String,
 	 *      wicket.request.target.mixin.IMountEncoder)
 	 */
-	public final void mountPath(String path, IMountEncoder encoder)
+	public final void mount(String path, IMountEncoder encoder)
 	{
 		if (path == null)
 		{
@@ -224,9 +224,9 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#unmountPath(java.lang.String)
+	 * @see wicket.request.IRequestEncoder#unmount(java.lang.String)
 	 */
-	public final void unmountPath(String path)
+	public final void unmount(String path)
 	{
 		if (path == null)
 		{
