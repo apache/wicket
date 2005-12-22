@@ -891,6 +891,13 @@ public abstract class MarkupContainer extends Component
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
 
+		// remove if from another parent.
+		MarkupContainer mc = component.getParent();
+		if(mc != null)
+		{
+			mc.remove(component);
+		}
+
 		// Set child's parent
 		component.setParent(this);
 
