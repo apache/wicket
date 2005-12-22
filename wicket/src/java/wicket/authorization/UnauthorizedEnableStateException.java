@@ -18,18 +18,20 @@
 package wicket.authorization;
 
 /**
- * Exception that is thrown when the creation of a component is not allowed.
+ * Exception that is thrown when a component that may not be enabled given the
+ * current authorization context is being accessed, like calling it's listener
+ * method or setting it's model.
  * 
  * @author Eelco Hillenius
  */
-public class CreationNotAllowedException extends AuthorizationException
+public class UnauthorizedEnableStateException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public CreationNotAllowedException()
+	public UnauthorizedEnableStateException()
 	{
 		super();
 	}
@@ -39,7 +41,7 @@ public class CreationNotAllowedException extends AuthorizationException
 	 * 
 	 * @param message
 	 */
-	public CreationNotAllowedException(String message)
+	public UnauthorizedEnableStateException(String message)
 	{
 		super(message);
 	}
@@ -50,7 +52,7 @@ public class CreationNotAllowedException extends AuthorizationException
 	 * @param message
 	 * @param cause
 	 */
-	public CreationNotAllowedException(String message, Throwable cause)
+	public UnauthorizedEnableStateException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
@@ -60,7 +62,7 @@ public class CreationNotAllowedException extends AuthorizationException
 	 * 
 	 * @param cause
 	 */
-	public CreationNotAllowedException(Throwable cause)
+	public UnauthorizedEnableStateException(Throwable cause)
 	{
 		super(cause);
 	}

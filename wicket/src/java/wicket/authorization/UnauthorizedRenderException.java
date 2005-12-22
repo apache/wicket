@@ -25,14 +25,14 @@ package wicket.authorization;
  * 
  * @author Eelco Hillenius
  */
-public class RenderNotAllowedException extends AuthorizationException
+public class UnauthorizedRenderException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public RenderNotAllowedException()
+	public UnauthorizedRenderException()
 	{
 		super();
 	}
@@ -42,7 +42,7 @@ public class RenderNotAllowedException extends AuthorizationException
 	 * 
 	 * @param message
 	 */
-	public RenderNotAllowedException(String message)
+	public UnauthorizedRenderException(String message)
 	{
 		super(message);
 	}
@@ -53,7 +53,7 @@ public class RenderNotAllowedException extends AuthorizationException
 	 * @param message
 	 * @param cause
 	 */
-	public RenderNotAllowedException(String message, Throwable cause)
+	public UnauthorizedRenderException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
@@ -63,7 +63,7 @@ public class RenderNotAllowedException extends AuthorizationException
 	 * 
 	 * @param cause
 	 */
-	public RenderNotAllowedException(Throwable cause)
+	public UnauthorizedRenderException(Throwable cause)
 	{
 		super(cause);
 	}
