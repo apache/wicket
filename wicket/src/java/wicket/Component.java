@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedInstantiationException;
-import wicket.authorization.UnauthorizedEnableStateException;
+import wicket.authorization.UnauthorizedEnabledStateException;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
@@ -1524,9 +1524,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		// check authorization
-		if (!getApplication().getAuthorizationStrategy().allowEnabled(this))
+		if (!getApplication().getAuthorizationStrategy().allowEnabledState(this))
 		{
-			throw new UnauthorizedEnableStateException(
+			throw new UnauthorizedEnabledStateException(
 					"operation not allowed in the current authorization context");
 		}
 
@@ -2419,7 +2419,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	private final void checkAuthorization()
 	{
-		if (!getApplication().getAuthorizationStrategy().allowCreateComponent(getClass()))
+		if (!getApplication().getAuthorizationStrategy().allowInstantiation(getClass()))
 		{
 			throw new UnauthorizedInstantiationException("insufficiently authorized to create component "
 					+ getClass());

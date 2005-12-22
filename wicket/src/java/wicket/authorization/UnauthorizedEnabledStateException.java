@@ -24,14 +24,14 @@ package wicket.authorization;
  * 
  * @author Eelco Hillenius
  */
-public class UnauthorizedEnableStateException extends AuthorizationException
+public class UnauthorizedEnabledStateException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public UnauthorizedEnableStateException()
+	public UnauthorizedEnabledStateException()
 	{
 		super();
 	}
@@ -41,7 +41,7 @@ public class UnauthorizedEnableStateException extends AuthorizationException
 	 * 
 	 * @param message
 	 */
-	public UnauthorizedEnableStateException(String message)
+	public UnauthorizedEnabledStateException(String message)
 	{
 		super(message);
 	}
@@ -52,7 +52,7 @@ public class UnauthorizedEnableStateException extends AuthorizationException
 	 * @param message
 	 * @param cause
 	 */
-	public UnauthorizedEnableStateException(String message, Throwable cause)
+	public UnauthorizedEnabledStateException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
@@ -62,7 +62,7 @@ public class UnauthorizedEnableStateException extends AuthorizationException
 	 * 
 	 * @param cause
 	 */
-	public UnauthorizedEnableStateException(Throwable cause)
+	public UnauthorizedEnabledStateException(Throwable cause)
 	{
 		super(cause);
 	}
