@@ -98,7 +98,7 @@ public class AuthorizationTest extends TestCase
 				return new DummyAuthorizationStrategy()
 				{
 
-					public boolean allowCreateComponent(Class c)
+					public boolean allowInstantiation(Class c)
 					{
 						return false;
 					}
@@ -204,7 +204,7 @@ public class AuthorizationTest extends TestCase
 			{
 				return new DummyAuthorizationStrategy()
 				{
-					public boolean allowEnabled(Component c)
+					public boolean allowEnabledState(Component c)
 					{
 						if (c instanceof TextField && c.getId().equals("stringInput"))
 						{
@@ -237,9 +237,9 @@ public class AuthorizationTest extends TestCase
 	private static class DummyAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowCreateComponent(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#allowInstantiation(java.lang.Class)
 		 */
-		public boolean allowCreateComponent(Class c)
+		public boolean allowInstantiation(Class c)
 		{
 			return true;
 		}
@@ -253,9 +253,9 @@ public class AuthorizationTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowEnabled(wicket.Component)
+		 * @see wicket.authorization.IAuthorizationStrategy#allowEnabledState(wicket.Component)
 		 */
-		public boolean allowEnabled(Component c)
+		public boolean allowEnabledState(Component c)
 		{
 			return true;
 		}

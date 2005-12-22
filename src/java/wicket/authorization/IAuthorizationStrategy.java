@@ -45,7 +45,7 @@ public interface IAuthorizationStrategy
 		/**
 		 * @return true allways
 		 */
-		public boolean allowCreateComponent(Class c)
+		public boolean allowInstantiation(Class c)
 		{
 			return true;
 		}
@@ -61,7 +61,7 @@ public interface IAuthorizationStrategy
 		/**
 		 * @return true allways
 		 */
-		public boolean allowEnabled(Component c)
+		public boolean allowEnabledState(Component c)
 		{
 			return true;
 		}
@@ -72,11 +72,11 @@ public interface IAuthorizationStrategy
 	 * If this method returns false, a {@link AuthorizationException} is thrown
 	 * during construction.
 	 * 
-	 * @param c
-	 *            the component to check for
+	 * @param componentClass
+	 *            The component class to check
 	 * @return whether the given component may be created
 	 */
-	boolean allowCreateComponent(Class c);
+	boolean allowInstantiation(Class componentClass);
 
 	/**
 	 * Gets whether the given component may be rendered. If this method returns
@@ -134,5 +134,5 @@ public interface IAuthorizationStrategy
 	 *            the component to check for
 	 * @return whether a component is allowed to be enabled
 	 */
-	boolean allowEnabled(Component c);
+	boolean allowEnabledState(Component c);
 }
