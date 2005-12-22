@@ -83,6 +83,21 @@ import wicket.util.file.WebApplicationPath;
  */
 public abstract class WebApplication extends Application
 {
+	/**
+	 * Map of buffered responses that are in progress per session. Buffered
+	 * responses are temporarily stored
+	 */
+	private Map bufferedResponses = new HashMap();
+
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
+
+	/**
+	 * the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
+	 */
+	private String sessionAttributePrefix;
+
 	/** Session factory for this web application */
 	private ISessionFactory sessionFactory = new ISessionFactory()
 	{
@@ -97,21 +112,6 @@ public abstract class WebApplication extends Application
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
-	/** the default request cycle processor implementation. */
-	private IRequestCycleProcessor requestCycleProcessor;
-
-	/**
-	 * Map of buffered responses that are in progress per session. Buffered
-	 * responses are temporarily stored
-	 */
-	private Map bufferedResponses = new HashMap();
-
-	/**
-	 * the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
-	 */
-	private String sessionAttributePrefix;
-
 	/**
 	 * Constructor.
 	 */
@@ -123,6 +123,54 @@ public abstract class WebApplication extends Application
 
 		// Add resolver for automatically resolving HTML links
 		getComponentResolvers().add(new AutoLinkResolver());
+	}
+
+	/**
+	 * Subclasses could override this to give there own implementation of
+	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
+	 * instead.
+	 * 
+	 * @return An instanceof an ApplicaitonSettings class
+	 * 
+	 * @see wicket.Application#createApplicationSettings()
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this)
+		{
+			/**
+			 * @see wicket.ApplicationSettings#newResourceFinder()
+			 */
+			public IResourceFinder newResourceFinder()
+			{
+				return new WebApplicationPath(getWicketServlet().getServletContext());
+			}
+		};
+	}
+
+	/**
+	 * Gets the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
+	 * 
+	 * @param request
+	 *            the request
+	 * 
+	 * @return the prefix for storing variables in the actual session
+	 */
+	public final String getSessionAttributePrefix(final WebRequest request)
+	{
+		if (sessionAttributePrefix == null)
+		{
+			String servletPath = request.getServletPath();
+			if (servletPath == null)
+			{
+				throw new WicketRuntimeException("unable to retrieve servlet path");
+			}
+			sessionAttributePrefix = "wicket-" + servletPath + "-";
+		}
+		// Namespacing for session attributes is provided by
+		// adding the servlet path
+		return sessionAttributePrefix;
 	}
 
 	/**
@@ -140,51 +188,23 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @param sessionFactory
-	 *            The session factory to use
-	 */
-	public final void setSessionFactory(final ISessionFactory sessionFactory)
-	{
-		this.sessionFactory = sessionFactory;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param wicketServlet
-	 *            The wicket servlet instance for this application
-	 * @throws IllegalStateException
-	 *             If an attempt is made to call this method once the wicket
-	 *             servlet has been set for the application.
-	 */
-	public final void setWicketServlet(final WicketServlet wicketServlet)
-	{
-		if (this.wicketServlet == null)
-		{
-			this.wicketServlet = wicketServlet;
-		}
-		else
-		{
-			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
-		}
-	}
-
-	/**
-	 * Checks mount path is valid.
+	 * Mounts an encoder at the given path.
 	 * 
 	 * @param path
-	 *            mount path
+	 *            the path to mount the bookmarkable page class on
+	 * @param encoder
+	 *            the encoder that will be used for this mount
 	 */
-	private void checkMountPath(String path)
+	public final void mount(String path, IMountEncoder encoder)
 	{
-		if (path == null)
+		checkMountPath(path);
+
+		if (encoder == null)
 		{
-			throw new IllegalArgumentException("mounting path cannot be null");
+			throw new NullPointerException("encoder must be not null");
 		}
-		if (!path.startsWith("/"))
-		{
-			throw new IllegalArgumentException("mounting path has to start with '/'");
-		}
+
+		getDefaultRequestCycleProcessor().getRequestEncoder().mount(path, encoder);
 	}
 
 	/**
@@ -240,23 +260,33 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Mounts an encoder at the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param encoder
-	 *            the encoder that will be used for this mount
+	 * @param sessionFactory
+	 *            The session factory to use
 	 */
-	public final void mount(String path, IMountEncoder encoder)
+	public final void setSessionFactory(final ISessionFactory sessionFactory)
 	{
-		checkMountPath(path);
+		this.sessionFactory = sessionFactory;
+	}
 
-		if (encoder == null)
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param wicketServlet
+	 *            The wicket servlet instance for this application
+	 * @throws IllegalStateException
+	 *             If an attempt is made to call this method once the wicket
+	 *             servlet has been set for the application.
+	 */
+	public final void setWicketServlet(final WicketServlet wicketServlet)
+	{
+		if (this.wicketServlet == null)
 		{
-			throw new NullPointerException("encoder must be not null");
+			this.wicketServlet = wicketServlet;
 		}
-
-		getDefaultRequestCycleProcessor().getRequestEncoder().mountPath(path, encoder);
+		else
+		{
+			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
+		}
 	}
 
 	/**
@@ -268,103 +298,7 @@ public abstract class WebApplication extends Application
 	public final void unmount(String path)
 	{
 		checkMountPath(path);
-		getDefaultRequestCycleProcessor().getRequestEncoder().unmountPath(path);
-	}
-
-	/**
-	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
-	 * instead.
-	 * 
-	 * @return An instanceof an ApplicaitonSettings class
-	 * 
-	 * @see wicket.Application#createApplicationSettings()
-	 */
-	public ApplicationSettings createApplicationSettings()
-	{
-		return new ApplicationSettings(this)
-		{
-			/**
-			 * @see wicket.ApplicationSettings#newResourceFinder()
-			 */
-			public IResourceFinder newResourceFinder()
-			{
-				return new WebApplicationPath(getWicketServlet().getServletContext());
-			}
-		};
-	}
-
-	/**
-	 * @see wicket.Application#getSessionFactory()
-	 */
-	protected ISessionFactory getSessionFactory()
-	{
-		return sessionFactory;
-	}
-
-	/**
-	 * Initialize; if you need the wicket servlet for initialization, e.g.
-	 * because you want to read an initParameter from web.xml or you want to
-	 * read a resource from the servlet's context path, you can override this
-	 * method and provide custom initialization. This method is called right
-	 * after this application class is constructed, and the wicket servlet is
-	 * set.
-	 */
-	protected void init()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Internal intialization. Reads servlet init parameter "configuration". If
-	 * the parameter is "development", settings appropriate for development are
-	 * set. If it's "deployment", deployment settings are used. If development
-	 * configuration is specified and a "sourceFolder" init parameter is also
-	 * set, then resources in that folder will be polled for changes.
-	 */
-	protected void internalInit()
-	{
-		super.internalInit();
-		final String configuration = wicketServlet.getInitParameter("configuration");
-		if (configuration != null)
-		{
-			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 */
-	protected void internalDestroy()
-	{
-	}
-
-	/**
-	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
-	 * obfuscated URL which has been encoded by an appropriate WebResponse.
-	 * 
-	 * @param servletRequest
-	 * @return a WebRequest object
-	 */
-	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
-	{
-		return new ServletWebRequest(servletRequest);
-	}
-
-	/**
-	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's
-	 * default URL and hide the details from the user. A appropriate WebRequest
-	 * must be implemented and configured to decode the encoded URL.
-	 * 
-	 * @param servletResponse
-	 * @return a WebResponse object
-	 */
-	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-	{
-		return (getSettings().getBufferResponse()
-				? new BufferedWebResponse(servletResponse)
-				: new WebResponse(servletResponse));
+		getDefaultRequestCycleProcessor().getRequestEncoder().unmount(path);
 	}
 
 	/**
@@ -408,6 +342,117 @@ public abstract class WebApplication extends Application
 			requestCycleProcessor = new DefaultWebRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
+	}
+
+	/**
+	 * @see wicket.Application#getSessionFactory()
+	 */
+	protected ISessionFactory getSessionFactory()
+	{
+		return sessionFactory;
+	}
+
+	/**
+	 * Initialize; if you need the wicket servlet for initialization, e.g.
+	 * because you want to read an initParameter from web.xml or you want to
+	 * read a resource from the servlet's context path, you can override this
+	 * method and provide custom initialization. This method is called right
+	 * after this application class is constructed, and the wicket servlet is
+	 * set.
+	 */
+	protected void init()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	protected void internalDestroy()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Internal intialization. Reads servlet init parameter "configuration". If
+	 * the parameter is "development", settings appropriate for development are
+	 * set. If it's "deployment", deployment settings are used. If development
+	 * configuration is specified and a "sourceFolder" init parameter is also
+	 * set, then resources in that folder will be polled for changes.
+	 */
+	protected void internalInit()
+	{
+		super.internalInit();
+		final String configuration = wicketServlet.getInitParameter("configuration");
+		if (configuration != null)
+		{
+			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+		}
+	}
+
+	/**
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
+	 * obfuscated URL which has been encoded by an appropriate WebResponse.
+	 * 
+	 * @param servletRequest
+	 * @return a WebRequest object
+	 */
+	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
+	{
+		return new ServletWebRequest(servletRequest);
+	}
+
+	/**
+	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's
+	 * default URL and hide the details from the user. A appropriate WebRequest
+	 * must be implemented and configured to decode the encoded URL.
+	 * 
+	 * @param servletResponse
+	 * @return a WebResponse object
+	 */
+	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
+	{
+		return (getSettings().getBufferResponse()
+				? new BufferedWebResponse(servletResponse)
+				: new WebResponse(servletResponse));
+	}
+
+	/**
+	 * Add a buffered response to the redirect buffer.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @param bufferId
+	 *            the id that should be used for storing the buffer
+	 * @param renderedResponse
+	 *            the response to buffer
+	 */
+	final void addBufferedResponse(String sessionId, String bufferId,
+			BufferedResponse renderedResponse)
+	{
+		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		if (responsesPerSession == null)
+		{
+			responsesPerSession = new MostRecentlyUsedMap(4);
+			bufferedResponses.put(sessionId, responsesPerSession);
+		}
+		responsesPerSession.put(bufferId, renderedResponse);
+	}
+
+	/**
+	 * Cleans up any buffered response map for the client with the provided
+	 * session id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	final void clearBufferedResponses(String sessionId)
+	{
+		bufferedResponses.remove(sessionId);
+
+		// TODO implement call to this method: probably have to register a
+		// session listener?
+		// or take a cleaner thread instead of this method
 	}
 
 	/**
@@ -471,31 +516,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
-	 * 
-	 * @param request
-	 *            the request
-	 * 
-	 * @return the prefix for storing variables in the actual session
-	 */
-	public final String getSessionAttributePrefix(final WebRequest request)
-	{
-		if (sessionAttributePrefix == null)
-		{
-			String servletPath = request.getServletPath();
-			if (servletPath == null)
-			{
-				throw new WicketRuntimeException("unable to retrieve servlet path");
-			}
-			sessionAttributePrefix = "wicket-" + servletPath + "-";
-		}
-		// Namespacing for session attributes is provided by
-		// adding the servlet path
-		return sessionAttributePrefix;
-	}
-
-	/**
 	 * Returns the redirect map where the buffered render pages are stored in
 	 * and removes it immediately.
 	 * 
@@ -519,40 +539,20 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Add a buffered response to the redirect buffer.
+	 * Checks mount path is valid.
 	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param bufferId
-	 *            the id that should be used for storing the buffer
-	 * @param renderedResponse
-	 *            the response to buffer
+	 * @param path
+	 *            mount path
 	 */
-	final void addBufferedResponse(String sessionId, String bufferId,
-			BufferedResponse renderedResponse)
+	private void checkMountPath(String path)
 	{
-		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
-		if (responsesPerSession == null)
+		if (path == null)
 		{
-			responsesPerSession = new MostRecentlyUsedMap(4);
-			bufferedResponses.put(sessionId, responsesPerSession);
+			throw new IllegalArgumentException("mounting path cannot be null");
 		}
-		responsesPerSession.put(bufferId, renderedResponse);
-	}
-
-	/**
-	 * Cleans up any buffered response map for the client with the provided
-	 * session id.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 */
-	final void clearBufferedResponses(String sessionId)
-	{
-		bufferedResponses.remove(sessionId);
-
-		// TODO implement call to this method: probably have to register a
-		// session listener?
-		// or take a cleaner thread instead of this method
+		if (!path.startsWith("/"))
+		{
+			throw new IllegalArgumentException("mounting path has to start with '/'");
+		}
 	}
 }

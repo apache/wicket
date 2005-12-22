@@ -36,7 +36,7 @@ public interface IRequestTargetPathMounter
 	 *            the mount encoder to use for encoding and decoding targets and
 	 *            mount paths
 	 */
-	void mountPath(String path, IMountEncoder encoder);
+	void mount(String path, IMountEncoder encoder);
 
 	/**
 	 * Unmounts a request target.
@@ -44,7 +44,7 @@ public interface IRequestTargetPathMounter
 	 * @param path
 	 *            the path to unmount
 	 */
-	void unmountPath(String path);
+	void unmount(String path);
 
 	/**
 	 * Gets the request target that conforms to the given path.
