@@ -37,4 +37,18 @@ public class Injectable
 	@SpringBean(name = "somebean")
 	private Bean beanByName;
 
+	public Bean getBeanByClass() {
+		return beanByClass;
+	}
+
+	public Bean getBeanByName() {
+		return beanByName;
+	}
+
+	public Bean getNobean() {
+		return nobean;
+	}
+	
+	
+
 }

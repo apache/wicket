@@ -108,7 +108,7 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 	{
 		try
 		{
-			AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(null);
+			new AnnotProxyFieldValueFactory(null);
 			fail();
 		}
 		catch (IllegalArgumentException e)
