@@ -35,28 +35,39 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *          add(new Link(&quot;myLink&quot;){
- *         
- *            public void onClick(RequestCycle cycle)
- *            {
- *               // do something here...  
- *            }
- *          );
+ *      add(new Link(&quot;myLink&quot;)
+ *      {
+ *          public void onClick(RequestCycle cycle)
+ *          {
+ *              // do something here...  
+ *          }
+ *      );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *           &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *      &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *           &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *      &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
+ * The following snippet shows how to pass a parameter from the Page creating the 
+ * Page to the Page responded by the Link.
+ * <pre>
+ *      add(new Link("link", listItem.getModel()) 
+ *      {
+ *          public void onClick() 
+ *          {
+ *              MyObject obj = (MyObject)getModelObject();
+ *              setResponse(new MyPage(obj.getId(), ... ));
+ *          }
+ * </pre>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
