@@ -23,7 +23,7 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.target.mixin.IAccessChecker;
+import wicket.request.target.mixin.IAccessCheck;
 
 /**
  * Default implementation of {@link IBookmarkablePageRequestTarget}. Target
@@ -36,7 +36,7 @@ import wicket.request.target.mixin.IAccessChecker;
 public class BookmarkablePageRequestTarget
 		implements
 			IBookmarkablePageRequestTarget,
-			IAccessChecker
+			IAccessCheck
 {
 	/** the class of the page. */
 	private final Class pageClass;
@@ -127,7 +127,7 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IAccessChecker#checkAccess(RequestCycle)
+	 * @see wicket.request.target.mixin.IAccessCheck#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{

@@ -39,14 +39,14 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			IListenerInterfaceRequestTarget,
 			IEventProcessor
 {
+	/** optionally the id of the behaviour to dispatch to. */
+	private final String behaviourId;
+
 	/** the target component. */
 	private final Component component;
 
 	/** the listener method. */
 	private final Method listenerMethod;
-
-	/** optionally the id of the behaviour to dispatch to. */
-	private final String behaviourId;
 
 	/**
 	 * Construct.
@@ -99,6 +99,82 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		boolean equal = false;
+		if (obj != null && obj.getClass().equals(getClass()))
+		{
+			AbstractListenerInterfaceRequestTarget that = (AbstractListenerInterfaceRequestTarget)obj;
+			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
+			{
+				if (behaviourId != null)
+				{
+					return behaviourId.equals(that.behaviourId);
+				}
+				else
+				{
+					return that.behaviourId == null;
+				}
+			}
+		}
+		return equal;
+	}
+
+	/**
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviourId()
+	 */
+	public final String getBehaviourId()
+	{
+		return behaviourId;
+	}
+
+	/**
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getListenerMethod()
+	 */
+	public final Method getListenerMethod()
+	{
+		return listenerMethod;
+	}
+
+	/**
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getTarget()
+	 */
+	public final Component getTarget()
+	{
+		return component;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = getClass().hashCode();
+		result += component.hashCode();
+		result += listenerMethod.hashCode();
+		result += behaviourId != null ? behaviourId.hashCode() : 0;
+		return 17 * result;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
+				.append(getPage().toString()).append("->").append(getTarget().getId()).append(
+						"->").append(getListenerMethod().getDeclaringClass()).append(".").append(
+						getListenerMethod().getName());
+		if (getBehaviourId() != null)
+		{
+			b.append(" (behaviour ").append(getBehaviourId()).append(")");
+		}
+		return b.toString();
+	}
+
+	/**
 	 * Invokes a given interface on a component.
 	 * 
 	 * @param component
@@ -128,81 +204,5 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		{
 			page.afterCallComponent(component, method);
 		}
-	}
-
-	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getComponent()
-	 */
-	public final Component getComponent()
-	{
-		return component;
-	}
-
-	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getListenerMethod()
-	 */
-	public final Method getListenerMethod()
-	{
-		return listenerMethod;
-	}
-
-	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviourId()
-	 */
-	public final String getBehaviourId()
-	{
-		return behaviourId;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj)
-	{
-		boolean equal = false;
-		if (obj != null && obj.getClass().equals(getClass()))
-		{
-			AbstractListenerInterfaceRequestTarget that = (AbstractListenerInterfaceRequestTarget)obj;
-			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
-			{
-				if (behaviourId != null)
-				{
-					return behaviourId.equals(that.behaviourId);
-				}
-				else
-				{
-					return that.behaviourId == null;
-				}
-			}
-		}
-		return equal;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode()
-	{
-		int result = getClass().hashCode();
-		result += component.hashCode();
-		result += listenerMethod.hashCode();
-		result += behaviourId != null ? behaviourId.hashCode() : 0;
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
-				.append(getPage().toString()).append("->").append(getComponent().getId()).append(
-						"->").append(getListenerMethod().getDeclaringClass()).append(".").append(
-						getListenerMethod().getName());
-		if (getBehaviourId() != null)
-		{
-			b.append(" (behaviour ").append(getBehaviourId()).append(")");
-		}
-		return b.toString();
 	}
 }

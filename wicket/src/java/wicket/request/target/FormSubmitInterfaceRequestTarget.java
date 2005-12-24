@@ -30,7 +30,6 @@ import wicket.RequestCycle;
  */
 public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceRequestTarget
 {
-
 	/**
 	 * Construct.
 	 * @param page
@@ -47,7 +46,6 @@ public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceR
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{
-		invokeInterface(getComponent(), getListenerMethod(), getPage());
+		invokeInterface(getTarget(), getListenerMethod(), getPage());
 	}
-
 }

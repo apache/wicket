@@ -25,14 +25,14 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
-import wicket.request.target.mixin.IAccessChecker;
+import wicket.request.target.mixin.IAccessCheck;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener event request.
  * 
  * @author jcompagner
  */
-public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessChecker
+public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessCheck
 {
 
 	private final Page page;
@@ -93,7 +93,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget, IAc
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IAccessChecker#checkAccess(RequestCycle)
+	 * @see wicket.request.target.mixin.IAccessCheck#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{

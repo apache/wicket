@@ -45,6 +45,6 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
-		invokeInterface(getComponent(), getListenerMethod(), getPage());
+		invokeInterface(getTarget(), getListenerMethod(), getPage());
 	}	
 }

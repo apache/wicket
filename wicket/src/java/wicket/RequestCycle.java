@@ -38,7 +38,7 @@ import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
 import wicket.request.target.PageRequestTarget;
-import wicket.request.target.mixin.IAccessChecker;
+import wicket.request.target.mixin.IAccessCheck;
 import wicket.util.lang.Classes;
 
 /**
@@ -512,9 +512,9 @@ public abstract class RequestCycle
 
 					IRequestTarget target = getRequestTarget();
 
-					if (target instanceof IAccessChecker)
+					if (target instanceof IAccessCheck)
 					{
-						((IAccessChecker)target).checkAccess(this);
+						((IAccessCheck)target).checkAccess(this);
 					}
 
 					// check access or earlier (like in a component constructor)
