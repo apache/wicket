@@ -27,7 +27,6 @@ import wicket.Application;
  */
 public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
 {
-
 	/**
 	 * Construct.
 	 */
@@ -35,5 +34,4 @@ public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
 	{
 		super(Application.get().getPages().getPageExpiredErrorPage());
 	}
-
 }
