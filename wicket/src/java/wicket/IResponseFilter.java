@@ -34,7 +34,6 @@ import wicket.response.BufferedResponse;
  */
 public interface IResponseFilter
 {
-
 	/**
 	 * Filters the response buffer and returns the filtered response that can be used
 	 * in the next filter or returned to the real output itself.
@@ -45,5 +44,4 @@ public interface IResponseFilter
 	 * @return The changed buffer or the response buffer itself (changed or not)
 	 */
 	StringBuffer filter(StringBuffer responseBuffer);
-
 }
