@@ -22,18 +22,17 @@ import wicket.IRequestTarget;
 import wicket.RequestCycle;
 
 /**
- * Default implementation of response processor strategy that just calls
+ * Default implementation of response strategy that just calls
  * {@link wicket.IRequestTarget#respond(RequestCycle)}.
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultResponseProcessor implements IResponseStrategy
+public final class DefaultResponseStrategy implements IResponseStrategy
 {
-
 	/**
 	 * Construct.
 	 */
-	public DefaultResponseProcessor()
+	public DefaultResponseStrategy()
 	{
 	}
 

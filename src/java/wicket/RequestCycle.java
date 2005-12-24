@@ -1010,7 +1010,7 @@ public abstract class RequestCycle
 	/**
 	 * Template method that is called when a runtime exception is thrown, just
 	 * before the actual handling of the runtime exception. This is called by
-	 * {@link wicket.request.compound.DefaultExceptionResponseProcessor}, hence
+	 * {@link wicket.request.compound.DefaultExceptionResponseStrategy}, hence
 	 * if that strategy is replaced by another one, there is no guarantee this
 	 * method is called.
 	 * 

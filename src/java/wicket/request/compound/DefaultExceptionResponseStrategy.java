@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultExceptionResponseProcessor.java,v 1.1 2005/11/27 09:20:16 eelco12
+ * $Id: DefaultExceptionResponseStrategy.java,v 1.1 2005/11/27 09:20:16 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -37,13 +37,13 @@ import wicket.request.IPageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public class DefaultExceptionResponseProcessor implements IExceptionResponseStrategy
+public class DefaultExceptionResponseStrategy implements IExceptionResponseStrategy
 {
 
 	/**
 	 * Construct.
 	 */
-	public DefaultExceptionResponseProcessor()
+	public DefaultExceptionResponseStrategy()
 	{
 	}
 
