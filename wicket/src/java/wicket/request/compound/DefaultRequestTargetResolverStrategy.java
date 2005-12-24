@@ -52,12 +52,12 @@ import wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class DefaultRequestTargetResolver implements IRequestTargetResolverStrategy
+public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
 	/**
 	 * Construct.
 	 */
-	public DefaultRequestTargetResolver()
+	public DefaultRequestTargetResolverStrategy()
 	{
 	}
 

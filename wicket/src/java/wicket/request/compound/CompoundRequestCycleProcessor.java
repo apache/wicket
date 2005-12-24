@@ -238,7 +238,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 */
 	protected IExceptionResponseStrategy newExceptionResponseStrategy()
 	{
-		return new DefaultExceptionResponseProcessor();
+		return new DefaultExceptionResponseStrategy();
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 */
 	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
 	{
-		return new DefaultRequestTargetResolver();
+		return new DefaultRequestTargetResolverStrategy();
 	}
 
 	/**
@@ -277,6 +277,6 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 */
 	protected IResponseStrategy newResponseStrategy()
 	{
-		return new DefaultResponseProcessor();
+		return new DefaultResponseStrategy();
 	}
 }
