@@ -21,10 +21,10 @@ import wicket.RequestCycle;
 import wicket.request.RequestParameters;
 
 /**
- * {@link wicket.IRequestTarget}s that extend this interface, will have this
+ * {@link wicket.IRequestTarget}s that implement this interface, will have this
  * method checked after
  * {@link wicket.request.IRequestCycleProcessor#resolve(RequestCycle, RequestParameters)}
- * is called (and resolved tho this target).
+ * is called (and resolved to this target).
  * 
  * @author Eelco Hillenius
  */
@@ -32,7 +32,7 @@ public interface IAccessChecker
 {
 	/**
 	 * Whether access is allowed to this target. If the page is not allowed you
-	 * must redirect to a another page, else you will get a blank page.
+	 * must redirect to another page, otherwise you will get a blank page.
 	 * Redirecting to another page can be done in a two ways:
 	 * <li>Use redirectToInterceptPage(Page page), You will be redirected to
 	 * that page when it is done you will be returned to this one</li>
