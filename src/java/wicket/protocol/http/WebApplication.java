@@ -38,9 +38,9 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.target.mixin.BookmarkablePagePathMountEncoder;
-import wicket.request.target.mixin.IMountEncoder;
-import wicket.request.target.mixin.PackagePathMountEncoder;
+import wicket.request.target.mixin.BookmarkablePageRequestTargetEncoderDecoder;
+import wicket.request.target.mixin.IRequestTargetEncoderDecoder;
+import wicket.request.target.mixin.PackageRequestTargetEncoderDecoder;
 import wicket.response.BufferedResponse;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.IResourceFinder;
@@ -195,7 +195,7 @@ public abstract class WebApplication extends Application
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(String path, IMountEncoder encoder)
+	public final void mount(String path, IRequestTargetEncoderDecoder encoder)
 	{
 		checkMountPath(path);
 
@@ -218,7 +218,7 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
-		mount(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass, null));
+		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass, null));
 	}
 
 	/**
@@ -235,7 +235,7 @@ public abstract class WebApplication extends Application
 			String pageMapName)
 	{
 		checkMountPath(path);
-		mount(path, new BookmarkablePagePathMountEncoder(path, bookmarkablePageClass,
+		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass,
 				pageMapName));
 	}
 
@@ -256,7 +256,7 @@ public abstract class WebApplication extends Application
 		{
 			throw new NullPointerException("class for mounting a package can't be null");
 		}
-		mount(path, new PackagePathMountEncoder(path, classOfPackageToMount));
+		mount(path, new PackageRequestTargetEncoderDecoder(path, classOfPackageToMount));
 	}
 
 	/**

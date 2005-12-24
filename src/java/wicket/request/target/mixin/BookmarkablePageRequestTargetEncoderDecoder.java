@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePagePathMountEncoder.java,v 1.1 2005/12/10 21:28:56 eelco12
+ * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -27,7 +27,7 @@ import wicket.request.target.BookmarkablePageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
+public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequestTargetEncoderDecoder
 {
 	/** bookmarkable page class. */
 	private final Class bookmarkablePageClass;
@@ -45,7 +45,7 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 	 * @param pageMapName
 	 *            the page map name if any
 	 */
-	public BookmarkablePagePathMountEncoder(final String mountPath,
+	public BookmarkablePageRequestTargetEncoderDecoder(final String mountPath,
 			final Class bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
@@ -60,7 +60,7 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#encode(wicket.IRequestTarget)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
 	 */
 	public final String encode(IRequestTarget requestTarget)
 	{
@@ -78,7 +78,7 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#decode(java.lang.String)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#decode(java.lang.String)
 	 */
 	public IRequestTarget decode(String urlFragment)
 	{
@@ -90,7 +90,7 @@ public class BookmarkablePagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#matches(wicket.IRequestTarget)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#matches(wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{

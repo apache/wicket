@@ -20,11 +20,12 @@ package wicket.request.target.mixin;
 import wicket.IRequestTarget;
 
 /**
- * Implementations know how to encode mountable request targets.
+ * Implementations of this interface know how to encode and decode
+ * request targets to/from a URL.
  * 
  * @author Eelco Hillenius
  */
-public interface IMountEncoder
+public interface IRequestTargetEncoderDecoder
 {
 	/**
 	 * Gets the encoded url for the provided request target. Typically, the

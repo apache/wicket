@@ -46,7 +46,7 @@ import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
-import wicket.request.target.mixin.IMountEncoder;
+import wicket.request.target.mixin.IRequestTargetEncoderDecoder;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
@@ -77,7 +77,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private SortedMap/* <String,IMountEncoder> */mountsOnPath = new TreeMap(lengthComparator);
+	private SortedMap/* <String,IRequestTargetEncoderDecoder> */mountsOnPath = new TreeMap(lengthComparator);
 
 	/** cached url prefix. */
 	private String urlPrefix;
@@ -96,12 +96,12 @@ public class WebRequestEncoder implements IRequestEncoder
 	 *            the request target to match
 	 * @return the mount encoder if any
 	 */
-	protected IMountEncoder getMountEncoder(IRequestTarget requestTarget)
+	protected IRequestTargetEncoderDecoder getMountEncoder(IRequestTarget requestTarget)
 	{
 		// TODO optimize algoritm if possible and/ or cache lookup results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
-			IMountEncoder encoder = (IMountEncoder)i.next();
+			IRequestTargetEncoderDecoder encoder = (IRequestTargetEncoderDecoder)i.next();
 			if (encoder.matches(requestTarget))
 			{
 				return encoder;
@@ -128,7 +128,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	{
 
 		// first check whether the target was mounted
-		IMountEncoder encoder = getMountEncoder(requestTarget);
+		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
 			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
@@ -195,9 +195,9 @@ public class WebRequestEncoder implements IRequestEncoder
 
 	/**
 	 * @see wicket.request.IRequestTargetPathMounter#mount(java.lang.String,
-	 *      wicket.request.target.mixin.IMountEncoder)
+	 *      wicket.request.target.mixin.IRequestTargetEncoderDecoder)
 	 */
-	public final void mount(String path, IMountEncoder encoder)
+	public final void mount(String path, IRequestTargetEncoderDecoder encoder)
 	{
 		if (path == null)
 		{
@@ -247,18 +247,18 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
-		IMountEncoder encoder = encoderForPath(path);
+		IRequestTargetEncoderDecoder encoder = encoderForPath(path);
 		return (encoder != null) ? encoder.decode(path) : null;
 	}
 
 	/**
 	 * @see wicket.request.IRequestTargetPathMounter#encoderForPath(java.lang.String)
 	 */
-	public final IMountEncoder encoderForPath(String path)
+	public final IRequestTargetEncoderDecoder encoderForPath(String path)
 	{
 		if (path == null)
 		{
-			return (IMountEncoder)mountsOnPath.get(null);
+			return (IRequestTargetEncoderDecoder)mountsOnPath.get(null);
 		}
 
 		Iterator it = mountsOnPath.entrySet().iterator();
@@ -268,7 +268,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			String key = (String)entry.getKey();
 			if (path.startsWith(key))
 			{
-				return (IMountEncoder)entry.getValue();
+				return (IRequestTargetEncoderDecoder)entry.getValue();
 			}
 		}
 		return null;
@@ -280,7 +280,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	public final String pathForTarget(IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		IMountEncoder encoder = getMountEncoder(requestTarget);
+		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
 			return encoder.encode(requestTarget);
