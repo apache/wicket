@@ -28,7 +28,7 @@ import wicket.request.RequestParameters;
  * 
  * @author Eelco Hillenius
  */
-public interface IAccessChecker
+public interface IAccessCheck
 {
 	/**
 	 * Whether access is allowed to this target. If the page is not allowed you

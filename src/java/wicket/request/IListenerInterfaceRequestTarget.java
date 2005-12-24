@@ -29,13 +29,12 @@ import wicket.Component;
  */
 public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 {
-
 	/**
 	 * Gets the target component.
 	 * 
 	 * @return the target component
 	 */
-	Component getComponent();
+	Component getTarget();
 
 	/**
 	 * Gets listener method.

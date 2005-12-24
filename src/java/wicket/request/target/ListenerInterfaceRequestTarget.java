@@ -48,7 +48,6 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 		this(page, component, listenerMethod, null);
 	}
 
-
 	/**
 	 * Construct.
 	 * 
@@ -79,7 +78,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 		// Clear all feedback messages if it isn't a redirect
 		getPage().getFeedbackMessages().clear();
 		
-		getPage().startComponentRender(getComponent());
+		getPage().startComponentRender(getTarget());
 		
 		final Application application = requestCycle.getApplication();
 		// and see if we have to redirect the render part by default
@@ -87,6 +86,6 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 		boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER || strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
 
 		requestCycle.setRedirect(issueRedirect);
-		invokeInterface(getComponent(), getListenerMethod(), getPage());
+		invokeInterface(getTarget(), getListenerMethod(), getPage());
 	}
 }

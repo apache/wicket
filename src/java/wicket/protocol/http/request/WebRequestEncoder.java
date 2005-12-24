@@ -388,7 +388,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	{
 		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
 		url.append("?path=");
-		Component component = requestTarget.getComponent();
+		Component component = requestTarget.getTarget();
 		url.append(component.getPath());
 		Page currentPage = component.getPage();
 		final PageMap pageMap = currentPage.getPageMap();
