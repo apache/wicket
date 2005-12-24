@@ -38,17 +38,17 @@ public class BookmarkablePageRequestTarget
 			IBookmarkablePageRequestTarget,
 			IAccessCheck
 {
-	/** the class of the page. */
-	private final Class pageClass;
-
-	/** optional page parameters. */
-	private final PageParameters pageParameters;
-
 	/** the page that was created in response for cleanup */
 	private Page page;
 
+	/** the class of the page. */
+	private final Class pageClass;
+
 	/** optional page map name. */
 	private final String pageMapName;
+
+	/** optional page parameters. */
+	private final PageParameters pageParameters;
 
 	/**
 	 * Construct.
@@ -64,6 +64,19 @@ public class BookmarkablePageRequestTarget
 	/**
 	 * Construct.
 	 * 
+	 * @param pageClass
+	 *            the class of the page
+	 * @param pageParameters
+	 *            optional page parameters
+	 */
+	public BookmarkablePageRequestTarget(Class pageClass, PageParameters pageParameters)
+	{
+		this(null, pageClass, pageParameters);
+	}
+
+	/**
+	 * Construct.
+	 * 
 	 * @param pageMapName
 	 *            optional page map name
 	 * 
@@ -73,19 +86,6 @@ public class BookmarkablePageRequestTarget
 	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass)
 	{
 		this(null, pageClass, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param pageClass
-	 *            the class of the page
-	 * @param pageParameters
-	 *            optional page parameters
-	 */
-	public BookmarkablePageRequestTarget(Class pageClass, PageParameters pageParameters)
-	{
-		this(null, pageClass, pageParameters);
 	}
 
 	/**
@@ -117,16 +117,6 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
-	 */
-	public boolean synchronizeOnSession(RequestCycle requestCycle)
-	{
-		// we need to lock when we are not redirecting, i.e. we are
-		// actually rendering the page
-		return !requestCycle.getRedirect();
-	}
-
-	/**
 	 * @see wicket.request.target.mixin.IAccessCheck#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
@@ -140,103 +130,11 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
-	 * Gets a newly constructed page if we are not in a redirect.
-	 * 
-	 * @param requestCycle
-	 *            the request cycle
-	 * @return the page
-	 */
-	private final Page getPage(RequestCycle requestCycle)
-	{
-		if (page == null && pageClass != null && !requestCycle.getRedirect())
-		{
-			page = newPage(pageClass, requestCycle);
-		}
-		return page;
-	}
-
-	/**
-	 * Constructs a new instance of a page given its class name
-	 * 
-	 * @param pageClass
-	 *            class name of the page to be created
-	 * @param requestCycle
-	 *            request cycle
-	 * @return new instance of page
-	 */
-	protected Page newPage(Class pageClass, RequestCycle requestCycle)
-	{
-		PageParameters params = pageParameters;
-
-		// TODO ? the parameters should already have been resolved ?
-		/*
-		 * if (isMounted()) { //decode page parameters from url Request request =
-		 * requestCycle.getRequest(); String urlFragment =
-		 * request.getPath().substring(mountPath.length()); params =
-		 * paramsEncoder.decode(urlFragment); }
-		 */
-		// construct a new instance using the default page factory
-		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
-				.getDefaultPageFactory();
-		return pageFactory.newPage(pageClass, params);
-	}
-
-	/**
-	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
-	 */
-	public void respond(RequestCycle requestCycle)
-	{
-		if (pageClass != null)
-		{
-			if (requestCycle.getRedirect())
-			{
-				IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
-				String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
-						new BookmarkablePageRequestTarget(pageClass, pageParameters));
-				requestCycle.getResponse().redirect(redirectUrl);
-			}
-			else
-			{
-				requestCycle.setUpdateSession(true);
-
-				page = getPage(requestCycle);
-
-				// let the page render itself
-				page.doRender();
-			}
-		}
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
 		page = null;
-	}
-
-	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageClass()
-	 */
-	public final Class getPageClass()
-	{
-		return pageClass;
-	}
-
-	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageParameters()
-	 */
-	public final PageParameters getPageParameters()
-	{
-		return pageParameters;
-	}
-
-	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageMapName()
-	 */
-	public final String getPageMapName()
-	{
-		return pageMapName;
 	}
 
 	/**
@@ -268,6 +166,30 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageClass()
+	 */
+	public final Class getPageClass()
+	{
+		return pageClass;
+	}
+
+	/**
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageMapName()
+	 */
+	public final String getPageMapName()
+	{
+		return pageMapName;
+	}
+
+	/**
+	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageParameters()
+	 */
+	public final PageParameters getPageParameters()
+	{
+		return pageParameters;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()
@@ -279,11 +201,89 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
+	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
+	 */
+	public void respond(RequestCycle requestCycle)
+	{
+		if (pageClass != null)
+		{
+			if (requestCycle.getRedirect())
+			{
+				IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
+				String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
+						new BookmarkablePageRequestTarget(pageClass, pageParameters));
+				requestCycle.getResponse().redirect(redirectUrl);
+			}
+			else
+			{
+				requestCycle.setUpdateSession(true);
+
+				page = getPage(requestCycle);
+
+				// let the page render itself
+				page.doRender();
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 */
+	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	{
+		// we need to lock when we are not redirecting, i.e. we are
+		// actually rendering the page
+		return !requestCycle.getRedirect();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
 		return "BookmarkablePageRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
 				+ "}";
+	}
+
+	/**
+	 * Constructs a new instance of a page given its class name
+	 * 
+	 * @param pageClass
+	 *            class name of the page to be created
+	 * @param requestCycle
+	 *            request cycle
+	 * @return new instance of page
+	 */
+	protected Page newPage(Class pageClass, RequestCycle requestCycle)
+	{
+		PageParameters params = pageParameters;
+
+		// TODO ? the parameters should already have been resolved ?
+		/*
+		 * if (isMounted()) { //decode page parameters from url Request request =
+		 * requestCycle.getRequest(); String urlFragment =
+		 * request.getPath().substring(mountPath.length()); params =
+		 * paramsEncoder.decode(urlFragment); }
+		 */
+		// construct a new instance using the default page factory
+		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
+				.getDefaultPageFactory();
+		return pageFactory.newPage(pageClass, params);
+	}
+
+	/**
+	 * Gets a newly constructed page if we are not in a redirect.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * @return the page
+	 */
+	private final Page getPage(RequestCycle requestCycle)
+	{
+		if (page == null && pageClass != null && !requestCycle.getRedirect())
+		{
+			page = newPage(pageClass, requestCycle);
+		}
+		return page;
 	}
 }
