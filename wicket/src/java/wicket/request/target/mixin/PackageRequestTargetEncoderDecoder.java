@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePagePathMountEncoder.java,v 1.1 2005/12/10 21:28:56 eelco12
+ * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -29,7 +29,7 @@ import wicket.util.lang.Classes;
  * 
  * @author Eelco Hillenius
  */
-public class PackagePathMountEncoder extends AbstractPathMountEncoder
+public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEncoderDecoder
 {
 	/** package for this mount. */
 	private final String mountedPackageName;
@@ -42,7 +42,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 	 * @param classOfPackageToMount
 	 *            class from which the package name must be extracted for this mount
 	 */
-	public PackagePathMountEncoder(final String mountPath, Class classOfPackageToMount)
+	public PackageRequestTargetEncoderDecoder(final String mountPath, Class classOfPackageToMount)
 	{
 		super(mountPath);
 		mountedPackageName = getPackageName(classOfPackageToMount);
@@ -60,7 +60,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#encode(wicket.IRequestTarget)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
 	 */
 	public final String encode(IRequestTarget requestTarget)
 	{
@@ -78,7 +78,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#decode(java.lang.String)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#decode(java.lang.String)
 	 */
 	public IRequestTarget decode(String urlFragment)
 	{
@@ -104,7 +104,7 @@ public class PackagePathMountEncoder extends AbstractPathMountEncoder
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IMountEncoder#matches(wicket.IRequestTarget)
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#matches(wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{

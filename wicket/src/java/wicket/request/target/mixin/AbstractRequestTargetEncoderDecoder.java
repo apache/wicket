@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePagePathMountEncoder.java,v 1.1 2005/12/10 21:28:56 eelco12
+ * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -28,7 +28,7 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractPathMountEncoder implements IMountEncoder
+public abstract class AbstractRequestTargetEncoderDecoder implements IRequestTargetEncoderDecoder
 {
 	/** mounted path. */
 	private final String mountPath;
@@ -39,7 +39,7 @@ public abstract class AbstractPathMountEncoder implements IMountEncoder
 	 * @param mountPath
 	 *            the mount path
 	 */
-	public AbstractPathMountEncoder(final String mountPath)
+	public AbstractRequestTargetEncoderDecoder(final String mountPath)
 	{
 		if (mountPath == null)
 		{
