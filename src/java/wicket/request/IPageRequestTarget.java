@@ -27,12 +27,10 @@ import wicket.Page;
  */
 public interface IPageRequestTarget extends IRequestTarget
 {
-
 	/**
 	 * Gets the page instance.
 	 * 
 	 * @return the page instance
 	 */
 	Page getPage();
-
 }
