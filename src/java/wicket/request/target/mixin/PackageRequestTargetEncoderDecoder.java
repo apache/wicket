@@ -48,35 +48,6 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 		mountedPackageName = getPackageName(classOfPackageToMount);
 	}
 
-	private String getPackageName(Class classOfPackageToMount)
-	{
-		String className = classOfPackageToMount.getName();
-		int index = className.lastIndexOf(".");
-		if(index != -1)
-		{
-			return className.substring(0,index+1); // including '.';
-		}
-		return "";
-	}
-
-	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
-	 */
-	public final String encode(IRequestTarget requestTarget)
-	{
-		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
-		{
-			throw new IllegalArgumentException("this encoder can only be used with instances of "
-					+ IBookmarkablePageRequestTarget.class.getName());
-		}
-		StringBuffer url = new StringBuffer();
-		url.append(getMountPath());
-		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		url.append("/").append(Classes.name(target.getPageClass()));
-		appendPageParameters(url, target.getPageParameters());
-		return url.toString();
-	}
-
 	/**
 	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#decode(java.lang.String)
 	 */
@@ -104,6 +75,24 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 	}
 
 	/**
+	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
+	 */
+	public final String encode(IRequestTarget requestTarget)
+	{
+		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
+		{
+			throw new IllegalArgumentException("this encoder can only be used with instances of "
+					+ IBookmarkablePageRequestTarget.class.getName());
+		}
+		StringBuffer url = new StringBuffer();
+		url.append(getMountPath());
+		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
+		url.append("/").append(Classes.name(target.getPageClass()));
+		appendPageParameters(url, target.getPageParameters());
+		return url.toString();
+	}
+
+	/**
 	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#matches(wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
@@ -117,5 +106,16 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 			}
 		}
 		return false;
+	}
+
+	private String getPackageName(Class classOfPackageToMount)
+	{
+		String className = classOfPackageToMount.getName();
+		int index = className.lastIndexOf(".");
+		if(index != -1)
+		{
+			return className.substring(0,index+1); // including '.';
+		}
+		return "";
 	}
 }
