@@ -39,11 +39,11 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 * @param component
 	 *            the component instance
 	 */
-	public ComponentRequestTarget(Component component)
+	public ComponentRequestTarget(final Component component)
 	{
 		if (component == null)
 		{
-			throw new NullPointerException("argument component must be not null");
+			throw new NullPointerException("Argument 'component' must be not null");
 		}
 
 		this.component = component;
@@ -52,22 +52,31 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(final RequestCycle requestCycle)
 	{
-		
+		// Initialize temporary variables
 		Page page = component.getPage();
-		if(page != null)
+		if (page != null)
 		{
 			page.startComponentRender(component);
 		}
+
 		// Let component render itself
-		component.render();
-		
-		if(page != null)
+		if (component instanceof Page)
+		{
+			// Use the default Page request target, if component is a Page
+			new PageRequestTarget((Page)component).respond(requestCycle);
+		}
+		else
+		{
+			// Render the component
+			component.doRender();
+		}
+
+		if (page != null)
 		{
 			page.endComponentRender(component);
 		}
-		
 	}
 
 	/**
@@ -81,14 +90,14 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
-	public void cleanUp(RequestCycle requestCycle)
+	public void cleanUp(final RequestCycle requestCycle)
 	{
 	}
 
 	/**
 	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
 	 */
-	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	public boolean synchronizeOnSession(final RequestCycle requestCycle)
 	{
 		return true;
 	}
@@ -96,7 +105,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof ComponentRequestTarget)
 		{
@@ -123,5 +132,4 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	{
 		return "ComponentRequestTarget@" + hashCode() + "{" + component + "}";
 	}
-
 }

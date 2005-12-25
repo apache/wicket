@@ -225,7 +225,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		init();
 	}
 
-
 	/**
 	 * Redirects to any intercept page previously specified by a call to
 	 * redirectToInterceptPage.
@@ -237,7 +236,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return getPageMap().continueToOriginalDestination();
 	}
-
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
@@ -275,21 +274,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Handle request by rendering page
 			render();
 
-			// Size profiling for pages
-			// dumpSize();
-
 			// Check rendering if it happened fully
 			checkRendering(this);
 		}
 		finally
 		{
-
 			// The request is over
 			internalEndRequest();
 		}
 	}
-
-
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -840,6 +834,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		});
 
 		// Set page's associated markup stream
+		resetMarkupStreams();
 		final MarkupStream markupStream = getAssociatedMarkupStream();
 		setMarkupStream(markupStream);
 
@@ -988,26 +983,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Reset this page. Called if rendering is interrupted by an exception to
-	 * put the page back into a state where it can function again.
-	 */
-	final void resetMarkupStreams()
-	{
-		// When an exception is thrown while rendering a page, there may
-		// be invalid markup streams set on various containers. We need
-		// to reset these to null to ensure they get recreated correctly.
-		visitChildren(MarkupContainer.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				final MarkupContainer container = (MarkupContainer)component;
-				container.setMarkupStream(null);
-				return CONTINUE_TRAVERSAL;
-			}
-		});
 	}
 
 	/**

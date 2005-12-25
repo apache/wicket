@@ -77,8 +77,15 @@ public class SimplePageTest extends WicketTestCase
 		application.rerender(panel);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
+		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
+		
+	    label = (Label)application.getLastRenderedPage().get("myPanel:label");
+	    assertNotNull(label);
+		application.rerender(label);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<wicket:panel>Inside the panel</wicket:panel>", document);
+		assertEquals("<span wicket:id=\"label\">mein Label</span>", document);
 		
 	    Border border = (Border)application.getLastRenderedPage().get("myBorder");
 	    assertNotNull(border);

@@ -34,7 +34,6 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
@@ -93,7 +92,9 @@ public abstract class MarkupContainer extends Component
 	/** List of children or single child */
 	private Object children;
 
-	/** The markup stream for this container. */
+	/** The markup stream for this container. This variable is used only
+	 * during the render phase to provide access to the current element
+	 * within the stream. */
 	private transient MarkupStream markupStream;
 
 	/**
@@ -526,6 +527,32 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Reset this page. Called if rendering is interrupted by an exception to
+	 * put the page back into a state where it can function again.
+	 */
+	final void resetMarkupStreams()
+	{
+		// When an exception is thrown while rendering a page, there may
+		// be invalid markup streams set on various containers. We need
+		// to reset these to null to ensure they get recreated correctly.
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				if (component instanceof MarkupContainer)
+				{
+					((MarkupContainer)component).setMarkupStream(null);
+				}
+				else
+				{
+					component.markStreamPositionInvalid();
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
 	public Component setModel(final IModel model)
@@ -854,20 +881,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
-		if ( (this instanceof Page || this instanceof Panel) 
-				&& (markupStream != null) 
-				&& (markupStream.equalMarkup(this.markupStream) == false))
-		{
-			visitChildren(new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					component.markStreamPositionInvalid();
-					return CONTINUE_TRAVERSAL;
-				}
-			});
-		}
-
 		this.markupStream = markupStream;
 	}
 
@@ -892,10 +905,11 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// remove if from another parent.
-		MarkupContainer mc = component.getParent();
-		if(mc != null)
+		MarkupContainer parent = component.getParent();
+		if (parent != null)
 		{
-			mc.remove(component);
+			throw new WicketRuntimeException(
+					"You can not add the same Component instance twice");
 		}
 
 		// Set child's parent

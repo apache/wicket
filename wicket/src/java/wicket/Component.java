@@ -33,6 +33,7 @@ import wicket.authorization.UnauthorizedEnabledStateException;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
@@ -171,8 +172,13 @@ import wicket.version.undo.Change;
  * might be a set of resources, including images and markup files, which gives
  * the design look of "ocean" to the user. If the Session's style is set to
  * "ocean" and these resources are given names suffixed with "_ocean", Wicket's
- * resource management logic will be prefer these resources to other resources,
+ * resource management logic will prefer these resources to other resources,
  * such as default resources, which are not as good of a match.
+ * 
+ * <li><b>Variation </b>- Whereas Styles are Session (user) specific, 
+ * variations are component specific. E.g. if the Style is "ocean" and the
+ * Variation is "NorthSea", than the resources are given the names suffixed
+ * with "_ocean_NorthSea".
  * 
  * <li><b>AttributeModifiers </b>- You can add one or more
  * {@link AttributeModifier}s to any component if you need to programmatically
@@ -202,11 +208,14 @@ import wicket.version.undo.Change;
  * versioning participation of a given Component can be retrieved with
  * {@link Component#isVersioned()}.
  * 
+ * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page
+ * has been rendered at least once by calling doRender(9.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * @author Juergen Donnerstag
  */
 public abstract class Component implements Serializable, IBehaviourListener
 {
@@ -1202,7 +1211,73 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Performs a render of this component.
+	 * Page.doRender() is used to render a whole page. With AJAX however it must
+	 * be possible to re-render anyone component contained in a page. That is 
+	 * what Component.doRender() is for.  
+	 */
+	public void doRender()
+	{
+		// Save the parent's markup stream to re-assign it at the end
+		MarkupContainer parent = getParent();
+		MarkupStream originalMarkupStream = parent.getMarkupStream();
+		
+		// Get the parent's associate markup stream. A MarkupContainer
+		// will delegate it to its parent. A Page, Panel and Border
+		// will return the content of the associated markup file.
+		MarkupStream markupStream = parent.getAssociatedMarkupStream();
+		
+		// Make sure the markup stream is position at the correct element
+		markupStream.setCurrentIndex(this.markupStreamPosition);
+		
+		try
+		{
+			// Make sure that while rendering the markup stream is found
+			parent.setMarkupStream(markupStream);
+			
+			// Render the component and all its children
+			render();
+		}
+		finally
+		{
+			// Make sure the original markup stream is back in place
+			parent.setMarkupStream(originalMarkupStream);
+		}
+	}
+
+	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource
+	 * for this class.
+	 * 
+	 * @return A stream of MarkupElement elements
+	 */
+	protected MarkupStream getAssociatedMarkupStream()
+	{
+		MarkupStream markupStream = null;
+		
+		// Start here
+		MarkupContainer parent = getParent();
+
+		// Walk up hierarchy until markup found
+		if (parent != null)
+		{
+			markupStream = parent.getAssociatedMarkupStream();
+			if (markupStream == null)
+			{
+				// Failed to find markup stream
+				throw new MarkupNotFoundException(
+						exceptionMessage("No markup found"));
+			}
+		}
+
+		markupStream.setCurrentIndex(this.markupStreamPosition);
+		return markupStream;
+	}
+
+	/**
+	 * Performs a render of this component as part of a Page level render process.
+	 * <p>
+	 * For component level re-render (e.g. AJAX) please call Component.doRender(). 
+	 * Though render() does seem to work, it will fail for panel children.
 	 */
 	public final void render()
 	{
