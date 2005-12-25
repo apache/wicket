@@ -195,27 +195,6 @@ public class PropertyResolver
 	}
 
 
-	private final static IGetAndSet findArrayProperty(String exp, Class clz, int index)
-	{
-		String name = "get" + Character.toUpperCase(exp.charAt(0)) + exp.substring(1);
-		try
-		{
-			Method method = clz.getMethod(name, new Class[] { int.class });
-			IGetAndSet getAndSet = new ArrayPropertyGetSet(method, index);
-			Map getAndSetters = (Map)classesToGetAndSetters.get(clz);
-			if (getAndSetters == null)
-			{
-				getAndSetters = new ConcurrentHashMap(8);
-				classesToGetAndSetters.put(clz, getAndSetters);
-			}
-		}
-		catch (Exception ex)
-		{
-			// TODO log
-		}
-		return null;
-	}
-
 	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
 	{
 		Map getAndSetters = (Map)classesToGetAndSetters.get(clz);

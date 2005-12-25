@@ -102,8 +102,6 @@ public class RadioGroupTest extends WicketTestCase
 	{
 		// setup some values we will use for testing as well as a test model
 		final String radio1 = "radio1-selection";
-		final String radio2 = "radio2-selection";
-
 		// object used to test compound property model
 		MockModelObject modelObject = new MockModelObject();
 

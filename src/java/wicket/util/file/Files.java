@@ -82,7 +82,7 @@ public class Files
 	 */
 	public static String filename(final String path)
 	{
-		return Strings.lastPathComponent(path.replace('/', File.separatorChar), File.separatorChar);
+		return Strings.lastPathComponent(path.replace('/', java.io.File.separatorChar), java.io.File.separatorChar);
 	}
 
 	/**

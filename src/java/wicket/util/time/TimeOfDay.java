@@ -283,7 +283,7 @@ public final class TimeOfDay extends AbstractTime
 	 */
 	public static TimeOfDay valueOf(final Time time)
 	{
-		return valueOf(Time.localtime, time);
+		return valueOf(AbstractTime.localtime, time);
 	}
 
 	/**
@@ -330,7 +330,7 @@ public final class TimeOfDay extends AbstractTime
 	 */
 	public Time next()
 	{
-		return next(Time.localtime);
+		return next(AbstractTime.localtime);
 	}
 
 	/**
