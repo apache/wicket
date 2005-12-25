@@ -120,7 +120,9 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	}
 
 	/**
-	 * @see adds sort to the list
+	 * adds sort to the list
+	 * 
+	 * @param property
 	 */
 	public void addSort(String property)
 	{
@@ -191,7 +193,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	}
 
 	/**
-	 * @see ISortableDataProvider#getSortState(String)
+	 * 
 	 */
 	//
 	//public SortState getSortState(String property) { int level = -1;
@@ -202,6 +204,10 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	//SortState(sortParam.isAscending() ? SortState.ASCENDING :
 	//SortState.DESCENDING, level); } } return new SortState(SortState.NONE,
 	//0); }
+	/**
+	 * @param property
+	 * @return SortParam
+	 */
 	private SortParam findByProperty(String property)
 	{
 		Iterator it = getSortList().iterator();
@@ -216,7 +222,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(java.lang.String, int)
 	 */
 	public void setPropertySortOrder(String property, int state)
@@ -225,7 +231,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 		
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
 	 */
 	public int getPropertySortOrder(String property)
