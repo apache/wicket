@@ -118,7 +118,15 @@ public class SimplePageTest extends WicketTestCase
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("body", document);
+		assertEquals("body<span wicket:id=\"myLabel2\">Test Label2</span>", document);
+		
+	    label = (Label)application.getLastRenderedPage().get("test:myLabel2");
+	    assertNotNull(label);
+		application.rerender(label);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<span wicket:id=\"myLabel2\">Test Label2</span>", document);
 	}
 
 	/**
