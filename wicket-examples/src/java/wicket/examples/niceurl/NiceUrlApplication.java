@@ -19,6 +19,8 @@ package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
+import wicket.markup.parser.IMarkupFilter;
+import wicket.markup.parser.filter.PrependContextPathHandler;
 
 /**
  * Application class for this example.
@@ -48,5 +50,15 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// that any refactoring (like a package rename) will automatically
 		// be applied here. 
 		mountPackage("/my/mounted/package", Page3.class);
+	}
+	
+	/**
+	 * Make sure all hrefs (and src) attributes have the correct prefix.
+	 * 
+	 * @return A list of additional IMarkupFilter
+	 */
+	public IMarkupFilter[] getAdditionalMarkupHandler()
+	{
+		return new IMarkupFilter[] { new PrependContextPathHandler() };
 	}
 }

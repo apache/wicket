@@ -33,6 +33,9 @@ have path mounting (or nice urls) work really nice:
 
 	Igor> You started it!
 	
+	Juergen> Fixed. NiceUrlApplication adds a PrependContextPathHandler (IMarkupFilter)
+	         to the application
+	
 2) Though we have the basic mounting working now, the next neat thing on the list
 	is to be able to partition our applications in paths. I think we can quite
 	elegantly map this to page maps. I am thinking in the lines of being able
@@ -44,6 +47,8 @@ have path mounting (or nice urls) work really nice:
 	like some authorization packages.
 	
 3) The reference back to index.html needs to be fixed; related to 2).
+  
+    Juergen> Fixed. PrependContextPathHandler solves this problem as well
 
 
 - Eelco
