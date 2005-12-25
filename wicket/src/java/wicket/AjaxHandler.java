@@ -47,9 +47,6 @@ public abstract class AjaxHandler
 	/** the component that this handler is bound to. */
 	private Component component;
 
-	/** The actual raw resource this class is rendering */
-	private IResourceStream resourceStream;
-
 	/** thread local for onload contributions. */
 	private static final ThreadLocal bodyOnloadContribHolder = new ThreadLocal();
 

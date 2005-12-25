@@ -37,8 +37,6 @@ public class Person
 	/** */
 	public Address address2;
 	
-	private Address address3;
-
 	private Country country;
 
 	private Map addressMap;

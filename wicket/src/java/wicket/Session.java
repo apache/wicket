@@ -496,13 +496,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Enforce resetting the markup positions of all components.
-	 */
-	private final void resetMarkupPositions()
-	{
-	}
-
-	/**
 	 * Set the style (see {@link wicket.Session}).
 	 * 
 	 * @param style
@@ -745,7 +738,6 @@ public abstract class Session implements Serializable
 		if (log.isDebugEnabled())
 		{
 			long t1 = System.currentTimeMillis();
-			Object test = null;
 			byte[] serialized;
 			try
 			{

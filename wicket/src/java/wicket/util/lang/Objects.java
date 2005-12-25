@@ -371,8 +371,6 @@ public abstract class Objects implements NumericTypes
 	 */
 	public static int getNumericType(Object value)
 	{
-		int result = NONNUMERIC;
-
 		if (value != null)
 		{
 			Class c = value.getClass();

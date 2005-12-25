@@ -19,14 +19,11 @@
 package wicket.util.time;
 
 
+import java.text.ParseException;
+import java.util.Calendar;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import java.text.ParseException;
-
-import java.util.GregorianCalendar;
-
-import wicket.util.time.Time;
 
 /**
  * Test cases for this object
@@ -48,7 +45,7 @@ public final class TimeTest extends TestCase
         final Time birthday = Time.parseDate("1966.06.01");
 
         Assert.assertEquals(1966, birthday.getYear());
-        Assert.assertEquals(GregorianCalendar.JUNE, birthday.getMonth());
+        Assert.assertEquals(Calendar.JUNE, birthday.getMonth());
         Assert.assertEquals(1, birthday.getDayOfMonth());
 
         final String y2k = "2000.01.01-12.00am";
