@@ -28,12 +28,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.AuthorizationException;
-import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.UnauthorizedEnabledStateException;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
-import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
@@ -977,7 +976,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 		return style;
 	}
 
-
 	/**
 	 * Gets the variation string of this component that will be used to look up
 	 * markup for this component. Subclasses can override this method to define
@@ -1042,7 +1040,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 		// This component is not an ancestor of the given component
 		return false;
 	}
-
 
 	/**
 	 * Gets whether this component is enabled. Specific components may decide to
@@ -1220,12 +1217,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 		// Save the parent's markup stream to re-assign it at the end
 		MarkupContainer parent = getParent();
 		MarkupStream originalMarkupStream = parent.getMarkupStream();
-		
-		// Get the parent's associate markup stream. A MarkupContainer
-		// will delegate it to its parent. A Page, Panel and Border
-		// will return the content of the associated markup file.
-		MarkupStream markupStream = parent.getAssociatedMarkupStream();
-		
+
+		// Get the parent's associated markup stream. 
+		MarkupStream markupStream = findParentWithAssociatedMarkup().getAssociatedMarkupStream();
+
 		// Make sure the markup stream is position at the correct element
 		markupStream.setCurrentIndex(this.markupStreamPosition);
 		
@@ -1242,35 +1237,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 			// Make sure the original markup stream is back in place
 			parent.setMarkupStream(originalMarkupStream);
 		}
-	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
-	 * 
-	 * @return A stream of MarkupElement elements
-	 */
-	protected MarkupStream getAssociatedMarkupStream()
-	{
-		MarkupStream markupStream = null;
-		
-		// Start here
-		MarkupContainer parent = getParent();
-
-		// Walk up hierarchy until markup found
-		if (parent != null)
-		{
-			markupStream = parent.getAssociatedMarkupStream();
-			if (markupStream == null)
-			{
-				// Failed to find markup stream
-				throw new MarkupNotFoundException(
-						exceptionMessage("No markup found"));
-			}
-		}
-
-		markupStream.setCurrentIndex(this.markupStreamPosition);
-		return markupStream;
 	}
 
 	/**

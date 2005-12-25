@@ -48,6 +48,8 @@ public class SimplePage extends WebPage
 	    container.setRenderBodyOnly(true);
 	    add(container);
 
+	    container.add(new Label("myLabel2", "Test Label2"));
+
 	    Panel panel = new SimplePanel("myPanel");
 	    panel.setRenderBodyOnly(true);
 	    add(panel);
