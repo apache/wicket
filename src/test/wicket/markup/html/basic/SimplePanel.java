@@ -38,5 +38,7 @@ public class SimplePanel extends Panel
 	{
 	    super(id);
 	    setRenderBodyOnly(true);
+	    
+	    add(new Label("label", "mein Label"));
     }
 }
