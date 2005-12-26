@@ -254,7 +254,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 
 					// Create the header container and associate the markup with
 					// it
-					WebMarkupContainer headerContainer = new TransparentWebMarkupContainer(
+					WebMarkupContainer headerContainer = new TransparentHeaderContainer(
 							headerId, this);
 					headerContainer.setMarkupStream(associatedMarkupStream);
 					headerContainer.setRenderBodyOnly(true);
@@ -271,13 +271,10 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 
 	/**
-	 * Autolink component delegate component resolution to their parent
-	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
-	 * know where to add the component to.
+	 * A header container to transparently resolve the wicket component contained.
 	 */
-	private final class TransparentWebMarkupContainer extends WebMarkupContainer
-			implements
-				IComponentResolver
+	private final class TransparentHeaderContainer extends WebMarkupContainer
+			implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -287,7 +284,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		 * @param id
 		 * @param container
 		 */
-		public TransparentWebMarkupContainer(final String id, final MarkupContainer container)
+		public TransparentHeaderContainer(final String id, final MarkupContainer container)
 		{
 			super(id);
 			this.container = container;
