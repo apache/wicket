@@ -462,6 +462,10 @@ public abstract class MarkupContainer extends Component
 		final MarkupStream originalMarkupStream = getMarkupStream();
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
 
+		// It could be that the markup stream has been reloaded (modified)
+		// and that the markup stream positions are no longer valid.
+		resetMarkupStreams();
+		
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
 		setMarkupStream(associatedMarkupStream);
@@ -543,10 +547,8 @@ public abstract class MarkupContainer extends Component
 				{
 					((MarkupContainer)component).setMarkupStream(null);
 				}
-				else
-				{
-					component.markStreamPositionInvalid();
-				}
+				
+				component.markStreamPositionInvalid();
 				return CONTINUE_TRAVERSAL;
 			}
 		});

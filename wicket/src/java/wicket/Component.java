@@ -296,7 +296,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/**
 	 * The position within the markup stream, where the markup for the component
-	 * begins
+	 * begins. Compared to MarkupContainer's markupStream this is NOT just a 
+	 * temporary variable to render a page. 
 	 */
 	private int markupStreamPosition = -1;
 

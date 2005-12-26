@@ -833,8 +833,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		});
 
-		// Set page's associated markup stream
+		// It could be that the markup stream has been reloaded (modified)
+		// and that the markup stream positions are no longer valid.
 		resetMarkupStreams();
+		
+		// Set page's associated markup stream
 		final MarkupStream markupStream = getAssociatedMarkupStream();
 		setMarkupStream(markupStream);
 
