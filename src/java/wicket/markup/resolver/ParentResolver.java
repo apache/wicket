@@ -15,24 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.resolver;
 
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 
 /**
- * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
- * autolinks are already detected and handled, the only task of this
- * resolver will be to add a "transparent" WebMarkupContainer to 
- * transparently handling child components. 
+ * Some containers are transparent to the user (e.g. HtmlHeaderContainer or
+ * BodyOnLoadContainer) and delegate component resolution to there parent.
  * 
  * @author Juergen Donnerstag
  */
-public class WicketLinkResolver implements IComponentResolver
+public class ParentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,46 +39,33 @@ public class WicketLinkResolver implements IComponentResolver
 	 * 
 	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
-	 * 
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <body onload>
-		if (tag instanceof WicketTag)
+		MarkupContainer parent = container;
+		while ((parent != null) && (parent.isTransparent()))
 		{
-			WicketTag wtag = (WicketTag) tag;
-			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
+			// Try to find the component with the parent component.
+			parent = parent.getParent();
+			if (parent != null)
 			{
-				final String id = "_link_" + container.getPage().getAutoIndex();
-				final Component component = new WebMarkupContainer(id)
-					{
-						private static final long serialVersionUID = 1L;
-
-						/**
-						 * @see wicket.MarkupContainer#isTransparent()
-						 */
-						public boolean isTransparent()
-						{
-							return true;
-						}
-					};
-				
-				container.autoAdd(component);
-	
-				// Yes, we handled the tag
-				return true;
+				Component component = parent.get(tag.getId());
+				if (component != null)
+				{
+					component.render();
+					return true;
+				}
 			}
 		}
 
-		// We were not able to handle the tag
+		// If not yet found, restore the original parent and test if it
+		// implement IComponentResolver
+		parent = container.getParent();
+		if (parent instanceof IComponentResolver)
+		{
+			return ((IComponentResolver)parent).resolve(container, markupStream, tag);
+		}
 		return false;
 	}
 }

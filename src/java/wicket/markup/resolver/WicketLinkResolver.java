@@ -15,19 +15,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.resolver;
 
+import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
- * This is a tag resolver which handles &lt;body onload=".."&gt; tags. 
+ * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
+ * autolinks are already detected and handled, the only task of this
+ * resolver will be to add a "transparent" WebMarkupContainer to 
+ * transparently handling child components. 
  * 
  * @author Juergen Donnerstag
  */
-public class BodyOnLoadResolver implements IComponentResolver
+public class WicketLinkResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,17 +56,30 @@ public class BodyOnLoadResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// It must be <body onload>
-		if ("body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+		if (tag instanceof WicketTag)
 		{
-			// Create, add and render the component.
-		    
-			// There is only one BodyOnLoadContainer allowed. That is we
-			// don't have to worry about creating a unique id.
-			BodyOnLoadContainer body = new BodyOnLoadContainer(tag.getId());
-			container.autoAdd(body);
+			WicketTag wtag = (WicketTag) tag;
+			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
+			{
+				final String id = "_link_" + container.getPage().getAutoIndex();
+				final Component component = new WebMarkupContainer(id)
+					{
+						private static final long serialVersionUID = 1L;
 
-			// Yes, we handled the tag
-			return true;
+						/**
+						 * @see wicket.MarkupContainer#isTransparent()
+						 */
+						public boolean isTransparent()
+						{
+							return true;
+						}
+					};
+				
+				container.autoAdd(component);
+	
+				// Yes, we handled the tag
+				return true;
+			}
 		}
 
 		// We were not able to handle the tag

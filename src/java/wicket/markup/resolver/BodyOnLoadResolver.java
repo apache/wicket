@@ -15,21 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.resolver;
 
-import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.internal.BodyOnLoadContainer;
 
 /**
- * Some containers are transparent to the user (e.g. HtmlHeaderContainer or
- * BodyOnLoadContainer) and delegate component resolution to there parent.
+ * This is a tag resolver which handles &lt;body onload=".."&gt; tags. 
  * 
  * @author Juergen Donnerstag
  */
-public class ParentResolver implements IComponentResolver
+public class BodyOnLoadResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,33 +38,33 @@ public class ParentResolver implements IComponentResolver
 	 * 
 	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
+	 * 
+	 * @param container
+	 *            The container parsing its markup
+	 * @param markupStream
+	 *            The current markupStream
+	 * @param tag
+	 *            The current component tag while parsing the markup
+	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		MarkupContainer parent = container;
-		while ((parent != null) && (parent.isTransparent()))
+		// It must be <body onload>
+		if ("body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
-			// Try to find the component with the parent component.
-			parent = parent.getParent();
-			if (parent != null)
-			{
-				Component component = parent.get(tag.getId());
-				if (component != null)
-				{
-					component.render();
-					return true;
-				}
-			}
+			// Create, add and render the component.
+		    
+			// There is only one BodyOnLoadContainer allowed. That is we
+			// don't have to worry about creating a unique id.
+			BodyOnLoadContainer body = new BodyOnLoadContainer(tag.getId());
+			container.autoAdd(body);
+
+			// Yes, we handled the tag
+			return true;
 		}
 
-		// If not yet found, restore the original parent and test if it
-		// implement IComponentResolver
-		parent = container.getParent();
-		if (parent instanceof IComponentResolver)
-		{
-			return ((IComponentResolver)parent).resolve(container, markupStream, tag);
-		}
+		// We were not able to handle the tag
 		return false;
 	}
 }

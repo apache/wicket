@@ -31,6 +31,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
@@ -84,7 +85,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section.
 	 * 
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 * 
 	 * @param container
 	 *            The HtmlHeaderContainer

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.resolver;
 
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
@@ -24,6 +24,9 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 
 /**

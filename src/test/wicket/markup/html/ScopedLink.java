@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.markup.IScopedComponent;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 

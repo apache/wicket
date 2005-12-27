@@ -15,13 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.resolver;
 
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.ComponentTag;
+import wicket.markup.IScopedComponent;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.panel.Panel;
 
@@ -74,7 +75,7 @@ import wicket.markup.html.panel.Panel;
  * hides the one of the parent-container with the same id.
  * 
  * @see wicket.MarkupContainer#isTransparent()
- * @see wicket.markup.html.ParentResolver
+ * @see wicket.markup.resolver.ParentResolver
  * 
  * @author Christian Essl
  * @author Juergen Donnerstag

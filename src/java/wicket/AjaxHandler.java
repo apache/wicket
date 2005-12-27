@@ -21,10 +21,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.request.target.EmptyRequestTarget;
 import wicket.request.target.ResourceStreamRequestTarget;
 import wicket.util.resource.IResourceStream;
@@ -95,7 +95,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	public final void renderHead(HtmlHeaderContainer container)
 	{

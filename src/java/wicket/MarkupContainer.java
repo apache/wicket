@@ -1264,7 +1264,7 @@ public abstract class MarkupContainer extends Component
 	 * have to be transparent with respect to there child components. A 
 	 * transparent container gets its children from its parent container.  
 	 * <p>
-	 * @see wicket.markup.html.ParentResolver
+	 * @see wicket.markup.resolver.ParentResolver
 	 * 
 	 * @return false. By default a MarkupContainer is not transparent.
 	 */

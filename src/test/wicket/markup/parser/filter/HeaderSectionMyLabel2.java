@@ -18,9 +18,9 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.Model;
 
 
@@ -44,7 +44,7 @@ public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
     }
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 * @param container
 	 */
 	public void renderHead(HtmlHeaderContainer container)
