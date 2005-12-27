@@ -119,13 +119,13 @@ public class MockHttpServletResponse implements HttpServletResponse
      */
     public void addHeader(final String name, final String value)
     {
-        List l = (List)headers.get(name);
-        if (l == null)
+        List list = (List)headers.get(name);
+        if (list == null)
         {
-            l = new ArrayList(1);
-            headers.put(name, l);
+            list = new ArrayList(1);
+            headers.put(name, list);
         }
-        l.add(value);
+        list.add(value);
     }
 
     /**
@@ -232,11 +232,17 @@ public class MockHttpServletResponse implements HttpServletResponse
     public int getBufferSize()
     {
         if (mode == MODE_NONE)
+        {
             return 0;
+        }
         else if (mode == MODE_BINARY)
+        {
             return byteStream.size();
+        }
         else
+        {
             return stringWriter.getBuffer().length();
+        }
     }
 
     /**
@@ -277,9 +283,13 @@ public class MockHttpServletResponse implements HttpServletResponse
     public String getDocument()
     {
         if (mode == MODE_BINARY)
+        {
             return new String(byteStream.toByteArray());
+        }
         else
+        {
             return stringWriter.getBuffer().toString();
+        }
     }
 
     /**
@@ -303,9 +313,13 @@ public class MockHttpServletResponse implements HttpServletResponse
     {
         List l = (List)headers.get(name);
         if (l == null || l.size() < 1)
+        {
             return null;
+        }
         else
+        {
             return (String)l.get(0);
+        }
     }
 
     /**

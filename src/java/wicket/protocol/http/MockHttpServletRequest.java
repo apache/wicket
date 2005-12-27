@@ -134,13 +134,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addHeader(String name, String value)
 	{
-		List l = (List)headers.get(name);
-		if (l == null)
+		List list = (List)headers.get(name);
+		if (list == null)
 		{
-			l = new ArrayList(1);
-			headers.put(name, l);
+			list = new ArrayList(1);
+			headers.put(name, list);
 		}
-		l.add(value);
+		list.add(value);
 	}
 
 	/**
@@ -242,7 +242,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		String value = getHeader(name);
 		if (value == null)
+		{
 			return -1;
+		}
+
 		DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
 		try
 		{
@@ -266,9 +269,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		final List l = (List)headers.get(name);
 		if (l == null || l.size() < 1)
+		{
 			return null;
+		}
 		else
+		{
 			return (String)l.get(0);
+		}
 	}
 
 	/**
@@ -290,12 +297,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Enumeration getHeaders(final String name)
 	{
-		List l = (List)headers.get(name);
-		if (l == null)
+		List list = (List)headers.get(name);
+		if (list == null)
 		{
-			l = new ArrayList();
+			list = new ArrayList();
 		}
-		return Collections.enumeration(l);
+		return Collections.enumeration(list);
 	}
 
 	/**
@@ -382,9 +389,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Enumeration getLocales()
 	{
-		List l = new ArrayList(1);
-		l.add(getLocale());
-		return Collections.enumeration(l);
+		List list = new ArrayList(1);
+		list.add(getLocale());
+		return Collections.enumeration(list);
 	}
 
 	/**
@@ -443,6 +450,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return new String[0];
 		}
+		
 		if (value instanceof String[])
 		{
 			return (String[])value;
@@ -708,8 +716,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		final String user = getRemoteUser();
 		if (user == null)
+		{
 			return null;
+		}
 		else
+		{
 			return new Principal()
 			{
 				public String getName()
@@ -717,6 +728,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					return user;
 				}
 			};
+		}
 	}
 
 	/**
@@ -937,31 +949,31 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			parameters.put("path", component.getPath());
 			parameters.put("version", "" + component.getPage().getCurrentVersionNumber());
-			Class c = null;
+			Class clazz = null;
 			if (component instanceof IRedirectListener)
 			{
-				c = IRedirectListener.class;
+				clazz = IRedirectListener.class;
 			}
 			else if (component instanceof IResourceListener)
 			{
-				c = IResourceListener.class;
+				clazz = IResourceListener.class;
 			}
 			else if (component instanceof IFormSubmitListener)
 			{
-				c = IFormSubmitListener.class;
+				clazz = IFormSubmitListener.class;
 			}
 			else if (component instanceof ILinkListener)
 			{
-				c = ILinkListener.class;
+				clazz = ILinkListener.class;
 			}
 			else if (component instanceof IOnChangeListener)
 			{
-				c = IOnChangeListener.class;
+				clazz = IOnChangeListener.class;
 			}
-	
-			if (c != null)
+
+			if (clazz != null)
 			{
-				parameters.put("interface", Classes.name(c));
+				parameters.put("interface", Classes.name(clazz));
 			}
 		}
 	}
@@ -1004,13 +1016,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			Map diff = new HashMap();
 			diff.putAll(values);
+			
 			Iterator iter = valuesApplied.keySet().iterator();
 			while (iter.hasNext())
 			{
 				diff.remove(iter.next());
 			}
-			log
-					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
+			
+			log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
 							+ diff.keySet());
 		}
 	}
@@ -1025,7 +1038,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToRedirectString(final String redirect)
 	{
 		parameters.clear();
-		
+
 		final String paramPart = redirect.substring(redirect.indexOf('?') + 1);
 		final String[] paramTuples = paramPart.split("&");
 		for (int t = 0; t < paramTuples.length; t++)
