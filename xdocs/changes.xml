@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Juergen Donnerstag" due-to="Christian Essl">Provide a component resolver (see ScopedComponentResolver) which walks up the component tree until a Page or Panel and tries to find a component with a matching wicket id, effectivly providing something like scoping for wicket id resolution.</action>
       <action type="update" dev="Eelco Hillenius">moved WebApplication.onRuntimeException(Page page, RuntimeException e) to RequestCycle, which is a much more logical place for it, and has a more natural grouping with onBeginRequest and onEndRequest</action>
       <action type="fix" dev="Igor Vaynberg" issue="1375598">ListView now creates Change objects instead of cloning the whole list on up/down/remove links</action>
       <action type="fix" dev="Igor Vaynberg" issue="1375590">FormComponentFeedback* components are now xhtml compliant</action>
