@@ -254,7 +254,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 
 					// Create the header container and associate the markup with
 					// it
-					WebMarkupContainer headerContainer = new TransparentHeaderContainer(
+					WebMarkupContainer headerContainer = new HeaderPartContainer(
 							headerId, this);
 					headerContainer.setMarkupStream(associatedMarkupStream);
 					headerContainer.setRenderBodyOnly(true);
@@ -271,9 +271,13 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 
 	/**
-	 * A header container to transparently resolve the wicket component contained.
+	 * A transparent container which handles the wicket:head region of 
+	 * a container (e.g. Panel).
+	 * <p>
+	 * Note: this container overrides isTransparent() and implements 
+	 * IComponentResolver
 	 */
-	private final class TransparentHeaderContainer extends WebMarkupContainer
+	private static final class HeaderPartContainer extends WebMarkupContainer
 			implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
@@ -284,24 +288,23 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		 * @param id
 		 * @param container
 		 */
-		public TransparentHeaderContainer(final String id, final MarkupContainer container)
+		public HeaderPartContainer(final String id, final MarkupContainer container)
 		{
 			super(id);
 			this.container = container;
 		}
 
 		/**
-		 * Because the autolink component is not able to resolve any inner
-		 * component, it'll passed it down to its parent.
 		 * 
-		 * @param container
-		 *            The container parsing its markup
-		 * @param markupStream
-		 *            The current markupStream
-		 * @param tag
-		 *            The current component tag while parsing the markup
-		 * @return True if componentId was handled by the resolver, false
-		 *         otherwise.
+		 * @see wicket.MarkupContainer#isTransparent()
+		 */
+		public boolean isTransparent()
+		{
+			return true;
+		}
+		
+		/**
+		 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
 		 */
 		public final boolean resolve(final MarkupContainer container,
 				final MarkupStream markupStream, final ComponentTag tag)
@@ -311,6 +314,8 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			{
 				if (component.isVisible() == true)
 				{
+					// Note: we can not just call render() because we need the
+					// specific markupStream and its current position.
 					component.renderComponent(markupStream);
 					component.rendered();
 				}
@@ -319,20 +324,6 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 					findMarkupStream().skipComponent();
 				}
 				return true;
-			}
-
-			// Delegate the request to the parent component
-			final MarkupContainer parent = getParent();
-			component = parent.get(tag.getId());
-			if (component != null)
-			{
-				component.render();
-				return true;
-			}
-
-			if (parent instanceof IComponentResolver)
-			{
-				return ((IComponentResolver)parent).resolve(container, markupStream, tag);
 			}
 
 			return false;

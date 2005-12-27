@@ -18,7 +18,6 @@
 package wicket.markup.html;
 
 import wicket.Component;
-import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
@@ -61,7 +60,7 @@ import wicket.response.StringResponse;
  * 
  * @author Juergen Donnerstag
  */
-public class HtmlHeaderContainer extends WebMarkupContainer implements IComponentResolver
+public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -171,38 +170,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	}
 
 	/**
-	 * HtmlHeaderContainer has been autoAdded, it has been injected similiar to
-	 * an AOP interceptor. Thus it must forward any request to find a component
-	 * based on an ID to its parent container.
-	 * 
-	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer,
-	 *      wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 * @see wicket.MarkupContainer#isTransparent()
 	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	public boolean isTransparent()
 	{
-		// Try to find the component with the parent component.
-		MarkupContainer parent = getParent();
-		if (parent != null)
-		{
-			if (parent.getId().equals(tag.getId()))
-			{
-				parent.render();
-				return true;
-			}
-
-			Component component = parent.get(tag.getId());
-			if (component != null)
-			{
-				component.render();
-				return true;
-			}
-
-			if (parent instanceof IComponentResolver)
-			{
-				return ((IComponentResolver)parent).resolve(container, markupStream, tag);
-			}
-		}
-
-		return false;
+		return true;
 	}
 }

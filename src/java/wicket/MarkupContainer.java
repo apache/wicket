@@ -1202,19 +1202,7 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				// Try application's component resolvers
-				final List componentResolvers = this.getApplication().getComponentResolvers();
-				final Iterator iterator = componentResolvers.iterator();
-				while (iterator.hasNext())
-				{
-					final IComponentResolver resolver = (IComponentResolver)iterator.next();
-					if (resolver.resolve(this, markupStream, tag))
-					{
-						return;
-					}
-				}
-
-				// 3rd try: Components like Border and Panel might implement
+				// 2rd try: Components like Border and Panel might implement
 				// the ComponentResolver interface as well.
 				MarkupContainer container = this;
 				while (container != null)
@@ -1228,6 +1216,18 @@ public abstract class MarkupContainer extends Component
 					}
 
 					container = container.findParent(MarkupContainer.class);
+				}
+
+				// 3rd try: Try application's component resolvers
+				final List componentResolvers = this.getApplication().getComponentResolvers();
+				final Iterator iterator = componentResolvers.iterator();
+				while (iterator.hasNext())
+				{
+					final IComponentResolver resolver = (IComponentResolver)iterator.next();
+					if (resolver.resolve(this, markupStream, tag))
+					{
+						return;
+					}
 				}
 
 				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
@@ -1259,4 +1259,17 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
+	/**
+	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer)
+	 * have to be transparent with respect to there child components. A 
+	 * transparent container gets its children from its parent container.  
+	 * <p>
+	 * @see wicket.markup.html.ParentResolver
+	 * 
+	 * @return false. By default a MarkupContainer is not transparent.
+	 */
+	public boolean isTransparent()
+	{
+		return false;
+	}
 }
