@@ -21,10 +21,10 @@ package wicket;
 import java.util.List;
 
 import wicket.ApplicationSettings;
-import wicket.resource.ApplicationStringResourceLoader;
-import wicket.resource.BundleStringResourceLoader;
-import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.DummyApplication;
+import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.resource.loader.ComponentStringResourceLoader;
 import junit.framework.TestCase;
 import junit.framework.Assert;
 

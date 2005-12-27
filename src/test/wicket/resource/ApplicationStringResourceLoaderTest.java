@@ -24,6 +24,8 @@ import junit.framework.Assert;
 import wicket.Application;
 import wicket.ISessionFactory;
 import wicket.request.IRequestCycleProcessor;
+import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.

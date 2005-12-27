@@ -25,7 +25,7 @@ import wicket.Application;
 import wicket.Component;
 import wicket.IRequestCycleFactory;
 import wicket.Session;
-import wicket.resource.IStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

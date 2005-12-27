@@ -20,8 +20,8 @@ package wicket.resource;
 
 import java.util.Locale;
 
-import wicket.resource.BundleStringResourceLoader;
-import wicket.resource.IStringResourceLoader;
+import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 import junit.framework.Assert;
 
 /**

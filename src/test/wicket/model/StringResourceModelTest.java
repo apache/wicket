@@ -30,7 +30,7 @@ import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.resource.BundleStringResourceLoader;
+import wicket.resource.loader.BundleStringResourceLoader;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
