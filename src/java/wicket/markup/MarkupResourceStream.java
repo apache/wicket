@@ -26,23 +26,30 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
- * A IResourceStream implementation which maintains container related
- * information about the markup resource stream.
+ * An IResourceStream implementation with specific extensions for markup
+ * resource streams.
  * 
  * @author Juergen Donnerstag
  */
 public class MarkupResourceStream implements IResourceStream
 {
-	/**  */
 	private static final long serialVersionUID = 1846489965076612828L;
-	
+
+	/** The associated markup resource stream */
 	private final IResourceStream resourceStream;
-	
+
+	/**
+	 * Container info like Class, locale and style which were used to locate the
+	 * resource
+	 */
 	private final ContainerInfo containerInfo;
-	
-	/** The actual component class the markup is directly associated with */
+
+	/**
+	 * The actual component class the markup is directly associated with. It
+	 * might be super class of the component class
+	 */
 	private final Class markupClass;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -50,12 +57,13 @@ public class MarkupResourceStream implements IResourceStream
 	 * @param containerInfo
 	 * @param markupClass
 	 */
-	public MarkupResourceStream(final IResourceStream resourceStream, final ContainerInfo containerInfo, final Class markupClass)
+	public MarkupResourceStream(final IResourceStream resourceStream,
+			final ContainerInfo containerInfo, final Class markupClass)
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
 		this.markupClass = markupClass;
-		
+
 		if (resourceStream == null)
 		{
 			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
@@ -126,9 +134,9 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * Get the actual component class the markup is directly associated with. Note: it not necessarily
-	 * must be the container class.
-	 *  
+	 * Get the actual component class the markup is directly associated with.
+	 * Note: it not necessarily must be the container class.
+	 * 
 	 * @return The directly associated class
 	 */
 	public Class getMarkupClass()
