@@ -23,6 +23,7 @@ import java.util.List;
 import wicket.Component;
 import wicket.IBehaviour;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 
 /**
@@ -63,7 +64,7 @@ public class WebComponent extends Component implements IHeaderContributor
 	 * 
 	 * @param container
 	 *            The HtmlHeaderContainer
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{

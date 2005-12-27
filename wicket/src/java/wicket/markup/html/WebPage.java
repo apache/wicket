@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;

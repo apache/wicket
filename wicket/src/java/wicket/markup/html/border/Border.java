@@ -23,9 +23,9 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 

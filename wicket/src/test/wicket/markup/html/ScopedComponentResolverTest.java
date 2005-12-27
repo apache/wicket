@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
+import wicket.markup.resolver.ScopedComponentResolver;
 
 /**
  * 

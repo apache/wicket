@@ -17,6 +17,8 @@
  */
 package wicket.markup.html;
 
+import wicket.markup.html.internal.HtmlHeaderContainer;
+
 
 /**
  * An interface to be implemented by components which are able to render

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup;
 
 /**
  * To be implemented by Components which walks up the component tree until a
@@ -26,9 +26,9 @@ package wicket.markup.html;
  * tries to resolve the wicket id with the parent only and shall be used
  * to implement transparent containers.
  * 
- * @see wicket.markup.html.ScopedComponentResolver
+ * @see wicket.markup.resolver.ScopedComponentResolver
  * @see wicket.MarkupContainer#isTransparent()
- * @see wicket.markup.html.ParentResolver
+ * @see wicket.markup.resolver.ParentResolver
  * 
  * @author Christian Essl
  * @author Juergen Donnerstag

@@ -17,6 +17,8 @@
  */
 package wicket.markup.html;
 
+import wicket.markup.html.internal.HtmlHeaderContainer;
+
 
 /**
  * THIS INTERFACE IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF.

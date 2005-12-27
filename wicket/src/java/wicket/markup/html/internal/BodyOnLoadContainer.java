@@ -15,10 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.markup.html.internal;
 
 import wicket.AttributeModifier;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.IBodyTagContributor;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
 import wicket.model.Model;
 
 /**
