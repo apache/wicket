@@ -36,6 +36,7 @@ import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.BodyOnLoadResolver;
 import wicket.markup.html.HtmlHeaderResolver;
+import wicket.markup.html.ParentResolver;
 import wicket.markup.html.WicketLinkResolver;
 import wicket.markup.html.WicketMessageResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -228,6 +229,7 @@ public abstract class Application
 		this.sharedResources = new SharedResources(this);
 
 		// Install default component resolvers
+		componentResolvers.add(new ParentResolver());
 		componentResolvers.add(new AutoComponentResolver());
 		componentResolvers.add(new MarkupInheritanceResolver());
 		componentResolvers.add(new HtmlHeaderResolver());

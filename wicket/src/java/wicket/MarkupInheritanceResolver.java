@@ -73,9 +73,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	 * This is a WebMarkupContainer, except that it is transparent for
 	 * it child components.
 	 */
-	public class TransparentWebMarkupContainer extends WebMarkupContainer
-		implements
-			IComponentResolver
+	private static class TransparentWebMarkupContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -88,29 +86,10 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		}
 
 		/**
-		 * Because the component is not able to resolve any inner
-		 * component, it'll passed it down to its parent.
-		 * 
-		 * @param container
-		 *            The container parsing its markup
-		 * @param markupStream
-		 *            The current markupStream
-		 * @param tag
-		 *            The current component tag while parsing the markup
-		 * @return True if componentId was handled by the resolver, false
-		 *         otherwise.
+		 * @see wicket.MarkupContainer#isTransparent()
 		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
+		public boolean isTransparent()
 		{
-			// Delegate the request to the parent component
-			final Component component = this.getParent().get(tag.getId());
-			if (component == null)
-			{
-				return false;
-			}
-
-			component.render();
 			return true;
 		}
 	}

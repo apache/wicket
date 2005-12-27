@@ -19,12 +19,11 @@ package wicket;
 
 
 /**
- * This is just a marker interface which may only be used in combination
- * with IComponentResolver. Usually AutoLinkResolver will getParent() of
- * all IComponentResolver's to find the proper component. The existence
- * of IComponentResolverMarker will interrupt that loop and return the
- * component implementing IComponentResolverMarker. This e.g. is the case
- * for Border. 
+ * This is a marker interface which may only be used in combination with
+ * IComponentResolver. Usually AutoLinkResolver will invoke getParent() of all
+ * IComponentResolver's to find the proper component. The existence of
+ * IComponentResolverMarker will interrupt that loop and return the component
+ * implementing IComponentResolverMarker (see the Border component).
  * 
  * @author Juergen Donnerstag
  */

@@ -211,13 +211,13 @@ public final class AutoLinkResolver implements IComponentResolver
 				{
 					// Href is relative. Create a resource reference pointing at
 					// this file
-	
+
 					// <wicket:head> components are handled differently. We can not
 					// use the container, because it is the container the header
 					// has been added to (e.g. the Page). What we need however, is
 					// the component (e.g. a Panel) which contributed it.
-					Component relevantContainer = container;
-					while ((relevantContainer instanceof IComponentResolver) 
+					MarkupContainer relevantContainer = container;
+					while (((relevantContainer instanceof IComponentResolver) || relevantContainer.isTransparent())  
 							&& !(relevantContainer instanceof IComponentResolverMarker))
 					{
 						relevantContainer = relevantContainer.getParent(); 
@@ -253,8 +253,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * @author Juergen Donnerstag
 	 */
 	private final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
-			implements
-				IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -276,29 +274,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * Because the autolink component is not able to resolve any inner
-		 * component, it'll passed it down to its parent.
-		 * 
-		 * @param container
-		 *            The container parsing its markup
-		 * @param markupStream
-		 *            The current markupStream
-		 * @param tag
-		 *            The current component tag while parsing the markup
-		 * @return True if componentId was handled by the resolver, false
-		 *         otherwise.
+		 * @see wicket.MarkupContainer#isTransparent()
 		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
+		public boolean isTransparent()
 		{
-			// Delegate the request to the parent component
-			final Component component = this.getParent().get(tag.getId());
-			if (component == null)
-			{
-				return false;
-			}
-
-			component.render();
 			return true;
 		}
 	}
@@ -311,8 +290,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * @author Juergen Donnerstag
 	 */
 	private final static class AutolinkExternalLink extends ExternalLink
-			implements
-				IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -328,29 +305,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * Because the autolink component is not able to resolve any inner
-		 * component, it'll passed it down to its parent.
-		 * 
-		 * @param container
-		 *            The container parsing its markup
-		 * @param markupStream
-		 *            The current markupStream
-		 * @param tag
-		 *            The current component tag while parsing the markup
-		 * @return True if componentId was handled by the resolver, false
-		 *         otherwise.
+		 * @see wicket.MarkupContainer#isTransparent()
 		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
+		public boolean isTransparent()
 		{
-			// Delegate the request to the parent component
-			final Component component = this.getParent().get(tag.getId());
-			if (component == null)
-			{
-				return false;
-			}
-
-			component.render();
 			return true;
 		}
 	}
@@ -361,8 +319,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * know where to add the component to.
 	 */
 	private final static class CssLink extends WebMarkupContainer
-		implements
-			IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -403,29 +359,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * Because the autolink component is not able to resolve any inner
-		 * component, it'll passed it down to its parent.
-		 * 
-		 * @param container
-		 *            The container parsing its markup
-		 * @param markupStream
-		 *            The current markupStream
-		 * @param tag
-		 *            The current component tag while parsing the markup
-		 * @return True if componentId was handled by the resolver, false
-		 *         otherwise.
+		 * @see wicket.MarkupContainer#isTransparent()
 		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
+		public boolean isTransparent()
 		{
-			// Delegate the request to the parent component
-			final Component component = this.getParent().get(tag.getId());
-			if (component == null)
-			{
-				return false;
-			}
-
-			component.render();
 			return true;
 		}
 	}

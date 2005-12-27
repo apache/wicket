@@ -106,7 +106,21 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}	
 
 	/**
-	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
+	 * 
+	 * @see wicket.MarkupContainer#isTransparent()
+	 */
+	public boolean isTransparent()
+	{
+		if (getMarkupStream() == null)
+		{
+			return true;
+		}
+		
+		return super.isTransparent();
+	}
+	
+	/**
+	 * Border makes use of a &lt;wicket:body&gt; tag to identify the position
 	 * to insert within the border's body. As &lt;wicket:body&gt; is a special
      * tag and MarkupContainer is not able to handle it, we do that here.
      * <p>
@@ -248,7 +262,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	 * section which gets (auto) added to the component hierarchie and
 	 * immediately rendered.". In case of bordered Pages, the header component
 	 * is not added to the Page, but to the Border component. Thus, in order
-	 * to handle bordered pages properly, we must the request down one more 
+	 * to handle bordered pages properly, we must pass the request down one more 
 	 * level. In case of a bordered page, it is a Page component.
      *
      * @param container The current html header container
