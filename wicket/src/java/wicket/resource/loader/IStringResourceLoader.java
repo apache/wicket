@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.resource;
+package wicket.resource.loader;
 
 import java.util.Locale;
 

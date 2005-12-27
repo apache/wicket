@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.resource;
+package wicket.resource.loader;
 
 import java.util.Locale;
 
@@ -29,6 +29,7 @@ import wicket.Page;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
+import wicket.resource.Properties;
 import wicket.util.value.ValueMap;
 
 /**

@@ -52,7 +52,7 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * Page on which the component resides. For reusable components/containers that
  * are packaged with their own string resource bundles it should be the actual
  * component/container rather than the page. For more information on this please
- * see {@link wicket.resource.ComponentStringResourceLoader}. The relative
+ * see {@link wicket.resource.loader.ComponentStringResourceLoader}. The relative
  * component may actually be <code>null</code> when all resource loading is to
  * be done from a global resource loader. However, we recommend that a relative
  * component is still supplied even in these cases in order to 'future proof'

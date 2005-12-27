@@ -23,8 +23,8 @@ import java.util.MissingResourceException;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.model.Model;
-import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.DummyApplication;
+import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.util.value.ValueMap;
 
 /**

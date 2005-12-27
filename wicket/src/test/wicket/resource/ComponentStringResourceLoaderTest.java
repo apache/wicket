@@ -24,6 +24,8 @@ import junit.framework.Assert;
 
 import wicket.Component;
 import wicket.markup.html.panel.Panel;
+import wicket.resource.loader.ComponentStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Test case for the <code>ComponentStringResourceLoader</code> class.

@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.model.IModel;
 import wicket.resource.IPropertiesReloadListener;
-import wicket.resource.IStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
