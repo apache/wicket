@@ -1,8 +1,0 @@
-build
-target
-*.log
-build.properties
-*.backup
-*.temp
-RECYCLER
-.clover
