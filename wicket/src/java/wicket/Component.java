@@ -1231,6 +1231,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			parent.setMarkupStream(markupStream);
 			
 			// Render the component and all its children
+			internalBeginRequest();
 			render();
 		}
 		finally
