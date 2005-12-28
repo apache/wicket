@@ -910,8 +910,7 @@ public abstract class MarkupContainer extends Component
 		MarkupContainer parent = component.getParent();
 		if (parent != null)
 		{
-			throw new WicketRuntimeException(
-					"You can not add the same Component instance twice");
+			parent.remove(component);
 		}
 
 		// Set child's parent
