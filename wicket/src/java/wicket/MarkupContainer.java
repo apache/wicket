@@ -92,9 +92,11 @@ public abstract class MarkupContainer extends Component
 	/** List of children or single child */
 	private Object children;
 
-	/** The markup stream for this container. This variable is used only
-	 * during the render phase to provide access to the current element
-	 * within the stream. */
+	/**
+	 * The markup stream for this container. This variable is used only during
+	 * the render phase to provide access to the current element within the
+	 * stream.
+	 */
 	private transient MarkupStream markupStream;
 
 	/**
@@ -385,7 +387,7 @@ public abstract class MarkupContainer extends Component
 				sorted = Arrays.asList((Component[])children);
 			}
 		}
-		Collections.sort(sorted,comparator);
+		Collections.sort(sorted, comparator);
 		return sorted.iterator();
 	}
 
@@ -421,6 +423,9 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Removes all children from this container.
+	 * <p>
+	 * Note: implementation does not call
+	 * {@link MarkupContainer#remove(Component) } for each component.
 	 */
 	public void removeAll()
 	{
@@ -429,8 +434,9 @@ public abstract class MarkupContainer extends Component
 			addStateChange(new Change()
 			{
 				private static final long serialVersionUID = 1L;
-				
+
 				final Object removedChildren = MarkupContainer.this.children;
+
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
@@ -465,7 +471,7 @@ public abstract class MarkupContainer extends Component
 		// It could be that the markup stream has been reloaded (modified)
 		// and that the markup stream positions are no longer valid.
 		resetMarkupStreams();
-		
+
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
 		setMarkupStream(associatedMarkupStream);
@@ -519,9 +525,9 @@ public abstract class MarkupContainer extends Component
 			// Look up to make sure it was already in the map
 			if (replaced == null)
 			{
-				throw new WicketRuntimeException(exceptionMessage(
-						"Cannot replace a component which has not been added: id='" 
-						+ child.getId() + "'"));
+				throw new WicketRuntimeException(
+						exceptionMessage("Cannot replace a component which has not been added: id='"
+								+ child.getId() + "'"));
 			}
 
 			removedComponent(replaced);
@@ -547,7 +553,7 @@ public abstract class MarkupContainer extends Component
 				{
 					((MarkupContainer)component).setMarkupStream(null);
 				}
-				
+
 				component.markStreamPositionInvalid();
 				return CONTINUE_TRAVERSAL;
 			}
@@ -747,7 +753,8 @@ public abstract class MarkupContainer extends Component
 		}
 		catch (MarkupException ex)
 		{
-			// re-throw it. The exception contains already all the information required.
+			// re-throw it. The exception contains already all the information
+			// required.
 			throw ex;
 		}
 		catch (WicketRuntimeException ex)
@@ -839,7 +846,7 @@ public abstract class MarkupContainer extends Component
 		boolean render = openTag.requiresCloseTag();
 		if (render == false)
 		{
-			// Tags like <p> do not require a close tag, but they may have. 
+			// Tags like <p> do not require a close tag, but they may have.
 			// Because ComponentTag does not have the information, we analyze
 			// the remaining of the streams to find the close tag.
 			int pos = markupStream.getCurrentIndex();
@@ -1231,14 +1238,15 @@ public abstract class MarkupContainer extends Component
 
 				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
 				{
-					// You can not render the base page of inherited markup as the 
-					// <wicket:child/> tag will not be found. You must use the 
+					// You can not render the base page of inherited markup as
+					// the
+					// <wicket:child/> tag will not be found. You must use the
 					// page (class) with the derived markup instead.
 					markupStream.throwMarkupException("Classes of base pages which "
 							+ "require inherited markup may not be used directly. "
 							+ "You must instantiate the child pages instead: " + this);
 				}
-				
+
 				// No one was able to handle the component id
 				markupStream.throwMarkupException("Unable to find component with id '" + id
 						+ "' in " + this + ". This means that you declared wicket:id=" + id
@@ -1260,9 +1268,10 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer)
-	 * have to be transparent with respect to there child components. A 
-	 * transparent container gets its children from its parent container.  
+	 * have to be transparent with respect to there child components. A
+	 * transparent container gets its children from its parent container.
 	 * <p>
+	 * 
 	 * @see wicket.markup.resolver.ParentResolver
 	 * 
 	 * @return false. By default a MarkupContainer is not transparent.
