@@ -76,10 +76,6 @@ import wicket.version.undo.Change;
  * new operator. Children may be added during construction if the Component is a
  * MarkupContainer.
  * 
- * <li><b>Cluster Attachment </b>- When a Component is freshly replicated in a
- * clustered environment, it may need to initialize transient state. This is
- * possible by overriding the {@link Component#onSessionAttach()} method.
- * 
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol
  * request handler such as WicketServlet. An associated Application object
  * creates Session, Request and Response objects for use by a given Component in
@@ -686,7 +682,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * 
 	 * @return The id of this component
 	 */
-	public final String getId()
+	public String getId()
 	{
 		return id;
 	}
@@ -2091,13 +2087,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * Implementation that renders this component.
 	 */
 	protected abstract void onRender();
-
-	/**
-	 * Called when this component is deserialized as part of session replication
-	 */
-	protected void onSessionAttach()
-	{
-	}
 
 	/**
 	 * Gets the currently coupled {@link IBehaviour}s as a unmodifiable list.

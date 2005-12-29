@@ -95,11 +95,11 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
 	 */
-	public boolean synchronizeOnSession(final RequestCycle requestCycle)
+	public Object getLock(final RequestCycle requestCycle)
 	{
-		return true;
+		return requestCycle.getSession();
 	}
 
 	/**

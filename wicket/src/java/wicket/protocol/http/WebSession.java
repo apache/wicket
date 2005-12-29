@@ -42,35 +42,22 @@ import wicket.SessionAttributeEvent;
  */
 public class WebSession extends Session
 {
-	private static final long serialVersionUID = 1L;
-
 	/** log. careful, this log is used to trigger profiling too! */
 	private static Log log = LogFactory.getLog(WebSession.class);
 
-	/** The request cycle factory for the session */
-	private transient IRequestCycleFactory requestCycleFactory;
+	private static final long serialVersionUID = 1L;
 
 	/** cached http session object. */
 	private transient HttpSession httpSession = null;
+
+	/** The request cycle factory for the session */
+	private transient IRequestCycleFactory requestCycleFactory;
 
 	/** The attribute in the HttpSession where this WebSession object is stored */
 	private transient String sessionAttributePrefix;
 
 	/** True, if session has been invalidated */
 	private transient boolean sessionInvalidated = false;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param application
-	 *            The application
-	 */
-	protected WebSession(final WebApplication application)
-	{
-		super(application);
-		// add listener that will create the actual session lazily
-		add(new FirstAttributeSessionListener());
-	}
 
 	/**
 	 * Listener for adding the session only when it is needed.
@@ -90,11 +77,11 @@ public class WebSession extends Session
 		{
 			if (clean)
 			{
-				// only do this once
+				// Only do this once
 				clean = false;
 
-				// create the actual httpSession (in case it didn't exist yet)
-				WebSession.this.httpSession = getHttpSession(true);
+				// Create the actual httpSession (in case it didn't exist yet)
+				WebSession.this.httpSession = getHttpSession();
 
 				if (log.isDebugEnabled())
 				{
@@ -119,6 +106,40 @@ public class WebSession extends Session
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param application
+	 *            The application
+	 */
+	protected WebSession(final WebApplication application)
+	{
+		super(application);
+		// add listener that will create the actual session lazily
+		add(new FirstAttributeSessionListener());
+	}
+
+	/**
+	 * Gets the underlying HttpSession object or null.
+	 * <p>
+	 * WARNING: it is a bad idea to depend on the http session object directly.
+	 * Please use the classes and methods that are exposed by Wicket instead.
+	 * Send an email to the mailing list in case it is not clear how to do
+	 * things or you think you miss funcionality which causes you to depend on
+	 * this directly.
+	 * </p>
+	 * 
+	 * @return The underlying HttpSession object (null if not created yet).
+	 */
+	public final HttpSession getHttpSession()
+	{
+		if (httpSession == null)
+		{
+			httpSession = createHttpSession();
+		}
+		return httpSession;
+	}
+
+	/**
 	 * Gets the id for this web session.
 	 * 
 	 * @return the id for this web session or super's invocation in case the
@@ -132,6 +153,17 @@ public class WebSession extends Session
 			return httpSession.getId();
 		}
 		return super.getId();
+	}
+
+	/**
+	 * Invalidates this session at the end of the current request. If you need
+	 * to invalidate the session immediately, you can do this by calling
+	 * invalidateNow(), however this will remove all Wicket components from this
+	 * session, which means that you will no longer be able to work with them.
+	 */
+	public void invalidate()
+	{
+		sessionInvalidated = true;
 	}
 
 	/**
@@ -156,50 +188,6 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Invalidates this session at the end of the current request. If you need
-	 * to invalidate the session immediately, you can do this by calling
-	 * invalidateNow(), however this will remove all Wicket components from this
-	 * session, which means that you will no longer be able to work with them.
-	 */
-	public void invalidate()
-	{
-		sessionInvalidated = true;
-	}
-
-	/**
-	 * Updates the session, e.g. for replication purposes.
-	 */
-	protected void update()
-	{
-		if (sessionInvalidated == false)
-		{
-			super.update();
-		}
-	}
-
-	/**
-	 * Gets the underlying HttpSession object or null.
-	 * <p>
-	 * WARNING: it is a bad idea to depend on the http session object directly.
-	 * Please use the classes and methods that are exposed by Wicket instead.
-	 * Send an email to the mailing list in case it is not clear how to do
-	 * things or you think you miss funcionality which causes you to depend on
-	 * this directly.
-	 * </p>
-	 * 
-	 * @return The underlying HttpSession object (null if not created yet).
-	 */
-	public final HttpSession getHttpSession()
-	{
-		if (httpSession == null)
-		{
-			// try to get it without forcing creation
-			httpSession = getHttpSession(false);
-		}
-		return httpSession;
-	}
-
-	/**
 	 * @see wicket.Session#detach()
 	 */
 	protected void detach()
@@ -207,6 +195,43 @@ public class WebSession extends Session
 		if (sessionInvalidated)
 		{
 			invalidateNow();
+		}
+	}
+
+	/**
+	 * @see Session#doGetAttribute(String)
+	 */
+	protected Object doGetAttribute(final String name)
+	{
+		HttpSession httpSession = getHttpSession();
+		if (httpSession != null)
+		{
+			return httpSession.getAttribute(sessionAttributePrefix + name);
+		}
+		return null;
+	}
+
+	/**
+	 * @see wicket.Session#doRemoveAttribute(java.lang.String)
+	 */
+	protected void doRemoveAttribute(final String name)
+	{
+		HttpSession httpSession = getHttpSession();
+		if (httpSession != null)
+		{
+			httpSession.removeAttribute(sessionAttributePrefix + name);
+		}
+	}
+
+	/**
+	 * @see Session#doSetAttribute(String, Object)
+	 */
+	protected void doSetAttribute(final String name, final Object object)
+	{
+		HttpSession httpSession = getHttpSession();
+		if (httpSession != null)
+		{
+			httpSession.setAttribute(sessionAttributePrefix + name, object);
 		}
 	}
 
@@ -220,7 +245,7 @@ public class WebSession extends Session
 		if (httpSession != null)
 		{
 			final Enumeration names = httpSession.getAttributeNames();
-			final String prefix = sessionAttributePrefix + "-";
+			final String prefix = sessionAttributePrefix;
 			while (names.hasMoreElements())
 			{
 				final String name = (String)names.nextElement();
@@ -248,39 +273,13 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * @see Session#doGetAttribute(String)
+	 * Updates the session, e.g. for replication purposes.
 	 */
-	protected Object doGetAttribute(final String name)
+	protected void update()
 	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
+		if (sessionInvalidated == false)
 		{
-			return httpSession.getAttribute(sessionAttributePrefix + name);
-		}
-		return null;
-	}
-
-	/**
-	 * @see Session#doSetAttribute(String, Object)
-	 */
-	protected void doSetAttribute(final String name, final Object object)
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			httpSession.setAttribute(sessionAttributePrefix + name, object);
-		}
-	}
-
-	/**
-	 * @see wicket.Session#doRemoveAttribute(java.lang.String)
-	 */
-	protected void doRemoveAttribute(final String name)
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			httpSession.removeAttribute(sessionAttributePrefix + name);
+			super.update();
 		}
 	}
 
@@ -294,8 +293,9 @@ public class WebSession extends Session
 	{
 		if (sessionAttributePrefix == null)
 		{
-			throw new NullPointerException("argument sessionAttributePrefix must be not null");
+			throw new IllegalArgumentException("Argument sessionAttributePrefix must be not null");
 		}
+		
 		// Set session attribute name
 		this.sessionAttributePrefix = sessionAttributePrefix;
 
@@ -306,14 +306,11 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Get the http session.
+	 * Create the http session.
 	 * 
-	 * @param create
-	 *            whether the session should be created if null
-	 * 
-	 * @return the http session or null (if it didn't exist and create is false)
+	 * @return The http session
 	 */
-	private final HttpSession getHttpSession(boolean create)
+	private final HttpSession createHttpSession()
 	{
 		RequestCycle requestCycle = getRequestCycle();
 		if (requestCycle != null)

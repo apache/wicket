@@ -227,13 +227,13 @@ public class BookmarkablePageRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
 	 */
-	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	public Object getLock(RequestCycle requestCycle)
 	{
 		// we need to lock when we are not redirecting, i.e. we are
 		// actually rendering the page
-		return !requestCycle.getRedirect();
+		return !requestCycle.getRedirect() ? requestCycle.getSession() : null;
 	}
 
 	/**

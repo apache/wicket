@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,15 +52,10 @@ public interface IRequestTarget
 	void cleanUp(RequestCycle requestCycle);
 
 	/**
-	 * Whether a request target needs to be synchronized on the session.  If 
-	 * a {@link wicket.IRequestTarget} implements this interface, the event
-	 * handling and response steps of the request cycle processing will be
-	 * synchronized on the session object.
-	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * 
-	 * @return whether this target should be synchronized on the user's session
+	 * @return Any lock to be used to synchronize this target.
 	 */
-	boolean synchronizeOnSession(RequestCycle requestCycle);
+	Object getLock(RequestCycle requestCycle);
 }

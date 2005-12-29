@@ -166,7 +166,7 @@ public abstract class WebApplication extends Application
 			{
 				throw new WicketRuntimeException("unable to retrieve servlet path");
 			}
-			sessionAttributePrefix = "wicket-" + servletPath + "-";
+			sessionAttributePrefix = "wicket:" + servletPath + ":";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path

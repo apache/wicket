@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.81 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,13 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,14 +117,14 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-	/** Next available page state sequence number */
-	int pageStateSequenceNumber;
-
 	/** Application that this is a session of. */
 	private transient Application application;
 
-	/** session listeners. */
-	private List/* <ISessionListener> */listeners = new ArrayList();
+	/**
+	 * Cached instance of agent info which is typically designated by calling
+	 * {@link RequestCycle#newClientInfo()}.
+	 */
+	private ClientInfo clientInfo;
 
 	/** The converter instance. */
 	private transient IConverter converter;
@@ -136,23 +132,26 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
+	/** Number designating when a page was accessed */
+	short accessSequenceNumber;
+
+	/** session listeners. */
+	private List/* <ISessionListener> */listeners = new ArrayList();
+
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
 
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Maps from name to page map */
-	private final Map pageMapForName = new HashMap(3);
-
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
-	/**
-	 * Cached instance of agent info which is typically designated by calling
-	 * {@link RequestCycle#newClientInfo()}.
-	 */
-	private ClientInfo clientInfo;
+	/** Attribute prefix for page maps stored in the session */
+	private final String pageMapAttributePrefix = "m:";
+
+	/** Prefix for attributes holding IPageSources */
+	final String pageSourceAttributePrefix = "p:";
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -216,7 +215,21 @@ public abstract class Session implements Serializable
 		setLocale(application.getSettings().getDefaultLocale());
 
 		// Create default page map
-		newPageMap(PageMap.defaultName);
+		newPageMap(null);
+	}
+
+	/**
+	 * Adds a session attribute listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
+	public void add(ISessionAttributeListener listener)
+	{
+		synchronized (listeners)
+		{
+			listeners.add(listener);
+		}
 	}
 
 	/**
@@ -238,6 +251,27 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Gets the client info object for this session. This method lazily gets the
+	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
+	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
+	 * the info object based on the current request when no client info object
+	 * was set yet, and then caches the returned object; we can expect the
+	 * client to stay the same for the whole session, and implementations of
+	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
+	 * 
+	 * 
+	 * @return the client info object based on this request
+	 */
+	public ClientInfo getClientInfo()
+	{
+		if (clientInfo == null)
+		{
+			this.clientInfo = getRequestCycle().newClientInfo();
+		}
+		return clientInfo;
+	}
+
+	/**
 	 * Gets the converter instance.
 	 * 
 	 * @return the converter
@@ -250,6 +284,18 @@ public abstract class Session implements Serializable
 			converter = getApplication().getConverterFactory().newConverter(getLocale());
 		}
 		return converter;
+	}
+
+	/**
+	 * Gets the unique id for this session (or a constant defining this is
+	 * constant. By default returns the hasCode of this object as a String.
+	 * 
+	 * @return the unique id for this session (or a constant defining this is
+	 *         constant
+	 */
+	public String getId()
+	{
+		return String.valueOf(hashCode());
 	}
 
 	/**
@@ -284,7 +330,8 @@ public abstract class Session implements Serializable
 		}
 
 		// Retrieve the page for the first path component from this session
-		Page page = getPage(pageMapName, Strings.firstPathComponent(path, COMPONENT_PATH_SEPERATOR));
+		Page page = getPage(pageMapName, Integer.parseInt(Strings.firstPathComponent(path,
+				COMPONENT_PATH_SEPERATOR)));
 
 		// Is there a page with the right id at all?
 		if (page != null)
@@ -344,11 +391,7 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap getPageMap(String pageMapName)
 	{
-		if (pageMapName == null)
-		{
-			pageMapName = PageMap.defaultName;
-		}
-		return (PageMap)pageMapForName.get(pageMapName);
+		return (PageMap)getAttribute(attributeForPageMapName(pageMapName));
 	}
 
 	/**
@@ -372,42 +415,27 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Set the session for each PageMap
+	 */
+	public final void init()
+	{
+		visitPageMaps(new IVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				}
+				pageMap.setSession(Session.this);
+			}
+		});
+	}
+
+	/**
 	 * Invalidates this session.
 	 */
 	public abstract void invalidate();
-
-	/**
-	 * Gets the client info object for this session. This method lazily gets the
-	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
-	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
-	 * the info object based on the current request when no client info object
-	 * was set yet, and then caches the returned object; we can expect the
-	 * client to stay the same for the whole session, and implementations of
-	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
-	 * 
-	 * 
-	 * @return the client info object based on this request
-	 */
-	public ClientInfo getClientInfo()
-	{
-		if (clientInfo == null)
-		{
-			this.clientInfo = getRequestCycle().newClientInfo();
-		}
-		return clientInfo;
-	}
-
-	/**
-	 * Sets the client info object for this session. This will only work when
-	 * {@link #getClientInfo()} is not overriden.
-	 * 
-	 * @param clientInfo
-	 *            the client info object
-	 */
-	public final void setClientInfo(ClientInfo clientInfo)
-	{
-		this.clientInfo = clientInfo;
-	}
 
 	/**
 	 * Creates a new page map with a given name
@@ -419,7 +447,7 @@ public abstract class Session implements Serializable
 	public final PageMap newPageMap(final String name)
 	{
 		final PageMap pageMap = new PageMap(name, this);
-		pageMapForName.put(name, pageMap);
+		setAttribute(attributeForPageMapName(name), pageMap);
 		return pageMap;
 	}
 
@@ -439,6 +467,24 @@ public abstract class Session implements Serializable
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
+
+	/**
+	 * Removes a session attribute listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
+	public void remove(ISessionAttributeListener listener)
+	{
+		synchronized (listeners)
+		{
+			if (!listeners.remove(listener))
+			{
+				throw new WicketRuntimeException("listener " + listener + " was not registered");
+			}
+		}
+	}
+
 
 	/**
 	 * Removes the given page from the cache. This method may be useful if you
@@ -468,7 +514,6 @@ public abstract class Session implements Serializable
 		});
 	}
 
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -480,6 +525,18 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
+	}
+
+	/**
+	 * Sets the client info object for this session. This will only work when
+	 * {@link #getClientInfo()} is not overriden.
+	 * 
+	 * @param clientInfo
+	 *            the client info object
+	 */
+	public final void setClientInfo(ClientInfo clientInfo)
+	{
+		this.clientInfo = clientInfo;
 	}
 
 	/**
@@ -508,151 +565,20 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Updates the session, e.g. for replication purposes.
-	 */
-	protected void update()
-	{
-		// If state is dirty
-		if (dirty)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("updateCluster(): Session is dirty.  Replicating.");
-			}
-
-			// State is no longer dirty
-			this.dirty = false;
-
-			// Set attribute.
-			setAttribute(SESSION_ATTRIBUTE_NAME, this);
-		}
-		else
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("updateCluster(): Session not dirty.");
-			}
-		}
-
-		// Go through all pages in all page maps, replicating any dirty pages
-		visitPageMaps(new IVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				pageMap.visitPages(new PageMap.IVisitor()
-				{
-					public void page(Page page)
-					{
-						if (page.isDirty())
-						{
-							page.setDirty(false);
-							replicate(page);
-						}
-					}
-				});
-			}
-		});
-	}
-
-	/**
-	 * Updates this session using changed state information that may have been
-	 * replicated to this node on a cluster.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @deprecated to be replaced by a pull way of working. The whole point of
-	 *             this method is that it should recreate any pages that might
-	 *             have come from a cluster. The problem with this is that it is
-	 *             inefficient compared to just pulling from the session when
-	 *             you need it. Furthermore if you use a smart clustering tech
-	 *             that only sends data when you need it, this implementation is
-	 *             a problem as it simply iterates all session attributes thus
-	 *             triggering such a mechanism to send all data. Bad, bad. We
-	 *             should rewrite this stuff to just pull a {@link PageState}
-	 *             object when we need it. If we combine this with always
-	 *             storing PageState objects instead of as currently is the case
-	 *             the page instances, we get better abstraction/ more
-	 *             flexibility too, and made clustering transparent (it /is/
-	 *             after all something your application server should
-	 *             transparently do for you).
-	 */
-	public final void updateSession()
-	{
-		// Go through each page map in the session
-		if (log.isDebugEnabled())
-		{
-			log.debug("updateSession(): Updating session.");
-		}
-		visitPageMaps(new IVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
-				}
-				pageMap.setSession(Session.this);
-			}
-		});
-
-		// Get PageStates from session attributes
-		if (log.isDebugEnabled())
-		{
-			log.debug("updateSession(): Getting PageState attributes.");
-		}
-		final List pageStates = getPageStateAttributes();
-
-		// Sort page states so that they can be added in reverse order of
-		// creation. This ensures that any newer pages will bump out older ones.
-		sortBySequenceNumber(pageStates);
-
-		// Adds pages to session
-		addPages(pageStates);
-		if (log.isDebugEnabled())
-		{
-			log.debug("updateSession(): Done updating session.");
-		}
-	}
-
-	/**
-	 * Adds a session attribute listener.
+	 * The page will be 'touched' in the session. If it wasn't added yet to the
+	 * pagemap, it will be added to the page map else it will set this page to
+	 * the front.
 	 * 
-	 * @param listener
-	 *            the listener
-	 */
-	public void add(ISessionAttributeListener listener)
-	{
-		synchronized (listeners)
-		{
-			listeners.add(listener);
-		}
-	}
-
-	/**
-	 * Removes a session attribute listener.
+	 * If another page was removed because of this it will be cleaned up.
 	 * 
-	 * @param listener
-	 *            the listener
+	 * @param page
 	 */
-	public void remove(ISessionAttributeListener listener)
+	public void touch(Page page)
 	{
-		synchronized (listeners)
-		{
-			if (!listeners.remove(listener))
-			{
-				throw new WicketRuntimeException("listener " + listener + " was not registered");
-			}
-		}
-	}
-
-	/**
-	 * Gets the unique id for this session (or a constant defining this is
-	 * constant. By default returns the hasCode of this object as a String.
-	 * 
-	 * @return the unique id for this session (or a constant defining this is
-	 *         constant
-	 */
-	public String getId()
-	{
-		return String.valueOf(hashCode());
+		// Touch the page in its pagemap.
+		page.getPageMap().put(page);
 	}
 
 	/**
@@ -670,28 +596,110 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * @return List of attributes for this session
+	 * Marks session state as dirty
 	 */
-	protected abstract List getAttributeNames();
-
-	/**
-	 * @return Request cycle factory for this kind of session.
-	 */
-	protected abstract IRequestCycleFactory getRequestCycleFactory();
-
-	/**
-	 * Gets a PageState record for a given Page. The default, inefficient
-	 * implementation is to simply wrap the entire Page object. More intimate
-	 * knowledge of a Page, however, may allow significant compression of state
-	 * information.
-	 * 
-	 * @param page
-	 *            The page
-	 * @return The page state record
-	 */
-	protected PageState newPageState(final Page page)
+	protected final void dirty()
 	{
-		return page.newPageState();
+		this.dirty = true;
+	}
+
+	/**
+	 * Internal implementation of {@link #getAttribute(String)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @return the attribute value
+	 * @see #getAttribute(String)
+	 */
+	protected abstract Object doGetAttribute(String name);
+
+	/**
+	 * Internal implementation of {@link #removeAttribute(String)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @see #removeAttribute(String)
+	 */
+	protected abstract void doRemoveAttribute(String name);
+
+	/**
+	 * Internal implementation of {@link #setAttribute(String, Object)}.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 * @see #setAttribute(String, Object)
+	 */
+	protected abstract void doSetAttribute(String name, Object value);
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeAdded(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 */
+	protected final void fireAttributeAdded(String name, Object value)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, value);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeAdded(evt);
+			}
+		}
+	}
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeRemoved(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 */
+	protected final void fireAttributeRemoved(String name)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeRemoved(evt);
+			}
+		}
+	}
+
+	/**
+	 * Calls
+	 * {@link ISessionAttributeListener#attributeReplaced(SessionAttributeEvent)}
+	 * on all registered session listeners.
+	 * 
+	 * @param name
+	 *            the attribute name
+	 * @param value
+	 *            the attribute value
+	 * @param oldValue
+	 *            the old attribute value
+	 */
+	protected final void fireAttributeReplaced(String name, Object value, Object oldValue)
+	{
+		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, oldValue);
+		synchronized (listeners)
+		{
+			for (Iterator i = listeners.iterator(); i.hasNext();)
+			{
+				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
+				l.attributeReplaced(evt);
+			}
+		}
 	}
 
 	/**
@@ -704,6 +712,49 @@ public abstract class Session implements Serializable
 	protected final Object getAttribute(final String name)
 	{
 		return doGetAttribute(name);
+	}
+
+	/**
+	 * @return List of attributes for this session
+	 */
+	protected abstract List getAttributeNames();
+
+	/**
+	 * Returns the registered listeners.
+	 * 
+	 * @return the list with listeners, never null
+	 */
+	protected final List getListeners()
+	{
+		return listeners;
+	}
+
+	/**
+	 * @return Request cycle factory for this kind of session.
+	 */
+	protected abstract IRequestCycleFactory getRequestCycleFactory();
+
+	/**
+	 * Removes the attribute with the given name.
+	 * 
+	 * @param name
+	 *            the name of the attribute to remove
+	 */
+	protected final void removeAttribute(String name)
+	{
+		// get the old value if any
+		Object oldValue = getAttribute(name);
+
+		if (oldValue != null)
+		{
+			fireAttributeRemoved(name);
+
+			doRemoveAttribute(name);
+		}
+		else
+		{
+			log.warn("attribute " + name + " could not be removed as it didn't exist in " + this);
+		}
 	}
 
 	/**
@@ -750,149 +801,70 @@ public abstract class Session implements Serializable
 				throw new RuntimeException("Internal error cloning object", e);
 			}
 			long t2 = System.currentTimeMillis();
-			log.debug("attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
+			log.debug("Attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
 					+ Bytes.bytes(serialized.length));
 		}
 	}
 
 	/**
-	 * Removes the attribute with the given name.
-	 * 
-	 * @param name
-	 *            the name of the attribute to remove
+	 * Updates the session, e.g. for replication purposes.
 	 */
-	protected final void removeAttribute(String name)
+	protected void update()
 	{
-		// get the old value if any
-		Object oldValue = getAttribute(name);
-
-		if (oldValue != null)
+		// If state is dirty
+		if (dirty)
 		{
-			fireAttributeRemoved(name);
+			if (log.isDebugEnabled())
+			{
+				log.debug("updateCluster(): Session is dirty.  Replicating.");
+			}
 
-			doRemoveAttribute(name);
+			// State is no longer dirty
+			this.dirty = false;
+
+			// Set attribute.
+			setAttribute(SESSION_ATTRIBUTE_NAME, this);
 		}
 		else
 		{
-			log.warn("attribute " + name + " could not be removed as it didn't exist in " + this);
-		}
-	}
-
-	/**
-	 * Internal implementation of {@link #setAttribute(String, Object)}.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 * @see #setAttribute(String, Object)
-	 */
-	protected abstract void doSetAttribute(String name, Object value);
-
-	/**
-	 * Internal implementation of {@link #getAttribute(String)}.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @return the attribute value
-	 * @see #getAttribute(String)
-	 */
-	protected abstract Object doGetAttribute(String name);
-
-	/**
-	 * Internal implementation of {@link #removeAttribute(String)}.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @see #removeAttribute(String)
-	 */
-	protected abstract void doRemoveAttribute(String name);
-
-	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeAdded(SessionAttributeEvent)}
-	 * on all registered session listeners.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 */
-	protected final void fireAttributeAdded(String name, Object value)
-	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, value);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
+			if (log.isDebugEnabled())
 			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeAdded(evt);
+				log.debug("updateCluster(): Session not dirty.");
+			}
+		}
+
+		// Go through all page sources, replicating any dirty pages
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageSourceAttributePrefix))
+			{
+				// Get next page source
+				IPageSource pageSource = (IPageSource)getAttribute(attribute);
+
+				// If page source is dirty
+				if (pageSource.isDirty())
+				{
+					// Make it undirty
+					pageSource.setDirty(false);
+
+					// Set session attribute to replicate the page
+					setAttribute(attribute, pageSource);
+				}
 			}
 		}
 	}
 
 	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeReplaced(SessionAttributeEvent)}
-	 * on all registered session listeners.
+	 * Indicates an access to a given page source
 	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 * @param oldValue
-	 *            the old attribute value
+	 * @param pageSource
+	 *            The page source
 	 */
-	protected final void fireAttributeReplaced(String name, Object value, Object oldValue)
+	final void access(IPageSource pageSource)
 	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, oldValue);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
-			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeReplaced(evt);
-			}
-		}
-	}
-
-	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeRemoved(SessionAttributeEvent)}
-	 * on all registered session listeners.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 */
-	protected final void fireAttributeRemoved(String name)
-	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
-			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeRemoved(evt);
-			}
-		}
-	}
-
-	/**
-	 * Returns the registered listeners.
-	 * 
-	 * @return the list with listeners, never null
-	 */
-	protected final List getListeners()
-	{
-		return listeners;
-	}
-
-	/**
-	 * Marks session state as dirty
-	 */
-	protected final void dirty()
-	{
-		this.dirty = true;
+		accessSequenceNumber++;
+		pageSource.setAccessSequenceNumber(accessSequenceNumber);
 	}
 
 	/**
@@ -904,19 +876,10 @@ public abstract class Session implements Serializable
 	 *            Page id
 	 * @return Page with the given id
 	 */
-	final Page getPage(final String pageMapName, final String id)
+	final Page getPage(final String pageMapName, final int id)
 	{
 		// This call will always mark the Page dirty
 		return getPageMap(pageMapName).get(id);
-	}
-
-	/**
-	 * @return The next access number
-	 */
-	final int nextPageStateSequenceNumber()
-	{
-		dirty();
-		return this.pageStateSequenceNumber++;
 	}
 
 	/**
@@ -925,7 +888,7 @@ public abstract class Session implements Serializable
 	 */
 	final void removePageMap(final PageMap pageMap)
 	{
-		pageMapForName.remove(pageMap);
+		removeAttribute(attributeForPageMapName(pageMap.getName()));
 	}
 
 	/**
@@ -934,150 +897,23 @@ public abstract class Session implements Serializable
 	 */
 	final void visitPageMaps(final IVisitor visitor)
 	{
-		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
-		{
-			visitor.pageMap((PageMap)iterator.next());
-		}
-	}
-
-	/**
-	 * @param pageStates
-	 */
-	private final void addPages(final List pageStates)
-	{
-		// Add page states as need be
-		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
-		{
-			// Get next attribute name
-			final PageState pageState = (PageState)iterator.next();
-
-			// If PageState has not been added to the session
-			if (!pageState.addedToSession)
-			{
-				// Get page from page state
-				final Page page = pageState.getPage();
-				if (log.isDebugEnabled())
-				{
-					log.debug("addPages(): Adding replicated page state " + pageState
-							+ ", which produced page " + page);
-				}
-
-				// Add to page map specified in page state info
-				attach(page);
-				Page removed = getPageMap(pageState.pageMapName).put(page);
-				if (removed != null)
-				{
-					removeAttribute(removed.getId());
-				}
-
-				// Page has been added to session now
-				pageState.addedToSession = true;
-			}
-		}
-	}
-
-	/**
-	 * @param page
-	 *            The page to traverse
-	 */
-	private final void attach(Page page)
-	{
-		page.visitChildren(new Component.IVisitor()
-		{
-			public Object component(Component component)
-			{
-				component.onSessionAttach();
-				return Component.IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
-	 * @return List of PageState values set as session attributes
-	 */
-	private final List getPageStateAttributes()
-	{
-		// PageStates to add
-		final List pageStates = new ArrayList();
-
-		// Copy any changed pages into our (transient) Session
 		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			// Get attribute value
-			final Object value = getAttribute((String)iterator.next());
-			if (value instanceof PageState)
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				pageStates.add(value);
+				visitor.pageMap((PageMap)getAttribute(attribute));
 			}
 		}
-		return pageStates;
 	}
 
 	/**
-	 * Called when an PageState record should be added to the replicated state
-	 * 
-	 * @param page
-	 *            The page to replicate
+	 * @param pageMapName
+	 *            Name of page map
+	 * @return Session attribute holding page map
 	 */
-	private final void replicate(final Page page)
+	private final String attributeForPageMapName(final String pageMapName)
 	{
-		// Create PageState for page
-		final PageState pageState = newPageState(page);
-
-		pageState.pageMapName = page.getPageMap().getName();
-
-		// For this session the page is in the pagemap.
-		pageState.addedToSession = true;
-
-		// Set HttpSession attribute for new PageState
-		setAttribute(page.getId(), pageState);
-	}
-
-	/**
-	 * @param pageStates
-	 */
-	private final void sortBySequenceNumber(final List pageStates)
-	{
-		// Sort in ascending order by access number so that pages which have
-		// a higher access number (which means they were accessed more recently)
-		// are added /last/.
-		Collections.sort(pageStates, new Comparator()
-		{
-			public int compare(Object object1, Object object2)
-			{
-				int sequenceNumber1 = ((PageState)object1).sequenceNumber;
-				int sequenceNumber2 = ((PageState)object2).sequenceNumber;
-				if (sequenceNumber1 < sequenceNumber2)
-				{
-					return -1;
-				}
-				if (sequenceNumber1 > sequenceNumber2)
-				{
-					return 1;
-				}
-				return 0;
-			}
-		});
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * The page will be 'touched' in the session. If it wasn't added yet to the
-	 * pagemap, it will be added to the page map else it will set this page to
-	 * the front.
-	 * 
-	 * If another page was removed because of this it will be cleaned up.
-	 * 
-	 * @param page
-	 */
-	public void touch(Page page)
-	{
-		// touch the page in its pagemap.
-		Page removedPage = page.getPageMap().put(page);
-		if (removedPage != null)
-		{
-			removeAttribute(removedPage.getId());
-		}
+		return pageMapAttributePrefix + pageMapName;
 	}
 }

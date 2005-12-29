@@ -120,11 +120,11 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#synchronizeOnSession(RequestCycle)
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
 	 */
-	public boolean synchronizeOnSession(RequestCycle requestCycle)
+	public Object getLock(RequestCycle requestCycle)
 	{
-		return false;
+		return null;
 	}
 
 	/**

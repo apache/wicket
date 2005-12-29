@@ -20,34 +20,16 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * A record of state for a Page which can be used to reproduce the original Page
- * at a later time when getPage() is called.
+ * Given a page map, determines which page to evict.
  * 
  * @author Jonathan Locke
  */
-public abstract class PageState implements Serializable
+public interface IPageMapEvictionStrategy extends Serializable
 {
-	// Access number
-	int sequenceNumber = Session.get().nextPageStateSequenceNumber();
-
-	// This value will be true when the page is added and false on
-	// whatever server this object is replicated to
-	transient boolean addedToSession;
-
-	// Name of PageMap where this PageState belongs
-	String pageMapName;
-
 	/**
-	 * @return The Page.
+	 * @param pageMap
+	 *            The page map to evict from
+	 * @return The PageSource to evict
 	 */
-	public abstract Page getPage();
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[PageState pageMapName = " + pageMapName + ", sequenceNumber = " + sequenceNumber
-				+ " addedToSession = " + addedToSession + "]";
-	}
+	public IPageSource evict(PageMap pageMap);
 }
