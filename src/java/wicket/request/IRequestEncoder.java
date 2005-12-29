@@ -37,7 +37,7 @@ public interface IRequestEncoder extends IRequestTargetPathMounter
 	 * for it.
 	 * 
 	 * @param request
-	 *            the incomming request
+	 *            the incoming request
 	 * @return a request parameters object that corresponds to the request
 	 */
 	RequestParameters decode(Request request);
