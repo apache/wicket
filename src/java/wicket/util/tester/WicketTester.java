@@ -34,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.WicketRuntimeException;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
@@ -48,7 +47,6 @@ import wicket.markup.html.link.PageLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
-import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.lang.Classes;
 
 /**
@@ -679,7 +677,9 @@ public class WicketTester extends MockWebApplication
 
 	/**
 	 * assert previous rendered page expired
-	 */
+	 *
+	 * TODO This test is no longer valid because it depends on an implementation detail that just changed!
+	 * 
 	public void assertExpirePreviousPage()
 	{
 		PageMap pageMap = getWicketSession().getPageMap(null);
@@ -706,6 +706,7 @@ public class WicketTester extends MockWebApplication
 			throw convertoUnexpect(e);
 		}
 	}
+	*/
 
 	/**
 	 * dump the source of last rendered page

@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IResourceListener;
 import wicket.ResourceReference;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -116,22 +115,5 @@ public class ImageButton extends Button implements IResourceListener
 		checkComponentTagAttribute(tag, "type", "image");
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
-	}
-	
-	/**
-	 * @see wicket.Component#onSessionAttach()
-	 */
-	protected void onSessionAttach()
-	{
-		try
-		{
-			localizedImageResource.bind();
-		} 
-		catch(WicketRuntimeException wre)
-		{
-			// If this exceptions happens here then the locale is maybe changed
-			// and there is no image for that locale you are in now.
-			log.error("Localized Image Resource not found for the current locale " + getLocale(), wre);
-		}
 	}
 }

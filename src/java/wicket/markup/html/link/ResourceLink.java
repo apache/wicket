@@ -84,13 +84,6 @@ public class ResourceLink extends Link implements IResourceListener
 	public void onClick()
 	{
 	}
-
-	/**
-	 * @see wicket.Component#onSessionAttach()
-	 */
-	protected void onSessionAttach()
-	{
-	}
 	
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()

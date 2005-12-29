@@ -18,11 +18,12 @@
 package wicket;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.IRequestEncoder;
-import wicket.util.collections.MostRecentlyUsedMap;
 
 /**
  * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
@@ -35,8 +36,8 @@ public final class PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Default page map name */
-	public static final String defaultName = "main";
+	/** The eviction strategy for this page map */
+	private IPageMapEvictionStrategy evictionStrategy = new LeastRecentlyAccessedEvictionStrategy();
 
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
@@ -44,27 +45,27 @@ public final class PageMap implements Serializable
 	/** Name of this page map */
 	private final String name;
 
-	/** Next available page identifier. */
+	/** Next available page identifier in this page map. */
 	private int pageId = 0;
-
-	/** The still-live pages for this user session. */
-	private transient MostRecentlyUsedMap pages;
 
 	/** The session where this PageMap resides */
 	private transient Session session;
 
+	/** Number of pages in the map */
+	private int size = 0;
+
 	/**
-	 * Visitor interface for visiting pages
+	 * Visitor interface for visiting page sources in this map
 	 * 
 	 * @author Jonathan Locke
 	 */
 	static interface IVisitor
 	{
 		/**
-		 * @param page
-		 *            The page
+		 * @param pageSource
+		 *            The page source
 		 */
-		public void page(final Page page);
+		public void pageSource(final IPageSource pageSource);
 	}
 
 	/**
@@ -82,6 +83,15 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Gets evictionStrategy.
+	 * @return evictionStrategy
+	 */
+	public final IPageMapEvictionStrategy getEvictionStrategy()
+	{
+		return evictionStrategy;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return Returns the name.
@@ -90,7 +100,15 @@ public final class PageMap implements Serializable
 	{
 		return name;
 	}
-
+	
+	/**
+	 * @return The session that this PageMap is in.
+	 */
+	public final Session getSession()
+	{
+		return session;
+	}
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -98,7 +116,7 @@ public final class PageMap implements Serializable
 	 */
 	public final boolean isDefault()
 	{
-		return name.equals(defaultName);
+		return name == null;
 	}
 
 	/**
@@ -112,12 +130,39 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @return The next id for this pagemap
+	 * Sets evictionStrategy.
+	 * @param evictionStrategy evictionStrategy
 	 */
-	final int nextId()
+	public final void setEvictionStrategy(IPageMapEvictionStrategy evictionStrategy)
 	{
-		session.dirty();
-		return this.pageId++;
+		this.evictionStrategy = evictionStrategy;
+	}
+
+	/**
+	 * @return Number of page sources in the page map
+	 */
+	public final int size()
+	{
+		return size;
+	}
+
+	/**
+	 * @param id
+	 *            The page id to create an attribute for
+	 * @return The session attribute for the given page (for replication of
+	 *         state)
+	 */
+	String attributeForId(final int id)
+	{
+		return attributePrefix() + id;
+	}
+	
+	/**
+	 * @return The attribute prefix for this page map
+	 */
+	String attributePrefix()
+	{
+		return session.pageSourceAttributePrefix + name + ":";
 	}
 
 	/**
@@ -145,7 +190,7 @@ public final class PageMap implements Serializable
 			// Reset interception URL
 			interceptContinuationURL = null;
 
-			// TODO why this?
+			// Force session to replicate page maps
 			session.dirty();
 			return true;
 		}
@@ -153,30 +198,72 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Retrieves page with given id.
+	 * 
 	 * @param id
-	 *            The identifier
+	 *            The page identifier
 	 * @return Any page having the given id
 	 */
-	final Page get(final String id)
+	final Page get(final int id)
 	{
-		final Page page = (Page)getPages().get(id);
-		if (page != null)
-		{
+		final IPageSource pageSource = (IPageSource)session.getAttribute(attributeForId(id));
+		if (pageSource != null)
+		{	
+			// Page source has been accessed
+			session.access(pageSource);
+
+			// Get page as dirty
+			final Page page = pageSource.getPage();
 			page.setDirty(true);
+			return page;
 		}
-		return page;
+		return null;
+	}
+	
+	/**
+	 * @return List of page sources in this page map
+	 */
+	final List getPageSources()
+	{
+		final List attributes = session.getAttributeNames();
+		final List list = new ArrayList();
+		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(attributePrefix()))
+			{
+				list.add((IPageSource)session.getAttribute(attribute));
+			}
+		}
+		return list;
 	}
 
 	/**
-	 * @param page
-	 *            The page to put into this map
-	 * @return Any page that was removed
+	 * @return The next id for this pagemap
 	 */
-	final Page put(final Page page)
+	final int nextId()
 	{
-		MostRecentlyUsedMap pages = getPages();
-		pages.put(page.getId(), page);
-		return (Page)pages.getRemovedValue();
+		session.dirty();
+		return this.pageId++;
+	}
+
+	/**
+	 * @param pageSource
+	 *            The page source to put into this map
+	 * @return Any page source that was removed by the eviction strategy for
+	 *         this page map
+	 */
+	final synchronized IPageSource put(final IPageSource pageSource)
+	{
+		// Page source has been accessed
+		session.access(pageSource);
+
+		// Store page source in session
+		session.setAttribute(attributeForId(pageSource.getNumericId()), pageSource);
+		size++;
+
+		// Return any evicted page source
+		return evictionStrategy.evict(this);
 	}
 
 	/**
@@ -205,20 +292,30 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param page
-	 *            The page to remove
+	 * @param pageSource
+	 *            The page source to remove
+	 * @return The removed pageSource
 	 */
-	final void remove(final Page page)
+	final IPageSource remove(final IPageSource pageSource)
 	{
-		getPages().remove(page.getId());
+		// Remove page source from session
+		session.removeAttribute(attributeForId(pageSource.getNumericId()));
+		size--;
+		return pageSource;
 	}
-
+	
 	/**
 	 * Removes all pages from this map
 	 */
 	final void removeAll()
 	{
-		getPages().clear();
+		visitPageSources(new IVisitor()
+		{
+			public void pageSource(IPageSource pageSource)
+			{
+				remove(pageSource);
+			}
+		});
 	}
 
 	/**
@@ -234,27 +331,16 @@ public final class PageMap implements Serializable
 	 * @param visitor
 	 *            The visitor to call at each Page in this PageMap.
 	 */
-	final void visitPages(final IVisitor visitor)
+	final void visitPageSources(final IVisitor visitor)
 	{
-		if (pages != null)
+		final List attributes = session.getAttributeNames();
+		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
 		{
-			for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(attributePrefix()))
 			{
-				visitor.page((Page)iterator.next());
+				visitor.pageSource((IPageSource)session.getAttribute(attribute));
 			}
 		}
-	}
-
-	/**
-	 * @return MRU map of pages
-	 */
-	private final MostRecentlyUsedMap getPages()
-	{
-		if (this.pages == null)
-		{
-			this.pages = new MostRecentlyUsedMap(session.getApplication().getSettings()
-					.getMaxPages());
-		}
-		return this.pages;
 	}
 }

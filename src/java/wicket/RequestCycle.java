@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.101 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -173,23 +173,68 @@ import wicket.util.lang.Classes;
  */
 public abstract class RequestCycle
 {
+	/**
+	 * Checking access after resolving.
+	 */
+	private static final int CHECK_ACCESS = 4;
+
+	/**
+	 * Cleaning up after responding to a request.
+	 */
+	private static final int CLEANUP_REQUEST = 8;
+
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
-	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
+	/**
+	 * Decoding request parameters into a strongly typed
+	 * {@link RequestParameters} object.
+	 */
+	private static final int DECODE_PARAMETERS = 2;
+
+	/**
+	 * Request cycle processing is done.
+	 */
+	private static final int DONE = 9;
+
+	/**
+	 * Responding to an uncaught exception.
+	 */
+	private static final int HANDLE_EXCEPTION = 7;
 
 	/** Map from request interface Class to Method. */
 	private static final Map listenerRequestInterfaceMethods = new HashMap();
 
-	/** The current stage of event processing. */
-	private int currentStep = NOT_STARTED;
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
+
+	/**
+	 * No processing has been done.
+	 */
+	private static final int NOT_STARTED = 0;
+
+	/**
+	 * Starting the actual request processing.
+	 */
+	private static final int PREPARE_REQUEST = 1;
+
+	/**
+	 * Dispatching and handling of events.
+	 */
+	private static final int PROCESS_EVENTS = 5;
+
+	/**
+	 * Resolving the {@link RequestParameters} object to a request target.
+	 */
+	private static final int RESOLVE_TARGET = 3;
+
+	/**
+	 * Responding using the currently set {@link IRequestTarget}.
+	 */
+	private static final int RESPOND = 6;
 
 	/** The application object. */
-	protected final Application application;
-
-	/** The session object. */
-	protected final Session session;
+	protected final Application application;;
 
 	/** The current request. */
 	protected Request request;
@@ -197,15 +242,14 @@ public abstract class RequestCycle
 	/** The current response. */
 	protected Response response;
 
+	/** The session object. */
+	protected final Session session;
+
+	/** The current stage of event processing. */
+	private int currentStep = NOT_STARTED;
+
 	/** The original response the request cycle was created with. */
 	private final Response originalResponse;
-
-	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO use a more efficient implementation, maybe with a default size of 3
-	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
-
-	/** the current request parameters (if any). */
-	private transient RequestParameters requestParameters;
 
 	/**
 	 * True if request should be redirected to the resulting page instead of
@@ -213,11 +257,18 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** True if the session should be updated (for clusterf purposes). */
-	private boolean updateSession;
+	/** the current request parameters (if any). */
+	private transient RequestParameters requestParameters;
+
+	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
+	// TODO use a more efficient implementation, maybe with a default size of 3
+	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/** the time that this request cycle object was created. */
-	private final long startTime = System.currentTimeMillis();;
+	private final long startTime = System.currentTimeMillis();
+
+	/** True if the session should be updated (for clusterf purposes). */
+	private boolean updateSession;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -293,6 +344,29 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the application object.
+	 * 
+	 * @return Application interface
+	 */
+	public final Application getApplication()
+	{
+		return application;
+	}
+
+	/**
+	 * Gets the new agent info object for this session. This method calls
+	 * {@link Session#getClientInfo()}, which may or may not cache the client
+	 * info object and typically calls {@link #newClientInfo()} when no client
+	 * info object was cached.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	public final ClientInfo getClientInfo()
+	{
+		return getSession().getClientInfo();
+	}
+
+	/**
 	 * Get the orignal respone the request was create with. Access may be
 	 * necessary with the response has temporarily being replaced but your
 	 * components requires access to lets say the cookie methods of a
@@ -303,16 +377,6 @@ public abstract class RequestCycle
 	public final Response getOriginalResponse()
 	{
 		return this.originalResponse;
-	}
-
-	/**
-	 * Gets the application object.
-	 * 
-	 * @return Application interface
-	 */
-	public final Application getApplication()
-	{
-		return application;
 	}
 
 	/**
@@ -336,6 +400,36 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the processor for delegated request cycle handling.
+	 * 
+	 * @return the processor for delegated request cycle handling
+	 */
+	public abstract IRequestCycleProcessor getRequestCycleProcessor();
+
+	/**
+	 * Looks up an request interface method by name.
+	 * 
+	 * @param interfaceName
+	 *            The interface name
+	 * @return The method, null of nothing is found
+	 * 
+	 */
+	public final Method getRequestInterfaceMethod(final String interfaceName)
+	{
+		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
+	}
+
+	/**
+	 * Gets the current request target. May be null.
+	 * 
+	 * @return the current request target, null if none was set yet.
+	 */
+	public final IRequestTarget getRequestTarget()
+	{
+		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
+	}
+
+	/**
 	 * Gets the response.
 	 * 
 	 * @return Response object
@@ -346,6 +440,39 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the page that is to be rendered for this request in case the last
+	 * set request target is of type {@link PageRequestTarget}.
+	 * 
+	 * @return the page or null
+	 */
+	public final Page getResponsePage()
+	{
+		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		if (target != null && (target instanceof PageRequestTarget))
+		{
+			return ((IPageRequestTarget)target).getPage();
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the page class that is to be instantiated and rendered for this
+	 * request in case the last set request target is of type
+	 * {@link BookmarkablePageRequestTarget}.
+	 * 
+	 * @return the page class or null
+	 */
+	public final Class getResponsePageClass()
+	{
+		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
+		{
+			return ((IBookmarkablePageRequestTarget)target).getPageClass();
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
@@ -353,6 +480,62 @@ public abstract class RequestCycle
 	public final Session getSession()
 	{
 		return session;
+	}
+
+	/**
+	 * @return The start time for this request
+	 */
+	public final long getStartTime()
+	{
+		return startTime;
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception. This is called by
+	 * {@link wicket.request.compound.DefaultExceptionResponseStrategy}, hence
+	 * if that strategy is replaced by another one, there is no guarantee this
+	 * method is called.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	public Page onRuntimeException(Page page, RuntimeException e)
+	{
+		return null;
+	}
+
+	/**
+	 * Redirects browser to the given page. NOTE: Usually, you should never call
+	 * this method directly, but work with setResponsePage instead. This method
+	 * is part of Wicket's internal behaviour and should only be used when you
+	 * want to circumvent the normal framework behaviour and issue the redirect
+	 * directly.
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 */
+	public abstract void redirectTo(final Page page);
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Responds to a request.
+	 * 
+	 * @throws ServletException
+	 */
+	public final void request() throws ServletException
+	{
+		checkReuse();
+
+		// set start step
+		currentStep = PREPARE_REQUEST;
+
+		// loop through steps
+		steps();
 	}
 
 	/**
@@ -383,24 +566,6 @@ public abstract class RequestCycle
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Responds to a request.
-	 * 
-	 * @throws ServletException
-	 */
-	public final void request() throws ServletException
-	{
-		checkReuse();
-
-		// set start step
-		currentStep = PREPARE_REQUEST;
-
-		// loop through steps
-		steps();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
 	 * Responds to a request with the request target.
 	 * 
 	 * @param target
@@ -423,6 +588,178 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Sets whether the page for this request should be redirected.
+	 * 
+	 * @param redirect
+	 *            True if the page for this request cycle should be redirected
+	 *            to rather than directly rendered.
+	 */
+	public final void setRedirect(final boolean redirect)
+	{
+		this.redirect = redirect;
+	}
+
+	/**
+	 * @param request
+	 *            The request to set.
+	 */
+	public final void setRequest(Request request)
+	{
+		this.request = request;
+	}
+
+	/**
+	 * Sets the request target as the current.
+	 * 
+	 * @param requestTarget
+	 *            the request target to set as current
+	 */
+	public final void setRequestTarget(IRequestTarget requestTarget)
+	{
+		// TODO this has to be done after the unit tests are fixed
+		// // if we are already responding, we can't change the request target
+		// // as that would either have no effect, or - in case we would set
+		// // the currentStep back to PROCESS_EVENTS, we would have double
+		// // output (and it is not Wicket's intention to work as Servlet
+		// filters)
+		// if (currentStep >= RESPOND)
+		// {
+		// throw new WicketRuntimeException(
+		// "you cannot change the request cycle after rendering has commenced");
+		// }
+
+		if (log.isDebugEnabled())
+		{
+			if (!requestTargets.isEmpty())
+			{
+				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				log.debug("replacing request target " + former + " with " + requestTarget);
+			}
+			else
+			{
+				log.debug("setting request target to " + requestTarget);
+			}
+		}
+
+		// change the current step to a step that will handle the
+		// new target if need be
+		if (currentStep >= RESPOND)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("rewinding request processing to PROCESS_EVENTS");
+			}
+
+			// we are not actually doing event processing again,
+			// but since we are still in the loop here, the next
+			// actual value will be RESPOND again
+			currentStep = PROCESS_EVENTS;
+		}
+		// NOTE: if we are at PROCESS_EVENTS, leave it as we don't
+		// want to re-execute that step again
+
+		requestTargets.push(requestTarget);
+	}
+
+	/**
+	 * Sets response.
+	 * 
+	 * @param response
+	 *            The response
+	 */
+	public final void setResponse(final Response response)
+	{
+		this.response = response;
+	}
+
+	/**
+	 * Convenience method that sets page class as the response. This will
+	 * generate a redirect to the page with a bookmarkable url
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 */
+	public final void setResponsePage(final Class pageClass)
+	{
+		setResponsePage(pageClass, null);
+	}
+
+	/**
+	 * Sets the page class with optionally the page parameters as the render
+	 * target of this request.
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 * @param pageParameters
+	 *            The page parameters that gets appended to the bookmarkable
+	 *            url,
+	 */
+	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
+	{
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
+		setRequestTarget(target);
+	}
+
+	/**
+	 * Sets the page as the render target of this request.
+	 * 
+	 * @param page
+	 *            The page to render as a response
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		IRequestTarget target = new PageRequestTarget(page);
+		setRequestTarget(target);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * @param updateCluster
+	 *            The updateCluster to set.
+	 */
+	public void setUpdateSession(boolean updateCluster)
+	{
+		this.updateSession = updateCluster;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
+				+ Thread.currentThread().getName() + "}";
+	}
+
+	/**
+	 * Creates a new agent info object based on this request. Typically, this
+	 * method is called once by the session and the returned object will be
+	 * cached in the session after that call; we can expect the client to stay
+	 * the same for the whole session, and implementations of
+	 * {@link #newClientInfo()} might be relatively expensive.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	protected abstract ClientInfo newClientInfo();
+
+	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
+	}
+
+	// internal ints for processing status; keep here to be out of sight a bit
+
+	/**
 	 * Checks whether no processing has been done yet and throws an exception
 	 * when a client tries to reuse this instance.
 	 */
@@ -437,33 +774,150 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Loop through the processing steps starting from the current one.
+	 * Clean up the request cycle.
 	 */
-	private final void steps()
+	private void cleanUp()
 	{
-		try
+		// clean up target stack; calling cleanUp has effects like
+		// NOTE: don't remove the targets as testing code might need them
+		// furthermore, the targets will be cg-ed with this cycle too
+		for (Iterator i = requestTargets.iterator(); i.hasNext();)
 		{
-			// get the processor
-			IRequestCycleProcessor processor = safeGetRequestProcessor();
-
-			// TODO catch infinite loops
-			while (currentStep < DONE)
+			IRequestTarget t = (IRequestTarget)i.next();
+			if (t != null)
 			{
-				step(processor);
-				currentStep++;
+				try
+				{
+					t.cleanUp(this);
+				}
+				catch (RuntimeException e)
+				{
+					log.error("there was an error cleaning up target " + t + ".", e);
+				}
 			}
 		}
-		finally
+
+		if (updateSession)
 		{
-			// set step manually to clean up
-			currentStep = CLEANUP_REQUEST;
-
-			// clean up the request
-			cleanUp();
-
-			// set step manually to done
-			currentStep = DONE;
+			// At the end of our response, we need to set any session
+			// attributes that might be required to update the cluster
+			session.update();
 		}
+
+		if (getResponse() instanceof BufferedWebResponse)
+		{
+			((BufferedWebResponse)getResponse()).filter();
+		}
+
+		try
+		{
+			onEndRequest();
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during onEndRequest", e);
+		}
+
+		// Release thread local resources
+		threadDetach();
+	}
+
+	/**
+	 * @param processor
+	 *            The request processor
+	 */
+	private final void doProcessEventsAndRespond(IRequestCycleProcessor processor)
+	{
+		// let the processor handle/ issue any events
+		processor.processEvents(this);
+
+		// set current stage manually this time
+		currentStep = RESPOND;
+
+		// generate a response
+		processor.respond(this);
+	}
+
+	/**
+	 * Gets the request parameters object using the instance of
+	 * {@link IRequestEncoder} of the provided request cycle processor.
+	 * 
+	 * @param processor
+	 *            the request cycle processor
+	 * @return the request parameters object
+	 */
+	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
+	{
+		// get the request encoder to decode the request parameters
+		final IRequestEncoder encoder = processor.getRequestEncoder();
+		if (encoder == null)
+		{
+			throw new WicketRuntimeException("request encoder must be not-null (provided by "
+					+ processor + ")");
+		}
+
+		// decode the request parameters into a strongly typed parameters
+		// object that is to be used by the target resolving
+		final RequestParameters requestParameters = encoder.decode(getRequest());
+
+		if (requestParameters == null)
+		{
+			throw new WicketRuntimeException("request parameters must be not-null (provided by "
+					+ encoder + ")");
+		}
+		return requestParameters;
+	}
+
+	/**
+	 * Prepare the request cycle.
+	 */
+	private void prepare()
+	{
+		// Prepare session for request
+		session.init();
+
+		// Event callback
+		onBeginRequest();
+	}
+
+	/**
+	 * Call the event processing and and respond methods on the request
+	 * processor and apply synchronization if needed.
+	 * 
+	 * @param processor
+	 *            the request processor
+	 */
+	private final void processEventsAndRespond(IRequestCycleProcessor processor)
+	{
+		// Use any synchronization lock provided by the target
+		Object lock = getRequestTarget().getLock(this);
+		if (lock != null)
+		{
+			synchronized (lock)
+			{
+				doProcessEventsAndRespond(processor);
+			}
+		}
+		else
+		{
+			doProcessEventsAndRespond(processor);
+		}
+	}
+
+	/**
+	 * Safe version of {@link #getRequestCycleProcessor()} that throws an
+	 * exception when the processor is null.
+	 * 
+	 * @return the request processor
+	 */
+	private IRequestCycleProcessor safeGetRequestProcessor()
+	{
+		IRequestCycleProcessor processor = getRequestCycleProcessor();
+		if (processor == null)
+		{
+			throw new WicketRuntimeException("request cycle processor must be not-null");
+		}
+		return processor;
 	}
 
 	/**
@@ -583,446 +1037,33 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Prepare the request cycle.
+	 * Loop through the processing steps starting from the current one.
 	 */
-	private void prepare()
+	private final void steps()
 	{
-		// Before the beginning of the response, we need to update
-		// our session based on any information that might be in
-		// session attributes
-		session.updateSession();
-
-		// event callback
-		onBeginRequest();
-	}
-
-	/**
-	 * Clean up the request cycle.
-	 */
-	private void cleanUp()
-	{
-		// clean up target stack; calling cleanUp has effects like
-		// NOTE: don't remove the targets as testing code might need them
-		// furthermore, the targets will be cg-ed with this cycle too
-		for (Iterator i = requestTargets.iterator(); i.hasNext();)
-		{
-			IRequestTarget t = (IRequestTarget)i.next();
-			if (t != null)
-			{
-				try
-				{
-					t.cleanUp(this);
-				}
-				catch (RuntimeException e)
-				{
-					log.error("there was an error cleaning up target " + t + ".", e);
-				}
-			}
-		}
-
-		if (updateSession)
-		{
-			// At the end of our response, we need to set any session
-			// attributes that might be required to update the cluster
-			session.update();
-		}
-
-		if (getResponse() instanceof BufferedWebResponse)
-		{
-			((BufferedWebResponse)getResponse()).filter();
-		}
-
 		try
 		{
-			onEndRequest();
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest", e);
-		}
+			// get the processor
+			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
-		// Release thread local resources
-		threadDetach();
-	}
-
-	/**
-	 * Gets the request parameters object using the instance of
-	 * {@link IRequestEncoder} of the provided request cycle processor.
-	 * 
-	 * @param processor
-	 *            the request cycle processor
-	 * @return the request parameters object
-	 */
-	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
-	{
-		// get the request encoder to decode the request parameters
-		final IRequestEncoder encoder = processor.getRequestEncoder();
-		if (encoder == null)
-		{
-			throw new WicketRuntimeException("request encoder must be not-null (provided by "
-					+ processor + ")");
-		}
-
-		// decode the request parameters into a strongly typed parameters
-		// object that is to be used by the target resolving
-		final RequestParameters requestParameters = encoder.decode(getRequest());
-
-		if (requestParameters == null)
-		{
-			throw new WicketRuntimeException("request parameters must be not-null (provided by "
-					+ encoder + ")");
-		}
-		return requestParameters;
-	}
-
-	/**
-	 * Call the event processing and and respond methods on the request
-	 * processor and apply synchronization if needed.
-	 * 
-	 * @param processor
-	 *            the request processor
-	 */
-	private final void processEventsAndRespond(IRequestCycleProcessor processor)
-	{
-		// see whether we need to do synchronization
-		Object synchronizeLock = getSynchronizationLock();
-
-		// if the lock is not-null, synchronize the rest of the request
-		// cycle processing
-		if (synchronizeLock != null)
-		{
-			synchronized (synchronizeLock)
+			// TODO catch infinite loops
+			while (currentStep < DONE)
 			{
-				// let the processor handle/ issue any events
-				processor.processEvents(this);
-
-				// set current stage manually this time
-				currentStep = RESPOND;
-
-				// generate a response
-				processor.respond(this);
+				step(processor);
+				currentStep++;
 			}
 		}
-		else
+		finally
 		{
-			// no lock means no synchronization (e.g. when handling static
-			// resources or external resources)
+			// set step manually to clean up
+			currentStep = CLEANUP_REQUEST;
 
-			// let the processor handle/ issue any events
-			processor.processEvents(this);
+			// clean up the request
+			cleanUp();
 
-			// set current stage manually this time
-			currentStep = RESPOND;
-
-			// generate a response
-			processor.respond(this);
+			// set step manually to done
+			currentStep = DONE;
 		}
-	}
-
-	/**
-	 * Gets the lock for synchronizing the request cycle processing other than
-	 * resolving this target. If this method returns null, no synchronization
-	 * will be used. Typically, if synchonization is wanted, this method should
-	 * return an instance of the current session. The latter would be the case
-	 * for e.g. a page request target. Non-synchornization is desirable for
-	 * instance with static resources or external resources.
-	 * 
-	 * @return the lock to use for synchronizing the event handling and
-	 *         rendering states of the request handling, or null if
-	 *         synchronization should not be done.
-	 */
-	private Object getSynchronizationLock()
-	{
-		if (getRequestTarget().synchronizeOnSession(this))
-		{
-			return getSession();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Sets the request target as the current.
-	 * 
-	 * @param requestTarget
-	 *            the request target to set as current
-	 */
-	public final void setRequestTarget(IRequestTarget requestTarget)
-	{
-		// TODO this has to be done after the unit tests are fixed
-		// // if we are already responding, we can't change the request target
-		// // as that would either have no effect, or - in case we would set
-		// // the currentStep back to PROCESS_EVENTS, we would have double
-		// // output (and it is not Wicket's intention to work as Servlet
-		// filters)
-		// if (currentStep >= RESPOND)
-		// {
-		// throw new WicketRuntimeException(
-		// "you cannot change the request cycle after rendering has commenced");
-		// }
-
-		if (log.isDebugEnabled())
-		{
-			if (!requestTargets.isEmpty())
-			{
-				IRequestTarget former = (IRequestTarget)requestTargets.peek();
-				log.debug("replacing request target " + former + " with " + requestTarget);
-			}
-			else
-			{
-				log.debug("setting request target to " + requestTarget);
-			}
-		}
-
-		// change the current step to a step that will handle the
-		// new target if need be
-		if (currentStep >= RESPOND)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("rewinding request processing to PROCESS_EVENTS");
-			}
-
-			// we are not actually doing event processing again,
-			// but since we are still in the loop here, the next
-			// actual value will be RESPOND again
-			currentStep = PROCESS_EVENTS;
-		}
-		// NOTE: if we are at PROCESS_EVENTS, leave it as we don't
-		// want to re-execute that step again
-
-		requestTargets.push(requestTarget);
-	}
-
-	/**
-	 * Gets the current request target. May be null.
-	 * 
-	 * @return the current request target, null if none was set yet.
-	 */
-	public final IRequestTarget getRequestTarget()
-	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
-	}
-
-	/**
-	 * Sets whether the page for this request should be redirected.
-	 * 
-	 * @param redirect
-	 *            True if the page for this request cycle should be redirected
-	 *            to rather than directly rendered.
-	 */
-	public final void setRedirect(final boolean redirect)
-	{
-		this.redirect = redirect;
-	}
-
-	/**
-	 * @param request
-	 *            The request to set.
-	 */
-	public final void setRequest(Request request)
-	{
-		this.request = request;
-	}
-
-	/**
-	 * Sets response.
-	 * 
-	 * @param response
-	 *            The response
-	 */
-	public final void setResponse(final Response response)
-	{
-		this.response = response;
-	}
-
-	/**
-	 * Convenience method that sets page class as the response. This will
-	 * generate a redirect to the page with a bookmarkable url
-	 * 
-	 * @param pageClass
-	 *            The page class to render as a response
-	 */
-	public final void setResponsePage(final Class pageClass)
-	{
-		setResponsePage(pageClass, null);
-	}
-
-	/**
-	 * Sets the page class with optionally the page parameters as the render
-	 * target of this request.
-	 * 
-	 * @param pageClass
-	 *            The page class to render as a response
-	 * @param pageParameters
-	 *            The page parameters that gets appended to the bookmarkable
-	 *            url,
-	 */
-	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
-	{
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
-		setRequestTarget(target);
-	}
-
-	/**
-	 * Sets the page as the render target of this request.
-	 * 
-	 * @param page
-	 *            The page to render as a response
-	 */
-	public final void setResponsePage(final Page page)
-	{
-		IRequestTarget target = new PageRequestTarget(page);
-		setRequestTarget(target);
-	}
-
-	/**
-	 * Gets the page that is to be rendered for this request in case the last
-	 * set request target is of type {@link PageRequestTarget}.
-	 * 
-	 * @return the page or null
-	 */
-	public final Page getResponsePage()
-	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof PageRequestTarget))
-		{
-			return ((IPageRequestTarget)target).getPage();
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the page class that is to be instantiated and rendered for this
-	 * request in case the last set request target is of type
-	 * {@link BookmarkablePageRequestTarget}.
-	 * 
-	 * @return the page class or null
-	 */
-	public final Class getResponsePageClass()
-	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
-		{
-			return ((IBookmarkablePageRequestTarget)target).getPageClass();
-		}
-		return null;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * @param updateCluster
-	 *            The updateCluster to set.
-	 */
-	public void setUpdateSession(boolean updateCluster)
-	{
-		this.updateSession = updateCluster;
-	}
-
-	/**
-	 * @return The start time for this request
-	 */
-	public final long getStartTime()
-	{
-		return startTime;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
-				+ Thread.currentThread().getName() + "}";
-	}
-
-	/**
-	 * Looks up an request interface method by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The method, null of nothing is found
-	 * 
-	 */
-	public final Method getRequestInterfaceMethod(final String interfaceName)
-	{
-		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
-	}
-
-	/**
-	 * Called when the request cycle object is beginning its response
-	 */
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
-	 * Called when the request cycle object has finished its response
-	 */
-	protected void onEndRequest()
-	{
-	}
-
-	/**
-	 * Creates a new agent info object based on this request. Typically, this
-	 * method is called once by the session and the returned object will be
-	 * cached in the session after that call; we can expect the client to stay
-	 * the same for the whole session, and implementations of
-	 * {@link #newClientInfo()} might be relatively expensive.
-	 * 
-	 * @return the agent info object based on this request
-	 */
-	protected abstract ClientInfo newClientInfo();
-
-	/**
-	 * Gets the new agent info object for this session. This method calls
-	 * {@link Session#getClientInfo()}, which may or may not cache the client
-	 * info object and typically calls {@link #newClientInfo()} when no client
-	 * info object was cached.
-	 * 
-	 * @return the agent info object based on this request
-	 */
-	public final ClientInfo getClientInfo()
-	{
-		return getSession().getClientInfo();
-	}
-
-	/**
-	 * Gets the processor for delegated request cycle handling.
-	 * 
-	 * @return the processor for delegated request cycle handling
-	 */
-	public abstract IRequestCycleProcessor getRequestCycleProcessor();
-
-	/**
-	 * Redirects browser to the given page. NOTE: Usually, you should never call
-	 * this method directly, but work with setResponsePage instead. This method
-	 * is part of Wicket's internal behaviour and should only be used when you
-	 * want to circumvent the normal framework behaviour and issue the redirect
-	 * directly.
-	 * 
-	 * @param page
-	 *            The page to redirect to
-	 */
-	public abstract void redirectTo(final Page page);
-
-	/**
-	 * Template method that is called when a runtime exception is thrown, just
-	 * before the actual handling of the runtime exception. This is called by
-	 * {@link wicket.request.compound.DefaultExceptionResponseStrategy}, hence
-	 * if that strategy is replaced by another one, there is no guarantee this
-	 * method is called.
-	 * 
-	 * @param page
-	 *            Any page context where the exception was thrown
-	 * @param e
-	 *            The exception
-	 * @return Any error page to redirect to
-	 */
-	public Page onRuntimeException(Page page, RuntimeException e)
-	{
-		return null;
 	}
 
 	/**
@@ -1047,73 +1088,4 @@ public abstract class RequestCycle
 		// reused
 		CURRENT.set(null);
 	}
-
-	/**
-	 * Safe version of {@link #getRequestCycleProcessor()} that throws an
-	 * exception when the processor is null.
-	 * 
-	 * @return the request processor
-	 */
-	private IRequestCycleProcessor safeGetRequestProcessor()
-	{
-		IRequestCycleProcessor processor = getRequestCycleProcessor();
-		if (processor == null)
-		{
-			throw new WicketRuntimeException("request cycle processor must be not-null");
-		}
-		return processor;
-	}
-
-	// internal ints for processing status; keep here to be out of sight a bit
-
-	/**
-	 * No processing has been done.
-	 */
-	private static final int NOT_STARTED = 0;
-
-	/**
-	 * Starting the actual request processing.
-	 */
-	private static final int PREPARE_REQUEST = 1;
-
-	/**
-	 * Decoding request parameters into a strongly typed
-	 * {@link RequestParameters} object.
-	 */
-	private static final int DECODE_PARAMETERS = 2;
-
-	/**
-	 * Resolving the {@link RequestParameters} object to a request target.
-	 */
-	private static final int RESOLVE_TARGET = 3;
-
-	/**
-	 * Checking access after resolving.
-	 */
-	private static final int CHECK_ACCESS = 4;
-
-	/**
-	 * Dispatching and handling of events.
-	 */
-	private static final int PROCESS_EVENTS = 5;
-
-	/**
-	 * Responding using the currently set {@link IRequestTarget}.
-	 */
-	private static final int RESPOND = 6;
-
-	/**
-	 * Responding to an uncaught exception.
-	 */
-	private static final int HANDLE_EXCEPTION = 7;
-
-	/**
-	 * Cleaning up after responding to a request.
-	 */
-	private static final int CLEANUP_REQUEST = 8;
-
-	/**
-	 * Request cycle processing is done.
-	 */
-	private static final int DONE = 9;
 }
