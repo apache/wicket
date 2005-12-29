@@ -19,6 +19,7 @@ package wicket.examples.niceurl;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.link.BookmarkablePageLink;
 
 
 /**
@@ -35,5 +36,6 @@ public class Page1 extends WicketExamplePage
 	 */
 	public Page1(PageParameters parameters)
 	{
+		add(new BookmarkablePageLink("homeLink", Home.class));
 	}
 }

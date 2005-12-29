@@ -63,5 +63,7 @@ public class Page2 extends WicketExamplePage
 
 		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page2.class, params);
 		add(link);
+		
+		add(new BookmarkablePageLink("homeLink", Home.class));
 	}
 }
