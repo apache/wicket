@@ -36,9 +36,6 @@ public final class PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The eviction strategy for this page map */
-	private IPageMapEvictionStrategy evictionStrategy = new LeastRecentlyAccessedEvictionStrategy();
-
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
 
@@ -83,15 +80,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Gets evictionStrategy.
-	 * @return evictionStrategy
-	 */
-	public final IPageMapEvictionStrategy getEvictionStrategy()
-	{
-		return evictionStrategy;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return Returns the name.
@@ -127,15 +115,6 @@ public final class PageMap implements Serializable
 	public final void remove()
 	{
 		session.removePageMap(this);
-	}
-
-	/**
-	 * Sets evictionStrategy.
-	 * @param evictionStrategy evictionStrategy
-	 */
-	public final void setEvictionStrategy(IPageMapEvictionStrategy evictionStrategy)
-	{
-		this.evictionStrategy = evictionStrategy;
 	}
 
 	/**
@@ -263,7 +242,7 @@ public final class PageMap implements Serializable
 		size++;
 
 		// Return any evicted page source
-		return evictionStrategy.evict(this);
+		return session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
 	}
 
 	/**

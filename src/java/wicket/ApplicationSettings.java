@@ -273,6 +273,9 @@ public class ApplicationSettings
 	/** Encryption key used to encode/decode passwords e.g. */
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
+	/** The eviction strategy for this page map */
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy();
+
 	/** The maximum number of pages in a session */
 	private int maxPages = 10;
 
@@ -290,6 +293,12 @@ public class ApplicationSettings
 	 */
 	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
+	/** Filesystem Path to search for resources */
+	private IResourceFinder resourceFinder = null;
+
+	/** Frequency at which files should be polled */
+	private Duration resourcePollFrequency = null;
+
 	/**
 	 * In order to do proper form parameter decoding it is important that the
 	 * response and the following request have the same encoding. see
@@ -298,26 +307,20 @@ public class ApplicationSettings
 	 */
 	private String responseRequestEncoding = "UTF-8";
 
-	/** Filesystem Path to search for resources */
-	private IResourceFinder resourceFinder = null;
-
-	/** Frequency at which files should be polled */
-	private Duration resourcePollFrequency = null;
-
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	private boolean stripXmlDeclarationFromOutput;
-
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
 	 */
 	private boolean stripWicketTags = false;
+
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	private boolean stripXmlDeclarationFromOutput;
 
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
@@ -328,12 +331,12 @@ public class ApplicationSettings
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
 
-	/** Determines if pages should be managed by a version manager by default */
-	private boolean versionPagesByDefault = true;
-
 	/** Factory for producing validator error message resource keys */
 	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
-
+	
+	/** Determines if pages should be managed by a version manager by default */
+	private boolean versionPagesByDefault = true;
+	
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -584,6 +587,16 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * @since 1.1
+	 * @return Returns default encoding of markup files. If null, the operating
+	 *         system provided encoding will be used.
+	 */
+	public final String getDefaultMarkupEncoding()
+	{
+		return defaultMarkupEncoding;
+	}
+
+	/**
 	 * Gets the default factory to be used when creating pages
 	 * 
 	 * @return The default page factory
@@ -604,13 +617,12 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * @since 1.1
-	 * @return Returns default encoding of markup files. If null, the operating
-	 *         system provided encoding will be used.
+	 * Gets pageMapEvictionStrategy.
+	 * @return pageMapEvictionStrategy
 	 */
-	public final String getDefaultMarkupEncoding()
+	public final IPageMapEvictionStrategy getPageMapEvictionStrategy()
 	{
-		return defaultMarkupEncoding;
+		return pageMapEvictionStrategy;
 	}
 
 	/**
@@ -670,6 +682,19 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * In order to do proper form parameter decoding it is important that the
+	 * response and the following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
+	 * additional information.
+	 * 
+	 * @return The request and response encoding
+	 */
+	public final String getResponseRequestEncoding()
+	{
+		return responseRequestEncoding;
+	}
+
+	/**
 	 * @return Returns the stripComments.
 	 * @see ApplicationSettings#setStripComments(boolean)
 	 */
@@ -723,6 +748,24 @@ public class ApplicationSettings
 	public final boolean getUseDefaultOnMissingResource()
 	{
 		return useDefaultOnMissingResource;
+	}
+
+	/**
+	 * This method builds a resource key for use by form component validators
+	 * using IValidatorResourceKeyFactory.
+	 * 
+	 * @see IValidatorResourceKeyFactory
+	 * @see DefaultValidatorResourceKeyFactory
+	 * 
+	 * @param validator
+	 *            the validator that is processing the error
+	 * @param formComponent
+	 *            the form component that is in error
+	 * @return resource key for validator's error message
+	 */
+	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
+	{
+		return validatorResourceKeyFactory.newKey(validator, formComponent);
 	}
 
 	/**
@@ -863,6 +906,18 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * Set default encoding for markup files. If null, the encoding provided by
+	 * the operating system will be used.
+	 * 
+	 * @since 1.1
+	 * @param encoding
+	 */
+	public final void setDefaultMarkupEncoding(final String encoding)
+	{
+		this.defaultMarkupEncoding = encoding;
+	}
+
+	/**
 	 * Sets the default factory to be used when creating pages.
 	 * 
 	 * @param defaultPageFactory
@@ -888,15 +943,12 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Set default encoding for markup files. If null, the encoding provided by
-	 * the operating system will be used.
-	 * 
-	 * @since 1.1
-	 * @param encoding
+	 * Sets pageMapEvictionStrategy.
+	 * @param pageMapEvictionStrategy pageMapEvictionStrategy
 	 */
-	public final void setDefaultMarkupEncoding(final String encoding)
+	public final void setPageMapEvictionStrategy(IPageMapEvictionStrategy evictionStrategy)
 	{
-		this.defaultMarkupEncoding = encoding;
+		this.pageMapEvictionStrategy = evictionStrategy;
 	}
 
 	/**
@@ -1020,6 +1072,22 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * In order to do proper form parameter decoding it is important that the
+	 * response and the following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
+	 * additional information.
+	 * 
+	 * Default encoding: UTF-8
+	 * 
+	 * @param responseRequestEncoding
+	 *            The request and response encoding to be used.
+	 */
+	public final void setResponseRequestEncoding(final String responseRequestEncoding)
+	{
+		this.responseRequestEncoding = responseRequestEncoding;
+	}
+
+	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment
 	 * tagging.
 	 * 
@@ -1114,6 +1182,23 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * This method is used to replace the default IValidatorResourceKeyFactory
+	 * implementation with a user specific one
+	 * 
+	 * @param factory
+	 *            the user defined implementation of
+	 *            IValidatorResourceKeyFactory
+	 */
+	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
+	{
+		if (factory == null)
+		{
+			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
+		}
+		this.validatorResourceKeyFactory = factory;
+	}
+
+	/**
 	 * @param pagesVersionedByDefault
 	 *            The pagesVersionedByDefault to set.
 	 */
@@ -1133,6 +1218,7 @@ public class ApplicationSettings
 		return new Path();
 	}
 
+
 	/**
 	 * Internal method to expose the string resource loaders configured within
 	 * the settings to the localization helpers that need to work with them.
@@ -1142,70 +1228,5 @@ public class ApplicationSettings
 	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
-	}
-
-	/**
-	 * In order to do proper form parameter decoding it is important that the
-	 * response and the following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
-	 * additional information.
-	 * 
-	 * @return The request and response encoding
-	 */
-	public final String getResponseRequestEncoding()
-	{
-		return responseRequestEncoding;
-	}
-
-	/**
-	 * In order to do proper form parameter decoding it is important that the
-	 * response and the following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
-	 * additional information.
-	 * 
-	 * Default encoding: UTF-8
-	 * 
-	 * @param responseRequestEncoding
-	 *            The request and response encoding to be used.
-	 */
-	public final void setResponseRequestEncoding(final String responseRequestEncoding)
-	{
-		this.responseRequestEncoding = responseRequestEncoding;
-	}
-
-	/**
-	 * This method is used to replace the default IValidatorResourceKeyFactory
-	 * implementation with a user specific one
-	 * 
-	 * @param factory
-	 *            the user defined implementation of
-	 *            IValidatorResourceKeyFactory
-	 */
-	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
-		}
-		this.validatorResourceKeyFactory = factory;
-	}
-
-
-	/**
-	 * This method builds a resource key for use by form component validators
-	 * using IValidatorResourceKeyFactory.
-	 * 
-	 * @see IValidatorResourceKeyFactory
-	 * @see DefaultValidatorResourceKeyFactory
-	 * 
-	 * @param validator
-	 *            the validator that is processing the error
-	 * @param formComponent
-	 *            the form component that is in error
-	 * @return resource key for validator's error message
-	 */
-	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
-	{
-		return validatorResourceKeyFactory.newKey(validator, formComponent);
 	}
 }
