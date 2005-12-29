@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id: LeastRecentlyAccessedEvictionStrategy.java,v 1.1 2005/12/29 05:30:24
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,13 +29,30 @@ import java.util.List;
 public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionStrategy
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** Maximum number of pages in a page map before evictions start */
+	private int maxPages;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param maxPages
+	 *            Maximum number of pages before eviction occurs
+	 */
+	public LeastRecentlyAccessedEvictionStrategy(int maxPages)
+	{
+		if (maxPages < 1)
+		{
+			throw new IllegalArgumentException("Value for maxPages must be >= 1");
+		}
+		this.maxPages = maxPages;
+	}
 
 	/**
 	 * @see wicket.IPageMapEvictionStrategy#evict(wicket.PageMap)
 	 */
-	public IPageSource evict(final PageMap pageMap)
+	public void evict(final PageMap pageMap)
 	{
-		final int maxPages = pageMap.getSession().getApplication().getSettings().getMaxPages();
 		if (pageMap.size() > maxPages)
 		{
 			final List list = pageMap.getPageSources();
@@ -55,8 +72,6 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 			{
 				pageMap.remove(leastRecentlyUsed);
 			}
-			return leastRecentlyUsed;
 		}
-		return null;
 	}
 }

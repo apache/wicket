@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id: IPageMapEvictionStrategy.java,v 1.1 2005/12/29 05:30:24 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,8 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * Given a page map, determines which page to evict.
+ * Given a page map, evicts zero or more page sources from the map according to
+ * some algorithm in the implementation.
  * 
  * @author Jonathan Locke
  */
@@ -29,7 +30,6 @@ public interface IPageMapEvictionStrategy extends Serializable
 	/**
 	 * @param pageMap
 	 *            The page map to evict from
-	 * @return The PageSource to evict
 	 */
-	public IPageSource evict(PageMap pageMap);
+	public void evict(PageMap pageMap);
 }
