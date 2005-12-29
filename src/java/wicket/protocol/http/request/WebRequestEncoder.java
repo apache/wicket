@@ -58,6 +58,34 @@ import wicket.util.string.Strings;
  */
 public class WebRequestEncoder implements IRequestEncoder
 {
+	/** Comparator implementation that sorts longest strings first */
+	private static final Comparator lengthComparator = new Comparator()
+	{
+		public int compare(Object o1, Object o2)
+		{
+			// longer first
+			if (o1 == o2)
+			{
+				return 0;
+			}
+			else if (o1 == null)
+			{
+				return 1;
+			}
+			else if (o2 == null)
+			{
+				return -1;
+			}
+			else
+			{
+				String lhs = (String)o1;
+				String rhs = (String)o2;
+				return 0 - lhs.compareTo(rhs);
+			}
+		}
+
+	};
+
 	/** log. */
 	private static Log log = LogFactory.getLog(WebRequestEncoder.class);
 
@@ -90,25 +118,17 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * Gets the mount encoder for the given request target if any.
-	 * 
-	 * @param requestTarget
-	 *            the request target to match
-	 * @return the mount encoder if any
+	 * @see wicket.request.IRequestEncoder#decode(wicket.Request)
 	 */
-	protected IRequestTargetEncoderDecoder getMountEncoder(IRequestTarget requestTarget)
+	public final RequestParameters decode(Request request)
 	{
-		// TODO optimize algoritm if possible and/ or cache lookup results
-		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
-		{
-			IRequestTargetEncoderDecoder encoder = (IRequestTargetEncoderDecoder)i.next();
-			if (encoder.matches(requestTarget))
-			{
-				return encoder;
-			}
-		}
-
-		return null;
+		RequestParameters parameters = new RequestParameters();
+		String pathInfo = getRequestPath(request);
+		parameters.setPath(pathInfo);
+		addPageParameters(request, parameters);
+		addBookmarkablePageParameters(request, parameters);
+		addResourceParameters(request, parameters);
+		return parameters;
 	}
 
 	/**
@@ -126,7 +146,6 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
-
 		// first check whether the target was mounted
 		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
@@ -161,36 +180,26 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * In case you are using custom targets that are not part of the default
-	 * target hierarchy, you need to override this method, which will be called
-	 * after the defaults have been tried. When this doesn't provide a url
-	 * either (returns null), an exception will be thrown by the encode method
-	 * saying that encoding could not be done.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle (for efficient access)
-	 * 
-	 * @param requestTarget
-	 *            the request target
-	 * @return the url to the provided target
+	 * @see wicket.request.IRequestTargetPathMounter#encoderDecoderForPath(java.lang.String)
 	 */
-	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
+	public final IRequestTargetEncoderDecoder encoderDecoderForPath(String path)
 	{
-		return null;
-	}
+		if (path == null)
+		{
+			return (IRequestTargetEncoderDecoder)mountsOnPath.get(null);
+		}
 
-	/**
-	 * @see wicket.request.IRequestEncoder#decode(wicket.Request)
-	 */
-	public final RequestParameters decode(Request request)
-	{
-		RequestParameters parameters = new RequestParameters();
-		String pathInfo = getRequestPath(request);
-		parameters.setPath(pathInfo);
-		addPageParameters(request, parameters);
-		addBookmarkablePageParameters(request, parameters);
-		addResourceParameters(request, parameters);
-		return parameters;
+		Iterator it = mountsOnPath.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry entry = (Entry)it.next();
+			String key = (String)entry.getKey();
+			if (path.startsWith(key))
+			{
+				return (IRequestTargetEncoderDecoder)entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -224,6 +233,29 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
+	 * @see wicket.request.IRequestEncoder#pathForTarget(wicket.IRequestTarget)
+	 */
+	public final String pathForTarget(IRequestTarget requestTarget)
+	{
+		// first check whether the target was mounted
+		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
+		if (encoder != null)
+		{
+			return encoder.encode(requestTarget);
+		}
+		return null;
+	}
+
+	/**
+	 * @see wicket.request.IRequestEncoder#targetForPath(java.lang.String)
+	 */
+	public final IRequestTarget targetForPath(String path)
+	{
+		IRequestTargetEncoderDecoder encoder = encoderDecoderForPath(path);
+		return (encoder != null) ? encoder.decode(path) : null;
+	}
+
+	/**
 	 * @see wicket.request.IRequestEncoder#unmount(java.lang.String)
 	 */
 	public final void unmount(String path)
@@ -243,63 +275,88 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#targetForPath(java.lang.String)
-	 */
-	public final IRequestTarget targetForPath(String path)
-	{
-		IRequestTargetEncoderDecoder encoder = encoderForPath(path);
-		return (encoder != null) ? encoder.decode(path) : null;
-	}
-
-	/**
-	 * @see wicket.request.IRequestTargetPathMounter#encoderForPath(java.lang.String)
-	 */
-	public final IRequestTargetEncoderDecoder encoderForPath(String path)
-	{
-		if (path == null)
-		{
-			return (IRequestTargetEncoderDecoder)mountsOnPath.get(null);
-		}
-
-		Iterator it = mountsOnPath.entrySet().iterator();
-		while (it.hasNext())
-		{
-			Map.Entry entry = (Entry)it.next();
-			String key = (String)entry.getKey();
-			if (path.startsWith(key))
-			{
-				return (IRequestTargetEncoderDecoder)entry.getValue();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @see wicket.request.IRequestEncoder#pathForTarget(wicket.IRequestTarget)
-	 */
-	public final String pathForTarget(IRequestTarget requestTarget)
-	{
-		// first check whether the target was mounted
-		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
-		if (encoder != null)
-		{
-			return encoder.encode(requestTarget);
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the request info path. This is an overridable method in order to
-	 * provide users with a means to implement e.g. a path encryption scheme.
-	 * This method by default returns {@link Request#getPath()}.
+	 * Adds bookmarkable page related parameters (page alias and optionally page
+	 * parameters). Any bookmarkable page alias mount will override this method;
+	 * hence if a mount is found, this method will not be called.
 	 * 
 	 * @param request
-	 *            the request
-	 * @return the path info object, possibly processed
+	 *            the incomming request
+	 * @param parameters
+	 *            the parameters object to set the found values on
 	 */
-	protected String getRequestPath(Request request)
+	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
 	{
-		return request.getPath();
+		String pageClass = request.getParameter(PageParameters.BOOKMARKABLE_PAGE);
+		parameters.setBookmarkablePageClass(pageClass);
+		parameters.setParameters(request.getParameterMap());
+	}
+
+	/**
+	 * Adds page related parameters (path and optionally pagemap, version and
+	 * interface).
+	 * 
+	 * @param request
+	 *            the incomming request
+	 * @param parameters
+	 *            the parameters object to set the found values on
+	 */
+	protected void addPageParameters(Request request, RequestParameters parameters)
+	{
+		String componentPath = request.getParameter("path");
+		if (componentPath != null)
+		{
+			parameters.setComponentPath(componentPath);
+			parameters.setPageMapName(request.getParameter("pagemap"));
+			final String versionNumberString = request.getParameter("version");
+			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
+					.parseInt(versionNumberString);
+			parameters.setVersionNumber(versionNumber);
+			String interfaceName = request.getParameter("interface");
+			if (interfaceName == null)
+			{
+				interfaceName = "IRedirectListener";
+			}
+			parameters.setInterfaceName(interfaceName);
+			parameters.setBehaviourId(request.getParameter("behaviourId"));
+		}
+	}
+
+	/**
+	 * Adds (shared) resource related parameters (resource key). Any shared
+	 * resource key mount will override this method; hence if a mount is found,
+	 * this method will not be called.
+	 * 
+	 * @param request
+	 *            the incomming request
+	 * @param parameters
+	 *            the parameters object to set the found values on
+	 */
+	protected void addResourceParameters(Request request, RequestParameters parameters)
+	{
+		String pathInfo = request.getPath();
+		if (pathInfo != null && pathInfo.startsWith("/resources/"))
+		{
+			parameters.setResourceKey(pathInfo.substring("/resources/".length()));
+		}
+	}
+
+	/**
+	 * In case you are using custom targets that are not part of the default
+	 * target hierarchy, you need to override this method, which will be called
+	 * after the defaults have been tried. When this doesn't provide a url
+	 * either (returns null), an exception will be thrown by the encode method
+	 * saying that encoding could not be done.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle (for efficient access)
+	 * 
+	 * @param requestTarget
+	 *            the request target
+	 * @return the url to the provided target
+	 */
+	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
+	{
+		return null;
 	}
 
 	/**
@@ -445,69 +502,39 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * Adds page related parameters (path and optionally pagemap, version and
-	 * interface).
+	 * Gets the mount encoder for the given request target if any.
 	 * 
-	 * @param request
-	 *            the incomming request
-	 * @param parameters
-	 *            the parameters object to set the found values on
+	 * @param requestTarget
+	 *            the request target to match
+	 * @return the mount encoder if any
 	 */
-	protected void addPageParameters(Request request, RequestParameters parameters)
+	protected IRequestTargetEncoderDecoder getMountEncoder(IRequestTarget requestTarget)
 	{
-		String componentPath = request.getParameter("path");
-		if (componentPath != null)
+		// TODO optimize algoritm if possible and/ or cache lookup results
+		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
-			parameters.setComponentPath(componentPath);
-			parameters.setPageMapName(request.getParameter("pagemap"));
-			final String versionNumberString = request.getParameter("version");
-			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
-					.parseInt(versionNumberString);
-			parameters.setVersionNumber(versionNumber);
-			String interfaceName = request.getParameter("interface");
-			if (interfaceName == null)
+			IRequestTargetEncoderDecoder encoder = (IRequestTargetEncoderDecoder)i.next();
+			if (encoder.matches(requestTarget))
 			{
-				interfaceName = "IRedirectListener";
+				return encoder;
 			}
-			parameters.setInterfaceName(interfaceName);
-			parameters.setBehaviourId(request.getParameter("behaviourId"));
 		}
+
+		return null;
 	}
 
 	/**
-	 * Adds bookmarkable page related parameters (page alias and optionally page
-	 * parameters). Any bookmarkable page alias mount will override this method;
-	 * hence if a mount is found, this method will not be called.
+	 * Gets the request info path. This is an overridable method in order to
+	 * provide users with a means to implement e.g. a path encryption scheme.
+	 * This method by default returns {@link Request#getPath()}.
 	 * 
 	 * @param request
-	 *            the incomming request
-	 * @param parameters
-	 *            the parameters object to set the found values on
+	 *            the request
+	 * @return the path info object, possibly processed
 	 */
-	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
+	protected String getRequestPath(Request request)
 	{
-		String pageClass = request.getParameter(PageParameters.BOOKMARKABLE_PAGE);
-		parameters.setBookmarkablePageClass(pageClass);
-		parameters.setParameters(request.getParameterMap());
-	}
-
-	/**
-	 * Adds (shared) resource related parameters (resource key). Any shared
-	 * resource key mount will override this method; hence if a mount is found,
-	 * this method will not be called.
-	 * 
-	 * @param request
-	 *            the incomming request
-	 * @param parameters
-	 *            the parameters object to set the found values on
-	 */
-	protected void addResourceParameters(Request request, RequestParameters parameters)
-	{
-		String pathInfo = request.getPath();
-		if (pathInfo != null && pathInfo.startsWith("/resources/"))
-		{
-			parameters.setResourceKey(pathInfo.substring("/resources/".length()));
-		}
+		return request.getPath();
 	}
 
 	/**
@@ -539,32 +566,4 @@ public class WebRequestEncoder implements IRequestEncoder
 		}
 		return urlPrefix;
 	}
-
-	/** Comparator implementation that sorts longest strings first */
-	private static final Comparator lengthComparator = new Comparator()
-	{
-		public int compare(Object o1, Object o2)
-		{
-			// longer first
-			if (o1 == o2)
-			{
-				return 0;
-			}
-			else if (o1 == null)
-			{
-				return 1;
-			}
-			else if (o2 == null)
-			{
-				return -1;
-			}
-			else
-			{
-				String lhs = (String)o1;
-				String rhs = (String)o2;
-				return 0 - lhs.compareTo(rhs);
-			}
-		}
-
-	};
 }

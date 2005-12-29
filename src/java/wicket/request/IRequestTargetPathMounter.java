@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IRequestTargetPathMounter.java,v 1.4 2005/12/24 05:56:31 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,11 +32,11 @@ public interface IRequestTargetPathMounter
 	 * 
 	 * @param path
 	 *            the path to mount the request target with
-	 * @param encoder
-	 *            the mount encoder to use for encoding and decoding targets and
-	 *            mount paths
+	 * @param encoderDecoder
+	 *            The mount encoder/decoder to use for encoding and decoding
+	 *            targets and mount paths.
 	 */
-	void mount(String path, IRequestTargetEncoderDecoder encoder);
+	void mount(String path, IRequestTargetEncoderDecoder encoderDecoder);
 
 	/**
 	 * Unmounts a request target.
@@ -61,16 +61,16 @@ public interface IRequestTargetPathMounter
 	 * 
 	 * @param path
 	 *            the path
-	 * @return the encoder that was mounted on the provided path if any
+	 * @return The encoder/decoder that was mounted on the provided path, if any
 	 */
-	IRequestTargetEncoderDecoder encoderForPath(String path);
+	IRequestTargetEncoderDecoder encoderDecoderForPath(String path);
 
 	/**
 	 * Gets the path that the provided request target conforms to.
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 * @return the path that the provided request target conforms ti
+	 * @return The path that the provided request target conforms to
 	 */
 	String pathForTarget(IRequestTarget requestTarget);
 }
