@@ -274,10 +274,7 @@ public class ApplicationSettings
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
 	/** The eviction strategy for this page map */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy();
-
-	/** The maximum number of pages in a session */
-	private int maxPages = 10;
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(15);
 
 	/** The maximum number of versions of a page to track */
 	private int maxPageVersions = 10;
@@ -626,17 +623,6 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Gets the maximum number of pages held in a session.
-	 * 
-	 * @return Returns the maxPages.
-	 * @see ApplicationSettings#setMaxPages(int)
-	 */
-	public final int getMaxPages()
-	{
-		return maxPages;
-	}
-
-	/**
 	 * @return Returns the maxPageVersions.
 	 */
 	public final int getMaxPageVersions()
@@ -949,26 +935,6 @@ public class ApplicationSettings
 	public final void setPageMapEvictionStrategy(IPageMapEvictionStrategy evictionStrategy)
 	{
 		this.pageMapEvictionStrategy = evictionStrategy;
-	}
-
-	/**
-	 * Sets the maximum number of pages held in a session. If a page is added to
-	 * a user's session when the session is full, the oldest page in the session
-	 * will be expired. The primary purpose of setting a maximum number of pages
-	 * in a session is to limit the resources consumed by server-side state.
-	 * 
-	 * @param maxPages
-	 *            The maxPages to set.
-	 * @return This
-	 */
-	public final ApplicationSettings setMaxPages(final int maxPages)
-	{
-		if (maxPages < 1)
-		{
-			throw new IllegalArgumentException("Value for maxPages must be >= 1");
-		}
-		this.maxPages = maxPages;
-		return this;
 	}
 
 	/**

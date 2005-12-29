@@ -229,10 +229,8 @@ public final class PageMap implements Serializable
 	/**
 	 * @param pageSource
 	 *            The page source to put into this map
-	 * @return Any page source that was removed by the eviction strategy for
-	 *         this page map
 	 */
-	final synchronized IPageSource put(final IPageSource pageSource)
+	final synchronized void put(final IPageSource pageSource)
 	{
 		// Page source has been accessed
 		session.access(pageSource);
@@ -241,8 +239,8 @@ public final class PageMap implements Serializable
 		session.setAttribute(attributeForId(pageSource.getNumericId()), pageSource);
 		size++;
 
-		// Return any evicted page source
-		return session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
+		// Evict any page(s) as need be
+		session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
 	}
 
 	/**
