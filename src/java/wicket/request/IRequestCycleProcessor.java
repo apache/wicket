@@ -69,6 +69,19 @@ public interface IRequestCycleProcessor
 	IRequestCodingStrategy getRequestCodingStrategy();
 
 	/**
+	 * After a page is restored, this method is responsible for calling any
+	 * event handling code based on the request. For example, when a link is
+	 * clicked, {@link #resolve(RequestCycle, RequestParameters)} should return
+	 * the page that that link resides on, and this method should call the
+	 * {@link wicket.markup.html.link.ILinkListener} interface on that
+	 * component.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 */
+	void processEvents(RequestCycle requestCycle);
+
+	/**
 	 * <p>
 	 * Resolves the request and returns the request target. Typically, the
 	 * resolver uses the {@link wicket.request.RequestParameters} object that is
@@ -88,19 +101,6 @@ public interface IRequestCycleProcessor
 	 * @return the request target; has to be non-null!
 	 */
 	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
-
-	/**
-	 * After a page is restored, this method is responsible for calling any
-	 * event handling code based on the request. For example, when a link is
-	 * clicked, {@link #resolve(RequestCycle, RequestParameters)} should return
-	 * the page that that link resides on, and this method should call the
-	 * {@link wicket.markup.html.link.ILinkListener} interface on that
-	 * component.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 */
-	void processEvents(RequestCycle requestCycle);
 
 	/**
 	 * After the target is resolved and the request events are handled, it is
