@@ -17,7 +17,7 @@
  */
 package wicket.request.compound;
 
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
 
 /**
  * Default implementation of {@link
@@ -43,7 +43,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	private IExceptionResponseStrategy exceptionResponseStrategy;
 
 	/** the cached strategy for constructing request parameters. */
-	private IRequestEncoder requestEncoder;
+	private IRequestCodingStrategy requestCodingStrategy;
 
 	/** the cached strategy for the target resolver method. */
 	private IRequestTargetResolverStrategy requestTargetResolverStrategy;
@@ -64,19 +64,19 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	/**
 	 * Constructor with the only strategy we don't have a default for.
 	 * 
-	 * @param requestEncoder
+	 * @param requestCodingStrategy
 	 *            the strategy for constructing request parameters
 	 */
-	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder)
+	public CompoundRequestCycleProcessor(IRequestCodingStrategy requestCodingStrategy)
 	{
-		this.requestEncoder = requestEncoder;
+		this.requestCodingStrategy = requestCodingStrategy;
 	}
 
 	/**
 	 * Bulk constructor. Constructs using the given strategies; all of which may
 	 * be null in which case the factory methods will be used.
 	 * 
-	 * @param requestEncoder
+	 * @param requestCodingStrategy
 	 *            the strategy for constructing request parameters
 	 * @param requestTargetResolverStrategy
 	 *            the strategy for the target resolver method
@@ -87,12 +87,12 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * @param exceptionResponseStrategy
 	 *            the strategy for the exception response method
 	 */
-	public CompoundRequestCycleProcessor(IRequestEncoder requestEncoder,
+	public CompoundRequestCycleProcessor(IRequestCodingStrategy requestCodingStrategy,
 			IRequestTargetResolverStrategy requestTargetResolverStrategy,
 			IEventProcessorStrategy eventProcessorStrategy, IResponseStrategy responseStrategy,
 			IExceptionResponseStrategy exceptionResponseStrategy)
 	{
-		this.requestEncoder = requestEncoder;
+		this.requestCodingStrategy = requestCodingStrategy;
 		this.requestTargetResolverStrategy = requestTargetResolverStrategy;
 		this.eventProcessorStrategy = eventProcessorStrategy;
 		this.responseStrategy = responseStrategy;
@@ -101,26 +101,26 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 
 	/**
 	 * Gets the cached request encoder instance or create one by calling
-	 * {@link #newRequestEncoder()}.
+	 * {@link #newRequestCodingStrategy()}.
 	 * 
-	 * @see wicket.request.IRequestCycleProcessor#getRequestEncoder()
+	 * @see wicket.request.IRequestCycleProcessor#getRequestCodingStrategy()
 	 */
-	public IRequestEncoder getRequestEncoder()
+	public IRequestCodingStrategy getRequestCodingStrategy()
 	{
 		// lazily create
-		if (requestEncoder == null)
+		if (requestCodingStrategy == null)
 		{
-			requestEncoder = newRequestEncoder();
+			requestCodingStrategy = newRequestCodingStrategy();
 		}
 
 		// still null?
-		if (requestEncoder == null)
+		if (requestCodingStrategy == null)
 		{
-			throw new IllegalStateException("no requestEncoder set");
+			throw new IllegalStateException("No requestCodingStrategy set");
 		}
 
 		// return the strategy
-		return requestEncoder;
+		return requestCodingStrategy;
 	}
 
 	/**
@@ -243,19 +243,19 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 
 	/**
 	 * Overridable factory method for creating the request encoder. Called by
-	 * {@link #getRequestEncoder()}. <strong>as there is no generic default for
+	 * {@link #getRequestCodingStrategy()}. <strong>as there is no generic default for
 	 * the request encoder, this method throws an exception by default. You
 	 * either have to provide an instance as a constructor argument, or override
-	 * this method or {@link #getRequestEncoder()}</strong>.
+	 * this method or {@link #getRequestCodingStrategy()}</strong>.
 	 * 
 	 * @return a new target resolver instance
 	 */
-	protected IRequestEncoder newRequestEncoder()
+	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		throw new IllegalStateException(
 				"there is no default for the request encoder. Please provide your strategy by either "
-						+ "providing it as a constructor argument, or by overriding newRequestEncoder "
-						+ "or getRequestEncoder");
+						+ "providing it as a constructor argument, or by overriding newRequestCodingStrategy "
+						+ "or getRequestCodingStrategy");
 	}
 
 	/**

@@ -22,15 +22,13 @@ import wicket.Request;
 import wicket.RequestCycle;
 
 /**
- * Implementations of this interface are responsible for digesting the incomming
- * request and create a suitable {@link wicket.request.RequestParameters} object
- * for it, and creating url representations for request targets.
+ * Implementations of this interface are responsible for digesting the incoming
+ * request and creating a suitable {@link wicket.request.RequestParameters} object
+ * for it, as well as creating url representations for request targets.
  * 
  * @author Eelco Hillenius
  */
-// TODO just returning a string with encode is probably not enough in the long
-// term if we ever want to support things like client state saving.
-public interface IRequestEncoder extends IRequestTargetMounter
+public interface IRequestCodingStrategy extends IRequestTargetMounter
 {
 	/**
 	 * Analyze the request and create a corresponding request parameters object

@@ -208,8 +208,8 @@ public class BookmarkablePageRequestTarget
 		{
 			if (requestCycle.getRedirect())
 			{
-				IRequestCycleProcessor processor = requestCycle.getRequestCycleProcessor();
-				String redirectUrl = processor.getRequestEncoder().encode(requestCycle,
+				IRequestCycleProcessor processor = requestCycle.getProcessor();
+				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle,
 						new BookmarkablePageRequestTarget(pageClass, pageParameters));
 				requestCycle.getResponse().redirect(redirectUrl);
 			}

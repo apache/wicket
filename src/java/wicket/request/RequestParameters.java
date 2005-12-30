@@ -28,7 +28,7 @@ import wicket.markup.html.link.ILinkListener;
  * optional parameters that can be translated from e.g. servlet request
  * parameters and serves of a strongly typed variant of these that is to be
  * created by the {@link wicket.request.IRequestCycleProcessor}'s
- * {@link wicket.request.IRequestEncoder}.
+ * {@link wicket.request.IRequestCodingStrategy}.
  * </p>
  * <p>
  * Though this object can be extended and hence more parameter options can be

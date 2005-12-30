@@ -33,7 +33,7 @@ import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentResourceRequestTarget;
@@ -46,7 +46,7 @@ import wicket.util.string.Strings;
 
 /**
  * Default target resolver strategy. It tries to lookup any registered mount
- * with {@link wicket.request.IRequestEncoder} and in case no mount was found,
+ * with {@link wicket.request.IRequestCodingStrategy} and in case no mount was found,
  * it uses the {@link wicket.request.RequestParameters} object for default
  * resolving.
  * 
@@ -71,7 +71,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		String path = requestCycle.getRequest().getPath();
 
 		// first, see whether we can find any mount
-		IRequestTarget mounted = requestCycle.getRequestCycleProcessor().getRequestEncoder()
+		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
 				.targetForPath(path);
 		if (mounted != null)
 		{
@@ -290,9 +290,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// mounted
 			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(
 					homePageClass);
-			IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
-					.getRequestEncoder();
-			String path = requestEncoder.pathForTarget(pokeTarget);
+			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+					.getRequestCodingStrategy();
+			String path = requestCodingStrategy.pathForTarget(pokeTarget);
 
 			if (path != null)
 			{

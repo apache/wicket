@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
 
 /**
  * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
@@ -257,10 +257,10 @@ public final class PageMap implements Serializable
 	final void redirectToInterceptPage(final Page page)
 	{
 		final RequestCycle cycle = session.getRequestCycle();
-		IRequestCycleProcessor processor = cycle.getRequestCycleProcessor();
-		IRequestEncoder encoder = processor.getRequestEncoder();
-		// TODO this conflicts with the use of IRequestEncoder. We should get
-		// rid of encodeURL in favor of IRequestEncoder
+		IRequestCycleProcessor processor = cycle.getProcessor();
+		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
+		// TODO this conflicts with the use of IRequestCodingStrategy. We should get
+		// rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
 
