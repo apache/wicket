@@ -29,11 +29,11 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
 
 /**
- * This is a tag resolver which handles &lt;wicket:messae&gt; tags. The looks
- * like &lt;wicket:message attr="myKey"&gt;Default Text&lt;/wicket:message&gt;
- * The resolver will replace the whole tag with the message found in the 
- * properties file associated with the parent markup container. If not
- * message is found, the default body text will remain. 
+ * This is a tag resolver which handles &lt;wicket:message
+ * attr="myKey"&gt;Default Text&lt;/wicket:message&gt;. The resolver will
+ * replace the whole tag with the message found in the properties file
+ * associated with the Page. If no message is found, the default body text will
+ * remain.
  * 
  * @author Juergen Donnerstag
  */
@@ -62,7 +62,7 @@ public class WicketMessageResolver implements IComponentResolver
 		// It must be <body onload>
 		if (tag instanceof WicketTag)
 		{
-			WicketTag wtag = (WicketTag) tag;
+			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isMessageTag() && (wtag.getNamespace() != null))
 			{
 				String messageKey = wtag.getAttributes().getString("key");
@@ -86,7 +86,8 @@ public class WicketMessageResolver implements IComponentResolver
 					component = new WebMarkupContainer(id);
 				}
 
-				component.setRenderBodyOnly(container.getApplicationSettings().getStripWicketTags());
+				component.setRenderBodyOnly(
+						container.getApplicationSettings().getStripWicketTags());
 
 				container.autoAdd(component);
 
@@ -104,8 +105,11 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	public static class MyLabel extends Label
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * Construct.
+		 * 
 		 * @param id
 		 * @param value
 		 */
@@ -113,43 +117,19 @@ public class WicketMessageResolver implements IComponentResolver
 		{
 			super(id, value);
 		}
-		private static final long serialVersionUID = 1L;
-		
-	    /**
-	     * Renders this component.
-	     */
-	    protected final void onRender()
-	    {
-	        // Render the tag that included this html compoment
-	        final MarkupStream markupStream = findMarkupStream();
 
-	        final boolean atOpenTag = markupStream.atOpenTag();
-	        if (atOpenTag)
-	        {
-	        	super.onRender();
-	        }
-	        else
-	        {
-		        // Open up the tag, change it from open-close to open, if necessary
-		        final ComponentTag openTag = markupStream.getTag().mutable();
-		        openTag.setType(XmlTag.OPEN);
-		        if (getRenderBodyOnly() == false)
-		        {
-		            renderComponentTag(openTag);
-		        }
-	
-				// Write the new body
-		        String value = getModelObjectAsString();
-				getResponse().write(value);
-	
-		        if (getRenderBodyOnly() == false)
-		        {
-		        	getResponse().write(openTag.syntheticCloseTagString());
-		        }
-	
-		        // Skip opening tag
-				markupStream.skipComponent();
-		    }
-	    }
+		/**
+		 * 
+		 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+		 */
+		protected void onComponentTag(ComponentTag tag)
+		{
+			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
+			if (tag.isOpenClose())
+			{
+				tag.setType(XmlTag.OPEN);
+			}
+			super.onComponentTag(tag);
+		}
 	}
 }

@@ -459,7 +459,15 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final String syntheticCloseTagString()
 	{
-		return "</" + getName() + ">";
+		StringBuffer buf = new StringBuffer(30);
+		buf.append("</");
+		if (getNamespace() != null)
+		{
+			buf.append(getNamespace()).append(":");
+		}
+		buf.append(getName()).append(">");
+		
+		return buf.toString();
 	}
 
 	/**
