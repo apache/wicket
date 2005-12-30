@@ -20,8 +20,8 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * Given a page map, evicts zero or more page sources from the map according to
- * some algorithm in the implementation.
+ * Given a page map, evicts zero or more entries from the map according to some
+ * algorithm in the implementation.
  * 
  * @author Jonathan Locke
  */

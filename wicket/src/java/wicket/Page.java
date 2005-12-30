@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.142 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -134,7 +134,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IPageSource
+public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	/** Access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
@@ -358,7 +358,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.IPageSource#getAccessSequenceNumber()
+	 * @see wicket.IPageMapEntry#getAccessSequenceNumber()
 	 */
 	public int getAccessSequenceNumber()
 	{
@@ -409,7 +409,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.IPageSource#getNumericId()
+	 * @see wicket.IPageMapEntry#getNumericId()
 	 */
 	public int getNumericId()
 	{
@@ -439,9 +439,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Any page source implementation for this page.
+	 * @return Get a page map entry for this page. By default, this is the page
+	 *         itself. But if you know of some way to compress the state for the
+	 *         page, you can return a custom implementation that produces the
+	 *         page on-the-fly.
 	 */
-	public IPageSource getPageSource()
+	public IPageMapEntry getPageMapEntry()
 	{
 		return this;
 	}
@@ -612,8 +615,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 	}
 
-	/** 
-	 * @param accessSequenceNumber New access sequence number for this page
+	/**
+	 * @param accessSequenceNumber
+	 *            New access sequence number for this page
 	 */
 	public void setAccessSequenceNumber(int accessSequenceNumber)
 	{
@@ -650,7 +654,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            page map does not yet exist, it is automatically created.
 	 */
 	public final void setPageMap(final String pageMapName)
-	{		
+	{
 		// Save name for restoring transient
 		this.pageMapName = pageMapName;
 
@@ -738,8 +742,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final String urlFor(final String resourceKey)
 	{
 		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getProcessor().getRequestCodingStrategy().encode(
-				requestCycle, new SharedResourceRequestTarget(resourceKey));
+		String url = requestCycle.getProcessor().getRequestCodingStrategy().encode(requestCycle,
+				new SharedResourceRequestTarget(resourceKey));
 		return url;
 	}
 
