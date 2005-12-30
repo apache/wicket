@@ -20,7 +20,6 @@ package wicket.request.target;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.request.IPageRequestTarget;
-import wicket.request.target.mixin.IAccessCheck;
 
 /**
  * Default implementation of {@link IPageRequestTarget}. Target that denotes a
@@ -99,7 +98,7 @@ public class PageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IAccessCheck#checkAccess(RequestCycle)
+	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{

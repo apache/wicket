@@ -18,7 +18,7 @@
 package wicket.request;
 
 import wicket.IRequestTarget;
-import wicket.request.target.mixin.IRequestTargetEncoderDecoder;
+import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
 /**
  * Defines the contract for mounting request targets to paths.
@@ -36,7 +36,7 @@ public interface IRequestTargetPathMounter
 	 *            The mount encoder/decoder to use for encoding and decoding
 	 *            targets and mount paths.
 	 */
-	void mount(String path, IRequestTargetEncoderDecoder encoderDecoder);
+	void mount(String path, IRequestTargetUrlCodingStrategy encoderDecoder);
 
 	/**
 	 * Unmounts a request target.
@@ -63,7 +63,7 @@ public interface IRequestTargetPathMounter
 	 *            the path
 	 * @return The encoder/decoder that was mounted on the provided path, if any
 	 */
-	IRequestTargetEncoderDecoder encoderDecoderForPath(String path);
+	IRequestTargetUrlCodingStrategy encoderDecoderForPath(String path);
 
 	/**
 	 * Gets the path that the provided request target conforms to.

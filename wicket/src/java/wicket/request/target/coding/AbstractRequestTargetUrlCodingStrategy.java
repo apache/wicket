@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
+ * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10 21:28:56 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target.mixin;
+package wicket.request.target.coding;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -28,7 +28,7 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractRequestTargetEncoderDecoder implements IRequestTargetEncoderDecoder
+public abstract class AbstractRequestTargetUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 {
 	/** mounted path. */
 	private final String mountPath;
@@ -39,7 +39,7 @@ public abstract class AbstractRequestTargetEncoderDecoder implements IRequestTar
 	 * @param mountPath
 	 *            the mount path
 	 */
-	public AbstractRequestTargetEncoderDecoder(final String mountPath)
+	public AbstractRequestTargetUrlCodingStrategy(final String mountPath)
 	{
 		if (mountPath == null)
 		{

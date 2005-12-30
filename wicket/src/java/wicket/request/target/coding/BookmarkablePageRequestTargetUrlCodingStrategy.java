@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
+ * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10 21:28:56 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target.mixin;
+package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
@@ -27,7 +27,7 @@ import wicket.request.target.BookmarkablePageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequestTargetEncoderDecoder
+public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
 	private final Class bookmarkablePageClass;
@@ -45,7 +45,7 @@ public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequest
 	 * @param pageMapName
 	 *            the page map name if any
 	 */
-	public BookmarkablePageRequestTargetEncoderDecoder(final String mountPath,
+	public BookmarkablePageRequestTargetUrlCodingStrategy(final String mountPath,
 			final Class bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
@@ -60,7 +60,7 @@ public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequest
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
 	public final String encode(IRequestTarget requestTarget)
 	{
@@ -78,7 +78,7 @@ public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequest
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
 	 */
 	public IRequestTarget decode(String urlFragment)
 	{
@@ -90,7 +90,7 @@ public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequest
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#matches(wicket.IRequestTarget)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{

@@ -38,9 +38,9 @@ import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.target.mixin.BookmarkablePageRequestTargetEncoderDecoder;
-import wicket.request.target.mixin.IRequestTargetEncoderDecoder;
-import wicket.request.target.mixin.PackageRequestTargetEncoderDecoder;
+import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
 import wicket.response.BufferedResponse;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.IResourceFinder;
@@ -210,7 +210,7 @@ public abstract class WebApplication extends Application
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(String path, IRequestTargetEncoderDecoder encoder)
+	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
 	{
 		checkMountPath(path);
 
@@ -260,7 +260,7 @@ public abstract class WebApplication extends Application
 		{
 			throw new IllegalArgumentException("PackageName cannot be null");
 		}
-		mount(path, new PackageRequestTargetEncoderDecoder(path, packageName));
+		mount(path, new PackageRequestTargetUrlCodingStrategy(path, packageName));
 	}
 
 	/**
@@ -274,7 +274,7 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass,
+		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				null));
 	}
 
@@ -292,7 +292,7 @@ public abstract class WebApplication extends Application
 			String pageMapName)
 	{
 		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass,
+		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				pageMapName));
 	}
 

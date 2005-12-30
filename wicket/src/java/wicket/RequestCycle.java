@@ -37,8 +37,8 @@ import wicket.request.IRequestEncoder;
 import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
+import wicket.request.target.IAccessCheck;
 import wicket.request.target.PageRequestTarget;
-import wicket.request.target.mixin.IAccessCheck;
 import wicket.util.lang.Classes;
 
 /**
