@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.44 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -135,11 +135,36 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
+	 * @return Model for feedback messages on which you can install filters and
+	 *         other properties
+	 */
+	public final FeedbackMessagesModel getFeedbackMessagesModel()
+	{
+		return (FeedbackMessagesModel)messageListView.getModel();
+	}
+
+	/**
+	 * @return The current message filter
+	 */
+	public final IFeedbackMessageFilter getFilter()
+	{
+		return getFeedbackMessagesModel().getFilter();
+	}
+
+	/**
+	 * @return The current sorting comparator
+	 */
+	public final Comparator getSortingComparator()
+	{
+		return getFeedbackMessagesModel().getSortingComparator();
+	}
+
+	/**
 	 * @see wicket.Component#isVersioned()
 	 */
 	public boolean isVersioned()
 	{
-		return false; // makes no sense to version the feedback panel
+		return false;
 	}
 
 	/**
@@ -151,6 +176,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public final void setEscapeMessages(boolean escapeMessages)
 	{
 		this.escapeMessages = escapeMessages;
+	}
+
+	/**
+	 * Sets a filter to use on the feedback messages model
+	 * 
+	 * @param filter
+	 *            The message filter to install on the feedback messages model
+	 */
+	public final void setFilter(IFeedbackMessageFilter filter)
+	{
+		getFeedbackMessagesModel().setFilter(filter);
 	}
 
 	/**
@@ -171,9 +207,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public final void setSortingComparator(Comparator sortingComparator)
 	{
-		FeedbackMessagesModel feedbackMessagesModel = (FeedbackMessagesModel)messageListView
-				.getModel();
-		feedbackMessagesModel.setSortingComparator(sortingComparator);
+		getFeedbackMessagesModel().setSortingComparator(sortingComparator);
 	}
 
 	/**
@@ -258,23 +292,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Returns feedback message filter to use for this feedback panel. This
-	 * method is only called once, when the feedback panel is constructed.
-	 * 
-	 * @return Let subclass specify some other filter.
-	 */
-	protected IFeedbackMessageFilter getFeedbackMessageFilter()
-	{
-		return null;
-	}
-
-	/**
 	 * Gets a new instance of FeedbackMessagesModel to use.
 	 * 
 	 * @return Instance of FeedbackMessagesModel to use
 	 */
 	protected FeedbackMessagesModel newFeedbackMessagesModel()
 	{
-		return new FeedbackMessagesModel(getFeedbackMessageFilter());
+		return new FeedbackMessagesModel();
 	}
 }

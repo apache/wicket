@@ -33,12 +33,12 @@ import wicket.model.IModel;
 public final class FeedbackMessagesModel extends AbstractDetachableModel
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Lazy loaded, temporary list. */
-	private transient List messages;
 
 	/** Message filter */
 	private IFeedbackMessageFilter filter;
+
+	/** Lazy loaded, temporary list. */
+	private transient List messages;
 
 	/** Comparator used for sorting the messages. */
 	private Comparator sortingComparator;
@@ -63,11 +63,27 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	}
 
 	/**
+	 * @return The current message filter
+	 */
+	public IFeedbackMessageFilter getFilter()
+	{
+		return filter;
+	}
+
+	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
 	public IModel getNestedModel()
 	{
 		return null;
+	}
+
+	/**
+	 * @return The current sorting comparator
+	 */
+	public Comparator getSortingComparator()
+	{
+		return sortingComparator;
 	}
 
 	/**
