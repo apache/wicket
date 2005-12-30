@@ -33,5 +33,4 @@ public interface ISharedResourceRequestTarget extends IRequestTarget
 	 * @return the key of the resource
 	 */
 	String getResourceKey();
-
 }
