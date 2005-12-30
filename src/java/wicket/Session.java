@@ -150,8 +150,8 @@ public abstract class Session implements Serializable
 	/** Attribute prefix for page maps stored in the session */
 	private final String pageMapAttributePrefix = "m:";
 
-	/** Prefix for attributes holding IPageSources */
-	final String pageSourceAttributePrefix = "p:";
+	/** Prefix for attributes holding page map entries */
+	final String pageMapEntryAttributePrefix = "p:";
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -833,38 +833,38 @@ public abstract class Session implements Serializable
 			}
 		}
 
-		// Go through all page sources, replicating any dirty pages
+		// Go through all entries, replicating any dirty pages
 		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
 			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(pageSourceAttributePrefix))
+			if (attribute.startsWith(pageMapEntryAttributePrefix))
 			{
-				// Get next page source
-				IPageSource pageSource = (IPageSource)getAttribute(attribute);
+				// Get next entry
+				IPageMapEntry entry = (IPageMapEntry)getAttribute(attribute);
 
-				// If page source is dirty
-				if (pageSource.isDirty())
+				// If entry is dirty
+				if (entry.isDirty())
 				{
 					// Make it undirty
-					pageSource.setDirty(false);
+					entry.setDirty(false);
 
 					// Set session attribute to replicate the page
-					setAttribute(attribute, pageSource);
+					setAttribute(attribute, entry);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Indicates an access to a given page source
+	 * Indicates an access to a given entry
 	 * 
-	 * @param pageSource
-	 *            The page source
+	 * @param entry
+	 *            The entry
 	 */
-	final void access(IPageSource pageSource)
+	final void access(IPageMapEntry entry)
 	{
 		accessSequenceNumber++;
-		pageSource.setAccessSequenceNumber(accessSequenceNumber);
+		entry.setAccessSequenceNumber(accessSequenceNumber);
 	}
 
 	/**

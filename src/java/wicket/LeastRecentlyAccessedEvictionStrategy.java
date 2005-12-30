@@ -55,17 +55,17 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	{
 		if (pageMap.size() > maxPages)
 		{
-			final List list = pageMap.getPageSources();
-			IPageSource leastRecentlyUsed = null;
+			final List list = pageMap.getEntries();
+			IPageMapEntry leastRecentlyUsed = null;
 			int min = Integer.MAX_VALUE;
 			for (Iterator iterator = list.iterator(); iterator.hasNext();)
 			{
-				IPageSource pageSource = (IPageSource)iterator.next();
-				int accessSequenceNumber = pageSource.getAccessSequenceNumber();
+				IPageMapEntry entry = (IPageMapEntry)iterator.next();
+				int accessSequenceNumber = entry.getAccessSequenceNumber();
 				if (accessSequenceNumber < min)
 				{
 					min = accessSequenceNumber;
-					leastRecentlyUsed = pageSource;
+					leastRecentlyUsed = entry;
 				}
 			}
 			if (leastRecentlyUsed != null)

@@ -18,19 +18,19 @@
 package wicket;
 
 /**
- * An abstract base class that makes it easier to create IPageSource
+ * An abstract base class that makes it easier to create IPageMapEntry
  * implementations.
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractPageSource implements IPageSource
+public abstract class AbstractPageMapEntry implements IPageMapEntry
 {
 	private short accessSequenceNumber;
 	private boolean dirty;
 	private short id;
 	
 	/**
-	 * @see wicket.IPageSource#getAccessSequenceNumber()
+	 * @see wicket.IPageMapEntry#getAccessSequenceNumber()
 	 */
 	public int getAccessSequenceNumber()
 	{
@@ -38,7 +38,7 @@ public abstract class AbstractPageSource implements IPageSource
 	}
 
 	/**
-	 * @see wicket.IPageSource#getNumericId()
+	 * @see wicket.IPageMapEntry#getNumericId()
 	 */
 	public int getNumericId()
 	{
@@ -51,7 +51,7 @@ public abstract class AbstractPageSource implements IPageSource
 	public abstract Page getPage();
 
 	/**
-	 * @see wicket.IPageSource#isDirty()
+	 * @see wicket.IPageMapEntry#isDirty()
 	 */
 	public boolean isDirty()
 	{
@@ -59,7 +59,7 @@ public abstract class AbstractPageSource implements IPageSource
 	}
 
 	/**
-	 * @see wicket.IPageSource#setAccessSequenceNumber(int)
+	 * @see wicket.IPageMapEntry#setAccessSequenceNumber(int)
 	 */
 	public void setAccessSequenceNumber(int accessSequenceNumber)
 	{
@@ -67,7 +67,7 @@ public abstract class AbstractPageSource implements IPageSource
 	}
 
 	/**
-	 * @see wicket.IPageSource#setDirty(boolean)
+	 * @see wicket.IPageMapEntry#setDirty(boolean)
 	 */
 	public void setDirty(boolean dirty)
 	{
@@ -75,7 +75,7 @@ public abstract class AbstractPageSource implements IPageSource
 	}
 	
 	/**
-	 * @see wicket.IPageSource#setNumericId(int)
+	 * @see wicket.IPageMapEntry#setNumericId(int)
 	 */
 	public void setNumericId(int id)
 	{

@@ -20,28 +20,27 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * Some source which produces a page. Page implements IPageSource by simply
+ * Some source which produces a page. Page implements IPageMapEntry by simply
  * returning "this", but other implementations are possible as well, allowing
- * users to create IPageSource implementations that reconstruct full blown Page
- * objects from a limited set of data (for example, a details page from an id).
- * The advantage of doing this is that you can save session memory (by trading
- * off against the processing power required to reconstruct the page).
+ * users to create IPageMapEntry implementations that reconstruct full blown
+ * Page objects from a limited set of data (for example, a details page from an
+ * id). The advantage of doing this is that you can save session memory (by
+ * trading off against the processing power required to reconstruct the page).
  * 
- * @see wicket.AbstractPageSource
+ * @see wicket.AbstractPageMapEntry
  * @author Jonathan Locke
  */
-public interface IPageSource extends Serializable
+public interface IPageMapEntry extends Serializable
 {
 	/**
-	 * @return A sequence number that can be used to compare when two page
-	 *         source objects were accessed. Given two page sources, the one
-	 *         with the higher access sequence number was more recently
-	 *         accessed.
+	 * @return A sequence number that can be used to compare when two page map
+	 *         entries were accessed. Given two entries, the one with the higher
+	 *         access sequence number was the one more recently accessed.
 	 */
 	public int getAccessSequenceNumber();
 
 	/**
-	 * @return The id of the page returned by this page source
+	 * @return A stable identifier for this page map entry
 	 */
 	public int getNumericId();
 
@@ -51,25 +50,25 @@ public interface IPageSource extends Serializable
 	public Page getPage();
 
 	/**
-	 * @return True if this page source is dirty and requires replication
+	 * @return True if this entry is dirty and requires replication
 	 */
 	public boolean isDirty();
 
 	/**
 	 * @param accessSequenceNumber
-	 *            New access sequence numnber for this page source
+	 *            New access sequence numnber for this entry
 	 */
 	public void setAccessSequenceNumber(int accessSequenceNumber);
 
 	/**
 	 * @param dirty
-	 *            True if this page source is now dirty
+	 *            True if this entry is now dirty
 	 */
 	public void setDirty(boolean dirty);
 
 	/**
 	 * @param id
-	 *            The numeric id for this page source
+	 *            The numeric id for this entry
 	 */
 	public void setNumericId(int id);
 }

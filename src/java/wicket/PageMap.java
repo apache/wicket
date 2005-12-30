@@ -52,17 +52,17 @@ public final class PageMap implements Serializable
 	private int size = 0;
 
 	/**
-	 * Visitor interface for visiting page sources in this map
+	 * Visitor interface for visiting entries in this map
 	 * 
 	 * @author Jonathan Locke
 	 */
 	static interface IVisitor
 	{
 		/**
-		 * @param pageSource
-		 *            The page source
+		 * @param entry
+		 *            The page map entry
 		 */
-		public void pageSource(final IPageSource pageSource);
+		public void entry(final IPageMapEntry entry);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @return Number of page sources in the page map
+	 * @return Number of entires in this page map
 	 */
 	public final int size()
 	{
@@ -141,7 +141,7 @@ public final class PageMap implements Serializable
 	 */
 	String attributePrefix()
 	{
-		return session.pageSourceAttributePrefix + name + ":";
+		return session.pageMapEntryAttributePrefix + name + ":";
 	}
 
 	/**
@@ -185,14 +185,14 @@ public final class PageMap implements Serializable
 	 */
 	final Page get(final int id)
 	{
-		final IPageSource pageSource = (IPageSource)session.getAttribute(attributeForId(id));
-		if (pageSource != null)
+		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
+		if (entry != null)
 		{	
-			// Page source has been accessed
-			session.access(pageSource);
+			// Entry has been accessed
+			session.access(entry);
 
 			// Get page as dirty
-			final Page page = pageSource.getPage();
+			final Page page = entry.getPage();
 			page.setDirty(true);
 			return page;
 		}
@@ -200,9 +200,9 @@ public final class PageMap implements Serializable
 	}
 	
 	/**
-	 * @return List of page sources in this page map
+	 * @return List of entries in this page map
 	 */
-	final List getPageSources()
+	final List getEntries()
 	{
 		final List attributes = session.getAttributeNames();
 		final List list = new ArrayList();
@@ -211,7 +211,7 @@ public final class PageMap implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				list.add((IPageSource)session.getAttribute(attribute));
+				list.add((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
 		return list;
@@ -227,16 +227,16 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param pageSource
-	 *            The page source to put into this map
+	 * @param entry
+	 *            The entry to put into this map
 	 */
-	final synchronized void put(final IPageSource pageSource)
+	final synchronized void put(final IPageMapEntry entry)
 	{
-		// Page source has been accessed
-		session.access(pageSource);
+		// Entry has been accessed
+		session.access(entry);
 
-		// Store page source in session
-		session.setAttribute(attributeForId(pageSource.getNumericId()), pageSource);
+		// Store entry in session
+		session.setAttribute(attributeForId(entry.getNumericId()), entry);
 		size++;
 
 		// Evict any page(s) as need be
@@ -269,16 +269,16 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param pageSource
-	 *            The page source to remove
-	 * @return The removed pageSource
+	 * @param entry
+	 *            The entry to remove
+	 * @return The removed entry
 	 */
-	final IPageSource remove(final IPageSource pageSource)
+	final IPageMapEntry remove(final IPageMapEntry entry)
 	{
-		// Remove page source from session
-		session.removeAttribute(attributeForId(pageSource.getNumericId()));
+		// Remove entry from session
+		session.removeAttribute(attributeForId(entry.getNumericId()));
 		size--;
-		return pageSource;
+		return entry;
 	}
 	
 	/**
@@ -286,11 +286,11 @@ public final class PageMap implements Serializable
 	 */
 	final void removeAll()
 	{
-		visitPageSources(new IVisitor()
+		visitEntries(new IVisitor()
 		{
-			public void pageSource(IPageSource pageSource)
+			public void entry(IPageMapEntry entry)
 			{
-				remove(pageSource);
+				remove(entry);
 			}
 		});
 	}
@@ -308,7 +308,7 @@ public final class PageMap implements Serializable
 	 * @param visitor
 	 *            The visitor to call at each Page in this PageMap.
 	 */
-	final void visitPageSources(final IVisitor visitor)
+	final void visitEntries(final IVisitor visitor)
 	{
 		final List attributes = session.getAttributeNames();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
@@ -316,7 +316,7 @@ public final class PageMap implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				visitor.pageSource((IPageSource)session.getAttribute(attribute));
+				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
 	}
