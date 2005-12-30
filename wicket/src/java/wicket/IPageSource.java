@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,14 +27,18 @@ import java.io.Serializable;
  * The advantage of doing this is that you can save session memory (by trading
  * off against the processing power required to reconstruct the page).
  * 
+ * @see wicket.AbstractPageSource
  * @author Jonathan Locke
  */
 public interface IPageSource extends Serializable
 {
 	/**
-	 * @return The Page.
+	 * @return A sequence number that can be used to compare when two page
+	 *         source objects were accessed. Given two page sources, the one
+	 *         with the higher access sequence number was more recently
+	 *         accessed.
 	 */
-	public Page getPage();
+	public int getAccessSequenceNumber();
 
 	/**
 	 * @return The id of the page returned by this page source
@@ -42,10 +46,14 @@ public interface IPageSource extends Serializable
 	public int getNumericId();
 
 	/**
-	 * @return A sequence number indicating when this page source was most
-	 *         recently accessed.
+	 * @return Gets the page, possibly creating it on the fly.
 	 */
-	public int getAccessSequenceNumber();
+	public Page getPage();
+
+	/**
+	 * @return True if this page source is dirty and requires replication
+	 */
+	public boolean isDirty();
 
 	/**
 	 * @param accessSequenceNumber
@@ -54,13 +62,14 @@ public interface IPageSource extends Serializable
 	public void setAccessSequenceNumber(int accessSequenceNumber);
 
 	/**
-	 * @return True if this page source is dirty and requires replication
-	 */
-	public boolean isDirty();
-
-	/**
 	 * @param dirty
 	 *            True if this page source is now dirty
 	 */
 	public void setDirty(boolean dirty);
+
+	/**
+	 * @param id
+	 *            The numeric id for this page source
+	 */
+	public void setNumericId(int id);
 }
