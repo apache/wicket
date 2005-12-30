@@ -258,20 +258,23 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Gets a new instance of FeedbackMessagesModel to use.
+	 * Returns feedback message filter to use for this feedback panel. This
+	 * method is only called once, when the feedback panel is constructed.
 	 * 
-	 * @return instance of FeedbackMessagesModel to use
-	 */
-	protected FeedbackMessagesModel newFeedbackMessagesModel()
-	{
-		return new FeedbackMessagesModel(getFeedbackMessageFilter());
-	}
-
-	/**
-	 * @return Let subclass specify some other filter
+	 * @return Let subclass specify some other filter.
 	 */
 	protected IFeedbackMessageFilter getFeedbackMessageFilter()
 	{
 		return null;
+	}
+
+	/**
+	 * Gets a new instance of FeedbackMessagesModel to use.
+	 * 
+	 * @return Instance of FeedbackMessagesModel to use
+	 */
+	protected FeedbackMessagesModel newFeedbackMessagesModel()
+	{
+		return new FeedbackMessagesModel(getFeedbackMessageFilter());
 	}
 }
