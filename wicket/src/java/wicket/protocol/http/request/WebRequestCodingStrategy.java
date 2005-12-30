@@ -43,7 +43,8 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageRequestTarget;
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
+import wicket.request.IRequestTargetMounter;
 import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -56,7 +57,7 @@ import wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class WebRequestEncoder implements IRequestEncoder
+public class WebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
@@ -87,7 +88,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	};
 
 	/** log. */
-	private static Log log = LogFactory.getLog(WebRequestEncoder.class);
+	private static Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
 
 	/**
 	 * map of path mounts for mount encoders on paths.
@@ -114,12 +115,12 @@ public class WebRequestEncoder implements IRequestEncoder
 	/**
 	 * Construct.
 	 */
-	public WebRequestEncoder()
+	public WebRequestCodingStrategy()
 	{
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#decode(wicket.Request)
+	 * @see wicket.request.IRequestCodingStrategy#decode(wicket.Request)
 	 */
 	public final RequestParameters decode(Request request)
 	{
@@ -142,7 +143,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 * either, and exception will be thrown saying that encoding could not be
 	 * done.
 	 * 
-	 * @see wicket.request.IRequestEncoder#encode(wicket.RequestCycle,
+	 * @see wicket.request.IRequestCodingStrategy#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
 	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
@@ -234,7 +235,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#pathForTarget(wicket.IRequestTarget)
+	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
 	 */
 	public final String pathForTarget(IRequestTarget requestTarget)
 	{
@@ -248,7 +249,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#targetForPath(java.lang.String)
+	 * @see wicket.request.IRequestCodingStrategy#targetForPath(java.lang.String)
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
@@ -257,7 +258,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestEncoder#unmount(java.lang.String)
+	 * @see wicket.request.IRequestCodingStrategy#unmount(java.lang.String)
 	 */
 	public final void unmount(String path)
 	{

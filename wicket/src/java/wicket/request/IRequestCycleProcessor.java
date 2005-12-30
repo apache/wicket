@@ -66,7 +66,7 @@ public interface IRequestCycleProcessor
 	 * 
 	 * @return the request encoder
 	 */
-	IRequestEncoder getRequestEncoder();
+	IRequestCodingStrategy getRequestCodingStrategy();
 
 	/**
 	 * <p>
@@ -84,7 +84,7 @@ public interface IRequestCycleProcessor
 	 *            the current request cycle
 	 * @param requestParameters
 	 *            The request parameters object as decoded by this processor's
-	 *            {@link IRequestEncoder}.
+	 *            {@link IRequestCodingStrategy}.
 	 * @return the request target; has to be non-null!
 	 */
 	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);

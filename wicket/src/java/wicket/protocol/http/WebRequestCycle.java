@@ -67,6 +67,24 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * By default returns the WebApplication's default request cycle processor.
+	 * Typically, you don't override this method but instead override
+	 * {@link WebApplication#getDefaultRequestCycleProcessor()}.
+	 * <p>
+	 * <strong>if you decide to override this method to provide a custom
+	 * processor per request cycle, any mounts done via WebApplication will not
+	 * work and and {@link #onRuntimeException(Page, RuntimeException)} is not
+	 * called unless you deliberately put effort in it to make it work.</strong>
+	 * </p>
+	 * 
+	 * @see wicket.RequestCycle#getProcessor()
+	 */
+	public IRequestCycleProcessor getProcessor()
+	{
+		return ((WebApplication)getApplication()).getDefaultRequestCycleProcessor();
+	}
+
+	/**
 	 * @return Request as a WebRequest
 	 */
 	public WebRequest getWebRequest()
@@ -170,7 +188,7 @@ public class WebRequestCycle extends RequestCycle
 				// re-assign the original response
 				setResponse(currentResponse);
 				log.error(ex.getMessage(), ex);
-				IRequestCycleProcessor processor = getRequestCycleProcessor();
+				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
 				return;
 			}
@@ -189,24 +207,6 @@ public class WebRequestCycle extends RequestCycle
 		}
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
-	}
-
-	/**
-	 * By default returns the WebApplication's default request cycle processor.
-	 * Typically, you don't override this method but instead override
-	 * {@link WebApplication#getDefaultRequestCycleProcessor()}.
-	 * <p>
-	 * <strong>if you decide to override this method to provide a custom
-	 * processor per request cycle, any mounts done via WebApplication will not
-	 * work and and {@link #onRuntimeException(Page, RuntimeException)} is not
-	 * called unless you deliberately put effort in it to make it work.</strong>
-	 * </p>
-	 * 
-	 * @see wicket.RequestCycle#getRequestCycleProcessor()
-	 */
-	public IRequestCycleProcessor getRequestCycleProcessor()
-	{
-		return ((WebApplication)getApplication()).getDefaultRequestCycleProcessor();
 	}
 
 	/**

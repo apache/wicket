@@ -33,7 +33,7 @@ import wicket.request.ClientInfo;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
@@ -380,6 +380,13 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the processor for delegated request cycle handling.
+	 * 
+	 * @return the processor for delegated request cycle handling
+	 */
+	public abstract IRequestCycleProcessor getProcessor();
+
+	/**
 	 * Gets whether the page for this request should be redirected.
 	 * 
 	 * @return whether the page for this request should be redirected
@@ -398,13 +405,6 @@ public abstract class RequestCycle
 	{
 		return request;
 	}
-
-	/**
-	 * Gets the processor for delegated request cycle handling.
-	 * 
-	 * @return the processor for delegated request cycle handling
-	 */
-	public abstract IRequestCycleProcessor getRequestCycleProcessor();
 
 	/**
 	 * Looks up an request interface method by name.
@@ -840,7 +840,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the request parameters object using the instance of
-	 * {@link IRequestEncoder} of the provided request cycle processor.
+	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
 	 * 
 	 * @param processor
 	 *            the request cycle processor
@@ -849,7 +849,7 @@ public abstract class RequestCycle
 	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
 	{
 		// get the request encoder to decode the request parameters
-		final IRequestEncoder encoder = processor.getRequestEncoder();
+		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 		if (encoder == null)
 		{
 			throw new WicketRuntimeException("request encoder must be not-null (provided by "
@@ -905,14 +905,14 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Safe version of {@link #getRequestCycleProcessor()} that throws an
+	 * Safe version of {@link #getProcessor()} that throws an
 	 * exception when the processor is null.
 	 * 
 	 * @return the request processor
 	 */
 	private IRequestCycleProcessor safeGetRequestProcessor()
 	{
-		IRequestCycleProcessor processor = getRequestCycleProcessor();
+		IRequestCycleProcessor processor = getProcessor();
 		if (processor == null)
 		{
 			throw new WicketRuntimeException("request cycle processor must be not-null");

@@ -17,7 +17,7 @@
  */
 package wicket.protocol.http;
 
-import wicket.protocol.http.request.WebRequestEncoder;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
@@ -33,6 +33,6 @@ public class DefaultWebRequestCycleProcessor extends CompoundRequestCycleProcess
 	 */
 	public DefaultWebRequestCycleProcessor()
 	{
-		super(new WebRequestEncoder());
+		super(new WebRequestCodingStrategy());
 	}
 }

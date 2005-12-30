@@ -36,7 +36,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.request.IRequestEncoder;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
@@ -693,9 +693,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		RequestCycle requestCycle = getRequestCycle();
 		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
 				.getRequestInterfaceMethod(interfaceName));
-		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
-				.getRequestEncoder();
-		return requestEncoder.encode(requestCycle, target);
+		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(requestCycle, target);
 	}
 
 	/**
@@ -708,9 +708,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final String urlFor(final IRequestTarget requestTarget)
 	{
 		RequestCycle requestCycle = getRequestCycle();
-		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
-				.getRequestEncoder();
-		return requestEncoder.encode(requestCycle, requestTarget);
+		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(requestCycle, requestTarget);
 	}
 
 
@@ -725,7 +725,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final String urlFor(final String resourceKey)
 	{
 		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getRequestCycleProcessor().getRequestEncoder().encode(
+		String url = requestCycle.getProcessor().getRequestCodingStrategy().encode(
 				requestCycle, new SharedResourceRequestTarget(resourceKey));
 		return url;
 	}
@@ -750,9 +750,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
 				parameters);
 		RequestCycle requestCycle = getRequestCycle();
-		IRequestEncoder requestEncoder = requestCycle.getRequestCycleProcessor()
-				.getRequestEncoder();
-		return requestEncoder.encode(requestCycle, target);
+		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(requestCycle, target);
 	}
 
 	/**

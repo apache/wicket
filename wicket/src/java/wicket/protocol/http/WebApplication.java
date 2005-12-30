@@ -219,7 +219,7 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("Encoder must be not null");
 		}
 
-		getDefaultRequestCycleProcessor().getRequestEncoder().mount(path, encoder);
+		getDefaultRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public abstract class WebApplication extends Application
 	public final void unmount(String path)
 	{
 		checkMountPath(path);
-		getDefaultRequestCycleProcessor().getRequestEncoder().unmount(path);
+		getDefaultRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
