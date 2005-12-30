@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.47 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,10 +18,12 @@
 package wicket.model;
 
 import wicket.Component;
+import wicket.util.lang.PropertyResolver;
 
 /**
  * A PropertyModel is used to dynamically access a model using an <a
- * href="www.ognl.org">Ognl expression </a>.
+ * href="www.ognl.org">Ognl</a>-like property expression. See
+ * {@link PropertyResolver} javadoc for allowed property expressions.
  * <p>
  * For example, take the following bean:
  * 
@@ -46,12 +48,12 @@ import wicket.Component;
  * given person object like this:
  * 
  * <pre>
- *                 Person person = getSomePerson();
- *                 ...
- *                 add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *                  Person person = getSomePerson();
+ *                  ...
+ *                  add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
  * </pre>
  * 
- * Where 'myLabel' is the name of the component, and 'name' is the Ognl
+ * Where 'myLabel' is the name of the component, and 'name' is property
  * expression to get the name property.
  * </p>
  * <p>
@@ -60,16 +62,16 @@ import wicket.Component;
  * updates the name property of a person like this:
  * 
  * <pre>
- *                 add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *                  add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * </p>
  * <p>
- * To force Ognl to convert to a specific type, you can provide constructor
- * argument 'propertyType'.if that is set, that type is used for conversion
- * instead of the type that is figured out by Ognl. This can be especially
+ * To force conversion of property value to a specific type, you can provide constructor
+ * argument 'propertyType'. if that is set, that type is used for conversion
+ * instead of the type that is figured out by {@link PropertyResolver}. This can be especially
  * useful for when you have a generic property (like Serializable myProp) that
- * you want to be converted to a narrower type (e.g. an Integer). Ognl sees an
+ * you want to be converted to a narrower type (e.g. an Integer). {@link PropertyResolver} sees an
  * incomming string being compatible with the target property, and will then
  * bypass the converter. Hence, to force myProp being converted to and from an
  * integer, propertyType should be set to Integer.
@@ -92,12 +94,12 @@ public class PropertyModel extends AbstractPropertyModel
 
 	/**
 	 * If this is set, this type is used for conversion instead of the type that
-	 * is figured out by Ognl. This can be especially useful for when you have
-	 * a generic property (like Serializable myProp) that you want to be
-	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
-	 * string being compatible with the target property, and will then bypass
-	 * the converter. Hence, to force myProp being converted to and from an
-	 * integer, propertyType should be set to Integer.
+	 * is figured out by Ognl. This can be especially useful for when you have a
+	 * generic property (like Serializable myProp) that you want to be converted
+	 * to a narrower type (e.g. an Integer). Ognl sees an incomming string being
+	 * compatible with the target property, and will then bypass the converter.
+	 * Hence, to force myProp being converted to and from an integer,
+	 * propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
 
