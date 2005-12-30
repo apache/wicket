@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DefaultRequestTargetResolverStrategy.java,v 1.4 2005/12/30 21:47:05
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,9 +46,9 @@ import wicket.util.string.Strings;
 
 /**
  * Default target resolver strategy. It tries to lookup any registered mount
- * with {@link wicket.request.IRequestCodingStrategy} and in case no mount was found,
- * it uses the {@link wicket.request.RequestParameters} object for default
- * resolving.
+ * with {@link wicket.request.IRequestCodingStrategy} and in case no mount was
+ * found, it uses the {@link wicket.request.RequestParameters} object for
+ * default resolving.
  * 
  * @author Eelco Hillenius
  */
@@ -284,8 +284,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		Application application = session.getApplication();
 		try
 		{
-			// get the home page class
+			// Get the home page class
 			Class homePageClass = application.getPages().getHomePage();
+
 			// and create a dummy target for looking up whether the home page is
 			// mounted
 			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(
@@ -296,7 +297,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 			if (path != null)
 			{
-				// the home page was mounted at the given path.
+				// The home page was mounted at the given path.
 				// Issue a redirect to that path
 				requestCycle.setRedirect(true);
 				// our poke target is good enough
@@ -307,11 +308,11 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// that we will keep a clean path
 			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			Page newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			// the response might have been set in the constructor of the home
-			// page
+			
+			// The response might have been set in the home page constructor
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 
-			// is it possible that there is already another request target at
+			// Is it possible that there is already another request target at
 			// this point then the 2 below?
 			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
 			{
@@ -330,8 +331,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 * Resolves to an external resource.
 	 * 
 	 * @param requestCycle
-	 *            the current request cycle
-	 * @return the external resource request target
+	 *            The current request cycle
+	 * @return The external resource request target
 	 */
 	protected IRequestTarget resolveExternalResource(RequestCycle requestCycle)
 	{
