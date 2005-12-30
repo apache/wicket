@@ -50,7 +50,7 @@ public abstract class AbstractBeanPanel extends Panel
 		super(id, beanModel);
 		if (beanModel == null)
 		{
-			throw new NullPointerException("argument beanModel must not be null");
+			throw new IllegalArgumentException("Argument beanModel must not be null");
 		}
 	}
 

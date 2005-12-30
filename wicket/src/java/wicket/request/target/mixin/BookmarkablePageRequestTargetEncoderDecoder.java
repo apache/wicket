@@ -52,7 +52,7 @@ public class BookmarkablePageRequestTargetEncoderDecoder extends AbstractRequest
 
 		if (bookmarkablePageClass == null)
 		{
-			throw new NullPointerException("argument bookmarkablePageClass must be not null");
+			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
 		this.bookmarkablePageClass = bookmarkablePageClass;

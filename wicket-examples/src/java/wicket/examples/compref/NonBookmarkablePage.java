@@ -37,7 +37,7 @@ public class NonBookmarkablePage extends WebPage
     {
     	if (referer == null)
     	{
-    		throw new NullPointerException("argument referer must not be null");
+    		throw new IllegalArgumentException("Argument referer must not be null");
     	}
 
     	// Add a link to navigate back to the refering page. We now use the PageLink

@@ -72,7 +72,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		super();
 		if (unscaledImageResource == null)
 		{
-			throw new NullPointerException("unscaledImageResource must be not null");
+			throw new IllegalArgumentException("Argument unscaledImageResource must be not null");
 		}
 		this.unscaledImageResource = unscaledImageResource;
 		this.maxSize = maxSize;

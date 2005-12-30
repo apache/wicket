@@ -48,12 +48,12 @@ public class PropertyMeta implements Serializable
 	{
 		if (propertyDescriptor == null)
 		{
-			throw new NullPointerException("argument propertyDescriptor may not be null");
+			throw new IllegalArgumentException("Argument propertyDescriptor may not be null");
 		}
 
 		if (beanModel == null)
 		{
-			throw new NullPointerException("argument beanModel may not be null");
+			throw new IllegalArgumentException("Argument beanModel may not be null");
 		}
 
 		this.beanModel = beanModel;

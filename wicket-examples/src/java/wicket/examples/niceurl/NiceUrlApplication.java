@@ -21,6 +21,7 @@ import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.filter.PrependContextPathHandler;
+import wicket.util.lang.PackageName;
 
 /**
  * Application class for this example.
@@ -48,10 +49,10 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// maybe not the neatest sight, but for package mounting it makes
 		// sense to use one of the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
-		// be applied here. 
-		mountPackage("/my/mounted/package", Page3.class);
+		// be applied here.
+		mount("/my/mounted/package", PackageName.forClass(Page3.class));
 	}
-	
+
 	/**
 	 * Make sure all hrefs (and src) attributes have the correct prefix.
 	 * 

@@ -84,14 +84,14 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 
 		if (component == null)
 		{
-			throw new NullPointerException("argument component must be not null");
+			throw new IllegalArgumentException("Argument component must be not null");
 		}
 
 		this.component = component;
 
 		if (listenerMethod == null)
 		{
-			throw new NullPointerException("argument listenerMethod must be not null");
+			throw new IllegalArgumentException("Argument listenerMethod must be not null");
 		}
 
 		this.listenerMethod = listenerMethod;
@@ -164,8 +164,8 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
-				.append(getPage().toString()).append("->").append(getTarget().getId()).append(
-						"->").append(getListenerMethod().getDeclaringClass()).append(".").append(
+				.append(getPage().toString()).append("->").append(getTarget().getId()).append("->")
+				.append(getListenerMethod().getDeclaringClass()).append(".").append(
 						getListenerMethod().getName());
 		if (getBehaviourId() != null)
 		{

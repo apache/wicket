@@ -43,7 +43,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	{
 		if (component == null)
 		{
-			throw new NullPointerException("Argument 'component' must be not null");
+			throw new IllegalArgumentException("Argument 'component' must be not null");
 		}
 
 		this.component = component;

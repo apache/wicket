@@ -43,7 +43,7 @@ public abstract class AbstractRequestTargetEncoderDecoder implements IRequestTar
 	{
 		if (mountPath == null)
 		{
-			throw new NullPointerException("argument mountPath must be not null");
+			throw new IllegalArgumentException("Argument mountPath must be not null");
 		}
 
 		this.mountPath = mountPath;

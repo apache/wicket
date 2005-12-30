@@ -195,7 +195,7 @@ public abstract class Session implements Serializable
 	{
 		if (session == null)
 		{
-			throw new NullPointerException("argument session must me not null");
+			throw new IllegalArgumentException("Argument session must me not null");
 		}
 		CURRENT.set(session);
 	}

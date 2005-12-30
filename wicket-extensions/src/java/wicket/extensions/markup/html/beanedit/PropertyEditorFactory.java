@@ -68,11 +68,11 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	{
 		if (factory == null)
 		{
-			throw new NullPointerException("argument factory may not be null");
+			throw new IllegalArgumentException("Argument factory may not be null");
 		}
 		if (c == null)
 		{
-			throw new NullPointerException("argument c (class) may not be null");
+			throw new IllegalArgumentException("Argument c (class) may not be null");
 		}
 
 		IPropertyEditorFactory replaced =

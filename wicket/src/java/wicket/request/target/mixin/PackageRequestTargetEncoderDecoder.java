@@ -1,6 +1,6 @@
 /*
- * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10 21:28:56 eelco12
- * Exp $ $Revision$ $Date$
+ * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,6 +23,7 @@ import wicket.Session;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.util.lang.Classes;
+import wicket.util.lang.PackageName;
 
 /**
  * Encodes and decodes mounts for a whole package.
@@ -32,20 +33,20 @@ import wicket.util.lang.Classes;
 public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEncoderDecoder
 {
 	/** package for this mount. */
-	private final String mountedPackageName;
+	private final PackageName packageName;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param mountPath
+	 * @param path
 	 *            the mount path
-	 * @param classOfPackageToMount
-	 *            class from which the package name must be extracted for this mount
+	 * @param packageName
+	 *            The name of the package to mount
 	 */
-	public PackageRequestTargetEncoderDecoder(final String mountPath, Class classOfPackageToMount)
+	public PackageRequestTargetEncoderDecoder(final String path, PackageName packageName)
 	{
-		super(mountPath);
-		mountedPackageName = getPackageName(classOfPackageToMount);
+		super(path);
+		this.packageName = packageName;
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		final String bookmarkablePageClassName = mountedPackageName + remainder.substring(1, ix);
+		final String bookmarkablePageClassName = packageName + remainder.substring(1, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
 		PageParameters parameters = decodePageParameters(parametersFragment);
@@ -100,22 +101,11 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if ( mountedPackageName.equals(getPackageName(target.getPageClass())) )
+			if (packageName.equals(PackageName.forClass(target.getPageClass())))
 			{
 				return true;
 			}
 		}
 		return false;
-	}
-
-	private String getPackageName(Class classOfPackageToMount)
-	{
-		String className = classOfPackageToMount.getName();
-		int index = className.lastIndexOf(".");
-		if(index != -1)
-		{
-			return className.substring(0,index+1); // including '.';
-		}
-		return "";
 	}
 }

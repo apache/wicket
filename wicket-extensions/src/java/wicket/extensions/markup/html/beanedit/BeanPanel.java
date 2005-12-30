@@ -80,7 +80,7 @@ public class BeanPanel extends AbstractBeanPanel
 		Panel header = newHeader("header", beanModel);
 		if (header == null)
 		{
-			throw new NullPointerException("header must be not null");
+			throw new IllegalArgumentException("Header must be not null");
 		}
 		add(header);
 		add(new PropertyList("propertiesList", new BeanPropertiesListModel(beanModel)));
@@ -278,7 +278,7 @@ public class BeanPanel extends AbstractBeanPanel
 			Panel propertyEditor = newPropertyEditor("editor", propertyMeta);
 			if (propertyEditor == null)
 			{
-				throw new NullPointerException("propertyEditor must be not null");
+				throw new IllegalStateException("Value propertyEditor must be not null");
 			}
 			item.add(propertyEditor);
 		}

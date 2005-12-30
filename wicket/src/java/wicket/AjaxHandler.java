@@ -303,7 +303,7 @@ public abstract class AjaxHandler
 	{
 		if (hostComponent == null)
 		{
-			throw new NullPointerException("argument hostComponent must be not null");
+			throw new IllegalArgumentException("Argument hostComponent must be not null");
 		}
 
 		if (this.component != null)

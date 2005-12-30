@@ -44,7 +44,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	{
 		if (resourceKey == null)
 		{
-			throw new NullPointerException("argument resourceKey must be not-null");
+			throw new IllegalArgumentException("Argument resourceKey must be not-null");
 		}
 
 		this.resourceKey = resourceKey;

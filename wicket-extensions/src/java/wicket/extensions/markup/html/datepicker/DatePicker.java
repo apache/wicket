@@ -216,14 +216,14 @@ public class DatePicker extends Panel
 
 		if (settings == null)
 		{
-			throw new NullPointerException("settings must be non null when using this constructor");
+			throw new IllegalArgumentException("Settings must be non null when using this constructor");
 		}
 
 		this.settings = settings;
 
 		if (target == null)
 		{
-			throw new NullPointerException("targetTextField must be not null");
+			throw new IllegalArgumentException("Target must be not null");
 		}
 
 		target.add(new PathAttributeModifier("id", target));

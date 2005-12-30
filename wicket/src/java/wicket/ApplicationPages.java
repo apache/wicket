@@ -121,7 +121,7 @@ public class ApplicationPages
 	{
 		if (internalErrorPage == null)
 		{
-			throw new NullPointerException("argument internalErrorPage may not be null");
+			throw new IllegalArgumentException("Argument internalErrorPage may not be null");
 		}
 		checkPageClass(internalErrorPage);
 
@@ -141,7 +141,7 @@ public class ApplicationPages
 	{
 		if (pageExpiredErrorPage == null)
 		{
-			throw new NullPointerException("argument pageExpiredErrorPage may not be null");
+			throw new IllegalArgumentException("Argument pageExpiredErrorPage may not be null");
 		}
 		checkPageClass(pageExpiredErrorPage);
 
