@@ -630,6 +630,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Set the id for this Page. This method is called by PageMap when a Page is
+	 * added because the id, which is assigned by PageMap, is not known until
+	 * this time.
+	 * 
+	 * @param id
+	 *            The id
+	 */
+	public final void setNumericId(final int id)
+	{
+		this.id = (short)id;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param pageMapName
@@ -698,6 +711,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return requestCodingStrategy.encode(requestCycle, target);
 	}
 
+
 	/**
 	 * Returns a URL that references the given request target.
 	 * 
@@ -712,7 +726,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(requestCycle, requestTarget);
 	}
-
 
 	/**
 	 * Returns a URL that references a shared resource through the provided
@@ -1045,19 +1058,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Set the id for this Page. This method is called by PageMap when a Page is
-	 * added because the id, which is assigned by PageMap, is not known until
-	 * this time.
-	 * 
-	 * @param id
-	 *            The id
-	 */
-	final void setId(final int id)
-	{
-		this.id = (short)id;
-	}
-
-	/**
 	 * Sets metadata on a given component using a given key
 	 * 
 	 * @param component
@@ -1219,11 +1219,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// All Pages are born dirty so they get clustered right away
 		setDirty(true);
 
-		// set the pagemap
+		// Set the pagemap
 		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
 				"pagemap") : null);
 
-		setId(getPageMap().nextId());
+		// Set the numeric id on this page
+		setNumericId(getPageMap().nextId());
 
 		// Set versioning of page based on default
 		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
