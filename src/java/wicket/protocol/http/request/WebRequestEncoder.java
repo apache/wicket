@@ -181,9 +181,9 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetPathMounter#encoderDecoderForPath(java.lang.String)
+	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	public final IRequestTargetUrlCodingStrategy encoderDecoderForPath(String path)
+	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
 		if (path == null)
 		{
@@ -204,7 +204,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetPathMounter#mount(java.lang.String,
+	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String,
 	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
@@ -252,7 +252,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
-		IRequestTargetUrlCodingStrategy encoder = encoderDecoderForPath(path);
+		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(path);
 		return (encoder != null) ? encoder.decode(path) : null;
 	}
 

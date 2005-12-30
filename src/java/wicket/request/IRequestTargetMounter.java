@@ -1,6 +1,6 @@
 /*
- * $Id: IRequestTargetPathMounter.java,v 1.4 2005/12/24 05:56:31 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,18 +25,17 @@ import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTargetPathMounter
+public interface IRequestTargetMounter
 {
 	/**
 	 * Mounts a request target with the given path.
 	 * 
 	 * @param path
 	 *            the path to mount the request target with
-	 * @param encoderDecoder
-	 *            The mount encoder/decoder to use for encoding and decoding
-	 *            targets and mount paths.
+	 * @param urlCodingStrategy
+	 *            The strategy to use for encoding and decoding urls
 	 */
-	void mount(String path, IRequestTargetUrlCodingStrategy encoderDecoder);
+	void mount(String path, IRequestTargetUrlCodingStrategy urlCodingStrategy);
 
 	/**
 	 * Unmounts a request target.
@@ -47,23 +46,13 @@ public interface IRequestTargetPathMounter
 	void unmount(String path);
 
 	/**
-	 * Gets the request target that conforms to the given path.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the request target or null if nothing was mounted with the given
-	 *         path
-	 */
-	IRequestTarget targetForPath(String path);
-
-	/**
 	 * Gets the encoder that was mounted on the provided path if any.
 	 * 
 	 * @param path
 	 *            the path
 	 * @return The encoder/decoder that was mounted on the provided path, if any
 	 */
-	IRequestTargetUrlCodingStrategy encoderDecoderForPath(String path);
+	IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path);
 
 	/**
 	 * Gets the path that the provided request target conforms to.
@@ -73,4 +62,14 @@ public interface IRequestTargetPathMounter
 	 * @return The path that the provided request target conforms to
 	 */
 	String pathForTarget(IRequestTarget requestTarget);
+
+	/**
+	 * Gets the request target that conforms to the given path.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the request target or null if nothing was mounted with the given
+	 *         path
+	 */
+	IRequestTarget targetForPath(String path);
 }

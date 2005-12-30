@@ -30,7 +30,7 @@ import wicket.RequestCycle;
  */
 // TODO just returning a string with encode is probably not enough in the long
 // term if we ever want to support things like client state saving.
-public interface IRequestEncoder extends IRequestTargetPathMounter
+public interface IRequestEncoder extends IRequestTargetMounter
 {
 	/**
 	 * Analyze the request and create a corresponding request parameters object
