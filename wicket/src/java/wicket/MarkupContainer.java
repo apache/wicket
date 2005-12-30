@@ -448,6 +448,20 @@ public abstract class MarkupContainer extends Component
 							+ removedChildren + "]";
 				}
 			});
+
+			// Loop through child components
+			int size = children_size();
+			for (int i=0; i < size; i++)
+			{
+				// Get next child
+				final Component child = children_get(i);
+				
+				// Do not call remove() because the state change would than be 
+				// recorded twice.
+				child.detachModel();
+				child.setParent(null);
+			}
+			
 			this.children = null;
 		}
 	}
@@ -913,11 +927,20 @@ public abstract class MarkupContainer extends Component
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
 
-		// remove if from another parent.
 		MarkupContainer parent = component.getParent();
 		if (parent != null)
 		{
-			parent.remove(component);
+			// It is ok to replace the component if it is the same parent container
+			if (parent == getParent())
+			{
+				parent.remove(component);
+			}
+			else
+			{
+				throw new WicketRuntimeException(
+					"You can not add the same Component instance to two different parents: " 
+						+ component.toString());
+			}
 		}
 
 		// Set child's parent

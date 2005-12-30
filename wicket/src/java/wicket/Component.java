@@ -1302,7 +1302,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 		validateMarkupStream(markupStream);
 
 		// Get mutable copy of next tag
-		final ComponentTag tag = markupStream.getTag().mutable();
+		final ComponentTag openTag = markupStream.getTag();
+		final ComponentTag tag = openTag.mutable();
 
 		// Call any tag handler
 		onComponentTag(tag);
@@ -1311,11 +1312,18 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!tag.isOpenClose() && !tag.isOpen())
 		{
 			// We were something other than <tag> or <tag/>
-			markupStream
-					.throwMarkupException("Method renderComponent called on bad markup element "
-							+ tag);
+			markupStream.throwMarkupException(
+					"Method renderComponent called on bad markup element: "
+					+ tag);
 		}
 
+		if (tag.isOpenClose() && openTag.isOpen())
+		{
+			markupStream.throwMarkupException(
+					"You can not modify a open tag to open-close: "
+					+ tag);
+		}
+		
 		// Render open tag
 		if (getRenderBodyOnly() == false)
 		{
@@ -1333,7 +1341,20 @@ public abstract class Component implements Serializable, IBehaviourListener
 		// Render close tag
 		if (tag.isOpen())
 		{
-			renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+			if (openTag.isOpen())
+			{
+				renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+			}
+			else
+			{
+				// If a open-close tag has been to modified to be open-body-close
+				// than a synthetic close tag must be rendered.
+				if (getRenderBodyOnly() == false)
+				{
+			        // Close the manually opened panel tag.
+			        getResponse().write(openTag.syntheticCloseTagString());
+				}
+			}
 		}
 	}
 
