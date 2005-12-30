@@ -932,9 +932,9 @@ public class ApplicationSettings
 	 * Sets pageMapEvictionStrategy.
 	 * @param pageMapEvictionStrategy pageMapEvictionStrategy
 	 */
-	public final void setPageMapEvictionStrategy(IPageMapEvictionStrategy evictionStrategy)
+	public final void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy)
 	{
-		this.pageMapEvictionStrategy = evictionStrategy;
+		this.pageMapEvictionStrategy = pageMapEvictionStrategy;
 	}
 
 	/**

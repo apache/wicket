@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.64 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,6 +45,7 @@ import wicket.response.BufferedResponse;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
+import wicket.util.lang.PackageName;
 
 
 /**
@@ -64,13 +65,27 @@ import wicket.util.file.WebApplicationPath;
  * init() method. For example:
  * 
  * <pre>
- *                                      
- *        public void init()
- *        {
- *          	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *           URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *           ...
+ * 
+ *  
+ *   
+ *    
  *     
+ *      
+ *       
+ *                                             
+ *               public void init()
+ *               {
+ *                 	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                  URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                  ...
+ *            
+ *        
+ *       
+ *      
+ *     
+ *    
+ *   
+ *  
  * </pre>
  * 
  * @see WicketServlet
@@ -201,10 +216,51 @@ public abstract class WebApplication extends Application
 
 		if (encoder == null)
 		{
-			throw new NullPointerException("encoder must be not null");
+			throw new IllegalArgumentException("Encoder must be not null");
 		}
 
 		getDefaultRequestCycleProcessor().getRequestEncoder().mount(path, encoder);
+	}
+
+	/**
+	 * Mounts all bookmarkable pages in a given package.
+	 * 
+	 * @param path
+	 *            The path to mount at
+	 * @param p
+	 *            The package for which all bookmarkable pages or
+	 *            sharedresources should be mounted
+	 */
+	public final void mount(String path, Package p)
+	{
+		if (p == null)
+		{
+			throw new IllegalArgumentException("Null Package argument not allowed.  "
+					+ "If you called Class.getPackage() and it returned null, "
+					+ "there may be no Package object for the given class!  "
+					+ "You can instead call mount(path, PackageName), passing "
+					+ "in wicket.util.lang.PackageName.forClass(c)");
+		}
+		mount(path, PackageName.forPackage(p));
+	}
+
+	/**
+	 * Mounts all bookmarkable pages at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param packageName
+	 *            the name of the package for which all bookmarkable pages or
+	 *            sharedresources should be mounted
+	 */
+	public final void mount(String path, PackageName packageName)
+	{
+		checkMountPath(path);
+		if (packageName == null)
+		{
+			throw new IllegalArgumentException("PackageName cannot be null");
+		}
+		mount(path, new PackageRequestTargetEncoderDecoder(path, packageName));
 	}
 
 	/**
@@ -218,7 +274,8 @@ public abstract class WebApplication extends Application
 	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass, null));
+		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass,
+				null));
 	}
 
 	/**
@@ -237,26 +294,6 @@ public abstract class WebApplication extends Application
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetEncoderDecoder(path, bookmarkablePageClass,
 				pageMapName));
-	}
-
-	/**
-	 * Mounts all bookmarkable pages at the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param classOfPackageToMount
-	 *            the class for which package of which all bookmarkable pages or
-	 *            sharedresources should be mounted
-	 */
-	public final void mountPackage(String path, Class classOfPackageToMount)
-	{
-		checkMountPath(path);
-
-		if (classOfPackageToMount == null)
-		{
-			throw new NullPointerException("class for mounting a package can't be null");
-		}
-		mount(path, new PackageRequestTargetEncoderDecoder(path, classOfPackageToMount));
 	}
 
 	/**

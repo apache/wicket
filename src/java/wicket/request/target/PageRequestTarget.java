@@ -46,7 +46,7 @@ public class PageRequestTarget
 	{
 		if (page == null)
 		{
-			throw new NullPointerException("argument page must be not null");
+			throw new IllegalArgumentException("Argument page must be not null");
 		}
 
 		this.page = page;

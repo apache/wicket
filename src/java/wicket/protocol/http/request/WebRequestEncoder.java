@@ -105,7 +105,8 @@ public class WebRequestEncoder implements IRequestEncoder
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private SortedMap/* <String,IRequestTargetEncoderDecoder> */mountsOnPath = new TreeMap(lengthComparator);
+	private SortedMap/* <String,IRequestTargetEncoderDecoder> */mountsOnPath = new TreeMap(
+			lengthComparator);
 
 	/** cached url prefix. */
 	private String urlPrefix;
@@ -210,12 +211,12 @@ public class WebRequestEncoder implements IRequestEncoder
 	{
 		if (path == null)
 		{
-			throw new NullPointerException("argument path must be not-null");
+			throw new IllegalArgumentException("Argument path must be not-null");
 		}
 
 		if (encoder == null)
 		{
-			throw new NullPointerException("argument encoder must be not-null");
+			throw new IllegalArgumentException("Argument encoder must be not-null");
 		}
 
 		// sanity check
@@ -262,7 +263,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	{
 		if (path == null)
 		{
-			throw new NullPointerException("argument path must be not-null");
+			throw new IllegalArgumentException("Argument path must be not-null");
 		}
 
 		// sanity check

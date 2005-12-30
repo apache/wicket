@@ -103,12 +103,12 @@ public class BookmarkablePageRequestTarget
 	{
 		if (pageClass == null)
 		{
-			throw new NullPointerException("argument pageClass must be not null");
+			throw new IllegalArgumentException("Argument pageClass must be not null");
 		}
 
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
-			throw new IllegalArgumentException("pageClass must be an instance of "
+			throw new IllegalArgumentException("Argument pageClass must be an instance of "
 					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;

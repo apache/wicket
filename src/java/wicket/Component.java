@@ -504,7 +504,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		if (behaviour == null)
 		{
-			throw new NullPointerException("argument may not be null");
+			throw new IllegalArgumentException("Argument may not be null");
 		}
 
 		// Lazy create
@@ -1761,7 +1761,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		if (behaviourListener == null)
 		{
-			throw new NullPointerException("argument behaviourListener must be not null");
+			throw new IllegalArgumentException("Argument behaviourListener must be not null");
 		}
 
 		if (behaviours == null)

@@ -226,8 +226,9 @@ public abstract class FileUploadBase {
      */
     public List /* FileItem */ parseRequest(RequestContext ctx)
             throws FileUploadException {
-        if (ctx == null) {
-            throw new NullPointerException("ctx parameter");
+        if (ctx == null) 
+        {
+            throw new IllegalArgumentException("ctx parameter cannot be null");
         }
 
         ArrayList items = new ArrayList();

@@ -535,8 +535,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	public Object put(Object key, Object value)
 	{
 		if (value == null)
-			throw new NullPointerException();
-
+		{
+			throw new IllegalArgumentException("Value must not be null");
+		}
 		int hash = hash(key);
 		Segment seg = segments[hash & SEGMENT_MASK];
 		int segcount;
@@ -779,10 +780,10 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 */
 	public boolean containsValue(Object value)
 	{
-
 		if (value == null)
-			throw new NullPointerException();
-
+		{
+			throw new IllegalArgumentException("Value must not be null");
+		}
 		for (int s = 0; s < segments.length; ++s)
 		{
 			Segment seg = segments[s];
@@ -1202,7 +1203,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public Object setValue(Object value)
 		{
 			if (value == null)
-				throw new NullPointerException();
+			{
+				throw new IllegalArgumentException("Value must not be null");
+			}
 			Object oldValue = this.value;
 			this.value = value;
 			return oldValue;

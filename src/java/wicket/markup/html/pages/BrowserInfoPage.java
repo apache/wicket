@@ -130,7 +130,7 @@ public class BrowserInfoPage extends WebPage
 	{
 		if (continueTo == null)
 		{
-			throw new NullPointerException("argument continueTo must be not null");
+			throw new IllegalArgumentException("Argument continueTo must be not null");
 		}
 		setContinueTo(continueTo);
 		initComps();

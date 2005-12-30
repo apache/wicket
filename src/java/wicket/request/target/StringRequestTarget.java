@@ -46,7 +46,7 @@ public class StringRequestTarget implements IRequestTarget
 	{
 		if (string == null)
 		{
-			throw new NullPointerException("argument string must be not null");
+			throw new IllegalArgumentException("Argument string must be not null");
 		}
 
 		this.string = string;

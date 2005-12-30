@@ -51,12 +51,12 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	{
 		if (resourceStream == null)
 		{
-			throw new NullPointerException("argument resourceStream must be not null");
+			throw new IllegalArgumentException("Argument resourceStream must be not null");
 		}
 
 		if (responseType == null)
 		{
-			throw new NullPointerException("argument responseType must be not null");
+			throw new IllegalArgumentException("Argument responseType must be not null");
 		}
 
 		this.resourceStream = resourceStream;

@@ -175,7 +175,7 @@ public final class Converter implements IConverter
 		// Class cannot be null
 		if (c == null)
 		{
-			throw new NullPointerException("Class cannot be null");
+			throw new IllegalArgumentException("Class cannot be null");
 		}
 
 		// Catch all cases where value is already the right type
@@ -263,11 +263,11 @@ public final class Converter implements IConverter
 	{
 		if (converter == null)
 		{
-			throw new NullPointerException("Converter cannot be null");
+			throw new IllegalArgumentException("Converter cannot be null");
 		}
 		if (c == null)
 		{
-			throw new NullPointerException("Class cannot be null");
+			throw new IllegalArgumentException("Class cannot be null");
 		}
 		return (ITypeConverter)classToConverter.put(c, converter);
 	}

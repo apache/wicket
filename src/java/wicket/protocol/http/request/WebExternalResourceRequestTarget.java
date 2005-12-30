@@ -60,7 +60,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	{
 		if (url == null)
 		{
-			throw new NullPointerException("argument url must be not null");
+			throw new IllegalArgumentException("Argument url must be not null");
 		}
 
 		this.url = url;

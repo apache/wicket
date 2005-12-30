@@ -502,8 +502,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	public Object put(Object key, Object value)
 	{
 		if (value == null)
-			throw new NullPointerException();
-
+		{
+			throw new IllegalArgumentException("Value must not be null");
+		}
 		int hash = hash(key);
 		Entry[] tab = table;
 		int index = hash & (tab.length - 1);
@@ -775,8 +776,10 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	public boolean containsValue(Object value)
 	{
 		if (value == null)
-			throw new NullPointerException();
-
+		{
+			throw new IllegalArgumentException("Value must not be null");
+		}
+		
 		Entry tab[] = getTableForReading();
 
 		for (int i = 0; i < tab.length; ++i)
@@ -1210,7 +1213,10 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public Object setValue(Object value)
 		{
 			if (value == null)
-				throw new NullPointerException();
+			{
+				throw new IllegalArgumentException("Value must not be null");
+			}
+			
 			Object oldValue = this.value;
 			this.value = value;
 			return oldValue;
