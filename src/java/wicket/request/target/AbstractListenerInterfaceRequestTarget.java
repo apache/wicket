@@ -23,7 +23,6 @@ import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.request.IListenerInterfaceRequestTarget;
-import wicket.request.target.mixin.IEventProcessor;
 
 /**
  * The abstract implementation of

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target.mixin;
+package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 
@@ -25,7 +25,7 @@ import wicket.IRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public interface IRequestTargetEncoderDecoder
+public interface IRequestTargetUrlCodingStrategy
 {
 	/**
 	 * Gets the encoded url for the provided request target. Typically, the

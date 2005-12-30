@@ -67,7 +67,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IEventProcessor#processEvents(wicket.RequestCycle)
+	 * @see wicket.request.target.IEventProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{

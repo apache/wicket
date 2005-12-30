@@ -1,5 +1,5 @@
 /*
- * $Id: BookmarkablePageRequestTargetEncoderDecoder.java,v 1.1 2005/12/10
+ * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
  * 21:28:56 eelco12 Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target.mixin;
+package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
@@ -30,7 +30,7 @@ import wicket.util.lang.PackageName;
  * 
  * @author Eelco Hillenius
  */
-public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEncoderDecoder
+public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
 	/** package for this mount. */
 	private final PackageName packageName;
@@ -43,14 +43,14 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 	 * @param packageName
 	 *            The name of the package to mount
 	 */
-	public PackageRequestTargetEncoderDecoder(final String path, PackageName packageName)
+	public PackageRequestTargetUrlCodingStrategy(final String path, PackageName packageName)
 	{
 		super(path);
 		this.packageName = packageName;
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
 	 */
 	public IRequestTarget decode(String urlFragment)
 	{
@@ -76,7 +76,7 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#encode(wicket.IRequestTarget)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
 	public final String encode(IRequestTarget requestTarget)
 	{
@@ -94,7 +94,7 @@ public class PackageRequestTargetEncoderDecoder extends AbstractRequestTargetEnc
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IRequestTargetEncoderDecoder#matches(wicket.IRequestTarget)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{

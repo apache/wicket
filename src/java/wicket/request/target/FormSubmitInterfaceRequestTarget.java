@@ -42,7 +42,7 @@ public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceR
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IEventProcessor#processEvents(wicket.RequestCycle)
+	 * @see wicket.request.target.IEventProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{

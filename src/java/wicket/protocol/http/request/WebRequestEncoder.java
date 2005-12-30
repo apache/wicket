@@ -46,7 +46,7 @@ import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestEncoder;
 import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
-import wicket.request.target.mixin.IRequestTargetEncoderDecoder;
+import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
@@ -105,7 +105,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private SortedMap/* <String,IRequestTargetEncoderDecoder> */mountsOnPath = new TreeMap(
+	private SortedMap/* <String,IRequestTargetUrlCodingStrategy> */mountsOnPath = new TreeMap(
 			lengthComparator);
 
 	/** cached url prefix. */
@@ -148,7 +148,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
+		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
 			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
@@ -183,11 +183,11 @@ public class WebRequestEncoder implements IRequestEncoder
 	/**
 	 * @see wicket.request.IRequestTargetPathMounter#encoderDecoderForPath(java.lang.String)
 	 */
-	public final IRequestTargetEncoderDecoder encoderDecoderForPath(String path)
+	public final IRequestTargetUrlCodingStrategy encoderDecoderForPath(String path)
 	{
 		if (path == null)
 		{
-			return (IRequestTargetEncoderDecoder)mountsOnPath.get(null);
+			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
 		}
 
 		Iterator it = mountsOnPath.entrySet().iterator();
@@ -197,7 +197,7 @@ public class WebRequestEncoder implements IRequestEncoder
 			String key = (String)entry.getKey();
 			if (path.startsWith(key))
 			{
-				return (IRequestTargetEncoderDecoder)entry.getValue();
+				return (IRequestTargetUrlCodingStrategy)entry.getValue();
 			}
 		}
 		return null;
@@ -205,9 +205,9 @@ public class WebRequestEncoder implements IRequestEncoder
 
 	/**
 	 * @see wicket.request.IRequestTargetPathMounter#mount(java.lang.String,
-	 *      wicket.request.target.mixin.IRequestTargetEncoderDecoder)
+	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
-	public final void mount(String path, IRequestTargetEncoderDecoder encoder)
+	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
 	{
 		if (path == null)
 		{
@@ -239,7 +239,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	public final String pathForTarget(IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		IRequestTargetEncoderDecoder encoder = getMountEncoder(requestTarget);
+		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
 			return encoder.encode(requestTarget);
@@ -252,7 +252,7 @@ public class WebRequestEncoder implements IRequestEncoder
 	 */
 	public final IRequestTarget targetForPath(String path)
 	{
-		IRequestTargetEncoderDecoder encoder = encoderDecoderForPath(path);
+		IRequestTargetUrlCodingStrategy encoder = encoderDecoderForPath(path);
 		return (encoder != null) ? encoder.decode(path) : null;
 	}
 
@@ -509,12 +509,12 @@ public class WebRequestEncoder implements IRequestEncoder
 	 *            the request target to match
 	 * @return the mount encoder if any
 	 */
-	protected IRequestTargetEncoderDecoder getMountEncoder(IRequestTarget requestTarget)
+	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
 		// TODO optimize algoritm if possible and/ or cache lookup results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
-			IRequestTargetEncoderDecoder encoder = (IRequestTargetEncoderDecoder)i.next();
+			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
 			if (encoder.matches(requestTarget))
 			{
 				return encoder;

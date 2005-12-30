@@ -25,7 +25,6 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
-import wicket.request.target.mixin.IAccessCheck;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener event request.
@@ -93,7 +92,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget, IAc
 	}
 
 	/**
-	 * @see wicket.request.target.mixin.IAccessCheck#checkAccess(RequestCycle)
+	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{

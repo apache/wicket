@@ -22,13 +22,13 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
-import wicket.request.target.mixin.IEventProcessor;
+import wicket.request.target.IEventProcessor;
 
 /**
  * The default event processing strategy looks whether the current target is of
- * type {@link wicket.request.target.mixin.IEventProcessor} and, if so, calls
+ * type {@link wicket.request.target.IEventProcessor} and, if so, calls
  * method
- * {@link wicket.request.target.mixin.IEventProcessor#processEvents(RequestCycle)}
+ * {@link wicket.request.target.IEventProcessor#processEvents(RequestCycle)}
  * on them.
  * 
  * @author Eelco Hillenius
