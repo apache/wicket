@@ -25,7 +25,7 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class NoopOutputTransformerContainer extends AbstractOutputTransformerContainer
+public class NoopOutputTransformerContainer extends AbstractOutputTransformerContainer
 {
 	private static final long serialVersionUID = 1L;
 

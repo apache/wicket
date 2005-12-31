@@ -74,14 +74,6 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 
 	/**
-	 * Renders this component. This implementation just calls renderComponent.
-	 */
-	protected void onRender()
-	{
-		renderComponent(findMarkupStream());
-	}
-
-	/**
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section.
 	 * 
