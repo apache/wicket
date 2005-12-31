@@ -157,6 +157,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
             return false;
         }
 
+        // Ok, it is a wicket:body tag. Now render its body
         ComponentTag bodyTag = tag;
         if (tag.isOpen())
         {
