@@ -17,11 +17,11 @@
  */
 package wicket.markup.outputTransformer;
 
+import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.response.StringResponse;
 
@@ -31,7 +31,7 @@ import wicket.response.StringResponse;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class AbstractOutputTransformerContainer extends WebMarkupContainer
+public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,6 +55,15 @@ public abstract class AbstractOutputTransformerContainer extends WebMarkupContai
 		super(id, model);
 	}
 
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupType()
+	 */
+	public String getMarkupType()
+	{
+		return "xsl";
+	}
+	
 	/**
 	 * Create a new response object which is used to store the markup generated
 	 * by the child objects.
@@ -89,12 +98,14 @@ public abstract class AbstractOutputTransformerContainer extends WebMarkupContai
 
 		try
 		{
+			// Create a new response object
 			final Response response = newResponse();
 			if (response == null)
 			{
 				throw new IllegalStateException("newResponse() must not return null");
 			}
 
+			// and make it the current one
 			this.getRequestCycle().setResponse(response);
 
 			// Invoke default execution
@@ -102,6 +113,7 @@ public abstract class AbstractOutputTransformerContainer extends WebMarkupContai
 
 			try
 			{
+				// Tranform the data
 				String output = transform(response.toString());
 				webResponse.write(output);
 			}

@@ -46,16 +46,7 @@ public class Page_1 extends WebPage
 	{
 		add(new Label("myLabel", "Test Label"));
 		
-	    MarkupContainer container = new NoopOutputTransformerContainer("test")
-	    {
-			private static final long serialVersionUID = 1L;
-
-			protected String transform(String output)
-			{
-				// do nothing
-				return output;
-			}
-	    };
+	    MarkupContainer container = new NoopOutputTransformerContainer("test");
 	    
 	    add(container);
 	    container.add(new Label("myLabel2", "Test Label2"));
@@ -91,9 +82,13 @@ public class Page_1 extends WebPage
 	    Border border = new SimpleBorder("myBorder");
 	    borderContainer.add(border);
 
+
+	    MarkupContainer xsltContainer = new NoopOutputTransformerContainer("test4");
+	    add(xsltContainer);
+	    
 	    Border border2 = new SimpleBorder("myBorder2");
 	    border2.setRenderBodyOnly(false);
 	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    add(border2);
+	    xsltContainer.add(border2);
     }
 }
