@@ -29,13 +29,13 @@ import wicket.PageParameters;
 public class BookmarkablePageLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The page class that this link links to. */
 	private final Class pageClass;
 
 	/** The parameters to pass to the class constructor when instantiated. */
 	private final PageParameters parameters;
-	
+
 	/** Just a unique identifier for popup windows within a session. */
 	private static int popupNumber = 0;
 
@@ -70,8 +70,11 @@ public class BookmarkablePageLink extends Link
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
-		} else if (!Page.class.isAssignableFrom(pageClass)) {
-			throw new IllegalArgumentException("Page class must be derived from "+Page.class.getName());
+		}
+		else if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Page class must be derived from "
+					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;
 		this.parameters = parameters;
@@ -90,10 +93,9 @@ public class BookmarkablePageLink extends Link
 	}
 
 	/**
-	 * THIS METHOD IS NOT USED!
-	 * Bookmarkable links do not have a click handler.
-	 * It is here to satisfy the interface only, as
-	 * bookmarkable links will be dispatched by the handling servlet.
+	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.
+	 * It is here to satisfy the interface only, as bookmarkable links will be
+	 * dispatched by the handling servlet.
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
@@ -164,7 +166,7 @@ public class BookmarkablePageLink extends Link
 		}
 		return getPage().urlFor(pageMapName, pageClass, parameters);
 	}
-	
+
 	/**
 	 * Get tge page class registered with the link
 	 * 
