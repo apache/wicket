@@ -46,7 +46,7 @@ public class Page_1 extends WebPage
 	{
 		add(new Label("myLabel", "Test Label"));
 		
-	    MarkupContainer container = new OutputTransformerContainer("test")
+	    MarkupContainer container = new NoopOutputTransformerContainer("test")
 	    {
 			private static final long serialVersionUID = 1L;
 
@@ -60,7 +60,7 @@ public class Page_1 extends WebPage
 	    add(container);
 	    container.add(new Label("myLabel2", "Test Label2"));
 
-	    MarkupContainer panelContainer = new OutputTransformerContainer("test2")
+	    MarkupContainer panelContainer = new AbstractOutputTransformerContainer("test2")
 	    {
 			private static final long serialVersionUID = 1L;
 
@@ -76,7 +76,7 @@ public class Page_1 extends WebPage
 	    panel.setRenderBodyOnly(true);
 	    panelContainer.add(panel);
 
-	    MarkupContainer borderContainer = new OutputTransformerContainer("test3")
+	    MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
 	    {
 			private static final long serialVersionUID = 1L;
 
