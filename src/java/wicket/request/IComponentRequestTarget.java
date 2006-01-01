@@ -30,12 +30,10 @@ import wicket.IRequestTarget;
  */
 public interface IComponentRequestTarget extends IRequestTarget
 {
-
 	/**
 	 * Gets the component instance.
 	 * 
 	 * @return the component instance
 	 */
 	Component getComponent();
-
 }
