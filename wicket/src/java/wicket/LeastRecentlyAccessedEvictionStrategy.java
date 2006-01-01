@@ -74,4 +74,12 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 			}
 		}
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[LeastRecentlyAccessedEvictionStrategy maxPages = " + maxPages + "]";
+	}
 }
