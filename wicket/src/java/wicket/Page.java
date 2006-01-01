@@ -474,7 +474,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Size of this page in bytes 
+	 * @return Size of this page in bytes
 	 */
 	public final int getSize()
 	{
@@ -580,6 +580,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *         user.
 	 */
 	public boolean isErrorPage()
+	{
+		return false;
+	}
+
+	/**
+	 * @return Return true from this method if you want to keep a page out of
+	 *         the session.
+	 */
+	public boolean isStateless()
 	{
 		return false;
 	}
@@ -855,7 +864,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
-		
+
 		detachModels();
 
 		if (isVersioned())

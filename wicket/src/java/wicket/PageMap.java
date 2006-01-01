@@ -258,8 +258,7 @@ public final class PageMap implements Serializable
 	 */
 	final synchronized void put(final IPageMapEntry entry)
 	{
-		// TODO Maybe make Page.isStateless() method and override in Inspector?
-		if (!(entry instanceof Inspector))
+		if (!(entry instanceof Page && ((Page)entry).isStateless()))
 		{
 			// Entry has been accessed
 			session.access(entry);

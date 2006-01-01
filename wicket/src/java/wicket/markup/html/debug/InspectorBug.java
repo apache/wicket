@@ -19,6 +19,7 @@ package wicket.markup.html.debug;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 
@@ -43,15 +44,23 @@ public final class InspectorBug extends Panel
 	public InspectorBug(final String id, final WebPage page)
 	{
 		super(id);
-		Link link = new Link("link")
+		Link link;
+		if (page.isStateless())
 		{
-			private static final long serialVersionUID = 1L;
-
-			public void onClick()
+			link = new BookmarkablePageLink("link", Inspector.class);
+		}
+		else
+		{
+			link = new Link("link")
 			{
-				setResponsePage(new Inspector(page));
-			}
-		};
+				private static final long serialVersionUID = 1L;
+	
+				public void onClick()
+				{
+					setResponsePage(new Inspector(page));
+				}
+			};
+		}
 		link.add(new Image("bug"));
 		add(link);
 	}
