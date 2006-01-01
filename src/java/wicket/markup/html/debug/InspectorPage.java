@@ -28,7 +28,7 @@ import wicket.markup.html.image.Image;
  * 
  * @author Jonathan Locke
  */
-public final class Inspector extends WebPage
+public final class InspectorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -38,7 +38,7 @@ public final class Inspector extends WebPage
 	 * @param page
 	 *            The page to be analyzed
 	 */
-	public Inspector(final WebPage page)
+	public InspectorPage(final WebPage page)
 	{
 		add(new ApplicationView("application", page.getApplication()));
 		add(new SessionView("session", page.getSession()));
@@ -49,7 +49,7 @@ public final class Inspector extends WebPage
 	/**
 	 * Construct.
 	 */
-	public Inspector()
+	public InspectorPage()
 	{
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));

@@ -47,7 +47,7 @@ public final class InspectorBug extends Panel
 		Link link;
 		if (page.isStateless())
 		{
-			link = new BookmarkablePageLink("link", Inspector.class);
+			link = new BookmarkablePageLink("link", InspectorPage.class);
 		}
 		else
 		{
@@ -57,7 +57,7 @@ public final class InspectorBug extends Panel
 	
 				public void onClick()
 				{
-					setResponsePage(new Inspector(page));
+					setResponsePage(new InspectorPage(page));
 				}
 			};
 		}
