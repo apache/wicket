@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import wicket.Component;
 
 /**
- * A compound property model that supports type conversions and OGNL expression
- * bindings.
+ * A compound property model that supports type conversions and property
+ * expression bindings.
  * 
  * @author Jonathan Locke
  */
@@ -51,13 +51,13 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 		private static final long serialVersionUID = 1L;
 
 		private final Component component;
-		private final String ognlExpression;
+		private final String propertyExpression;
 		private final Class type;
 
-		private Binding(final Component component, final String ognlExpression, final Class type)
+		private Binding(final Component component, final String propertyExpression, final Class type)
 		{
 			this.component = component;
-			this.ognlExpression = ognlExpression;
+			this.propertyExpression = propertyExpression;
 			this.type = type;
 		}
 
@@ -68,7 +68,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 		{
 			StringBuffer sb = new StringBuffer("Binding(");
 			sb.append(":component=[").append(component).append("]");
-			sb.append(":expression=[").append(ognlExpression).append("]");
+			sb.append(":expression=[").append(propertyExpression).append("]");
 			sb.append(":type=[").append(type).append("]");
 			sb.append(")");
 			return sb.toString();
@@ -91,13 +91,13 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * 
 	 * @param component
 	 *            The component to bind
-	 * @param ognlExpression
-	 *            An OGNL expression pointing to the property in this model
+	 * @param propertyExpression
+	 *            A property expression pointing to the property in this model
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component, final String ognlExpression)
+	public Component bind(final Component component, final String propertyExpression)
 	{
-		bind(component, ognlExpression, null);
+		bind(component, propertyExpression, null);
 		return component;
 	}
 
@@ -121,16 +121,16 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * 
 	 * @param component
 	 *            The component to bind
-	 * @param ognlExpression
-	 *            An OGNL expression pointing to the property in this model
+	 * @param propertyExpression
+	 *            A property expression pointing to the property in this model
 	 * @param type
 	 *            The type of the property
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component, final String ognlExpression, final Class type)
+	public Component bind(final Component component, final String propertyExpression, final Class type)
 	{
 		// Add new binding
-		bindings.add(new Binding(component, ognlExpression, type));
+		bindings.add(new Binding(component, propertyExpression, type));
 		return component;
 	}
 
@@ -146,14 +146,14 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#ognlExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
-	protected String ognlExpression(final Component component)
+	protected String propertyExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
 		if (binding != null)
 		{
-			return binding.ognlExpression;
+			return binding.propertyExpression;
 		}
 		else if (component != null)
 		{

@@ -44,7 +44,7 @@ import wicket.util.lang.Classes;
  * <p>
  * MyForm.name.RequiredValidator=A name is required.
  * <p>
- * Error message string resources can contain optional ognl variable
+ * Error message string resources can contain optional property variable
  * interpolations from the component, such as:
  * <p>
  * editBook.name.LengthValidator='${input}' is too short a name.

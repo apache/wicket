@@ -115,7 +115,7 @@ public class StringResourceModelTest extends TestCase
 	 * 
 	 *
 	 */
-	public void testGetOGNLResource()
+	public void testGetPropertySubstitutedResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
 		Assert.assertEquals("Text should be as expected",

@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,29 +19,44 @@ package wicket.markup.html.form;
 import wicket.util.lang.PropertyResolver;
 
 /**
- * Default implementation of {@link wicket.markup.html.form.IChoiceRenderer}. Usage:
+ * Default implementation of {@link wicket.markup.html.form.IChoiceRenderer}.
+ * Usage:
  * <p>
- * <pre>new DropDownChoice("users",new Model(selectedUser),listOfUsers)</pre>
- * creates a DropDownChoice of users and the display value will be toString() and the
- * id the index of the object in the ListOfUsers.
+ * 
+ * <pre>
+ * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers)
+ * </pre>
+ * 
+ * creates a DropDownChoice of users and the display value will be toString()
+ * and the id the index of the object in the ListOfUsers.
  * </p>
  * <p>
- * <pre>new DropDownChoice("users",new Model(selectedUser),listOfUsers,new ChoiceRenderer("name"))</pre>
+ * 
+ * <pre>
+ * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;))
+ * </pre>
+ * 
  * creates a DropDownChoice of users and the display value will be looked up by
- * ognl ("name") and the id the index of the object in the ListOfUsers
+ * property expression ("name") and the id the index of the object in the
+ * ListOfUsers
  * </p>
  * <p>
- * <pre>new DropDownChoice("users",new Model(selectedUser),listOfUsers,new ChoiceRenderer("name","id"))</pre>
- * creates a DropDownChoice of users and the display value will be looked up by ognl ("name") 
- * and the id will be looked up by the  ognl expression "id" 
+ * 
+ * <pre>
+ * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;, &quot;id&quot;))
+ * </pre>
+ * 
+ * creates a DropDownChoice of users and the display value will be looked up by
+ * property expression ("name") and the id will be looked up by the property
+ * expression "id"
  * </p>
- *
+ * 
  * @author jcompagner
  */
 public class ChoiceRenderer implements IChoiceRenderer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** expression for getting the display value. */
 	private final String displayExpression;
 
@@ -51,11 +64,9 @@ public class ChoiceRenderer implements IChoiceRenderer
 	private final String idExpression;
 
 	/**
-	 * Construct. 
-	 * When you use this constructor, the display value will be determined
-	 * by calling toString() on the list object, and the id will be based on the
-	 * list index.
-	 * the id value will be the index
+	 * Construct. When you use this constructor, the display value will be
+	 * determined by calling toString() on the list object, and the id will be
+	 * based on the list index. the id value will be the index
 	 */
 	public ChoiceRenderer()
 	{
@@ -65,13 +76,13 @@ public class ChoiceRenderer implements IChoiceRenderer
 	}
 
 	/**
-	 * Construct.
-	 * When you use this constructor, the display value will be determined
-	 * by executing the given ognl expression on the list object, and the id
-	 * will be based on the list index.
-	 * The display value will be calculated by the given ognl expression
+	 * Construct. When you use this constructor, the display value will be
+	 * determined by executing the given property expression on the list object, and
+	 * the id will be based on the list index. The display value will be
+	 * calculated by the given property expression
 	 * 
-	 * @param displayExpression An ognl expression to get the display value
+	 * @param displayExpression
+	 *            A property expression to get the display value
 	 */
 	public ChoiceRenderer(String displayExpression)
 	{
@@ -79,14 +90,16 @@ public class ChoiceRenderer implements IChoiceRenderer
 		this.displayExpression = displayExpression;
 		this.idExpression = null;
 	}
-	
+
 	/**
-	 * Construct.
-	 * When you use this constructor, both the id and the display value will be determined
-	 * by executing the given ognl expressions on the list object.
+	 * Construct. When you use this constructor, both the id and the display
+	 * value will be determined by executing the given property expressions on the
+	 * list object.
 	 * 
-	 * @param displayExpression An ognl expression to get the display value
-	 * @param idExpression An ognl expression to get the id value
+	 * @param displayExpression
+	 *            A property expression to get the display value
+	 * @param idExpression
+	 *            A property expression to get the id value
 	 */
 	public ChoiceRenderer(String displayExpression, String idExpression)
 	{
@@ -105,36 +118,37 @@ public class ChoiceRenderer implements IChoiceRenderer
 		{
 			returnValue = PropertyResolver.getValue(displayExpression, object);
 		}
-		
+
 		if (returnValue == null)
 		{
-		    return "";
+			return "";
 		}
-		
+
 		return returnValue.toString();
 	}
 
 	/**
-	 * @see wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object, int)
+	 * @see wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
+	 *      int)
 	 */
 	public String getIdValue(Object object, int index)
 	{
 		if (idExpression == null)
 		{
-		    return Integer.toString(index);
+			return Integer.toString(index);
 		}
-		
+
 		if (object == null)
 		{
-		    return "";
+			return "";
 		}
-		
+
 		Object returnValue = PropertyResolver.getValue(idExpression, object);
 		if (returnValue == null)
 		{
-		    return "";
+			return "";
 		}
-		
+
 		return returnValue.toString();
 	}
 }

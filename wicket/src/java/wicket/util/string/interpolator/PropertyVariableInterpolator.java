@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,23 +19,21 @@ package wicket.util.string.interpolator;
 import wicket.util.lang.PropertyResolver;
 
 /**
- * Interpolates values into strings that are produced by interpreting OGNL
- * (Object Graph Navigational Language) expressions against a beans model.
+ * Interpolates values into strings that are produced by interpreting property
+ * expressions against a beans model.
  * <p>
  * The interpolate(String string, Object model) method takes a string such as
- * "My name is ${name}" and a beans model such as a Person and uses OGNL to
- * reflect on the object using any OGNL expressions found inside ${} markers in
- * the string. In this case, if the Person model had a getName() method, the
- * results of calling that method would be substituted for ${name}. If getName()
- * returned Jonathan, interpolate() would then return "My name is Jonathan".
- * <p>
- * For full documentation and OGNL examples, see the OGNL web site.
+ * "My name is ${name}" and a beans model such as a Person, and reflects on the
+ * object using any property expressions found inside ${} markers in the string.
+ * In this case, if the Person model had a getName() method, the results of
+ * calling that method would be substituted for ${name}. If getName() returned
+ * Jonathan, interpolate() would then return "My name is Jonathan".
  * 
  * @author Jonathan Locke
  */
 public final class PropertyVariableInterpolator extends VariableInterpolator
 {
-	/** The model to introspect on with OGNL */
+	/** The model to introspect on */
 	private final Object model;
 
 	/**
@@ -45,7 +42,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	 * @param string
 	 *            The string to interpolate into
 	 * @param model
-	 *            The root model to apply ognl expressions to
+	 *            The root model to apply property expressions to
 	 */
 	private PropertyVariableInterpolator(final String string, final Object model)
 	{
@@ -54,20 +51,20 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Interpolates string using OGNL
+	 * Interpolates string, substituting values for property expressions
 	 * 
 	 * @param string
-	 *            String containing OGNL expressions like ${ognl}
+	 *            String containing property expressions like ${xyz}
 	 * @param object
-	 *            The object for OGNL to reflect on
+	 *            The object to reflect on
 	 * @return The interpolated string
 	 */
 	public static String interpolate(final String string, final Object object)
 	{
-		// If there's any reason to go to the expense of OGNL
+		// If there's any reason to go to the expense of property expressions
 		if (string.indexOf("${") != -1)
 		{
-			// do ognl variable interpolation
+			// Do property expression interpolation
 			return new PropertyVariableInterpolator(string, object).toString();
 		}
 

@@ -83,7 +83,7 @@ public class PropertyColumn extends AbstractColumn
 
 	/**
 	 * Implementation of populateItem which adds a label to the cell whose model
-	 * is the provided OGNL property expression evaluated agains rowModelObject
+	 * is the provided property expression evaluated agains rowModelObject
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */

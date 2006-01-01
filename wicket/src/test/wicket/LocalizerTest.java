@@ -129,12 +129,12 @@ public class LocalizerTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testGetStringOGNLSubstitution()
+	public void testGetStringPropertySubstitution()
 	{
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
 		Model model = new Model(vm);
-		Assert.assertEquals("OGNL substitution should occur", "Welcome, John Doe", 
+		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", 
 		        localizer.getString("test.substitute", null, model, null, null, null));
 	}
 

@@ -25,7 +25,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.list.ListView;
-import wicket.resolver.IComponentResolver;
+import wicket.markup.resolver.IComponentResolver;
 
 /**
  * This is a convenient component to create sorted list view headers very easily. It first

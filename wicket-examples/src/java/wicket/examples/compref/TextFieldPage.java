@@ -74,7 +74,7 @@ public class TextFieldPage extends WicketExamplePage
 		// 1. A type validator is added, so that before any actual updating is tried, first the
 		// 		user input is checked for validity. When the user input is wrong for an integer,
 		//		the model updating is cancelled, and an error message is displayed to the user
-		// 2.When updating the model, the given type is explicitly used instead of Ognl trying
+		// 2.When updating the model, the given type is explicitly used instead of trying
 		//		to figure out what type should be converted to.
 		// Note that the default validation message mechanism uses resource bundles for the actual
 		// message lookup. The message for this component can be found in TextFieldPage.properties
@@ -120,7 +120,7 @@ public class TextFieldPage extends WicketExamplePage
                 + "&nbsp;&nbsp;&nbsp;&nbsp;// 1. A type validator is added, so that before any actual updating is tried, first the\n"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;// &nbsp;&nbsp;&nbsp;&nbsp;user input is checked for validity. When the user input is wrong for an integer,\n"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;the model updating is cancelled, and an error message is displayed to the user\n"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;// 2.When updating the model, the given type is explicitly used instead of Ognl trying\n"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;// 2.When updating the model, the given type is explicitly used instead of trying\n"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;to figure out what type should be converted to.\n"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;// Note that the default validation message mechanism uses resource bundles for the actual\n"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;// message lookup. The message for this component can be found in TextFieldPage.properties\n"

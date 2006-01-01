@@ -21,7 +21,7 @@ import wicket.Component;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * A simple compound model which uses the component's name as the OGNL
+ * A simple compound model which uses the component's name as the property
  * expression to retrieve properties on the nested model object.
  * 
  * @see wicket.model.IModel
@@ -46,9 +46,9 @@ public class CompoundPropertyModel extends AbstractPropertyModel implements ICom
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#ognlExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
-	protected String ognlExpression(final Component component)
+	protected String propertyExpression(final Component component)
 	{
 		if (component == null)
 		{

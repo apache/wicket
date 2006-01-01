@@ -53,9 +53,7 @@ import wicket.Component;
  * 
  * <li><b>Property Models </b>- The AbstractPropertyModel class provides
  * default functionality for property models. A property model provides access
- * to a particular property of its wrapped model. The property is generally
- * accessed using OGNL (Object Graph Navigational Language). For details on
- * OGNL, see http://www.ognl.org/.
+ * to a particular property of its wrapped model.
  * 
  * <li><b>Compound Property Models </b>- The IModel interface is parameterized
  * by Component, allowing a model to be shared among several Components. When
