@@ -476,7 +476,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @return Size of this page in bytes 
 	 */
-	final public int getSize()
+	public final int getSize()
 	{
 		this.pageMap = null;
 		return Objects.sizeof(this);
