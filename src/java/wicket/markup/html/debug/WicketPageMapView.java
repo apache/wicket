@@ -29,7 +29,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.util.lang.Bytes;
-import wicket.util.profile.ObjectProfiler;
+import wicket.util.lang.Objects;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket
@@ -87,18 +87,18 @@ public final class WicketPageMapView extends Panel
 				int versions;
 				if (entry instanceof Page)
 				{
-					size = ((Page)entry).getSize();
-					versions = ((Page)entry).getCurrentVersionNumber() + 1;
+					Page page = (Page)entry;
+					page.detachModels();
+					size = page.getSize();
+					versions = page.getCurrentVersionNumber() + 1;
 				}
 				else
 				{
-					size = ObjectProfiler.sizeof(entry);
+					size = Objects.sizeof(entry);
 					versions = 1;
 				}
 				listItem.add(new Label("versions", "" + versions));
-				listItem.add(new Label("size", (entry instanceof WicketInspector)
-						? "(inspector)"
-						: "" + Bytes.bytes(size)));
+				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
 			}
 		});
 	}

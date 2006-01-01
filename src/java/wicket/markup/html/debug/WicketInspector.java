@@ -29,7 +29,7 @@ import wicket.markup.html.WebPage;
 public final class WicketInspector extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * Constructor.
 	 * 
