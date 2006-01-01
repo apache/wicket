@@ -17,8 +17,10 @@
  */
 package wicket.markup.html.debug;
 
-import wicket.Page;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.panel.Panel;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including
@@ -26,27 +28,31 @@ import wicket.markup.html.WebPage;
  * 
  * @author Jonathan Locke
  */
-public final class WicketInspector extends WebPage
+public final class InspectorBug extends Panel
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
-	 * Constructor.
+	 * Constructor
 	 * 
+	 * @param id
+	 *            Component id
 	 * @param page
-	 *            The page to be analyzed
+	 *            Page to inspect
 	 */
-	public WicketInspector(final Page page)
+	public InspectorBug(final String id, final WebPage page)
 	{
-		add(new WicketSessionView("session", page.getSession()));
-		add(new WicketPageView("page", page));
-	}
-	
-	/**
-	 * @see wicket.Component#isVersioned()
-	 */
-	public boolean isVersioned()
-	{
-		return false;
+		super(id);
+		Link link = new Link("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				setResponsePage(new Inspector(page));
+			}
+		};
+		link.add(new Image("bug"));
+		add(link);
 	}
 }

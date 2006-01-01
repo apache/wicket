@@ -10,9 +10,18 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 .tablestyle { margin-left : 2em; border : 1px solid #bbb; }
 </style>
 <body>
-  <p>
-  <h1>Wicket Inspector</h1>
-  <span wicket:id="session">Session view here</span>
-  <span wicket:id="page">Page view here</span>
+  <wicket:panel>
+  	<h2>Session</h2>
+  	<ul>
+  	Id: <span wicket:id="id">9999</span><br/>
+  	Locale: <span wicket:id="locale">en_US</span><br/>
+  	Style: <span wicket:id="style">none</span><br/>
+	Serialized Size: <span wicket:id="size">none</span><br/>
+	Total Serialized Size: <span wicket:id="totalSize">none</span><br/>
+	<span wicket:id="pagemaps">
+	  <span wicket:id="pagemap">pagemap here</span><p/>
+	</span>
+	</ul>
+  </wicket:panel>
 </body>
 </html>
