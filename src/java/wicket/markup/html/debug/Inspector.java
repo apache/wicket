@@ -20,6 +20,7 @@ package wicket.markup.html.debug;
 import wicket.Application;
 import wicket.Session;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.image.Image;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including
@@ -42,6 +43,7 @@ public final class Inspector extends WebPage
 		add(new ApplicationView("application", page.getApplication()));
 		add(new SessionView("session", page.getSession()));
 		add(new PageView("page", page));
+		add(new Image("bug"));
 	}
 	
 	/**
@@ -52,6 +54,7 @@ public final class Inspector extends WebPage
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));
 		add(new PageView("page", null));
+		add(new Image("bug"));
 	}
 	
 	/**
