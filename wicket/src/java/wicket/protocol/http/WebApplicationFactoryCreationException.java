@@ -16,7 +16,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.protocol.http;
+
+import wicket.WicketRuntimeException;
 
 /**
  * Thrown when the {@link wicket.protocol.http.IWebApplicationFactory} could not
@@ -24,7 +26,7 @@ package wicket;
  * 
  * @author Seth Ladd
  */
-public class ApplicationFactoryCreationException extends WicketRuntimeException
+public class WebApplicationFactoryCreationException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +38,7 @@ public class ApplicationFactoryCreationException extends WicketRuntimeException
 	 * @param e
 	 *            the cause for the creation problem
 	 */
-	public ApplicationFactoryCreationException(String appFactoryClassName, Exception e)
+	public WebApplicationFactoryCreationException(String appFactoryClassName, Exception e)
 	{
 		super("Unable to create application factory of class " + appFactoryClassName, e);
 	}
