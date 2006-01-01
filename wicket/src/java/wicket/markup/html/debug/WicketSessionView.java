@@ -27,7 +27,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.util.lang.Bytes;
-import wicket.util.profile.ObjectProfiler;
+import wicket.util.lang.Objects;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket
@@ -54,7 +54,7 @@ public final class WicketSessionView extends Panel
 		add(new Label("id", session.getId()));
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label("size", "" + Bytes.bytes(ObjectProfiler.sizeof(session))));
+		add(new Label("size", "" + Bytes.bytes(Objects.sizeof(session))));
 		
 		// Get pagemaps
 		final List pagemaps = session.getPageMaps();
