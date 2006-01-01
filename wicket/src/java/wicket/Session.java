@@ -117,6 +117,12 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
+	/** Number designating when a page was accessed */
+	short accessSequenceNumber;
+
+	/** Prefix for attributes holding page map entries */
+	final String pageMapEntryAttributePrefix = "p:";
+
 	/** Application that this is a session of. */
 	private transient Application application;
 
@@ -132,9 +138,6 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** Number designating when a page was accessed */
-	short accessSequenceNumber;
-
 	/** session listeners. */
 	private List/* <ISessionListener> */listeners = new ArrayList();
 
@@ -144,21 +147,18 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Any special "skin" style to use when loading resources. */
-	private String style;
-
 	/** Attribute prefix for page maps stored in the session */
 	private final String pageMapAttributePrefix = "m:";
 
-	/** Prefix for attributes holding page map entries */
-	final String pageMapEntryAttributePrefix = "p:";
+	/** Any special "skin" style to use when loading resources. */
+	private String style;
 
 	/**
 	 * Visitor interface for visiting page maps
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static interface IVisitor
+	public static interface IPageMapVisitor
 	{
 		/**
 		 * @param pageMap
@@ -395,6 +395,23 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @return A list of all PageMaps in this session.
+	 */
+	public final List getPageMaps()
+	{
+		final List list = new ArrayList();
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				list.add((PageMap)getAttribute(attribute));
+			}
+		}
+		return list;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return The currently active request cycle for this session
@@ -419,7 +436,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void init()
 	{
-		visitPageMaps(new IVisitor()
+		visitPageMaps(new IPageMapVisitor()
 		{
 			public void pageMap(PageMap pageMap)
 			{
@@ -505,7 +522,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void removeAll()
 	{
-		visitPageMaps(new IVisitor()
+		visitPageMaps(new IPageMapVisitor()
 		{
 			public void pageMap(PageMap pageMap)
 			{
@@ -579,6 +596,22 @@ public abstract class Session implements Serializable
 	{
 		// Touch the page in its pagemap.
 		page.getPageMap().put(page);
+	}
+
+	/**
+	 * @param visitor
+	 *            The visitor to call at each Page in this PageMap.
+	 */
+	public final void visitPageMaps(final IPageMapVisitor visitor)
+	{
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				visitor.pageMap((PageMap)getAttribute(attribute));
+			}
+		}
 	}
 
 	/**
@@ -889,22 +922,6 @@ public abstract class Session implements Serializable
 	final void removePageMap(final PageMap pageMap)
 	{
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
-	}
-
-	/**
-	 * @param visitor
-	 *            The visitor to call at each Page in this PageMap.
-	 */
-	final void visitPageMaps(final IVisitor visitor)
-	{
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
-		{
-			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(pageMapAttributePrefix))
-			{
-				visitor.pageMap((PageMap)getAttribute(attribute));
-			}
-		}
 	}
 
 	/**

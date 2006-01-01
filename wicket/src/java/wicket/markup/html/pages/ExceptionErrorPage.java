@@ -24,7 +24,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
-import wicket.markup.html.debug.WicketComponentTree;
+import wicket.markup.html.debug.WicketPageView;
 import wicket.util.string.Strings;
 
 /**
@@ -88,7 +88,7 @@ public class ExceptionErrorPage extends WebPage
 		// Show component tree of the page
 		if (page != null)
 		{
-		    add(new WicketComponentTree("componentTree", page));
+		    add(new WicketPageView("componentTree", page));
 		}
 		else
 		{

@@ -45,6 +45,6 @@ public class WicketComponentTreeTestPage extends WebPage
 	    add(new Label("label2", "test22"));
 	    
 	    // Add component tree
-		add(new WicketComponentTree("componentList", this));
+		add(new WicketPageView("componentList", this));
 	}
 }

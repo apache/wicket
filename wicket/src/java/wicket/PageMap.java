@@ -80,6 +80,26 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * 
+	 * @return List of entries in this page map
+	 */
+	public final List getEntries()
+	{
+		final List attributes = session.getAttributeNames();
+		final List list = new ArrayList();
+		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(attributePrefix()))
+			{
+				list.add((IPageMapEntry)session.getAttribute(attribute));
+			}
+		}
+		return list;
+	}
+	
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return Returns the name.
@@ -96,7 +116,7 @@ public final class PageMap implements Serializable
 	{
 		return session;
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -124,7 +144,7 @@ public final class PageMap implements Serializable
 	{
 		return size;
 	}
-
+	
 	/**
 	 * @param id
 	 *            The page id to create an attribute for
@@ -135,7 +155,7 @@ public final class PageMap implements Serializable
 	{
 		return attributePrefix() + id;
 	}
-	
+
 	/**
 	 * @return The attribute prefix for this page map
 	 */
@@ -175,7 +195,7 @@ public final class PageMap implements Serializable
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Retrieves page with given id.
 	 * 
@@ -197,24 +217,6 @@ public final class PageMap implements Serializable
 			return page;
 		}
 		return null;
-	}
-	
-	/**
-	 * @return List of entries in this page map
-	 */
-	final List getEntries()
-	{
-		final List attributes = session.getAttributeNames();
-		final List list = new ArrayList();
-		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
-		{
-			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(attributePrefix()))
-			{
-				list.add((IPageMapEntry)session.getAttribute(attribute));
-			}
-		}
-		return list;
 	}
 
 	/**

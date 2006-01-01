@@ -38,7 +38,7 @@ import wicket.util.string.Strings;
  * Simply add this code to your page's contructor:
  * 
  * <pre>
- * add(new WicketComponentTree(&quot;componentTree&quot;, this));
+ * add(new WicketPageView(&quot;componentTree&quot;, this));
  * </pre>
  * 
  * And this to your markup:
@@ -49,7 +49,7 @@ import wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketComponentTree extends Panel
+public final class WicketPageView extends Panel
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -62,7 +62,7 @@ public final class WicketComponentTree extends Panel
 	 *            The page to be analyzed
 	 * @see Component#Component(String)
 	 */
-	public WicketComponentTree(final String id, final Page page)
+	public WicketPageView(final String id, final Page page)
 	{
 		super(id);
 		
@@ -70,7 +70,7 @@ public final class WicketComponentTree extends Panel
 		final List data = new ArrayList();
 
 		// Name of page
-		add(new Label("page", page.toString()));
+		add(new Label("info", page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -118,7 +118,7 @@ public final class WicketComponentTree extends Panel
 		{
 			public Object component(final Component component)
 			{
-			    if (!component.getPath().startsWith(WicketComponentTree.this.getPath()))
+			    if (!component.getPath().startsWith(WicketPageView.this.getPath()))
 			    {
 					final ComponentData object = new ComponentData();
 	

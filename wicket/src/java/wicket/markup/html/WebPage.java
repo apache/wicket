@@ -51,10 +51,10 @@ import wicket.protocol.http.WebRequestCycle;
  */
 public class WebPage extends Page implements IHeaderRenderer
 {
-	private static final long serialVersionUID = 1L;
-
 	/** log. */
 	private static Log log = LogFactory.getLog(WebPage.class);
+
+	private static final long serialVersionUID = 1L;
 
 	/** Components contribution to <body onload="..." */
 	private String bodyOnLoad;
@@ -66,6 +66,14 @@ public class WebPage extends Page implements IHeaderRenderer
 	protected WebPage()
 	{
 		super();
+	}
+
+	/**
+	 * @see Page#Page(IModel)
+	 */
+	protected WebPage(final IModel model)
+	{
+		super(model);
 	}
 
 	/**
@@ -87,11 +95,40 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
-	 * @see Page#Page(IModel)
+	 * THIS IS NOT PART OF THE PUBLIC API.
+	 * 
+	 * Append string to body onload attribute
+	 * 
+	 * @param onLoad
+	 *            Attribute value to be appended
 	 */
-	protected WebPage(final IModel model)
+	public final void appendToBodyOnLoad(final String onLoad)
 	{
-		super(model);
+		if (onLoad != null)
+		{
+			// Tell the page to change the Page's
+			// body tags.
+			if (this.bodyOnLoad == null)
+			{
+				this.bodyOnLoad = onLoad;
+			}
+			else
+			{
+				this.bodyOnLoad = this.bodyOnLoad + onLoad;
+			}
+		}
+	}
+
+	/**
+	 * THIS IS NOT PART OF THE PUBLIC API.
+	 * 
+	 * Get what will be appended to the page markup's body onload attribute
+	 * 
+	 * @return The onload attribute
+	 */
+	public String getBodyOnLoad()
+	{
+		return this.bodyOnLoad;
 	}
 
 	/**
@@ -109,26 +146,6 @@ public class WebPage extends Page implements IHeaderRenderer
 	public String getMarkupType()
 	{
 		return "html";
-	}
-
-	/**
-	 * @return The WebRequestCycle for this WebPage.
-	 */
-	protected final WebRequestCycle getWebRequestCycle()
-	{
-		return (WebRequestCycle)getRequestCycle();
-	}
-
-	/**
-	 * Creates and returns a bookmarkable link to this application's home page.
-	 * 
-	 * @param id
-	 *            Name of link
-	 * @return Link to home page for this application
-	 */
-	protected final BookmarkablePageLink homePageLink(final String id)
-	{
-		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
 	}
 
 	/**
@@ -182,40 +199,23 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
-	 * THIS IS NOT PART OF THE PUBLIC API.
-	 * 
-	 * Get what will be appended to the page markup's body onload attribute
-	 * 
-	 * @return The onload attribute
+	 * @return The WebRequestCycle for this WebPage.
 	 */
-	public String getBodyOnLoad()
+	protected final WebRequestCycle getWebRequestCycle()
 	{
-		return this.bodyOnLoad;
+		return (WebRequestCycle)getRequestCycle();
 	}
 
 	/**
-	 * THIS IS NOT PART OF THE PUBLIC API.
+	 * Creates and returns a bookmarkable link to this application's home page.
 	 * 
-	 * Append string to body onload attribute
-	 * 
-	 * @param onLoad
-	 *            Attribute value to be appended
+	 * @param id
+	 *            Name of link
+	 * @return Link to home page for this application
 	 */
-	public final void appendToBodyOnLoad(final String onLoad)
+	protected final BookmarkablePageLink homePageLink(final String id)
 	{
-		if (onLoad != null)
-		{
-			// Tell the page to change the Page's
-			// body tags.
-			if (this.bodyOnLoad == null)
-			{
-				this.bodyOnLoad = onLoad;
-			}
-			else
-			{
-				this.bodyOnLoad = this.bodyOnLoad + onLoad;
-			}
-		}
+		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
 	}
 
 	/**
@@ -232,7 +232,6 @@ public class WebPage extends Page implements IHeaderRenderer
 		{
 			this.remove(header);
 		}
-
 		super.onEndRequest();
 	}
 }

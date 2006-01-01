@@ -19,7 +19,7 @@ package wicket.markup.html.border;
 
 
 /**
- * Test the component: WicketComponentTree
+ * Test the component: WicketPageView
  * 
  * @author Juergen Donnerstag
  */
