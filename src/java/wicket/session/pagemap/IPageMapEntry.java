@@ -19,7 +19,6 @@ package wicket.session.pagemap;
 
 import java.io.Serializable;
 
-import wicket.AbstractPageMapEntry;
 import wicket.Page;
 
 /**

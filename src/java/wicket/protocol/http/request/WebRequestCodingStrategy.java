@@ -44,7 +44,6 @@ import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
-import wicket.request.IRequestTargetMounter;
 import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;

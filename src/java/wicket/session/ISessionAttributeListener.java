@@ -19,9 +19,6 @@ package wicket.session;
 
 import java.io.Serializable;
 
-import wicket.Session;
-
-
 /**
  * Implementations are notified of attribute change events broadcasted by
  * {@link wicket.Session}.
