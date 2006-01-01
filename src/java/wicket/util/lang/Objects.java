@@ -601,6 +601,7 @@ public abstract class Objects implements NumericTypes
 		{
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			new ObjectOutputStream(out).writeObject(object);
+			out.close();
 			return out.size();
 		}
 		catch (IOException e)
