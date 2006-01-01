@@ -108,6 +108,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>InspectorApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.inspector.InspectorApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>LibraryApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -300,6 +310,11 @@
 	<servlet-mapping>
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<url-pattern>/helloworld/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>InspectorApplication</servlet-name>
+		<url-pattern>/inspector/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
