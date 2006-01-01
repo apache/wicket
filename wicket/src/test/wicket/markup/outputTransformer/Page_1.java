@@ -55,7 +55,7 @@ public class Page_1 extends WebPage
 	    {
 			private static final long serialVersionUID = 1L;
 
-			protected String transform(String output)
+			protected CharSequence transform(String output)
 			{
 				// replace the generated String
 				return "Whatever";
@@ -71,7 +71,7 @@ public class Page_1 extends WebPage
 	    {
 			private static final long serialVersionUID = 1L;
 
-			protected String transform(String output)
+			protected CharSequence transform(String output)
 			{
 				// Convert all text to uppercase
 				return output.toUpperCase();
@@ -83,7 +83,7 @@ public class Page_1 extends WebPage
 	    borderContainer.add(border);
 
 
-	    MarkupContainer xsltContainer = new NoopOutputTransformerContainer("test4");
+	    MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
 	    add(xsltContainer);
 	    
 	    Border border2 = new SimpleBorder("myBorder2");

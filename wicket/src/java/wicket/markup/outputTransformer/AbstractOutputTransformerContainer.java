@@ -84,7 +84,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * @return The output which will be appended to the orginal response
 	 * @throws Exception
 	 */
-	protected abstract String transform(final String output) throws Exception;
+	protected abstract CharSequence transform(final String output) throws Exception;
 
 	/**
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
@@ -114,8 +114,8 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 			try
 			{
 				// Tranform the data
-				String output = transform(response.toString());
-				webResponse.write(output);
+				CharSequence output = transform(response.toString());
+				webResponse.write(output.toString());
 			}
 			catch (Exception ex)
 			{
