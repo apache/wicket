@@ -415,6 +415,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return id;
 	}
+	
+	/**
+	 * @see wicket.IPageMapEntry#getPageClass()
+	 */
+	public final Class getPageClass()
+	{
+		return getClass();
+	}
 
 	/**
 	 * @return Returns the PageMap that this Page is stored in.

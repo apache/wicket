@@ -28,7 +28,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	private short accessSequenceNumber;
 	private boolean dirty;
 	private short id;
-	
+
 	/**
 	 * @see wicket.IPageMapEntry#getAccessSequenceNumber()
 	 */
@@ -46,9 +46,23 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @return The Page.
+	 * @see wicket.IPageMapEntry#getPage()
 	 */
 	public abstract Page getPage();
+
+	/**
+	 * Failing to override this method could be pretty expensive because this
+	 * default implementation calls getPage(), which probably creates the page.
+	 * That's a lot of work to do in order to simply determine the page's class.
+	 * So, if there's an easy way to implement this method, that might be
+	 * desirable.
+	 * 
+	 * @see wicket.IPageMapEntry#getPageClass()
+	 */
+	public Class getPageClass()
+	{
+		return getPage().getClass();
+	}
 
 	/**
 	 * @see wicket.IPageMapEntry#isDirty()
@@ -73,7 +87,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	{
 		this.dirty = dirty;
 	}
-	
+
 	/**
 	 * @see wicket.IPageMapEntry#setNumericId(int)
 	 */
