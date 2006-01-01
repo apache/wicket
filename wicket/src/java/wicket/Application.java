@@ -126,8 +126,14 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
+	/** thread local holder of the application object. */
+	private static final ThreadLocal CURRENT = new ThreadLocal();
+
 	/** log. */
 	private static Log log = LogFactory.getLog(Application.class);
+
+	/** the authorization strategy. */
+	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers = new ArrayList();
@@ -138,8 +144,8 @@ public abstract class Application
 	 */
 	private IConverterFactory converterFactory = new ConverterFactory();
 
-	/** the authorization strategy. */
-	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
+	/** cached encryption/decryption object. */
+	private ICrypt crypt;
 
 	/** The single application-wide localization class */
 	private Localizer localizer;
@@ -156,20 +162,14 @@ public abstract class Application
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
 
+	/** The factory to be used for the property files */
+	private PropertiesFactory propertiesFactory;
+
 	/** The default resource locator for this application */
 	private ResourceStreamLocator resourceStreamLocator;
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
-
-	/** Settings for application. */
-	private ApplicationSettings settings;
-
-	/** Shared resources for the application */
-	private final SharedResources sharedResources;
-
-	/** cached encryption/decryption object. */
-	private ICrypt crypt;
 
 	/**
 	 * List of {@link IResponseFilter}s.
@@ -181,11 +181,11 @@ public abstract class Application
 	// strategy
 	private List responseFilters;
 
-	/** The factory to be used for the property files */
-	private PropertiesFactory propertiesFactory;
+	/** Settings for application. */
+	private ApplicationSettings settings;
 	
-	/** thread local holder of the application object. */
-	private static final ThreadLocal CURRENT = new ThreadLocal();
+	/** Shared resources for the application */
+	private final SharedResources sharedResources;
 
 	/**
 	 * Get application for current session.
@@ -256,6 +256,82 @@ public abstract class Application
 	}
 
 	/**
+	 * Adds a response filer to the list. Filters are evaluated in the order
+	 * they have been added.
+	 * 
+	 * @param responseFilter
+	 *            The {@link IResponseFilter} that is added
+	 */
+	public final void addResponseFilter(IResponseFilter responseFilter)
+	{
+		if (responseFilters == null)
+		{
+			responseFilters = new ArrayList(3);
+		}
+		responseFilters.add(responseFilter);
+	}
+
+	/**
+	 * Subclasses could override this to give there own implementation of
+	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
+	 * instead.
+	 * 
+	 * @return An instanceof an ApplicationSettings class.
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * Loops over all the response filters that were set (if any) with the give
+	 * response returns the response buffer itself if there where now filters or
+	 * the response buffer that was created/returned by the filter(s)
+	 * 
+	 * @param responseBuffer
+	 *            The response buffer to be filtered
+	 * @return Returns the filtered string buffer.
+	 */
+	public final StringBuffer filterResponse(StringBuffer responseBuffer)
+	{
+		if (responseFilters == null)
+		{
+			return responseBuffer;
+		}
+		for (int i = 0; i < responseFilters.size(); i++)
+		{
+			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
+			responseBuffer = filter.filter(responseBuffer);
+		}
+		return responseBuffer;
+	}
+
+	/**
+	 * If you want to add an additional IMarkupFilter to the MarkupParser, 
+	 * e.g. PrependContextPathHandler, simply add it to the list/array
+	 * returned.
+	 * @see #newMarkupParser()
+	 * 
+	 * @return List 
+	 */
+	public IMarkupFilter[] getAdditionalMarkupHandler()
+	{
+		return null;
+	}
+
+	/**
+	 * Gets the authorization strategy.
+	 * 
+	 * @return Returns the authorizationStrategy.
+	 */
+	public IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return authorizationStrategy;
+	}
+
+	/**
 	 * Get the (modifiable) list of IComponentResolvers.
 	 * 
 	 * @see AutoComponentResolver for an example
@@ -277,16 +353,6 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the authorization strategy.
-	 * 
-	 * @return Returns the authorizationStrategy.
-	 */
-	public IAuthorizationStrategy getAuthorizationStrategy()
-	{
-		return authorizationStrategy;
-	}
-
-	/**
 	 * Get the application's localizer.
 	 * <p>
 	 * Note: please @see ApplicationSettings#addStringResourceLoader(IStringResourceLoader)
@@ -301,17 +367,6 @@ public abstract class Application
 			this.localizer = new Localizer(this);
 		}
 		return localizer;
-	}
-
-	/**
-	 * Users may provide there own implementation of a localizer, e.g. one which
-	 * uses Spring's MessageSource.
-	 * 
-	 * @param localizer
-	 */
-	public final void setLocalizer(final Localizer localizer)
-	{
-		this.localizer = localizer;
 	}
 
 	/**
@@ -343,30 +398,17 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
+	 * Get the property factory which will be used to load properties files
 	 * 
-	 * @param page
-	 *            The Page for which a list of PageSets should be retrieved
-	 * @return Sequence of PageSets for a given Page
+	 * @return PropertiesFactory
 	 */
-	public final Iterator getPageSets(final Page page)
+	public PropertiesFactory getPropertiesFactory()
 	{
-		return new Iterator()
+		if (propertiesFactory == null)
 		{
-			public boolean hasNext()
-			{
-				return false;
-			}
-
-			public Object next()
-			{
-				return null;
-			}
-
-			public void remove()
-			{
-			}
-		};
+			propertiesFactory = new PropertiesFactory();
+		}
+		return propertiesFactory;
 	}
 
 	/**
@@ -424,25 +466,13 @@ public abstract class Application
 	}
 
 	/**
-	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
-	 * instead.
-	 * 
-	 * @return An instanceof an ApplicationSettings class.
-	 */
-	public ApplicationSettings createApplicationSettings()
-	{
-		return new ApplicationSettings(this);
-	}
-
-	/**
 	 * @return Returns the sharedResources.
 	 */
 	public final SharedResources getSharedResources()
 	{
 		return sharedResources;
 	}
-
+	
 	/**
 	 * Factory method that creates an instance of de-/encryption class. NOTE:
 	 * this implementation caches the crypt instance, so it has to be
@@ -521,63 +551,20 @@ public abstract class Application
 	}
 
 	/**
-	 * If you want to add an additional IMarkupFilter to the MarkupParser, 
-	 * e.g. PrependContextPathHandler, simply add it to the list/array
-	 * returned.
-	 * @see #newMarkupParser()
+	 * Users may provide there own implementation of a localizer, e.g. one which
+	 * uses Spring's MessageSource.
 	 * 
-	 * @return List 
+	 * @param localizer
 	 */
-	public IMarkupFilter[] getAdditionalMarkupHandler()
+	public final void setLocalizer(final Localizer localizer)
 	{
-		return null;
+		this.localizer = localizer;
 	}
-	
+
 	/**
 	 * @return Factory for creating sessions
 	 */
 	protected abstract ISessionFactory getSessionFactory();
-
-	/**
-	 * Adds a response filer to the list. Filters are evaluated in the order
-	 * they have been added.
-	 * 
-	 * @param responseFilter
-	 *            The {@link IResponseFilter} that is added
-	 */
-	public final void addResponseFilter(IResponseFilter responseFilter)
-	{
-		if (responseFilters == null)
-		{
-			responseFilters = new ArrayList(3);
-		}
-		responseFilters.add(responseFilter);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * Loops over all the response filters that were set (if any) with the give
-	 * response returns the response buffer itself if there where now filters or
-	 * the response buffer that was created/returned by the filter(s)
-	 * 
-	 * @param responseBuffer
-	 *            The response buffer to be filtered
-	 * @return Returns the filtered string buffer.
-	 */
-	public final StringBuffer filterResponse(StringBuffer responseBuffer)
-	{
-		if (responseFilters == null)
-		{
-			return responseBuffer;
-		}
-		for (int i = 0; i < responseFilters.size(); i++)
-		{
-			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
-			responseBuffer = filter.filter(responseBuffer);
-		}
-		return responseBuffer;
-	}
 
 	/**
 	 * Allows for initialization of the application by a subclass.
@@ -609,6 +596,40 @@ public abstract class Application
 	final void resourceFinderChanged()
 	{
 		this.resourceStreamLocator = null;
+	}
+
+	/**
+	 * Instantiate initializer with the given class name
+	 * 
+	 * @param className
+	 *            The name of the initializer class
+	 */
+	private void initialize(final String className)
+	{
+		if (!Strings.isEmpty(className))
+		{
+			try
+			{
+				Class c = getClass().getClassLoader().loadClass(className);
+				((IInitializer)c.newInstance()).init(this);
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+		}
 	}
 
 	/**
@@ -646,7 +667,7 @@ public abstract class Application
 			throw new WicketRuntimeException("Unable to load initializers file", e);
 		}
 	}
-
+	
 	/**
 	 * @param properties
 	 *            Properties table with names of any library initializers in it
@@ -655,53 +676,5 @@ public abstract class Application
 	{
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));
-	}
-
-	/**
-	 * Instantiate initializer with the given class name
-	 * 
-	 * @param className
-	 *            The name of the initializer class
-	 */
-	private void initialize(final String className)
-	{
-		if (!Strings.isEmpty(className))
-		{
-			try
-			{
-				Class c = getClass().getClassLoader().loadClass(className);
-				((IInitializer)c.newInstance()).init(this);
-			}
-			catch (ClassCastException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (InstantiationException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-		}
-	}
-	
-	/**
-	 * Get the property factory which will be used to load properties files
-	 * 
-	 * @return PropertiesFactory
-	 */
-	public PropertiesFactory getPropertiesFactory()
-	{
-		if (propertiesFactory == null)
-		{
-			propertiesFactory = new PropertiesFactory();
-		}
-		return propertiesFactory;
 	}
 }
