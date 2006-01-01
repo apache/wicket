@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.debug;
 
+import wicket.Application;
+import wicket.Session;
 import wicket.markup.html.WebPage;
 
 /**
@@ -43,10 +45,28 @@ public final class Inspector extends WebPage
 	}
 	
 	/**
+	 * Construct.
+	 */
+	public Inspector()
+	{
+		add(new ApplicationView("application", Application.get()));
+		add(new SessionView("session", Session.get()));
+		add(new PageView("page", null));
+	}
+	
+	/**
 	 * @see wicket.Component#isVersioned()
 	 */
 	public boolean isVersioned()
 	{
 		return false;
+	}
+	
+	/**
+	 * @see wicket.Page#isStateless()
+	 */
+	public boolean isStateless()
+	{
+		return true;
 	}
 }

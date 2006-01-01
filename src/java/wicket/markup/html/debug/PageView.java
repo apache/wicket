@@ -70,11 +70,14 @@ public final class PageView extends Panel
 		final List data = new ArrayList();
 
 		// Name of page
-		add(new Label("info", page.toString()));
+		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
-		data.addAll(getComponentData(page));
+		if (page != null)
+		{
+			data.addAll(getComponentData(page));
+		}
 		Collections.sort(data, new Comparator()
 		{
 			public int compare(Object o1, Object o2)
