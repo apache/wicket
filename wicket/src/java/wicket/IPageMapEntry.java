@@ -50,6 +50,12 @@ public interface IPageMapEntry extends Serializable
 	public Page getPage();
 
 	/**
+	 * @return The class of page stored in this page map entry (which can be
+	 *         used by an eviction strategy to prioritize evictions)
+	 */
+	public Class getPageClass();
+
+	/**
 	 * @return True if this entry is dirty and requires replication
 	 */
 	public boolean isDirty();
