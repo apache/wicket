@@ -23,7 +23,7 @@ import wicket.markup.html.form.Form;
 
 
 /**
- * Test the component: WicketPageView
+ * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */

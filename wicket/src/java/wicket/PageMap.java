@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.markup.html.debug.WicketInspector;
+import wicket.markup.html.debug.Inspector;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.util.lang.Objects;
@@ -258,7 +258,7 @@ public final class PageMap implements Serializable
 	 */
 	final synchronized void put(final IPageMapEntry entry)
 	{
-		if (!(entry instanceof WicketInspector))
+		if (!(entry instanceof Inspector))
 		{
 			// Entry has been accessed
 			session.access(entry);

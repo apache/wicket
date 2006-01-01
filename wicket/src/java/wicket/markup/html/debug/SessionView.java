@@ -17,13 +17,11 @@
  */
 package wicket.markup.html.debug;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import wicket.IPageMapEntry;
-import wicket.Page;
+import wicket.Component;
 import wicket.PageMap;
+import wicket.Session;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -33,11 +31,11 @@ import wicket.util.lang.Objects;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket
- * pagemap.
+ * session.
  * 
  * @author Jonathan Locke
  */
-public final class WicketPageMapView extends Panel
+public final class SessionView extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,34 +43,25 @@ public final class WicketPageMapView extends Panel
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            The component id
-	 * @param pageMap
-	 *            Page map to show
+	 *            See Component
+	 * @see Component#Component(String)
 	 */
-	public WicketPageMapView(final String id, final PageMap pageMap)
+	public SessionView(final String id, final Session session)
 	{
 		super(id);
 
 		// Basic attributes
-		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label("size", "" + Bytes.bytes(pageMap.getSize())));
+		add(new Label("id", session.getId()));
+		add(new Label("locale", session.getLocale().toString()));
+		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
+		add(new Label("size", "" + Bytes.bytes(Objects.sizeof(session))));
+		add(new Label("totalSize", "" + Bytes.bytes(session.getSize())));
 
 		// Get pagemaps
-		final List entries = pageMap.getEntries();
-
-		// Sort on access
-		Collections.sort(entries, new Comparator()
-		{
-			public int compare(Object a, Object b)
-			{
-				IPageMapEntry ea = (IPageMapEntry)a;
-				IPageMapEntry eb = (IPageMapEntry)b;
-				return eb.getAccessSequenceNumber() - ea.getAccessSequenceNumber();
-			}
-		});
+		final List pagemaps = session.getPageMaps();
 
 		// Create the table containing the list the components
-		add(new ListView("entries", entries)
+		add(new ListView("pagemaps", pagemaps)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -81,25 +70,8 @@ public final class WicketPageMapView extends Panel
 			 */
 			protected void populateItem(final ListItem listItem)
 			{
-				IPageMapEntry entry = (IPageMapEntry)listItem.getModelObject();
-				listItem.add(new Label("id", "" + entry.getNumericId()));
-				listItem.add(new Label("class", "" + entry.getClass().getName()));
-				int size;
-				int versions;
-				if (entry instanceof Page)
-				{
-					Page page = (Page)entry;
-					page.detachModels();
-					size = page.getSize();
-					versions = page.getCurrentVersionNumber() + 1;
-				}
-				else
-				{
-					size = Objects.sizeof(entry);
-					versions = 1;
-				}
-				listItem.add(new Label("versions", "" + versions));
-				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
+				PageMap p = (PageMap)listItem.getModelObject();
+				listItem.add(new PageMapView("pagemap", p));
 			}
 		});
 	}

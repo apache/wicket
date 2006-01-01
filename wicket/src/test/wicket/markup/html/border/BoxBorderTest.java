@@ -26,7 +26,7 @@ import wicket.markup.html.form.TextField;
 import wicket.protocol.http.MockHttpServletRequest;
 
 /**
- * Test the component: WicketPageView
+ * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
