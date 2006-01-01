@@ -53,7 +53,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.markup.outputTransformer.AbstractOutputTransformerContainer#transform(java.lang.String)
 	 */
-	protected String transform(final String output)
+	protected CharSequence transform(final String output)
 	{
 		return output;
 	}
