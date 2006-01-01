@@ -262,7 +262,7 @@ public final class PageMap implements Serializable
 		{
 			// Entry has been accessed
 			session.access(entry);
-	
+
 			// Store entry in session
 			session.setAttribute(attributeForId(entry.getNumericId()), entry);
 			size++;
