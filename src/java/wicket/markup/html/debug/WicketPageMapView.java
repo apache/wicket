@@ -82,15 +82,20 @@ public final class WicketPageMapView extends Panel
 			{
 				IPageMapEntry entry = (IPageMapEntry)listItem.getModelObject();
 				listItem.add(new Label("id", "" + entry.getNumericId()));
+				listItem.add(new Label("class", "" + entry.getClass().getName()));
 				int size;
+				int versions;
 				if (entry instanceof Page)
 				{
 					size = ((Page)entry).getSize();
+					versions = ((Page)entry).getCurrentVersionNumber() + 1;
 				}
 				else
 				{
 					size = ObjectProfiler.sizeof(entry);
+					versions = 1;
 				}
+				listItem.add(new Label("versions", "" + versions));
 				listItem.add(new Label("size", (entry instanceof WicketInspector)
 						? "(inspector)"
 						: "" + Bytes.bytes(size)));
