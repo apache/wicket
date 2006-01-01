@@ -30,7 +30,7 @@ import wicket.markup.html.list.ListView;
 import wicket.protocol.http.MockWebApplication;
 
 /**
- * Test the component: WicketComponentTree
+ * Test the component: WicketPageView
  * 
  * @author Juergen Donnerstag
  */

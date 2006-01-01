@@ -41,6 +41,7 @@ import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
+import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.undo.Change;
@@ -415,7 +416,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return id;
 	}
-	
+
 	/**
 	 * @see wicket.IPageMapEntry#getPageClass()
 	 */
@@ -455,6 +456,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public IPageMapEntry getPageMapEntry()
 	{
 		return this;
+	}
+
+	/**
+	 * @return Size of this page in bytes 
+	 */
+	final public int getSize()
+	{
+		PageMap oldPageMap = this.pageMap;
+		this.pageMap = null;
+		int size = ObjectProfiler.sizeof(this);
+		this.pageMap = oldPageMap;
+		return size;
 	}
 
 	/**

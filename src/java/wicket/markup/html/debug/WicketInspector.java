@@ -1,8 +1,8 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
- * ========================================================================
+ * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,44 +15,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.border;
+package wicket.markup.html.debug;
 
-import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.markup.html.form.Form;
-
+import wicket.Page;
+import wicket.markup.html.WebPage;
 
 /**
- * Test the component: WicketPageView
+ * A page that shows interesting attributes of the Wicket environment, including
+ * the current session and the component tree for the current page.
  * 
- * @author Juergen Donnerstag
+ * @author Jonathan Locke
  */
-public class FormBorder extends Border
+public final class WicketInspector extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
-
 	/**
+	 * Constructor.
 	 * 
-	 * @param id
+	 * @param page
+	 *            The page to be analyzed
 	 */
-	public FormBorder(final String id)
+	public WicketInspector(final Page page)
 	{
-		super(id);
-		
-		this.form = new Form("myForm");
-		add(this.form);
-	}
-	
-	/**
-	 * 
-	 * @param child
-	 * @return MarkupContainer
-	 */
-	public MarkupContainer addToForm(final Component child)
-	{
-		form.add(child);
-		return this;
+		add(new WicketSessionView("session", page.getSession()));
+		add(new WicketPageView("page", page));
 	}
 }
