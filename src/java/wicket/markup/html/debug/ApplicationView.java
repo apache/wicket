@@ -56,5 +56,6 @@ public final class ApplicationView extends Panel
 		add(new Label("bufferResponse", "" + settings.getBufferResponse()));
 		add(new Label("resourcePollFrequency", "" + settings.getResourcePollFrequency()));
 		add(new Label("versionPages", "" + settings.getVersionPagesByDefault()));
+		add(new Label("pageMapEvictionStrategy", "" + settings.getPageMapEvictionStrategy()));		
 	}
 }
