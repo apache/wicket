@@ -498,7 +498,7 @@ public class ApplicationSettings
 	/**
 	 * If true, automatic link resolution is enabled. Disabled by default.
 	 * 
-	 * @see wicket.AutoLinkResolver
+	 * @see wicket.markup.resolver.AutoLinkResolver
 	 * @see wicket.markup.parser.filter.WicketLinkTagHandler
 	 * @return Returns the automaticLinking.
 	 */
@@ -769,7 +769,7 @@ public class ApplicationSettings
 	/**
 	 * Application default for automatic link resolution. Please
 	 * 
-	 * @see wicket.AutoLinkResolver and
+	 * @see wicket.markup.resolver.AutoLinkResolver and
 	 * @see wicket.markup.parser.filter.WicketLinkTagHandler for more details.
 	 * 
 	 * @param automaticLinking

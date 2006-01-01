@@ -22,7 +22,6 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.IBehaviour;
-import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.markup.ComponentTag;
@@ -32,6 +31,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.ajax.IBodyOnloadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;

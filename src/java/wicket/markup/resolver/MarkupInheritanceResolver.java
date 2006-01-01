@@ -15,8 +15,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.resolver;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
@@ -33,7 +34,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see wicket.IComponentResolver#resolve(MarkupContainer,
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
 	 * @param container
 	 *            The container parsing its markup

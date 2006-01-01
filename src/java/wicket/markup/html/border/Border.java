@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.border;
 
-import wicket.IComponentResolver;
-import wicket.IComponentResolverMarker;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -27,6 +25,8 @@ import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.resolver.IComponentResolver;
+import wicket.markup.resolver.IComponentResolverMarker;
 import wicket.model.IModel;
 
 /**

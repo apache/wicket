@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.resolver;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import wicket.Component;
+import wicket.MarkupContainer;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -56,7 +59,7 @@ public final class AutoComponentResolver implements IComponentResolver
     private final Map nestedComponents = new HashMap();
     
     /**
-     * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+     * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
      *      ComponentTag)
      * @param container
      *            The container parsing its markup
