@@ -35,7 +35,7 @@ import wicket.util.string.Strings;
  * validation.
  * <p>
  * This component adds ${type}, ${exception}, ${locale} and ${format} to the
- * model for OGNL error message interpolation. Format is only valid if the type
+ * model for error message interpolation. Format is only valid if the type
  * conversion involves a date.
  * 
  * @author Eelco Hillenius

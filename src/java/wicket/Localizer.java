@@ -116,7 +116,7 @@ public class Localizer
 	 * @param component
 	 *            The component to get the resource for
 	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
+	 *            The model to use for property substitutions in the strings
 	 *            (optional)
 	 * @return The string resource
 	 * @throws MissingResourceException
@@ -137,7 +137,7 @@ public class Localizer
 	 * @param component
 	 *            The component to get the resource for
 	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
+	 *            The model to use for property substitutions in the strings
 	 *            (optional)
 	 * @param defaultValue
 	 *            The default value (optional)
@@ -186,7 +186,7 @@ public class Localizer
 	 * @param component
 	 *            The component to get the resource for (optional)
 	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
+	 *            The model to use for substitutions in the strings
 	 *            (optional)
 	 * @param locale
 	 *            The locale to get the resource for (optional)
@@ -236,7 +236,7 @@ public class Localizer
 
 		if (string != null)
 		{
-			return substituteOgnl(component, string, model);
+			return substitutePropertyExpressions(component, string, model);
 		}
 
 		// Resource not found, so handle missing resources based on application
@@ -260,7 +260,7 @@ public class Localizer
 	/**
 	 * 
 	 * <p>
-	 * Note: This implementation does NOT allow variable (OGNL) substitution
+	 * Note: This implementation does NOT allow variable substitution
 	 * 
 	 * @param key
 	 *            The key to obtain the resource for
@@ -369,7 +369,7 @@ public class Localizer
 	}
 
 	/**
-	 * Helper method to handle OGNL variable substituion in strings.
+	 * Helper method to handle preoprty variable substituion in strings.
 	 * 
 	 * @param component
 	 *            The component requesting a model value
@@ -379,7 +379,7 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	private String substituteOgnl(final Component component, final String string, final IModel model)
+	private String substitutePropertyExpressions(final Component component, final String string, final IModel model)
 	{
 		if (string != null && model != null)
 		{

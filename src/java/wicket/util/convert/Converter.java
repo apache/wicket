@@ -82,7 +82,7 @@ public final class Converter implements IConverter
 		private static final long serialVersionUID = 1L;
 		
 		/**
-		 * Converts the given value object to class c using OgnlOps.
+		 * Converts the given value object to class c.
 		 * 
 		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 		 *      java.lang.Class)

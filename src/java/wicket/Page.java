@@ -103,7 +103,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * the name of the Component determines which property of the implicit page
  * model the component is bound to. If more control is desired over the binding
  * of Components to the page model (for example, if you want to specify some
- * OGNL expression other than the component's name for retrieving the model
+ * property expression other than the component's name for retrieving the model
  * object), BoundCompoundPropertyModel can be used.
  * 
  * <li><b>Back Button </b>- Pages can support the back button by enabling
