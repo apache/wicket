@@ -1,7 +1,6 @@
-package wicket;
+package wicket.markup.html.form.validation;
 
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.IValidator;
 import wicket.util.lang.Classes;
 
 /**

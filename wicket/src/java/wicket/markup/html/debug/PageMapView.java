@@ -21,13 +21,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import wicket.IPageMapEntry;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
+import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 

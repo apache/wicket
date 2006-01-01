@@ -25,6 +25,7 @@ import java.util.List;
 import wicket.markup.html.debug.InspectorPage;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
+import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
 /**
@@ -162,6 +163,21 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param entry
+	 *            The entry to remove
+	 * @return The removed entry
+	 */
+	public final IPageMapEntry remove(final IPageMapEntry entry)
+	{
+		// Remove entry from session
+		session.removeAttribute(attributeForId(entry.getNumericId()));
+		size--;
+		return entry;
+	}
+
+	/**
 	 * @return Number of entires in this page map
 	 */
 	public final int size()
@@ -266,7 +282,7 @@ public final class PageMap implements Serializable
 			// Store entry in session
 			session.setAttribute(attributeForId(entry.getNumericId()), entry);
 			size++;
-	
+
 			// Evict any page(s) as need be
 			session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
 		}
@@ -296,19 +312,6 @@ public final class PageMap implements Serializable
 
 		// TODO why this?
 		session.dirty();
-	}
-
-	/**
-	 * @param entry
-	 *            The entry to remove
-	 * @return The removed entry
-	 */
-	final IPageMapEntry remove(final IPageMapEntry entry)
-	{
-		// Remove entry from session
-		session.removeAttribute(attributeForId(entry.getNumericId()));
-		size--;
-		return entry;
 	}
 
 	/**

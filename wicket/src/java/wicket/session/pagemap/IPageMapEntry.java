@@ -15,9 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session.pagemap;
 
 import java.io.Serializable;
+
+import wicket.AbstractPageMapEntry;
+import wicket.Page;
 
 /**
  * Some source which produces a page. Page implements IPageMapEntry by simply

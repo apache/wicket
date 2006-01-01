@@ -15,9 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session.pagemap;
 
 import java.io.Serializable;
+
+import wicket.PageMap;
 
 /**
  * Given a page map, evicts zero or more entries from the map according to some

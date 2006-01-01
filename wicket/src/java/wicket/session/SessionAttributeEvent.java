@@ -15,12 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session;
+
+import wicket.Session;
 
 /**
  * Event obect for passing notifications when attributes are bound to or removed
  * from {@link wicket.Session}s. To listen for such events, listeners need to
- * implement {@link wicket.ISessionAttributeListener}.
+ * implement {@link wicket.session.ISessionAttributeListener}.
  * 
  * @author Eelco Hillenius
  */

@@ -39,6 +39,7 @@ import wicket.request.IRequestCodingStrategy;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
+import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -384,7 +385,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#getAccessSequenceNumber()
+	 * @see wicket.session.pagemap.IPageMapEntry#getAccessSequenceNumber()
 	 */
 	public int getAccessSequenceNumber()
 	{
@@ -435,7 +436,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#getNumericId()
+	 * @see wicket.session.pagemap.IPageMapEntry#getNumericId()
 	 */
 	public int getNumericId()
 	{
@@ -443,7 +444,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#getPageClass()
+	 * @see wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
 	public final Class getPageClass()
 	{

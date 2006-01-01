@@ -15,14 +15,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session;
 
 import java.util.EventObject;
+
+import wicket.Session;
 
 /**
  * Event obect for passing notifications that are cast by {@link wicket.Session}s.
  * To listen for such events, listeners need to implement
- * {@link wicket.ISessionAttributeListener}.
+ * {@link wicket.session.ISessionAttributeListener}.
  * 
  * @author Eelco Hillenius
  */

@@ -27,11 +27,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.IRequestCycleFactory;
-import wicket.ISessionAttributeListener;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Session;
-import wicket.SessionAttributeEvent;
+import wicket.session.ISessionAttributeListener;
+import wicket.session.SessionAttributeEvent;
 
 /**
  * Session subclass for HTTP protocol which holds an HttpSession object and
@@ -71,7 +71,7 @@ public class WebSession extends Session
 		private boolean clean = true;
 
 		/**
-		 * @see wicket.ISessionAttributeListener#attributeAdded(wicket.SessionAttributeEvent)
+		 * @see wicket.session.ISessionAttributeListener#attributeAdded(wicket.session.SessionAttributeEvent)
 		 */
 		public void attributeAdded(SessionAttributeEvent evt)
 		{
@@ -91,14 +91,14 @@ public class WebSession extends Session
 		}
 
 		/**
-		 * @see wicket.ISessionAttributeListener#attributeRemoved(wicket.SessionAttributeEvent)
+		 * @see wicket.session.ISessionAttributeListener#attributeRemoved(wicket.session.SessionAttributeEvent)
 		 */
 		public void attributeRemoved(SessionAttributeEvent evt)
 		{
 		}
 
 		/**
-		 * @see wicket.ISessionAttributeListener#attributeReplaced(wicket.SessionAttributeEvent)
+		 * @see wicket.session.ISessionAttributeListener#attributeReplaced(wicket.session.SessionAttributeEvent)
 		 */
 		public void attributeReplaced(SessionAttributeEvent evt)
 		{

@@ -29,6 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.request.ClientInfo;
+import wicket.session.ISessionAttributeListener;
+import wicket.session.SessionAttributeEvent;
+import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
