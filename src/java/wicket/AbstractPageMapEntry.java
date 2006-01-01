@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import wicket.session.pagemap.IPageMapEntry;
+
 /**
  * An abstract base class that makes it easier to create IPageMapEntry
  * implementations.
@@ -30,7 +32,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	private short id;
 
 	/**
-	 * @see wicket.IPageMapEntry#getAccessSequenceNumber()
+	 * @see wicket.session.pagemap.IPageMapEntry#getAccessSequenceNumber()
 	 */
 	public int getAccessSequenceNumber()
 	{
@@ -38,7 +40,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#getNumericId()
+	 * @see wicket.session.pagemap.IPageMapEntry#getNumericId()
 	 */
 	public int getNumericId()
 	{
@@ -46,7 +48,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#getPage()
+	 * @see wicket.session.pagemap.IPageMapEntry#getPage()
 	 */
 	public abstract Page getPage();
 
@@ -57,7 +59,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	 * So, if there's an easy way to implement this method, that might be
 	 * desirable.
 	 * 
-	 * @see wicket.IPageMapEntry#getPageClass()
+	 * @see wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
 	public Class getPageClass()
 	{
@@ -65,7 +67,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#isDirty()
+	 * @see wicket.session.pagemap.IPageMapEntry#isDirty()
 	 */
 	public boolean isDirty()
 	{
@@ -73,7 +75,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#setAccessSequenceNumber(int)
+	 * @see wicket.session.pagemap.IPageMapEntry#setAccessSequenceNumber(int)
 	 */
 	public void setAccessSequenceNumber(int accessSequenceNumber)
 	{
@@ -81,7 +83,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#setDirty(boolean)
+	 * @see wicket.session.pagemap.IPageMapEntry#setDirty(boolean)
 	 */
 	public void setDirty(boolean dirty)
 	{
@@ -89,7 +91,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	}
 
 	/**
-	 * @see wicket.IPageMapEntry#setNumericId(int)
+	 * @see wicket.session.pagemap.IPageMapEntry#setNumericId(int)
 	 */
 	public void setNumericId(int id)
 	{

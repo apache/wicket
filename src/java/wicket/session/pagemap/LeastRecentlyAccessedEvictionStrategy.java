@@ -15,10 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session.pagemap;
 
 import java.util.Iterator;
 import java.util.List;
+
+import wicket.PageMap;
+
 
 /**
  * A simple eviction strategy that evicts the least recently accessed page
@@ -49,7 +52,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	}
 
 	/**
-	 * @see wicket.IPageMapEvictionStrategy#evict(wicket.PageMap)
+	 * @see wicket.session.pagemap.IPageMapEvictionStrategy#evict(wicket.PageMap)
 	 */
 	public void evict(final PageMap pageMap)
 	{
