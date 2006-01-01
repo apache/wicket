@@ -24,7 +24,7 @@ import wicket.WicketRuntimeException;
  * Factory that creates application objects based on the class name specified in
  * the APP_CLASS_PARAM context variable.
  * 
- * @author Igor Vaynberg ( ivaynberg at privesec dot com )
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 {

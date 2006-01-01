@@ -5,7 +5,7 @@ import wicket.markup.html.form.FormComponent;
 /**
  * Factory for creating resource keys for validator error messages
  * 
- * @author Igor Vaynberg ivaynberg@privesec.com
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public interface IValidatorResourceKeyFactory

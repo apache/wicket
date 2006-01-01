@@ -7,8 +7,8 @@ import wicket.util.lang.Classes;
  * Default implementation of IValidatorResourceKeyFactory. Generates keys of
  * form <form-id>.<component-name>.<validator-class>
  * 
- * @author Igor Vaynberg ivaynberg@privesec.com
- * 
+ * @author Igor Vaynberg (ivaynberg)
+ *  
  */
 public class DefaultValidatorResourceKeyFactory implements IValidatorResourceKeyFactory
 {
