@@ -102,7 +102,7 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  * @author Timur Mehrvarz
  * @author Juergen Donnerstag
- * @author Igor Vaynberg ( ivaynberg at privesec dot com )
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class WicketServlet extends HttpServlet
 {

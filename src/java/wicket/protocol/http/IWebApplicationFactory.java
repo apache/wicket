@@ -28,7 +28,7 @@ package wicket.protocol.http;
  *   &lt;/init-param&gt;
  * </pre>
  * 
- * @author Igor Vaynberg ( ivaynberg at privesec dot com )
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IWebApplicationFactory
 {
