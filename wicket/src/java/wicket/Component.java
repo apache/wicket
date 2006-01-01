@@ -214,8 +214,31 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviourListener
 {
-	/** Reserved subclass-definable flag bit */
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
 
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+	
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
+	
+	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
@@ -226,6 +249,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
@@ -244,32 +270,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 			return newObject.equals(previous);
 		}
 	};
-
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -1329,9 +1329,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public final void renderComponent(final MarkupStream markupStream)
 	{
 		// If yet unknown, set the markup stream position with the current
-		// position
-		// of markupStream. Else set the markupStream.setCurrentPosition based
-		// on the position already known to the component.
+		// position of markupStream. Else set the markupStream.setCurrentPosition 
+		// based on the position already known to the component.
 		validateMarkupStream(markupStream);
 
 		// Get mutable copy of next tag
@@ -1380,8 +1379,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			else
 			{
 				// If a open-close tag has been to modified to be
-				// open-body-close
-				// than a synthetic close tag must be rendered.
+				// open-body-close than a synthetic close tag must be rendered.
 				if (getRenderBodyOnly() == false)
 				{
 					// Close the manually opened panel tag.
@@ -1465,13 +1463,11 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
 			// TODO we can't record any state change as Link.onComponentTag
-			// potentially sets this property
-			// we probably don't need to support this, but I'll keep this
-			// commented so that we can
-			// think about it
+			// potentially sets this property we probably don't need to support 
+			// this, but I'll keep this commented so that we can think about it
 			// I (johan) changed the way Link.onComponentTag works. It will
-			// disable versioning for a the setEnabled call
-			// // Tell the page that this component's enabled was changed
+			// disable versioning for a the setEnabled call. 
+			// Tell the page that this component's enabled was changed
 			if (isVersioned())
 			{
 				final Page page = findPage();
@@ -2029,9 +2025,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another
-				// component
-				// that is the owner of the model (that component has to decide
-				// whether to version or not
+				// component that is the owner of the model (that component 
+				// has to decide whether to version or not
 				setVersioned(false);
 
 				// return the shared compound model
@@ -2105,12 +2100,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
 	{
-
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
-		if (behaviour instanceof AttributeModifier
-				&& getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false)
+		if ((behaviour instanceof AttributeModifier) 
+				&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
+		{
 			return false;
-
+		}
+		
 		return true;
 	}
 
@@ -2191,7 +2187,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply behaviour modifiers
-			if (behaviours != null && !behaviours.isEmpty())
+			if ((behaviours != null) && !behaviours.isEmpty() && !tag.isClose() 
+					&& (isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 
@@ -2281,6 +2278,16 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 		return this;
+	}
+
+	/**
+	 * If true, all attribute modifiers will be ignored
+	 * 
+	 * @return True, if attribute modifiers are to be ignored
+	 */
+	protected final boolean isIgnoreAttributeModifier()
+	{
+		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
 	/**

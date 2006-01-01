@@ -17,6 +17,7 @@
  */
 package wicket.markup.outputTransformer;
 
+import wicket.Component;
 import wicket.model.IModel;
 
 /**
@@ -51,9 +52,9 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 
 	/**
 	 * 
-	 * @see wicket.markup.outputTransformer.AbstractOutputTransformerContainer#transform(java.lang.String)
+	 * @see wicket.markup.outputTransformer.ITransformer#transform(wicket.Component, java.lang.String)
 	 */
-	protected CharSequence transform(final String output)
+	public CharSequence transform(final Component component, final String output)
 	{
 		return output;
 	}
