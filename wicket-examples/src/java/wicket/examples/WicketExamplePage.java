@@ -19,6 +19,7 @@
 package wicket.examples;
 
 import wicket.markup.html.WebPage;
+import wicket.markup.html.debug.InspectorBug;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 
@@ -45,7 +46,7 @@ public class WicketExamplePage extends WebPage
 	{
 		super(model);
         final String packageName = getClass().getPackage().getName();
-        add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.')));
+        add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.'), this));
 		explain();
 	}
 
