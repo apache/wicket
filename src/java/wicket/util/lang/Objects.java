@@ -36,25 +36,117 @@ public abstract class Objects implements NumericTypes
 {
 	static HashMap primitiveDefaults = new HashMap();
 
-	static
+	/**
+	 * Evaluates the given object as a BigDecimal.
+	 * 
+	 * @param value
+	 *            an object to interpret as a BigDecimal
+	 * @return the BigDecimal value implied by the given object
+	 * @throws NumberFormatException
+	 *             if the given object can't be understood as a BigDecimal
+	 */
+	public static BigDecimal bigDecValue(Object value) throws NumberFormatException
 	{
-		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
-		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
-		primitiveDefaults.put(Short.TYPE, new Short((short)0));
-		primitiveDefaults.put(Character.TYPE, new Character((char)0));
-		primitiveDefaults.put(Integer.TYPE, new Integer(0));
-		primitiveDefaults.put(Long.TYPE, new Long(0L));
-		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
-		primitiveDefaults.put(Double.TYPE, new Double(0.0));
-		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
-		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
+		if (value == null)
+			return BigDecimal.valueOf(0L);
+		Class c = value.getClass();
+		if (c == BigDecimal.class)
+			return (BigDecimal)value;
+		if (c == BigInteger.class)
+			return new BigDecimal((BigInteger)value);
+		if (c.getSuperclass() == Number.class)
+			return new BigDecimal(((Number)value).doubleValue());
+		if (c == Boolean.class)
+			return BigDecimal.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		if (c == Character.class)
+			return BigDecimal.valueOf(((Character)value).charValue());
+		return new BigDecimal(stringValue(value, true));
 	}
 
 	/**
-	 * Instantiation not allowed
+	 * Evaluates the given object as a BigInteger.
+	 * 
+	 * @param value
+	 *            an object to interpret as a BigInteger
+	 * @return the BigInteger value implied by the given object
+	 * @throws NumberFormatException
+	 *             if the given object can't be understood as a BigInteger
 	 */
-	private Objects()
+	public static BigInteger bigIntValue(Object value) throws NumberFormatException
 	{
+		if (value == null)
+			return BigInteger.valueOf(0L);
+		Class c = value.getClass();
+		if (c == BigInteger.class)
+			return (BigInteger)value;
+		if (c == BigDecimal.class)
+			return ((BigDecimal)value).toBigInteger();
+		if (c.getSuperclass() == Number.class)
+			return BigInteger.valueOf(((Number)value).longValue());
+		if (c == Boolean.class)
+			return BigInteger.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		if (c == Character.class)
+			return BigInteger.valueOf(((Character)value).charValue());
+		return new BigInteger(stringValue(value, true));
+	}
+
+	/**
+	 * Evaluates the given object as a boolean: if it is a Boolean object, it's
+	 * easy; if it's a Number or a Character, returns true for non-zero objects;
+	 * and otherwise returns true for non-null objects.
+	 * 
+	 * @param value
+	 *            an object to interpret as a boolean
+	 * @return the boolean value implied by the given object
+	 */
+	public static boolean booleanValue(Object value)
+	{
+		if (value == null)
+			return false;
+		Class c = value.getClass();
+		if (c == Boolean.class)
+			return ((Boolean)value).booleanValue();
+		// if ( c == String.class )
+		// return ((String)value).length() > 0;
+		if (c == Character.class)
+			return ((Character)value).charValue() != 0;
+		if (value instanceof Number)
+			return ((Number)value).doubleValue() != 0;
+		return true; // non-null
+	}
+
+	/**
+	 * Makes a deep clone of an object by serializing and deserializing it. The
+	 * object must be fully serializable to be cloned.
+	 * 
+	 * @param object
+	 *            The object to clone
+	 * @return A deep copy of the object
+	 */
+	public static Object clone(final Object object)
+	{
+		if (object == null)
+		{
+			return null;
+		}
+		else
+		{
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(object);
+				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
+						.readObject();
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
+		}
 	}
 
 	/**
@@ -138,267 +230,6 @@ public abstract class Objects implements NumericTypes
 	}
 
 	/**
-	 * Returns true if object1 is equal to object2 in either the sense that they
-	 * are the same object or, if both are non-null if they are equal in the
-	 * <CODE>equals()</CODE> sense.
-	 * 
-	 * @param object1
-	 *            First object to compare
-	 * @param object2
-	 *            Second object to compare
-	 * 
-	 * @return true if v1 == v2
-	 */
-	public static boolean isEqual(Object object1, Object object2)
-	{
-		boolean result = false;
-
-		if (object1 == object2)
-		{
-			result = true;
-		}
-		else
-		{
-			if ((object1 != null) && object1.getClass().isArray())
-			{
-				if ((object2 != null) && object2.getClass().isArray()
-						&& (object2.getClass() == object1.getClass()))
-				{
-					result = (Array.getLength(object1) == Array.getLength(object2));
-					if (result)
-					{
-						for (int i = 0, icount = Array.getLength(object1); result && (i < icount); i++)
-						{
-							result = isEqual(Array.get(object1, i), Array.get(object2, i));
-						}
-					}
-				}
-			}
-			else
-			{
-				// Check for converted equivalence first, then equals()
-				// equivalence
-				result = (object1 != null)
-						&& (object2 != null)
-						&& ((compareWithConversion(object1, object2) == 0) || object1
-								.equals(object2));
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Evaluates the given object as a boolean: if it is a Boolean object, it's
-	 * easy; if it's a Number or a Character, returns true for non-zero objects;
-	 * and otherwise returns true for non-null objects.
-	 * 
-	 * @param value
-	 *            an object to interpret as a boolean
-	 * @return the boolean value implied by the given object
-	 */
-	public static boolean booleanValue(Object value)
-	{
-		if (value == null)
-			return false;
-		Class c = value.getClass();
-		if (c == Boolean.class)
-			return ((Boolean)value).booleanValue();
-		// if ( c == String.class )
-		// return ((String)value).length() > 0;
-		if (c == Character.class)
-			return ((Character)value).charValue() != 0;
-		if (value instanceof Number)
-			return ((Number)value).doubleValue() != 0;
-		return true; // non-null
-	}
-
-	/**
-	 * Evaluates the given object as a long integer.
-	 * 
-	 * @param value
-	 *            an object to interpret as a long integer
-	 * @return the long integer value implied by the given object
-	 * @throws NumberFormatException
-	 *             if the given object can't be understood as a long integer
-	 */
-	public static long longValue(Object value) throws NumberFormatException
-	{
-		if (value == null)
-			return 0L;
-		Class c = value.getClass();
-		if (c.getSuperclass() == Number.class)
-			return ((Number)value).longValue();
-		if (c == Boolean.class)
-			return ((Boolean)value).booleanValue() ? 1 : 0;
-		if (c == Character.class)
-			return ((Character)value).charValue();
-		return Long.parseLong(stringValue(value, true));
-	}
-
-	/**
-	 * Evaluates the given object as a double-precision floating-point number.
-	 * 
-	 * @param value
-	 *            an object to interpret as a double
-	 * @return the double value implied by the given object
-	 * @throws NumberFormatException
-	 *             if the given object can't be understood as a double
-	 */
-	public static double doubleValue(Object value) throws NumberFormatException
-	{
-		if (value == null)
-			return 0.0;
-		Class c = value.getClass();
-		if (c.getSuperclass() == Number.class)
-			return ((Number)value).doubleValue();
-		if (c == Boolean.class)
-			return ((Boolean)value).booleanValue() ? 1 : 0;
-		if (c == Character.class)
-			return ((Character)value).charValue();
-		String s = stringValue(value, true);
-
-		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
-		/*
-		 * For 1.1 parseDouble() is not available
-		 */
-		// return Double.valueOf( value.toString() ).doubleValue();
-	}
-
-	/**
-	 * Evaluates the given object as a BigInteger.
-	 * 
-	 * @param value
-	 *            an object to interpret as a BigInteger
-	 * @return the BigInteger value implied by the given object
-	 * @throws NumberFormatException
-	 *             if the given object can't be understood as a BigInteger
-	 */
-	public static BigInteger bigIntValue(Object value) throws NumberFormatException
-	{
-		if (value == null)
-			return BigInteger.valueOf(0L);
-		Class c = value.getClass();
-		if (c == BigInteger.class)
-			return (BigInteger)value;
-		if (c == BigDecimal.class)
-			return ((BigDecimal)value).toBigInteger();
-		if (c.getSuperclass() == Number.class)
-			return BigInteger.valueOf(((Number)value).longValue());
-		if (c == Boolean.class)
-			return BigInteger.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
-		if (c == Character.class)
-			return BigInteger.valueOf(((Character)value).charValue());
-		return new BigInteger(stringValue(value, true));
-	}
-
-	/**
-	 * Evaluates the given object as a BigDecimal.
-	 * 
-	 * @param value
-	 *            an object to interpret as a BigDecimal
-	 * @return the BigDecimal value implied by the given object
-	 * @throws NumberFormatException
-	 *             if the given object can't be understood as a BigDecimal
-	 */
-	public static BigDecimal bigDecValue(Object value) throws NumberFormatException
-	{
-		if (value == null)
-			return BigDecimal.valueOf(0L);
-		Class c = value.getClass();
-		if (c == BigDecimal.class)
-			return (BigDecimal)value;
-		if (c == BigInteger.class)
-			return new BigDecimal((BigInteger)value);
-		if (c.getSuperclass() == Number.class)
-			return new BigDecimal(((Number)value).doubleValue());
-		if (c == Boolean.class)
-			return BigDecimal.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
-		if (c == Character.class)
-			return BigDecimal.valueOf(((Character)value).charValue());
-		return new BigDecimal(stringValue(value, true));
-	}
-
-	/**
-	 * Evaluates the given object as a String and trims it if the trim flag is
-	 * true.
-	 * 
-	 * @param value
-	 *            an object to interpret as a String
-	 * @param trim
-	 *            whether to trim the string
-	 * @return the String value implied by the given object as returned by the
-	 *         toString() method, or "null" if the object is null.
-	 */
-	public static String stringValue(Object value, boolean trim)
-	{
-		String result;
-
-		if (value == null)
-		{
-			result = "null";
-		}
-		else
-		{
-			result = value.toString();
-			if (trim)
-			{
-				result = result.trim();
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Evaluates the given object as a String.
-	 * 
-	 * @param value
-	 *            an object to interpret as a String
-	 * @return the String value implied by the given object as returned by the
-	 *         toString() method, or "null" if the object is null.
-	 */
-	public static String stringValue(Object value)
-	{
-		return stringValue(value, false);
-	}
-
-	/**
-	 * Returns a constant from the NumericTypes interface that represents the
-	 * numeric type of the given object.
-	 * 
-	 * @param value
-	 *            an object that needs to be interpreted as a number
-	 * @return the appropriate constant from the NumericTypes interface
-	 */
-	public static int getNumericType(Object value)
-	{
-		if (value != null)
-		{
-			Class c = value.getClass();
-			if (c == Integer.class)
-				return INT;
-			if (c == Double.class)
-				return DOUBLE;
-			if (c == Boolean.class)
-				return BOOL;
-			if (c == Byte.class)
-				return BYTE;
-			if (c == Character.class)
-				return CHAR;
-			if (c == Short.class)
-				return SHORT;
-			if (c == Long.class)
-				return LONG;
-			if (c == Float.class)
-				return FLOAT;
-			if (c == BigInteger.class)
-				return BIGINT;
-			if (c == BigDecimal.class)
-				return BIGDEC;
-		}
-		return NONNUMERIC;
-	}
-
-	/**
 	 * Returns the value converted numerically to the given class type
 	 * 
 	 * This method also detects when arrays are being converted and converts the
@@ -464,20 +295,57 @@ public abstract class Objects implements NumericTypes
 		return result;
 	}
 
+	/**
+	 * Evaluates the given object as a double-precision floating-point number.
+	 * 
+	 * @param value
+	 *            an object to interpret as a double
+	 * @return the double value implied by the given object
+	 * @throws NumberFormatException
+	 *             if the given object can't be understood as a double
+	 */
+	public static double doubleValue(Object value) throws NumberFormatException
+	{
+		if (value == null)
+			return 0.0;
+		Class c = value.getClass();
+		if (c.getSuperclass() == Number.class)
+			return ((Number)value).doubleValue();
+		if (c == Boolean.class)
+			return ((Boolean)value).booleanValue() ? 1 : 0;
+		if (c == Character.class)
+			return ((Character)value).charValue();
+		String s = stringValue(value, true);
+
+		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
+		/*
+		 * For 1.1 parseDouble() is not available
+		 */
+		// return Double.valueOf( value.toString() ).doubleValue();
+	}
 
 	/**
-	 * Returns the constant from the NumericTypes interface that best expresses
-	 * the type of a numeric operation on the two given objects.
+	 * Returns true if a and b are equal. Either object may be null.
 	 * 
-	 * @param v1
-	 *            one argument to a numeric operator
-	 * @param v2
-	 *            the other argument
-	 * @return the appropriate constant from the NumericTypes interface
+	 * @param a
+	 *            Object a
+	 * @param b
+	 *            Object b
+	 * @return True if the objects are equal
 	 */
-	public static int getNumericType(Object v1, Object v2)
+	public static boolean equal(final Object a, final Object b)
 	{
-		return getNumericType(v1, v2, false);
+		if (a == b)
+		{
+			return true;
+		}
+
+		if (a != null && b != null && a.equals(b))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -529,6 +397,58 @@ public abstract class Objects implements NumericTypes
 	}
 
 	/**
+	 * Returns a constant from the NumericTypes interface that represents the
+	 * numeric type of the given object.
+	 * 
+	 * @param value
+	 *            an object that needs to be interpreted as a number
+	 * @return the appropriate constant from the NumericTypes interface
+	 */
+	public static int getNumericType(Object value)
+	{
+		if (value != null)
+		{
+			Class c = value.getClass();
+			if (c == Integer.class)
+				return INT;
+			if (c == Double.class)
+				return DOUBLE;
+			if (c == Boolean.class)
+				return BOOL;
+			if (c == Byte.class)
+				return BYTE;
+			if (c == Character.class)
+				return CHAR;
+			if (c == Short.class)
+				return SHORT;
+			if (c == Long.class)
+				return LONG;
+			if (c == Float.class)
+				return FLOAT;
+			if (c == BigInteger.class)
+				return BIGINT;
+			if (c == BigDecimal.class)
+				return BIGDEC;
+		}
+		return NONNUMERIC;
+	}
+
+	/**
+	 * Returns the constant from the NumericTypes interface that best expresses
+	 * the type of a numeric operation on the two given objects.
+	 * 
+	 * @param v1
+	 *            one argument to a numeric operator
+	 * @param v2
+	 *            the other argument
+	 * @return the appropriate constant from the NumericTypes interface
+	 */
+	public static int getNumericType(Object v1, Object v2)
+	{
+		return getNumericType(v1, v2, false);
+	}
+
+	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
 	 * given objects.
@@ -544,6 +464,80 @@ public abstract class Objects implements NumericTypes
 	public static int getNumericType(Object v1, Object v2, boolean canBeNonNumeric)
 	{
 		return getNumericType(getNumericType(v1), getNumericType(v2), canBeNonNumeric);
+	}
+
+	/**
+	 * Returns true if object1 is equal to object2 in either the sense that they
+	 * are the same object or, if both are non-null if they are equal in the
+	 * <CODE>equals()</CODE> sense.
+	 * 
+	 * @param object1
+	 *            First object to compare
+	 * @param object2
+	 *            Second object to compare
+	 * 
+	 * @return true if v1 == v2
+	 */
+	public static boolean isEqual(Object object1, Object object2)
+	{
+		boolean result = false;
+
+		if (object1 == object2)
+		{
+			result = true;
+		}
+		else
+		{
+			if ((object1 != null) && object1.getClass().isArray())
+			{
+				if ((object2 != null) && object2.getClass().isArray()
+						&& (object2.getClass() == object1.getClass()))
+				{
+					result = (Array.getLength(object1) == Array.getLength(object2));
+					if (result)
+					{
+						for (int i = 0, icount = Array.getLength(object1); result && (i < icount); i++)
+						{
+							result = isEqual(Array.get(object1, i), Array.get(object2, i));
+						}
+					}
+				}
+			}
+			else
+			{
+				// Check for converted equivalence first, then equals()
+				// equivalence
+				result = (object1 != null)
+						&& (object2 != null)
+						&& ((compareWithConversion(object1, object2) == 0) || object1
+								.equals(object2));
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * Evaluates the given object as a long integer.
+	 * 
+	 * @param value
+	 *            an object to interpret as a long integer
+	 * @return the long integer value implied by the given object
+	 * @throws NumberFormatException
+	 *             if the given object can't be understood as a long integer
+	 */
+	public static long longValue(Object value) throws NumberFormatException
+	{
+		if (value == null)
+			return 0L;
+		Class c = value.getClass();
+		if (c.getSuperclass() == Number.class)
+			return ((Number)value).longValue();
+		if (c == Boolean.class)
+			return ((Boolean)value).booleanValue() ? 1 : 0;
+		if (c == Character.class)
+			return ((Character)value).charValue();
+		return Long.parseLong(stringValue(value, true));
 	}
 
 	/**
@@ -595,64 +589,6 @@ public abstract class Objects implements NumericTypes
 	}
 
 	/**
-	 * Returns true if a and b are equal. Either object may be null.
-	 * 
-	 * @param a
-	 *            Object a
-	 * @param b
-	 *            Object b
-	 * @return True if the objects are equal
-	 */
-	public static boolean equal(final Object a, final Object b)
-	{
-		if (a == b)
-		{
-			return true;
-		}
-
-		if (a != null && b != null && a.equals(b))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Makes a deep clone of an object by serializing and deserializing it. The
-	 * object must be fully serializable to be cloned.
-	 * 
-	 * @param object
-	 *            The object to clone
-	 * @return A deep copy of the object
-	 */
-	public static Object clone(final Object object)
-	{
-		if (object == null)
-		{
-			return null;
-		}
-		else
-		{
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(object);
-				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
-						.readObject();
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new RuntimeException("Internal error cloning object", e);
-			}
-			catch (IOException e)
-			{
-				throw new RuntimeException("Internal error cloning object", e);
-			}
-		}
-	}
-
-	/**
 	 * Computes the size of an object by serializing it to a byte array.
 	 * 
 	 * @param object
@@ -672,5 +608,69 @@ public abstract class Objects implements NumericTypes
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	/**
+	 * Evaluates the given object as a String.
+	 * 
+	 * @param value
+	 *            an object to interpret as a String
+	 * @return the String value implied by the given object as returned by the
+	 *         toString() method, or "null" if the object is null.
+	 */
+	public static String stringValue(Object value)
+	{
+		return stringValue(value, false);
+	}
+
+	/**
+	 * Evaluates the given object as a String and trims it if the trim flag is
+	 * true.
+	 * 
+	 * @param value
+	 *            an object to interpret as a String
+	 * @param trim
+	 *            whether to trim the string
+	 * @return the String value implied by the given object as returned by the
+	 *         toString() method, or "null" if the object is null.
+	 */
+	public static String stringValue(Object value, boolean trim)
+	{
+		String result;
+
+		if (value == null)
+		{
+			result = "null";
+		}
+		else
+		{
+			result = value.toString();
+			if (trim)
+			{
+				result = result.trim();
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Instantiation not allowed
+	 */
+	private Objects()
+	{
+	}
+
+	static
+	{
+		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
+		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
+		primitiveDefaults.put(Short.TYPE, new Short((short)0));
+		primitiveDefaults.put(Character.TYPE, new Character((char)0));
+		primitiveDefaults.put(Integer.TYPE, new Integer(0));
+		primitiveDefaults.put(Long.TYPE, new Long(0L));
+		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
+		primitiveDefaults.put(Double.TYPE, new Double(0.0));
+		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
+		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
 	}
 }
