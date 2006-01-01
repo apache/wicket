@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -649,6 +649,28 @@ public abstract class Objects implements NumericTypes
 			{
 				throw new RuntimeException("Internal error cloning object", e);
 			}
+		}
+	}
+
+	/**
+	 * Computes the size of an object by serializing it to a byte array.
+	 * 
+	 * @param object
+	 *            Object to compute size of
+	 * @return The size of the object in bytes
+	 */
+	public static int sizeof(final Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			new ObjectOutputStream(out).writeObject(object);
+			return out.size();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return -1;
 		}
 	}
 }

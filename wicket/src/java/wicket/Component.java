@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.197 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -170,10 +170,10 @@ import wicket.version.undo.Change;
  * resource management logic will prefer these resources to other resources,
  * such as default resources, which are not as good of a match.
  * 
- * <li><b>Variation </b>- Whereas Styles are Session (user) specific, 
+ * <li><b>Variation </b>- Whereas Styles are Session (user) specific,
  * variations are component specific. E.g. if the Style is "ocean" and the
- * Variation is "NorthSea", than the resources are given the names suffixed
- * with "_ocean_NorthSea".
+ * Variation is "NorthSea", than the resources are given the names suffixed with
+ * "_ocean_NorthSea".
  * 
  * <li><b>AttributeModifiers </b>- You can add one or more
  * {@link AttributeModifier}s to any component if you need to programmatically
@@ -214,29 +214,6 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviourListener
 {
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
 	/** Reserved subclass-definable flag bit */
 
 	protected static final short FLAG_RESERVED1 = 0x0100;
@@ -249,13 +226,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED4 = 0x0800;
-
-	/** boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED 
-			| FLAG_ENABLED;
 
 	private static final IComponentValueComparator comparator = new IComponentValueComparator()
 	{
@@ -275,27 +245,56 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 	};
 
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
+
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** List of behaviours to be applied for this Component */
 	private List behaviours = null;
 
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
+
 	/** Component id. */
 	private String id;
+
+	/**
+	 * The position within the markup stream, where the markup for the component
+	 * begins. Compared to MarkupContainer's markupStream this is NOT just a
+	 * temporary variable to render a page.
+	 */
+	private int markupStreamPosition = -1;
 
 	/** The model for this component. */
 	private IModel model;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
-
-	/**
-	 * The position within the markup stream, where the markup for the component
-	 * begins. Compared to MarkupContainer's markupStream this is NOT just a 
-	 * temporary variable to render a page. 
-	 */
-	private int markupStreamPosition = -1;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -331,19 +330,19 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		/**
-		 * @see wicket.version.undo.Change#undo()
-		 */
-		public void undo()
-		{
-			setModel(this.model);
-		}
-
-		/**
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString()
 		{
 			return "ComponentModelChange[component: " + getPath() + "]";
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setModel(this.model);
 		}
 	}
 
@@ -400,19 +399,19 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		/**
-		 * @see wicket.version.undo.Change#undo()
-		 */
-		public void undo()
-		{
-			component.setEnabled(enabled);
-		}
-
-		/**
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString()
 		{
 			return "EnabledChange[component: " + component.getPath() + ",enabled: " + enabled + "]";
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			component.setEnabled(enabled);
 		}
 	}
 
@@ -441,20 +440,20 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		/**
-		 * @see wicket.version.undo.Change#undo()
-		 */
-		public void undo()
-		{
-			component.setVisible(visible);
-		}
-
-		/**
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString()
 		{
 			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible
 					+ "]";
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			component.setVisible(visible);
 		}
 	}
 
@@ -530,6 +529,58 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public final void debug(final String message)
 	{
 		getPage().getFeedbackMessages().debug(this, message);
+	}
+
+	/**
+	 * Detaches all models
+	 */
+	public void detachModels()
+	{
+		// Detach any detachable model from this component
+		detachModel();
+
+		// Also detach models from any contained attribute modifiers
+		if (behaviours != null)
+		{
+			for (Iterator i = behaviours.iterator(); i.hasNext();)
+			{
+				IBehaviour behaviour = (IBehaviour)i.next();
+				behaviour.detachModel();
+			}
+		}
+	}
+
+	/**
+	 * Page.doRender() is used to render a whole page. With AJAX however it must
+	 * be possible to re-render anyone component contained in a page. That is
+	 * what Component.doRender() is for.
+	 */
+	public void doRender()
+	{
+		// Save the parent's markup stream to re-assign it at the end
+		MarkupContainer parent = getParent();
+		MarkupStream originalMarkupStream = parent.getMarkupStream();
+
+		// Get the parent's associated markup stream.
+		MarkupStream markupStream = findParentWithAssociatedMarkup().getAssociatedMarkupStream();
+
+		// Make sure the markup stream is position at the correct element
+		markupStream.setCurrentIndex(this.markupStreamPosition);
+
+		try
+		{
+			// Make sure that while rendering the markup stream is found
+			parent.setMarkupStream(markupStream);
+
+			// Render the component and all its children
+			internalBeginRequest();
+			render();
+		}
+		finally
+		{
+			// Make sure the original markup stream is back in place
+			parent.setMarkupStream(originalMarkupStream);
+		}
 	}
 
 	/**
@@ -859,6 +910,18 @@ public abstract class Component implements Serializable, IBehaviourListener
 			buffer.insert(0, c.getId());
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * If false the component's tag will be printed as well as its body (which
+	 * is default). If true only the body will be printed, but not the
+	 * component's tag.
+	 * 
+	 * @return If true, the component tag will not be printed
+	 */
+	public final boolean getRenderBodyOnly()
+	{
+		return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 
 	/**
@@ -1205,48 +1268,17 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Page.doRender() is used to render a whole page. With AJAX however it must
-	 * be possible to re-render anyone component contained in a page. That is 
-	 * what Component.doRender() is for.  
-	 */
-	public void doRender()
-	{
-		// Save the parent's markup stream to re-assign it at the end
-		MarkupContainer parent = getParent();
-		MarkupStream originalMarkupStream = parent.getMarkupStream();
-
-		// Get the parent's associated markup stream. 
-		MarkupStream markupStream = findParentWithAssociatedMarkup().getAssociatedMarkupStream();
-
-		// Make sure the markup stream is position at the correct element
-		markupStream.setCurrentIndex(this.markupStreamPosition);
-		
-		try
-		{
-			// Make sure that while rendering the markup stream is found
-			parent.setMarkupStream(markupStream);
-			
-			// Render the component and all its children
-			internalBeginRequest();
-			render();
-		}
-		finally
-		{
-			// Make sure the original markup stream is back in place
-			parent.setMarkupStream(originalMarkupStream);
-		}
-	}
-
-	/**
-	 * Performs a render of this component as part of a Page level render process.
+	 * Performs a render of this component as part of a Page level render
+	 * process.
 	 * <p>
-	 * For component level re-render (e.g. AJAX) please call Component.doRender(). 
-	 * Though render() does seem to work, it will fail for panel children.
+	 * For component level re-render (e.g. AJAX) please call
+	 * Component.doRender(). Though render() does seem to work, it will fail for
+	 * panel children.
 	 */
 	public final void render()
 	{
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
-		
+
 		rendering = true;
 
 		try
@@ -1260,13 +1292,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 				{
 					log.debug("Begin render " + this);
 				}
-	
+
 				// Call implementation to render component
 				onRender();
-	
+
 				// Component has been rendered
 				rendered();
-	
+
 				if (log.isDebugEnabled())
 				{
 					log.debug("End render " + this);
@@ -1296,7 +1328,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		// If yet unknown, set the markup stream position with the current position
+		// If yet unknown, set the markup stream position with the current
+		// position
 		// of markupStream. Else set the markupStream.setCurrentPosition based
 		// on the position already known to the component.
 		validateMarkupStream(markupStream);
@@ -1312,18 +1345,17 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!tag.isOpenClose() && !tag.isOpen())
 		{
 			// We were something other than <tag> or <tag/>
-			markupStream.throwMarkupException(
-					"Method renderComponent called on bad markup element: "
-					+ tag);
+			markupStream
+					.throwMarkupException("Method renderComponent called on bad markup element: "
+							+ tag);
 		}
 
 		if (tag.isOpenClose() && openTag.isOpen())
 		{
-			markupStream.throwMarkupException(
-					"You can not modify a open tag to open-close: "
-					+ tag);
+			markupStream
+					.throwMarkupException("You can not modify a open tag to open-close: " + tag);
 		}
-		
+
 		// Render open tag
 		if (getRenderBodyOnly() == false)
 		{
@@ -1347,12 +1379,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 			}
 			else
 			{
-				// If a open-close tag has been to modified to be open-body-close
+				// If a open-close tag has been to modified to be
+				// open-body-close
 				// than a synthetic close tag must be rendered.
 				if (getRenderBodyOnly() == false)
 				{
-			        // Close the manually opened panel tag.
-			        getResponse().write(openTag.syntheticCloseTagString());
+					// Close the manually opened panel tag.
+					getResponse().write(openTag.syntheticCloseTagString());
 				}
 			}
 		}
@@ -1436,62 +1469,21 @@ public abstract class Component implements Serializable, IBehaviourListener
 			// we probably don't need to support this, but I'll keep this
 			// commented so that we can
 			// think about it
-			// I (johan) changed the way Link.onComponentTag works. It will disable versioning for a the setEnabled call 
+			// I (johan) changed the way Link.onComponentTag works. It will
+			// disable versioning for a the setEnabled call
 			// // Tell the page that this component's enabled was changed
-			if(isVersioned())
+			if (isVersioned())
 			{
 				final Page page = findPage();
 				if (page != null)
 				{
-					 addStateChange(new EnabledChange(this));
+					addStateChange(new EnabledChange(this));
 				}
 			}
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
 		}
 		return this;
-	}
-
-	/**
-	 * If yet unknown, set the markup stream position with the current position
-	 * of markupStream. Else set the markupStream.setCurrentPosition based the
-	 * position already known to the component.
-	 * <p>
-	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
-	 * re-render is allowed.
-	 * 
-	 * @param markupStream
-	 */
-	protected final void validateMarkupStream(final MarkupStream markupStream)
-	{
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		final Component parent = getParent();
-		if (this.isAuto() || (parent != null && parent.isRendering()) )
-		{
-			// Remember the position while rendering the component the first
-			// time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else if (this.markupStreamPosition < 0)
-		{
-			throw new WicketRuntimeException(
-					"The markup stream of the component should be known by now, but isn't: " 
-					+ this.toString());
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
-	}
-
-	/**
-	 * @return boolean if this component is currently rendering itself
-	 */
-	private boolean isRendering()
-	{
-		return rendering;
 	}
 
 	/**
@@ -1634,6 +1626,21 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
+	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * <p>
+	 * 
+	 * @param b
+	 *            Boolean to set the rendering
+	 * @return the previous value of the rendering.
+	 */
+	public final boolean setRendering(boolean b)
+	{
+		boolean tmp = rendering;
+		rendering = b;
+		return tmp;
+	}
+
+	/**
 	 * Sets the page that will respond to this request
 	 * 
 	 * @param cls
@@ -1750,6 +1757,19 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
+	 * Gets the url for the listener interface (e.g. ILinkListener).
+	 * 
+	 * @param listenerInterface
+	 *            The listener interface that the URL should call
+	 * @return The URL
+	 * @see Page#urlFor(Component, Class)
+	 */
+	public final String urlFor(final Class listenerInterface)
+	{
+		return getPage().urlFor(this, listenerInterface);
+	}
+
+	/**
 	 * Gets the url for the provided behaviour listener.
 	 * 
 	 * @param behaviourListener
@@ -1778,19 +1798,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		return urlFor(IBehaviourListener.class) + "&behaviourId=" + index;
-	}
-
-	/**
-	 * Gets the url for the listener interface (e.g. ILinkListener).
-	 * 
-	 * @param listenerInterface
-	 *            The listener interface that the URL should call
-	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
-	 */
-	public final String urlFor(final Class listenerInterface)
-	{
-		return getPage().urlFor(this, listenerInterface);
 	}
 
 	/**
@@ -1933,6 +1940,54 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
+	 * Gets the currently coupled {@link IBehaviour}s as a unmodifiable list.
+	 * Returns an empty list rather than null if there are no behaviours coupled
+	 * to this component.
+	 * 
+	 * @return the currently coupled behaviours as a unmodifiable list
+	 */
+	protected final List/* <IBehaviour> */getBehaviours()
+	{
+		if (behaviours == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		return Collections.unmodifiableList(behaviours);
+	}
+
+	/**
+	 * Gets the subset of the currently coupled {@link IBehaviour}s that are of
+	 * the provided type as a unmodifiable list or null if there are no
+	 * behaviours attached. Returns an empty list rather than null if there are
+	 * no behaviours coupled to this component.
+	 * 
+	 * @param type
+	 *            the type
+	 * 
+	 * @return the subset of the currently coupled behaviours that are of the
+	 *         provided type as a unmodifiable list or null
+	 */
+	protected final List/* <IBehaviour> */getBehaviours(Class type)
+	{
+		if (behaviours == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		List subset = new ArrayList(behaviours.size()); // avoid growing
+		for (Iterator i = behaviours.iterator(); i.hasNext();)
+		{
+			Object behaviour = i.next();
+			if (type.isAssignableFrom(behaviour.getClass()))
+			{
+				subset.add(behaviour);
+			}
+		}
+		return Collections.unmodifiableList(subset);
+	}
+
+	/**
 	 * Gets the value comparator. Implementations of this interface can be used
 	 * in the Component.getComparator() for testing the current value of the
 	 * components model data with the new value that is given.
@@ -1954,18 +2009,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	protected final boolean getFlag(final short flag)
 	{
 		return (this.flags & flag) != 0;
-	}
-
-	/**
-	 * If false the component's tag will be printed as well as its body (which
-	 * is default). If true only the body will be printed, but not the
-	 * component's tag.
-	 * 
-	 * @return If true, the component tag will not be printed
-	 */
-	public final boolean getRenderBodyOnly()
-	{
-		return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 
 	/**
@@ -2055,6 +2098,31 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
+	 * Components are allowed to reject behaviour modifiers.
+	 * 
+	 * @param behaviour
+	 * @return false, if the component should not apply this behaviour
+	 */
+	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
+	{
+
+		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
+		if (behaviour instanceof AttributeModifier
+				&& getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false)
+			return false;
+
+		return true;
+	}
+
+	/**
+	 * Invalidates the markupstream position, called when the markup did change
+	 */
+	protected final void markStreamPositionInvalid()
+	{
+		markupStreamPosition = -1;
+	}
+
+	/**
 	 * Called when a request begins.
 	 */
 	protected void onBeginRequest()
@@ -2110,54 +2178,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	protected abstract void onRender();
 
 	/**
-	 * Gets the currently coupled {@link IBehaviour}s as a unmodifiable list.
-	 * Returns an empty list rather than null if there are no behaviours coupled
-	 * to this component.
-	 * 
-	 * @return the currently coupled behaviours as a unmodifiable list
-	 */
-	protected final List/* <IBehaviour> */getBehaviours()
-	{
-		if (behaviours == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		return Collections.unmodifiableList(behaviours);
-	}
-
-	/**
-	 * Gets the subset of the currently coupled {@link IBehaviour}s that are of
-	 * the provided type as a unmodifiable list or null if there are no
-	 * behaviours attached. Returns an empty list rather than null if there are
-	 * no behaviours coupled to this component.
-	 * 
-	 * @param type
-	 *            the type
-	 * 
-	 * @return the subset of the currently coupled behaviours that are of the
-	 *         provided type as a unmodifiable list or null
-	 */
-	protected final List/* <IBehaviour> */getBehaviours(Class type)
-	{
-		if (behaviours == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		List subset = new ArrayList(behaviours.size()); // avoid growing
-		for (Iterator i = behaviours.iterator(); i.hasNext();)
-		{
-			Object behaviour = i.next();
-			if (type.isAssignableFrom(behaviour.getClass()))
-			{
-				subset.add(behaviour);
-			}
-		}
-		return Collections.unmodifiableList(subset);
-	}
-
-	/**
 	 * Writes a simple tag out to the response stream. Any components that might
 	 * be referenced by the tag are ignored. Also undertakes any tag attribute
 	 * modifications if they have been added to the component.
@@ -2190,23 +2210,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 			tag.writeOutput(getResponse(), settings.getStripWicketTags(), this.findMarkupStream()
 					.getWicketNamespace());
 		}
-	}
-
-	/**
-	 * Components are allowed to reject behaviour modifiers.
-	 * 
-	 * @param behaviour
-	 * @return false, if the component should not apply this behaviour
-	 */
-	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
-	{
-
-		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
-		if (behaviour instanceof AttributeModifier
-				&& getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false)
-			return false;
-
-		return true;
 	}
 
 	/**
@@ -2281,6 +2284,40 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
+	 * If yet unknown, set the markup stream position with the current position
+	 * of markupStream. Else set the markupStream.setCurrentPosition based the
+	 * position already known to the component.
+	 * <p>
+	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
+	 * re-render is allowed.
+	 * 
+	 * @param markupStream
+	 */
+	protected final void validateMarkupStream(final MarkupStream markupStream)
+	{
+		// Allow the component to be re-rendered without a page. Partial
+		// re-rendering is a requirement of AJAX.
+		final Component parent = getParent();
+		if (this.isAuto() || (parent != null && parent.isRendering()))
+		{
+			// Remember the position while rendering the component the first
+			// time
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+		}
+		else if (this.markupStreamPosition < 0)
+		{
+			throw new WicketRuntimeException(
+					"The markup stream of the component should be known by now, but isn't: "
+							+ this.toString());
+		}
+		else
+		{
+			// Re-set the markups index to the beginning of the component tag
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+	}
+
+	/**
 	 * Visits the parents of this component.
 	 * 
 	 * @param c
@@ -2311,25 +2348,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 			current = current.getParent();
 		}
 		return null;
-	}
-
-	/**
-	 * Detaches all models
-	 */
-	final void detachModels()
-	{
-		// Detach any detachable model from this component
-		detachModel();
-
-		// Also detach models from any contained attribute modifiers
-		if (behaviours != null)
-		{
-			for (Iterator i = behaviours.iterator(); i.hasNext();)
-			{
-				IBehaviour behaviour = (IBehaviour)i.next();
-				behaviour.detachModel();
-			}
-		}
 	}
 
 	/**
@@ -2474,8 +2492,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		if (!getApplication().getAuthorizationStrategy().allowInstantiation(getClass()))
 		{
-			throw new UnauthorizedInstantiationException("insufficiently authorized to create component "
-					+ getClass());
+			throw new UnauthorizedInstantiationException(
+					"insufficiently authorized to create component " + getClass());
 		}
 	}
 
@@ -2507,23 +2525,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Invalidates the markupstream position, called when the markup did change
+	 * @return boolean if this component is currently rendering itself
 	 */
-	protected final void markStreamPositionInvalid()
+	private boolean isRendering()
 	{
-		markupStreamPosition = -1;
-	}
-
-	/**
-	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
-	 * <p>
-	 * @param b Boolean to set the rendering
-	 * @return the previous value of the rendering.
-	 */
-	public final boolean setRendering(boolean b)
-	{
-		boolean tmp = rendering;
-		rendering = b;
-		return tmp;
+		return rendering;
 	}
 }

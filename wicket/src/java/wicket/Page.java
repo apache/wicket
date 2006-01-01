@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +40,7 @@ import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
-import wicket.util.profile.ObjectProfiler;
+import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.undo.Change;
@@ -291,6 +290,32 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Detaches any attached models referenced by this page.
+	 */
+	public void detachModels()
+	{
+		// visit all this page's children to detach the models
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				try
+				{
+					// detach any models of the component
+					component.detachModels();
+				}
+				catch (Exception e) // catch anything; we MUST detach all models
+				{
+					log.error("detaching models of component " + component + " failed:", e);
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		detachModel();
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
 	public final void doRender()
@@ -438,16 +463,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
-	 * 
-	 * @return The list of PageSets to which this Page belongs.
-	 */
-	public final Iterator getPageSets()
-	{
-		return getSession().getApplication().getPageSets(this);
-	}
-
-	/**
 	 * @return Get a page map entry for this page. By default, this is the page
 	 *         itself. But if you know of some way to compress the state for the
 	 *         page, you can return a custom implementation that produces the
@@ -463,11 +478,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final public int getSize()
 	{
-		PageMap oldPageMap = this.pageMap;
 		this.pageMap = null;
-		int size = ObjectProfiler.sizeof(this);
-		this.pageMap = oldPageMap;
-		return size;
+		return Objects.sizeof(this);
 	}
 
 	/**
@@ -713,6 +725,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
 	}
 
+
 	/**
 	 * Returns a URL that references a given interface on a component. When the
 	 * URL is requested from the server at a later time, the interface will be
@@ -735,7 +748,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(requestCycle, target);
 	}
-
 
 	/**
 	 * Returns a URL that references the given request target.
@@ -843,25 +855,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
-		// visit all this page's children to detach the models
-		visitChildren(new IVisitor()
-		{
-			public Object component(Component component)
-			{
-				try
-				{
-					// detach any models of the component
-					component.detachModels();
-				}
-				catch (Exception e) // catch anything; we MUST detach all models
-				{
-					log.error("detaching models of component " + component + " failed:", e);
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
-		detachModel();
+		
+		detachModels();
 
 		if (isVersioned())
 		{
