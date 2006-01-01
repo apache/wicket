@@ -912,7 +912,12 @@ public abstract class Session implements Serializable
 	final Page getPage(final String pageMapName, final int id)
 	{
 		// This call will always mark the Page dirty
-		return getPageMap(pageMapName).get(id);
+		PageMap pageMap = getPageMap(pageMapName);
+		if (pageMap == null)
+		{
+			return null;
+		}
+		return pageMap.get(id);
 	}
 
 	/**

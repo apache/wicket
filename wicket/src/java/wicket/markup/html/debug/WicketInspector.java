@@ -41,4 +41,12 @@ public final class WicketInspector extends WebPage
 		add(new WicketSessionView("session", page.getSession()));
 		add(new WicketPageView("page", page));
 	}
+	
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
 }
