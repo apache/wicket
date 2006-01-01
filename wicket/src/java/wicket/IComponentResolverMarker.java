@@ -17,7 +17,6 @@
  */
 package wicket;
 
-
 /**
  * This is a marker interface which may only be used in combination with
  * IComponentResolver. Usually AutoLinkResolver will invoke getParent() of all
