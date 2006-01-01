@@ -20,7 +20,7 @@ package wicket.examples.inspector;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.debug.WicketInspectorBug;
+import wicket.markup.html.debug.InspectorBug;
 
 /**
  * A simple page with an inspector bug on it.
@@ -35,6 +35,6 @@ public class Inspector extends WicketExamplePage
     public Inspector()
     {
         add(new Label("message", "Hello World!"));
-        add(new WicketInspectorBug("bug", this));
+        add(new InspectorBug("bug", this));
     }
 }
