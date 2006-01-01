@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.debug;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import wicket.IPageMapEntry;
@@ -57,6 +59,17 @@ public final class WicketPageMapView extends Panel
 		// Get pagemaps
 		final List entries = pageMap.getEntries();
 
+		// Sort on access
+		Collections.sort(entries, new Comparator()
+		{
+			public int compare(Object a, Object b)
+			{
+				IPageMapEntry ea = (IPageMapEntry)a;
+				IPageMapEntry eb = (IPageMapEntry)b;
+				return eb.getAccessSequenceNumber() - ea.getAccessSequenceNumber();
+			}
+		});
+
 		// Create the table containing the list the components
 		add(new ListView("entries", entries)
 		{
@@ -78,7 +91,9 @@ public final class WicketPageMapView extends Panel
 				{
 					size = ObjectProfiler.sizeof(entry);
 				}
-				listItem.add(new Label("size", (entry instanceof WicketInspector) ? "(inspector)" : "" + Bytes.bytes(size)));
+				listItem.add(new Label("size", (entry instanceof WicketInspector)
+						? "(inspector)"
+						: "" + Bytes.bytes(size)));
 			}
 		});
 	}
