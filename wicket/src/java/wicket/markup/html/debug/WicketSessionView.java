@@ -55,7 +55,8 @@ public final class WicketSessionView extends Panel
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
 		add(new Label("size", "" + Bytes.bytes(Objects.sizeof(session))));
-		
+		add(new Label("totalSize", "" + Bytes.bytes(session.getSize())));
+
 		// Get pagemaps
 		final List pagemaps = session.getPageMaps();
 

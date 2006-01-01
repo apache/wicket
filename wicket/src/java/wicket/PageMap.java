@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.21 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.request.IRequestCycleProcessor;
+import wicket.markup.html.debug.WicketInspector;
 import wicket.request.IRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.util.lang.Objects;
 
 /**
  * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
@@ -80,7 +82,7 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return List of entries in this page map
 	 */
@@ -98,7 +100,7 @@ public final class PageMap implements Serializable
 		}
 		return list;
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -108,13 +110,35 @@ public final class PageMap implements Serializable
 	{
 		return name;
 	}
-	
+
 	/**
 	 * @return The session that this PageMap is in.
 	 */
 	public final Session getSession()
 	{
 		return session;
+	}
+
+	/**
+	 * @return Size of this page map, including a sum of the sizes of all the
+	 *         pages it contains.
+	 */
+	public int getSize()
+	{
+		int size = Objects.sizeof(this);
+		for (Iterator iterator = getEntries().iterator(); iterator.hasNext();)
+		{
+			IPageMapEntry entry = (IPageMapEntry)iterator.next();
+			if (entry instanceof Page)
+			{
+				size += ((Page)entry).getSize();
+			}
+			else
+			{
+				size += Objects.sizeof(entry);
+			}
+		}
+		return size;
 	}
 
 	/**
@@ -144,7 +168,7 @@ public final class PageMap implements Serializable
 	{
 		return size;
 	}
-	
+
 	/**
 	 * @param id
 	 *            The page id to create an attribute for
@@ -195,7 +219,7 @@ public final class PageMap implements Serializable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retrieves page with given id.
 	 * 
@@ -207,7 +231,7 @@ public final class PageMap implements Serializable
 	{
 		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
 		if (entry != null)
-		{	
+		{
 			// Entry has been accessed
 			session.access(entry);
 
@@ -234,15 +258,18 @@ public final class PageMap implements Serializable
 	 */
 	final synchronized void put(final IPageMapEntry entry)
 	{
-		// Entry has been accessed
-		session.access(entry);
-
-		// Store entry in session
-		session.setAttribute(attributeForId(entry.getNumericId()), entry);
-		size++;
-
-		// Evict any page(s) as need be
-		session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
+		if (!(entry instanceof WicketInspector))
+		{
+			// Entry has been accessed
+			session.access(entry);
+	
+			// Store entry in session
+			session.setAttribute(attributeForId(entry.getNumericId()), entry);
+			size++;
+	
+			// Evict any page(s) as need be
+			session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
+		}
 	}
 
 	/**
@@ -261,7 +288,8 @@ public final class PageMap implements Serializable
 		final RequestCycle cycle = session.getRequestCycle();
 		IRequestCycleProcessor processor = cycle.getProcessor();
 		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
-		// TODO this conflicts with the use of IRequestCodingStrategy. We should get
+		// TODO this conflicts with the use of IRequestCodingStrategy. We should
+		// get
 		// rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
@@ -282,7 +310,7 @@ public final class PageMap implements Serializable
 		size--;
 		return entry;
 	}
-	
+
 	/**
 	 * Removes all pages from this map
 	 */

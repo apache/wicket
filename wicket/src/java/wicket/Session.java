@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.request.ClientInfo;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Bytes;
+import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 
 /**
@@ -422,6 +423,20 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @return Size of this session, including all the pagemaps it contains
+	 */
+	public int getSize()
+	{
+		int size = Objects.sizeof(this);
+		for (Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		{
+			PageMap pageMap = (PageMap)iterator.next();
+			size += pageMap.getSize();
+		}
+		return size;
+	}
+
+	/**
 	 * Get the style (see {@link wicket.Session}).
 	 * 
 	 * @return Returns the style (see {@link wicket.Session})
@@ -485,6 +500,7 @@ public abstract class Session implements Serializable
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
+
 	/**
 	 * Removes a session attribute listener.
 	 * 
@@ -501,7 +517,6 @@ public abstract class Session implements Serializable
 			}
 		}
 	}
-
 
 	/**
 	 * Removes the given page from the cache. This method may be useful if you

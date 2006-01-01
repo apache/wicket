@@ -55,6 +55,7 @@ public final class WicketPageMapView extends Panel
 
 		// Basic attributes
 		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
+		add(new Label("size", "" + Bytes.bytes(pageMap.getSize())));
 
 		// Get pagemaps
 		final List entries = pageMap.getEntries();
