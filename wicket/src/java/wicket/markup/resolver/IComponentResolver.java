@@ -15,10 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.resolver;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 

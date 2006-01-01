@@ -29,7 +29,7 @@ import wicket.Page;
  * id). The advantage of doing this is that you can save session memory (by
  * trading off against the processing power required to reconstruct the page).
  * 
- * @see wicket.AbstractPageMapEntry
+ * @see wicket.session.pagemap.AbstractPageMapEntry
  * @author Jonathan Locke
  */
 public interface IPageMapEntry extends Serializable

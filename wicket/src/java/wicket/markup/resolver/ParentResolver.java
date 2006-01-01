@@ -18,7 +18,6 @@
 package wicket.markup.resolver;
 
 import wicket.Component;
-import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -37,7 +36,7 @@ public class ParentResolver implements IComponentResolver
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
 	 * 
-	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,

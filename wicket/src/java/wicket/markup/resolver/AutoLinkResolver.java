@@ -15,11 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.resolver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationSettings;
+import wicket.Component;
+import wicket.IClassResolver;
+import wicket.MarkupContainer;
+import wicket.Page;
+import wicket.PageParameters;
+import wicket.ResourceReference;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
@@ -74,7 +82,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
-	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
 	 * @param markupStream
 	 *            The current markupStream

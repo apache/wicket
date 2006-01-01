@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.ApplicationSettings;
-import wicket.AutoLinkResolver;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
 import wicket.Request;
@@ -36,6 +35,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.markup.resolver.AutoLinkResolver;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;

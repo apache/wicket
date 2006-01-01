@@ -15,9 +15,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session.pagemap;
 
-import wicket.session.pagemap.IPageMapEntry;
+import wicket.Page;
 
 /**
  * An abstract base class that makes it easier to create IPageMapEntry

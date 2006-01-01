@@ -18,7 +18,6 @@
 package wicket.markup.resolver;
 
 import wicket.Component;
-import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.ComponentTag;
@@ -94,7 +93,7 @@ public class ScopedComponentResolver implements IComponentResolver
 
 	/**
 	 * 
-	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer,
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupStream, wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,

@@ -34,6 +34,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.resolver.IComponentResolver;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
