@@ -35,7 +35,7 @@ import wicket.model.Model;
  *
  * @author Chris Turner
  */
-public class Page_1 extends WebPage 
+public class Page_2 extends WebPage 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class Page_1 extends WebPage
 	 * Construct.
 	 * @param parameters
 	 */
-	public Page_1(final PageParameters parameters) 
+	public Page_2(final PageParameters parameters) 
 	{
 		add(new Label("myLabel", "Test Label"));
 		
@@ -83,13 +83,11 @@ public class Page_1 extends WebPage
 	    Border border = new SimpleBorder("myBorder");
 	    borderContainer.add(border);
 
-
-	    MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
-	    add(xsltContainer);
-	    
 	    Border border2 = new SimpleBorder("myBorder2");
 	    border2.setRenderBodyOnly(false);
 	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    xsltContainer.add(border2);
+	    add(border2);
+	    
+	    border2.add(new XsltTransfomerBehaviour());
     }
 }
