@@ -30,7 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.ApplicationFactoryCreationException;
 import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
@@ -311,19 +310,19 @@ public class WicketServlet extends HttpServlet
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (InstantiationException e)
 			{
-				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (IllegalAccessException e)
 			{
-				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 			catch (SecurityException e)
 			{
-				throw new ApplicationFactoryCreationException(appFactoryClassName, e);
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}
 		}
 	}
