@@ -64,5 +64,4 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	{
 		super(cause);
 	}
-
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: UnauthorizedEnabledStateException.java,v 1.1 2005/12/22 22:32:24
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,8 +19,7 @@ package wicket.authorization;
 
 /**
  * Exception that is thrown when a component that may not be enabled given the
- * current authorization context is being accessed, like calling it's listener
- * method or setting it's model.
+ * current authorization context.
  * 
  * @author Eelco Hillenius
  */

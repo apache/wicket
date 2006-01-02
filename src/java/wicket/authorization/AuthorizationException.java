@@ -21,8 +21,7 @@ package wicket.authorization;
 import wicket.WicketRuntimeException;
 
 /**
- * Exception class to be used for any code that throws exception because of
- * using a authorization strategy.
+ * Base class for exceptions thrown as a result of authorization failure.
  */
 public abstract class AuthorizationException extends WicketRuntimeException
 {
@@ -37,6 +36,7 @@ public abstract class AuthorizationException extends WicketRuntimeException
 	}
 
 	/**
+	 * 
 	 * Construct.
 	 * 
 	 * @param message

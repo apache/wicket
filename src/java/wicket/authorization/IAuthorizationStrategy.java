@@ -21,15 +21,24 @@ package wicket.authorization;
 import wicket.Component;
 
 /**
- * Authorization strategies control on a low level how authorization is implied.
- * A strategy itself is generally not responsible for enforcing it. What a
- * strategy does do is tell the framework whether a component may be created
- * (especialy usefull for implementing secure bookmarkable pages and components
- * that should always be secure no matter what environment they are put it),
- * whether it may be rendered (which can result in components being 'filtered'
- * from a page, or triggering the page to not be rendered at all and redirecting
- * to a error or logon page), and whether a component may be enabled (thus
- * controlling it's reachability etc) at all.
+ * Authorization strategies specify aspect-like constraints on significant
+ * actions taken by the framework in a given application. These constraints are
+ * guaranteed by the framework to be applied consistently throughout. Violations
+ * will result in a security action directed by the strategy, such as the
+ * throwing of an AuthorizationException or the filtering out of
+ * security-sensitive information.
+ * <p>
+ * An authorization strategy tells the framework whether a component may be:
+ * <p>
+ * 1. Created - This is especially useful for implementing secure bookmarkable
+ * pages and sensitive components that should always be secure no matter what
+ * environment they are put in.
+ * <p>
+ * 2. Rendered - Components can be 'filtered' from a page, or the page may not
+ * be rendered at all, redirecting to a error or logon page.
+ * <p>
+ * 3. Enabled - Components may be disabled, making them unavailable for user
+ * interaction.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -41,38 +50,27 @@ public interface IAuthorizationStrategy
 	 */
 	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
 	{
-		/**
-		 * @return true allways
-		 */
-		public boolean allowEnabledState(Component c)
+		public boolean allowEnabledState(final Component c)
 		{
 			return true;
 		}
 
-		/**
-		 * @return true allways
-		 */
-		public boolean allowInstantiation(Class c)
+		public boolean allowInstantiation(final Class c)
 		{
 			return true;
 		}
 
-		/**
-		 * @return true allways
-		 */
-		public boolean allowRender(Component c)
+		public boolean allowRender(final Component c)
 		{
 			return true;
 		}
 	};
 
 	/**
-	 * <p>
 	 * Gets whether a component is allowed to be enabled. If this method returns
 	 * true, a component may decide by itself (typically using it's enabled
 	 * property) whether it is enabled or not. If this method returns false, the
-	 * passed component is marked disabled, regardless it's enabled property.
-	 * </p>
+	 * passed component is marked disabled, regardless its enabled property.
 	 * <p>
 	 * When a component is not allowed to be enabled (in effect disabled through
 	 * the implementation of this interface), Wicket will try to prevent model
@@ -85,13 +83,11 @@ public interface IAuthorizationStrategy
 	 * 
 	 * can't be prevented. Indeed it can be argued that any model protection is
 	 * best dealt with in your model objects to be completely secured. Wicket
-	 * will catch all normal use though.
-	 * 
-	 * </p>
+	 * will catch all normal framework-directed use though.
 	 * 
 	 * @param c
-	 *            the component to check for
-	 * @return whether a component is allowed to be enabled
+	 *            The component to check for
+	 * @return Whether a component is allowed to be enabled
 	 */
 	boolean allowEnabledState(Component c);
 
@@ -102,7 +98,7 @@ public interface IAuthorizationStrategy
 	 * 
 	 * @param componentClass
 	 *            The component class to check
-	 * @return whether the given component may be created
+	 * @return Whether the given component may be created
 	 */
 	boolean allowInstantiation(Class componentClass);
 
@@ -112,25 +108,25 @@ public interface IAuthorizationStrategy
 	 * <p>
 	 * There are two uses for this method:
 	 * <ul>
-	 * <li>The 'normal' use is for controling whether a component is rendered
+	 * <li>The 'normal' use is for controlling whether a component is rendered
 	 * without having any effect on the rest of the processing. If a strategy
-	 * lats this method return 'false', then the target component and it's
-	 * children will not be rendered in the same fashion as when that component
-	 * would have had it's visibility property 'false'.</li>
+	 * lets this method return 'false', then the target component and its
+	 * children will not be rendered, in the same fashion as if that component
+	 * had visibility property 'false'.</li>
 	 * <li>The other use is when a component should block the rendering of the
 	 * whole page. So instead of 'hiding' a component, what we generally want to
-	 * acchieve here is that we force the user to logon/ give credentials for a
+	 * achieve here is that we force the user to logon/give-credentials for a
 	 * higher level of authorization. For this functionality, the strategy
 	 * implementation should throw a {@link AuthorizationException}, which will
-	 * then be handled further with the framework.</li>
+	 * then be handled further by the framework.</li>
 	 * </ul>
 	 * </p>
 	 * 
 	 * @param c
-	 *            the component to check for
-	 * @return whether the given component may be rendered
+	 *            Whe component to check for
+	 * @return Whether the given component may be rendered
 	 * @throws AuthorizationException
-	 *             in case the rendering is not allowed, and when it should
+	 *             In case the rendering is not allowed, and when it should
 	 *             block the whole page from being rendered
 	 */
 	boolean allowRender(Component c);
