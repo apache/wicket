@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$
+ * $Id$
+ * $Revision$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +18,6 @@
 package wicket.markup.html;
 
 import wicket.AttributeModifier;
-
 
 /**
  * An interface to be implemented by components which are able to add
@@ -45,5 +45,5 @@ public interface IBodyTagContributor
 	 * 
 	 * @return all AttributeModifiers which contribute to the &lt;BODY&gt; tag.
 	 */
-	public AttributeModifier[] getBodyAttributeModifiers();
+	AttributeModifier[] getBodyAttributeModifiers();
 }

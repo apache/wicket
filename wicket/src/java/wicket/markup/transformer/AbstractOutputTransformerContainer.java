@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.outputTransformer;
+package wicket.markup.transformer;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -32,8 +32,8 @@ import wicket.response.StringResponse;
  * <p>
  * Please see <code>IBehaviour</code> for an alternativ based on IBehaviour
  * 
- * @see wicket.markup.outputTransformer.AbstractTransformerBehaviour
- * @see wicket.markup.outputTransformer.ITransformer
+ * @see wicket.markup.transformer.AbstractTransformerBehaviour
+ * @see wicket.markup.transformer.ITransformer
  * 
  * @author Juergen Donnerstag
  */
@@ -76,7 +76,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 
 	/**
 	 * 
-	 * @see wicket.markup.outputTransformer.ITransformer#transform(wicket.Component,
+	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,
 	 *      java.lang.String)
 	 */
 	public abstract CharSequence transform(final Component component, final String output)

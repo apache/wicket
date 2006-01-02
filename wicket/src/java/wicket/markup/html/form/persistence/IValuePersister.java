@@ -41,7 +41,7 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void save(FormComponent component);
+	void save(FormComponent component);
 
 	/**
 	 * Loads any persisted value for a given form component
@@ -49,7 +49,7 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void load(FormComponent component);
+	void load(FormComponent component);
 
 	/**
 	 * Remove any persisted value for a given form component.
@@ -57,6 +57,6 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void clear(FormComponent component);
+	void clear(FormComponent component);
 }
 

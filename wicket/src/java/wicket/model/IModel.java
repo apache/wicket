@@ -79,7 +79,7 @@ public interface IModel extends IDetachable
 	 * 
 	 * @return The nested model object.
 	 */
-	public IModel getNestedModel();
+	IModel getNestedModel();
 
 	/**
 	 * Gets the model object.
@@ -89,7 +89,7 @@ public interface IModel extends IDetachable
 	 * 
 	 * @return The model object
 	 */
-	public Object getObject(final Component component);
+	Object getObject(final Component component);
 
 	/**
 	 * Sets the model object.
@@ -100,5 +100,5 @@ public interface IModel extends IDetachable
 	 * @param object
 	 *            The model object
 	 */
-	public void setObject(final Component component, final Object object);
+	void setObject(final Component component, final Object object);
 }

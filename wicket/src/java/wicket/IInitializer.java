@@ -28,5 +28,5 @@ public interface IInitializer
 	 * @param application
 	 *            The application loading the component
 	 */
-	public void init(Application application);
+	void init(Application application);
 }

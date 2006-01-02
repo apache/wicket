@@ -51,5 +51,5 @@ public interface IValidator extends Serializable
 	 * @param component
 	 *            Component to validate
 	 */
-	public void validate(final FormComponent component);
+	void validate(final FormComponent component);
 }

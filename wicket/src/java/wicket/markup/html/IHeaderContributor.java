@@ -19,24 +19,24 @@ package wicket.markup.html;
 
 import wicket.markup.html.internal.HtmlHeaderContainer;
 
-
 /**
- * An interface to be implemented by components which are able to render
- * the header section associated with the markup. Default implementations
- * are with WebComponent and WebMarkupContainer. 
+ * An interface to be implemented by components which are able to render the
+ * header section associated with the markup. Default implementations are with
+ * WebComponent and WebMarkupContainer.
  * 
  * @author Juergen Donnerstag
  */
 public interface IHeaderContributor
 {
 	/**
-	 * Render to the web response whatever the component wants
-	 * to contribute to the head section.
+	 * Render to the web response whatever the component wants to contribute to
+	 * the head section.
 	 * <p>
-	 * Note: This method is kind of dangerous as users are able
-	 * to write to the output whatever they like. 
+	 * Note: This method is kind of dangerous as users are able to write to the
+	 * output whatever they like.
 	 * 
-	 * @param container The HtmlHeaderContainer
+	 * @param container
+	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer container);
+	void renderHead(final HtmlHeaderContainer container);
 }

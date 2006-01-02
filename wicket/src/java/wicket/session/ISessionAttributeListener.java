@@ -34,7 +34,7 @@ public interface ISessionAttributeListener extends Serializable
 	 * @param evt
 	 *            the notification event
 	 */
-	public void attributeAdded(SessionAttributeEvent evt);
+	void attributeAdded(SessionAttributeEvent evt);
 
 	/**
 	 * Notification that an attribute is about to be removed from a session.
@@ -43,7 +43,7 @@ public interface ISessionAttributeListener extends Serializable
 	 * @param evt
 	 *            the notification event
 	 */
-	public void attributeRemoved(SessionAttributeEvent evt);
+	void attributeRemoved(SessionAttributeEvent evt);
 
 	/**
 	 * Notification that an attribute is to be replaced in a session. Called
@@ -52,5 +52,5 @@ public interface ISessionAttributeListener extends Serializable
 	 * @param evt
 	 *            the notification event
 	 */
-	public void attributeReplaced(SessionAttributeEvent evt);
+	void attributeReplaced(SessionAttributeEvent evt);
 }

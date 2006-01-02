@@ -27,5 +27,5 @@ public interface IChangeListener extends IListener
 	/**
 	 * Client method that is called to indicate that something changed.
 	 */
-	public void onChange();
+	void onChange();
 }

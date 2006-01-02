@@ -33,5 +33,5 @@ public interface IPageMapEvictionStrategy extends Serializable
 	 * @param pageMap
 	 *            The page map to evict from
 	 */
-	public void evict(PageMap pageMap);
+	void evict(PageMap pageMap);
 }

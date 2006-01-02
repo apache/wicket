@@ -29,5 +29,5 @@ public interface ILinkListener extends IRequestListener
 	/**
 	 * Called when a link is clicked.
 	 */
-	public void onLinkClicked();
+	void onLinkClicked();
 }
