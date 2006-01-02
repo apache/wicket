@@ -18,7 +18,7 @@ import wicket.request.target.ComponentRequestTarget;
 public class Index extends WicketExamplePage
 {
 	/** Counts the number of clicks. */
-	private Integer counter = Integer.valueOf(0);
+	private Integer counter = new Integer(0);
 
 	/**
 	 * Constructor.
@@ -35,7 +35,7 @@ public class Index extends WicketExamplePage
 			public void onClick()
 			{
 				// increase the counter
-				counter = Integer.valueOf(counter.intValue() + 1);
+				counter = new Integer(counter.intValue() + 1);
 
 				// the response should return the label displaying the counter.
 				Component component = getPage().get("counter");
