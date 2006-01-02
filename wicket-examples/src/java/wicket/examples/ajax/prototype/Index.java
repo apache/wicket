@@ -1,5 +1,6 @@
 package wicket.examples.ajax.prototype;
 
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
@@ -10,7 +11,9 @@ import wicket.request.target.ComponentRequestTarget;
 
 /**
  * Example displaying partial page rendering using the counting link
- * example and prototype.js. Prototype.js is a javascript library
+ * example and prototype.js. Prototype.js is a javascript library that provides
+ * several handy JavaScript functions, amongst others an Ajax.Updater function,
+ * which updates the HTML document with the response of the Ajax call.
  */
 public class Index extends WicketExamplePage
 {
@@ -22,33 +25,45 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
+		// add the Ajaxian link to the page...
 		add(new Link("link")
 		{
+			/**
+			 * Handles a click on the link. This method is accessed normally using a standard
+			 * http request, but in this example, we use Ajax to perform the call.
+			 */
 			public void onClick()
 			{
+				// increase the counter
 				counter = Integer.valueOf(counter.intValue() + 1);
 
-				// set the request target to the label
-				ComponentRequestTarget target = new ComponentRequestTarget(getPage().get("counter"));
+				// the response should return the label displaying the counter.
+				Component component = getPage().get("counter");
+				ComponentRequestTarget target = new ComponentRequestTarget(component);
 				RequestCycle cycle = RequestCycle.get();
 				cycle.setRequestTarget(target);
 			}
 
+			/**
+			 * Alter the javascript 'onclick' event to emit the Ajax call and update the
+			 * counter label.
+			 */
 			protected String getOnClickScript(String url)
 			{
-				StringBuilder sb = new StringBuilder();
+				StringBuffer sb = new StringBuffer();
 
 				sb.append("new Ajax.Updater('counter',");
 				sb.append("'" + urlFor(ILinkListener.class) + "',{method:'get'}");
 				sb.append(");");
+
 				// always return false, otherwise the submit event gets sent to
-				// the server. We
-				// are already processing the ajax event.
+				// the server. We are already processing the ajax event.
 				sb.append("return false;");
 
 				return sb.toString();
 			}
 		});
+		// add the label
 		add(new Label("counter", new PropertyModel(this, "counter")));
 	}
 
