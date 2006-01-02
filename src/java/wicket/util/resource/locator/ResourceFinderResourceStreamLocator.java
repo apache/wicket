@@ -33,7 +33,7 @@ import wicket.util.resource.UrlResourceStream;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
+public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceFinderResourceStreamLocator.class);
