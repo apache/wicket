@@ -279,8 +279,17 @@ public final class PageMap implements Serializable
 			session.access(entry);
 
 			// Store entry in session
-			session.setAttribute(attributeForId(entry.getNumericId()), entry);
-			size++;
+			final String attribute = attributeForId(entry.getNumericId());
+
+			// If we're adding a new attribute
+			if (session.getAttribute(attribute) == null)
+			{
+				// Increase pagemap size
+				size++;
+			}
+			
+			// Set attribute
+			session.setAttribute(attribute, entry);		
 
 			// Evict any page(s) as need be
 			session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
