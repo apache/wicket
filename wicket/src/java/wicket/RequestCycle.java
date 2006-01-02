@@ -905,8 +905,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Safe version of {@link #getProcessor()} that throws an
-	 * exception when the processor is null.
+	 * Safe version of {@link #getProcessor()} that throws an exception when the
+	 * processor is null.
 	 * 
 	 * @return the request processor
 	 */
@@ -932,14 +932,17 @@ public abstract class RequestCycle
 		{
 			switch (currentStep)
 			{
-				case PREPARE_REQUEST : {
+				case PREPARE_REQUEST: 
+				{
 
 					// prepare the request
 					prepare();
 
 					break;
 				}
-				case DECODE_PARAMETERS : {
+				
+				case DECODE_PARAMETERS: 
+				{
 
 					// get the request parameters object using the request
 					// encoder of the processor
@@ -947,8 +950,9 @@ public abstract class RequestCycle
 
 					break;
 				}
-				case RESOLVE_TARGET : {
-
+				
+				case RESOLVE_TARGET: 
+				{
 					// resolve the target of the request using the request
 					// parameters
 					final IRequestTarget target = processor.resolve(this, requestParameters);
@@ -961,7 +965,9 @@ public abstract class RequestCycle
 					requestTargets.push(target);
 					break;
 				}
-				case CHECK_ACCESS : {
+				
+				case CHECK_ACCESS: 
+				{
 					// manually set step to check access
 
 					IRequestTarget target = getRequestTarget();
@@ -989,7 +995,9 @@ public abstract class RequestCycle
 					}
 					break;
 				}
-				case PROCESS_EVENTS : {
+				
+				case PROCESS_EVENTS: 
+				{
 
 					// determine what kind of synchronization is to be used, and
 					// handle any events with that and generate a response in
@@ -1000,7 +1008,9 @@ public abstract class RequestCycle
 
 					break;
 				}
-				case RESPOND : {
+				
+				case RESPOND: 
+				{
 
 					// generate a response
 					// NOTE: we reach this block when during event processing
@@ -1013,7 +1023,9 @@ public abstract class RequestCycle
 
 					break;
 				}
-				default : {
+				
+				default: 
+				{
 					// nothing
 				}
 			}
