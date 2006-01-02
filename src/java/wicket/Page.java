@@ -321,7 +321,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void doRender()
 	{
-		// Make sure it is realy empty
+		// Make sure it is really empty
 		renderedComponents = null;
 
 		// Add/touch the response page in the session (its pagemap).
