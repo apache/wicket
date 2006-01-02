@@ -173,10 +173,10 @@ public final class StringsTest extends TestCase
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
 				.escapeMarkup(convertNonASCIIString("Çüéâäàåçêë"), false, true));
 
-		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \té"), false,
+		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"), false,
 				true));
-		assertEquals(convertNonASCIIString("\n \té"), Strings.escapeMarkup(
-				convertNonASCIIString("\n \té"), false, false));
+		assertEquals(convertNonASCIIString("\n \t&#233;"), Strings.escapeMarkup(
+				convertNonASCIIString("\n \t&#233;"), false, false));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public final class StringsTest extends TestCase
 		assertEquals("abcdefghijklmë", Strings.replaceHtmlEscapeNumber("abcdefghijklmë"));
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
-				convertNonASCIIString("Çüéâäàåçêë"),
+				convertNonASCIIString("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb"),
 				Strings
 						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
