@@ -17,10 +17,9 @@
  */
 package wicket.resource;
 
-
 /**
- * To be implemented by listeners interested in PropertiesFactory events
- * fired after a new properties files has been loaded
+ * To be implemented by listeners interested in PropertiesFactory events fired
+ * after a new properties files has been loaded
  * 
  * @author Juergen Donnerstag
  */
@@ -28,7 +27,8 @@ public abstract interface IPropertiesReloadListener
 {
 	/**
 	 * Fired after a new properties files has been loaded
+	 * 
 	 * @param key
 	 */
-	public void propertiesLoaded(final String key);
+	void propertiesLoaded(final String key);
 }

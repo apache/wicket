@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,30 +19,34 @@ package wicket.markup.html.form;
 import java.io.Serializable;
 
 /**
- * Renders one choice. Seperates the 'id' values used for internal representation from
- * 'display values' which are the values shown to the user of components that use this renderer.
- *
+ * Renders one choice. Seperates the 'id' values used for internal
+ * representation from 'display values' which are the values shown to the user
+ * of components that use this renderer.
+ * 
  * @author jcompagner
  */
 public interface IChoiceRenderer extends Serializable
 {
-
 	/**
 	 * Get the value for displaying to an end user.
-	 *
-	 * @param object the actual object
+	 * 
+	 * @param object
+	 *            the actual object
 	 * @return the value meant for displaying to an end user
 	 */
-	public String getDisplayValue(Object object);
-	
+	String getDisplayValue(Object object);
+
 	/**
-	 * This method is called to get the id value of an object (used as the value attribute of a choice element)
-	 * The id can be extracted from the object like a primary key, or if the list is stable you could just return
-	 * a toString of the index.
+	 * This method is called to get the id value of an object (used as the value
+	 * attribute of a choice element) The id can be extracted from the object
+	 * like a primary key, or if the list is stable you could just return a
+	 * toString of the index.
 	 * 
-	 * @param object The object for which the id should be generated
-	 * @param index The index of the object in the choices list.
-	 * @return String 
+	 * @param object
+	 *            The object for which the id should be generated
+	 * @param index
+	 *            The index of the object in the choices list.
+	 * @return String
 	 */
-	public String getIdValue(Object object, int index);
+	String getIdValue(Object object, int index);
 }

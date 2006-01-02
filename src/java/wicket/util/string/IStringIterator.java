@@ -27,10 +27,10 @@ public interface IStringIterator
 	/**
 	 * @return True if there is a next string
 	 */
-	public boolean hasNext();
+	boolean hasNext();
 
 	/**
 	 * @return The next string!
 	 */
-	public String next();
+	String next();
 }

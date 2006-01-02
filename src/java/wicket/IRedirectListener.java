@@ -28,7 +28,7 @@ public interface IRedirectListener extends IRequestListener
     /**
      * Called when a page redirect happens.
      */
-    public void onRedirect();
+    void onRedirect();
 }
 
 

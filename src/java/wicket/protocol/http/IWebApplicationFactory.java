@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,11 +19,14 @@ package wicket.protocol.http;
 /**
  * A factory interface used by wicket servlet to create application objects.
  * Configure your webapplication to use this factory in web.xml like:
+ * 
  * <pre>
- *   &lt;init-param&gt;
- *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *   &lt;/init-param&gt;
+ * 
+ *    &lt;init-param&gt;
+ *      &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *        &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *    &lt;/init-param&gt;
+ *  
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)

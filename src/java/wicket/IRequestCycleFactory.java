@@ -37,6 +37,6 @@ public interface IRequestCycleFactory extends Serializable
 	 *            The response
 	 * @return The cycle
 	 */
-	public RequestCycle newRequestCycle(final Session session, final Request request,
+	RequestCycle newRequestCycle(final Session session, final Request request,
 			final Response response);
 }

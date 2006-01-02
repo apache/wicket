@@ -23,8 +23,8 @@ package wicket.markup;
  * component itself does not contain it.
  * <p>
  * Note: MarkupContainer.isTransparent() in combination with ParentResolver
- * tries to resolve the wicket id with the parent only and shall be used
- * to implement transparent containers.
+ * tries to resolve the wicket id with the parent only and shall be used to
+ * implement transparent containers.
  * 
  * @see wicket.markup.resolver.ScopedComponentResolver
  * @see wicket.MarkupContainer#isTransparent()
@@ -39,5 +39,5 @@ public interface IScopedComponent
 	 * @return true, if component shall try its parents to resolve the component
 	 *         if the component itself does not contain it.
 	 */
-	public boolean isRenderableInSubContainers();
+	boolean isRenderableInSubContainers();
 }

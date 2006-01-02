@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,18 +27,18 @@ import java.util.Locale;
  */
 public interface ILocalizable
 {
-    /**
-     * Sets the locale.
-     * 
-     * @param locale
-     *            The locale
-     */
-    public void setLocale(Locale locale);
-    
-    /**
-     * Gets the locale.
-     * 
-     * @return The locale
-     */
-    public Locale getLocale();
+	/**
+	 * Sets the locale.
+	 * 
+	 * @param locale
+	 *            The locale
+	 */
+	void setLocale(Locale locale);
+
+	/**
+	 * Gets the locale.
+	 * 
+	 * @return The locale
+	 */
+	Locale getLocale();
 }

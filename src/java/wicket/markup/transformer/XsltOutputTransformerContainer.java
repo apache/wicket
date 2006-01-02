@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.outputTransformer;
+package wicket.markup.transformer;
 
 import wicket.Component;
 import wicket.model.IModel;
@@ -29,7 +29,7 @@ import wicket.model.IModel;
  * Similar to this container, a <code>IBehaviour</code> is available which
  * does the same, but does not require an additional Container.
  * 
- * @see wicket.markup.outputTransformer.XsltTransfomerBehaviour
+ * @see wicket.markup.transformer.XsltTransfomerBehaviour
  * 
  * @author Juergen Donnerstag
  */
@@ -68,7 +68,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 
 	/**
 	 * 
-	 * @see wicket.markup.outputTransformer.ITransformer#transform(wicket.Component,
+	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,
 	 *      java.lang.String)
 	 */
 	public CharSequence transform(final Component component, final String output) throws Exception

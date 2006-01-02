@@ -31,5 +31,5 @@ public abstract interface ITestPageSource
 	 * 
 	 * @return Page created page instance for testing
 	 */
-	public Page getTestPage();
+	Page getTestPage();
 }

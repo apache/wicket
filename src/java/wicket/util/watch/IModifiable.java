@@ -31,5 +31,5 @@ public interface IModifiable
 	 * 
 	 * @return The last modification time.
 	 */
-	public Time lastModifiedTime();
+	Time lastModifiedTime();
 }

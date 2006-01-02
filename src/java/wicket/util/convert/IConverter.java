@@ -37,5 +37,5 @@ public interface IConverter extends ILocalizable, Serializable
 	 *            The class of object to convert to
 	 * @return The converted value
 	 */
-	public Object convert(Object value, Class c);
+	Object convert(Object value, Class c);
 }

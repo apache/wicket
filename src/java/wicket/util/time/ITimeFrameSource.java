@@ -30,5 +30,5 @@ public interface ITimeFrameSource
 	/**
 	 * @return Gets current time frame value
 	 */
-	public TimeFrame getTimeFrame();
+	TimeFrame getTimeFrame();
 }

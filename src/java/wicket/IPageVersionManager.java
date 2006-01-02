@@ -52,7 +52,7 @@ public interface IPageVersionManager extends Serializable
 	 * In requests where a Page is not changed at all, beginVersion will never
 	 * be called, nor will any of the other methods in this interface.
 	 */
-	public void beginVersion();
+	void beginVersion();
 
 	/**
 	 * Indicates that the given component was added.
@@ -60,7 +60,7 @@ public interface IPageVersionManager extends Serializable
 	 * @param component
 	 *            The component that was added.
 	 */
-	public void componentAdded(Component component);
+	void componentAdded(Component component);
 
 	/**
 	 * Indicates that the model for the given component is about to change.
@@ -68,14 +68,14 @@ public interface IPageVersionManager extends Serializable
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	public void componentModelChanging(Component component);
+	void componentModelChanging(Component component);
 
 	/**
 	 * Indicates an internal state for the given component is about to change.
 	 * @param change 
 	 * 			  The change which represents the internal state
 	 */
-	public void componentStateChanging(Change change);
+	void componentStateChanging(Change change);
 	
 	/**
 	 * Indicates that the given component was removed.
@@ -83,14 +83,14 @@ public interface IPageVersionManager extends Serializable
 	 * @param component
 	 *            The component that was removed.
 	 */
-	public void componentRemoved(Component component);
+	void componentRemoved(Component component);
 
 	/**
 	 * Called when changes to the page have ended.
 	 * 
 	 * @see IPageVersionManager#beginVersion()
 	 */
-	public void endVersion();
+	void endVersion();
 
 	/**
 	 * Retrieves a given Page version.
@@ -99,11 +99,11 @@ public interface IPageVersionManager extends Serializable
 	 *            The version of the page to get
 	 * @return The page or null if the version requested is not available
 	 */
-	public Page getVersion(int versionNumber);
+	Page getVersion(int versionNumber);
 
 	/**
 	 * @return Returns the current (newest) version number available through
 	 *         this version manager.
 	 */
-	public int getCurrentVersionNumber();
+	int getCurrentVersionNumber();
 }

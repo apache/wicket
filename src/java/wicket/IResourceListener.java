@@ -37,7 +37,5 @@ public interface IResourceListener extends IRequestListener
     /**
      * Called when a resource is requested.
      */
-    public void onResourceRequested();
+    void onResourceRequested();
 }
-
-

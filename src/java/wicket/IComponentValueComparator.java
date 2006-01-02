@@ -18,7 +18,6 @@
  */
 package wicket;
 
-
 /**
  * Implementations of this interface can be used in the Component.getComparator()
  * for testing the current value of the components model data with the new value

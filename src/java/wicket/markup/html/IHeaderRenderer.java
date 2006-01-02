@@ -19,13 +19,12 @@ package wicket.markup.html;
 
 import wicket.markup.html.internal.HtmlHeaderContainer;
 
-
 /**
  * THIS INTERFACE IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF.
  * 
- * An interface to be implemented by components which are able to render
- * header sections. Usually this is only Page. However, Border implements it
- * as well to handle bordered pages (common page layout).
+ * An interface to be implemented by components which are able to render header
+ * sections. Usually this is only Page. However, Border implements it as well to
+ * handle bordered pages (common page layout).
  * 
  * @author Juergen Donnerstag
  */
@@ -40,5 +39,5 @@ public interface IHeaderRenderer
 	 * @param container
 	 *            The current html header container
 	 */
-	public void renderHeaderSections(final HtmlHeaderContainer container);
+	void renderHeaderSections(final HtmlHeaderContainer container);
 }

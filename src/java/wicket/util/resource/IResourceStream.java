@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.10 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,14 +47,14 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * @return The mime type of this resource, such as "image/jpeg" or
 	 *         "text/html"
 	 */
-	public String getContentType();
-	
+	String getContentType();
+
 	/**
 	 * Gets the size of this resource
 	 * 
 	 * @return The size of this resource in the number of bytes
 	 */
-	public long length();
+	long length();
 
 	/**
 	 * Gets the resource stream. You should not directly close this stream.
@@ -64,7 +64,7 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * @return Returns the inputStream.
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public InputStream getInputStream() throws ResourceStreamNotFoundException;
+	InputStream getInputStream() throws ResourceStreamNotFoundException;
 
 	/**
 	 * Closes the resource. Normally, this includes closing any underlying input
@@ -72,18 +72,19 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * 
 	 * @throws IOException
 	 */
-	public void close() throws IOException;
-	
+	void close() throws IOException;
+
 	/**
 	 * @return The Locale where this stream did resolve to
 	 */
-	public Locale getLocale();
-	
-	/**
-	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved locale.
-	 * 
-	 * @param locale The Locale where this stream did resolve to.
-	 */
-	public void setLocale(Locale locale);
+	Locale getLocale();
 
+	/**
+	 * This method shouldn't be used for the outside, It is used by the Loaders
+	 * to set the resolved locale.
+	 * 
+	 * @param locale
+	 *            The Locale where this stream did resolve to.
+	 */
+	void setLocale(Locale locale);
 }

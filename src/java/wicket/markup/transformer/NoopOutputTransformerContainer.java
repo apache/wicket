@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.outputTransformer;
+package wicket.markup.transformer;
 
 import wicket.Component;
 import wicket.model.IModel;
@@ -52,7 +52,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 
 	/**
 	 * 
-	 * @see wicket.markup.outputTransformer.ITransformer#transform(wicket.Component, java.lang.String)
+	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component, java.lang.String)
 	 */
 	public CharSequence transform(final Component component, final String output)
 	{

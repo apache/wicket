@@ -34,14 +34,15 @@ public interface ICrypt
 	 *            the text to decrypt
 	 * @return the decrypted string.
 	 */
-	public String decrypt(final String text);
+	String decrypt(final String text);
+
 	/**
 	 * Encrypts a string.
 	 * 
 	 * @param plainText
 	 * @return encrypted string
 	 */
-	public String encrypt(final String plainText);
+	String encrypt(final String plainText);
 
 	/**
 	 * Sets private encryption key. It depends on the implementation if a
@@ -51,5 +52,5 @@ public interface ICrypt
 	 * @param key
 	 *            private key
 	 */
-	public void setKey(final String key);
+	void setKey(final String key);
 }

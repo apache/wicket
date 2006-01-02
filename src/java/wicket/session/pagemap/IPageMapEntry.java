@@ -39,44 +39,44 @@ public interface IPageMapEntry extends Serializable
 	 *         entries were accessed. Given two entries, the one with the higher
 	 *         access sequence number was the one more recently accessed.
 	 */
-	public int getAccessSequenceNumber();
+	int getAccessSequenceNumber();
 
 	/**
 	 * @return A stable identifier for this page map entry
 	 */
-	public int getNumericId();
+	int getNumericId();
 
 	/**
 	 * @return Gets the page, possibly creating it on the fly.
 	 */
-	public Page getPage();
+	Page getPage();
 
 	/**
 	 * @return The class of page stored in this page map entry (which can be
 	 *         used by an eviction strategy to prioritize evictions)
 	 */
-	public Class getPageClass();
+	Class getPageClass();
 
 	/**
 	 * @return True if this entry is dirty and requires replication
 	 */
-	public boolean isDirty();
+	boolean isDirty();
 
 	/**
 	 * @param accessSequenceNumber
 	 *            New access sequence numnber for this entry
 	 */
-	public void setAccessSequenceNumber(int accessSequenceNumber);
+	void setAccessSequenceNumber(int accessSequenceNumber);
 
 	/**
 	 * @param dirty
 	 *            True if this entry is now dirty
 	 */
-	public void setDirty(boolean dirty);
+	void setDirty(boolean dirty);
 
 	/**
 	 * @param id
 	 *            The numeric id for this entry
 	 */
-	public void setNumericId(int id);
+	void setNumericId(int id);
 }

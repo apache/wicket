@@ -31,5 +31,5 @@ public interface ISessionFactory extends Serializable
 	 * 
 	 * @return The session
 	 */
-	public Session newSession();
+	Session newSession();
 }

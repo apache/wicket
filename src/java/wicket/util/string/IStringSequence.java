@@ -35,15 +35,15 @@ public interface IStringSequence
 	 * @return The string at the given index
 	 * @throws IndexOutOfBoundsException
 	 */
-	public String get(int index) throws IndexOutOfBoundsException;
+	String get(int index) throws IndexOutOfBoundsException;
 
 	/**
 	 * @return Typesafe string iterator
 	 */
-	public IStringIterator iterator();
+	IStringIterator iterator();
 
 	/**
 	 * @return Number of strings in this sequence
 	 */
-	public int size();
+	int size();
 }

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.outputTransformer;
+package wicket.markup.transformer;
 
 import wicket.Component;
 
@@ -25,7 +25,7 @@ import wicket.Component;
  * located in the same path as the nearest parent with an associated markup and
  * must have a filename equal to the component's id.
  * 
- * @see wicket.markup.outputTransformer.AbstractOutputTransformerContainer
+ * @see wicket.markup.transformer.AbstractOutputTransformerContainer
  * 
  * @author Juergen Donnerstag
  */
@@ -42,7 +42,7 @@ public class XsltTransfomerBehaviour extends AbstractTransformerBehaviour
 
 	/**
 	 * 
-	 * @see wicket.markup.outputTransformer.ITransformer#transform(wicket.Component,
+	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,
 	 *      java.lang.String)
 	 */
 	public CharSequence transform(final Component component, final String output) throws Exception
