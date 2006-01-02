@@ -306,6 +306,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 */
 	private transient boolean renderAllowed = true;
 
+	/** True while rendering is in progress */
 	private transient boolean rendering;
 
 	/**
