@@ -29,7 +29,7 @@ import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
@@ -128,9 +128,9 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 				((IHeaderContributor)behaviour).renderHead(container);
 			}
 
-			if (behaviour instanceof IBodyOnloadContributor)
+			if (behaviour instanceof IBodyOnLoadContributor)
 			{
-				String stmt = ((IBodyOnloadContributor)behaviour).getBodyOnload();
+				String stmt = ((IBodyOnLoadContributor)behaviour).getBodyOnLoad();
 				if (stmt != null)
 				{
 					((WebPage)getPage()).appendToBodyOnLoad(stmt);
