@@ -8,13 +8,14 @@ import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
- * A light weight version of the attribute modifier. This is convinient for
+ * A light weight version of the attribute modifier. This is convenient for
  * simpler situations where you know the value upfront and you do not need a
  * push-based enable method.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleAttributeModifier extends AbstractBehaviour {
+public class SimpleAttributeModifier extends AbstractBehaviour
+{
 	private static final long serialVersionUID = 1L;
 
 	private String attr;
@@ -26,13 +27,15 @@ public class SimpleAttributeModifier extends AbstractBehaviour {
 	 * @param attr
 	 * @param value
 	 */
-	public SimpleAttributeModifier(String attr, String value) {
-		if (attr == null) {
+	public SimpleAttributeModifier(String attr, String value)
+	{
+		if (attr == null)
+		{
 			throw new IllegalArgumentException("argument [attr] cannot be null");
 		}
-		if (value == null) {
-			throw new IllegalArgumentException(
-					"argument [value] cannot be null");
+		if (value == null)
+		{
+			throw new IllegalArgumentException("argument [value] cannot be null");
 		}
 		this.attr = attr;
 		this.value = value;
@@ -42,8 +45,10 @@ public class SimpleAttributeModifier extends AbstractBehaviour {
 	 * @see wicket.AbstractBehaviour#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
-	public void onComponentTag(Component component, ComponentTag tag) {
-		if (isEnabled()) {
+	public void onComponentTag(Component component, ComponentTag tag)
+	{
+		if (isEnabled())
+		{
 			tag.getAttributes().put(attr, value);
 		}
 	}
@@ -51,7 +56,8 @@ public class SimpleAttributeModifier extends AbstractBehaviour {
 	/**
 	 * @return true to enable the modifier, false to disable
 	 */
-	protected boolean isEnabled() {
+	protected boolean isEnabled()
+	{
 		return true;
 	}
 

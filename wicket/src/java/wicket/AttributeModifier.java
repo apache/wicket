@@ -69,12 +69,13 @@ import wicket.util.value.ValueMap;
  */
 public class AttributeModifier extends AbstractBehaviour implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
+
 	/** Marker value to have an attribute without a value removed. */
 	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
+	
+	private static final long serialVersionUID = 1L;
 
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
@@ -173,6 +174,18 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	}
 
 	/**
+	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
+	 * be called from the outside
+	 */
+	public final void detachModel()
+	{
+		if (replaceModel != null)
+		{
+			replaceModel.detach();
+		}
+	}
+
+	/**
 	 * Checks whether this attribute modifier is enabled or not.
 	 * 
 	 * @return Whether enabled or not
@@ -180,6 +193,18 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	public boolean isEnabled()
 	{
 		return enabled;
+	}
+
+	/**
+	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
+	 *      wicket.markup.ComponentTag)
+	 */
+	public final void onComponentTag(Component component, ComponentTag tag)
+	{
+		if (tag.getType() != XmlTag.CLOSE)
+		{
+			replaceAttibuteValue(component, tag);
+		}
 	}
 
 	/**
@@ -203,6 +228,16 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	}
 
 	/**
+	 * Gets the replacement model. Allows subclasses access to replace model.
+	 * 
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
+	/**
 	 * Gets the value that should replace the current attribute value. This
 	 * gives users the ultimate means to customize what will be used as the
 	 * attribute value. For instance, you might decide to append the replacement
@@ -217,16 +252,6 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		return replacementValue;
-	}
-
-	/**
-	 * Gets the replacement model. Allows subclasses access to replace model.
-	 * 
-	 * @return the replace model of this attribute modifier
-	 */
-	protected final IModel getReplaceModel()
-	{
-		return replaceModel;
 	}
 
 	/**
@@ -291,28 +316,4 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	{
 		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
-
-	/**
-	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
-	 *      wicket.markup.ComponentTag)
-	 */
-	public final void onComponentTag(Component component, ComponentTag tag)
-	{
-		if (tag.getType() != XmlTag.CLOSE)
-			replaceAttibuteValue(component, tag);
-	}
-
-	/**
-	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
-	 * be called from the outside
-	 */
-	public final void detachModel()
-	{
-		if (replaceModel != null)
-		{
-			replaceModel.detach();
-		}
-	}
-
-
 }
