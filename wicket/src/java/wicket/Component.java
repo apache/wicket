@@ -38,6 +38,7 @@ import wicket.markup.WicketTag;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
+import wicket.model.IModelComparator;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -214,8 +215,40 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviourListener
 {
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
+	
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** Basic model IModelComparator implementation for normal object models */
+	private static final IModelComparator defaultModelComparator = new IModelComparator()
+	{
+		public boolean compare(Object a, Object b)
+		{
+			if (a == null && b == null)
+			{
+				return true;
+			}
+			if (a == null || b == null)
+			{
+				return false;
+			}
+			return a.equals(b);
+		}
+	};
+
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
 	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
@@ -223,53 +256,20 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** Flag for Component holding root compound model */
 	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
 
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
 	/** Versioning boolean */
 	private static final short FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
-	
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
-
-	/** boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	private static final IComponentValueComparator comparator = new IComponentValueComparator()
-	{
-		public boolean compareValue(Component component, Object newObject)
-		{
-			IModel model = component.getModel();
-			Object previous = model.getObject(component);
-			if (newObject == null && previous == null)
-			{
-				return true;
-			}
-			if (newObject == null || previous == null)
-			{
-				return false;
-			}
-			return newObject.equals(previous);
-		}
-	};
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -1564,7 +1564,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		final IModel model = getModel();
 
-		// check whether anything can be set at all
+		// Check whether anything can be set at all
 		if (model == null)
 		{
 			throw new IllegalStateException(
@@ -1572,15 +1572,16 @@ public abstract class Component implements Serializable, IBehaviourListener
 							+ getPageRelativePath());
 		}
 
-		// check authorization
+		// Check authorization
 		if (!getApplication().getAuthorizationStrategy().allowEnabledState(this))
 		{
 			throw new UnauthorizedEnabledStateException(
 					"operation not allowed in the current authorization context");
 		}
 
-		// check whether this will result in a actual change
-		if (!getComparator().compareValue(this, object))
+		// Check whether this will result in an actual change
+		final Object current = model.getObject(this);
+		if (!getModelComparator().compare(current, object))
 		{
 			modelChanging();
 
@@ -1594,6 +1595,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			}
 			modelChanged();
 		}
+		
 		return this;
 	}
 
@@ -1985,18 +1987,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Gets the value comparator. Implementations of this interface can be used
-	 * in the Component.getComparator() for testing the current value of the
-	 * components model data with the new value that is given.
-	 * 
-	 * @return the value comparator
-	 */
-	protected IComponentValueComparator getComparator()
-	{
-		return comparator;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param flag
@@ -2006,6 +1996,18 @@ public abstract class Component implements Serializable, IBehaviourListener
 	protected final boolean getFlag(final short flag)
 	{
 		return (this.flags & flag) != 0;
+	}
+
+	/**
+	 * Gets the value defaultModelComparator. Implementations of this interface can be used
+	 * in the Component.getComparator() for testing the current value of the
+	 * components model data with the new value that is given.
+	 * 
+	 * @return the value defaultModelComparator
+	 */
+	protected IModelComparator getModelComparator()
+	{
+		return defaultModelComparator;
 	}
 
 	/**
@@ -2109,6 +2111,16 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 		
 		return true;
+	}
+
+	/**
+	 * If true, all attribute modifiers will be ignored
+	 * 
+	 * @return True, if attribute modifiers are to be ignored
+	 */
+	protected final boolean isIgnoreAttributeModifier()
+	{
+		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
 	/**
@@ -2279,16 +2291,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	{
 		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 		return this;
-	}
-
-	/**
-	 * If true, all attribute modifiers will be ignored
-	 * 
-	 * @return True, if attribute modifiers are to be ignored
-	 */
-	protected final boolean isIgnoreAttributeModifier()
-	{
-		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
 	/**
