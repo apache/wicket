@@ -155,7 +155,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * Override this method to process to the FeedbackMessage list.
+	 * Override this method to post process to the FeedbackMessage list.
 	 * 
 	 * @param messages
 	 *            List of sorted and filtered FeedbackMessages for further
