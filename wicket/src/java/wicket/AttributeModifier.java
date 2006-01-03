@@ -20,7 +20,6 @@ package wicket;
 import java.io.Serializable;
 
 import wicket.behavior.AbstractBehavior;
-import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
