@@ -23,8 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IPageVersionManager;
 import wicket.Page;
+import wicket.version.IPageVersionManager;
 
 /**
  * A version manager implemented by recording component changes as undo records
@@ -71,7 +71,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#beginVersion()
+	 * @see wicket.version.IPageVersionManager#beginVersion()
 	 */
 	public void beginVersion()
 	{
@@ -83,7 +83,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentAdded(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
 	 */
 	public void componentAdded(Component component)
 	{
@@ -91,7 +91,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentModelChanging(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentModelChanging(wicket.Component)
 	 */
 	public void componentModelChanging(Component component)
 	{
@@ -99,7 +99,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentRemoved(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentRemoved(wicket.Component)
 	 */
 	public void componentRemoved(Component component)
 	{
@@ -107,7 +107,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
+	 * @see wicket.version.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
 	 */
 	public void componentStateChanging(Change change)
 	{
@@ -115,7 +115,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#endVersion()
+	 * @see wicket.version.IPageVersionManager#endVersion()
 	 */
 	public void endVersion()
 	{
@@ -138,7 +138,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getCurrentVersionNumber()
+	 * @see wicket.version.IPageVersionManager#getCurrentVersionNumber()
 	 */
 	public int getCurrentVersionNumber()
 	{
@@ -146,7 +146,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getVersion(int)
+	 * @see wicket.version.IPageVersionManager#getVersion(int)
 	 */
 	public Page getVersion(final int versionNumber)
 	{

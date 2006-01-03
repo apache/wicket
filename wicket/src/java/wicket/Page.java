@@ -44,6 +44,7 @@ import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
+import wicket.version.IPageVersionManager;
 import wicket.version.undo.Change;
 import wicket.version.undo.UndoPageVersionManager;
 
@@ -127,7 +128,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * @see wicket.model.CompoundPropertyModel
  * @see wicket.model.BoundCompoundPropertyModel
  * @see wicket.Component
- * @see wicket.IPageVersionManager
+ * @see wicket.version.IPageVersionManager
  * @see wicket.version.undo.UndoPageVersionManager
  * 
  * @author Jonathan Locke
