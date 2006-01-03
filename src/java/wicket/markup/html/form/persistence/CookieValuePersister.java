@@ -44,7 +44,7 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see wicket.markup.html.form.persistence.IValuePersister#clear(wicket.markup.html.form.FormComponent)
 	 */
-	public void clear(FormComponent component)
+	public void clear(final FormComponent component)
 	{
 		final Cookie cookie = getCookie(component);
 		if (cookie != null)
@@ -60,7 +60,7 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see wicket.markup.html.form.persistence.IValuePersister#load(wicket.markup.html.form.FormComponent)
 	 */
-	public void load(FormComponent component)
+	public void load(final FormComponent component)
 	{
 		final Cookie cookie = getCookie(component);
 		if (cookie != null)
@@ -77,12 +77,12 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see wicket.markup.html.form.persistence.IValuePersister#save(wicket.markup.html.form.FormComponent)
 	 */
-	public void save(FormComponent component)
+	public void save(final FormComponent component)
 	{
 		final String name = component.getPageRelativePath();
 		final String value = component.getValue();
 
-		Cookie cookie = new Cookie(name, value == null ? "" : value);
+		final Cookie cookie = new Cookie(name, value == null ? "" : value);
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
 
@@ -96,7 +96,7 @@ public class CookieValuePersister implements IValuePersister
 	 * @param cookie
 	 *            The cookie to delete
 	 */
-	private void clear(Cookie cookie)
+	private void clear(final Cookie cookie)
 	{
 		if (cookie != null)
 		{
@@ -115,7 +115,7 @@ public class CookieValuePersister implements IValuePersister
 	 *            the cookie to debug.
 	 * @return a string that represents the internals of the cookie.
 	 */
-	private String cookieToDebugString(Cookie cookie)
+	private String cookieToDebugString(final Cookie cookie)
 	{
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue()
 				+ ", domain = " + cookie.getDomain() + ", path = " + cookie.getPath()
@@ -183,7 +183,7 @@ public class CookieValuePersister implements IValuePersister
     {
         try
         {
-            return getWebRequest().getHttpServletRequest().getCookies();
+            return getWebRequest().getCookies();
         }
         catch (NullPointerException ex)
         {
@@ -202,7 +202,6 @@ public class CookieValuePersister implements IValuePersister
 	{
 		return RequestCycle.get().getApplication().getSettings().getCookieValuePersisterSettings();
 	}
-
 
 	/**
 	 * Convenience method to get the http request.
@@ -231,7 +230,7 @@ public class CookieValuePersister implements IValuePersister
 	 *            The Cookie to be persisted.
 	 * @return The cookie provided
 	 */
-	private Cookie save(Cookie cookie)
+	private Cookie save(final Cookie cookie)
 	{
 		if (cookie == null)
 		{
@@ -252,9 +251,9 @@ public class CookieValuePersister implements IValuePersister
     		}
     
     		cookie.setVersion(getSettings().getVersion());
-    		cookie.setSecure(getSettings().isSecure());
+    		cookie.setSecure(getSettings().getSecure());
 
-    		getWebResponse().getHttpServletResponse().addCookie(cookie);
+    		getWebResponse().addCookie(cookie);
     
     		if (log.isDebugEnabled())
     		{
