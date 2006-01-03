@@ -60,5 +60,4 @@ public class SimpleAttributeModifier extends AbstractBehaviour
 	{
 		return true;
 	}
-
 }
