@@ -17,8 +17,10 @@
  */
 package wicket.markup.transformer;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A container which output markup will be processes by a XSLT processor prior
@@ -26,8 +28,14 @@ import wicket.model.IModel;
  * located in the same path as the nearest parent with an associated markup and
  * must have a filename equal to the component's id.
  * <p>
- * Similar to this container, a <code>IBehavior</code> is available which
- * does the same, but does not require an additional Container.
+ * The containers tag will be the root element of the xml data applied for
+ * transformation to ensure the xml data are well formed (single root element).
+ * In addition the attribute
+ * <code>xmlns:wicket="http://wicket.sourceforge.net"</code> is added to the
+ * root element to allow the XSL processor to handle the wicket namespace.
+ * <p>
+ * Similar to this container, a <code>IBehavior</code> is available which does
+ * the same, but does not require an additional Container.
  * 
  * @see wicket.markup.transformer.XsltTransfomerBehaviour
  * 
@@ -45,6 +53,15 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	public XsltOutputTransformerContainer(final String id)
 	{
 		super(id);
+
+		// The containers tag will be transformed as well. Thus we make sure that
+		// the xml provided to the xsl processor is well formed (has a single
+		// root element)
+		setTransformBodyOnly(false);
+
+		// Make the XSLT processor happy and allow him to handle the wicket
+		// tags and attributes which are in the wicket namespace
+		add(new AttributeModifier("xmlns:wicket", true, new Model("http://wicket.sourceforge.net")));
 	}
 
 	/**

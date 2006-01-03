@@ -86,7 +86,6 @@ public class Page_1 extends WebPage
 	    Border border = new SimpleBorder("myBorder");
 	    borderContainer.add(border);
 
-
 	    MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
 	    add(xsltContainer);
 	    

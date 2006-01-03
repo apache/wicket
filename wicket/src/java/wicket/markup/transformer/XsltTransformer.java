@@ -74,12 +74,6 @@ public class XsltTransformer implements ITransformer
 					+ component.toString());
 		}
 
-		StringBuffer input = new StringBuffer(4000);
-		input.append("<wicket xmlns:wicket=\"http://wicket.sourceforge.net\">");
-		int startPos = input.length();
-		input.append(output);
-		input.append("</wicket>");
-
 		try
 		{
 			// 1. Instantiate a TransformerFactory.
@@ -94,12 +88,10 @@ public class XsltTransformer implements ITransformer
 			// 3. Use the Transformer to transform an XML Source and send the
 			// output to a Result object.
 			StringWriter writer = new StringWriter();
-			transformer.transform(new StreamSource(new StringReader(input.toString())),
+			transformer.transform(new StreamSource(new StringReader(output)),
 					new StreamResult(writer));
 
-			input = writer.getBuffer();
-			CharSequence xslOutput = input.subSequence(startPos, input.length() - 9);
-			return xslOutput;
+			return writer.getBuffer();
 		}
 		finally
 		{
