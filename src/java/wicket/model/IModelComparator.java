@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,25 +14,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.model;
 
 /**
- * Implementations of this interface can be used in the Component.getComparator()
- * for testing the current value of the components model data with the new value
- * that is given.
+ * Implementations of this interface compare model object.
  * 
  * @author jcompagner
- * 
+ * @author Jonathan Locke
  */
-public interface IComponentValueComparator
+public interface IModelComparator
 {
 	/**
-	 * @param component
-	 *            The component for which the compare must take place.
-	 * @param newObject
-	 *            The object to compare the current value to.
-	 * @return true if the current component model value is the same as the
-	 *         newObject.
+	 * @param a
+	 *            Model object a
+	 * @param b
+	 *            Model object b
+	 * @return True if the two model objects are equal
 	 */
-	boolean compareValue(Component component, Object newObject);
+	boolean compare(Object a, Object b);
 }
