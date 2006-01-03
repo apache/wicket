@@ -170,8 +170,9 @@ public final class StringsTest extends TestCase
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true));
 
+		// The escaped unicode is Çüéâäàåçêë"
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
-				.escapeMarkup(convertNonASCIIString("Çüéâäàåçêë"), false, true));
+				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb", false, true));
 
 		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"), false,
 				true));
@@ -190,9 +191,9 @@ public final class StringsTest extends TestCase
 		assertEquals("abcdefghijklmë", Strings.replaceHtmlEscapeNumber("abcdefghijklmë"));
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
-				convertNonASCIIString("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb"),
-				Strings
-						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+				"\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
+				Strings.replaceHtmlEscapeNumber(
+						"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
 
 	private String convertNonASCIIString(String str) throws UnsupportedEncodingException
