@@ -17,7 +17,6 @@
  */
 package wicket;
 
-
 /**
  * Listens for requests to behaviours. When {@link wicket.IBehaviour}s are
  * 'enriched' with this interface, they can receive requests themselves. You can
