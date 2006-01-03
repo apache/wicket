@@ -264,7 +264,7 @@ public class AuthorizationTest extends TestCase
 	/**
 	 * Test page for authentication tests.
 	 */
-	private static class AuthTestPage1 extends WebPage
+	public static class AuthTestPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
