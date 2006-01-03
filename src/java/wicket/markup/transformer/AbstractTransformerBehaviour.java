@@ -68,6 +68,8 @@ public abstract class AbstractTransformerBehaviour extends AbstractBehavior
 	 */
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
+		tag.put("xmlns:wicket", "http://wicket.sourceforge.net");
+		
 		final RequestCycle requestCycle = RequestCycle.get();
 
 		// Temporarily replace the web response with a String response
