@@ -38,10 +38,10 @@ import wicket.util.string.StringList;
  */
 public final class FeedbackMessages implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-	
 	/** Log. */
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Holds a list of {@link wicket.feedback.FeedbackMessage}s.
@@ -65,148 +65,6 @@ public final class FeedbackMessages implements Serializable
 		{
 			messages.clear();
 		}
-	}
-
-	/**
-	 * Convenience method that looks up whether the given component registered a
-	 * message with this list with the level ERROR.
-	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 *         with level ERROR
-	 */
-	public final boolean hasErrorMessageFor(Component component)
-	{
-		return hasMessageFor(component, FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Looks up whether the given component registered a message with this list.
-	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 */
-	public final boolean hasMessageFor(Component component)
-	{
-		return messageForComponent(component) != null;
-	}
-
-	/**
-	 * Looks up whether the given component registered a message with this list
-	 * with the given level.
-	 * 
-	 * @param component
-	 *            The component to look up whether it registered a message
-	 * @param level
-	 *            The level of the message
-	 * @return Whether the given component registered a message with this list
-	 *         with the given level
-	 */
-	public final boolean hasMessageFor(Component component, int level)
-	{
-		final FeedbackMessage message = messageForComponent(component);
-		return message != null && message.isLevel(level);
-	}
-
-	/**
-	 * Gets whether there are no messages.
-	 * 
-	 * @return True when there are no messages
-	 */
-	public final boolean isEmpty()
-	{
-		return messages == null || messages.isEmpty();
-	}
-
-	/**
-	 * Looks up a message for the given component.
-	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match)
-	 *         or null if none was found
-	 */
-	public final FeedbackMessage messageForComponent(final Component component)
-	{
-		if (messages != null)
-		{
-			for (Iterator iterator = messages.iterator(); iterator.hasNext();)
-			{
-				FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (message.getReporter() == component)
-				{
-					return message;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param filter
-	 *            Filter for selecting messages
-	 * @return True if one or more messages matches the filter
-	 */
-	public final boolean hasMessage(final IFeedbackMessageFilter filter)
-	{
-		return messages(filter).size() != 0;
-	}
-
-	/**
-	 * Gets a list of messages from the page using a filter.
-	 * 
-	 * @param filter
-	 *            Filter for selecting messages
-	 * @return The messages or an empty list if no messages are found
-	 */
-	public final List messages(final IFeedbackMessageFilter filter)
-	{
-		if (messages == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-		else
-		{
-			final List list = new ArrayList();
-			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-			{
-				final FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (filter == null || filter.accept(message))
-				{
-					list.add(message);
-				}
-			}
-			return list;
-		}
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
-	}
-
-	/**
-	 * Adds a message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	final void add(FeedbackMessage message)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Adding feedback message " + message);
-		}
-		if (messages == null)
-		{
-			messages = new ArrayList();
-		}
-		messages.add(message);
 	}
 
 	/**
@@ -249,6 +107,59 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
+	 * Convenience method that looks up whether the given component registered a
+	 * message with this list with the level ERROR.
+	 * 
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @return whether the given component registered a message with this list
+	 *         with level ERROR
+	 */
+	public final boolean hasErrorMessageFor(Component component)
+	{
+		return hasMessageFor(component, FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * @param filter
+	 *            Filter for selecting messages
+	 * @return True if one or more messages matches the filter
+	 */
+	public final boolean hasMessage(final IFeedbackMessageFilter filter)
+	{
+		return messages(filter).size() != 0;
+	}
+
+	/**
+	 * Looks up whether the given component registered a message with this list.
+	 * 
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @return whether the given component registered a message with this list
+	 */
+	public final boolean hasMessageFor(Component component)
+	{
+		return messageForComponent(component) != null;
+	}
+
+	/**
+	 * Looks up whether the given component registered a message with this list
+	 * with the given level.
+	 * 
+	 * @param component
+	 *            The component to look up whether it registered a message
+	 * @param level
+	 *            The level of the message
+	 * @return Whether the given component registered a message with this list
+	 *         with the given level
+	 */
+	public final boolean hasMessageFor(Component component, int level)
+	{
+		final FeedbackMessage message = messageForComponent(component);
+		return message != null && message.isLevel(level);
+	}
+
+	/**
 	 * Adds a new ui message with level INFO to the current messages.
 	 * 
 	 * @param reporter
@@ -262,6 +173,76 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
+	 * Gets whether there are no messages.
+	 * 
+	 * @return True when there are no messages
+	 */
+	public final boolean isEmpty()
+	{
+		return messages == null || messages.isEmpty();
+	}
+
+	/**
+	 * Looks up a message for the given component.
+	 * 
+	 * @param component
+	 *            the component to look up the message for
+	 * @return the message that is found for the given component (first match)
+	 *         or null if none was found
+	 */
+	public final FeedbackMessage messageForComponent(final Component component)
+	{
+		if (messages != null)
+		{
+			for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+			{
+				FeedbackMessage message = (FeedbackMessage)iterator.next();
+				if (message.getReporter() == component)
+				{
+					return message;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets a list of messages from the page using a filter.
+	 * 
+	 * @param filter
+	 *            Filter for selecting messages
+	 * @return The messages or an empty list if no messages are found
+	 */
+	public final List messages(final IFeedbackMessageFilter filter)
+	{
+		if (messages == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+		else
+		{
+			final List list = new ArrayList();
+			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+			{
+				final FeedbackMessage message = (FeedbackMessage)iterator.next();
+				if (filter == null || filter.accept(message))
+				{
+					list.add(message);
+				}
+			}
+			return list;
+		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
+	}
+
+	/**
 	 * Adds a new ui message with level WARNING to the current messages.
 	 * 
 	 * @param reporter
@@ -272,5 +253,24 @@ public final class FeedbackMessages implements Serializable
 	public final void warn(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
+	}
+
+	/**
+	 * Adds a message.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	final void add(FeedbackMessage message)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("Adding feedback message " + message);
+		}
+		if (messages == null)
+		{
+			messages = new ArrayList();
+		}
+		messages.add(message);
 	}
 }
