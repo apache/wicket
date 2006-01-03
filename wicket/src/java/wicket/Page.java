@@ -1097,6 +1097,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            The key
 	 * @param object
 	 *            The object
+	 * @throws IllegalArgumentException
+	 *             Thrown if the object is not of the correct type for the key
 	 */
 	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
 	{

@@ -220,7 +220,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED2 = 0x0200;
-	
+
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED3 = 0x0400;
 
@@ -235,7 +235,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 	/** Flag for escaping HTML in model strings */
 	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-	
+
 	/** Flag for Component holding root compound model */
 	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
 
@@ -270,7 +270,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			return a.equals(b);
 		}
 	};
-	
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -1330,7 +1330,8 @@ public abstract class Component implements Serializable, IBehaviourListener
 	public final void renderComponent(final MarkupStream markupStream)
 	{
 		// If yet unknown, set the markup stream position with the current
-		// position of markupStream. Else set the markupStream.setCurrentPosition 
+		// position of markupStream. Else set the
+		// markupStream.setCurrentPosition
 		// based on the position already known to the component.
 		validateMarkupStream(markupStream);
 
@@ -1464,10 +1465,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
 			// TODO we can't record any state change as Link.onComponentTag
-			// potentially sets this property we probably don't need to support 
+			// potentially sets this property we probably don't need to support
 			// this, but I'll keep this commented so that we can think about it
 			// I (johan) changed the way Link.onComponentTag works. It will
-			// disable versioning for a the setEnabled call. 
+			// disable versioning for a the setEnabled call.
 			// Tell the page that this component's enabled was changed
 			if (isVersioned())
 			{
@@ -1499,14 +1500,14 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/**
 	 * Sets the metadata for this component using the given key. If the metadata
 	 * object is not of the correct type for the metadata key, an
-	 * InvalidMetaDataTypeException will be thrown. For information on creating
+	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
 	 *            The metadata object
-	 * @throws InvalidMetaDataTypeException
+	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
@@ -1595,7 +1596,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			}
 			modelChanged();
 		}
-		
+
 		return this;
 	}
 
@@ -1999,9 +2000,9 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Gets the value defaultModelComparator. Implementations of this interface can be used
-	 * in the Component.getComparator() for testing the current value of the
-	 * components model data with the new value that is given.
+	 * Gets the value defaultModelComparator. Implementations of this interface
+	 * can be used in the Component.getComparator() for testing the current
+	 * value of the components model data with the new value that is given.
 	 * 
 	 * @return the value defaultModelComparator
 	 */
@@ -2028,7 +2029,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another
-				// component that is the owner of the model (that component 
+				// component that is the owner of the model (that component
 				// has to decide whether to version or not
 				setVersioned(false);
 
@@ -2104,12 +2105,12 @@ public abstract class Component implements Serializable, IBehaviourListener
 	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
-		if ((behaviour instanceof AttributeModifier) 
+		if ((behaviour instanceof AttributeModifier)
 				&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -2200,7 +2201,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply behaviour modifiers
-			if ((behaviours != null) && !behaviours.isEmpty() && !tag.isClose() 
+			if ((behaviours != null) && !behaviours.isEmpty() && !tag.isClose()
 					&& (isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
