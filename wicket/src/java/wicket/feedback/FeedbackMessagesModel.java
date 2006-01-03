@@ -105,7 +105,8 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 			// Let subclass do any extra processing it wants to on the messages.
 			// It may want to do something special, such as removing a given
 			// message under some special condition or perhaps eliminate
-			// duplicate messages.
+			// duplicate messages. It could even add a message under certain
+			// conditions.
 			messages = processMessages(messages);
 		}
 		return messages;
