@@ -22,9 +22,9 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;

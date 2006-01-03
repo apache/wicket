@@ -22,8 +22,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.behavior.AttributeModifier;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessagesModel;
 import wicket.feedback.IFeedback;

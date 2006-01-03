@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedEnabledStateException;
 import wicket.authorization.UnauthorizedInstantiationException;
-import wicket.behavior.AttributeModifier;
 import wicket.behavior.IBehavior;
 import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessage;

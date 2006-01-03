@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.pages;
 
+import wicket.AttributeModifier;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.WicketRuntimeException;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.model.Model;

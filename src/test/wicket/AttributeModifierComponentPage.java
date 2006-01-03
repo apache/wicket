@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import wicket.behavior.AttributeModifier;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractDetachableModel;

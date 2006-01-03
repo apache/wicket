@@ -17,7 +17,7 @@
  */
 package wicket.markup.html;
 
-import wicket.behavior.AttributeModifier;
+import wicket.AttributeModifier;
 
 /**
  * An interface to be implemented by components which are able to add
@@ -40,7 +40,7 @@ import wicket.behavior.AttributeModifier;
 public interface IBodyTagContributor
 {
 	/**
-	 * Fetch a list of {@link wicket.behavior.AttributeModifier AttributeModifiers} for
+	 * Fetch a list of {@link wicket.AttributeModifier AttributeModifiers} for
 	 * the body tag.
 	 * 
 	 * @return all AttributeModifiers which contribute to the &lt;BODY&gt; tag.
