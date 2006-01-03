@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.IBehaviour;
-import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 
@@ -79,9 +79,9 @@ public class WebComponent extends Component implements IHeaderContributor
 				((IHeaderContributor)behaviour).renderHead(container);
 			}
 
-			if (behaviour instanceof IBodyOnloadContributor)
+			if (behaviour instanceof IBodyOnLoadContributor)
 			{
-				String stmt = ((IBodyOnloadContributor)behaviour).getBodyOnload();
+				String stmt = ((IBodyOnLoadContributor)behaviour).getBodyOnLoad();
 				if (stmt != null)
 				{
 					((WebPage)getPage()).appendToBodyOnLoad(stmt);

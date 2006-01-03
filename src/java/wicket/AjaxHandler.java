@@ -23,7 +23,7 @@ import java.util.Set;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.IBodyOnloadContributor;
+import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.request.target.EmptyRequestTarget;
 import wicket.request.target.ResourceStreamRequestTarget;
@@ -42,7 +42,7 @@ public abstract class AjaxHandler
 			IBehaviour,
 			IBehaviourListener,
 			IHeaderContributor,
-			IBodyOnloadContributor
+			IBodyOnLoadContributor
 {
 	/** the component that this handler is bound to. */
 	private Component component;
@@ -61,9 +61,9 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.IBodyOnloadContributor#getBodyOnload()
+	 * @see wicket.markup.html.ajax.IBodyOnLoadContributor#getBodyOnLoad()
 	 */
-	public final String getBodyOnload()
+	public final String getBodyOnLoad()
 	{
 		String staticContrib = null;
 		Set contributors = (Set)bodyOnloadContribHolder.get();
