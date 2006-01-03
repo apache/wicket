@@ -1,10 +1,10 @@
 /*
  * Copyright Teachscape
  */
-package wicket;
+package wicket.behavior;
 
-import wicket.AbstractBehaviour;
 import wicket.Component;
+import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 
 /**
@@ -14,7 +14,7 @@ import wicket.markup.ComponentTag;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleAttributeModifier extends AbstractBehaviour
+public class SimpleAttributeModifier extends AbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public class SimpleAttributeModifier extends AbstractBehaviour
 	}
 
 	/**
-	 * @see wicket.AbstractBehaviour#onComponentTag(wicket.Component,
+	 * @see wicket.behavior.AbstractBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
 	public void onComponentTag(Component component, ComponentTag tag)

@@ -14,10 +14,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.behavior;
 
 import java.io.Serializable;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
@@ -32,7 +33,7 @@ import wicket.markup.ComponentTag;
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public interface IBehaviour extends Serializable
+public interface IBehavior extends Serializable
 {
 	/**
 	 * Bind this handler to the given component.

@@ -18,6 +18,8 @@
  */
 package wicket;
 
+import wicket.session.DefaultPageFactory;
+
 
 /**
  * Test the Pagefactory

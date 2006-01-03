@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.internal;
 
-import wicket.AttributeModifier;
+import wicket.behavior.AttributeModifier;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IBodyTagContributor;
 import wicket.markup.html.WebMarkupContainer;

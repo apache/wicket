@@ -15,10 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.behavior;
 
 import java.io.Serializable;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
@@ -67,7 +68,7 @@ import wicket.util.value.ValueMap;
  * @author Martijn Dashorst
  * @author Ralf Ebert
  */
-public class AttributeModifier extends AbstractBehaviour implements Serializable
+public class AttributeModifier extends AbstractBehavior implements Serializable
 {
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
@@ -196,7 +197,7 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	}
 
 	/**
-	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
 	public final void onComponentTag(Component component, ComponentTag tag)
@@ -204,6 +205,57 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 		if (tag.getType() != XmlTag.CLOSE)
 		{
 			replaceAttibuteValue(component, tag);
+		}
+	}
+
+	/**
+	 * Checks the given component tag for an instance of the attribute to modify
+	 * and if all criteria are met then replace the value of this attribute with
+	 * the value of the contained model object.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param tag
+	 *            The tag to replace the attribute value for
+	 */
+	public final void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	{
+		if (isEnabled())
+		{
+			final ValueMap attributes = tag.getAttributes();
+			final Object replacementValue = getReplacementOrNull(component);
+
+			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))
+			{
+				attributes.put(attribute, null);
+			}
+			else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacementValue))
+			{
+				attributes.remove(attribute);
+			}
+			else
+			{
+				if (attributes.containsKey(attribute))
+				{
+					final String value = toStringOrNull(attributes.get(attribute));
+					if (pattern == null || value.matches(pattern))
+					{
+						final String newValue = newValue(value, toStringOrNull(replacementValue));
+						if (newValue != null)
+						{
+							attributes.put(attribute, newValue);
+						}
+					}
+				}
+				else if (addAttributeIfNotPresent)
+				{
+					final String newValue = newValue(null, toStringOrNull(replacementValue));
+					if (newValue != null)
+					{
+						attributes.put(attribute, newValue);
+					}
+				}
+			}
 		}
 	}
 
@@ -252,57 +304,6 @@ public class AttributeModifier extends AbstractBehaviour implements Serializable
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		return replacementValue;
-	}
-
-	/**
-	 * Checks the given component tag for an instance of the attribute to modify
-	 * and if all criteria are met then replace the value of this attribute with
-	 * the value of the contained model object.
-	 * 
-	 * @param component
-	 *            The component
-	 * @param tag
-	 *            The tag to replace the attribute value for
-	 */
-	final void replaceAttibuteValue(final Component component, final ComponentTag tag)
-	{
-		if (isEnabled())
-		{
-			final ValueMap attributes = tag.getAttributes();
-			final Object replacementValue = getReplacementOrNull(component);
-
-			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))
-			{
-				attributes.put(attribute, null);
-			}
-			else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacementValue))
-			{
-				attributes.remove(attribute);
-			}
-			else
-			{
-				if (attributes.containsKey(attribute))
-				{
-					final String value = toStringOrNull(attributes.get(attribute));
-					if (pattern == null || value.matches(pattern))
-					{
-						final String newValue = newValue(value, toStringOrNull(replacementValue));
-						if (newValue != null)
-						{
-							attributes.put(attribute, newValue);
-						}
-					}
-				}
-				else if (addAttributeIfNotPresent)
-				{
-					final String newValue = newValue(null, toStringOrNull(replacementValue));
-					if (newValue != null)
-					{
-						attributes.put(attribute, newValue);
-					}
-				}
-			}
-		}
 	}
 
 	/* gets replacement with null check. */

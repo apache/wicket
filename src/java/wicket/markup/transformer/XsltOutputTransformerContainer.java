@@ -26,7 +26,7 @@ import wicket.model.IModel;
  * located in the same path as the nearest parent with an associated markup and
  * must have a filename equal to the component's id.
  * <p>
- * Similar to this container, a <code>IBehaviour</code> is available which
+ * Similar to this container, a <code>IBehavior</code> is available which
  * does the same, but does not require an additional Container.
  * 
  * @see wicket.markup.transformer.XsltTransfomerBehaviour

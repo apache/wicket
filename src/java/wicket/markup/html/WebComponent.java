@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.IBehaviour;
+import wicket.behavior.IBehavior;
 import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
@@ -73,7 +73,7 @@ public class WebComponent extends Component implements IHeaderContributor
 		List behaviours = getBehaviours();
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
-			IBehaviour behaviour = (IBehaviour)i.next();
+			IBehavior behaviour = (IBehavior)i.next();
 			if (behaviour instanceof IHeaderContributor)
 			{
 				((IHeaderContributor)behaviour).renderHead(container);

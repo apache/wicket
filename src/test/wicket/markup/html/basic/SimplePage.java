@@ -18,8 +18,8 @@
  */
 package wicket.markup.html.basic;
 
-import wicket.AttributeModifier;
 import wicket.PageParameters;
+import wicket.behavior.AttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;

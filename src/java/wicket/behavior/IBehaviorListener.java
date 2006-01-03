@@ -15,17 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.behavior;
+
+import wicket.IRequestListener;
 
 /**
- * Listens for requests to behaviours. When {@link wicket.IBehaviour}s are
+ * Listens for requests to behaviours. When {@link wicket.behavior.IBehavior}s are
  * 'enriched' with this interface, they can receive requests themselves. You can
  * use this for example to implement AJAX behaviour, though you'll probably want
- * to extend from {@link wicket.AjaxHandler} directly instead in that case.
+ * to extend from {@link wicket.behavior.AjaxHandler} directly instead in that case.
  * 
  * @author Eelco Hillenius
  */
-public interface IBehaviourListener extends IRequestListener
+public interface IBehaviorListener extends IRequestListener
 {
 	/**
 	 * Called when a request to a behaviour is received.

@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.IBehaviour;
 import wicket.MarkupContainer;
 import wicket.Response;
+import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
@@ -122,7 +122,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		List behaviours = getBehaviours();
 		for (Iterator i = behaviours.iterator(); i.hasNext();)
 		{
-			IBehaviour behaviour = (IBehaviour)i.next();
+			IBehavior behaviour = (IBehavior)i.next();
 			if (behaviour instanceof IHeaderContributor)
 			{
 				((IHeaderContributor)behaviour).renderHead(container);
