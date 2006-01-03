@@ -15,7 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.application;
+
+import wicket.ApplicationSettings;
+import wicket.WicketRuntimeException;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
@@ -27,7 +30,7 @@ package wicket;
 public final class DefaultClassResolver implements IClassResolver
 {
 	/**
-	 * @see wicket.IClassResolver#resolveClass(java.lang.String)
+	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
 	public final Class resolveClass(String classname)
 	{

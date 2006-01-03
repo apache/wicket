@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.application.DefaultClassResolver;
+import wicket.application.IClassResolver;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
