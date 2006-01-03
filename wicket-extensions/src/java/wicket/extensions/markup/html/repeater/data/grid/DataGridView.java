@@ -21,8 +21,8 @@ package wicket.extensions.markup.html.repeater.data.grid;
 import java.util.List;
 
 import wicket.AttributeModifier;
-import wicket.IBehaviour;
-import wicket.SimpleAttributeModifier;
+import wicket.behavior.IBehavior;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 
@@ -139,7 +139,7 @@ public class DataGridView extends AbstractDataGridView
 	 *            Item container representing the row
 	 * 
 	 * @see Item
-	 * @see IBehaviour
+	 * @see IBehavior
 	 * @see AttributeModifier
 	 * @see SimpleAttributeModifier
 	 */
@@ -158,7 +158,7 @@ public class DataGridView extends AbstractDataGridView
 	 *            Item container representing the cell
 	 * 
 	 * @see Item
-	 * @see IBehaviour
+	 * @see IBehavior
 	 * @see AttributeModifier
 	 * @see SimpleAttributeModifier
 	 */

@@ -18,8 +18,8 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
-import wicket.AbstractBehaviour;
 import wicket.Component;
+import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -55,7 +55,7 @@ public class FilterForm extends Form
 
 		hidden = new HiddenField("focus-tracker", new Model());
 
-		hidden.add(new AbstractBehaviour()
+		hidden.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class FilterForm extends Form
 	 */
 	public final void enableFocusTracking(FormComponent fc)
 	{
-		fc.add(new AbstractBehaviour()
+		fc.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
