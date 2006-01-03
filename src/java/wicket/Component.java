@@ -227,23 +227,6 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED4 = 0x0800;
 
-	/** Basic model IModelComparator implementation for normal object models */
-	private static final IModelComparator defaultModelComparator = new IModelComparator()
-	{
-		public boolean compare(Object a, Object b)
-		{
-			if (a == null && b == null)
-			{
-				return true;
-			}
-			if (a == null || b == null)
-			{
-				return false;
-			}
-			return a.equals(b);
-		}
-	};
-
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
 
@@ -271,6 +254,23 @@ public abstract class Component implements Serializable, IBehaviourListener
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
+	/** Basic model IModelComparator implementation for normal object models */
+	private static final IModelComparator defaultModelComparator = new IModelComparator()
+	{
+		public boolean compare(Object a, Object b)
+		{
+			if (a == null && b == null)
+			{
+				return true;
+			}
+			if (a == null || b == null)
+			{
+				return false;
+			}
+			return a.equals(b);
+		}
+	};
+	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
