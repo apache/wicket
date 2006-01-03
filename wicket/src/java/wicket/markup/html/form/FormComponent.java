@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;

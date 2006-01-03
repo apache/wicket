@@ -27,10 +27,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;

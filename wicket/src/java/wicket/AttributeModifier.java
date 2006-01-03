@@ -15,11 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.behavior;
+package wicket;
 
 import java.io.Serializable;
 
-import wicket.Component;
+import wicket.behavior.AbstractBehavior;
+import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;

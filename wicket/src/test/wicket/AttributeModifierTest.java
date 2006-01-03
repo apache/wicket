@@ -22,7 +22,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.Model;

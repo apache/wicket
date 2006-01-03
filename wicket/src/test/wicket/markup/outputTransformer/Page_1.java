@@ -18,10 +18,10 @@
  */
 package wicket.markup.outputTransformer;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.PageParameters;
-import wicket.behavior.AttributeModifier;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.SimpleBorder;
