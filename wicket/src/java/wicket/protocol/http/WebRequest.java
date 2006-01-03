@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Request;
@@ -47,6 +48,16 @@ public abstract class WebRequest extends Request
 	 */
 	public abstract String getContextPath();
 
+	/**
+	 * Get the requests' cookies
+	 * 
+	 * @return Cookies
+	 */
+	public Cookie[] getCookies()
+	{
+		return getHttpServletRequest().getCookies();
+	}
+	
 	/**
 	 * Gets the servlet path.
 	 * 

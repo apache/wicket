@@ -109,7 +109,7 @@ public class CookieValuePersisterSettings
 	 * 
 	 * @return whether this cookie is secure
 	 */
-	public boolean isSecure()
+	public boolean getSecure()
 	{
 		return secure;
 	}

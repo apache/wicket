@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -70,6 +71,16 @@ public class WebResponse extends Response
 		this.httpServletResponse = httpServletResponse;
 	}
 
+	/**
+	 * Add a cookie to the web response
+	 * 
+	 * @param cookie
+	 */
+	public void addCookie(final Cookie cookie)
+	{
+		getHttpServletResponse().addCookie(cookie);
+	}
+	
 	/**
 	 * Closes response output.
 	 */
