@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.Component;
-import wicket.DefaultPageFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -39,6 +38,7 @@ import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
+import wicket.session.DefaultPageFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
 

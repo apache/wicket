@@ -15,11 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.behavior;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import wicket.Component;
+import wicket.IRequestTarget;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
@@ -39,8 +42,8 @@ import wicket.util.resource.IResourceStream;
  */
 public abstract class AjaxHandler
 		implements
-			IBehaviour,
-			IBehaviourListener,
+			IBehavior,
+			IBehaviorListener,
 			IHeaderContributor,
 			IBodyOnLoadContributor
 {
@@ -123,7 +126,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
 	public final void onComponentTag(Component component, ComponentTag tag)
@@ -144,7 +147,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.IBehaviour#detachModel()
+	 * @see wicket.behavior.IBehavior#detachModel()
 	 */
 	public void detachModel()
 	{
@@ -249,7 +252,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.IBehaviour#rendered(wicket.Component)
+	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
 	public void rendered(Component hostComponent)
 	{

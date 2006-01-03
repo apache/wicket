@@ -15,36 +15,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.behavior;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
- * Adapter implementation of {@link wicket.IBehaviour}. This class just
+ * Adapter implementation of {@link wicket.behavior.IBehavior}. This class just
  * implements the interface with empty methods; override this class when you
  * don't want to implement the whole interface.
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public abstract class AbstractBehaviour implements IBehaviour
+public abstract class AbstractBehavior implements IBehavior
 {
 	/**
-	 * @see wicket.IBehaviour#bind(wicket.Component)
+	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
 	 */
 	public void bind(Component hostComponent)
 	{
 	}
 
 	/**
-	 * @see wicket.IBehaviour#rendered(wicket.Component)
+	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
 	public void rendered(Component hostComponent)
 	{
 	}
 
 	/**
-	 * @see wicket.IBehaviour#onComponentTag(wicket.Component,
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
 	public void onComponentTag(Component component, ComponentTag tag)
@@ -52,7 +53,7 @@ public abstract class AbstractBehaviour implements IBehaviour
 	}
 
 	/**
-	 * @see wicket.IBehaviour#detachModel()
+	 * @see wicket.behavior.IBehavior#detachModel()
 	 */
 	public void detachModel()
 	{

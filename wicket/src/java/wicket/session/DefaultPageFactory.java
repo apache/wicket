@@ -15,12 +15,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.session;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import wicket.ApplicationSettings;
+import wicket.IPageFactory;
+import wicket.Page;
+import wicket.PageParameters;
+import wicket.WicketRuntimeException;
 import wicket.util.concurrent.ConcurrentHashMap;
 
 /**

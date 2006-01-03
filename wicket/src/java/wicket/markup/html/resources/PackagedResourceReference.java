@@ -18,9 +18,9 @@
 package wicket.markup.html.resources;
 
 import wicket.Application;
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
+import wicket.behavior.AttributeModifier;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;

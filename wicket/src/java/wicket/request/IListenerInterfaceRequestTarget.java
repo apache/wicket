@@ -45,7 +45,7 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 
 	/**
 	 * Gets the optional behaviour id in case this call points a dispatched
-	 * method (i.e. a coupled behaviour such as an {@link wicket.AjaxHandler}).
+	 * method (i.e. a coupled behaviour such as an {@link wicket.behavior.AjaxHandler}).
 	 * 
 	 * @return the optional behaviour id
 	 */

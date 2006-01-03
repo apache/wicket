@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
@@ -1313,7 +1314,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
 
 		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(IBehaviourListener.class);
+		RequestCycle.registerRequestListenerInterface(IBehaviorListener.class);
 	}
 
 }

@@ -33,6 +33,7 @@ import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
+import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.crypt.SunJceCrypt;

@@ -30,6 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedEnabledStateException;
 import wicket.authorization.UnauthorizedInstantiationException;
+import wicket.behavior.AttributeModifier;
+import wicket.behavior.IBehavior;
+import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
@@ -213,7 +216,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Juergen Donnerstag
  */
-public abstract class Component implements Serializable, IBehaviourListener
+public abstract class Component implements Serializable, IBehaviorListener
 {
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
@@ -500,7 +503,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 *            The behaviour modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(final IBehaviour behaviour)
+	public final Component add(final IBehavior behaviour)
 	{
 		if (behaviour == null)
 		{
@@ -545,7 +548,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		{
 			for (Iterator i = behaviours.iterator(); i.hasNext();)
 			{
-				IBehaviour behaviour = (IBehaviour)i.next();
+				IBehavior behaviour = (IBehavior)i.next();
 				behaviour.detachModel();
 			}
 		}
@@ -1228,10 +1231,10 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Component has to implement {@link IBehaviourListener} to be able to pass
+	 * Component has to implement {@link IBehaviorListener} to be able to pass
 	 * through events to behaviours without ending up with many if/else blocks.
 	 * 
-	 * @see wicket.IBehaviourListener#onRequest()
+	 * @see wicket.behavior.IBehaviorListener#onRequest()
 	 */
 	public void onRequest()
 	{
@@ -1244,7 +1247,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		}
 
 		int idAsInt = Integer.parseInt(id);
-		IBehaviourListener behaviourListener = (IBehaviourListener)behaviours.get(idAsInt);
+		IBehaviorListener behaviourListener = (IBehaviorListener)behaviours.get(idAsInt);
 
 		if (behaviourListener == null)
 		{
@@ -1409,7 +1412,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 		{
 			for (Iterator i = behaviours.iterator(); i.hasNext();)
 			{
-				IBehaviour behaviour = (IBehaviour)i.next();
+				IBehavior behaviour = (IBehavior)i.next();
 				behaviour.rendered(this);
 			}
 		}
@@ -1777,7 +1780,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * @return The URL
 	 * @see Page#urlFor(Component, Class)
 	 */
-	public final String urlFor(final IBehaviourListener behaviourListener)
+	public final String urlFor(final IBehaviorListener behaviourListener)
 	{
 		if (behaviourListener == null)
 		{
@@ -1797,7 +1800,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 					+ " was not registered with this component");
 		}
 
-		return urlFor(IBehaviourListener.class) + "&behaviourId=" + index;
+		return urlFor(IBehaviorListener.class) + "&behaviourId=" + index;
 	}
 
 	/**
@@ -1940,13 +1943,13 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Gets the currently coupled {@link IBehaviour}s as a unmodifiable list.
+	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
 	 * Returns an empty list rather than null if there are no behaviours coupled
 	 * to this component.
 	 * 
 	 * @return the currently coupled behaviours as a unmodifiable list
 	 */
-	protected final List/* <IBehaviour> */getBehaviours()
+	protected final List/* <IBehavior> */getBehaviours()
 	{
 		if (behaviours == null)
 		{
@@ -1957,7 +1960,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	}
 
 	/**
-	 * Gets the subset of the currently coupled {@link IBehaviour}s that are of
+	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
 	 * the provided type as a unmodifiable list or null if there are no
 	 * behaviours attached. Returns an empty list rather than null if there are
 	 * no behaviours coupled to this component.
@@ -1968,7 +1971,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * @return the subset of the currently coupled behaviours that are of the
 	 *         provided type as a unmodifiable list or null
 	 */
-	protected final List/* <IBehaviour> */getBehaviours(Class type)
+	protected final List/* <IBehavior> */getBehaviours(Class type)
 	{
 		if (behaviours == null)
 		{
@@ -2102,7 +2105,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 	 * @param behaviour
 	 * @return false, if the component should not apply this behaviour
 	 */
-	protected boolean isBehaviourAccepted(final IBehaviour behaviour)
+	protected boolean isBehaviourAccepted(final IBehavior behaviour)
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
 		if ((behaviour instanceof AttributeModifier)
@@ -2208,7 +2211,7 @@ public abstract class Component implements Serializable, IBehaviourListener
 
 				for (Iterator i = behaviours.iterator(); i.hasNext();)
 				{
-					IBehaviour behaviour = (IBehaviour)i.next();
+					IBehavior behaviour = (IBehavior)i.next();
 					// components may reject some behaviour components
 					if (isBehaviourAccepted(behaviour))
 					{
