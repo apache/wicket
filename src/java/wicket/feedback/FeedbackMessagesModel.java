@@ -101,6 +101,12 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 			{
 				Collections.sort(messages, sortingComparator);
 			}
+
+			// Let subclass do any extra processing it wants to on the messages.
+			// It may want to do something special, such as removing a given
+			// message under some special condition or perhaps eliminate
+			// duplicate messages.
+			messages = processMessages(messages);
 		}
 		return messages;
 	}
@@ -146,5 +152,18 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	protected void onSetObject(Component component, Object object)
 	{
+	}
+
+	/**
+	 * Override this method to process to the FeedbackMessage list.
+	 * 
+	 * @param messages
+	 *            List of sorted and filtered FeedbackMessages for further
+	 *            processing
+	 * @return The processed FeedbackMessage list
+	 */
+	protected List processMessages(final List messages)
+	{
+		return messages;
 	}
 }
