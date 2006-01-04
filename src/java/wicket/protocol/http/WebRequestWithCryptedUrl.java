@@ -124,11 +124,11 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			{
 				if(endIndex == -1)
 				{
-					secureParam = URLDecoder.decode(url.substring(startIndex),Application.get().getSettings().getResponseRequestEncoding());
+					secureParam = URLDecoder.decode(url.substring(startIndex),Application.get().getRequestCycleSettings().getResponseRequestEncoding());
 				}
 				else
 				{
-					secureParam = URLDecoder.decode(url.substring(startIndex, endIndex),Application.get().getSettings().getResponseRequestEncoding());
+					secureParam = URLDecoder.decode(url.substring(startIndex, endIndex),Application.get().getRequestCycleSettings().getResponseRequestEncoding());
 				}
 			}
 			catch (UnsupportedEncodingException ex)

@@ -26,6 +26,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.request.IPageRequestTarget;
+import wicket.settings.IExceptionSettings;
 import wicket.settings.Settings;
 
 /**
@@ -56,7 +57,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
-		final Settings settings = application.getSettings();
+		final IExceptionSettings settings = application.getExceptionSettings();
 		final Page responsePage = requestCycle.getResponsePage();
 
 		Page override = onRuntimeException(responsePage, e);

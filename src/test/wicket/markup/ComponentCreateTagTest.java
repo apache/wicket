@@ -118,7 +118,7 @@ public class ComponentCreateTagTest extends TestCase
 	{
 		application = new MockWebApplication(null);
 		application.getRequiredPageSettings().setHomePage(pageClass);
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 
 		// Do the processing
 		application.setupRequestAndResponse();

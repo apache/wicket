@@ -265,7 +265,7 @@ public class BookmarkablePageRequestTarget
 		 * paramsEncoder.decode(urlFragment); }
 		 */
 		// construct a new instance using the default page factory
-		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
+		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
 				.getPageFactory();
 		return pageFactory.newPage(pageClass, params);
 	}
