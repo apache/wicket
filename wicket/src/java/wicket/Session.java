@@ -277,21 +277,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets the converter instance.
-	 * 
-	 * @return the converter
-	 */
-	public final IConverter getConverter()
-	{
-		if (converter == null)
-		{
-			// Let the factory create a new converter
-			converter = getApplication().getSessionSettings().getConverterFactory().newConverter(getLocale());
-		}
-		return converter;
-	}
-
-	/**
 	 * Gets the unique id for this session (or a constant defining this is
 	 * constant. By default returns the hasCode of this object as a String.
 	 * 
@@ -504,7 +489,6 @@ public abstract class Session implements Serializable
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
-
 	/**
 	 * Removes a session attribute listener.
 	 * 
@@ -521,6 +505,7 @@ public abstract class Session implements Serializable
 			}
 		}
 	}
+
 
 	/**
 	 * Removes the given page from the cache. This method may be useful if you
@@ -917,6 +902,22 @@ public abstract class Session implements Serializable
 	{
 		accessSequenceNumber++;
 		entry.setAccessSequenceNumber(accessSequenceNumber);
+	}
+
+	/**
+	 * Gets the converter instance.
+	 * 
+	 * @return the converter
+	 */
+	final IConverter getConverter()
+	{
+		if (converter == null)
+		{
+			// Let the factory create a new converter
+			converter = getApplication().getApplicationSettings().getConverterFactory()
+					.newConverter(getLocale());
+		}
+		return converter;
 	}
 
 	/**

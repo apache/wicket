@@ -381,7 +381,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISessionSettings#getConverterFactory()
+	 * @see wicket.settings.IApplicationSettings#getConverterFactory()
 	 */
 	public IConverterFactory getConverterFactory()
 	{
@@ -725,7 +725,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISessionSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
 	 */
 	public void setConverterFactory(IConverterFactory factory)
 	{
