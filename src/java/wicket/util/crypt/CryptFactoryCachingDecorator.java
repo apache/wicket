@@ -50,7 +50,7 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	/**
 	 * @see wicket.util.crypt.ICryptFactory#newCrypt()
 	 */
-	public ICrypt newCrypt()
+	public final ICrypt newCrypt()
 	{
 		if (cache == null)
 		{
