@@ -233,11 +233,6 @@ public abstract class Application
 	}
 
 
-	private Settings createApplicationSettings()
-	{
-		return new Settings(this);
-	}
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
@@ -267,6 +262,26 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Application's debug related settings
+	 * @see IDebugSettings
+	 * @since 1.2
+	 */
+	public final IDebugSettings getDebugSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's exception handling settings
+	 * @see IExceptionSettings
+	 * @since 1.2
+	 */
+	public final IExceptionSettings getExceptionSettings()
+	{
+		return getSettings();
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
 	 * @return Returns the markup cache associated with the application
@@ -274,6 +289,16 @@ public abstract class Application
 	public final MarkupCache getMarkupCache()
 	{
 		return this.markupCache;
+	}
+
+	/**
+	 * @return Application's markup related settings
+	 * @see IMarkupSettings
+	 * @since 1.2
+	 */
+	public final IMarkupSettings getMarkupSettings()
+	{
+		return getSettings();
 	}
 
 	/**
@@ -287,20 +312,11 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's requried page settings
-	 * @see IRequiredPageSettings
-	 */
-	public final IRequiredPageSettings getRequiredPageSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's debug related settings
-	 * @see IDebugSettings
+	 * @return Application's page related settings
+	 * @see IPageSettings
 	 * @since 1.2
 	 */
-	public final IDebugSettings getDebugSettings()
+	public final IPageSettings getPageSettings()
 	{
 		return getSettings();
 	}
@@ -311,6 +327,15 @@ public abstract class Application
 	 * @since 1.2
 	 */
 	public final IRequestCycleSettings getRequestCycleSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's requried page settings
+	 * @see IRequiredPageSettings
+	 */
+	public final IRequiredPageSettings getRequiredPageSettings()
 	{
 		return getSettings();
 	}
@@ -336,36 +361,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's exception handling settings
-	 * @see IExceptionSettings
-	 * @since 1.2
-	 */
-	public final IExceptionSettings getExceptionSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's markup related settings
-	 * @see IMarkupSettings
-	 * @since 1.2
-	 */
-	public final IMarkupSettings getMarkupSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's page related settings
-	 * @see IPageSettings
-	 * @since 1.2
-	 */
-	public final IPageSettings getPageSettings()
-	{
-		return getSettings();
-	}
-
-	/**
 	 * @return Application's session related settings
 	 * @see ISessionSettings
 	 * @since 1.2
@@ -374,7 +369,6 @@ public abstract class Application
 	{
 		return getSettings();
 	}
-
 
 	/**
 	 * @return Application settings
@@ -389,6 +383,7 @@ public abstract class Application
 		}
 		return settings;
 	}
+
 
 	/**
 	 * @return Returns the sharedResources.
@@ -423,6 +418,11 @@ public abstract class Application
 		// constructor and that subclass constructor may add class aliases that
 		// would be used in installing resources in the component.
 		initializeComponents();
+	}
+
+	private Settings createApplicationSettings()
+	{
+		return new Settings(this);
 	}
 
 	/**
