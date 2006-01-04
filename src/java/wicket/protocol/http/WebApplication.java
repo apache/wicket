@@ -413,7 +413,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 	{
-		return (getSettings().getBufferResponse()
+		return (getRequestCycleSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)
 				: new WebResponse(servletResponse));
 	}

@@ -200,7 +200,7 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private CookieValuePersisterSettings getSettings()
 	{
-		return RequestCycle.get().getApplication().getSettings().getCookieValuePersisterSettings();
+		return RequestCycle.get().getApplication().getSecuritySettings().getCookieValuePersisterSettings();
 	}
 
 	/**

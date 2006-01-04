@@ -217,7 +217,7 @@ public abstract class Session implements Serializable
 		this.application = application;
 
 		// Set locale to default locale
-		setLocale(application.getSettings().getDefaultLocale());
+		setLocale(application.getResourceSettings().getDefaultLocale());
 
 		// Create default page map
 		newPageMap(null);
@@ -252,7 +252,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return application.getSettings().getClassResolver();
+		return application.getRequestCycleSettings().getClassResolver();
 	}
 
 	/**
@@ -369,7 +369,7 @@ public abstract class Session implements Serializable
 	{
 		if (pageFactory == null)
 		{
-			pageFactory = application.getSettings().getPageFactory();
+			pageFactory = application.getSessionSettings().getPageFactory();
 		}
 		return pageFactory;
 	}

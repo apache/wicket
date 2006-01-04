@@ -20,7 +20,6 @@ package wicket.markup.html.debug;
 import wicket.Application;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
-import wicket.settings.Settings;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket
@@ -37,25 +36,27 @@ public final class ApplicationView extends Panel
 	 * 
 	 * @param id
 	 *            Component id
-	 * @param application
+	 * @param app
 	 *            The application to view
 	 */
-	public ApplicationView(final String id, final Application application)
+	public ApplicationView(final String id, final Application app)
 	{
 		super(id);
 
 		// Basic attributes
-		add(new Label("name", application.getName()));
-		Settings settings = application.getSettings();
-		add(new Label("componentUseCheck", "" + settings.getComponentUseCheck()));
-		add(new Label("compressWhitespace", "" + settings.getCompressWhitespace()));
-		add(new Label("defaultLocale", "" + settings.getDefaultLocale()));
-		add(new Label("maxPageVersions", "" + settings.getMaxPageVersions()));
-		add(new Label("stripComments", "" + settings.getStripComments()));
-		add(new Label("stripWicketTags", "" + settings.getStripWicketTags()));
-		add(new Label("bufferResponse", "" + settings.getBufferResponse()));
-		add(new Label("resourcePollFrequency", "" + settings.getResourcePollFrequency()));
-		add(new Label("versionPages", "" + settings.getVersionPagesByDefault()));
-		add(new Label("pageMapEvictionStrategy", "" + settings.getPageMapEvictionStrategy()));		
+		add(new Label("name", app.getName()));
+
+		add(new Label("componentUseCheck", "" + app.getDebugSettings().getComponentUseCheck()));
+		add(new Label("compressWhitespace", "" + app.getMarkupSettings().getCompressWhitespace()));
+		add(new Label("defaultLocale", "" + app.getResourceSettings().getDefaultLocale()));
+		add(new Label("maxPageVersions", "" + app.getPageSettings().getMaxPageVersions()));
+		add(new Label("stripComments", "" + app.getMarkupSettings().getStripComments()));
+		add(new Label("stripWicketTags", "" + app.getMarkupSettings().getStripWicketTags()));
+		add(new Label("bufferResponse", "" + app.getRequestCycleSettings().getBufferResponse()));
+		add(new Label("resourcePollFrequency", ""
+				+ app.getResourceSettings().getResourcePollFrequency()));
+		add(new Label("versionPages", "" + app.getPageSettings().getVersionPagesByDefault()));
+		add(new Label("pageMapEvictionStrategy", ""
+				+ app.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }
