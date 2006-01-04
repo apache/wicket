@@ -41,7 +41,7 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.settings.IRequiredPageSettings;
+import wicket.settings.IApplicationSettings;
 import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
@@ -679,13 +679,13 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * belongs to.
 	 * 
 	 * @return The application pages
-	 * @see IRequiredPageSettings
+	 * @see IApplicationSettings
 	 * 
 	 * @deprecated
 	 */
-	public final IRequiredPageSettings getApplicationPages()
+	public final IApplicationSettings getApplicationPages()
 	{
-		return getApplication().getRequiredPageSettings();
+		return getApplication().getSettings();
 	}
 
 	/**
@@ -773,7 +773,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final Localizer getLocalizer()
 	{
-		return getApplication().getMarkupSettings().getLocalizer();
+		return getApplication().getResourceSettings().getLocalizer();
 	}
 
 	/**

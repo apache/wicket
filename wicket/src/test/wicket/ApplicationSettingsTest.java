@@ -124,6 +124,6 @@ public class ApplicationSettingsTest extends TestCase
 	public void testLocalizer()
 	{
 		Application dummy = new DummyApplication();
-		Assert.assertNotNull("Localizer should be available", dummy.getMarkupSettings().getLocalizer());
+		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings().getLocalizer());
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,6 +39,7 @@ import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
+import wicket.markup.resolver.IComponentResolver;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
@@ -60,25 +61,7 @@ import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Contains application settings as property values. All settings exposed are
- * generic to any kind of protocol or markup.
- * <p>
- * Application settings properties:
- * <p>
- * <ul>
- * <i>componentIdAttribute </i> (defaults to "wicket") - The markup attribute
- * which denotes the ids of components to be attached
- * <p>
- * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
- * instances that are searched in order to obtain string resources used during
- * localization. By default the chain is set up to first search for resources
- * against a particular component (e.g. page etc.) and then against the
- * application.
- * <p>
- * <i>defaultPageFactory </i>- the factory class that is used for constructing
- * page instances.
- * <p>
- * </p>
+ * Contains settings exposed via IXXXSettings interfaces.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -89,7 +72,7 @@ import wicket.util.watch.ModificationWatcher;
  */
 public final class Settings
 		implements
-			IRequiredPageSettings,
+			IApplicationSettings,
 			IDebugSettings,
 			IExceptionSettings,
 			IMarkupSettings,
@@ -277,6 +260,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IPageSettings#addComponentResolver(wicket.markup.resolver.IComponentResolver)
+	 */
+	public void addComponentResolver(IComponentResolver resolver)
+	{
+		componentResolvers.add(resolver);
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#addResourceFactory(java.lang.String,
 	 *      wicket.IResourceFactory)
 	 */
@@ -288,7 +279,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#addResourceFolder(java.lang.String)
 	 */
-	public IPageSettings addResourceFolder(final String resourceFolder)
+	public void addResourceFolder(final String resourceFolder)
 	{
 		// Get resource finder
 		final IResourceFinder finder = getResourceFinder();
@@ -303,7 +294,6 @@ public final class Settings
 		// Cast to resource path and add folder
 		final IResourcePath path = (IResourcePath)finder;
 		path.add(resourceFolder);
-		return this;
 	}
 
 	/**
@@ -321,7 +311,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 */
-	public IPageSettings addStringResourceLoader(final IStringResourceLoader loader)
+	public void addStringResourceLoader(final IStringResourceLoader loader)
 	{
 		if (!overriddenStringResourceLoaders)
 		{
@@ -329,7 +319,6 @@ public final class Settings
 			overriddenStringResourceLoaders = true;
 		}
 		stringResourceLoaders.add(loader);
-		return this;
 	}
 
 	/**
@@ -357,7 +346,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequestCycleSettings#getClassResolver()
+	 * @see wicket.settings.IApplicationSettings#getClassResolver()
 	 */
 	public IClassResolver getClassResolver()
 	{
@@ -436,7 +425,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#getDefaultLocale()
+	 * @see wicket.settings.IApplicationSettings#getDefaultLocale()
 	 */
 	public Locale getDefaultLocale()
 	{
@@ -452,7 +441,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequiredPageSettings#getInternalErrorPage()
+	 * @see wicket.settings.IApplicationSettings#getInternalErrorPage()
 	 */
 	public Class getInternalErrorPage()
 	{
@@ -460,7 +449,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IMarkupSettings#getLocalizer()
+	 * @see wicket.settings.IResourceSettings#getLocalizer()
 	 */
 	public Localizer getLocalizer()
 	{
@@ -488,7 +477,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequiredPageSettings#getPageExpiredErrorPage()
+	 * @see wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
 	 */
 	public Class getPageExpiredErrorPage()
 	{
@@ -709,13 +698,14 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequestCycleSettings#setClassResolver(wicket.application.IClassResolver)
+	 * @see wicket.settings.IApplicationSettings#setClassResolver(wicket.application.IClassResolver)
 	 */
 	public IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		this.classResolver = defaultClassResolver;
 		return this;
 	}
+
 
 	/**
 	 * @see wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
@@ -733,7 +723,6 @@ public final class Settings
 	{
 		this.compressWhitespace = compressWhitespace;
 	}
-
 
 	/**
 	 * @see wicket.settings.ISessionSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
@@ -785,7 +774,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#setDefaultLocale(java.util.Locale)
+	 * @see wicket.settings.IApplicationSettings#setDefaultLocale(java.util.Locale)
 	 */
 	public void setDefaultLocale(Locale defaultLocale)
 	{
@@ -801,7 +790,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequiredPageSettings#setInternalErrorPage(java.lang.Class)
+	 * @see wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
 	public void setInternalErrorPage(final Class internalErrorPage)
 	{
@@ -840,7 +829,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequiredPageSettings#setPageExpiredErrorPage(java.lang.Class)
+	 * @see wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
 	public void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
 	{
@@ -889,23 +878,20 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setResourceFinder(wicket.util.file.IResourceFinder)
 	 */
-	public IPageSettings setResourceFinder(final IResourceFinder resourceFinder)
+	public void setResourceFinder(final IResourceFinder resourceFinder)
 	{
 		this.resourceFinder = resourceFinder;
 
 		// Cause resource locator to get recreated
 		this.resourceStreamLocator = null;
-
-		return this;
 	}
 
 	/**
 	 * @see wicket.settings.IResourceSettings#setResourcePollFrequency(wicket.util.time.Duration)
 	 */
-	public IPageSettings setResourcePollFrequency(final Duration resourcePollFrequency)
+	public void setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
 		this.resourcePollFrequency = resourcePollFrequency;
-		return this;
 	}
 
 	/**
@@ -951,8 +937,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setThrowExceptionOnMissingResource(boolean)
 	 */
-	public void setThrowExceptionOnMissingResource(
-			final boolean throwExceptionOnMissingResource)
+	public void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
 	{
 		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
 	}

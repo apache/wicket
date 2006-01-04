@@ -7,6 +7,10 @@ import wicket.util.convert.IConverterFactory;
 /**
  * Interface for session related settings *
  * <p>
+ * <i>pageFactory </i>- The factory class that is used for constructing
+ * page instances.
+ * <p>
+ * <p>
  * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can
  * provide your own factory which creates locale sensitive Converter instances.
  * 

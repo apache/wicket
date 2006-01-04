@@ -1,9 +1,7 @@
 package wicket.settings;
 
-import wicket.Localizer;
-import wicket.markup.MarkupParserFactory;
 import wicket.markup.IMarkupParserFactory;
-import wicket.model.IModel;
+import wicket.markup.MarkupParserFactory;
 
 /**
  * Interface for markup related settings.
@@ -15,13 +13,6 @@ import wicket.model.IModel;
  * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
- * <p>
- * <i>A Localizer </i> The getLocalizer() method returns an object encapsulating
- * all of the functionality required to access localized resources. For many
- * localization problems, even this will not be required, as there are
- * convenience methods available to all components:
- * {@link wicket.Component#getString(String key)} and
- * {@link wicket.Component#getString(String key, IModel model)}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -154,17 +145,6 @@ public interface IMarkupSettings
 	 *            if true, xml declaration will be stripped from output
 	 */
 	void setStripXmlDeclarationFromOutput(final boolean strip);
-
-	/**
-	 * Get the application's localizer.
-	 * 
-	 * @see wicket.settings.Settings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
-	 *      for means of extending the way Wicket resolves keys to localized
-	 *      messages.
-	 * 
-	 * @return The application wide localizer instance
-	 */
-	Localizer getLocalizer();
 
 	/**
 	 * Sets the markup parser factory that will be used to generate parsers for

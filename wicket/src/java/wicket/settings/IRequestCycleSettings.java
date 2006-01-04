@@ -4,8 +4,6 @@ import java.util.List;
 
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
-import wicket.application.IClassResolver;
-import wicket.markup.resolver.AutoComponentResolver;
 import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import wicket.settings.Settings.RenderStrategy;
 
@@ -17,7 +15,6 @@ import wicket.settings.Settings.RenderStrategy;
  * exception displays accurate because the whole rendering process completes
  * before the page is sent to the user, thus avoiding the possibility of a
  * partially rendered page.
- * 
  * <p>
  * <i>renderStrategy </i>- Sets in what way the render part of a request is
  * handled. Basically, there are two different options:
@@ -81,7 +78,7 @@ public interface IRequestCycleSettings
 	 * </p>
 	 */
 	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
-	
+
 	/**
 	 * All logical parts of a request (the action and render part) are handled
 	 * within the same request, but instead of streaming the render result to
@@ -90,7 +87,7 @@ public interface IRequestCycleSettings
 	 * request.
 	 */
 	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
-	
+
 	/**
 	 * The render part of a request (opposed to the 'action part' which is
 	 * either the construction of a bookmarkable page or the execution of a
@@ -124,16 +121,18 @@ public interface IRequestCycleSettings
 			"CLIENT_SIDE_REDIRECT");
 
 	/**
+	 * Adds a response filter to the list. Filters are evaluated in the order
+	 * they have been added.
+	 * 
+	 * @param responseFilter
+	 *            The {@link IResponseFilter} that is added
+	 */
+	void addResponseFilter(IResponseFilter responseFilter);
+
+	/**
 	 * @return True if this application buffers its responses
 	 */
 	boolean getBufferResponse();
-
-	/**
-	 * Gets the default resolver to use when finding classes
-	 * 
-	 * @return Default class resolver
-	 */
-	IClassResolver getClassResolver();
 
 	/**
 	 * Gets in what way the render part of a request is handled.
@@ -141,6 +140,11 @@ public interface IRequestCycleSettings
 	 * @return the render strategy
 	 */
 	RenderStrategy getRenderStrategy();
+
+	/**
+	 * @return an unmodifiable list of added response filters, null if none
+	 */
+	List getResponseFilters();
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the
@@ -164,15 +168,6 @@ public interface IRequestCycleSettings
 	 *            True if this application should buffer responses.
 	 */
 	void setBufferResponse(boolean bufferResponse);
-
-	/**
-	 * Sets the default class resolver to use when finding classes.
-	 * 
-	 * @param defaultClassResolver
-	 *            The default class resolver
-	 * @return This
-	 */
-	IPageSettings setClassResolver(final IClassResolver defaultClassResolver);
 
 	/**
 	 * Sets in what way the render part of a request is handled. Basically,
@@ -241,26 +236,4 @@ public interface IRequestCycleSettings
 	 * @param unexpectedExceptionDisplay
 	 */
 	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
-
-	/**
-	 * Get the (modifiable) list of IComponentResolvers.
-	 * 
-	 * @see AutoComponentResolver for an example
-	 * @return List of ComponentResolvers
-	 */
-	List getComponentResolvers();
-
-	/**
-	 * Adds a response filer to the list. Filters are evaluated in the order
-	 * they have been added.
-	 * 
-	 * @param responseFilter
-	 *            The {@link IResponseFilter} that is added
-	 */
-	void addResponseFilter(IResponseFilter responseFilter);
-
-	/**
-	 * @return an unmodifiable list of added response filters, null if none
-	 */
-	List getResponseFilters();
 }

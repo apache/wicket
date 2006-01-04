@@ -37,12 +37,12 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IExceptionSettings;
 import wicket.settings.IMarkupSettings;
 import wicket.settings.IPageSettings;
 import wicket.settings.IRequestCycleSettings;
-import wicket.settings.IRequiredPageSettings;
 import wicket.settings.IResourceSettings;
 import wicket.settings.ISecuritySettings;
 import wicket.settings.ISessionSettings;
@@ -148,14 +148,13 @@ public abstract class Application
 		this.sharedResources = new SharedResources(this);
 
 		// Install default component resolvers
-		List componentResolvers = getRequestCycleSettings().getComponentResolvers();
-		componentResolvers.add(new ParentResolver());
-		componentResolvers.add(new AutoComponentResolver());
-		componentResolvers.add(new MarkupInheritanceResolver());
-		componentResolvers.add(new HtmlHeaderResolver());
-		componentResolvers.add(new BodyOnLoadResolver());
-		componentResolvers.add(new WicketLinkResolver());
-		componentResolvers.add(new WicketMessageResolver());
+		getPageSettings().addComponentResolver(new ParentResolver());
+		getPageSettings().addComponentResolver(new AutoComponentResolver());
+		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
+		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
+		getPageSettings().addComponentResolver(new BodyOnLoadResolver());
+		getPageSettings().addComponentResolver(new WicketLinkResolver());
+		getPageSettings().addComponentResolver(new WicketMessageResolver());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
@@ -267,6 +266,16 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Application's application-wide settings
+	 * @see IApplicationSettings
+	 * @since 1.2
+	 */
+	public final IApplicationSettings getApplicationSettings()
+	{
+		return getSettings();
+	}
+
+	/**
 	 * @return Application's debug related settings
 	 * @see IDebugSettings
 	 * @since 1.2
@@ -337,15 +346,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's requried page settings
-	 * @see IRequiredPageSettings
-	 */
-	public final IRequiredPageSettings getRequiredPageSettings()
-	{
-		return getSettings();
-	}
-
-	/**
 	 * @return Application's resources related settings
 	 * @see IResourceSettings
 	 * @since 1.2
@@ -382,12 +382,12 @@ public abstract class Application
 	 * 
 	 * @return Application settings
 	 * 
+	 * @see Application#getApplicationSettings()
 	 * @see Application#getDebugSettings()
 	 * @see Application#getExceptionSettings()
 	 * @see Application#getMarkupSettings()
 	 * @see Application#getPageSettings()
 	 * @see Application#getRequestCycleSettings()
-	 * @see Application#getRequiredPageSettings()
 	 * @see Application#getResourceSettings()
 	 * @see Application#getSecuritySettings()
 	 * @see Application#getSessionSettings()
