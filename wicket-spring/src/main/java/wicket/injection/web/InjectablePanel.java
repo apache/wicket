@@ -30,7 +30,8 @@ import wicket.model.IModel;
 public class InjectablePanel extends Panel
 {
 	/**
-	 * @param id
+	 * Constructor
+	 * @param id component id
 	 */
 	public InjectablePanel(String id)
 	{
@@ -39,6 +40,7 @@ public class InjectablePanel extends Panel
 	}
 
 	/**
+	 * Constructor
 	 * @param id
 	 * @param model
 	 */
