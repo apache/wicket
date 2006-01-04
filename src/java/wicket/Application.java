@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.94 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -197,13 +197,15 @@ public abstract class Application
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
 			getMarkupSettings().setStripWicketTags(false);
-			getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+			getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		}
 		else if ("deployment".equalsIgnoreCase(configurationType))
 		{
 			getDebugSettings().setComponentUseCheck(false);
 			getMarkupSettings().setStripWicketTags(true);
-			getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+			getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 		}
 		else
 		{
@@ -377,6 +379,8 @@ public abstract class Application
 	/**
 	 * @return Application settings
 	 */
+	// FIXME this needs to become private and classes switched to using proper
+	// interfaces intead of the generic object
 	public Settings getSettings()
 	{
 		if (settings == null)
