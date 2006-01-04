@@ -41,7 +41,6 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.settings.IMarkupSettings;
 import wicket.settings.IRequiredPageSettings;
 import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
