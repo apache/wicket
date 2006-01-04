@@ -127,13 +127,13 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
-	/** thread local holder of the application object. */
+	/** Thread local holder of the application object. */
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
-	/** log. */
+	/** Log. */
 	private static Log log = LogFactory.getLog(Application.class);
 
-	/** the authorization strategy. */
+	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** List of (static) ComponentResolvers */
