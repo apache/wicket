@@ -35,10 +35,8 @@ import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
-import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.resource.PropertiesFactory;
@@ -101,6 +99,20 @@ public final class Settings
 			ISecuritySettings,
 			ISessionSettings
 {
+
+	/**
+	 * Enumerated type for different ways of handling the render part of
+	 * requests.
+	 */
+	public static final class RenderStrategy extends EnumeratedType
+	{
+		private static final long serialVersionUID = 1L;
+
+		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
 
 	/** The application */
 	private Application application;
@@ -216,9 +228,9 @@ public final class Settings
 	/** Factory for producing validator error message resource keys */
 	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
 
+
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
-
 
 	/** Home page class */
 	private Class homePage;
@@ -253,20 +265,6 @@ public final class Settings
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
 
-	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
-	 */
-	public static final class RenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-
-		RenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
-
 
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -280,6 +278,15 @@ public final class Settings
 		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#addResourceFactory(java.lang.String,
+	 *      wicket.IResourceFactory)
+	 */
+	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	{
+		nameToResourceFactory.put(name, resourceFactory);
 	}
 
 	/**
@@ -304,6 +311,18 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IRequestCycleSettings#addResponseFilter(wicket.IResponseFilter)
+	 */
+	public void addResponseFilter(IResponseFilter responseFilter)
+	{
+		if (responseFilters == null)
+		{
+			responseFilters = new ArrayList(3);
+		}
+		responseFilters.add(responseFilter);
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 */
 	public final IPageSettings addStringResourceLoader(final IStringResourceLoader loader)
@@ -315,6 +334,38 @@ public final class Settings
 		}
 		stringResourceLoaders.add(loader);
 		return this;
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass
+	 * of Page.
+	 * 
+	 * @param pageClass
+	 *            the page class to check
+	 */
+	private final void checkPageClass(final Class pageClass)
+	{
+		// NOTE: we can't really check on whether it is a bookmarkable page
+		// here, as - though
+		// the default is that a bookmarkable page must either have a default
+		// constructor and/ or
+		// a constructor with a PageParameters object, this could be different
+		// for another
+		// IPageFactory implementation
+
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("argument " + pageClass
+					+ " must be a subclass of Page");
+		}
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#getAuthorizationStrategy()
+	 */
+	public IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return authorizationStrategy;
 	}
 
 	/**
@@ -334,6 +385,25 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IRequestCycleSettings#getClassResolver()
+	 */
+	public final IClassResolver getClassResolver()
+	{
+		return classResolver;
+	}
+
+	/**
+	 * Get the (modifiable) list of IComponentResolvers.
+	 * 
+	 * @see AutoComponentResolver for an example
+	 * @return List of ComponentResolvers
+	 */
+	public final List getComponentResolvers()
+	{
+		return componentResolvers;
+	}
+
+	/**
 	 * @see wicket.settings.IDebugSettings#getComponentUseCheck()
 	 */
 	public final boolean getComponentUseCheck()
@@ -350,11 +420,31 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISessionSettings#getConverterFactory()
+	 */
+	public IConverterFactory getConverterFactory()
+	{
+		return converterFactory;
+	}
+
+	/**
 	 * @see wicket.settings.ISecuritySettings#getCookieValuePersisterSettings()
 	 */
 	public final CookieValuePersisterSettings getCookieValuePersisterSettings()
 	{
 		return cookieValuePersisterSettings;
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#getCryptFactory()
+	 */
+	public synchronized ICryptFactory getCryptFactory()
+	{
+		if (cryptFactory == null)
+		{
+			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
+		}
+		return cryptFactory;
 	}
 
 	/**
@@ -374,14 +464,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequestCycleSettings#getClassResolver()
-	 */
-	public final IClassResolver getClassResolver()
-	{
-		return classResolver;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#getDefaultLocale()
 	 */
 	public final Locale getDefaultLocale()
@@ -395,6 +477,66 @@ public final class Settings
 	public final String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#getHomePage()
+	 */
+	public final Class getHomePage()
+	{
+		// If no home page is available
+		if (homePage == null)
+		{
+			// give up with an exception
+			throw new IllegalStateException(
+					"No home page class was specified in ApplicationSettings");
+		}
+
+		return homePage;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#getInternalErrorPage()
+	 */
+	public final Class getInternalErrorPage()
+	{
+		return internalErrorPage;
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#getLocalizer()
+	 */
+	public Localizer getLocalizer()
+	{
+		if (localizer == null)
+		{
+			this.localizer = new Localizer(application);
+		}
+		return localizer;
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#getMarkupParserFactory()
+	 */
+	public IMarkupParserFactory getMarkupParserFactory()
+	{
+		return markupParserFactory;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#getMaxPageVersions()
+	 */
+	public final int getMaxPageVersions()
+	{
+		return maxPageVersions;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#getPageExpiredErrorPage()
+	 */
+	public final Class getPageExpiredErrorPage()
+	{
+		return pageExpiredErrorPage;
 	}
 
 	/**
@@ -414,11 +556,15 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IPageSettings#getMaxPageVersions()
+	 * @see wicket.settings.IResourceSettings#getPropertiesFactory()
 	 */
-	public final int getMaxPageVersions()
+	public PropertiesFactory getPropertiesFactory()
 	{
-		return maxPageVersions;
+		if (propertiesFactory == null)
+		{
+			propertiesFactory = new PropertiesFactory();
+		}
+		return propertiesFactory;
 	}
 
 	/**
@@ -427,6 +573,14 @@ public final class Settings
 	public final RenderStrategy getRenderStrategy()
 	{
 		return renderStrategy;
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#getResourceFactory(java.lang.String)
+	 */
+	public final IResourceFactory getResourceFactory(final String name)
+	{
+		return (IResourceFactory)nameToResourceFactory.get(name);
 	}
 
 	/**
@@ -446,11 +600,64 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IResourceSettings#getResourceStreamLocator()
+	 */
+	public ResourceStreamLocator getResourceStreamLocator()
+	{
+		if (resourceStreamLocator == null)
+		{
+			// Create compound resource locator using source path from
+			// application settings
+			resourceStreamLocator = new DefaultResourceStreamLocator(getResourceFinder());
+		}
+		return resourceStreamLocator;
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#getResourceWatcher()
+	 */
+	public ModificationWatcher getResourceWatcher()
+	{
+		if (resourceWatcher == null)
+		{
+			final Duration pollFrequency = getResourcePollFrequency();
+			if (pollFrequency != null)
+			{
+				resourceWatcher = new ModificationWatcher(pollFrequency);
+			}
+		}
+		return resourceWatcher;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestCycleSettings#getResponseFilters()
+	 */
+	public List getResponseFilters()
+	{
+		if (responseFilters == null)
+		{
+			return null;
+		}
+		else
+		{
+			return Collections.unmodifiableList(responseFilters);
+		}
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#getResponseRequestEncoding()
 	 */
 	public final String getResponseRequestEncoding()
 	{
 		return responseRequestEncoding;
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
+	 */
+	public final List getStringResourceLoaders()
+	{
+		return Collections.unmodifiableList(stringResourceLoaders);
 	}
 
 	/**
@@ -502,21 +709,11 @@ public final class Settings
 	}
 
 	/**
-	 * This method builds a resource key for use by form component validators
-	 * using IValidatorResourceKeyFactory.
-	 * 
-	 * @see IValidatorResourceKeyFactory
-	 * @see DefaultValidatorResourceKeyFactory
-	 * 
-	 * @param validator
-	 *            the validator that is processing the error
-	 * @param formComponent
-	 *            the form component that is in error
-	 * @return resource key for validator's error message
+	 * @see wicket.settings.IResourceSettings#getValidatorResourceKeyFactory()
 	 */
-	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
+	public IValidatorResourceKeyFactory getValidatorResourceKeyFactory()
 	{
-		return validatorResourceKeyFactory.newKey(validator, formComponent);
+		return validatorResourceKeyFactory;
 	}
 
 	/**
@@ -525,6 +722,18 @@ public final class Settings
 	public final boolean getVersionPagesByDefault()
 	{
 		return versionPagesByDefault;
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
+	 */
+	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
+	{
+		if (strategy == null)
+		{
+			throw new IllegalArgumentException("authorization strategy cannot be set to null");
+		}
+		this.authorizationStrategy = strategy;
 	}
 
 	/**
@@ -544,12 +753,23 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IRequestCycleSettings#setClassResolver(wicket.application.IClassResolver)
+	 */
+	public final IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
+	{
+		this.classResolver = defaultClassResolver;
+		return this;
+	}
+
+
+	/**
 	 * @see wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
 	 */
 	public final void setComponentUseCheck(final boolean componentUseCheck)
 	{
 		this.componentUseCheck = componentUseCheck;
 	}
+
 
 	/**
 	 * @see wicket.settings.IMarkupSettings#setCompressWhitespace(boolean)
@@ -560,12 +780,36 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISessionSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
+	 */
+	public void setConverterFactory(IConverterFactory factory)
+	{
+		if (factory == null)
+		{
+			throw new IllegalArgumentException("converter factory cannot be set to null");
+		}
+		this.converterFactory = factory;
+	}
+
+	/**
 	 * @see wicket.settings.ISecuritySettings#setCookieValuePersisterSettings(wicket.markup.html.form.persistence.CookieValuePersisterSettings)
 	 */
 	public final void setCookieValuePersisterSettings(
 			CookieValuePersisterSettings cookieValuePersisterSettings)
 	{
 		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#setCryptFactory(wicket.util.crypt.ICryptFactory)
+	 */
+	public void setCryptFactory(ICryptFactory cryptFactory)
+	{
+		if (cryptFactory == null)
+		{
+			throw new IllegalArgumentException("cryptFactory cannot be null");
+		}
+		this.cryptFactory = cryptFactory;
 	}
 
 	/**
@@ -585,15 +829,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IRequestCycleSettings#setClassResolver(wicket.application.IClassResolver)
-	 */
-	public final IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
-	{
-		this.classResolver = defaultClassResolver;
-		return this;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#setDefaultLocale(java.util.Locale)
 	 */
 	public final void setDefaultLocale(Locale defaultLocale)
@@ -607,6 +842,68 @@ public final class Settings
 	public final void setDefaultMarkupEncoding(final String encoding)
 	{
 		this.defaultMarkupEncoding = encoding;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#setHomePage(java.lang.Class)
+	 */
+	public final void setHomePage(final Class homePage)
+	{
+		checkPageClass(homePage);
+		this.homePage = homePage;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#setInternalErrorPage(java.lang.Class)
+	 */
+	public final void setInternalErrorPage(final Class internalErrorPage)
+	{
+		if (internalErrorPage == null)
+		{
+			throw new IllegalArgumentException("Argument internalErrorPage may not be null");
+		}
+		checkPageClass(internalErrorPage);
+
+		this.internalErrorPage = internalErrorPage;
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#setMarkupParserFactory(wicket.markup.IMarkupParserFactory)
+	 */
+	public void setMarkupParserFactory(IMarkupParserFactory factory)
+	{
+		if (factory == null)
+		{
+			throw new IllegalArgumentException("markup parser factory cannot be null");
+		}
+
+		this.markupParserFactory = factory;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#setMaxPageVersions(int)
+	 */
+	public final void setMaxPageVersions(int maxPageVersions)
+	{
+		if (maxPageVersions < 0)
+		{
+			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
+		}
+		this.maxPageVersions = maxPageVersions;
+	}
+
+	/**
+	 * @see wicket.settings.IRequiredPageSettings#setPageExpiredErrorPage(java.lang.Class)
+	 */
+	public final void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
+	{
+		if (pageExpiredErrorPage == null)
+		{
+			throw new IllegalArgumentException("Argument pageExpiredErrorPage may not be null");
+		}
+		checkPageClass(pageExpiredErrorPage);
+
+		this.pageExpiredErrorPage = pageExpiredErrorPage;
 	}
 
 	/**
@@ -627,15 +924,11 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IPageSettings#setMaxPageVersions(int)
+	 * @see wicket.settings.IResourceSettings#setPropertiesFactory(wicket.resource.PropertiesFactory)
 	 */
-	public final void setMaxPageVersions(int maxPageVersions)
+	public void setPropertiesFactory(PropertiesFactory factory)
 	{
-		if (maxPageVersions < 0)
-		{
-			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
-		}
-		this.maxPageVersions = maxPageVersions;
+		this.propertiesFactory = factory;
 	}
 
 	/**
@@ -666,6 +959,14 @@ public final class Settings
 	{
 		this.resourcePollFrequency = resourcePollFrequency;
 		return this;
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.ResourceStreamLocator)
+	 */
+	public void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator)
+	{
+		this.resourceStreamLocator = resourceStreamLocator;
 	}
 
 	/**
@@ -727,12 +1028,7 @@ public final class Settings
 	}
 
 	/**
-	 * This method is used to replace the default IValidatorResourceKeyFactory
-	 * implementation with a user specific one
-	 * 
-	 * @param factory
-	 *            the user defined implementation of
-	 *            IValidatorResourceKeyFactory
+	 * @see wicket.settings.IResourceSettings#setValidatorResourceKeyFactory(wicket.markup.html.form.validation.IValidatorResourceKeyFactory)
 	 */
 	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
 	{
@@ -742,7 +1038,7 @@ public final class Settings
 		}
 		this.validatorResourceKeyFactory = factory;
 	}
-
+	
 	/**
 	 * @see wicket.settings.IPageSettings#setVersionPagesByDefault(boolean)
 	 */
@@ -751,315 +1047,4 @@ public final class Settings
 		this.versionPagesByDefault = pagesVersionedByDefault;
 	}
 
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
-	 */
-	public final List getStringResourceLoaders()
-	{
-		return Collections.unmodifiableList(stringResourceLoaders);
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#getHomePage()
-	 */
-	public final Class getHomePage()
-	{
-		// If no home page is available
-		if (homePage == null)
-		{
-			// give up with an exception
-			throw new IllegalStateException(
-					"No home page class was specified in ApplicationSettings");
-		}
-
-		return homePage;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#getInternalErrorPage()
-	 */
-	public final Class getInternalErrorPage()
-	{
-		return internalErrorPage;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#getPageExpiredErrorPage()
-	 */
-	public final Class getPageExpiredErrorPage()
-	{
-		return pageExpiredErrorPage;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#setHomePage(java.lang.Class)
-	 */
-	public final void setHomePage(final Class homePage)
-	{
-		checkPageClass(homePage);
-		this.homePage = homePage;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#setInternalErrorPage(java.lang.Class)
-	 */
-	public final void setInternalErrorPage(final Class internalErrorPage)
-	{
-		if (internalErrorPage == null)
-		{
-			throw new IllegalArgumentException("Argument internalErrorPage may not be null");
-		}
-		checkPageClass(internalErrorPage);
-
-		this.internalErrorPage = internalErrorPage;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#setPageExpiredErrorPage(java.lang.Class)
-	 */
-	public final void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
-	{
-		if (pageExpiredErrorPage == null)
-		{
-			throw new IllegalArgumentException("Argument pageExpiredErrorPage may not be null");
-		}
-		checkPageClass(pageExpiredErrorPage);
-
-		this.pageExpiredErrorPage = pageExpiredErrorPage;
-	}
-
-	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
-	 * 
-	 * @param pageClass
-	 *            the page class to check
-	 */
-	private final void checkPageClass(final Class pageClass)
-	{
-		// NOTE: we can't really check on whether it is a bookmarkable page
-		// here, as - though
-		// the default is that a bookmarkable page must either have a default
-		// constructor and/ or
-		// a constructor with a PageParameters object, this could be different
-		// for another
-		// IPageFactory implementation
-
-		if (!Page.class.isAssignableFrom(pageClass))
-		{
-			throw new IllegalArgumentException("argument " + pageClass
-					+ " must be a subclass of Page");
-		}
-	}
-
-	/**
-	 * @see wicket.settings.ISecuritySettings#getAuthorizationStrategy()
-	 */
-	public IAuthorizationStrategy getAuthorizationStrategy()
-	{
-		return authorizationStrategy;
-	}
-
-	/**
-	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
-	 */
-	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
-	{
-		if (strategy == null)
-		{
-			throw new IllegalArgumentException("authorization strategy cannot be set to null");
-		}
-		this.authorizationStrategy = strategy;
-	}
-
-	/**
-	 * @see wicket.settings.ISessionSettings#getConverterFactory()
-	 */
-	public IConverterFactory getConverterFactory()
-	{
-		return converterFactory;
-	}
-
-	/**
-	 * @see wicket.settings.ISessionSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
-	 */
-	public void setConverterFactory(IConverterFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("converter factory cannot be set to null");
-		}
-		this.converterFactory = factory;
-	}
-
-	/**
-	 * @see wicket.settings.IMarkupSettings#getLocalizer()
-	 */
-	public Localizer getLocalizer()
-	{
-		if (localizer == null)
-		{
-			this.localizer = new Localizer(application);
-		}
-		return localizer;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getResourceStreamLocator()
-	 */
-	public ResourceStreamLocator getResourceStreamLocator()
-	{
-		if (resourceStreamLocator == null)
-		{
-			// Create compound resource locator using source path from
-			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getResourceFinder());
-		}
-		return resourceStreamLocator;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.ResourceStreamLocator)
-	 */
-	public void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator)
-	{
-		this.resourceStreamLocator = resourceStreamLocator;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getResourceWatcher()
-	 */
-	public ModificationWatcher getResourceWatcher()
-	{
-		if (resourceWatcher == null)
-		{
-			final Duration pollFrequency = getResourcePollFrequency();
-			if (pollFrequency != null)
-			{
-				resourceWatcher = new ModificationWatcher(pollFrequency);
-			}
-		}
-		return resourceWatcher;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#addResourceFactory(java.lang.String,
-	 *      wicket.IResourceFactory)
-	 */
-	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
-	{
-		nameToResourceFactory.put(name, resourceFactory);
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getResourceFactory(java.lang.String)
-	 */
-	public final IResourceFactory getResourceFactory(final String name)
-	{
-		return (IResourceFactory)nameToResourceFactory.get(name);
-	}
-
-	/**
-	 * Get the (modifiable) list of IComponentResolvers.
-	 * 
-	 * @see AutoComponentResolver for an example
-	 * @return List of ComponentResolvers
-	 */
-	public final List getComponentResolvers()
-	{
-		return componentResolvers;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getPropertiesFactory()
-	 */
-	public PropertiesFactory getPropertiesFactory()
-	{
-		if (propertiesFactory == null)
-		{
-			propertiesFactory = new PropertiesFactory();
-		}
-		return propertiesFactory;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#setPropertiesFactory(wicket.resource.PropertiesFactory)
-	 */
-	public void setPropertiesFactory(PropertiesFactory factory)
-	{
-		this.propertiesFactory = factory;
-	}
-
-	/**
-	 * @see wicket.settings.ISecuritySettings#setCryptFactory(wicket.util.crypt.ICryptFactory)
-	 */
-	public void setCryptFactory(ICryptFactory cryptFactory)
-	{
-		if (cryptFactory == null)
-		{
-			throw new IllegalArgumentException("cryptFactory cannot be null");
-		}
-		this.cryptFactory = cryptFactory;
-	}
-
-	/**
-	 * @see wicket.settings.ISecuritySettings#getCryptFactory()
-	 */
-	public synchronized ICryptFactory getCryptFactory()
-	{
-		if (cryptFactory == null)
-		{
-			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
-		}
-		return cryptFactory;
-	}
-
-	/**
-	 * @see wicket.settings.IRequestCycleSettings#addResponseFilter(wicket.IResponseFilter)
-	 */
-	public void addResponseFilter(IResponseFilter responseFilter)
-	{
-		if (responseFilters == null)
-		{
-			responseFilters = new ArrayList(3);
-		}
-		responseFilters.add(responseFilter);
-	}
-
-	/**
-	 * @see wicket.settings.IRequestCycleSettings#getResponseFilters()
-	 */
-	public List getResponseFilters()
-	{
-		if (responseFilters == null)
-		{
-			return null;
-		}
-		else
-		{
-			return Collections.unmodifiableList(responseFilters);
-		}
-	}
-
-	/**
-	 * @see wicket.settings.IMarkupSettings#setMarkupParserFactory(wicket.markup.IMarkupParserFactory)
-	 */
-	public void setMarkupParserFactory(IMarkupParserFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("markup parser factory cannot be null");
-		}
-
-		this.markupParserFactory = factory;
-	}
-
-	/**
-	 * @see wicket.settings.IMarkupSettings#getMarkupParserFactory()
-	 */
-	public IMarkupParserFactory getMarkupParserFactory()
-	{
-		return markupParserFactory;
-	}
 }

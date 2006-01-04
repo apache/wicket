@@ -684,13 +684,19 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * This method has been deprecated in favor of
+	 * Application.get().getXXXSettings()
+	 * 
 	 * Gets the application settings from the application that this component
 	 * belongs to.
 	 * 
 	 * @return The application settings from the application that this component
 	 *         belongs to
 	 * @see Settings
+	 * @deprecated
+	 * 
 	 */
+	// TODO remove this method in wicket post 1.2
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();

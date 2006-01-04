@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.IResourceFactory;
+import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
@@ -45,31 +46,15 @@ import wicket.util.watch.ModificationWatcher;
 public interface IResourceSettings
 {
 	/**
-	 * @return Resource locator for this application
-	 */
-	ResourceStreamLocator getResourceStreamLocator();
-
-	/**
-	 * Sets the resource stream locator for this application
+	 * Adds a resource factory to the list of factories to consult when
+	 * generating resources automatically
 	 * 
-	 * @param resourceStreamLocator
-	 *            new resource stream locator
+	 * @param name
+	 *            The name to give to the factory
+	 * @param resourceFactory
+	 *            The resource factory to add
 	 */
-	void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator);
-
-
-	/**
-	 * @return Whether to use a default value (if available) when a missing
-	 *         resource is requested
-	 */
-	boolean getUseDefaultOnMissingResource();
-
-	/**
-	 * @param useDefaultOnMissingResource
-	 *            Whether to use a default value (if available) when a missing
-	 *            resource is requested
-	 */
-	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
+	void addResourceFactory(final String name, final IResourceFactory resourceFactory);
 
 	/**
 	 * Convenience method that sets the resource search path to a single folder.
@@ -83,6 +68,7 @@ public interface IResourceSettings
 	 */
 	IPageSettings addResourceFolder(final String resourceFolder);
 
+
 	/**
 	 * Add a string resource loader to the chain of loaders. If this is the
 	 * first call to this method since the creation of the application settings
@@ -95,14 +81,23 @@ public interface IResourceSettings
 	IPageSettings addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
-	 * @return an unmodifiable list of all available string resource loaders
-	 */
-	List getStringResourceLoaders();
-
-	/**
 	 * @return Returns the defaultLocale.
 	 */
 	Locale getDefaultLocale();
+
+	/**
+	 * Get the property factory which will be used to load property files
+	 * 
+	 * @return PropertiesFactory
+	 */
+	PropertiesFactory getPropertiesFactory();
+
+	/**
+	 * @param name
+	 *            Name of the factory to get
+	 * @return The IResourceFactory with the given name.
+	 */
+	IResourceFactory getResourceFactory(final String name);
 
 	/**
 	 * Gets the resource finder to use when searching for resources. If no
@@ -122,6 +117,22 @@ public interface IResourceSettings
 	Duration getResourcePollFrequency();
 
 	/**
+	 * @return Resource locator for this application
+	 */
+	ResourceStreamLocator getResourceStreamLocator();
+
+	/**
+	 * @return Resource watcher with polling frequency determined by setting, or
+	 *         null if no polling frequency has been set.
+	 */
+	ModificationWatcher getResourceWatcher();
+
+	/**
+	 * @return an unmodifiable list of all available string resource loaders
+	 */
+	List getStringResourceLoaders();
+
+	/**
 	 * @see wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
 	 * 
 	 * @return boolean
@@ -129,10 +140,28 @@ public interface IResourceSettings
 	boolean getThrowExceptionOnMissingResource();
 
 	/**
+	 * @return Whether to use a default value (if available) when a missing
+	 *         resource is requested
+	 */
+	boolean getUseDefaultOnMissingResource();
+
+	/**
+	 * @return factory used to generate resource keys for validator messages
+	 */
+	IValidatorResourceKeyFactory getValidatorResourceKeyFactory();
+
+	/**
 	 * @param defaultLocale
 	 *            The defaultLocale to set.
 	 */
 	void setDefaultLocale(Locale defaultLocale);
+
+	/**
+	 * Set the property factory which will be used to load property files
+	 * 
+	 * @param factory
+	 */
+	void setPropertiesFactory(PropertiesFactory factory);
 
 	/**
 	 * Sets the finder to use when searching for resources. By default, the
@@ -159,6 +188,14 @@ public interface IResourceSettings
 	IPageSettings setResourcePollFrequency(final Duration resourcePollFrequency);
 
 	/**
+	 * Sets the resource stream locator for this application
+	 * 
+	 * @param resourceStreamLocator
+	 *            new resource stream locator
+	 */
+	void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator);
+
+	/**
 	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
 	 * 
 	 * @param throwExceptionOnMissingResource
@@ -166,40 +203,17 @@ public interface IResourceSettings
 	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
 
 	/**
-	 * @return Resource watcher with polling frequency determined by setting, or
-	 *         null if no polling frequency has been set.
+	 * @param useDefaultOnMissingResource
+	 *            Whether to use a default value (if available) when a missing
+	 *            resource is requested
 	 */
-	ModificationWatcher getResourceWatcher();
+	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
 	/**
-	 * Adds a resource factory to the list of factories to consult when
-	 * generating resources automatically
-	 * 
-	 * @param name
-	 *            The name to give to the factory
-	 * @param resourceFactory
-	 *            The resource factory to add
-	 */
-	void addResourceFactory(final String name, final IResourceFactory resourceFactory);
-
-	/**
-	 * @param name
-	 *            Name of the factory to get
-	 * @return The IResourceFactory with the given name.
-	 */
-	IResourceFactory getResourceFactory(final String name);
-
-	/**
-	 * Get the property factory which will be used to load property files
-	 * 
-	 * @return PropertiesFactory
-	 */
-	PropertiesFactory getPropertiesFactory();
-
-	/**
-	 * Set the property factory which will be used to load property files
+	 * Sets the factory that will be used to generate resource keys for
+	 * validator messages
 	 * 
 	 * @param factory
 	 */
-	void setPropertiesFactory(PropertiesFactory factory);
+	void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory);
 }

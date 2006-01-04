@@ -1,14 +1,14 @@
 /*
- * $Id: AutoLinkResolver.java,v 1.2 2005/02/10 18:01:32 jonathanlocke
- * Exp $ $Revision$ $Date$
- *
+ * $Id$
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,8 +42,8 @@ import wicket.util.value.ValueMap;
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
  * are marked "autolink" by the MarkupParser for all tags with href attribute,
- * such as anchor and link tags with no explicit wicket id. E.g. 
- * &lt;a href="Home.html"&gt;
+ * such as anchor and link tags with no explicit wicket id. E.g. &lt;a
+ * href="Home.html"&gt;
  * <p>
  * If href points to a *.html file, a BookmarkablePageLink will automatically be
  * created, except for absolut paths, where an ExternalLink is created.
@@ -64,26 +64,27 @@ public final class AutoLinkResolver implements IComponentResolver
 	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/** List of all file name extensions which are supported by autolink */
 	private static final ValueMap supportedPageExtensions = new ValueMap();
-	
+
 	static
 	{
-		/** Initialize supported list of file name extension which'll create 
-		 * bookmarkable pages 
+		/**
+		 * Initialize supported list of file name extension which'll create
+		 * bookmarkable pages
 		 */
 		supportedPageExtensions.put("html", null);
 		supportedPageExtensions.put("xml", null);
 		supportedPageExtensions.put("wml", null);
 		supportedPageExtensions.put("svg", null);
 	}
-	
+
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
-	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 * @param markupStream
 	 *            The current markupStream
 	 * @param tag
@@ -99,9 +100,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		if (tag.isAutolinkEnabled())
 		{
 			// Try to find the Page matching the href
-			// Note: to not use tag.getId() because it will be modified while 
+			// Note: to not use tag.getId() because it will be modified while
 			// resolving the link and hence the 2nd render will fail.
-			final Component link = resolveAutomaticLink(container, 
+			final Component link = resolveAutomaticLink(container,
 					WicketLinkTagHandler.AUTOLINK_ID, tag);
 
 			// Add the link to the container
@@ -176,13 +177,15 @@ public final class AutoLinkResolver implements IComponentResolver
 			// HTML hrefs are handled first
 			if (supportedPageExtensions.containsKey(extension.toLowerCase()))
 			{
-				// Obviously a href like href="myPkg.MyLabel.html" will do as well.
+				// Obviously a href like href="myPkg.MyLabel.html" will do as
+				// well.
 				// Wicket will not throw an exception. It accepts it.
 				infoPath = Strings.replaceAll(infoPath, "/", ".");
-	
-				final IRequestCycleSettings appSettings = page.getApplicationSettings();
+
+				final IRequestCycleSettings appSettings = page.getApplication()
+						.getRequestCycleSettings();
 				final IClassResolver defaultClassResolver = appSettings.getClassResolver();
-				
+
 				final String className;
 				if (!infoPath.startsWith("."))
 				{
@@ -196,7 +199,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					// exists, use it. Else don't change the href.
 					className = infoPath.substring(1);
 				}
-				
+
 				try
 				{
 					final Class clazz = defaultClassResolver.resolveClass(className);
@@ -220,17 +223,20 @@ public final class AutoLinkResolver implements IComponentResolver
 					// Href is relative. Create a resource reference pointing at
 					// this file
 
-					// <wicket:head> components are handled differently. We can not
+					// <wicket:head> components are handled differently. We can
+					// not
 					// use the container, because it is the container the header
-					// has been added to (e.g. the Page). What we need however, is
+					// has been added to (e.g. the Page). What we need however,
+					// is
 					// the component (e.g. a Panel) which contributed it.
 					MarkupContainer relevantContainer = container;
-					while (((relevantContainer instanceof IComponentResolver) || relevantContainer.isTransparent())  
+					while (((relevantContainer instanceof IComponentResolver) || relevantContainer
+							.isTransparent())
 							&& !(relevantContainer instanceof IComponentResolverMarker))
 					{
-						relevantContainer = relevantContainer.getParent(); 
+						relevantContainer = relevantContainer.getParent();
 					}
-	
+
 					try
 					{
 						// Create the component implementing the link
@@ -238,10 +244,13 @@ public final class AutoLinkResolver implements IComponentResolver
 					}
 					catch (WicketRuntimeException ex)
 					{
-						// Provided the resource does not exist, assume the user did
-						// deliberately not point it to a page or resource. The href
-						// might still point to a valid homepage outside of wicket.
-						log.info("Did not find autolink resource: " + href 
+						// Provided the resource does not exist, assume the user
+						// did
+						// deliberately not point it to a page or resource. The
+						// href
+						// might still point to a valid homepage outside of
+						// wicket.
+						log.info("Did not find autolink resource: " + href
 								+ "; Assume it is a valid external URL");
 					}
 				}
@@ -263,7 +272,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	private final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Construct
 		 * 
@@ -300,7 +309,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	private final static class AutolinkExternalLink extends ExternalLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Construct
 		 * 
@@ -329,7 +338,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	private final static class CssLink extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** Resource reference */
 		private final ResourceReference resourceReference;
 
@@ -343,8 +352,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			super(id);
 
 			// Create the component implementing the link
-			resourceReference = new PackageResourceReference(
-					getApplication(), clazz, href, getLocale(), getStyle());
+			resourceReference = new PackageResourceReference(getApplication(), clazz, href,
+					getLocale(), getStyle());
 		}
 
 		/**

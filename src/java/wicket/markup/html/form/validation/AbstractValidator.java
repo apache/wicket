@@ -111,7 +111,8 @@ public abstract class AbstractValidator implements IValidator
 				"");
 		if ((message == null) || (message.length() == 0))
 		{
-			if (formComponent.getApplicationSettings().getThrowExceptionOnMissingResource())
+			if (formComponent.getApplication().getResourceSettings()
+					.getThrowExceptionOnMissingResource())
 			{
 				throw new MissingResourceException("Unable to find resource: " + resourceKey,
 						formComponent.getClass().getName(), resourceKey);
@@ -175,7 +176,8 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	protected String resourceKey(final FormComponent formComponent)
 	{
-		return formComponent.getApplicationSettings().getValidatorResourceKey(this, formComponent);
+		return formComponent.getApplication().getResourceSettings()
+				.getValidatorResourceKeyFactory().newKey(this, formComponent);
 	}
 
 	/**

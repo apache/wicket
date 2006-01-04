@@ -840,17 +840,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// Get the response
 		final Response response = getResponse();
+		final Application app = Application.get();
 
 		// Set content type based on markup type for page
 		response.setContentType("text/" + getMarkupType() + "; charset="
-				+ getApplicationSettings().getResponseRequestEncoding());
+				+ app.getRequestCycleSettings().getResponseRequestEncoding());
 
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
-				&& (getApplicationSettings().getStripXmlDeclarationFromOutput() == false))
+				&& (app.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
 			response.write("<?xml version='1.0' encoding='"
-					+ getApplicationSettings().getResponseRequestEncoding() + "'?>");
+					+ app.getRequestCycleSettings().getResponseRequestEncoding() + "'?>");
 		}
 
 		// Set response locale from session locale

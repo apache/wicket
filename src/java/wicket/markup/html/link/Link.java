@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.Application;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -376,8 +377,9 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		// Set default for before/after link text
 		if (beforeDisabledLink == null)
 		{
-			beforeDisabledLink = getApplicationSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = getApplicationSettings().getDefaultAfterDisabledLink();
+			final Application app=getApplication();
+			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
+			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
 		}
 	}
 
