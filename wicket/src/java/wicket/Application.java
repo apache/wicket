@@ -375,6 +375,7 @@ public abstract class Application
 	 */
 	// FIXME this needs to become private and classes switched to using proper
 	// interfaces intead of the generic object
+	// TODO should we leave this here for backards src compat? - jonathan
 	public Settings getSettings()
 	{
 		if (settings == null)
