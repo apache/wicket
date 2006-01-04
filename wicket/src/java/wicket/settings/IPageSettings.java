@@ -1,6 +1,5 @@
 package wicket.settings;
 
-
 /**
  * Interface for page related settings. *
  * 
@@ -8,7 +7,6 @@ package wicket.settings;
  */
 public interface IPageSettings
 {
-
 	/**
 	 * @return Returns the maxPageVersions.
 	 */
@@ -30,7 +28,4 @@ public interface IPageSettings
 	 *            The pagesVersionedByDefault to set.
 	 */
 	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
-
-
-
 }

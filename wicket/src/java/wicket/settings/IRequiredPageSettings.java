@@ -39,7 +39,6 @@ package wicket.settings;
  */
 public interface IRequiredPageSettings
 {
-
 	/**
 	 * Gets home page class.
 	 * 
@@ -90,5 +89,4 @@ public interface IRequiredPageSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
-
 }

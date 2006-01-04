@@ -10,7 +10,6 @@ import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
-
 /**
  * Interface for resource related settings
  * <p>
@@ -197,6 +196,4 @@ public interface IResourceSettings
 	 * @param factory
 	 */
 	void setPropertiesFactory(PropertiesFactory factory);
-
-
 }

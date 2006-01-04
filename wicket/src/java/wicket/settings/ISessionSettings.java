@@ -4,19 +4,16 @@ import wicket.IPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.util.convert.IConverterFactory;
 
-
 /**
  * Interface for session related settings *
  * <p>
  * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can
  * provide your own factory which creates locale sensitive Converter instances.
  * 
- * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface ISessionSettings
 {
-
 	/**
 	 * Gets the factory to be used when creating pages
 	 * 

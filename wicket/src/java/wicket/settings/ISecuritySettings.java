@@ -11,7 +11,6 @@ import wicket.util.crypt.ICryptFactory;
  */
 public interface ISecuritySettings
 {
-
 	/**
 	 * encryption key used by default crypt factory
 	 */
@@ -58,5 +57,4 @@ public interface ISecuritySettings
 	 * @return crypt factory used to generate crypt objects
 	 */
 	ICryptFactory getCryptFactory();
-
 }
