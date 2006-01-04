@@ -753,13 +753,8 @@ public final class Settings
 
 
 	/**
-	 * Internal method to expose the string resource loaders configured within
-	 * the settings to the localization helpers that need to work with them.
-	 * 
-	 * @return The string resource loaders
+	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
-	// FIXME made this public. does this really need to stay hidden? would
-	// changing return type to an iterator be enough?
 	public final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);

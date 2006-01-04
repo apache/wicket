@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.loader.IStringResourceLoader;
-import wicket.settings.Settings;
+import wicket.settings.IResourceSettings;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
@@ -69,26 +69,28 @@ public class Localizer
 	public Localizer(final Application application)
 	{
 		this.application = application;
-		
+
 		// Register a listener to the properties factory which is invoked after
 		// a properties file has been reloaded.
-		application.getResourceSettings().getPropertiesFactory().addListener(new IPropertiesReloadListener()
-		{
-			public void propertiesLoaded(final String key)
-			{
-				// Remove all cached values. Unfortunately I did not yet
-				// find a proper way (which is easy and clean to implement)
-				// which selectively removes just the cache entries
-				// affected. Hence they all get removed. Actually that
-				// is less worse as it may sound, because type
-				// Properties does cache them as well. We only have
-				// to walk the properties resolution path once again.
-				// And, the feature of reloading the properties file
-				// is usually activated during development only and
-				// for production. Hence, it affect development only.
-				cachedValues.clear();
-			}
-		});
+		application.getResourceSettings().getPropertiesFactory().addListener(
+				new IPropertiesReloadListener()
+				{
+					public void propertiesLoaded(final String key)
+					{
+						// Remove all cached values. Unfortunately I did not yet
+						// find a proper way (which is easy and clean to
+						// implement)
+						// which selectively removes just the cache entries
+						// affected. Hence they all get removed. Actually that
+						// is less worse as it may sound, because type
+						// Properties does cache them as well. We only have
+						// to walk the properties resolution path once again.
+						// And, the feature of reloading the properties file
+						// is usually activated during development only and
+						// for production. Hence, it affect development only.
+						cachedValues.clear();
+					}
+				});
 	}
 
 	/**
@@ -174,7 +176,7 @@ public class Localizer
 		return getString(key, component, null, component.getLocale(), component.getStyle(),
 				defaultValue);
 	}
-	
+
 	/**
 	 * Get the localized string using all of the supplied parameters. This
 	 * method is left public to allow developers full control over string
@@ -187,8 +189,7 @@ public class Localizer
 	 * @param component
 	 *            The component to get the resource for (optional)
 	 * @param model
-	 *            The model to use for substitutions in the strings
-	 *            (optional)
+	 *            The model to use for substitutions in the strings (optional)
 	 * @param locale
 	 *            The locale to get the resource for (optional)
 	 * @param style
@@ -205,8 +206,8 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		// Get application settings
-		final Settings settings = application.getSettings();
+		// Get markup settings
+		final IResourceSettings settings = application.getResourceSettings();
 
 		// If value is cached already ...
 		Class clazz = (component != null ? component.getClass() : null);
@@ -214,7 +215,7 @@ public class Localizer
 
 		// The cached key value
 		String string = getCachedValue(id);
-		
+
 		// If not found in the cache
 		if (string == null)
 		{
@@ -249,15 +250,16 @@ public class Localizer
 
 		if (settings.getThrowExceptionOnMissingResource())
 		{
-			throw new MissingResourceException("Unable to find resource: " + key, 
-					(clazz != null ? getClass().getName() : ""), key);
+			throw new MissingResourceException("Unable to find resource: " + key, (clazz != null
+					? getClass().getName()
+					: ""), key);
 		}
 		else
 		{
 			return "[Warning: String resource for '" + key + "' not found]";
 		}
 	}
-	
+
 	/**
 	 * 
 	 * <p>
@@ -279,9 +281,8 @@ public class Localizer
 	 *             If resource not found and configuration dictates that
 	 *             exception should be thrown
 	 */
-	public String getString(final String key, final String path, final List searchStack, 
-			final Locale locale, final String style)
-			throws MissingResourceException
+	public String getString(final String key, final String path, final List searchStack,
+			final Locale locale, final String style) throws MissingResourceException
 	{
 		if (searchStack == null)
 		{
@@ -290,19 +291,19 @@ public class Localizer
 		}
 
 		// The top element
-		Class componentClass = (searchStack.size() > 0 ? (Class) searchStack.get(0) : null); 
-		
+		Class componentClass = (searchStack.size() > 0 ? (Class)searchStack.get(0) : null);
+
 		// If value is cached already ...
 		String id = createCacheId(componentClass, locale, style, key);
 
 		// The cached key value
 		String string = getCachedValue(id);
-		
+
 		// If not found in the cache
 		if (string == null)
 		{
 			string = traverseResourceLoaders(key, path, searchStack, locale, style);
-			
+
 			// cache all values, not matter the key has been found or not
 			if (string != null)
 			{
@@ -320,13 +321,14 @@ public class Localizer
 	}
 
 	/**
-     * For each StringResourceLoader registered with the application, load the 
-     * properties file associated with the classes in the searchStack, the locale
-     * and the style. The searchStack is traversed in reverse order.<p>
-     * The property is identified by the 'key' or 'path'+'key'. 'path' is
-     * shortened (last element removed) to always represent the page relative
-     * path of the original component associate with it.
-     * 
+	 * For each StringResourceLoader registered with the application, load the
+	 * properties file associated with the classes in the searchStack, the
+	 * locale and the style. The searchStack is traversed in reverse order.
+	 * <p>
+	 * The property is identified by the 'key' or 'path'+'key'. 'path' is
+	 * shortened (last element removed) to always represent the page relative
+	 * path of the original component associate with it.
+	 * 
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param path
@@ -340,18 +342,19 @@ public class Localizer
 	 *            {@link wicket.Session})
 	 * @return The string resource
 	 */
-	private String traverseResourceLoaders(final String key, final String path, 
+	private String traverseResourceLoaders(final String key, final String path,
 			final List searchStack, final Locale locale, final String style)
 	{
 		// Search each loader in turn and return the string if it is found
-		final Iterator iterator = application.getSettings().getStringResourceLoaders().iterator();
+		final Iterator iterator = application.getResourceSettings().getStringResourceLoaders()
+				.iterator();
 		String string = null;
 		while (iterator.hasNext() && (string == null))
 		{
 			IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
-			
+
 			String prefix = path;
-			for (int i=searchStack.size() - 1; (i >= 0) && (string == null); i--)
+			for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 			{
 				Class clazz = (Class)searchStack.get(i);
 				string = loader.loadStringResource(clazz, key, locale, style);
@@ -380,7 +383,8 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	private String substitutePropertyExpressions(final Component component, final String string, final IModel model)
+	private String substitutePropertyExpressions(final Component component, final String string,
+			final IModel model)
 	{
 		if (string != null && model != null)
 		{
@@ -406,7 +410,7 @@ public class Localizer
 			{
 				log.debug("Found message key in cache: " + cacheId);
 			}
-			
+
 			if (value == NULL)
 			{
 				value = null;
@@ -429,8 +433,8 @@ public class Localizer
 	 *            The message key
 	 * @return The unique cache id
 	 */
-	private String createCacheId(final Class clazz, final Locale locale,
-			final String style, final String key)
+	private String createCacheId(final Class clazz, final Locale locale, final String style,
+			final String key)
 	{
 		String id = application.getResourceSettings().getPropertiesFactory().createResourceKey(
 				clazz, locale, style)
@@ -447,11 +451,12 @@ public class Localizer
 	}
 
 	/**
-	 * Traverse the component hierachy up to the Page and add each
-	 * component class to the list (stack) returned
+	 * Traverse the component hierachy up to the Page and add each component
+	 * class to the list (stack) returned
 	 * 
-	 * @param component The component to evaluate
-	 * @return The stack of classes 
+	 * @param component
+	 *            The component to evaluate
+	 * @return The stack of classes
 	 */
 	private List getComponentStack(final Component component)
 	{
