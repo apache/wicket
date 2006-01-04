@@ -27,8 +27,6 @@ import wicket.model.IModel;
  */
 public interface IMarkupSettings
 {
-
-
 	/**
 	 * If true, automatic link resolution is enabled. Disabled by default.
 	 * 
@@ -181,5 +179,4 @@ public interface IMarkupSettings
 	 * @return markup parser factory
 	 */
 	IMarkupParserFactory getMarkupParserFactory();
-
 }

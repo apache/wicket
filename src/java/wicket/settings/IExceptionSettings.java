@@ -18,7 +18,6 @@ import wicket.util.lang.EnumeratedType;
  */
 public interface IExceptionSettings
 {
-	
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
@@ -92,6 +91,4 @@ public interface IExceptionSettings
 	 *         requested
 	 */
 	boolean getThrowExceptionOnMissingResource();
-
-
 }

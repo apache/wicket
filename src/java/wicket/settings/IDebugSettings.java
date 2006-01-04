@@ -13,7 +13,6 @@ package wicket.settings;
  */
 public interface IDebugSettings
 {
-
 	/**
 	 * Sets componentUseCheck debug settings
 	 * 
