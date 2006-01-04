@@ -5,7 +5,7 @@
   <groupId>wicket</groupId>
   <id>wicket-spring-examples</id>
   <name>Wicket Spring Integration Examples</name>
-  <currentVersion>1.0-SNAPSHOT</currentVersion>
+  <currentVersion>1.1-SNAPSHOT</currentVersion>
   <inceptionYear>2005</inceptionYear>
   <package>wicket.spring</package>
   
@@ -45,36 +45,23 @@
     </dependency>
     
     <dependency>
-      <groupId>ognl</groupId>
-      <artifactId>ognl</artifactId>
-      <version>2.6.7</version>
-      <url>http://www.ognl.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description>Used for introspection.</wicket.description>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    
-    
-    <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
       <properties><war.bundle>true</war.bundle></properties>
     </dependency>
 
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
       <properties><war.bundle>true</war.bundle></properties>
     </dependency>
 
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-spring</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
       <properties><war.bundle>true</war.bundle></properties>
     </dependency>
     
