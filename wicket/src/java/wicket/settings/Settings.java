@@ -99,7 +99,6 @@ public final class Settings
 			ISecuritySettings,
 			ISessionSettings
 {
-
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
@@ -173,7 +172,7 @@ public final class Settings
 	private int maxPageVersions = 10;
 
 	/** Map to look up resource factories by name */
-	private final Map nameToResourceFactory = new HashMap();
+	private Map nameToResourceFactory = new HashMap();
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
@@ -255,7 +254,7 @@ public final class Settings
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
 	 */
-	public static final class RenderStrategy extends EnumeratedType
+	public static class RenderStrategy extends EnumeratedType
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -284,7 +283,7 @@ public final class Settings
 	 * @see wicket.settings.IResourceSettings#addResourceFactory(java.lang.String,
 	 *      wicket.IResourceFactory)
 	 */
-	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	public void addResourceFactory(final String name, IResourceFactory resourceFactory)
 	{
 		nameToResourceFactory.put(name, resourceFactory);
 	}
@@ -292,7 +291,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#addResourceFolder(java.lang.String)
 	 */
-	public final IPageSettings addResourceFolder(final String resourceFolder)
+	public IPageSettings addResourceFolder(final String resourceFolder)
 	{
 		// Get resource finder
 		final IResourceFinder finder = getResourceFinder();
@@ -325,7 +324,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 */
-	public final IPageSettings addStringResourceLoader(final IStringResourceLoader loader)
+	public IPageSettings addStringResourceLoader(final IStringResourceLoader loader)
 	{
 		if (!overriddenStringResourceLoaders)
 		{
@@ -347,7 +346,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getAutomaticLinking()
 	 */
-	public final boolean getAutomaticLinking()
+	public boolean getAutomaticLinking()
 	{
 		return automaticLinking;
 	}
@@ -355,7 +354,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getBufferResponse()
 	 */
-	public final boolean getBufferResponse()
+	public boolean getBufferResponse()
 	{
 		return bufferResponse;
 	}
@@ -363,7 +362,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getClassResolver()
 	 */
-	public final IClassResolver getClassResolver()
+	public IClassResolver getClassResolver()
 	{
 		return classResolver;
 	}
@@ -374,7 +373,7 @@ public final class Settings
 	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
-	public final List getComponentResolvers()
+	public List getComponentResolvers()
 	{
 		return componentResolvers;
 	}
@@ -382,7 +381,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IDebugSettings#getComponentUseCheck()
 	 */
-	public final boolean getComponentUseCheck()
+	public boolean getComponentUseCheck()
 	{
 		return this.componentUseCheck;
 	}
@@ -390,7 +389,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getCompressWhitespace()
 	 */
-	public final boolean getCompressWhitespace()
+	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
 	}
@@ -406,7 +405,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISecuritySettings#getCookieValuePersisterSettings()
 	 */
-	public final CookieValuePersisterSettings getCookieValuePersisterSettings()
+	public CookieValuePersisterSettings getCookieValuePersisterSettings()
 	{
 		return cookieValuePersisterSettings;
 	}
@@ -426,7 +425,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getDefaultAfterDisabledLink()
 	 */
-	public final String getDefaultAfterDisabledLink()
+	public String getDefaultAfterDisabledLink()
 	{
 		return defaultAfterDisabledLink;
 	}
@@ -434,7 +433,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getDefaultBeforeDisabledLink()
 	 */
-	public final String getDefaultBeforeDisabledLink()
+	public String getDefaultBeforeDisabledLink()
 	{
 		return defaultBeforeDisabledLink;
 	}
@@ -442,7 +441,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getDefaultLocale()
 	 */
-	public final Locale getDefaultLocale()
+	public Locale getDefaultLocale()
 	{
 		return defaultLocale;
 	}
@@ -450,7 +449,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getDefaultMarkupEncoding()
 	 */
-	public final String getDefaultMarkupEncoding()
+	public String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
 	}
@@ -458,7 +457,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#getHomePage()
 	 */
-	public final Class getHomePage()
+	public Class getHomePage()
 	{
 		// If no home page is available
 		if (homePage == null)
@@ -474,7 +473,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#getInternalErrorPage()
 	 */
-	public final Class getInternalErrorPage()
+	public Class getInternalErrorPage()
 	{
 		return internalErrorPage;
 	}
@@ -502,7 +501,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IPageSettings#getMaxPageVersions()
 	 */
-	public final int getMaxPageVersions()
+	public int getMaxPageVersions()
 	{
 		return maxPageVersions;
 	}
@@ -510,7 +509,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#getPageExpiredErrorPage()
 	 */
-	public final Class getPageExpiredErrorPage()
+	public Class getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage;
 	}
@@ -518,7 +517,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISessionSettings#getPageFactory()
 	 */
-	public final IPageFactory getPageFactory()
+	public IPageFactory getPageFactory()
 	{
 		return pageFactory;
 	}
@@ -526,7 +525,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISessionSettings#getPageMapEvictionStrategy()
 	 */
-	public final IPageMapEvictionStrategy getPageMapEvictionStrategy()
+	public IPageMapEvictionStrategy getPageMapEvictionStrategy()
 	{
 		return pageMapEvictionStrategy;
 	}
@@ -546,7 +545,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getRenderStrategy()
 	 */
-	public final RenderStrategy getRenderStrategy()
+	public RenderStrategy getRenderStrategy()
 	{
 		return renderStrategy;
 	}
@@ -554,7 +553,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getResourceFactory(java.lang.String)
 	 */
-	public final IResourceFactory getResourceFactory(final String name)
+	public IResourceFactory getResourceFactory(final String name)
 	{
 		return (IResourceFactory)nameToResourceFactory.get(name);
 	}
@@ -562,7 +561,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getResourceFinder()
 	 */
-	public final IResourceFinder getResourceFinder()
+	public IResourceFinder getResourceFinder()
 	{
 		return resourceFinder;
 	}
@@ -570,7 +569,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getResourcePollFrequency()
 	 */
-	public final Duration getResourcePollFrequency()
+	public Duration getResourcePollFrequency()
 	{
 		return resourcePollFrequency;
 	}
@@ -623,7 +622,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getResponseRequestEncoding()
 	 */
-	public final String getResponseRequestEncoding()
+	public String getResponseRequestEncoding()
 	{
 		return responseRequestEncoding;
 	}
@@ -631,7 +630,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
-	public final List getStringResourceLoaders()
+	public List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
 	}
@@ -639,7 +638,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getStripComments()
 	 */
-	public final boolean getStripComments()
+	public boolean getStripComments()
 	{
 		return stripComments;
 	}
@@ -647,7 +646,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getStripWicketTags()
 	 */
-	public final boolean getStripWicketTags()
+	public boolean getStripWicketTags()
 	{
 		return this.stripWicketTags;
 	}
@@ -655,7 +654,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#getStripXmlDeclarationFromOutput()
 	 */
-	public final boolean getStripXmlDeclarationFromOutput()
+	public boolean getStripXmlDeclarationFromOutput()
 	{
 		return this.stripXmlDeclarationFromOutput;
 	}
@@ -663,7 +662,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getThrowExceptionOnMissingResource()
 	 */
-	public final boolean getThrowExceptionOnMissingResource()
+	public boolean getThrowExceptionOnMissingResource()
 	{
 		return throwExceptionOnMissingResource;
 	}
@@ -671,7 +670,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
 	 */
-	public final UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
+	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
 	{
 		return unexpectedExceptionDisplay;
 	}
@@ -679,7 +678,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getUseDefaultOnMissingResource()
 	 */
-	public final boolean getUseDefaultOnMissingResource()
+	public boolean getUseDefaultOnMissingResource()
 	{
 		return useDefaultOnMissingResource;
 	}
@@ -695,7 +694,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IPageSettings#getVersionPagesByDefault()
 	 */
-	public final boolean getVersionPagesByDefault()
+	public boolean getVersionPagesByDefault()
 	{
 		return versionPagesByDefault;
 	}
@@ -715,7 +714,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setAutomaticLinking(boolean)
 	 */
-	public final void setAutomaticLinking(boolean automaticLinking)
+	public void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
 	}
@@ -723,7 +722,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)
 	 */
-	public final void setBufferResponse(boolean bufferResponse)
+	public void setBufferResponse(boolean bufferResponse)
 	{
 		this.bufferResponse = bufferResponse;
 	}
@@ -731,7 +730,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setClassResolver(wicket.application.IClassResolver)
 	 */
-	public final IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
+	public IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		this.classResolver = defaultClassResolver;
 		return this;
@@ -740,7 +739,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
 	 */
-	public final void setComponentUseCheck(final boolean componentUseCheck)
+	public void setComponentUseCheck(final boolean componentUseCheck)
 	{
 		this.componentUseCheck = componentUseCheck;
 	}
@@ -749,7 +748,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setCompressWhitespace(boolean)
 	 */
-	public final void setCompressWhitespace(final boolean compressWhitespace)
+	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
 	}
@@ -770,7 +769,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISecuritySettings#setCookieValuePersisterSettings(wicket.markup.html.form.persistence.CookieValuePersisterSettings)
 	 */
-	public final void setCookieValuePersisterSettings(
+	public void setCookieValuePersisterSettings(
 			CookieValuePersisterSettings cookieValuePersisterSettings)
 	{
 		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
@@ -791,7 +790,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setDefaultAfterDisabledLink(java.lang.String)
 	 */
-	public final void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
+	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
 	{
 		this.defaultAfterDisabledLink = defaultAfterDisabledLink;
 	}
@@ -799,7 +798,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setDefaultBeforeDisabledLink(java.lang.String)
 	 */
-	public final void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
+	public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
 	{
 		this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
 	}
@@ -807,7 +806,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setDefaultLocale(java.util.Locale)
 	 */
-	public final void setDefaultLocale(Locale defaultLocale)
+	public void setDefaultLocale(Locale defaultLocale)
 	{
 		this.defaultLocale = defaultLocale;
 	}
@@ -815,7 +814,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setDefaultMarkupEncoding(java.lang.String)
 	 */
-	public final void setDefaultMarkupEncoding(final String encoding)
+	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		this.defaultMarkupEncoding = encoding;
 	}
@@ -823,7 +822,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#setHomePage(java.lang.Class)
 	 */
-	public final void setHomePage(final Class homePage)
+	public void setHomePage(final Class homePage)
 	{
 		checkPageClass(homePage);
 		this.homePage = homePage;
@@ -832,7 +831,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#setInternalErrorPage(java.lang.Class)
 	 */
-	public final void setInternalErrorPage(final Class internalErrorPage)
+	public void setInternalErrorPage(final Class internalErrorPage)
 	{
 		if (internalErrorPage == null)
 		{
@@ -859,7 +858,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IPageSettings#setMaxPageVersions(int)
 	 */
-	public final void setMaxPageVersions(int maxPageVersions)
+	public void setMaxPageVersions(int maxPageVersions)
 	{
 		if (maxPageVersions < 0)
 		{
@@ -871,7 +870,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequiredPageSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
-	public final void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
+	public void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{
@@ -885,7 +884,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISessionSettings#setPageFactory(wicket.IPageFactory)
 	 */
-	public final IPageSettings setPageFactory(final IPageFactory defaultPageFactory)
+	public IPageSettings setPageFactory(final IPageFactory defaultPageFactory)
 	{
 		this.pageFactory = defaultPageFactory;
 		return this;
@@ -894,7 +893,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISessionSettings#setPageMapEvictionStrategy(wicket.session.pagemap.IPageMapEvictionStrategy)
 	 */
-	public final void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy)
+	public void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy)
 	{
 		this.pageMapEvictionStrategy = pageMapEvictionStrategy;
 	}
@@ -910,7 +909,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setRenderStrategy(wicket.settings.Settings.RenderStrategy)
 	 */
-	public final void setRenderStrategy(RenderStrategy renderStrategy)
+	public void setRenderStrategy(RenderStrategy renderStrategy)
 	{
 		this.renderStrategy = renderStrategy;
 	}
@@ -918,7 +917,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setResourceFinder(wicket.util.file.IResourceFinder)
 	 */
-	public final IPageSettings setResourceFinder(final IResourceFinder resourceFinder)
+	public IPageSettings setResourceFinder(final IResourceFinder resourceFinder)
 	{
 		this.resourceFinder = resourceFinder;
 
@@ -931,7 +930,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setResourcePollFrequency(wicket.util.time.Duration)
 	 */
-	public final IPageSettings setResourcePollFrequency(final Duration resourcePollFrequency)
+	public IPageSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
 		this.resourcePollFrequency = resourcePollFrequency;
 		return this;
@@ -948,7 +947,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setResponseRequestEncoding(java.lang.String)
 	 */
-	public final void setResponseRequestEncoding(final String responseRequestEncoding)
+	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
 	}
@@ -956,7 +955,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setStripComments(boolean)
 	 */
-	public final void setStripComments(boolean stripComments)
+	public void setStripComments(boolean stripComments)
 	{
 		this.stripComments = stripComments;
 	}
@@ -964,7 +963,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setStripWicketTags(boolean)
 	 */
-	public final void setStripWicketTags(boolean stripWicketTags)
+	public void setStripWicketTags(boolean stripWicketTags)
 	{
 		this.stripWicketTags = stripWicketTags;
 	}
@@ -972,7 +971,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IMarkupSettings#setStripXmlDeclarationFromOutput(boolean)
 	 */
-	public final void setStripXmlDeclarationFromOutput(final boolean strip)
+	public void setStripXmlDeclarationFromOutput(final boolean strip)
 	{
 		this.stripXmlDeclarationFromOutput = strip;
 	}
@@ -980,7 +979,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setThrowExceptionOnMissingResource(boolean)
 	 */
-	public final void setThrowExceptionOnMissingResource(
+	public void setThrowExceptionOnMissingResource(
 			final boolean throwExceptionOnMissingResource)
 	{
 		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
@@ -989,7 +988,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
 	 */
-	public final void setUnexpectedExceptionDisplay(
+	public void setUnexpectedExceptionDisplay(
 			final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
@@ -998,7 +997,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setUseDefaultOnMissingResource(boolean)
 	 */
-	public final void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
+	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
 	}
@@ -1018,7 +1017,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IPageSettings#setVersionPagesByDefault(boolean)
 	 */
-	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
 	}
@@ -1030,7 +1029,7 @@ public final class Settings
 	 * @param pageClass
 	 *            the page class to check
 	 */
-	private final void checkPageClass(final Class pageClass)
+	private void checkPageClass(final Class pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
 		// here, as - though the default is that a bookmarkable page must
