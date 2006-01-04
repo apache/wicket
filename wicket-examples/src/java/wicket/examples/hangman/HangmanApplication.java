@@ -34,7 +34,6 @@ public class HangmanApplication extends WicketExampleApplication
 	 */
 	public HangmanApplication()
 	{
-		getRequiredPageSettings().setHomePage(Home.class);
 	}
 
 	/**
@@ -49,5 +48,13 @@ public class HangmanApplication extends WicketExampleApplication
 				return new HangmanSession(HangmanApplication.this);
 			}
 		};
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }

@@ -74,7 +74,7 @@ public class CookieTest extends TestCase
         super.setUp();
         
         application = new MockWebApplication(null);
-        application.getRequiredPageSettings().setHomePage(MockPage.class);
+        application.setHomePage(MockPage.class);
         application.setupRequestAndResponse();
 
         final ISecuritySettings settings = application.getSecuritySettings();

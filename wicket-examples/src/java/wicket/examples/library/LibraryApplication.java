@@ -34,7 +34,6 @@ public final class LibraryApplication extends WicketExampleApplication
      */
     public LibraryApplication()
     {
-        getRequiredPageSettings().setHomePage(Home.class);
         getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
     }
@@ -51,5 +50,13 @@ public final class LibraryApplication extends WicketExampleApplication
                 return new LibrarySession(LibraryApplication.this);
             }
         };
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }

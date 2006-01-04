@@ -21,6 +21,7 @@ package wicket.examples.signin;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
+import wicket.examples.nested.Home;
 
 /**
  * Forms example.
@@ -33,7 +34,6 @@ public final class SignInApplication extends WicketExampleApplication
      */
     public SignInApplication()
     {
-        getRequiredPageSettings().setHomePage(Home.class);
     }
     
     /**
@@ -49,6 +49,15 @@ public final class SignInApplication extends WicketExampleApplication
             }
         };
     }
+    
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
 }
 
 

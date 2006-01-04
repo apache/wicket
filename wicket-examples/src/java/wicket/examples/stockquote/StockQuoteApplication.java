@@ -31,6 +31,14 @@ public class StockQuoteApplication extends WicketExampleApplication
 	 */
 	public StockQuoteApplication()
 	{
-		getRequiredPageSettings().setHomePage(StockQuotePage.class);
 	}
+	
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return StockQuotePage.class;
+	}
+	
 }

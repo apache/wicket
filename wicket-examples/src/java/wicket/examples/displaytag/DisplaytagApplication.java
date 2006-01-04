@@ -33,7 +33,14 @@ public class DisplaytagApplication extends WebApplication
 	 */
 	public DisplaytagApplication()
 	{
-		getRequiredPageSettings().setHomePage(DisplaytagIndex.class);
 		getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return DisplaytagIndex.class;
 	}
 }

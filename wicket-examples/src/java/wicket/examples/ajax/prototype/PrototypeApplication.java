@@ -13,8 +13,15 @@ public class PrototypeApplication extends WicketExampleApplication
 	 */
 	public PrototypeApplication()
 	{
-		getRequiredPageSettings().setHomePage(Index.class);
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Index.class;
 	}
 }

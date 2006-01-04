@@ -40,7 +40,6 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	 */
 	public HelloBrowserApplication()
 	{
-		getRequiredPageSettings().setHomePage(HelloBrowser.class);
 	}
 
 	/**
@@ -58,5 +57,13 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	public RequestCycle newRequestCycle(Session session, Request request, Response response)
 	{
 		return new HelloBrowserRequestCycle((WebSession)session, (WebRequest)request, response);
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return HelloBrowser.class;
 	}
 }

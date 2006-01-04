@@ -18,8 +18,9 @@
 package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.examples.nested.Home;
 import wicket.examples.niceurl.mounted.Page3;
-import wicket.markup.parser.IMarkupFilter;
+import wicket.markup.MarkupParserFactory;
 import wicket.markup.parser.filter.PrependContextPathHandler;
 import wicket.util.lang.PackageName;
 
@@ -36,8 +37,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 	public NiceUrlApplication()
 	{
 		super();
-		getRequiredPageSettings().setHomePage(Home.class);
-
 		// mount single bookmarkable pages
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
@@ -51,15 +50,18 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
+
+		getMarkupSettings().setMarkupParserFactory(
+				new MarkupParserFactory(getMarkupSettings(), new PrependContextPathHandler()));
 	}
 
+
 	/**
-	 * Make sure all hrefs (and src) attributes have the correct prefix.
-	 * 
-	 * @return A list of additional IMarkupFilter
+	 * @see wicket.Application#getHomePage()
 	 */
-	public IMarkupFilter[] getAdditionalMarkupHandler()
+	public Class getHomePage()
 	{
-		return new IMarkupFilter[] { new PrependContextPathHandler() };
+		return Home.class;
 	}
+
 }

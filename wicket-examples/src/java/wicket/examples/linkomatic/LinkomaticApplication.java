@@ -32,9 +32,17 @@ public class LinkomaticApplication extends WicketExampleApplication
      */
     public LinkomaticApplication()
     {
-        getRequiredPageSettings().setHomePage(Home.class);
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
     }
+    
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
 }
 
 

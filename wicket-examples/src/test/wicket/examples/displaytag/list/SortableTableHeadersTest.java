@@ -72,7 +72,7 @@ public class SortableTableHeadersTest extends TestCase
 	{
 		MockWebApplication application = new MockWebApplication(null);
 		application.getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
-		application.getRequiredPageSettings().setHomePage(SortableTableHeadersPage.class);
+		application.setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();

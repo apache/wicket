@@ -40,7 +40,6 @@ public final class SignIn2Application extends WicketExampleApplication
      */
     public SignIn2Application()
     {
-        getRequiredPageSettings().setHomePage(Home.class);
     }
     
     /**
@@ -72,4 +71,13 @@ public final class SignIn2Application extends WicketExampleApplication
 	{
 		return new WebResponseWithCryptedUrl(servletResponse);
 	}
+	
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
 }

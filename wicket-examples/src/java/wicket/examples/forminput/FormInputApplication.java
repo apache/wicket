@@ -42,7 +42,6 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 	public FormInputApplication()
 	{
-		getRequiredPageSettings().setHomePage(FormInput.class);
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
@@ -65,5 +64,13 @@ public class FormInputApplication extends WicketExampleApplication
 	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 	{
 		return new WebResponseWithCryptedUrl(servletResponse);
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return FormInput.class;
 	}
 }

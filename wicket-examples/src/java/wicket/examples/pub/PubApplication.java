@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,6 +18,7 @@
 package wicket.examples.pub;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.examples.nested.Home;
 
 /**
  * WicketServlet class for the linkomatic example.
@@ -31,6 +32,14 @@ public class PubApplication extends WicketExampleApplication
 	 */
 	public PubApplication()
 	{
-		getRequiredPageSettings().setHomePage(Home.class);
 	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
 }

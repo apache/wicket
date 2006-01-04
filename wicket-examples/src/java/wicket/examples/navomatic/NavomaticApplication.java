@@ -32,6 +32,15 @@ public class NavomaticApplication extends WicketExampleApplication
      */
     public NavomaticApplication()
     {
-        getRequiredPageSettings().setHomePage(Page1.class);
     }
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Page1.class;
+	}
+    
+    
 }

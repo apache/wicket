@@ -31,9 +31,17 @@ public class UploadApplication extends WicketExampleApplication
      */
     public UploadApplication()
     {
-        getRequiredPageSettings().setHomePage(UploadPage.class);
         getExceptionSettings().setThrowExceptionOnMissingResource(false);
     }
+    
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return UploadPage.class;
+	}
+
 }
 
 

@@ -31,6 +31,14 @@ public class ImagesApplication extends WicketExampleApplication
 	 */
 	public ImagesApplication()
 	{
-		getRequiredPageSettings().setHomePage(Home.class);
+		
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }
