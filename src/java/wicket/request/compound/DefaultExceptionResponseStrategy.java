@@ -68,7 +68,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != Settings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			Class internalErrorPageClass = application.getRequiredPageSettings().getInternalErrorPage();
+			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass

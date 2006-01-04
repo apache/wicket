@@ -62,7 +62,7 @@ public class LocalizerTest extends TestCase
 		application = new DummyApplication();
 		settings = application.getResourceSettings();
 		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
-		localizer = application.getMarkupSettings().getLocalizer();
+		localizer = application.getResourceSettings().getLocalizer();
 	}
 
 	/**

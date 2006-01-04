@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.IResourceFactory;
+import wicket.Localizer;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
+import wicket.model.IModel;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
@@ -40,6 +42,20 @@ import wicket.util.watch.ModificationWatcher;
  * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}
  * and especially
  * {@link wicket.markup.html.image.resource.LocalizedImageResource}.
+ * <p>
+ * <i>A Localizer </i> The getLocalizer() method returns an object encapsulating
+ * all of the functionality required to access localized resources. For many
+ * localization problems, even this will not be required, as there are
+ * convenience methods available to all components:
+ * {@link wicket.Component#getString(String key)} and
+ * {@link wicket.Component#getString(String key, IModel model)}.
+ * <p>
+ * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
+ * instances that are searched in order to obtain string resources used during
+ * localization. By default the chain is set up to first search for resources
+ * against a particular component (e.g. page etc.) and then against the
+ * application.
+ * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -64,10 +80,8 @@ public interface IResourceSettings
 	 * 
 	 * @param resourceFolder
 	 *            The resourceFolder to set
-	 * @return This
 	 */
-	IPageSettings addResourceFolder(final String resourceFolder);
-
+	void addResourceFolder(final String resourceFolder);
 
 	/**
 	 * Add a string resource loader to the chain of loaders. If this is the
@@ -76,9 +90,8 @@ public interface IResourceSettings
 	 * 
 	 * @param loader
 	 *            The loader to be added
-	 * @return This
 	 */
-	IPageSettings addStringResourceLoader(final IStringResourceLoader loader);
+	void addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
 	 * @return Returns the defaultLocale.
@@ -86,12 +99,23 @@ public interface IResourceSettings
 	Locale getDefaultLocale();
 
 	/**
+	 * Get the application's localizer.
+	 * 
+	 * @see wicket.settings.Settings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
+	 *      for means of extending the way Wicket resolves keys to localized
+	 *      messages.
+	 * 
+	 * @return The application wide localizer instance
+	 */
+	Localizer getLocalizer();
+
+	/**
 	 * Get the property factory which will be used to load property files
 	 * 
 	 * @return PropertiesFactory
 	 */
 	PropertiesFactory getPropertiesFactory();
-
+	
 	/**
 	 * @param name
 	 *            Name of the factory to get
@@ -170,9 +194,8 @@ public interface IResourceSettings
 	 * 
 	 * @param resourceFinder
 	 *            The resourceFinder to set
-	 * @return This
 	 */
-	IPageSettings setResourceFinder(final IResourceFinder resourceFinder);
+	void setResourceFinder(final IResourceFinder resourceFinder);
 
 	/**
 	 * Sets the resource polling frequency. This is the duration of time between
@@ -182,10 +205,9 @@ public interface IResourceSettings
 	 * 
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
-	 * @return This
 	 * @see Settings#setResourceFinder(IResourceFinder)
 	 */
-	IPageSettings setResourcePollFrequency(final Duration resourcePollFrequency);
+	void setResourcePollFrequency(final Duration resourcePollFrequency);
 
 	/**
 	 * Sets the resource stream locator for this application

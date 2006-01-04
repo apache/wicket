@@ -34,7 +34,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
-import wicket.settings.IRequestCycleSettings;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
@@ -178,13 +177,11 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (supportedPageExtensions.containsKey(extension.toLowerCase()))
 			{
 				// Obviously a href like href="myPkg.MyLabel.html" will do as
-				// well.
-				// Wicket will not throw an exception. It accepts it.
+				// well. Wicket will not throw an exception. It accepts it.
 				infoPath = Strings.replaceAll(infoPath, "/", ".");
 
-				final IRequestCycleSettings appSettings = page.getApplication()
-						.getRequestCycleSettings();
-				final IClassResolver defaultClassResolver = appSettings.getClassResolver();
+				final IClassResolver defaultClassResolver = page.getApplication()
+						.getApplicationSettings().getClassResolver();
 
 				final String className;
 				if (!infoPath.startsWith("."))
@@ -195,7 +192,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 				else
 				{
-					// href is absolute. If class with the same absolute path
+					// Href is absolute. If class with the same absolute path
 					// exists, use it. Else don't change the href.
 					className = infoPath.substring(1);
 				}

@@ -133,7 +133,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String value = Application.get().getMarkupSettings().getLocalizer().getString(messageKey,
+				String value = Application.get().getResourceSettings().getLocalizer().getString(messageKey,
 						null, searchStack, containerInfo.getLocale(), containerInfo.getStyle());
 
 				if (value.length() > 0)

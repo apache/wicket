@@ -444,7 +444,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		final Session session = Session.get();
 		if (session != null)
 		{
-			this.localizer = session.getApplication().getMarkupSettings().getLocalizer();
+			this.localizer = session.getApplication().getResourceSettings().getLocalizer();
 			this.locale = session.getLocale();
 		}
 		else

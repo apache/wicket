@@ -55,8 +55,8 @@ import wicket.util.lang.PackageName;
  * Application settings are given defaults by the WebApplication() constructor,
  * such as error page classes appropriate for HTML. WebApplication subclasses
  * can override these values and/or modify other application settings in their
- * respective constructors by calling getSettings() to retrieve a mutable
- * ApplicationSettings object.
+ * respective constructors by calling getXXXSettings() to retrieve an interface
+ * to a mutable Settings object.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
@@ -72,7 +72,7 @@ import wicket.util.lang.PackageName;
  * 
  * @see WicketServlet
  * @see wicket.settings.Settings
- * @see wicket.settings.IRequiredPageSettings
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Johan Compagner
@@ -116,11 +116,11 @@ public abstract class WebApplication extends Application
 	public WebApplication()
 	{
 		// Set default error pages for HTML markup
-		getRequiredPageSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
-		getRequiredPageSettings().setInternalErrorPage(InternalErrorPage.class);
+		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
+		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
 
 		// Add resolver for automatically resolving HTML links
-		getRequestCycleSettings().getComponentResolvers().add(new AutoLinkResolver());
+		getPageSettings().addComponentResolver(new AutoLinkResolver());
 	}
 
 	/**
