@@ -41,6 +41,7 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
+import wicket.settings.IMarkupSettings;
 import wicket.settings.IRequiredPageSettings;
 import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
@@ -2209,7 +2210,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	protected final void renderComponentTag(ComponentTag tag)
 	{
 		final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
-
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behaviour modifiers

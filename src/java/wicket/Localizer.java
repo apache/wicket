@@ -206,8 +206,8 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		// Get markup settings
-		final IResourceSettings settings = application.getResourceSettings();
+		// Get resource settings
+		final IResourceSettings resourceSettings = application.getResourceSettings();
 
 		// If value is cached already ...
 		Class clazz = (component != null ? component.getClass() : null);
@@ -243,12 +243,12 @@ public class Localizer
 
 		// Resource not found, so handle missing resources based on application
 		// configuration
-		if (settings.getUseDefaultOnMissingResource() && (defaultValue != null))
+		if (resourceSettings.getUseDefaultOnMissingResource() && (defaultValue != null))
 		{
 			return defaultValue;
 		}
 
-		if (settings.getThrowExceptionOnMissingResource())
+		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
 			throw new MissingResourceException("Unable to find resource: " + key, (clazz != null
 					? getClass().getName()

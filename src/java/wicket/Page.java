@@ -1,6 +1,11 @@
 /*
+<<<<<<< Page.java
  * $Id$ $Revision$
  * $Date$
+=======
+ * $Id$ $Revision$
+ * $Date$
+>>>>>>> 1.157
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -1169,8 +1174,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final IDebugSettings settings = Application.get().getDebugSettings();
-		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
 			final List unrenderedAutoComponents = new ArrayList();
