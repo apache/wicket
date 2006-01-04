@@ -19,6 +19,7 @@
 package wicket.markup.html;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +55,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if(headIndex != -1 && bodyIndex != -1)
 		{
-			HashMap map = new HashMap(4);
+			Map map = new HashMap(4);
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken)/1000 + "s");
 			
@@ -68,7 +69,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			StringBuffer beginScript = new StringBuffer("\n<script>\nvar clientTimeVariable = new Date().getTime();\n</script>\n");
 			responseBuffer.insert(headIndex+6, beginScript);
 		}
-		log.info( timeTaken + "ms server time taken for request " + RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
+		log.info(timeTaken + "ms server time taken for request " + RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
 		return responseBuffer;
 	}
 

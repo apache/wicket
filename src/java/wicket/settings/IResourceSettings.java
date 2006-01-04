@@ -118,6 +118,8 @@ public interface IResourceSettings
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
+	 * 
+	 * @return boolean
 	 */
 	boolean getThrowExceptionOnMissingResource();
 
@@ -153,6 +155,8 @@ public interface IResourceSettings
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
+	 * 
+	 * @param throwExceptionOnMissingResource
 	 */
 	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
 

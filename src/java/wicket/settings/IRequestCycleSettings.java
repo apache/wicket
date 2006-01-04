@@ -67,7 +67,6 @@ import wicket.settings.Settings.RenderStrategy;
  */
 public interface IRequestCycleSettings
 {
-
 	/**
 	 * All logical parts of a request (the action and render part) are handled
 	 * within the same request. To enable a the client side redirect for a
@@ -82,6 +81,7 @@ public interface IRequestCycleSettings
 	 * </p>
 	 */
 	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
+	
 	/**
 	 * All logical parts of a request (the action and render part) are handled
 	 * within the same request, but instead of streaming the render result to
@@ -90,6 +90,7 @@ public interface IRequestCycleSettings
 	 * request.
 	 */
 	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
+	
 	/**
 	 * The render part of a request (opposed to the 'action part' which is
 	 * either the construction of a bookmarkable page or the execution of a
@@ -153,6 +154,8 @@ public interface IRequestCycleSettings
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
+	 * 
+	 * @return UnexpectedExceptionDisplay
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
 
@@ -234,6 +237,8 @@ public interface IRequestCycleSettings
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
+	 * 
+	 * @param unexpectedExceptionDisplay
 	 */
 	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 
@@ -258,5 +263,4 @@ public interface IRequestCycleSettings
 	 * @return an unmodifiable list of added response filters, null if none
 	 */
 	List getResponseFilters();
-
 }

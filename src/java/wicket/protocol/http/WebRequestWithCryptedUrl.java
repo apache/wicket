@@ -255,7 +255,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 */
 	public Map getParameterMap()
 	{
-		HashMap map = new HashMap(parameters.size(),1);
+		Map map = new HashMap(parameters.size(),1);
 		Iterator it = parameters.keySet().iterator();
 		while (it.hasNext())
 		{
