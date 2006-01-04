@@ -101,21 +101,19 @@ public final class Settings
 {
 
 	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * removed from output
 	 */
-	public static final class RenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
+	boolean stripWicketTags = false;
 
-		RenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	boolean stripXmlDeclarationFromOutput;
 
 	/** The application */
 	private Application application;
+
+	/** the authorization strategy. */
+	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
@@ -123,14 +121,29 @@ public final class Settings
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
 
+	/** class resolver to find classes */
+	private IClassResolver classResolver = new DefaultClassResolver();
+
+	/** List of (static) ComponentResolvers */
+	private List componentResolvers = new ArrayList();
+
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
 
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
 
+	/**
+	 * Factory for the converter instance; default to the non localized factory
+	 * {@link ConverterFactory}.
+	 */
+	private IConverterFactory converterFactory = new ConverterFactory();
+
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
+
+	/** facotry for creating crypt objects */
+	private ICryptFactory cryptFactory;
 
 	/** Default markup for after a disabled link */
 	private String defaultAfterDisabledLink = "</em>";
@@ -138,14 +151,35 @@ public final class Settings
 	/** Default markup for before a disabled link */
 	private String defaultBeforeDisabledLink = "<em>";
 
-	/** class resolver to find classes */
-	private IClassResolver classResolver = new DefaultClassResolver();
-
 	/** The default locale to use */
 	private Locale defaultLocale = Locale.getDefault();
 
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
+
+	/** Home page class */
+	private Class homePage;
+
+	/** Class of internal error page. */
+	private Class internalErrorPage;
+
+	/** I18N support */
+	private Localizer localizer;
+
+	/** factory for creating markup parsers */
+	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
+
+	/** The maximum number of versions of a page to track */
+	private int maxPageVersions = 10;
+
+	/** Map to look up resource factories by name */
+	private final Map nameToResourceFactory = new HashMap();
+
+	/** True if string resource loaders have been overridden */
+	private boolean overriddenStringResourceLoaders = false;
+
+	/** The error page displayed when an expired page is accessed. */
+	private Class pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -154,11 +188,8 @@ public final class Settings
 	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
 			15);
 
-	/** The maximum number of versions of a page to track */
-	private int maxPageVersions = 10;
-
-	/** True if string resource loaders have been overridden */
-	private boolean overriddenStringResourceLoaders = false;
+	/** The factory to be used for the property files */
+	private PropertiesFactory propertiesFactory;
 
 	/**
 	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property
@@ -174,14 +205,12 @@ public final class Settings
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
 
+	/** resource locator for this application */
+	private ResourceStreamLocator resourceStreamLocator;
+
+
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
-
-	/** facotry for creating crypt objects */
-	private ICryptFactory cryptFactory;
-
-	/** factory for creating markup parsers */
-	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
 
 	/**
 	 * List of {@link IResponseFilter}s.
@@ -207,15 +236,6 @@ public final class Settings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
-	/**
-	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
-	 * removed from output
-	 */
-	boolean stripWicketTags = false;
-
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	boolean stripXmlDeclarationFromOutput;
-
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
 
@@ -228,42 +248,22 @@ public final class Settings
 	/** Factory for producing validator error message resource keys */
 	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
 
-
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
-	/** Home page class */
-	private Class homePage;
-
-	/** Class of internal error page. */
-	private Class internalErrorPage;
-
-	/** The error page displayed when an expired page is accessed. */
-	private Class pageExpiredErrorPage;
-
-	/** the authorization strategy. */
-	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
-
 	/**
-	 * Factory for the converter instance; default to the non localized factory
-	 * {@link ConverterFactory}.
+	 * Enumerated type for different ways of handling the render part of
+	 * requests.
 	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
+	public static final class RenderStrategy extends EnumeratedType
+	{
+		private static final long serialVersionUID = 1L;
 
-	/** I18N support */
-	private Localizer localizer;
-
-	/** Map to look up resource factories by name */
-	private final Map nameToResourceFactory = new HashMap();
-
-	/** resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
-
-	/** List of (static) ComponentResolvers */
-	private List componentResolvers = new ArrayList();
-
-	/** The factory to be used for the property files */
-	private PropertiesFactory propertiesFactory;
+		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
 
 
 	/**
@@ -334,30 +334,6 @@ public final class Settings
 		}
 		stringResourceLoaders.add(loader);
 		return this;
-	}
-
-	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
-	 * 
-	 * @param pageClass
-	 *            the page class to check
-	 */
-	private final void checkPageClass(final Class pageClass)
-	{
-		// NOTE: we can't really check on whether it is a bookmarkable page
-		// here, as - though
-		// the default is that a bookmarkable page must either have a default
-		// constructor and/ or
-		// a constructor with a PageParameters object, this could be different
-		// for another
-		// IPageFactory implementation
-
-		if (!Page.class.isAssignableFrom(pageClass))
-		{
-			throw new IllegalArgumentException("argument " + pageClass
-					+ " must be a subclass of Page");
-		}
 	}
 
 	/**
@@ -761,7 +737,6 @@ public final class Settings
 		return this;
 	}
 
-
 	/**
 	 * @see wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
 	 */
@@ -778,6 +753,7 @@ public final class Settings
 	{
 		this.compressWhitespace = compressWhitespace;
 	}
+
 
 	/**
 	 * @see wicket.settings.ISessionSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
@@ -1038,13 +1014,37 @@ public final class Settings
 		}
 		this.validatorResourceKeyFactory = factory;
 	}
-	
+
 	/**
 	 * @see wicket.settings.IPageSettings#setVersionPagesByDefault(boolean)
 	 */
 	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
+	}
+	
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass
+	 * of Page.
+	 * 
+	 * @param pageClass
+	 *            the page class to check
+	 */
+	private final void checkPageClass(final Class pageClass)
+	{
+		// NOTE: we can't really check on whether it is a bookmarkable page
+		// here, as - though
+		// the default is that a bookmarkable page must either have a default
+		// constructor and/ or
+		// a constructor with a PageParameters object, this could be different
+		// for another
+		// IPageFactory implementation
+
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("argument " + pageClass
+					+ " must be a subclass of Page");
+		}
 	}
 
 }
