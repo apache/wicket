@@ -372,7 +372,7 @@ public abstract class Application
 
 	/**
 	 * This method is still here for backwards compatibility with 1.1 source
-	 * code. The get[X]Settings() methods are now preferred. This method will be
+	 * code. The getXXXSettings() methods are now preferred. This method will be
 	 * removed post 1.2 version.
 	 * 
 	 * @return Application settings
