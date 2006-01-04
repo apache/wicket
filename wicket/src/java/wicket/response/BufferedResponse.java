@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import wicket.Application;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 
@@ -169,7 +168,7 @@ public class BufferedResponse extends Response
 	{
         if (redirectUrl == null && stringBuffer != null && stringBuffer.length() != 0)
         {
-        	this.stringBuffer = Application.get().filterResponse(stringBuffer);
+        	this.stringBuffer = filter(stringBuffer);
         }
 	}	
 	/**

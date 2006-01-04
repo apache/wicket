@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -234,35 +233,6 @@ public abstract class Application
 	{
 		configure(configurationType);
 		getResourceSettings().addResourceFolder(resourceFolder);
-	}
-
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * Loops over all the response filters that were set (if any) with the give
-	 * response returns the response buffer itself if there where now filters or
-	 * the response buffer that was created/returned by the filter(s)
-	 * 
-	 * @param responseBuffer
-	 *            The response buffer to be filtered
-	 * @return Returns the filtered string buffer.
-	 */
-	// FIXME move this method somewhere else closer to Response objects, i dont
-	// think this really belongs in the Application
-	public final StringBuffer filterResponse(StringBuffer responseBuffer)
-	{
-		List responseFilters = getRequestCycleSettings().getResponseFilters();
-		if (responseFilters == null)
-		{
-			return responseBuffer;
-		}
-		for (int i = 0; i < responseFilters.size(); i++)
-		{
-			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
-			responseBuffer = filter.filter(responseBuffer);
-		}
-		return responseBuffer;
 	}
 
 	/**
