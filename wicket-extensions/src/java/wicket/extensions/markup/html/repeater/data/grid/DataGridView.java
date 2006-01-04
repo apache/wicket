@@ -138,7 +138,7 @@ public class DataGridView extends AbstractDataGridView
 	 *            Item container representing the row
 	 * 
 	 * @see Item
-	 * @see IBehaviour
+	 * @see wicket.behavior.IBehavior
 	 * @see AttributeModifier
 	 * @see SimpleAttributeModifier
 	 */
@@ -157,7 +157,7 @@ public class DataGridView extends AbstractDataGridView
 	 *            Item container representing the cell
 	 * 
 	 * @see Item
-	 * @see IBehaviour
+	 * @see wicket.behavior.IBehavior
 	 * @see AttributeModifier
 	 * @see SimpleAttributeModifier
 	 */

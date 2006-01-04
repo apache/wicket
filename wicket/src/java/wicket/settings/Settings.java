@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -169,8 +169,8 @@ public final class Settings
 	private ICryptFactory cryptFactory;
 
 	/** factory for creating markup parsers */
-	private IMarkupParserFactory markupParserFactory=new MarkupParserFactory(this);
-	
+	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
+
 	/**
 	 * List of {@link IResponseFilter}s.
 	 */
@@ -238,6 +238,7 @@ public final class Settings
 	 */
 	private IConverterFactory converterFactory = new ConverterFactory();
 
+	/** I18N support */
 	private Localizer localizer;
 
 	/** Map to look up resource factories by name */
@@ -251,7 +252,6 @@ public final class Settings
 
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
-
 
 	/**
 	 * Enumerated type for different ways of handling the render part of
@@ -404,7 +404,6 @@ public final class Settings
 	{
 		return pageFactory;
 	}
-
 
 	/**
 	 * @see wicket.settings.ISessionSettings#getPageMapEvictionStrategy()
@@ -618,7 +617,6 @@ public final class Settings
 		this.pageFactory = defaultPageFactory;
 		return this;
 	}
-
 
 	/**
 	 * @see wicket.settings.ISessionSettings#setPageMapEvictionStrategy(wicket.session.pagemap.IPageMapEvictionStrategy)
@@ -1054,11 +1052,12 @@ public final class Settings
 	 */
 	public void setMarkupParserFactory(IMarkupParserFactory factory)
 	{
-		if (factory==null) {
+		if (factory == null)
+		{
 			throw new IllegalArgumentException("markup parser factory cannot be null");
 		}
-		
-		this.markupParserFactory=factory;
+
+		this.markupParserFactory = factory;
 	}
 
 	/**
@@ -1068,6 +1067,4 @@ public final class Settings
 	{
 		return markupParserFactory;
 	}
-
-
 }

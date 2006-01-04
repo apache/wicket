@@ -63,13 +63,11 @@ import wicket.util.lang.PackageName;
  * init() method. For example:
  * 
  * <pre>
- * 
- * public void init()
- * {
- *   String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *   URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *  ...
- *  
+ *    public void init()
+ *    {
+ *        String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *        ...
  * </pre>
  * 
  * @see WicketServlet
@@ -78,7 +76,8 @@ import wicket.util.lang.PackageName;
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Johan Compagner
- * @uahtor Eelco Hillenius
+ * @author Eelco Hillenius
+ * @author Juergen Donnerstag
  */
 public abstract class WebApplication extends Application
 {
@@ -86,7 +85,7 @@ public abstract class WebApplication extends Application
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
-	private Map bufferedResponses = new HashMap();
+	private final Map bufferedResponses = new HashMap();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -122,7 +121,7 @@ public abstract class WebApplication extends Application
 
 		// Add resolver for automatically resolving HTML links
 		getRequestCycleSettings().getComponentResolvers().add(new AutoLinkResolver());
-		}
+	}
 
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
@@ -390,8 +389,6 @@ public abstract class WebApplication extends Application
 		{
 			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
-
-
 	}
 
 	/**

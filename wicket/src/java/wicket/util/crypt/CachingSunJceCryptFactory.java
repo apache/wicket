@@ -29,8 +29,6 @@ public class CachingSunJceCryptFactory extends CryptFactoryCachingDecorator
 	/**
 	 * Construct.
 	 * 
-	 * @param cryptClass
-	 *            class that represents the {@link ICrypt} object
 	 * @param encryptionKey
 	 *            encryption key
 	 */

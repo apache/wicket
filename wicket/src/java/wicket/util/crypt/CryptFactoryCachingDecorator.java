@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: CryptFactoryCachingDecorator.java,v 1.2 2006/01/04 09:42:04 ivaynberg
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,11 +17,10 @@
  */
 package wicket.util.crypt;
 
-import wicket.Application;
 
 /**
  * {@link ICryptFactory} decorator that caches the call to
- * {@link ICryptFactory#newCrypt(Application) }
+ * {@link ICryptFactory#newCrypt()}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -34,9 +33,8 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	 * Construct.
 	 * 
 	 * @param delegate
-	 *            the crypt factory whose
-	 *            {@link ICryptFactory#newCrypt(Application) } call will be
-	 *            cached
+	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call
+	 *            will be cached
 	 */
 	public CryptFactoryCachingDecorator(ICryptFactory delegate)
 	{
@@ -58,5 +56,4 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 		}
 		return cache;
 	}
-
 }

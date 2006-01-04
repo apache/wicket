@@ -43,7 +43,7 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
- * @see Application#getLocalizer()
+ * @see wicket.settings.Settings#getLocalizer()
  */
 public class Localizer
 {
@@ -69,7 +69,7 @@ public class Localizer
 	public Localizer(final Application application)
 	{
 		this.application = application;
-
+		
 		// Register a listener to the properties factory which is invoked after
 		// a properties file has been reloaded.
 		application.getResourceSettings().getPropertiesFactory().addListener(new IPropertiesReloadListener()

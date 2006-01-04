@@ -29,7 +29,6 @@ import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestWithCryptedUrl;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebResponseWithCryptedUrl;
-import wicket.util.crypt.SunJceCrypt;
 
 /**
  * Application class for form input example.
@@ -46,15 +45,14 @@ public class FormInputApplication extends WicketExampleApplication
 		getRequiredPageSettings().setHomePage(FormInput.class);
 		getSettings().setThrowExceptionOnMissingResource(false);
 
-
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u4E4B\u5916"));
+		
 		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
 	}
-
 
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
@@ -71,6 +69,4 @@ public class FormInputApplication extends WicketExampleApplication
 	{
 		return new WebResponseWithCryptedUrl(servletResponse);
 	}
-
-
 }

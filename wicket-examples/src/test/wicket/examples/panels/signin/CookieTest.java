@@ -38,7 +38,6 @@ import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.ISecuritySettings;
 import wicket.util.crypt.ICrypt;
-import wicket.util.crypt.NoCrypt;
 import wicket.util.crypt.NoCryptFactory;
 
 

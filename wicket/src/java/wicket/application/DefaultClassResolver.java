@@ -22,7 +22,8 @@ import wicket.WicketRuntimeException;
 /**
  * Resolves a class by using the classloader that loaded this class.
  * 
- * @see ApplicationSettings
+ * @see wicket.settings.Settings#getClassResolver()
+ * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */

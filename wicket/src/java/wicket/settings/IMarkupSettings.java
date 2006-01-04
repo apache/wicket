@@ -159,9 +159,8 @@ public interface IMarkupSettings
 
 	/**
 	 * Get the application's localizer.
-	 * <p>
 	 * 
-	 * @see ApplicationSettings#addStringResourceLoader(IStringResourceLoader)
+	 * @see wicket.settings.Settings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 *      for means of extending the way Wicket resolves keys to localized
 	 *      messages.
 	 * 

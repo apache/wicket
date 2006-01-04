@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -795,7 +796,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 				FileUploadException e = (FileUploadException)wre.getCause();
 				// Create model with exception and maximum size values
-				final HashMap model = new HashMap();
+				final Map model = new HashMap();
 				model.put("exception", e);
 				model.put("maxSize", maxSize);
 
