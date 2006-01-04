@@ -36,7 +36,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	public NiceUrlApplication()
 	{
 		super();
-		getPages().setHomePage(Home.class);
+		getRequiredPageSettings().setHomePage(Home.class);
 
 		// mount single bookmarkable pages
 		mountBookmarkablePage("/the/homepage/path", Home.class);

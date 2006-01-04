@@ -30,10 +30,10 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ApplicationSettings;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
+import wicket.settings.Settings;
 import wicket.util.io.Streams;
 import wicket.util.string.StringList;
 
@@ -72,8 +72,8 @@ public class SortableTableHeadersTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getSettings().setRenderStrategy(ApplicationSettings.REDIRECT_TO_BUFFER);
-		application.getPages().setHomePage(SortableTableHeadersPage.class);
+		application.getSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
+		application.getRequiredPageSettings().setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();

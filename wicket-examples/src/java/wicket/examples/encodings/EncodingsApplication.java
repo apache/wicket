@@ -31,7 +31,7 @@ public class EncodingsApplication extends WicketExampleApplication
      */
     public EncodingsApplication()
     {
-        getPages().setHomePage(Home.class);
+        getRequiredPageSettings().setHomePage(Home.class);
     }
 }
 

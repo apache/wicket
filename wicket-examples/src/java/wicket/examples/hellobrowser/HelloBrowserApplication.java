@@ -40,7 +40,7 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	 */
 	public HelloBrowserApplication()
 	{
-		getPages().setHomePage(HelloBrowser.class);
+		getRequiredPageSettings().setHomePage(HelloBrowser.class);
 	}
 
 	/**

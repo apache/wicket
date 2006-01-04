@@ -31,6 +31,6 @@ public class HelloWorldApplication extends WicketExampleApplication
 	 */
 	public HelloWorldApplication()
 	{
-		getPages().setHomePage(HelloWorld.class);
+		getRequiredPageSettings().setHomePage(HelloWorld.class);
 	}
 }

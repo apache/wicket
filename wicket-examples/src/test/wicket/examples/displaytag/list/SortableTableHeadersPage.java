@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
-import wicket.examples.displaytag.list.SortableListViewHeader;
-import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;

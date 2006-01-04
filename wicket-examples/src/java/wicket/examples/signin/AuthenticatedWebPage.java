@@ -19,7 +19,6 @@
 package wicket.examples.signin;
 
 import wicket.examples.WicketExamplePage;
-import wicket.examples.signin.SignInSession;
 
 /**
  *

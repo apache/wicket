@@ -36,7 +36,7 @@ public class RepeaterApplication extends WebApplication
 	 */
 	public RepeaterApplication()
 	{
-		getPages().setHomePage(Index.class);
+		getRequiredPageSettings().setHomePage(Index.class);
 		getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 	}
 

@@ -31,15 +31,15 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ApplicationSettings;
-import wicket.examples.panels.signin.SignInPanel;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.settings.ISecuritySettings;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
+import wicket.util.crypt.NoCryptFactory;
 
 
 /**
@@ -75,11 +75,11 @@ public class CookieTest extends TestCase
         super.setUp();
         
         application = new MockWebApplication(null);
-        application.getPages().setHomePage(MockPage.class);
+        application.getRequiredPageSettings().setHomePage(MockPage.class);
         application.setupRequestAndResponse();
 
-        final ApplicationSettings settings = application.getSettings();
-        settings.setCryptClass(NoCrypt.class);
+        final ISecuritySettings settings = application.getSettings();
+        settings.setCryptFactory(new NoCryptFactory());
 
         this.panel = new SignInPanel("panel")
 		{
@@ -92,7 +92,7 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-        final ICrypt crypt = application.newCrypt();
+        final ICrypt crypt = application.getSecuritySettings().getCryptFactory().newCrypt();
         final String encryptedPassword = crypt.encrypt("test");
         assertNotNull(encryptedPassword);
         this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");

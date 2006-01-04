@@ -32,6 +32,6 @@ public class TemplateApplication extends WicketExampleApplication
      */
     public TemplateApplication()
     {
-        getPages().setHomePage(Page1.class);
+        getRequiredPageSettings().setHomePage(Page1.class);
     }
 }

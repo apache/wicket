@@ -40,7 +40,7 @@ public final class SignIn2Application extends WicketExampleApplication
      */
     public SignIn2Application()
     {
-        getPages().setHomePage(Home.class);
+        getRequiredPageSettings().setHomePage(Home.class);
     }
     
     /**

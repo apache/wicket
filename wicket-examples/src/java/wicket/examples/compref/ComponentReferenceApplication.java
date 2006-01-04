@@ -53,7 +53,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	 */
 	public ComponentReferenceApplication()
 	{
-		getPages().setHomePage(Index.class);
+		getRequiredPageSettings().setHomePage(Index.class);
 		getSettings().setThrowExceptionOnMissingResource(false);
 	}
 }

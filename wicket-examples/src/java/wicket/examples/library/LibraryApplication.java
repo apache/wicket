@@ -18,10 +18,10 @@
  */
 package wicket.examples.library;
 
-import wicket.ApplicationSettings;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
+import wicket.settings.Settings;
 
 /**
  * WicketServlet class for example.
@@ -34,9 +34,9 @@ public final class LibraryApplication extends WicketExampleApplication
      */
     public LibraryApplication()
     {
-        getPages().setHomePage(Home.class);
+        getRequiredPageSettings().setHomePage(Home.class);
         getSettings().setThrowExceptionOnMissingResource(false);
-		getSettings().setRenderStrategy(ApplicationSettings.REDIRECT_TO_RENDER);
+		getSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
     }
     
     /**

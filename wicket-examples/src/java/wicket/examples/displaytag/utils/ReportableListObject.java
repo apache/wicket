@@ -21,10 +21,9 @@ package wicket.examples.displaytag.utils;
 import java.io.Serializable;
 import java.util.Random;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
 
 
 /**

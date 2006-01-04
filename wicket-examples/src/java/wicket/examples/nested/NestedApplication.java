@@ -32,6 +32,6 @@ public class NestedApplication extends WicketExampleApplication
      */
     public NestedApplication()
     {
-        getPages().setHomePage(Home.class);
+        getRequiredPageSettings().setHomePage(Home.class);
     }
 }

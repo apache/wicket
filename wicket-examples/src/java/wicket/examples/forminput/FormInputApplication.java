@@ -43,12 +43,11 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 	public FormInputApplication()
 	{
-		getPages().setHomePage(FormInput.class);
+		getRequiredPageSettings().setHomePage(FormInput.class);
 		getSettings().setThrowExceptionOnMissingResource(false);
 
-		getSettings().setCryptClass(SunJceCrypt.class);
 
-		addResponseFilter(new ServerAndClientTimeFilter());
+		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u4E4B\u5916"));

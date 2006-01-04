@@ -18,7 +18,6 @@
 package wicket.examples.guestbook;
 
 import java.io.Serializable;
-
 import java.util.Date;
 
 /**
