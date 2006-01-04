@@ -372,7 +372,8 @@ public abstract class Application
 
 	/**
 	 * This method is still here for backwards compatibility with 1.1 source
-	 * code. The get[X]Settings() methods are now preferred.
+	 * code. The get[X]Settings() methods are now preferred. This method will be
+	 * removed post 1.2 version.
 	 * 
 	 * @return Application settings
 	 * 
@@ -387,9 +388,7 @@ public abstract class Application
 	 * @see Application#getSessionSettings()
 	 * @deprecated
 	 */
-	// FIXME this needs to become private and classes switched to using proper
-	// interfaces intead of the generic object - igor
-	// TODO should we just leave this here for backards src compat? - jonathan
+	// TODO remove post wicket 1.2
 	public Settings getSettings()
 	{
 		if (settings == null)
