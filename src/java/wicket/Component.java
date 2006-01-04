@@ -41,6 +41,8 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
+import wicket.settings.IRequiredPageSettings;
+import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -674,11 +676,11 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * belongs to.
 	 * 
 	 * @return The application pages
-	 * @see ApplicationPages
+	 * @see IRequiredPageSettings
 	 */
-	public final ApplicationPages getApplicationPages()
+	public final IRequiredPageSettings getApplicationPages()
 	{
-		return getApplication().getPages();
+		return getApplication().getRequiredPageSettings();
 	}
 
 	/**
@@ -687,9 +689,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * @return The application settings from the application that this component
 	 *         belongs to
-	 * @see ApplicationSettings
+	 * @see Settings
 	 */
-	public final ApplicationSettings getApplicationSettings()
+	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
 	}
@@ -760,7 +762,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final Localizer getLocalizer()
 	{
-		return getApplication().getLocalizer();
+		return getApplication().getMarkupSettings().getLocalizer();
 	}
 
 	/**
@@ -1576,7 +1578,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!getApplication().getAuthorizationStrategy().allowEnabledState(this))
+		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowEnabledState(this))
 		{
 			throw new UnauthorizedEnabledStateException(
 					"operation not allowed in the current authorization context");
@@ -2199,7 +2201,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
-		final ApplicationSettings settings = getApplication().getSettings();
+		final Settings settings = getApplication().getSettings();
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply behaviour modifiers
@@ -2503,7 +2505,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	private final void checkAuthorization()
 	{
-		if (!getApplication().getAuthorizationStrategy().allowInstantiation(getClass()))
+		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowInstantiation(getClass()))
 		{
 			throw new UnauthorizedInstantiationException(
 					"insufficiently authorized to create component " + getClass());

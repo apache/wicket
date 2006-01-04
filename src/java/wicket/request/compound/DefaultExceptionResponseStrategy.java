@@ -18,7 +18,6 @@
 package wicket.request.compound;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.IPageFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -27,6 +26,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.request.IPageRequestTarget;
+import wicket.settings.Settings;
 
 /**
  * Default implementation of
@@ -56,7 +56,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
-		final ApplicationSettings settings = application.getSettings();
+		final Settings settings = application.getSettings();
 		final Page responsePage = requestCycle.getResponsePage();
 
 		Page override = onRuntimeException(responsePage, e);
@@ -65,13 +65,13 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			requestCycle.setResponsePage(override);
 			requestCycle.setRedirect(true);
 		}
-		else if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+		else if (settings.getUnexpectedExceptionDisplay() != Settings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
+			Class internalErrorPageClass = application.getRequiredPageSettings().getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+					&& settings.getUnexpectedExceptionDisplay() == Settings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
 				final IPageFactory pageFactory;

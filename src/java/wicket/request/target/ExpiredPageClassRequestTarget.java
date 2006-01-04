@@ -32,6 +32,6 @@ public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
 	 */
 	public ExpiredPageClassRequestTarget()
 	{
-		super(Application.get().getPages().getPageExpiredErrorPage());
+		super(Application.get().getRequiredPageSettings().getPageExpiredErrorPage());
 	}
 }

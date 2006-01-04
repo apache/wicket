@@ -54,7 +54,7 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(PagedTableNavigatorWithMarginPage.class);
+		application.getRequiredPageSettings().setHomePage(PagedTableNavigatorWithMarginPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)application.getLastRenderedPage();

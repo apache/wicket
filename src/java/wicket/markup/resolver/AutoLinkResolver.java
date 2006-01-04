@@ -20,7 +20,6 @@ package wicket.markup.resolver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
@@ -35,6 +34,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
@@ -180,8 +180,8 @@ public final class AutoLinkResolver implements IComponentResolver
 				// Wicket will not throw an exception. It accepts it.
 				infoPath = Strings.replaceAll(infoPath, "/", ".");
 	
-				final ApplicationSettings appSettings = page.getApplicationSettings();
-				final IClassResolver defaultClassResolver = appSettings.getDefaultClassResolver();
+				final IRequestCycleSettings appSettings = page.getApplicationSettings();
+				final IClassResolver defaultClassResolver = appSettings.getClassResolver();
 				
 				final String className;
 				if (!infoPath.startsWith("."))

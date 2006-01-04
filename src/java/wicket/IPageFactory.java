@@ -17,11 +17,14 @@
  */
 package wicket;
 
+import wicket.settings.Settings;
+
+
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
  * without a PageParameters argument to pass to the Page's constructor. 
  *
- * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
+ * @see Settings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()
  * @see Session#getPageFactory(Page)
  * 

@@ -4,7 +4,6 @@
 package wicket.behavior;
 
 import wicket.Component;
-import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 
 /**

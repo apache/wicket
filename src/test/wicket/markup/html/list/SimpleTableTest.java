@@ -55,7 +55,7 @@ public class SimpleTableTest extends TestCase
 	public void testSimpleTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(SimpleTablePage.class);
+		application.getRequiredPageSettings().setHomePage(SimpleTablePage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		SimpleTablePage page = (SimpleTablePage)application.getLastRenderedPage();

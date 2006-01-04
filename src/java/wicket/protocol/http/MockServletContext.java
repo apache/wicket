@@ -17,20 +17,21 @@
  */
 package wicket.protocol.http;
 
-import java.util.Set;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Collections;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.servlet.ServletContext;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

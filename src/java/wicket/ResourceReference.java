@@ -17,8 +17,8 @@
  */
 package wicket;
 
-import java.util.Locale;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * ResourceReference is essentially a reference to an actual resource which is

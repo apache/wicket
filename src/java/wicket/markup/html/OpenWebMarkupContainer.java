@@ -19,7 +19,6 @@ package wicket.markup.html;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 

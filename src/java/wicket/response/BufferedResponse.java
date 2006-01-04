@@ -28,7 +28,7 @@ import wicket.WicketRuntimeException;
 /**
  * Holds a rendered response for future use.
  * 
- * @see wicket.ApplicationSettings.RenderStrategy
+ * @see wicket.settings.Settings.RenderStrategy
  * 
  * @author Johan Compagner
  * @author Eelco Hillenius

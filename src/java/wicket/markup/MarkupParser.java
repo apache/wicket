@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
@@ -38,6 +37,7 @@ import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
+import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 
@@ -111,7 +111,7 @@ public class MarkupParser
 	 * Configure the markup parser based on Wicket application settings
 	 * @param settings Wicket application settings
 	 */
-	public final void configure(final ApplicationSettings settings)
+	public final void configure(final IMarkupSettings settings)
 	{
         this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();

@@ -27,7 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -39,7 +38,7 @@ import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.session.DefaultPageFactory;
-import wicket.util.file.IResourceFinder;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.file.WebApplicationPath;
 
 /**
@@ -126,30 +125,24 @@ public class MockWebApplication extends WebApplication
 	public MockWebApplication(final String path)
 	{
 		Application.set(this);
+
 		context = new MockServletContext(this, path);
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
 		servletResponse = new MockHttpServletResponse();
 		wicketRequest = newWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
-		ApplicationSettings settings = getSettings();
-		settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
+
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
+		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+		
 	}
 
-	/**
-	 * @see wicket.protocol.http.WebApplication#createApplicationSettings()
-	 */
-	public ApplicationSettings createApplicationSettings()
+	protected void init()
 	{
-		return new ApplicationSettings(this)
-		{
-			public IResourceFinder newResourceFinder()
-			{
-				return new WebApplicationPath(context);
-			}
-		};
-	}
 
+	}
+	
 	/**
 	 * Get the page that was just rendered by the last request cycle processing.
 	 * 

@@ -291,7 +291,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	private IResourceFactory getResourceFactory(final Application application,
 			final String factoryName)
 	{
-		final IResourceFactory factory = application.getResourceFactory(factoryName);
+		final IResourceFactory factory = application.getResourceSettings().getResourceFactory(factoryName);
 
 		// Found factory?
 		if (factory == null)

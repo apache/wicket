@@ -145,7 +145,7 @@ public class MarkupCache
 	private MarkupResourceStream newMarkupResourceStream(final Class containerClass,
 			final ContainerInfo containerInfo)
 	{
-		IResourceStream markupResource = application.getResourceStreamLocator().locate(
+		IResourceStream markupResource = application.getResourceSettings().getResourceStreamLocator().locate(
 				containerClass, containerInfo.getStyle(), containerInfo.getLocale(),
 				containerInfo.getFileExtension());
 
@@ -241,7 +241,7 @@ public class MarkupCache
 		try
 		{
 			// read and parse the markup
-			Markup markup = application.newMarkupParser().readAndParse(markupResourceStream);
+			Markup markup = application.getMarkupSettings().getMarkupParserFactory().newMarkupParser().readAndParse(markupResourceStream);
 
 			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.
@@ -295,7 +295,7 @@ public class MarkupCache
 			final MarkupResourceStream markupResourceStream)
 	{
 		// Watch file in the future
-		final ModificationWatcher watcher = application.getResourceWatcher();
+		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher();
 		if (watcher != null)
 		{
 			watcher.add(markupResourceStream, new IChangeListener()

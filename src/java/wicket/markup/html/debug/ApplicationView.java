@@ -18,9 +18,9 @@
 package wicket.markup.html.debug;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
+import wicket.settings.Settings;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket
@@ -46,7 +46,7 @@ public final class ApplicationView extends Panel
 
 		// Basic attributes
 		add(new Label("name", application.getName()));
-		ApplicationSettings settings = application.getSettings();
+		Settings settings = application.getSettings();
 		add(new Label("componentUseCheck", "" + settings.getComponentUseCheck()));
 		add(new Label("compressWhitespace", "" + settings.getCompressWhitespace()));
 		add(new Label("defaultLocale", "" + settings.getDefaultLocale()));

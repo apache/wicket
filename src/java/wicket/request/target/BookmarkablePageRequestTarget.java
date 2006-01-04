@@ -266,7 +266,7 @@ public class BookmarkablePageRequestTarget
 		 */
 		// construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSettings()
-				.getDefaultPageFactory();
+				.getPageFactory();
 		return pageFactory.newPage(pageClass, params);
 	}
 

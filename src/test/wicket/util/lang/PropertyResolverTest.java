@@ -27,11 +27,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import junit.framework.TestCase;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.Converter;
-import wicket.util.lang.PropertyResolver;
-import junit.framework.TestCase;
 
 /**
  * @author jcompagner

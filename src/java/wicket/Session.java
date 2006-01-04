@@ -252,7 +252,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return application.getSettings().getDefaultClassResolver();
+		return application.getSettings().getClassResolver();
 	}
 
 	/**
@@ -286,7 +286,7 @@ public abstract class Session implements Serializable
 		if (converter == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(getLocale());
+			converter = getApplication().getSessionSettings().getConverterFactory().newConverter(getLocale());
 		}
 		return converter;
 	}
@@ -369,7 +369,7 @@ public abstract class Session implements Serializable
 	{
 		if (pageFactory == null)
 		{
-			pageFactory = application.getSettings().getDefaultPageFactory();
+			pageFactory = application.getSettings().getPageFactory();
 		}
 		return pageFactory;
 	}

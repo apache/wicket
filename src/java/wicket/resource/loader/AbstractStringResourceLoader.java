@@ -198,7 +198,7 @@ public abstract class AbstractStringResourceLoader
 	 */
 	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
 	{
-		return application.getPropertiesFactory().get(application, clazz, style, locale);
+		return application.getResourceSettings().getPropertiesFactory().get(application, clazz, style, locale);
 	}
 
 	/**

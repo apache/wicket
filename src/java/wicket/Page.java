@@ -41,6 +41,8 @@ import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.settings.IPageSettings;
+import wicket.settings.Settings;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -909,7 +911,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected IPageVersionManager newVersionManager()
 	{
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		final IPageSettings settings = getSession().getApplication().getSettings();
 		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
 	}
 
@@ -923,7 +925,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// in the components, and when a authorization exception is thrown
 		// it will be block the rendering of this page
 		final IAuthorizationStrategy authorizationStrategy = getApplication()
-				.getAuthorizationStrategy();
+				.getSecuritySettings().getAuthorizationStrategy();
 		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
@@ -1166,7 +1168,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final ApplicationSettings settings = Application.get().getSettings();
+		final Settings settings = Application.get().getSettings();
 		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();

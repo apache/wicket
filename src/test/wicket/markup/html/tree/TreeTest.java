@@ -60,7 +60,7 @@ public class TreeTest extends TestCase
 		System.out.println("=== " + TreePage.class.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(TreePage.class);
+		application.getRequiredPageSettings().setHomePage(TreePage.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -90,7 +90,7 @@ public class TreeTest extends TestCase
 		System.out.println("=== " + TreePageWithBorder.class.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(TreePageWithBorder.class);
+		application.getRequiredPageSettings().setHomePage(TreePageWithBorder.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -121,7 +121,7 @@ public class TreeTest extends TestCase
 		System.out.println("=== " + TreePageNoWicketHeadTag.class.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(TreePageNoWicketHeadTag.class);
+		application.getRequiredPageSettings().setHomePage(TreePageNoWicketHeadTag.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -183,7 +183,7 @@ public class TreeTest extends TestCase
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
+		application.getRequiredPageSettings().setHomePage(pageClass);
 
 		// Do the processing
 		application.setupRequestAndResponse();

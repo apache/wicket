@@ -1248,7 +1248,7 @@ public abstract class MarkupContainer extends Component
 				}
 
 				// 3rd try: Try application's component resolvers
-				final List componentResolvers = this.getApplication().getComponentResolvers();
+				final List componentResolvers = this.getApplication().getRequestCycleSettings().getComponentResolvers();
 				final Iterator iterator = componentResolvers.iterator();
 				while (iterator.hasNext())
 				{

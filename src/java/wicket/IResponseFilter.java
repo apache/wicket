@@ -20,12 +20,13 @@ package wicket;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.response.BufferedResponse;
+import wicket.settings.Settings;
 
 /**
  * A response filter can be added to the {@link Application#addResponseFilter(IResponseFilter)} object  
  * The will be called from the {@link BufferedResponse} or {@link BufferedWebResponse} objects
  * right before they would send it to the real responses. 
- * You have to use the {@link ApplicationSettings#setBufferResponse(boolean)}(to true which is the default) 
+ * You have to use the {@link Settings#setBufferResponse(boolean)}(to true which is the default) 
  * for this filtering to work.
  *  
  * @author jcompagner

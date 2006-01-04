@@ -18,10 +18,10 @@
  */
 package wicket.util.string;
 
+import java.io.UnsupportedEncodingException;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Test cases for the <code>Strings</code> class.

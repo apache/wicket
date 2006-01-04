@@ -103,7 +103,7 @@ public class WicketNamespaceTest extends TestCase
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
+		application.getRequiredPageSettings().setHomePage(pageClass);
 
 		// Do the processing
 		application.setupRequestAndResponse();
