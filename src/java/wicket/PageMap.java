@@ -292,7 +292,7 @@ public final class PageMap implements Serializable
 			session.setAttribute(attribute, entry);		
 
 			// Evict any page(s) as need be
-			session.getApplication().getSettings().getPageMapEvictionStrategy().evict(this);
+			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);
 		}
 	}
 

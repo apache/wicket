@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.235 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -1578,7 +1578,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowEnabledState(this))
+		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowEnabledState(
+				this))
 		{
 			throw new UnauthorizedEnabledStateException(
 					"operation not allowed in the current authorization context");
@@ -2201,8 +2202,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
-		final Settings settings = getApplication().getSettings();
-		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
+		final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
+
+		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behaviour modifiers
 			if ((behaviours != null) && !behaviours.isEmpty() && !tag.isClose()
@@ -2222,7 +2224,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 			}
 
 			// Write the tag
-			tag.writeOutput(getResponse(), settings.getStripWicketTags(), this.findMarkupStream()
+			tag.writeOutput(getResponse(), stripWicketTags, this.findMarkupStream()
 					.getWicketNamespace());
 		}
 	}
@@ -2505,7 +2507,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	private final void checkAuthorization()
 	{
-		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowInstantiation(getClass()))
+		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowInstantiation(
+				getClass()))
 		{
 			throw new UnauthorizedInstantiationException(
 					"insufficiently authorized to create component " + getClass());

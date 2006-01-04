@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.142 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,8 +41,8 @@ import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
-import wicket.settings.Settings;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -911,7 +911,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected IPageVersionManager newVersionManager()
 	{
-		final IPageSettings settings = getSession().getApplication().getSettings();
+		final IPageSettings settings = getSession().getApplication().getPageSettings();
 		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
 	}
 
@@ -924,8 +924,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// we set any result; positive or negative as a temporary boolean
 		// in the components, and when a authorization exception is thrown
 		// it will be block the rendering of this page
-		final IAuthorizationStrategy authorizationStrategy = getApplication()
-				.getSecuritySettings().getAuthorizationStrategy();
+		final IAuthorizationStrategy authorizationStrategy = getApplication().getSecuritySettings()
+				.getAuthorizationStrategy();
 		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
@@ -1018,7 +1018,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
-		if (Application.get().getSettings().getComponentUseCheck())
+		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
@@ -1168,7 +1168,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final Settings settings = Application.get().getSettings();
+		final IDebugSettings settings = Application.get().getDebugSettings();
 		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
@@ -1263,7 +1263,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		setNumericId(getPageMap().nextId());
 
 		// Set versioning of page based on default
-		setVersioned(Application.get().getSettings().getVersionPagesByDefault());
+		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package wicket.settings;
 
+import java.util.List;
 import java.util.Locale;
 
 import wicket.IResourceFactory;
@@ -92,6 +93,11 @@ public interface IResourceSettings
 	 * @return This
 	 */
 	IPageSettings addStringResourceLoader(final IStringResourceLoader loader);
+
+	/**
+	 * @return an unmodifiable list of all available string resource loaders
+	 */
+	List getStringResourceLoaders();
 
 	/**
 	 * @return Returns the defaultLocale.
