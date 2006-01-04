@@ -3,6 +3,7 @@ package wicket.settings;
 import java.util.Locale;
 
 import wicket.application.IClassResolver;
+import wicket.util.convert.IConverterFactory;
 
 /**
  * Settings interface for application settings.
@@ -14,6 +15,9 @@ import wicket.application.IClassResolver;
  * bookmarkable page class to display expired page errors in a different way.
  * You can set property homePageRenderStrategy to choose from different ways the
  * home page url shows up in your browser.
+ * <p>
+ * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can
+ * provide your own factory which creates locale sensitive Converter instances.
  * 
  * @author Jonathan Locke
  */
@@ -25,6 +29,13 @@ public interface IApplicationSettings
 	 * @return Default class resolver
 	 */
 	IClassResolver getClassResolver();
+
+	/**
+	 * Gets the converter factory.
+	 * 
+	 * @return the converter factory
+	 */
+	IConverterFactory getConverterFactory();
 
 	/**
 	 * @return Returns the defaultLocale.
@@ -55,6 +66,14 @@ public interface IApplicationSettings
 	 * @return This
 	 */
 	IPageSettings setClassResolver(final IClassResolver defaultClassResolver);
+
+	/**
+	 * Sets converter factory
+	 * 
+	 * @param factory
+	 *            new factory
+	 */
+	void setConverterFactory(IConverterFactory factory);
 
 	/**
 	 * @param defaultLocale
