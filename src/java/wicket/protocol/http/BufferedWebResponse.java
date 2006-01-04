@@ -19,7 +19,6 @@ package wicket.protocol.http;
 
 import javax.servlet.http.HttpServletResponse;
 
-import wicket.Application;
 import wicket.WicketRuntimeException;
 
 /**
@@ -108,7 +107,7 @@ public class BufferedWebResponse extends WebResponse
 	{
         if (redirectURL == null && buffer.length() != 0)
         {
-        	this.buffer = Application.get().filterResponse(buffer);
+        	this.buffer = filter(buffer);
 
         }
 	}

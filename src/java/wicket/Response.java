@@ -18,6 +18,7 @@
 package wicket;
 
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
@@ -66,6 +67,49 @@ public abstract class Response
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * Loops over all the response filters that were set (if any) with the give
+	 * response returns the response buffer itself if there where now filters or
+	 * the response buffer that was created/returned by the filter(s)
+	 * 
+	 * @param responseBuffer
+	 *            The response buffer to be filtered
+	 * @return Returns the filtered string buffer.
+	 */
+	public final StringBuffer filter(StringBuffer responseBuffer)
+	{
+		List responseFilters = Application.get().getRequestCycleSettings().getResponseFilters();
+		if (responseFilters == null)
+		{
+			return responseBuffer;
+		}
+		for (int i = 0; i < responseFilters.size(); i++)
+		{
+			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
+			responseBuffer = filter.filter(responseBuffer);
+		}
+		return responseBuffer;
+	}
+
+	/**
+	 * Get the default encoding
+	 * 
+	 * @return default encoding
+	 */
+	public String getCharacterEncoding()
+	{
+		if (this.defaultEncoding == null)
+		{
+			return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+		}
+		else
+		{
+			return this.defaultEncoding;
+		}
+	}
+
+	/**
 	 * @return The output stream for this response
 	 */
 	public abstract OutputStream getOutputStream();
@@ -97,6 +141,19 @@ public abstract class Response
 	}
 
 	/**
+	 * Set the default encoding for the output. 
+	 * Note: It is up to the derived class to make use of the information.
+	 * Class Respsonse simply stores the value, but does not apply
+	 * it anywhere automatically.
+	 * 
+	 * @param encoding
+	 */
+	public void setCharacterEncoding(final String encoding)
+	{
+	    this.defaultEncoding = encoding;
+	}
+	
+	/**
 	 * Set the content length on the response, if appropriate in the subclass.
 	 * This default implementation does nothing.
 	 * 
@@ -117,7 +174,7 @@ public abstract class Response
 	public void setContentType(final String mimeType)
 	{
 	}
-	
+
 	/**
 	 * Set the contents last modified time, if appropriate in the subclass.
 	 * This default implementation does nothing.
@@ -127,43 +184,13 @@ public abstract class Response
 	public void setLastModifiedTime(Time time)
 	{
 	}
-
+	
 	/**
 	 * @param locale
 	 *            Locale to use for this response
 	 */
 	public void setLocale(final Locale locale)
 	{
-	}
-
-	/**
-	 * Set the default encoding for the output. 
-	 * Note: It is up to the derived class to make use of the information.
-	 * Class Respsonse simply stores the value, but does not apply
-	 * it anywhere automatically.
-	 * 
-	 * @param encoding
-	 */
-	public void setCharacterEncoding(final String encoding)
-	{
-	    this.defaultEncoding = encoding;
-	}
-	
-	/**
-	 * Get the default encoding
-	 * 
-	 * @return default encoding
-	 */
-	public String getCharacterEncoding()
-	{
-		if (this.defaultEncoding == null)
-		{
-			return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
-		}
-		else
-		{
-			return this.defaultEncoding;
-		}
 	}
 	
 	/**
