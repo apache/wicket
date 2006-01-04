@@ -126,7 +126,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_8() throws Exception
 	{
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 	    executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
 

@@ -124,7 +124,7 @@ public class WebRequestCycle extends RequestCycle
 		String redirectUrl = null;
 
 		// Check if use serverside response for client side redirects
-		IRequestCycleSettings settings = application.getSettings();
+		IRequestCycleSettings settings = application.getRequestCycleSettings();
 		if ((settings.getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
 				&& (application instanceof WebApplication))
 		{

@@ -101,7 +101,7 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 

@@ -60,7 +60,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getSettings().addStringResourceLoader(
+		application.getResourceSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage(null);
 		ws = new WeatherStation();

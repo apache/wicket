@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import wicket.model.Model;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.ApplicationStringResourceLoader;
-import wicket.settings.Settings;
+import wicket.settings.IResourceSettings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -37,7 +37,7 @@ public class LocalizerTest extends TestCase
 {
 	private Application application;
 
-	private Settings settings;
+	private IResourceSettings settings;
 
 	private Localizer localizer;
 
@@ -60,7 +60,7 @@ public class LocalizerTest extends TestCase
 	{
 		super.setUp();
 		application = new DummyApplication();
-		settings = application.getSettings();
+		settings = application.getResourceSettings();
 		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
 		localizer = application.getMarkupSettings().getLocalizer();
 	}

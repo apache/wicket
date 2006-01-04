@@ -415,7 +415,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					try
 					{
 						escapedValue = URLEncoder.encode(escapedValue, Application.get()
-								.getSettings().getResponseRequestEncoding());
+								.getRequestCycleSettings().getResponseRequestEncoding());
 					}
 					catch (UnsupportedEncodingException ex)
 					{
