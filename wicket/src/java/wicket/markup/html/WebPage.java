@@ -220,7 +220,7 @@ public class WebPage extends Page implements IHeaderRenderer
 
 	/**
 	 * Remove the header component and all its children from the component
-	 * hierachie. Be aware, thus you can not transfer state from one request to
+	 * hierachy. Be aware, thus you can not transfer state from one request to
 	 * another.
 	 * 
 	 * @see wicket.Component#onEndRequest()
