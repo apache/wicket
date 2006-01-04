@@ -68,6 +68,11 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 			{
 				return null;
 			}
+
+			public Class getHomePage()
+			{
+				return null;
+			}
 		};
 
 		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);

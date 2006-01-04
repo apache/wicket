@@ -215,7 +215,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 */
 	protected final BookmarkablePageLink homePageLink(final String id)
 	{
-		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
+		return new BookmarkablePageLink(id, getApplication().getHomePage());
 	}
 
 	/**

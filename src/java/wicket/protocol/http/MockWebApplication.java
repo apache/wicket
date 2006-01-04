@@ -114,6 +114,8 @@ public class MockWebApplication extends WebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
+	private Class homePage;
+	
 	/**
 	 * Create the mock http application that can be used for testing.
 	 * 
@@ -379,5 +381,21 @@ public class MockWebApplication extends WebApplication
 	public void setParametersForNextRequest(Map parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return homePage;
+	}
+	
+	/**
+	 * Sets the home page for this mock application
+	 * @param clazz
+	 */
+	public void setHomePage(Class clazz) {
+		homePage=clazz;
 	}
 }

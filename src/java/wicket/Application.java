@@ -161,6 +161,11 @@ public abstract class Application
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
 	}
+	
+	/**
+	 * @return home page class
+	 */
+	public abstract Class getHomePage();
 
 	/**
 	 * Configures application settings for a given configuration type.

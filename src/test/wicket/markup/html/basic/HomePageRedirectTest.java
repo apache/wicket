@@ -44,7 +44,7 @@ public class HomePageRedirectTest extends TestCase
 	{
 		MockWebApplication application = new MockWebApplication(null);
 		
-		application.getRequiredPageSettings().setHomePage(HomePagePageRedirect.class);
+		application.setHomePage(HomePagePageRedirect.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -65,7 +65,7 @@ public class HomePageRedirectTest extends TestCase
 	{
 		MockWebApplication application = new MockWebApplication(null);
 		
-		application.getRequiredPageSettings().setHomePage(HomePageClassRedirect.class);
+		application.setHomePage(HomePageClassRedirect.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();

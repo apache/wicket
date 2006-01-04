@@ -62,7 +62,7 @@ public class CookieValuePersisterTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(CookieValuePersisterTestPage.class);
+		application.setHomePage(CookieValuePersisterTestPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 	}

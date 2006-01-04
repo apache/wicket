@@ -373,7 +373,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			IBookmarkablePageRequestTarget requestTarget)
 	{
 		final Class pageClass = requestTarget.getPageClass();
-		final Class homePageClass = requestCycle.getApplication().getRequiredPageSettings().getHomePage();
+		final Class homePageClass = requestCycle.getApplication().getHomePage();
 
 		// TODO fix homepage class
 

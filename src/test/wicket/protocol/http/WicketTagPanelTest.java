@@ -54,7 +54,7 @@ public class WicketTagPanelTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(WicketPanelPage.class);
+		application.setHomePage(WicketPanelPage.class);
 	}
 
 	/**
