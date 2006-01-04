@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag.list;
 
@@ -72,7 +71,7 @@ public class SortableTableHeadersTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
+		application.getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
 		application.getRequiredPageSettings().setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
@@ -96,7 +95,7 @@ public class SortableTableHeadersTest extends TestCase
 
 		// Check that redirect was set as expected and invoke it
 		MockHttpServletResponse redirectResponse = application.getServletResponse();
-		
+
 		Assert.assertTrue("Response should be a redirect", redirectResponse.isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
@@ -117,7 +116,7 @@ public class SortableTableHeadersTest extends TestCase
 		// Check that wicket:border tag gets removed
 		Assert.assertTrue("Response should be a redirect", application.getServletResponse()
 				.isRedirect());
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.6 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -105,7 +105,7 @@ public abstract class SignInPanel extends Panel
 				// otherwise to the Home page
 				if (!getPage().continueToOriginalDestination())
 				{
-					setResponsePage(getApplicationSettings().getPageFactory().newPage(
+					setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
 							getApplicationPages().getHomePage(), (PageParameters)null));
 				}
 			}

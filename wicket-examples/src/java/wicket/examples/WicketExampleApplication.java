@@ -52,7 +52,7 @@ public abstract class WicketExampleApplication extends WebApplication
 		// has the java security classes required by Crypt installed
 		// and we want them to be able to run the examples out of the
 		// box.
-		getSettings().setCryptFactory(
+		getSecuritySettings().setCryptFactory(
 				new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
 	}
 

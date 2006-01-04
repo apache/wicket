@@ -77,7 +77,7 @@ public class CookieTest extends TestCase
         application.getRequiredPageSettings().setHomePage(MockPage.class);
         application.setupRequestAndResponse();
 
-        final ISecuritySettings settings = application.getSettings();
+        final ISecuritySettings settings = application.getSecuritySettings();
         settings.setCryptFactory(new NoCryptFactory());
 
         this.panel = new SignInPanel("panel")

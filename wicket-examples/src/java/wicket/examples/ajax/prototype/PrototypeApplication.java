@@ -11,10 +11,10 @@ public class PrototypeApplication extends WicketExampleApplication
 	/**
 	 * Constructor.
 	 */
-	public PrototypeApplication() {
+	public PrototypeApplication()
+	{
 		getRequiredPageSettings().setHomePage(Index.class);
-		getSettings().setThrowExceptionOnMissingResource(false);
-
+		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 }

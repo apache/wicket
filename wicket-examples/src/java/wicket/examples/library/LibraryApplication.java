@@ -35,8 +35,8 @@ public final class LibraryApplication extends WicketExampleApplication
     public LibraryApplication()
     {
         getRequiredPageSettings().setHomePage(Home.class);
-        getSettings().setThrowExceptionOnMissingResource(false);
-		getSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
+        getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
     }
     
     /**
