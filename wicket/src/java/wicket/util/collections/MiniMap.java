@@ -18,7 +18,6 @@
 package wicket.util.collections;
 
 import java.io.Serializable;
-
 import java.util.AbstractList;
 import java.util.AbstractSet;
 import java.util.Collection;

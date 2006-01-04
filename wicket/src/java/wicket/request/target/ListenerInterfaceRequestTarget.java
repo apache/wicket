@@ -20,10 +20,10 @@ package wicket.request.target;
 import java.lang.reflect.Method;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.settings.Settings;
 
 /**
  * Target that denotes a page instance and a call to a component on that page
@@ -82,8 +82,8 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 		
 		final Application application = requestCycle.getApplication();
 		// and see if we have to redirect the render part by default
-		ApplicationSettings.RenderStrategy strategy = application.getSettings().getRenderStrategy();
-		boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER || strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
+		Settings.RenderStrategy strategy = application.getSettings().getRenderStrategy();
+		boolean issueRedirect = (strategy == Settings.REDIRECT_TO_RENDER || strategy == Settings.REDIRECT_TO_BUFFER);
 
 		requestCycle.setRedirect(issueRedirect);
 		invokeInterface(getTarget(), getListenerMethod(), getPage());

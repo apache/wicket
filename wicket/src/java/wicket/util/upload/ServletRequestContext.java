@@ -15,8 +15,9 @@
  */
 package wicket.util.upload;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.servlet.http.HttpServletRequest;
 
 

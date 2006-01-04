@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.loader.IStringResourceLoader;
+import wicket.settings.Settings;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
@@ -71,7 +72,7 @@ public class Localizer
 
 		// Register a listener to the properties factory which is invoked after
 		// a properties file has been reloaded.
-		application.getPropertiesFactory().addListener(new IPropertiesReloadListener()
+		application.getResourceSettings().getPropertiesFactory().addListener(new IPropertiesReloadListener()
 		{
 			public void propertiesLoaded(final String key)
 			{
@@ -205,7 +206,7 @@ public class Localizer
 			throws MissingResourceException
 	{
 		// Get application settings
-		final ApplicationSettings settings = application.getSettings();
+		final Settings settings = application.getSettings();
 
 		// If value is cached already ...
 		Class clazz = (component != null ? component.getClass() : null);
@@ -431,7 +432,7 @@ public class Localizer
 	private String createCacheId(final Class clazz, final Locale locale,
 			final String style, final String key)
 	{
-		String id = application.getPropertiesFactory().createResourceKey(
+		String id = application.getResourceSettings().getPropertiesFactory().createResourceKey(
 				clazz, locale, style)
 				+ '.' + key;
 		return id;

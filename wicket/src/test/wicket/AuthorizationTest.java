@@ -91,20 +91,15 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testCreateDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
+		WicketTester app = new WicketTester();
+		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
-			{
-				return new DummyAuthorizationStrategy()
-				{
 
-					public boolean allowInstantiation(Class c)
-					{
-						return false;
-					}
-				};
+			public boolean allowInstantiation(Class c)
+			{
+				return false;
 			}
-		};
+		});
 		try
 		{
 			WebComponent c = new WebComponent("test");
@@ -124,13 +119,9 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testRenderAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
-		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
-			{
-				return new DummyAuthorizationStrategy();
-			}
-		};
+		WicketTester app = new WicketTester();
+		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.assertLabel("label", "wicked!");
@@ -143,23 +134,18 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testRenderDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
+		WicketTester app = new WicketTester();
+		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
+			public boolean allowRender(Component c)
 			{
-				return new DummyAuthorizationStrategy()
+				if (c instanceof Label)
 				{
-					public boolean allowRender(Component c)
-					{
-						if (c instanceof Label)
-						{
-							return false;
-						}
-						return true;
-					}
-				};
+					return false;
+				}
+				return true;
 			}
-		};
+		});
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.assertInvisible("label");
@@ -172,13 +158,9 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testEnabledAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
-		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
-			{
-				return new DummyAuthorizationStrategy();
-			}
-		};
+		WicketTester app = new WicketTester();
+		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.setParameterForNextRequest("form:stringInput", "test");
@@ -198,23 +180,18 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testEnabledDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
+		WicketTester app = new WicketTester();
+		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
+			public boolean allowEnabledState(Component c)
 			{
-				return new DummyAuthorizationStrategy()
+				if (c instanceof TextField && c.getId().equals("stringInput"))
 				{
-					public boolean allowEnabledState(Component c)
-					{
-						if (c instanceof TextField && c.getId().equals("stringInput"))
-						{
-							return false;
-						}
-						return true;
-					}
-				};
+					return false;
+				}
+				return true;
 			}
-		};
+		});
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.setParameterForNextRequest("form:stringInput", "test");
@@ -264,7 +241,7 @@ public class AuthorizationTest extends TestCase
 	/**
 	 * Test page for authentication tests.
 	 */
-	public static class AuthTestPage1 extends WebPage
+	public  static class AuthTestPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -285,7 +285,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			// Get the home page class
-			Class homePageClass = application.getPages().getHomePage();
+			Class homePageClass = application.getRequiredPageSettings().getHomePage();
 
 			// and create a dummy target for looking up whether the home page is
 			// mounted

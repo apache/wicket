@@ -212,7 +212,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(ITestPageSource testPageSource)
 	{
-		getPages().setHomePage(DummyHomePage.class);
+		getRequiredPageSettings().setHomePage(DummyHomePage.class);
 		setupRequestAndResponse();
 		processRequestCycle();
 		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
@@ -243,7 +243,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page) throws ServletException
 	{
-		getPages().setHomePage(DummyHomePage.class);
+		getRequiredPageSettings().setHomePage(DummyHomePage.class);
 		rerender(page);
 		
 		Page last=getLastRenderedPage();
@@ -264,7 +264,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(Class pageClass)
 	{
-		getPages().setHomePage(pageClass);
+		getRequiredPageSettings().setHomePage(pageClass);
 		setupRequestAndResponse();
 		processRequestCycle();
 		return getLastRenderedPage();

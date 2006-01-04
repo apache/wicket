@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
 import wicket.Request;
@@ -43,7 +42,6 @@ import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
 import wicket.response.BufferedResponse;
 import wicket.util.collections.MostRecentlyUsedMap;
-import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
 
@@ -66,31 +64,17 @@ import wicket.util.lang.PackageName;
  * 
  * <pre>
  * 
- *  
- *   
- *    
- *     
- *      
- *       
- *                                             
- *               public void init()
- *               {
- *                 	String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                  ...
- *            
- *        
- *       
- *      
- *     
- *    
- *   
+ * public void init()
+ * {
+ *   String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *   URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *  ...
  *  
  * </pre>
  * 
  * @see WicketServlet
- * @see wicket.ApplicationSettings
- * @see wicket.ApplicationPages
+ * @see wicket.settings.Settings
+ * @see wicket.settings.IRequiredPageSettings
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Johan Compagner
@@ -133,35 +117,12 @@ public abstract class WebApplication extends Application
 	public WebApplication()
 	{
 		// Set default error pages for HTML markup
-		getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
-				InternalErrorPage.class);
+		getRequiredPageSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
+		getRequiredPageSettings().setInternalErrorPage(InternalErrorPage.class);
 
 		// Add resolver for automatically resolving HTML links
-		getComponentResolvers().add(new AutoLinkResolver());
-	}
-
-	/**
-	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
-	 * instead.
-	 * 
-	 * @return An instanceof an ApplicaitonSettings class
-	 * 
-	 * @see wicket.Application#createApplicationSettings()
-	 */
-	public ApplicationSettings createApplicationSettings()
-	{
-		return new ApplicationSettings(this)
-		{
-			/**
-			 * @see wicket.ApplicationSettings#newResourceFinder()
-			 */
-			public IResourceFinder newResourceFinder()
-			{
-				return new WebApplicationPath(getWicketServlet().getServletContext());
-			}
-		};
-	}
+		getRequestCycleSettings().getComponentResolvers().add(new AutoLinkResolver());
+		}
 
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
@@ -420,11 +381,17 @@ public abstract class WebApplication extends Application
 	protected void internalInit()
 	{
 		super.internalInit();
+
+		// Set resource finder to web app path
+		getResourceSettings().setResourceFinder(new WebApplicationPath(getWicketServlet().getServletContext()));
+
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
 		{
-			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
+
+
 	}
 
 	/**

@@ -3,10 +3,10 @@
  */
 package wicket.markup.html.basic;
 
+import junit.framework.TestCase;
 import wicket.markup.html.form.Form;
 import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.MockWebApplication;
-import junit.framework.TestCase;
 
 /**
  * @author jcompagner
@@ -21,7 +21,7 @@ public class SimpleResponsePageClassTest extends TestCase
 	{
 		MockWebApplication mockWebApp = new MockWebApplication(null);
 		
-        mockWebApp.getPages().setHomePage(SimpleResponsePageClass.class);
+        mockWebApp.getRequiredPageSettings().setHomePage(SimpleResponsePageClass.class);
         mockWebApp.setupRequestAndResponse();
         mockWebApp.processRequestCycle();
         SimpleResponsePageClass manageBook = (SimpleResponsePageClass) mockWebApp.getLastRenderedPage();

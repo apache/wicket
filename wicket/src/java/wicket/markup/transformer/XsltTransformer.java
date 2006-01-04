@@ -64,7 +64,7 @@ public class XsltTransformer implements ITransformer
 				.getName().replace('.', '/')
 				+ "/" + component.getId();
 
-		IResourceStream resourceStream = Application.get().getResourceStreamLocator().locate(
+		IResourceStream resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
 				getClass().getClassLoader(), filepath, component.getStyle(), component.getLocale(),
 				XsltTransformer.extension);
 

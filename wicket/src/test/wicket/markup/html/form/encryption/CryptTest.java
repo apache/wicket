@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form.encryption;
 
+import junit.framework.TestCase;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.crypt.SunJceCrypt;
-import junit.framework.TestCase;
 
 /**
  * @author Juergen Donnerstag

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.markup.html.panel.Panel;
 
 
 /**

@@ -30,11 +30,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
 import wicket.response.BufferedResponse;
+import wicket.settings.Settings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
 
@@ -141,7 +141,7 @@ public class WicketServlet extends HttpServlet
 		Application.set(webApplication);
 
 		// try to see if there is a redirect stored
-		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
+		if (webApplication.getSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
 		{
 			String sessionId = servletRequest.getSession(true).getId();
 			String queryString = servletRequest.getQueryString();

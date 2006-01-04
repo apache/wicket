@@ -62,7 +62,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	public String encodeURL(String url)
 	{
 	    // Get the crypt implementation from the application
-		ICrypt urlCrypt = Application.get().newCrypt();
+		ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
 		if (urlCrypt != null)
 		{
 		    // The url must have a query string, otherwise keep the url unchanged

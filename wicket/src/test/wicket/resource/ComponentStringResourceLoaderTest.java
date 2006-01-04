@@ -21,7 +21,6 @@ package wicket.resource;
 import java.util.Locale;
 
 import junit.framework.Assert;
-
 import wicket.Component;
 import wicket.markup.html.panel.Panel;
 import wicket.resource.loader.ComponentStringResourceLoader;

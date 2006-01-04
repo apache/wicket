@@ -21,13 +21,13 @@ package wicket.resource;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestCycleFactory;
 import wicket.Session;
 import wicket.resource.loader.IStringResourceLoader;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader

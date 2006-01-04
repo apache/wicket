@@ -191,7 +191,7 @@ public class PackageResource extends WebResource
 	public IResourceStream getResourceStream()
 	{
 		// Locate resource
-		IResourceStream resourceStream = Application.get().getResourceStreamLocator().locate(
+		IResourceStream resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
 				scope.getClassLoader(), absolutePath, style, locale, null);
 
 		// Check that resource was found

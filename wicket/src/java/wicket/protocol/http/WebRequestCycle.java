@@ -20,7 +20,6 @@ package wicket.protocol.http;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ApplicationSettings;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.RequestCycle;
@@ -29,6 +28,8 @@ import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.response.BufferedResponse;
+import wicket.settings.IRequestCycleSettings;
+import wicket.settings.Settings;
 
 /**
  * RequestCycle implementation for HTTP protocol. Holds the application,
@@ -123,8 +124,8 @@ public class WebRequestCycle extends RequestCycle
 		String redirectUrl = null;
 
 		// Check if use serverside response for client side redirects
-		ApplicationSettings settings = application.getSettings();
-		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
+		IRequestCycleSettings settings = application.getSettings();
+		if ((settings.getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
 				&& (application instanceof WebApplication))
 		{
 			// remember the current response

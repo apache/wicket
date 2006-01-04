@@ -60,7 +60,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			
 			String defaultValue = "Server parsetime: " + ((double)timeTaken)/1000 + "s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's";
 			
-			String txt = Application.get().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue);
+			String txt = Application.get().getMarkupSettings().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue);
 			StringBuffer endScript = new StringBuffer("\n<script>\nwindow.defaultStatus='");
 			endScript.append(txt);
 			endScript.append("';\n</script>\n");

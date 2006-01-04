@@ -68,7 +68,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 		if ((secureParam != null) && (secureParam.length() > 0))
 		{
 			// Get the crypt implementation from the application
-			ICrypt urlCrypt = Application.get().newCrypt();
+			ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
 			
 		    // Decrypt the query string
 			final String queryString = urlCrypt.decrypt(secureParam);
@@ -138,7 +138,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			}
 			 
 			// Get the crypt implementation from the application
-			final ICrypt urlCrypt = Application.get().newCrypt();
+			final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
 			
 		    // Decrypt the query string
 			final String queryString = urlCrypt.decrypt(secureParam);

@@ -100,7 +100,7 @@ public class PropertiesFactory
 		Properties props = (Properties)propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
-			final IResourceStream resource = application.getResourceStreamLocator().locate(clazz,
+			final IResourceStream resource = application.getResourceSettings().getResourceStreamLocator().locate(clazz,
 					style, locale, "properties");
 
 			if (resource != null)
@@ -250,7 +250,7 @@ public class PropertiesFactory
 			final Locale locale)
 	{
 		// Watch file in the future
-		final ModificationWatcher watcher = Application.get().getResourceWatcher();
+		final ModificationWatcher watcher = Application.get().getResourceSettings().getResourceWatcher();
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()

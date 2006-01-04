@@ -71,7 +71,7 @@ public class WicketMessageResolver implements IComponentResolver
 							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				final String value = container.getApplication().getLocalizer().getString(
+				final String value = container.getApplication().getMarkupSettings().getLocalizer().getString(
 						messageKey, container, "");
 
 				final String id = "_message_" + container.getPage().getAutoIndex();

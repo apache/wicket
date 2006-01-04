@@ -19,11 +19,10 @@
 package wicket.util.size;
 
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import java.util.Locale;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import wicket.util.lang.Bytes;
 import wicket.util.string.StringValueConversionException;
 

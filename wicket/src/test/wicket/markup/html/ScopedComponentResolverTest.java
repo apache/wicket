@@ -45,7 +45,7 @@ public class ScopedComponentResolverTest extends WicketTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application.getComponentResolvers().add(new ScopedComponentResolver());
+		application.getRequestCycleSettings().getComponentResolvers().add(new ScopedComponentResolver());
 	}
 
 	/**

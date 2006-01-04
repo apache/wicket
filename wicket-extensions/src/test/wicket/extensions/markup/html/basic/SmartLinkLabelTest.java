@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.basic;
 
-import wicket.extensions.markup.html.basic.SmartLinkLabel;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

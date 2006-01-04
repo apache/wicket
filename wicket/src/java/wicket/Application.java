@@ -17,25 +17,19 @@
  */
 package wicket;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.MarkupCache;
-import wicket.markup.MarkupParser;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
-import wicket.markup.parser.IMarkupFilter;
-import wicket.markup.parser.XmlPullParser;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.BodyOnLoadResolver;
 import wicket.markup.resolver.HtmlHeaderResolver;
@@ -43,18 +37,20 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
-import wicket.model.IModel;
-import wicket.resource.PropertiesFactory;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverterFactory;
-import wicket.util.crypt.ICrypt;
-import wicket.util.crypt.NoCrypt;
+import wicket.settings.IDebugSettings;
+import wicket.settings.IExceptionSettings;
+import wicket.settings.IMarkupSettings;
+import wicket.settings.IPageSettings;
+import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequiredPageSettings;
+import wicket.settings.IResourceSettings;
+import wicket.settings.ISecuritySettings;
+import wicket.settings.ISessionSettings;
+import wicket.settings.Settings;
+import wicket.util.file.IResourceFinder;
 import wicket.util.lang.Classes;
-import wicket.util.resource.locator.DefaultResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
-import wicket.util.watch.ModificationWatcher;
 
 /**
  * Base class for all Wicket applications. To create a Wicket application, you
@@ -67,17 +63,6 @@ import wicket.util.watch.ModificationWatcher;
  * <li><b>Name </b>- The application's name, which is the same as its class
  * name.
  * 
- * <li><b>Application Settings </b>- A variety of settings that control the
- * behavior of the Wicket framework for a given application. It is not necessary
- * to learn all the settings. Good defaults can be set for deployment and
- * development by calling ApplicationSettings.configure("deployment") or
- * ApplicationSettings.configure("development").
- * 
- * <li><b>Application Pages </b>- A particular set of required pages. The
- * required pages returned by getPages() include a home page and pages for
- * handling common error conditions. The only page you must supply to create a
- * Wicket application is the application home page.
- * 
  * <li><b>Shared Resources </b>- Resources added to an application with any of
  * the Application.addResource() methods have application-wide scope and can be
  * referenced using a logical scope and a name with the ResourceReference class.
@@ -87,31 +72,6 @@ import wicket.util.watch.ModificationWatcher;
  * efficient browser caching of the resource (even if the resource is
  * dynamically generated). Resources shared in this manner may also be
  * localized. See {@link wicket.ResourceReference} for more details.
- * 
- * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
- * can provide your own factory which creates locale sensitive Converter
- * instances.
- * 
- * <li><b>A ResourceStreamLocator </b>- An Application's ResourceStreamLocator
- * is used to find resources such as images or markup files. You can supply your
- * own ResourceStreamLocator if your prefer to store your application's
- * resources in a non-standard location (such as a different filesystem
- * location, a particular JAR file or even a database) by overriding the
- * getResourceLocator() method.
- * 
- * <li><b>Resource Factories </b>- Resource factories can be used to create
- * resources dynamically from specially formatted HTML tag attribute values. For
- * more details, see {@link IResourceFactory},
- * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}
- * and especially
- * {@link wicket.markup.html.image.resource.LocalizedImageResource}.
- * 
- * <li><b>A Localizer </b>- The getLocalizer() method returns an object
- * encapsulating all of the functionality required to access localized
- * resources. For many localization problems, even this will not be required, as
- * there are convenience methods available to all components:
- * {@link wicket.Component#getString(String key)} and
- * {@link wicket.Component#getString(String key, IModel model)}.
  * 
  * <li><b>A Session Factory </b>- The Application subclass WebApplication
  * supplies an implementation of getSessionFactory() which returns an
@@ -127,29 +87,11 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
-	/** Thread local holder of the application object. */
+	/** thread local holder of the application object. */
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
-	/** Log. */
+	/** log. */
 	private static Log log = LogFactory.getLog(Application.class);
-
-	/** The authorization strategy. */
-	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
-
-	/** List of (static) ComponentResolvers */
-	private List componentResolvers = new ArrayList();
-
-	/**
-	 * Factory for the converter instance; default to the non localized factory
-	 * {@link ConverterFactory}.
-	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
-
-	/** cached encryption/decryption object. */
-	private ICrypt crypt;
-
-	/** The single application-wide localization class */
-	private Localizer localizer;
 
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
@@ -157,34 +99,10 @@ public abstract class Application
 	/** Name of application subclass. */
 	private final String name;
 
-	/** Map to look up resource factories by name */
-	private final Map nameToResourceFactory = new HashMap();
-
-	/** Pages for application */
-	private final ApplicationPages pages = new ApplicationPages();
-
-	/** The factory to be used for the property files */
-	private PropertiesFactory propertiesFactory;
-
-	/** The default resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
-
-	/** ModificationWatcher to watch for changes in markup files */
-	private ModificationWatcher resourceWatcher;
-
-	/**
-	 * List of {@link IResponseFilter}s.
-	 */
-	// TODO revisit... I don't think everyone agrees with
-	// this (e.g. why not use servlet filters to acchieve the same)
-	// and if we want to support this, it could more elegantly
-	// be made part of e.g. request targets or a request processing
-	// strategy
-	private List responseFilters;
 
 	/** Settings for application. */
-	private ApplicationSettings settings;
-	
+	private Settings settings;
+
 	/** Shared resources for the application */
 	private final SharedResources sharedResources;
 
@@ -230,6 +148,7 @@ public abstract class Application
 		this.sharedResources = new SharedResources(this);
 
 		// Install default component resolvers
+		List componentResolvers = getRequestCycleSettings().getComponentResolvers();
 		componentResolvers.add(new ParentResolver());
 		componentResolvers.add(new AutoComponentResolver());
 		componentResolvers.add(new MarkupInheritanceResolver());
@@ -239,49 +158,82 @@ public abstract class Application
 		componentResolvers.add(new WicketMessageResolver());
 
 		// Install button image resource factory
-		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
+		getResourceSettings().addResourceFactory("buttonFactory",
+				new DefaultButtonImageResourceFactory());
 	}
 
 	/**
-	 * Adds a resource factory to the list of factories to consult when
-	 * generating resources automatically
+	 * Configures application settings for a given configuration type.
 	 * 
-	 * @param name
-	 *            The name to give to the factory
-	 * @param resourceFactory
-	 *            The resource factory to add
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the classpath
+	 *            is polled for changes
 	 */
-	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	public final void configure(final String configurationType)
 	{
-		nameToResourceFactory.put(name, resourceFactory);
+		configure(configurationType, (IResourceFinder)null);
 	}
 
 	/**
-	 * Adds a response filer to the list. Filters are evaluated in the order
-	 * they have been added.
+	 * Configures application settings for a given configuration type.
 	 * 
-	 * @param responseFilter
-	 *            The {@link IResponseFilter} that is added
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the given
+	 *            resourceFinder is polled for changes
+	 * @param resourceFinder
+	 *            Finder for looking up resources
+	 * @see File#pathSeparator
 	 */
-	public final void addResponseFilter(IResponseFilter responseFilter)
+	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
 	{
-		if (responseFilters == null)
+		if (resourceFinder != null)
 		{
-			responseFilters = new ArrayList(3);
+			getResourceSettings().setResourceFinder(resourceFinder);
 		}
-		responseFilters.add(responseFilter);
+		if ("development".equalsIgnoreCase(configurationType))
+		{
+			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+			getDebugSettings().setComponentUseCheck(true);
+			getMarkupSettings().setStripWicketTags(false);
+			getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		}
+		else if ("deployment".equalsIgnoreCase(configurationType))
+		{
+			getDebugSettings().setComponentUseCheck(false);
+			getMarkupSettings().setStripWicketTags(true);
+			getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
+		}
 	}
 
 	/**
-	 * Subclasses could override this to give there own implementation of
-	 * ApplicationSettings. DO NOT CALL THIS METHOD YOURSELF. Use getSettings
-	 * instead.
+	 * Convenience method that configures application settings for a given
+	 * configuration type.
 	 * 
-	 * @return An instanceof an ApplicationSettings class.
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the given
+	 *            resourceFolder is polled for changes
+	 * @param resourceFolder
+	 *            Folder for polling resources
+	 * @see File#pathSeparator
 	 */
-	public ApplicationSettings createApplicationSettings()
+	public final void configure(final String configurationType, final String resourceFolder)
 	{
-		return new ApplicationSettings(this);
+		configure(configurationType);
+		getResourceSettings().addResourceFolder(resourceFolder);
+	}
+
+
+	private Settings createApplicationSettings()
+	{
+		return new Settings(this);
 	}
 
 	/**
@@ -295,8 +247,11 @@ public abstract class Application
 	 *            The response buffer to be filtered
 	 * @return Returns the filtered string buffer.
 	 */
+	// FIXME move this method somewhere else closer to Response objects, i dont
+	// think this really belongs in the Application
 	public final StringBuffer filterResponse(StringBuffer responseBuffer)
 	{
+		List responseFilters = getRequestCycleSettings().getResponseFilters();
 		if (responseFilters == null)
 		{
 			return responseBuffer;
@@ -307,67 +262,6 @@ public abstract class Application
 			responseBuffer = filter.filter(responseBuffer);
 		}
 		return responseBuffer;
-	}
-
-	/**
-	 * If you want to add an additional IMarkupFilter to the MarkupParser, 
-	 * e.g. PrependContextPathHandler, simply add it to the list/array
-	 * returned.
-	 * @see #newMarkupParser()
-	 * 
-	 * @return List 
-	 */
-	public IMarkupFilter[] getAdditionalMarkupHandler()
-	{
-		return null;
-	}
-
-	/**
-	 * Gets the authorization strategy.
-	 * 
-	 * @return Returns the authorizationStrategy.
-	 */
-	public IAuthorizationStrategy getAuthorizationStrategy()
-	{
-		return authorizationStrategy;
-	}
-
-	/**
-	 * Get the (modifiable) list of IComponentResolvers.
-	 * 
-	 * @see AutoComponentResolver for an example
-	 * @return List of ComponentResolvers
-	 */
-	public final List getComponentResolvers()
-	{
-		return componentResolvers;
-	}
-
-	/**
-	 * Gets the converter factory.
-	 * 
-	 * @return the converter factory
-	 */
-	public IConverterFactory getConverterFactory()
-	{
-		return converterFactory;
-	}
-
-	/**
-	 * Get the application's localizer.
-	 * <p>
-	 * Note: please @see ApplicationSettings#addStringResourceLoader(IStringResourceLoader)
-	 * for means of extending the way Wicket resolves keys to localized messages.
-	 *   
-	 * @return The application wide localizer instance
-	 */
-	public final Localizer getLocalizer()
-	{
-		if (localizer == null)
-		{
-			this.localizer = new Localizer(this);
-		}
-		return localizer;
 	}
 
 	/**
@@ -391,73 +285,99 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's common pages
+	 * @return Application's requried page settings
+	 * @see IRequiredPageSettings
 	 */
-	public final ApplicationPages getPages()
+	public final IRequiredPageSettings getRequiredPageSettings()
 	{
-		return pages;
+		return getSettings();
 	}
 
 	/**
-	 * Get the property factory which will be used to load properties files
-	 * 
-	 * @return PropertiesFactory
+	 * @return Application's debug related settings
+	 * @see IDebugSettings
+	 * @since 1.2
 	 */
-	public PropertiesFactory getPropertiesFactory()
+	public final IDebugSettings getDebugSettings()
 	{
-		if (propertiesFactory == null)
-		{
-			propertiesFactory = new PropertiesFactory();
-		}
-		return propertiesFactory;
+		return getSettings();
 	}
 
 	/**
-	 * @param name
-	 *            Name of the factory to get
-	 * @return The IResourceFactory with the given name.
+	 * @return Application's request cycle related settings
+	 * @see IDebugSettings
+	 * @since 1.2
 	 */
-	public final IResourceFactory getResourceFactory(final String name)
+	public final IRequestCycleSettings getRequestCycleSettings()
 	{
-		return (IResourceFactory)nameToResourceFactory.get(name);
+		return getSettings();
 	}
 
 	/**
-	 * @return Resource locator for this application
+	 * @return Application's resources related settings
+	 * @see IResourceSettings
+	 * @since 1.2
 	 */
-	public ResourceStreamLocator getResourceStreamLocator()
+	public final IResourceSettings getResourceSettings()
 	{
-		if (resourceStreamLocator == null)
-		{
-			// Create compound resource locator using source path from
-			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
-					.getResourceFinder());
-		}
-		return resourceStreamLocator;
+		return getSettings();
 	}
 
 	/**
-	 * @return Resource watcher with polling frequency determined by setting, or
-	 *         null if no polling frequency has been set.
+	 * @return Application's security related settings
+	 * @see ISecuritySettings
+	 * @since 1.2
 	 */
-	public final ModificationWatcher getResourceWatcher()
+	public final ISecuritySettings getSecuritySettings()
 	{
-		if (resourceWatcher == null)
-		{
-			final Duration pollFrequency = getSettings().getResourcePollFrequency();
-			if (pollFrequency != null)
-			{
-				resourceWatcher = new ModificationWatcher(pollFrequency);
-			}
-		}
-		return resourceWatcher;
+		return getSettings();
 	}
+
+	/**
+	 * @return Application's exception handling settings
+	 * @see IExceptionSettings
+	 * @since 1.2
+	 */
+	public final IExceptionSettings getExceptionSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's markup related settings
+	 * @see IMarkupSettings
+	 * @since 1.2
+	 */
+	public final IMarkupSettings getMarkupSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's page related settings
+	 * @see IPageSettings
+	 * @since 1.2
+	 */
+	public final IPageSettings getPageSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's session related settings
+	 * @see ISessionSettings
+	 * @since 1.2
+	 */
+	public final ISessionSettings getSessionSettings()
+	{
+		return getSettings();
+	}
+
 
 	/**
 	 * @return Application settings
 	 */
-	public ApplicationSettings getSettings()
+	public Settings getSettings()
 	{
 		if (settings == null)
 		{
@@ -472,94 +392,6 @@ public abstract class Application
 	public final SharedResources getSharedResources()
 	{
 		return sharedResources;
-	}
-	
-	/**
-	 * Factory method that creates an instance of de-/encryption class. NOTE:
-	 * this implementation caches the crypt instance, so it has to be
-	 * Threadsafe. If you want other behaviour, or want to provide a custom
-	 * crypt class, you should override this method.
-	 * 
-	 * @return Instance of de-/encryption class
-	 */
-	public synchronized ICrypt newCrypt()
-	{
-		if (crypt == null)
-		{
-			Class cryptClass = getSettings().getCryptClass();
-			try
-			{
-				crypt = (ICrypt)cryptClass.newInstance();
-				log.info("using encryption/decryption object " + crypt);
-				crypt.setKey(getSettings().getEncryptionKey());
-				return crypt;
-			}
-			catch (Throwable e)
-			{
-				log.warn("************************** WARNING **************************");
-				log.warn("As the instantion of encryption/decryption class:");
-				log.warn("\t" + cryptClass);
-				log.warn("failed, Wicket will fallback on a dummy implementation");
-				log.warn("\t(" + NoCrypt.class.getName() + ")");
-				log.warn("This is not recommended for production systems.");
-				log.warn("Please override method wicket.Application.newCrypt()");
-				log.warn("to provide a custom encryption/decryption implementation");
-				log.warn("The cause of the instantion failure: ");
-				log.warn("\t" + e.getMessage());
-				if (log.isDebugEnabled())
-				{
-					log.debug("exception: ", e);
-				}
-				else
-				{
-					log.warn("set log level to DEBUG to display the stack trace.");
-				}
-				log.warn("*************************************************************");
-
-				// assign the dummy crypt implementation
-				crypt = new NoCrypt();
-			}
-		}
-
-		return crypt;
-	}
-
-	/**
-	 * Factory method that creates a markup parser.
-	 * 
-	 * @return A new MarkupParser
-	 */
-	public MarkupParser newMarkupParser()
-	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser(
-				getSettings().getDefaultMarkupEncoding()))
-		        {
-			    	public void initFilterChain()
-			        {
-			    		IMarkupFilter filters[] = getAdditionalMarkupHandler();
-			    		if (filters != null)
-			    		{
-			    			for (int i = 0; i < filters.length; i++)
-							{
-			    				appendMarkupFilter(filters[i]);		
-							}
-			    		}
-			        }
-		        };
-		        
-		parser.configure(getSettings());
-		return parser;
-	}
-
-	/**
-	 * Users may provide there own implementation of a localizer, e.g. one which
-	 * uses Spring's MessageSource.
-	 * 
-	 * @param localizer
-	 */
-	public final void setLocalizer(final Localizer localizer)
-	{
-		this.localizer = localizer;
 	}
 
 	/**
@@ -587,16 +419,6 @@ public abstract class Application
 		// constructor and that subclass constructor may add class aliases that
 		// would be used in installing resources in the component.
 		initializeComponents();
-	}
-
-	/**
-	 * Called by ApplicationSettings when source path property is changed. This
-	 * method sets the resourceStreamLocator to null so it will get recreated
-	 * the next time it is accessed using the new source path.
-	 */
-	final void resourceFinderChanged()
-	{
-		this.resourceStreamLocator = null;
 	}
 
 	/**
@@ -668,7 +490,7 @@ public abstract class Application
 			throw new WicketRuntimeException("Unable to load initializers file", e);
 		}
 	}
-	
+
 	/**
 	 * @param properties
 	 *            Properties table with names of any library initializers in it

@@ -18,7 +18,6 @@
 package wicket.util.time;
 
 import java.text.ParseException;
-
 import java.util.Calendar;
 
 import wicket.util.lang.EnumeratedType;

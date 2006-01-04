@@ -17,7 +17,6 @@
  */
 package wicket.application;
 
-import wicket.ApplicationSettings;
 import wicket.WicketRuntimeException;
 
 /**

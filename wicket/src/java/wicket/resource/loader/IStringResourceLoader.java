@@ -38,7 +38,7 @@ import java.util.Locale;
  * in the chain is reached.
  * 
  * @author Chris Turner
- * @see wicket.ApplicationSettings
+ * @see wicket.settings.Settings
  */
 public interface IStringResourceLoader
 {

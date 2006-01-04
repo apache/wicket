@@ -17,20 +17,21 @@
  */
 package wicket.protocol.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
-import java.util.Locale;
-import java.util.List;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
+
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import wicket.util.value.ValueMap;
 
