@@ -672,11 +672,16 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * 
+	 * Deprecated. Use getApplication().getXXXSettings() instead
+	 * 
 	 * Gets the application pages from the application that this component
 	 * belongs to.
 	 * 
 	 * @return The application pages
 	 * @see IRequiredPageSettings
+	 * 
+	 * @deprecated
 	 */
 	public final IRequiredPageSettings getApplicationPages()
 	{
