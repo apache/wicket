@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.94 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -371,11 +371,15 @@ public abstract class Application
 	}
 
 	/**
+	 * This method is still here for backwards compatibility with 1.1 source
+	 * code. The get[X]Settings() methods are now preferred.
+	 * 
 	 * @return Application settings
+	 * @deprecated
 	 */
 	// FIXME this needs to become private and classes switched to using proper
-	// interfaces intead of the generic object
-	// TODO should we leave this here for backards src compat? - jonathan
+	// interfaces intead of the generic object - igor
+	// TODO should we just leave this here for backards src compat? - jonathan
 	public Settings getSettings()
 	{
 		if (settings == null)
