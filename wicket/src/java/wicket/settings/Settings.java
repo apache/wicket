@@ -156,9 +156,6 @@ public final class Settings
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
 
-	/** Home page class */
-	private Class homePage;
-
 	/** Class of internal error page. */
 	private Class internalErrorPage;
 
@@ -452,22 +449,6 @@ public final class Settings
 	public String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#getHomePage()
-	 */
-	public Class getHomePage()
-	{
-		// If no home page is available
-		if (homePage == null)
-		{
-			// give up with an exception
-			throw new IllegalStateException(
-					"No home page class was specified in ApplicationSettings");
-		}
-
-		return homePage;
 	}
 
 	/**
@@ -817,15 +798,6 @@ public final class Settings
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		this.defaultMarkupEncoding = encoding;
-	}
-
-	/**
-	 * @see wicket.settings.IRequiredPageSettings#setHomePage(java.lang.Class)
-	 */
-	public void setHomePage(final Class homePage)
-	{
-		checkPageClass(homePage);
-		this.homePage = homePage;
 	}
 
 	/**
