@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -1022,7 +1022,7 @@ public final class Settings
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
 	}
-	
+
 	/**
 	 * Throws an IllegalArgumentException if the given class is not a subclass
 	 * of Page.
@@ -1033,18 +1033,14 @@ public final class Settings
 	private final void checkPageClass(final Class pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
-		// here, as - though
-		// the default is that a bookmarkable page must either have a default
-		// constructor and/ or
-		// a constructor with a PageParameters object, this could be different
-		// for another
+		// here, as - though the default is that a bookmarkable page must
+		// either have a default constructor and/or a constructor with a
+		// PageParameters object, this could be different for another
 		// IPageFactory implementation
-
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
 	}
-
 }
