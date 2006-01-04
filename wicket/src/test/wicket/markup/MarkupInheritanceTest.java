@@ -73,7 +73,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	{
 		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
 		
-		application.getRequiredPageSettings().setHomePage(MarkupInheritanceExtension_4.class);
+		application.setHomePage(MarkupInheritanceExtension_4.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();

@@ -40,14 +40,6 @@ package wicket.settings;
 public interface IRequiredPageSettings
 {
 	/**
-	 * Gets home page class.
-	 * 
-	 * @return Returns the homePage.
-	 * @see IRequiredPageSettings#setHomePage(Class)
-	 */
-	Class getHomePage();
-
-	/**
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
@@ -62,15 +54,6 @@ public interface IRequiredPageSettings
 	 * @see IRequiredPageSettings#setPageExpiredErrorPage(Class)
 	 */
 	Class getPageExpiredErrorPage();
-
-	/**
-	 * Sets home page class. The class must be bookmarkable and must extend
-	 * Page.
-	 * 
-	 * @param homePage
-	 *            The home page class
-	 */
-	void setHomePage(final Class homePage);
 
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must

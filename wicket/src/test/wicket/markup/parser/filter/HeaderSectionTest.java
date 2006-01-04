@@ -201,7 +201,7 @@ public class HeaderSectionTest extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
-		application.getRequiredPageSettings().setHomePage(pageClass);
+		application.setHomePage(pageClass);
 
 		// Do the processing
 		application.setupRequestAndResponse();

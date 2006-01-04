@@ -47,7 +47,7 @@ public class MockWebApplicationTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(MockPage.class);
+		application.setHomePage(MockPage.class);
 	}
 
 	/**

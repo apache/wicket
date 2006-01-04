@@ -21,7 +21,7 @@ public class SimpleResponsePageClassTest extends TestCase
 	{
 		MockWebApplication mockWebApp = new MockWebApplication(null);
 		
-        mockWebApp.getRequiredPageSettings().setHomePage(SimpleResponsePageClass.class);
+        mockWebApp.setHomePage(SimpleResponsePageClass.class);
         mockWebApp.setupRequestAndResponse();
         mockWebApp.processRequestCycle();
         SimpleResponsePageClass manageBook = (SimpleResponsePageClass) mockWebApp.getLastRenderedPage();

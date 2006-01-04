@@ -54,7 +54,7 @@ public class PagedTableNavigatorWithLabelProviderTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(PagedTableNavigatorWithLabelProviderPage.class);
+		application.setHomePage(PagedTableNavigatorWithLabelProviderPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)application.getLastRenderedPage();

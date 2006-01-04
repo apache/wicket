@@ -56,7 +56,7 @@ public class IncrementalTableNavigationTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(IncrementalTableNavigationPage.class);
+		application.setHomePage(IncrementalTableNavigationPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		IncrementalTableNavigationPage page = (IncrementalTableNavigationPage)application

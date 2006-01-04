@@ -44,7 +44,7 @@ public class CheckAccessRedirectTest extends TestCase
 	{
 		MockWebApplication application = new MockWebApplication(null);
 		
-		application.getRequiredPageSettings().setHomePage(CheckAccessPageRedirect.class);
+		application.setHomePage(CheckAccessPageRedirect.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -65,7 +65,7 @@ public class CheckAccessRedirectTest extends TestCase
 	{
 		MockWebApplication application = new MockWebApplication(null);
 		
-		application.getRequiredPageSettings().setHomePage(CheckAccessClassRedirect.class);
+		application.setHomePage(CheckAccessClassRedirect.class);
 
 		// Do the processing
 		application.setupRequestAndResponse();

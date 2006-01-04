@@ -56,7 +56,7 @@ public class PagedTableTest extends TestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getRequiredPageSettings().setHomePage(PagedTablePage.class);
+		application.setHomePage(PagedTablePage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
