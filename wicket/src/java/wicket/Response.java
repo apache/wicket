@@ -158,7 +158,7 @@ public abstract class Response
 	{
 		if (this.defaultEncoding == null)
 		{
-			return Application.get().getSettings().getResponseRequestEncoding();
+			return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 		else
 		{
