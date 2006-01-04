@@ -18,8 +18,10 @@
  */
 package wicket.injection.web;
 
+import wicket.PageParameters;
 import wicket.injection.ConfigurableInjector;
 import wicket.markup.html.WebPage;
+import wicket.model.IModel;
 
 /**
  * Subclass of WebPage that is injected via an injector in the InjectorHolder
@@ -46,6 +48,31 @@ import wicket.markup.html.WebPage;
  */
 public class InjectableWebPage extends WebPage
 {
+
+	/**
+	 * Constructor
+	 * 
+	 * @param model
+	 *            page model
+	 */
+	public InjectableWebPage(IModel model)
+	{
+		super(model);
+		getInjector().inject(this);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param pageParameters
+	 *            page parameters
+	 */
+	public InjectableWebPage(PageParameters pageParameters)
+	{
+		super(pageParameters);
+		getInjector().inject(this);
+	}
+
 	/**
 	 * Constructor
 	 */
@@ -53,10 +80,12 @@ public class InjectableWebPage extends WebPage
 	{
 		getInjector().inject(this);
 	}
-	
-	private ConfigurableInjector getInjector() {
-		ConfigurableInjector injector=InjectorHolder.getInjector();
-		if (injector==null) {
+
+	private ConfigurableInjector getInjector()
+	{
+		ConfigurableInjector injector = InjectorHolder.getInjector();
+		if (injector == null)
+		{
 			throw new RuntimeException("injector not set in InjectorHolder");
 		}
 		return injector;
