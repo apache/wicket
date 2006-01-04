@@ -375,6 +375,16 @@ public abstract class Application
 	 * code. The get[X]Settings() methods are now preferred.
 	 * 
 	 * @return Application settings
+	 * 
+	 * @see Application#getDebugSettings()
+	 * @see Application#getExceptionSettings()
+	 * @see Application#getMarkupSettings()
+	 * @see Application#getPageSettings()
+	 * @see Application#getRequestCycleSettings()
+	 * @see Application#getRequiredPageSettings()
+	 * @see Application#getResourceSettings()
+	 * @see Application#getSecuritySettings()
+	 * @see Application#getSessionSettings()
 	 * @deprecated
 	 */
 	// FIXME this needs to become private and classes switched to using proper
