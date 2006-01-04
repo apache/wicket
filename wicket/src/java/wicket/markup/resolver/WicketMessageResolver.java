@@ -44,8 +44,8 @@ public class WicketMessageResolver implements IComponentResolver
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
 	 * 
-	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 * 
 	 * @param container
 	 *            The container parsing its markup
@@ -71,8 +71,8 @@ public class WicketMessageResolver implements IComponentResolver
 							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				final String value = container.getApplication().getMarkupSettings().getLocalizer().getString(
-						messageKey, container, "");
+				final String value = container.getApplication().getMarkupSettings().getLocalizer()
+						.getString(messageKey, container, "");
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
 				Component component = null;
@@ -85,8 +85,8 @@ public class WicketMessageResolver implements IComponentResolver
 					component = new WebMarkupContainer(id);
 				}
 
-				component.setRenderBodyOnly(
-						container.getApplicationSettings().getStripWicketTags());
+				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
+						.getStripWicketTags());
 
 				container.autoAdd(component);
 
@@ -105,7 +105,7 @@ public class WicketMessageResolver implements IComponentResolver
 	public static class MyLabel extends Label
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Construct.
 		 * 
@@ -123,7 +123,8 @@ public class WicketMessageResolver implements IComponentResolver
 		 */
 		protected void onComponentTag(ComponentTag tag)
 		{
-			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
+			// Convert <wicket:message /> into
+			// <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
 			{
 				tag.setType(XmlTag.OPEN);
