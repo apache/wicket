@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.1</version>
+			<version>1.2-SNAPSHOT</version>
 			<properties>
 				<eclipse.dependency>true</eclipse.dependency>
 			</properties>
