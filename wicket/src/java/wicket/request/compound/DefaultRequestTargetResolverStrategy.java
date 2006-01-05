@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -245,9 +246,16 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 		try
 		{
-			Page newPage = session.getPageFactory().newPage(pageClass,
+			Page newPage = null;
+			
+			IPageFactory pageFactory = session.getPageFactory();
+			// FIXME: need to take a second look on synchronizing in the resolve/render phase
+			// at this time, the session isn't accessed in a atomic, isolated manner during
+			// the request.
+			synchronized (session) {
+				newPage = pageFactory.newPage(pageClass,
 					new PageParameters(requestParameters.getParameters()));
-
+			}
 			// the response might have been set in the constructor of
 			// the bookmarkable page
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
