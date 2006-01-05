@@ -34,7 +34,7 @@ import wicket.proxy.LazyInitProxyFactory;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class SpringWebApplication extends WebApplication implements
+public abstract class SpringWebApplication extends WebApplication implements
 		ApplicationContextAware
 {
 	private ApplicationContext applicationContext;

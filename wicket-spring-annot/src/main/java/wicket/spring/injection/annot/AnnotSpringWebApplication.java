@@ -11,7 +11,7 @@ import wicket.spring.SpringWebApplication;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class AnnotSpringWebApplication extends SpringWebApplication
+public abstract class AnnotSpringWebApplication extends SpringWebApplication
 {
 
 	protected void internalInit()
@@ -19,5 +19,6 @@ public class AnnotSpringWebApplication extends SpringWebApplication
 		super.internalInit();
 		InjectorHolder.setInjector(new AnnotSpringInjector(getSpringContextLocator()));
 	}
+	
 
 }
