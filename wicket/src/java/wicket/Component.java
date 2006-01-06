@@ -261,8 +261,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
-		public boolean compare(Object a, Object b)
+		public boolean compare(Component component, Object b)
 		{
+			final Object a = component.getModelObject();
 			if (a == null && b == null)
 			{
 				return true;
@@ -1597,8 +1598,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check whether this will result in an actual change
-		final Object current = model.getObject(this);
-		if (!getModelComparator().compare(current, object))
+		if (!getModelComparator().compare(this, object))
 		{
 			modelChanging();
 
