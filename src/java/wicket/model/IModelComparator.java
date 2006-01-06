@@ -16,8 +16,15 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 /**
  * Implementations of this interface compare model object.
+ * The component is given so that a developer can choose what the previous object is
+ * The default implementation for form components is just component.getModelObject();
+ * But developers can choose to keep the last rendered value for that component and compare
+ * this value with the newObject. So that it doesn't overwrite values for an object that was
+ * changed by another session if the current session didn't touch that specific value.
  * 
  * @author jcompagner
  * @author Jonathan Locke
@@ -25,11 +32,11 @@ package wicket.model;
 public interface IModelComparator
 {
 	/**
-	 * @param a
-	 *            Model object a
-	 * @param b
-	 *            Model object b
-	 * @return True if the two model objects are equal
+	 * @param component
+	 *            The component which received the new object
+	 * @param newObject
+	 *            The newObject 
+	 * @return True if the previous components object is the same as the newObject.
 	 */
-	boolean compare(Object a, Object b);
+	boolean compare(Component component, Object newObject);
 }
