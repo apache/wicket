@@ -277,6 +277,20 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		return false;
 	}
+	
+	/**
+	 * @see wicket.Component#isEnabled()
+	 */
+	public boolean isEnabled()
+	{
+		// If we're auto-enabling
+		if(getAutoEnable())
+		{
+			// the link is enabled if this link doesn't link to the current page
+			return !linksTo(getPage());
+		}
+		return super.isEnabled();
+	}
 
 	/**
 	 * Handles this link's tag.
@@ -289,16 +303,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		// Default handling for tag
 		super.onComponentTag(tag);
-
-		// If we're auto-enabling
-		if (getAutoEnable())
-		{
-			// the link is enabled if this link doesn't link to the current page
-			boolean versionEnabled = isVersioned();
-			setVersioned(false);
-			setEnabled(!linksTo(getPage()));
-			setVersioned(versionEnabled);
-		}
 
 		// Set href to link to this link's linkClicked method
 		String url = getURL();
