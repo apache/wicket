@@ -40,7 +40,6 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
-import wicket.response.BufferedResponse;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
@@ -429,7 +428,7 @@ public abstract class WebApplication extends Application
 	 *            the response to buffer
 	 */
 	final void addBufferedResponse(String sessionId, String bufferId,
-			BufferedResponse renderedResponse)
+			BufferedHttpServletResponse renderedResponse)
 	{
 		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
 		if (responsesPerSession == null)
@@ -528,12 +527,12 @@ public abstract class WebApplication extends Application
 	 * @return the buffered response or null if not found (when this request is
 	 *         on a different box than the original request came in
 	 */
-	final BufferedResponse popBufferedResponse(String sessionId, String bufferId)
+	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
 	{
 		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
 		if (responsesPerSession != null)
 		{
-			BufferedResponse buffered = (BufferedResponse)responsesPerSession.remove(bufferId);
+			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession.remove(bufferId);
 			return buffered;
 		}
 		return null;
