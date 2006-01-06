@@ -18,7 +18,6 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
@@ -33,7 +32,6 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.response.BufferedResponse;
 import wicket.settings.Settings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
@@ -147,19 +145,12 @@ public class WicketServlet extends HttpServlet
 			String queryString = servletRequest.getQueryString();
 			String requestUri = servletRequest.getRequestURI();
 			String bufferId = (queryString == null) ? requestUri : requestUri + "?" + queryString;
-			BufferedResponse bufferedResponse = webApplication.popBufferedResponse(sessionId,
+			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(sessionId,
 					bufferId);
 
 			if (bufferedResponse != null)
 			{
-				// got a buffered response; now write it
-				servletResponse.setContentLength(bufferedResponse.getContentLength());
-				servletResponse.setContentType(bufferedResponse.getContentType());
-
-				final OutputStream out = servletResponse.getOutputStream();
-				out.write(bufferedResponse.getBytes());
-				out.close();
-
+				bufferedResponse.writeTo(servletResponse);
 				return;
 			}
 		}
