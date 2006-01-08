@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.161 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -195,9 +195,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
-	/** Boolean if the page is stateless, so it doesn't have to be in the page map, will be set in urlFor */
+	/**
+	 * Boolean if the page is stateless, so it doesn't have to be in the page
+	 * map, will be set in urlFor
+	 */
 	private transient boolean stateless = true;
 
+	/**
+	 * Class used for holding meta data entries for components on this Page.
+	 * Since most Components are not expected to have metadata, this saves space
+	 * over having each component hold its own metadata list
+	 */
 	private static class MetaDataEntry
 	{
 		Component component;
@@ -330,8 +338,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// Make sure it is really empty
 		renderedComponents = null;
-		
-		// Reset it to stateless is false so that 
+
+		// Reset it to stateless is false so that
 		this.stateless = true;
 
 		// Set form component values from cookies
@@ -766,7 +774,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			stateless = false;
 		}
-		
+
 		String interfaceName = Classes.name(listenerInterface);
 		RequestCycle requestCycle = getRequestCycle();
 		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
