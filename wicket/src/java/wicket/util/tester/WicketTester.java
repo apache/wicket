@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.12 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import junit.framework.Assert;
 
@@ -230,26 +228,26 @@ public class WicketTester extends MockWebApplication
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
-		//getServletRequest().getSession().getPageMap(null);
+		// getServletRequest().getSession().getPageMap(null);
 		processRequestCycle();
 	}
-	
+
 	/**
 	 * Render the page
 	 * 
 	 * @param page
 	 * @return The page rendered
-	 * @throws ServletException
 	 */
-	public final Page startPage(final Page page) throws ServletException
+	public final Page startPage(final Page page)
 	{
 		setHomePage(DummyHomePage.class);
 		rerender(page);
-		
-		Page last=getLastRenderedPage();
-		
+
+		Page last = getLastRenderedPage();
+
 		getWicketSession().touch(page);
-		if (page!=last) {
+		if (page != last)
+		{
 			getWicketSession().touch(last);
 		}
 		return last;
@@ -677,36 +675,22 @@ public class WicketTester extends MockWebApplication
 
 	/**
 	 * assert previous rendered page expired
-	 *
-	 * TODO This test is no longer valid because it depends on an implementation detail that just changed!
 	 * 
-	public void assertExpirePreviousPage()
-	{
-		PageMap pageMap = getWicketSession().getPageMap(null);
-		Field internalMapCacheField;
-		try
-		{
-			internalMapCacheField = pageMap.getClass().getDeclaredField("pages");
-			internalMapCacheField.setAccessible(true);
-			MostRecentlyUsedMap mru = (MostRecentlyUsedMap)internalMapCacheField.get(pageMap);
-			Assert.assertFalse("Previous Page '"
-					+ Classes.name(getPreviousRenderedPage().getClass()) + "' not expire", mru
-					.containsValue(getPreviousRenderedPage()));
-		}
-		catch (SecurityException e)
-		{
-			throw convertoUnexpect(e);
-		}
-		catch (NoSuchFieldException e)
-		{
-			throw convertoUnexpect(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw convertoUnexpect(e);
-		}
-	}
-	*/
+	 * TODO This test is no longer valid because it depends on an implementation
+	 * detail that just changed!
+	 * 
+	 * public void assertExpirePreviousPage() { PageMap pageMap =
+	 * getWicketSession().getPageMap(null); Field internalMapCacheField; try {
+	 * internalMapCacheField = pageMap.getClass().getDeclaredField("pages");
+	 * internalMapCacheField.setAccessible(true); MostRecentlyUsedMap mru =
+	 * (MostRecentlyUsedMap)internalMapCacheField.get(pageMap);
+	 * Assert.assertFalse("Previous Page '" +
+	 * Classes.name(getPreviousRenderedPage().getClass()) + "' not expire", mru
+	 * .containsValue(getPreviousRenderedPage())); } catch (SecurityException e) {
+	 * throw convertoUnexpect(e); } catch (NoSuchFieldException e) { throw
+	 * convertoUnexpect(e); } catch (IllegalAccessException e) { throw
+	 * convertoUnexpect(e); } }
+	 */
 
 	/**
 	 * dump the source of last rendered page

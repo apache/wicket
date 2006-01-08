@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.servlet.ServletException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -524,10 +522,8 @@ public abstract class RequestCycle
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Responds to a request.
-	 * 
-	 * @throws ServletException
 	 */
-	public final void request() throws ServletException
+	public final void request()
 	{
 		checkReuse();
 
@@ -549,9 +545,8 @@ public abstract class RequestCycle
 	 * 
 	 * @param component
 	 *            to be re-rendered
-	 * @throws ServletException
 	 */
-	public final void request(final Component component) throws ServletException
+	public final void request(final Component component)
 	{
 		checkReuse();
 
@@ -570,10 +565,8 @@ public abstract class RequestCycle
 	 * 
 	 * @param target
 	 *            request target
-	 * 
-	 * @throws ServletException
 	 */
-	public final void request(IRequestTarget target) throws ServletException
+	public final void request(IRequestTarget target)
 	{
 		checkReuse();
 
