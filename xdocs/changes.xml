@@ -9,6 +9,8 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="fix" dev="Johan Compagner" due-to="Bryn Cook">RadioChoice didn't register the IOnChangeListener to the RequestCycle</action>
+      <action type="update" dev="Johan Compagner">REDIREC_TO_BUFFER strategy changes, Now when responding the Response object is for WebPages always a WebResponse, Headers and Cookies will be now set</action>
       <action type="add" dev="Igor Vaynberg">Wicket settings system has been refactored. ApplicationSettings is now hidden behind Application.getXXXSettings interfaces that should be used to access the various settings. See http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2 for details.</action> 
       <action type="update" dev="Jonathan Locke">Reworked page state to include IPageSource envisioned earlier as well as IPageMapEvictionStrategy for more flexible management of page state.  A variety of other small changes were made.</action>
       <action type="add" dev="Juergen Donnerstag" due-to="Christian Essl">Provide a component resolver (see ScopedComponentResolver) which walks up the component tree until a Page or Panel and tries to find a component with a matching wicket id, effectivly providing something like scoping for wicket id resolution.</action>
