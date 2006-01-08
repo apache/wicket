@@ -1,11 +1,6 @@
 /*
-<<<<<<< Page.java
  * $Id$ $Revision$
  * $Date$
-=======
- * $Id$ $Revision$
- * $Date$
->>>>>>> 1.157
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -200,7 +195,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
-	/** boolean if the page is stateless, so it doesn't have to be in the page map, will be set in urlFor */
+	/** Boolean if the page is stateless, so it doesn't have to be in the page map, will be set in urlFor */
 	private transient boolean stateless = true;
 
 	private static class MetaDataEntry
