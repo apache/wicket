@@ -43,12 +43,4 @@ public class BookmarkableWebPage extends WebPage
 	{
 		super(parameters);
 	}
-
-	/**
-	 * @see wicket.Page#isStateless()
-	 */
-	public boolean isStateless()
-	{
-		return true;
-	}
 }
