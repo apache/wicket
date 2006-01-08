@@ -64,12 +64,4 @@ public final class InspectorPage extends WebPage
 	{
 		return false;
 	}
-	
-	/**
-	 * @see wicket.Page#isStateless()
-	 */
-	public boolean isStateless()
-	{
-		return true;
-	}
 }

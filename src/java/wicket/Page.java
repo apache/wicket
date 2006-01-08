@@ -200,6 +200,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
+	/** boolean if the page is stateless, so it doesn't have to be in the page map, will be set in urlFor */
+	private transient boolean stateless = true;
+
 	private static class MetaDataEntry
 	{
 		Component component;
@@ -332,9 +335,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// Make sure it is really empty
 		renderedComponents = null;
-
-		// Add/touch the response page in the session (its pagemap).
-		getSession().touch(this);
+		
+		// Reset it to stateless is false so that 
+		this.stateless = true;
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -364,6 +367,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 			// Check rendering if it happened fully
 			checkRendering(this);
+
+			// Add/touch the response page in the session (its pagemap).
+			getSession().touch(this);
+
 		}
 		finally
 		{
@@ -598,9 +605,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @return Return true from this method if you want to keep a page out of
 	 *         the session.
 	 */
-	public boolean isStateless()
+	public final boolean isStateless()
 	{
-		return false;
+		return stateless;
 	}
 
 	/**
@@ -759,6 +766,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
+		// the page is not stateless if it is not a RedirectListener
+		if(!IRedirectListener.class.isAssignableFrom(listenerInterface))
+		{
+			stateless = false;
+		}
+		
 		String interfaceName = Classes.name(listenerInterface);
 		RequestCycle requestCycle = getRequestCycle();
 		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
