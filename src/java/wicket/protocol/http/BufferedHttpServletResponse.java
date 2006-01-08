@@ -60,6 +60,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	private String contentType;
 	private byte[] byteBuffer;
 	private Locale locale;
+	private String encoding;
 	
 	
 	/**
@@ -279,9 +280,18 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public String getCharacterEncoding()
 	{
 		isOpen();
-		return realResponse.getCharacterEncoding();
+		return encoding;
 	}
 
+	/**
+	 * Set the charackter encoding to use for the output.
+	 * 
+	 * @param encoding
+	 */
+	public void setCharacterEncoding(String encoding)
+	{
+		this.encoding = encoding;
+	}
 	/**
 	 * @see javax.servlet.ServletResponse#getOutputStream()
 	 */

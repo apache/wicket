@@ -131,11 +131,10 @@ public class WebRequestCycle extends RequestCycle
 			final WebResponse currentResponse = getWebResponse();
 			try
 			{
-				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
 				// create the redirect response.
-				// override the encodeURL so that it will use the real once
-				// encoding.
+				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse);
+				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
 				// redirect the response to the buffer
 				setResponse(redirectResponse);
@@ -157,16 +156,16 @@ public class WebRequestCycle extends RequestCycle
 				}
 				else if (servletResponse.getContentLength() > 0)
 				{
-					// call filter() so that any filters can process the
-					// response
+					// call filter() so that any filters can process the response
 					servletResponse.filter(currentResponse);
-					// close it so that the reponse is fixed and encoded from
-					// here on.
+
+					// Set the final character encoding before  calling close
+					servletResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
+					// close it so that the reponse is fixed and encoded from here on.
 					servletResponse.close();
 
 					redirectUrl = page.urlFor(page, IRedirectListener.class);
-					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
-							.getId();
+					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
 					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl, servletResponse);
 				}
 			}
