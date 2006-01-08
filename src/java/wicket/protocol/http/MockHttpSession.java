@@ -24,7 +24,6 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import wicket.util.value.ValueMap;
 
@@ -135,8 +134,9 @@ public class MockHttpSession implements HttpSession, Serializable
      * NOT USED.
      * 
      * @return Always null
+     * @deprecated
      */
-    public HttpSessionContext getSessionContext()
+    public javax.servlet.http.HttpSessionContext getSessionContext()
     {
         return null;
     }
