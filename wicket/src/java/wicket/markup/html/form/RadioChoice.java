@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -450,5 +451,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+	}
+	
+	static
+	{
+		// Allow optional use of the IOnChangeListener interface
+		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }
