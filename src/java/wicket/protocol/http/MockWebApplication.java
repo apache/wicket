@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -242,9 +241,8 @@ public class MockWebApplication extends WebApplication
 	 * Initialize a new WebRequestCycle and all its dependent objects
 	 * 
 	 * @param component
-	 * @throws ServletException
 	 */
-	public void rerender(final Component component) throws ServletException
+	public void rerender(final Component component)
 	{
 		setupRequestAndResponse();
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
@@ -263,15 +261,7 @@ public class MockWebApplication extends WebApplication
 	public void processRequestCycle()
 	{
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
-
-		try
-		{
-			cycle.request();
-		}
-		catch (ServletException ex)
-		{
-			throw new WicketRuntimeException("Error while processing Wicket request cycle.", ex);
-		}
+		cycle.request();
 
 		previousRenderedPage = lastRenderedPage;
 
@@ -289,15 +279,7 @@ public class MockWebApplication extends WebApplication
 
 			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketSession = getSession(wicketRequest);
-			try
-			{
-				new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
-			}
-			catch (ServletException ex)
-			{
-				throw new WicketRuntimeException(
-						"Error while processing Wicket redirect request cycle.", ex);
-			}
+			new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
 		}
 		generateLastRenderedPage(cycle);
 
