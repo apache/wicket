@@ -21,7 +21,6 @@ public class QuickStartApplication extends WebApplication
      */
 	public QuickStartApplication()
 	{
-		getPages().setHomePage(Index.class);
 		if (!Boolean.getBoolean("cache-markup"))
 		{
 			getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
@@ -31,6 +30,15 @@ public class QuickStartApplication extends WebApplication
 		{
 			log.info("Markup caching is ACTIVE");
 		}
+	}
+	
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		// TODO Auto-generated method stub
+		return Index.class;
 	}
 
     /**
