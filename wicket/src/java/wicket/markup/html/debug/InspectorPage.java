@@ -18,9 +18,12 @@
 package wicket.markup.html.debug;
 
 import wicket.Application;
+import wicket.Page;
+import wicket.PageParameters;
 import wicket.Session;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.image.Image;
+import wicket.util.string.StringValueConversionException;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including
@@ -35,25 +38,23 @@ public final class InspectorPage extends WebPage
 	/**
 	 * Constructor.
 	 * 
-	 * @param page
-	 *            The page to be analyzed
+	 * @param parameters
+	 *            The page id of any page to be analyzed
 	 */
-	public InspectorPage(final WebPage page)
-	{
-		add(new ApplicationView("application", page.getApplication()));
-		add(new SessionView("session", page.getSession()));
-		add(new PageView("page", page));
-		add(new Image("bug"));
-	}
-	
-	/**
-	 * Construct.
-	 */
-	public InspectorPage()
+	public InspectorPage(final PageParameters parameters)
 	{
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));
-		add(new PageView("page", null));
+		Page page = null;
+		try
+		{
+			page = getPageMap().get(parameters.getInt("pageId"));
+		}
+		catch (StringValueConversionException e)
+		{
+			// Ignore
+		}
+		add(new PageView("page", page));
 		add(new Image("bug"));
 	}
 	

@@ -113,6 +113,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
+	 * @deprecated
 	 */
 	public String encodeUrl(String url)
 	{
@@ -122,6 +123,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
+	 * @deprecated
 	 */
 	public String encodeRedirectUrl(String url)
 	{
@@ -267,6 +269,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
+	 * @deprecated
 	 */
 	public void setStatus(int sc, String sm)
 	{
