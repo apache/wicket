@@ -246,7 +246,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/** Ignore attribute modifiers */
 	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
-	/** boolean whether this component was rendered once for tracking changes. */
+	/** Boolean whether this component was rendered once for tracking changes. */
 	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	/** Render tag boolean */
