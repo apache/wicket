@@ -18,7 +18,6 @@
 package wicket.examples.pub;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.examples.nested.Home;
 
 /**
  * WicketServlet class for the linkomatic example.
