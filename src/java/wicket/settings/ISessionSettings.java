@@ -33,9 +33,8 @@ public interface ISessionSettings
 	 * 
 	 * @param pageFactory
 	 *            The default factory
-	 * @return This
 	 */
-	IPageSettings setPageFactory(final IPageFactory pageFactory);
+	void setPageFactory(final IPageFactory pageFactory);
 
 	/**
 	 * Sets pageMapEvictionStrategy.
