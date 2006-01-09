@@ -835,7 +835,9 @@ public abstract class Session implements Serializable
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException("Internal error cloning object", e);
+				throw new WicketRuntimeException(
+						"Internal error cloning object. May be you model object does not implement Serializable. Object=" 
+						+ (value != null ? value.toString() : "null"), e);
 			}
 			long t2 = System.currentTimeMillis();
 			log.debug("Attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
