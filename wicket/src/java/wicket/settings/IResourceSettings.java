@@ -124,10 +124,7 @@ public interface IResourceSettings
 	IResourceFactory getResourceFactory(final String name);
 
 	/**
-	 * Gets the resource finder to use when searching for resources. If no
-	 * resource finder has been set explicitly via setResourceFinder(), the
-	 * factory method newResourceFinder() will be called to create a resource
-	 * finder.
+	 * Gets the resource finder to use when searching for resources.
 	 * 
 	 * @return Returns the resourceFinder.
 	 * @see Settings#setResourceFinder(IResourceFinder)
