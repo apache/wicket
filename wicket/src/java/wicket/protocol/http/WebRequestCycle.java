@@ -181,6 +181,7 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
+			redirectUrl = page.urlFor(page, IRedirectListener.class);
 			session.touch(page);
 			// redirect page can touch its models already (via for example the
 			// constructors)
