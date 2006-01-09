@@ -5,14 +5,14 @@
     <groupId>wicket</groupId>
     <artifactId>wicket-spring-annot</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Wicket Spring Integration through Annotations</name>
     
     <dependencies>
         <dependency>
             <groupId>wicket</groupId>
             <artifactId>wicket-spring</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
