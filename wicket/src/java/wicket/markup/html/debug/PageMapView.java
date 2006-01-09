@@ -23,7 +23,10 @@ import java.util.List;
 
 import wicket.Page;
 import wicket.PageMap;
+import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
@@ -82,7 +85,11 @@ public final class PageMapView extends Panel
 			protected void populateItem(final ListItem listItem)
 			{
 				IPageMapEntry entry = (IPageMapEntry)listItem.getModelObject();
-				listItem.add(new Label("id", "" + entry.getNumericId()));
+				PageParameters parameters = new PageParameters();
+				parameters.put("pageId", "" + entry.getNumericId());
+				Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
+				link.add(new Label("id", "" + entry.getNumericId()));
+				listItem.add(link);
 				listItem.add(new Label("class", "" + entry.getClass().getName()));
 				int size;
 				int versions;
