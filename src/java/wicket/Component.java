@@ -1300,6 +1300,13 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 		try
 		{
+			// Allow currently invisible components to be re-rendered as well
+			if (getParent() != null)
+			{
+				final MarkupStream markupStream = findMarkupStream();
+				validateMarkupStream(markupStream);
+			}
+			
 			// Determine if component is visible using it's authorization status
 			// and the isVisible property.
 			if (renderAllowed && isVisible())
@@ -1345,12 +1352,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		// If yet unknown, set the markup stream position with the current
-		// position of markupStream. Else set the
-		// markupStream.setCurrentPosition
-		// based on the position already known to the component.
-		validateMarkupStream(markupStream);
-
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
 		final ComponentTag tag = openTag.mutable();
@@ -2320,7 +2321,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * @param markupStream
 	 */
-	protected final void validateMarkupStream(final MarkupStream markupStream)
+	private final void validateMarkupStream(final MarkupStream markupStream)
 	{
 		// Allow the component to be re-rendered without a page. Partial
 		// re-rendering is a requirement of AJAX.
