@@ -770,7 +770,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
 		// The page is not stateless if it is not an IRedirectListener
-		if (!IRedirectListener.class.isAssignableFrom(listenerInterface))
+		//if (!IRedirectListener.class.isAssignableFrom(listenerInterface))
 		{
 			stateless = false;
 		}
