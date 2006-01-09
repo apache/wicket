@@ -363,7 +363,7 @@ public abstract class Application
 	 * @see Application#getSessionSettings()
 	 * @deprecated
 	 */
-	// TODO remove post wicket 1.2
+	// TODO make private in post 1.2
 	public Settings getSettings()
 	{
 		if (settings == null)
