@@ -4,7 +4,7 @@ import wicket.IPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 
 /**
- * Interface for session related settings *
+ * Interface for session related settings
  * <p>
  * <i>pageFactory </i>- The factory class that is used for constructing
  * page instances.
