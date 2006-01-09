@@ -18,11 +18,11 @@
 package wicket.markup.html.debug;
 
 import wicket.Application;
-import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.image.Image;
+import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.string.StringValueConversionException;
 
 /**
@@ -45,16 +45,16 @@ public final class InspectorPage extends WebPage
 	{
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));
-		Page page = null;
+		IPageMapEntry entry = null;
 		try
 		{
-			page = getPageMap().get(parameters.getInt("pageId"));
+			entry = getPageMap().getEntry(parameters.getInt("pageId"));
 		}
 		catch (StringValueConversionException e)
 		{
 			// Ignore
 		}
-		add(new PageView("page", page));
+		add(new PageView("page", entry == null ? null : entry.getPage()));
 		add(new Image("bug"));
 	}
 	

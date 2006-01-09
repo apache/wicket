@@ -102,6 +102,18 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Retrieves entry with given id.
+	 * 
+	 * @param id
+	 *            The page identifier
+	 * @return Any entry having the given id
+	 */
+	public final IPageMapEntry getEntry(final int id)
+	{
+		return (IPageMapEntry)session.getAttribute(attributeForId(id));
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @return Returns the name.
@@ -234,17 +246,15 @@ public final class PageMap implements Serializable
 		}
 		return false;
 	}
-
+	
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * Retrieves page with given id.
 	 * 
 	 * @param id
 	 *            The page identifier
 	 * @return Any page having the given id
 	 */
-	public final Page get(final int id)
+	final Page get(final int id)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
 		if (entry != null)
