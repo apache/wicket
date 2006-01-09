@@ -117,7 +117,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag. If null, no more tags are available
 		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if (tag == null)
+		if (tag == null  || tag.getId() != null)
 		{
 			return tag;
 		}
