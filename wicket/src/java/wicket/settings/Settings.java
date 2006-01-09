@@ -845,10 +845,9 @@ public final class Settings
 	/**
 	 * @see wicket.settings.ISessionSettings#setPageFactory(wicket.IPageFactory)
 	 */
-	public IPageSettings setPageFactory(final IPageFactory defaultPageFactory)
+	public void setPageFactory(final IPageFactory defaultPageFactory)
 	{
 		this.pageFactory = defaultPageFactory;
-		return this;
 	}
 
 	/**
