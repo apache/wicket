@@ -237,4 +237,20 @@ public class SimplePageTest extends WicketTestCase
 	{
 		executeTest(SimplePage_9.class, "SimplePageExpectedResult_9.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_10() throws Exception
+	{
+	    executeTest(SimplePage_10.class, "SimplePageExpectedResult_10.html");
+
+	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
+	    assertNotNull(panel);
+	    panel.setVisible(true);
+		application.rerender(panel);
+		String document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
+	}
 }

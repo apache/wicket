@@ -545,7 +545,6 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();
-		validateMarkupStream(markupStream);
 
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
