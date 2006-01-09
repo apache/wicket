@@ -5,8 +5,16 @@
     <groupId>wicket</groupId>
     <artifactId>wicket-spring</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Wicket Spring Integration</name>
+    
+    <developers>
+        <developer>
+            <name>Igor Vaynberg</name>
+            <id>ivaynberg</id>
+            <email>ivaynberg at users.sf.net</email>
+        </developer>
+    </developers>
     
     <dependencies>
         <dependency>
@@ -14,11 +22,7 @@
             <artifactId>servletapi</artifactId>
             <version>2.3</version>
         </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
-        </dependency>
+ 
         <dependency>
             <groupId>wicket</groupId>
             <artifactId>wicket</artifactId>
@@ -35,12 +39,6 @@
             <groupId>easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>1.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.8</version>
         </dependency>
         
         <dependency>
