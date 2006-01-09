@@ -5,7 +5,7 @@
 	<groupId>wicket</groupId>
 	<id>wicket-spring-cattr</id>
 	<name>Wicket Spring Integration through Commons Attributes</name>
-	<currentVersion>1.0-SNAPSHOT</currentVersion>
+	<currentVersion>1.0</currentVersion>
 	<inceptionYear>2005</inceptionYear>
 	<package>wicket</package>
 	<versions></versions>
@@ -45,18 +45,12 @@
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>1.1</version>
-			<properties>
-				<eclipse.dependency>true</eclipse.dependency>
-			</properties>
 		</dependency>
 
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<properties>
-				<eclipse.dependency>true</eclipse.dependency>
-			</properties>
+			<version>1.0</version>
 		</dependency>
 
 
@@ -104,8 +98,6 @@
 			<artifactId>ognl</artifactId>
 			<version>2.6.7</version>
 		</dependency>
-		
-		<!-- added by karthik -->
 		
 		<dependency>
 			<groupId>commons-attributes</groupId>

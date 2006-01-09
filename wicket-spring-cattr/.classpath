@@ -9,9 +9,9 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar">
   </classpathentry>
-  <classpathentry kind="src" path="/wicket">
+  <classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-1.1.jar">
   </classpathentry>
-  <classpathentry kind="src" path="/wicket-spring">
+  <classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-spring-1.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/org.springframework/jars/spring-1.2.6.jar">
   </classpathentry>
