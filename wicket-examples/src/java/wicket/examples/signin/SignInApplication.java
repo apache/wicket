@@ -21,7 +21,6 @@ package wicket.examples.signin;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
-import wicket.examples.nested.Home;
 
 /**
  * Forms example.

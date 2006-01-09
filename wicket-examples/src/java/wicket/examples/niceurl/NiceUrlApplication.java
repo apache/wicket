@@ -18,7 +18,6 @@
 package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.examples.nested.Home;
 import wicket.examples.niceurl.mounted.Page3;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.parser.filter.PrependContextPathHandler;
