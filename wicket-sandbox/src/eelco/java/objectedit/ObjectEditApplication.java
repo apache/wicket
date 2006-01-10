@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,23 +17,27 @@
  */
 package objectedit;
 
-import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
 
 /**
  * WicketServlet class for nested structure example.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class ObjectEditApplication extends WebApplication
 {
-    /**
-     * Constructor.
-     */
-    public ObjectEditApplication()
-    {
-        getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		settings.configure("development");
+	/**
+	 * Constructor.
+	 */
+	public ObjectEditApplication()
+	{
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }
