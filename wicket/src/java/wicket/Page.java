@@ -939,8 +939,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/**
 	 * Renders this container to the given response object.
+	 * 
+	 * @param markupStream
 	 */
-	protected final void onRender()
+	protected final void onRender(final MarkupStream markupStream)
 	{
 		// visit all this page's children to check rendering authorization.
 		// we set any result; positive or negative as a temporary boolean
@@ -962,8 +964,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		resetMarkupStreams();
 
 		// Set page's associated markup stream
-		final MarkupStream markupStream = getAssociatedMarkupStream();
-		setMarkupStream(markupStream);
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		setMarkupStream(associatedMarkupStream);
 
 		// Configure response object with locale and content type
 		configureResponse();
@@ -972,7 +974,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		setFlag(FLAG_IS_RENDERING, true);
 		try
 		{
-			renderAll(markupStream);
+			renderAll(associatedMarkupStream);
 		}
 		finally
 		{

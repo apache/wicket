@@ -144,13 +144,11 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders this Loop container.
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	protected final void onRender()
+	protected final void onRender(final MarkupStream markupStream)
 	{
-		// Ask parents for markup stream to use
-		final MarkupStream markupStream = findMarkupStream();
-
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
 

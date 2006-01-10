@@ -104,10 +104,11 @@ public class RepeatingView extends WebMarkupContainer
 
 	/**
 	 * Renders all child items in no specified order
+	 * 
+	 * @param markupStream The markup stream
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		final MarkupStream markupStream = findMarkupStream();
 		final int markupStart = markupStream.getCurrentIndex();
 
 		Iterator it = renderIterator();

@@ -36,9 +36,8 @@ import wicket.response.StringResponse;
  * something to contribute to the &lt;head&gt; section of the html response. If
  * yes, it must <b>immediately </b> be rendered.
  * <p>
- * Of course &lt;head&gt; regions may contain additional wicket components,
- * which must be added by means of addToHeader() instead of add() to be handled
- * properly.
+ * &lt;head&gt; regions may contain additional wicket components, which must 
+ * be added by means of add(Component) as usual.
  * <p>
  * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.

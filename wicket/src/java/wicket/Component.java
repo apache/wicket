@@ -1301,9 +1301,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 		try
 		{
 			// Allow currently invisible components to be re-rendered as well
+			MarkupStream markupStream = null;
 			if (getParent() != null)
 			{
-				final MarkupStream markupStream = findMarkupStream();
+				markupStream = findMarkupStream();
 				validateMarkupStream(markupStream);
 			}
 			
@@ -1318,7 +1319,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 				}
 
 				// Call implementation to render component
-				onRender();
+				onRender(markupStream);
 
 				// Component has been rendered
 				rendered();
@@ -2201,8 +2202,21 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Implementation that renders this component.
+	 * 
+	 * @deprecated since 1.2 Please implement onRender(MarkupStream) instead
 	 */
-	protected abstract void onRender();
+	protected final void onRender()
+	{
+		onRender(findMarkupStream());
+	}
+
+	/**
+	 * Implementation that renders this component.
+	 * 
+	 * @since Wicket 1.2
+	 * @param markupStream
+	 */
+	protected abstract void onRender(final MarkupStream markupStream);
 
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might

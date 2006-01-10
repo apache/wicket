@@ -813,10 +813,12 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Renders this component. This implementation just calls renderComponent.
+	 * 
+	 * @param markupStream
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		renderComponent(findMarkupStream());
+		renderComponent(markupStream);
 	}
 
 	/**

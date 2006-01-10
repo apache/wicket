@@ -22,6 +22,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.behavior.IBehavior;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
@@ -91,10 +92,11 @@ public class WebComponent extends Component implements IHeaderContributor
 	}
 
 	/**
-	 * Renders this component.
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		renderComponent(findMarkupStream());
+		renderComponent(markupStream);
 	}
 }

@@ -121,19 +121,16 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	/**
 	 * Scan the related markup and attach a SortableListViewHeader to each &lt;th&gt; tag
 	 * found.
-	 * @see wicket.Component#onRender()
+	 * @see wicket.Component#onRender(MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Get the markup related to the component
-		MarkupStream markupStream = this.findMarkupStream();
-
 		// Must be <thead> tag
 		ComponentTag tag = markupStream.getTag();
 		final ComponentTag openTag = tag;
 		checkComponentTag(tag, "thead");
 
 		// Continue with default behaviour
-		super.onRender();
+		super.onRender(markupStream);
 	}
 }
