@@ -231,8 +231,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			// Position markup stream at beginning of header tag
 			associatedMarkupStream.setCurrentIndex(index);
 
-			// Create a HtmlHeaderContainer for the header tag found and
-			// add all components from addToHeader list
+			// Create a HtmlHeaderContainer for the header tag found
 			final MarkupElement element = associatedMarkupStream.get();
 			if (element instanceof WicketTag)
 			{
