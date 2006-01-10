@@ -142,6 +142,9 @@ public final class Settings
 	/** Class of internal error page. */
 	private Class internalErrorPage;
 
+	/** Class of access denied page. */
+	private Class accessDeniedPage;
+
 	/** I18N support */
 	private Localizer localizer;
 
@@ -997,5 +1000,27 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#getAccessDeniedPage()
+	 */
+	public Class getAccessDeniedPage()
+	{
+		return accessDeniedPage;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
+	 */
+	public void setAccessDeniedPage(Class accessDeniedPage)
+	{
+		if (accessDeniedPage == null)
+		{
+			throw new IllegalArgumentException("Argument accessDeniedPage may not be null");
+		}
+		checkPageClass(accessDeniedPage);
+
+		this.accessDeniedPage = accessDeniedPage;
 	}
 }

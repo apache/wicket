@@ -965,9 +965,10 @@ public abstract class RequestCycle
 
 					IRequestTarget target = getRequestTarget();
 
+					boolean access = true;
 					if (target instanceof IAccessCheck)
 					{
-						((IAccessCheck)target).checkAccess(this);
+						access = ((IAccessCheck)target).checkAccess(this);
 					}
 
 					// check access or earlier (like in a component constructor)
@@ -985,6 +986,10 @@ public abstract class RequestCycle
 						requestTargets.pop();
 						requestTargets.push(target);
 						requestTargets.push(otherTarget);
+					}
+					else if( !access )
+					{
+						setResponsePage(getApplication().getApplicationSettings().getAccessDeniedPage());
 					}
 					break;
 				}

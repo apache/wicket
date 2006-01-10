@@ -117,6 +117,8 @@ public abstract class WebApplication extends Application
 		// Set default error pages for HTML markup
 		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
 		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
+		// TODO must have a nice AccessDenied page
+		getApplicationSettings().setAccessDeniedPage(InternalErrorPage.class);
 
 		// Add resolver for automatically resolving HTML links
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
