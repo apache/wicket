@@ -27,6 +27,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
+import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -252,5 +253,25 @@ public class SimplePageTest extends WicketTestCase
 		String document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testAccessDeniedPage_11() throws Exception
+	{
+	    Class pageClass = SimplePage_11.class;
+	    String filename = "SimplePageExpectedResult_11.html";
+	    
+		System.out.println("=== " + SimplePage_11.class.getName() + " ===");
+		
+		application.setHomePage(pageClass);
+
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Response page must the access denied page
+		assertEquals(AccessDeniedPage.class, application.getLastRenderedPage().getClass());
 	}
 }
