@@ -32,6 +32,7 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.resolver.AutoLinkResolver;
@@ -117,8 +118,7 @@ public abstract class WebApplication extends Application
 		// Set default error pages for HTML markup
 		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
 		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
-		// TODO must have a nice AccessDenied page
-		getApplicationSettings().setAccessDeniedPage(InternalErrorPage.class);
+		getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
 
 		// Add resolver for automatically resolving HTML links
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
