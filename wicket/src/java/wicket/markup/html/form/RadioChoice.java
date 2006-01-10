@@ -21,6 +21,7 @@ import java.util.List;
 
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -431,10 +432,18 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				{
 					final String url = urlFor(IOnChangeListener.class);
 
-					// NOTE: do not encode the url as that would give invalid
-					// JavaScript
-					buffer.append(" onclick=\"location.href='" + url + "&" + getInputName() + "="
-							+ id + "';\"");
+					try
+					{
+						Form form = getForm();
+						buffer.append(" onclick=\"" +  form.getJsForInterfaceUrl(url)  + ";\"");
+					}
+					catch (WicketRuntimeException ex)
+					{
+						// NOTE: do not encode the url as that would give invalid
+						// JavaScript
+						buffer.append(" onclick=\"" + url + "&" + getInputName() + "="
+								+ id + "';\"");
+					}
 				}
 
 				buffer.append("/>");

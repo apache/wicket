@@ -157,8 +157,18 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			final String url = urlFor(IOnChangeListener.class);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onclick", "location.href='" + url + "&" + getInputName()
-					+ "=' + this.checked;");
+			try
+			{
+				Form form = getForm();
+				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onclick", "location.href='" + url + "&" + getInputName()
+						+ "=' + this.checked;");
+			}
+			
 		}
 
 		super.onComponentTag(tag);
