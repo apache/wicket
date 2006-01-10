@@ -121,6 +121,12 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 		{
 			return tag;
 		}
+		
+		// Don't touch any wicket:id component
+		if (tag.getId() != null)
+		{
+			return tag;
+		}
 
 		// A new handler is created for each markup file. Hence it is
 		// sufficient to "create" the context path just once.
