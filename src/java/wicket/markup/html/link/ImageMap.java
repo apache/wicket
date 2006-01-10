@@ -333,13 +333,10 @@ public final class ImageMap extends WebMarkupContainer
 	/**
 	 * Renders this component.
 	 * 
-	 * @see wicket.Component#onRender()
+	 * @see wicket.Component#onRender(MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Get markup stream
-		final MarkupStream markupStream = findMarkupStream();
-
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
 

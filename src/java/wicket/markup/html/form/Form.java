@@ -634,9 +634,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @see wicket.Component#onRender()
+	 * @see wicket.Component#onRender(MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
 		// Force multi-part on if any child form component is multi-part
 		visitFormComponents(new FormComponent.IVisitor()
@@ -650,7 +650,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		});
 
-		super.onRender();
+		super.onRender(markupStream);
 	}
 
 	/**

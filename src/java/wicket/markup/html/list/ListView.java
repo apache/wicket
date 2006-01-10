@@ -539,13 +539,11 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders this ListView (container).
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Ask parents for markup stream to use
-		final MarkupStream markupStream = findMarkupStream();
-
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
 

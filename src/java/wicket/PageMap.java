@@ -325,8 +325,7 @@ public final class PageMap implements Serializable
 		IRequestCycleProcessor processor = cycle.getProcessor();
 		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 		// TODO this conflicts with the use of IRequestCodingStrategy. We should
-		// get
-		// rid of encodeURL in favor of IRequestCodingStrategy
+		// get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
 
