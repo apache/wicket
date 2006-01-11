@@ -66,13 +66,10 @@ public abstract class StylesheetBlock extends WebComponent
 	/**
 	 * @see wicket.markup.html.WebComponent#onRender()
 	 */
-	protected void onRender()
+	protected void onRender(MarkupStream markupStream)
 	{
 		// Allow subclass an opportunity to edit the stylesheet block
 		edit();
-
-		// Get markup stream
-		final MarkupStream markupStream = findMarkupStream();
 
 		// Get next tag
 		final ComponentTag tag = markupStream.getTag();

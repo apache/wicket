@@ -79,13 +79,10 @@ public abstract class StylesheetLinks extends WebComponent
 	/**
 	 * @see wicket.markup.html.WebComponent#onRender()
 	 */
-	protected void onRender()
+	protected void onRender(MarkupStream markupStream)
 	{
 		// Allow subclass an opportunity to reorder things
 		edit();
-
-		// Get markup stream
-		final MarkupStream markupStream = findMarkupStream();
 
 		// Get next tag
 		final ComponentTag tag = markupStream.getTag();
