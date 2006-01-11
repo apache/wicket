@@ -13,9 +13,9 @@ public class Page extends Container {
 	}
 	
 	@Override
-	public ComponentFragment getFragment(String path) {
+	public ComponentFragment getFragment(String markupRelativePath) {
 		Markup markup=getMarkup();
-		return markup.getComponentFragment(path);
+		return markup.getComponentFragment(markupRelativePath);
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class Page extends Container {
 	}
 	
 	@Override
-	protected String getMarkupRelativePath(String path) {
+	String getMarkupRelativePath(String path) {
 		return path;
 	}
 }

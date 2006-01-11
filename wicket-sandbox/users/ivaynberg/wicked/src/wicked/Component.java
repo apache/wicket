@@ -46,11 +46,11 @@ public class Component {
 	}
 
 	public ComponentFragment getFragment() {
-		return getFragment(getPath());
+		return getFragment(getMarkupRelativePath());
 	}
 
-	protected ComponentFragment getFragment(String path) {
-		return parent.getFragment(path);
+	protected ComponentFragment getFragment(String markupRelativePath) {
+		return parent.getFragment(markupRelativePath);
 
 	}
 
@@ -61,11 +61,10 @@ public class Component {
 		}
 		return (Page) c;
 	}
-
-	public void render(OutputStream stream) {
+	
+	public void renderOpenTag(OutputStream stream) {
 		ComponentFragment frag = getFragment();
 		Tag tag = frag.getTag();
-
 		try {
 			stream.write("<".getBytes());
 			stream.write(tag.getName().getBytes());
@@ -77,11 +76,27 @@ public class Component {
 				stream.write(attr.getValue().getBytes());
 				stream.write("\"".getBytes());
 			}
-			stream.write("/>".getBytes());
-
+			stream.write(">".getBytes());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void renderCloseTag(OutputStream stream) {
+		ComponentFragment frag = getFragment();
+		Tag tag = frag.getTag();
+		try {
+			stream.write("</".getBytes());
+			stream.write(tag.getName().getBytes());
+			stream.write(">".getBytes());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void render(OutputStream stream) {
+		renderOpenTag(stream);
+		renderCloseTag(stream);
 	}
 
 	public void checkTag() {
@@ -111,7 +126,7 @@ public class Component {
 		return getMarkupRelativePath(getPath());
 	}
 
-	protected String getMarkupRelativePath(String path) {
+	String getMarkupRelativePath(String path) {
 		return parent.getMarkupRelativePath(path);
 	}
 

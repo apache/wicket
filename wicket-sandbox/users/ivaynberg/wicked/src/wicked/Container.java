@@ -3,6 +3,7 @@ package wicked;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,34 +39,14 @@ public class Container extends Component {
 
 	public void render(OutputStream stream) {
 		ComponentFragment frag = getFragment();
-		Tag tag = frag.getTag();
+		renderOpenTag(stream);
 
-		try {
-			stream.write("<".getBytes());
-			stream.write(tag.getName().getBytes());
-			for (Map.Entry<String, String> attr : tag.getAttributes()
-					.entrySet()) {
-				stream.write(" ".getBytes());
-				stream.write(attr.getKey().getBytes());
-				stream.write("=\"".getBytes());
-				stream.write(attr.getValue().getBytes());
-				stream.write("\"".getBytes());
-			}
+		renderBody(stream, frag.getFragments());
 
-			if (frag.getFragments() == null) {
-				stream.write("/>".getBytes());
-			} else {
-				stream.write(">".getBytes());
-				renderBody(stream, frag.getFragments());
-				stream.write("</".getBytes());
-				stream.write(tag.getName().getBytes());
-				stream.write(">".getBytes());
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		renderCloseTag(stream);
 	}
 
+	//TODO should the fragments be passed in or aquired through getfragment() ?
 	public void renderBody(OutputStream stream, List<Fragment> fragments) {
 		if (fragments != null) {
 
@@ -73,14 +54,14 @@ public class Container extends Component {
 				switch (f.getType()) {
 				case STATIC:
 					try {
-							stream.write(f.toString().getBytes());
-						} catch (IOException e) {
-							throw new RuntimeException(e);
-						}
+						stream.write(f.toString().getBytes());
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
 					break;
 				case COMPONENT:
-					ComponentFragment cf=(ComponentFragment) f;
-					Component comp=get(cf.getId());
+					ComponentFragment cf = (ComponentFragment) f;
+					Component comp = get(cf.getId());
 					comp.render(stream);
 					break;
 				}
@@ -88,22 +69,25 @@ public class Container extends Component {
 
 		}
 	}
-	
+
 	@Override
 	public Component get(String path) {
-		if (path==null||path.length()==0) {
+		if (path == null || path.length() == 0) {
 			return this;
 		}
-		
-		int col=path.indexOf(":");
-		if (col<0) {
-			return idToComponent.get(path); 
+
+		int col = path.indexOf(":");
+		if (col < 0) {
+			return idToComponent.get(path);
 		}
-		String first=path.substring(0, col);
-		String rest=path.substring(col+1);
-		
-		Component next=idToComponent.get(first);
+		String first = path.substring(0, col);
+		String rest = path.substring(col + 1);
+
+		Component next = idToComponent.get(first);
 		return next.get(rest);
 	}
-	
+
+	protected Iterator<Component> getChildren() {
+		return idToComponent.values().iterator();
+	}
 }

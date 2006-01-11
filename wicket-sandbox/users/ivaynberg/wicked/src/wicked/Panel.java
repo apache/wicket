@@ -23,9 +23,8 @@ public class Panel extends Container {
 	}
 	
 	@Override
-	protected ComponentFragment getFragment(String path) {
-		String panelRelativePath=path.substring(getPath().length()+1);
-		return getMarkup().getComponentFragment(panelRelativePath);
+	protected ComponentFragment getFragment(String markupRelativePath) {
+		return getMarkup().getComponentFragment(markupRelativePath);
 	}
 	
 	@Override
@@ -35,7 +34,7 @@ public class Panel extends Container {
 	}
 	
 	@Override
-	protected String getMarkupRelativePath(String path) {
+	String getMarkupRelativePath(String path) {
 		return path.substring(getPath().length()+1);
 	}
 	
