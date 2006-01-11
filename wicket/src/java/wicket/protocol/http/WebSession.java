@@ -30,8 +30,6 @@ import wicket.IRequestCycleFactory;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Session;
-import wicket.session.ISessionAttributeListener;
-import wicket.session.SessionAttributeEvent;
 
 /**
  * Session subclass for HTTP protocol which holds an HttpSession object and
@@ -60,52 +58,6 @@ public class WebSession extends Session
 	private transient boolean sessionInvalidated = false;
 
 	/**
-	 * Listener for adding the session only when it is needed.
-	 */
-	private final class FirstAttributeSessionListener implements ISessionAttributeListener
-	{
-		/** The default serial version uid */
-		private static final long serialVersionUID = 1L;
-
-		/** we start this session clean. */
-		private boolean clean = true;
-
-		/**
-		 * @see wicket.session.ISessionAttributeListener#attributeAdded(wicket.session.SessionAttributeEvent)
-		 */
-		public void attributeAdded(SessionAttributeEvent evt)
-		{
-			if (clean)
-			{
-				// Only do this once
-				clean = false;
-
-				// Create the actual httpSession (in case it didn't exist yet)
-				WebSession.this.httpSession = getHttpSession();
-
-				if (log.isDebugEnabled())
-				{
-					log.info("created http session " + WebSession.this.httpSession.getId());
-				}
-			}
-		}
-
-		/**
-		 * @see wicket.session.ISessionAttributeListener#attributeRemoved(wicket.session.SessionAttributeEvent)
-		 */
-		public void attributeRemoved(SessionAttributeEvent evt)
-		{
-		}
-
-		/**
-		 * @see wicket.session.ISessionAttributeListener#attributeReplaced(wicket.session.SessionAttributeEvent)
-		 */
-		public void attributeReplaced(SessionAttributeEvent evt)
-		{
-		}
-	}
-
-	/**
 	 * Constructor
 	 * 
 	 * @param application
@@ -114,8 +66,6 @@ public class WebSession extends Session
 	protected WebSession(final WebApplication application)
 	{
 		super(application);
-		// add listener that will create the actual session lazily
-		add(new FirstAttributeSessionListener());
 	}
 
 	/**
