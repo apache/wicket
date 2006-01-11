@@ -115,7 +115,7 @@ public class MarkupCache
 			throw new MarkupNotFoundException(
 					"Markup not found. Component class: "
 							+ container.getClass().getName()
-							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
+							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried");
 		}
 
 		return null;
