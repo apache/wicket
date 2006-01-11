@@ -825,6 +825,7 @@ public abstract class Session implements Serializable
 		// session replication
 		if (log.isDebugEnabled())
 		{
+			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			long t1 = System.currentTimeMillis();
 			byte[] serialized;
 			try
@@ -836,12 +837,12 @@ public abstract class Session implements Serializable
 			catch (Exception e)
 			{
 				throw new WicketRuntimeException(
-						"Internal error cloning object. May be you model object does not implement Serializable. Class=" 
-						+ (value != null ? value.getClass().getName() : "null"), e);
+						"Internal error cloning object. May be your model object does not implement Serializable. Class="
+								+ valueTypeName, e);
 			}
 			long t2 = System.currentTimeMillis();
-			log.debug("Attribute " + name + " serialized in " + (t2 - t1) + " miliseconds, size: "
-					+ Bytes.bytes(serialized.length));
+			log.debug("Attribute " + name + "{ " + valueTypeName + "} serialized in " + (t2 - t1)
+					+ " miliseconds, size: " + Bytes.bytes(serialized.length));
 		}
 	}
 
