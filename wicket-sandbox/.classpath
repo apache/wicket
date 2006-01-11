@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/chris/java"/>
+	<classpathentry kind="src" path="users/ivaynberg/wicked/src"/>
+	<classpathentry kind="src" path="users/ivaynberg/wicked/test"/>
 	<classpathentry kind="src" path="src/eelco/java"/>
 	<classpathentry kind="src" path="src/gwyn/java"/>
 	<classpathentry kind="src" path="src/johan/java"/>
