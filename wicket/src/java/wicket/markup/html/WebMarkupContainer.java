@@ -306,10 +306,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			{
 				if (component.isVisible() == true)
 				{
-					// Note: we can not just call render() because we need the
-					// specific markupStream and its current position.
-					component.renderComponent(markupStream);
-					component.rendered();
+					component.render(markupStream);
 				}
 				else
 				{

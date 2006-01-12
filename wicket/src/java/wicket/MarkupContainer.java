@@ -1219,7 +1219,7 @@ public abstract class MarkupContainer extends Component
 			// Failed to find it?
 			if (component != null)
 			{
-				component.render();
+				component.render(markupStream);
 			}
 			else
 			{

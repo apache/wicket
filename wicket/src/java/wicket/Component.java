@@ -1291,8 +1291,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * For component level re-render (e.g. AJAX) please call
 	 * Component.doRender(). Though render() does seem to work, it will fail for
 	 * panel children.
+	 * 
+	 * @param markupStream
 	 */
-	public final void render()
+	public final void render(final MarkupStream markupStream)
 	{
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
 
@@ -1300,14 +1302,11 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 		try
 		{
-			// Allow currently invisible components to be re-rendered as well
-			MarkupStream markupStream = null;
 			if (getParent() != null)
 			{
-				markupStream = findMarkupStream();
 				validateMarkupStream(markupStream);
 			}
-			
+
 			// Determine if component is visible using it's authorization status
 			// and the isVisible property.
 			if (renderAllowed && isVisible())
@@ -1338,6 +1337,26 @@ public abstract class Component implements Serializable, IBehaviorListener
 		{
 			rendering = false;
 		}
+	}
+
+	/**
+	 * Performs a render of this component as part of a Page level render
+	 * process.
+	 * <p>
+	 * For component level re-render (e.g. AJAX) please call
+	 * Component.doRender(). Though render() does seem to work, it will fail for
+	 * panel children.
+	 */
+	public final void render()
+	{
+		// Allow currently invisible components to be re-rendered as well
+		MarkupStream markupStream = null;
+		if (getParent() != null)
+		{
+			markupStream = findMarkupStream();
+		}
+
+		render(markupStream);
 	}
 
 	/**
