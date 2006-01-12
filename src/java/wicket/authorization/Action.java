@@ -27,7 +27,7 @@ import java.io.Serializable;
  * @author Jonathan Locke
  * @since 1.2
  */
-public final class Action implements Serializable
+public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
 
@@ -38,7 +38,7 @@ public final class Action implements Serializable
 	 * Construct.
 	 * 
 	 * @param name
-	 *            the action
+	 *            The name of this action for debug purposes
 	 */
 	public Action(String name)
 	{
@@ -48,29 +48,6 @@ public final class Action implements Serializable
 		}
 
 		this.name = name;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof Action)
-		{
-			Action that = (Action)obj;
-			return name.equals(that.name);
-		}
-		return false;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode()
-	{
-		int result = "Action".hashCode();
-		result += name.hashCode();
-		return 17 * result;
 	}
 
 	/**
