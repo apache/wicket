@@ -27,45 +27,13 @@ import wicket.Component;
  * will result in a security action directed by the strategy, such as the
  * throwing of an AuthorizationException or the filtering out of
  * security-sensitive information.
- * <p>
- * An authorization strategy tells the framework whether a component may be:
- * <p>
- * 1. Created - This is especially useful for implementing secure bookmarkable
- * pages and sensitive components that should always be secure no matter what
- * environment they are put in.
- * <p>
- * 2. Rendered - Components can be 'filtered' from a page, or the page may not
- * be rendered at all, redirecting to a error or logon page.
- * <p>
- * 3. Enabled - Components may be disabled, making them unavailable for user
- * interaction.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * @since Wicket 1.2
  */
 public interface IAuthorizationStrategy
 {
-	/**
-	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
-	 */
-	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
-	{
-		public boolean allowEnabledState(final Component c)
-		{
-			return true;
-		}
-
-		public boolean allowInstantiation(final Class c)
-		{
-			return true;
-		}
-
-		public boolean allowRender(final Component c)
-		{
-			return true;
-		}
-	};
-
 	/**
 	 * Gets whether a component is allowed to be enabled. If this method returns
 	 * true, a component may decide by itself (typically using it's enabled
@@ -84,23 +52,8 @@ public interface IAuthorizationStrategy
 	 * can't be prevented. Indeed it can be argued that any model protection is
 	 * best dealt with in your model objects to be completely secured. Wicket
 	 * will catch all normal framework-directed use though.
-	 * 
-	 * @param c
-	 *            The component to check for
-	 * @return Whether a component is allowed to be enabled
 	 */
-	boolean allowEnabledState(Component c);
-
-	/**
-	 * Checks whether an instance of the given component class may be created.
-	 * If this method returns false, a {@link AuthorizationException} is thrown
-	 * during construction.
-	 * 
-	 * @param componentClass
-	 *            The component class to check
-	 * @return Whether the given component may be created
-	 */
-	boolean allowInstantiation(Class componentClass);
+	public AuthorizationAction ACTION_ENABLED_STATE = new AuthorizationAction("enabled");
 
 	/**
 	 * Gets whether the given component may be rendered. If this method returns
@@ -121,13 +74,59 @@ public interface IAuthorizationStrategy
 	 * then be handled further by the framework.</li>
 	 * </ul>
 	 * </p>
+	 */
+	public AuthorizationAction ACTION_RENDER = new AuthorizationAction("render");
+
+	/**
+	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
+	 */
+	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
+	{
+		/**
+		 * @see wicket.authorization.IAuthorizationStrategy#allowInstantiation(java.lang.Class)
+		 */
+		public boolean allowInstantiation(final Class c)
+		{
+			return true;
+		}
+
+		/**
+		 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
+		 *      wicket.Component)
+		 */
+		public boolean allow(AuthorizationAction action, Component c)
+		{
+			return true;
+		}
+	};
+
+	/**
+	 * Checks whether an instance of the given component class may be created.
+	 * If this method returns false, a {@link AuthorizationException} is thrown
+	 * during construction.
+	 * 
+	 * @param componentClass
+	 *            The component class to check
+	 * @return Whether the given component may be created
+	 */
+	boolean allowInstantiation(Class componentClass);
+
+	/**
+	 * Gets whether the given action is permitted. If it is, this method should
+	 * return true. If it isn't, this method should either return false or - in
+	 * case of a serious breach - throw a security exception. Returning is
+	 * generally preferable over trhowing an exception as that doesn't break the
+	 * normal flow.
+	 * 
+	 * @param action
+	 *            the authorization to check on
 	 * 
 	 * @param c
 	 *            Whe component to check for
 	 * @return Whether the given component may be rendered
 	 * @throws AuthorizationException
-	 *             In case the rendering is not allowed, and when it should
-	 *             block the whole page from being rendered
+	 *             In case the action is not allowed, and when it should block
+	 *             the whole page from being rendered
 	 */
-	boolean allowRender(Component c);
+	boolean allow(AuthorizationAction action, Component c);
 }
