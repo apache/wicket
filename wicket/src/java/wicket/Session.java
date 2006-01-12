@@ -30,10 +30,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.application.IClassResolver;
 import wicket.request.ClientInfo;
-import wicket.session.ISessionAttributeListener;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
-import wicket.session.SessionAttributeEvent;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Bytes;
@@ -145,9 +143,6 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** session listeners. */
-	private List/* <ISessionListener> */listeners = new ArrayList();
-
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
 
@@ -223,20 +218,6 @@ public abstract class Session implements Serializable
 
 		// Set locale to default locale
 		setLocale(application.getApplicationSettings().getDefaultLocale());
-	}
-
-	/**
-	 * Adds a session attribute listener.
-	 * 
-	 * @param listener
-	 *            the listener
-	 */
-	public void add(ISessionAttributeListener listener)
-	{
-		synchronized (listeners)
-		{
-			listeners.add(listener);
-		}
 	}
 
 	/**
@@ -495,24 +476,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Removes a session attribute listener.
-	 * 
-	 * @param listener
-	 *            the listener
-	 */
-	public void remove(ISessionAttributeListener listener)
-	{
-		synchronized (listeners)
-		{
-			if (!listeners.remove(listener))
-			{
-				throw new WicketRuntimeException("listener " + listener + " was not registered");
-			}
-		}
-	}
-
-
-	/**
 	 * Removes the given page from the cache. This method may be useful if you
 	 * have special knowledge that a given page cannot be accessed again. For
 	 * example, the user may have closed a popup window.
@@ -662,75 +625,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeAdded(SessionAttributeEvent)}
-	 * on all registered session listeners.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 */
-	protected final void fireAttributeAdded(String name, Object value)
-	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, value);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
-			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeAdded(evt);
-			}
-		}
-	}
-
-	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeRemoved(SessionAttributeEvent)}
-	 * on all registered session listeners.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 */
-	protected final void fireAttributeRemoved(String name)
-	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
-			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeRemoved(evt);
-			}
-		}
-	}
-
-	/**
-	 * Calls
-	 * {@link ISessionAttributeListener#attributeReplaced(SessionAttributeEvent)}
-	 * on all registered session listeners.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 * @param oldValue
-	 *            the old attribute value
-	 */
-	protected final void fireAttributeReplaced(String name, Object value, Object oldValue)
-	{
-		SessionAttributeEvent evt = new SessionAttributeEvent(this, name, oldValue);
-		synchronized (listeners)
-		{
-			for (Iterator i = listeners.iterator(); i.hasNext();)
-			{
-				ISessionAttributeListener l = (ISessionAttributeListener)i.next();
-				l.attributeReplaced(evt);
-			}
-		}
-	}
-
-	/**
 	 * Gets the attribute value with the given name
 	 * 
 	 * @param name
@@ -751,16 +645,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Returns the registered listeners.
-	 * 
-	 * @return the list with listeners, never null
-	 */
-	protected final List getListeners()
-	{
-		return listeners;
-	}
-
-	/**
 	 * @return Request cycle factory for this kind of session.
 	 */
 	protected abstract IRequestCycleFactory getRequestCycleFactory();
@@ -778,8 +662,6 @@ public abstract class Session implements Serializable
 
 		if (oldValue != null)
 		{
-			fireAttributeRemoved(name);
-
 			getSessionStore().removeAttribute(name);
 		}
 		else
@@ -800,16 +682,6 @@ public abstract class Session implements Serializable
 	{
 		// get the old value if any
 		Object oldValue = getAttribute(name);
-
-		// fire the appropriate event
-		if (oldValue == null)
-		{
-			fireAttributeAdded(name, value);
-		}
-		else
-		{
-			fireAttributeReplaced(name, value, oldValue);
-		}
 
 		// set the actual attribute
 		getSessionStore().setAttribute(name, value);
