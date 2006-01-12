@@ -682,23 +682,20 @@ public abstract class Session implements Serializable
 		if (log.isDebugEnabled())
 		{
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			long t1 = System.currentTimeMillis();
-			byte[] serialized;
+			int size;
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream();
 				new ObjectOutputStream(out).writeObject(value);
-				serialized = out.toByteArray();
+				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
+						+ Bytes.bytes(out.size()));
 			}
 			catch (Exception e)
 			{
 				throw new WicketRuntimeException(
-						"Internal error cloning object. May be your model object does not implement Serializable. Class="
+						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
 								+ valueTypeName, e);
 			}
-			long t2 = System.currentTimeMillis();
-			log.debug("Attribute " + name + "{ " + valueTypeName + "} serialized in " + (t2 - t1)
-					+ " miliseconds, size: " + Bytes.bytes(serialized.length));
 		}
 	}
 
