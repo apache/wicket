@@ -338,7 +338,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * best dealt with in your model objects to be completely secured. Wicket
 	 * will catch all normal framework-directed use though.
 	 */
-	public static final Action ENABLE = new Action("enable");
+	public static final Action ENABLE = new Action("ENABLE");
 
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
@@ -360,7 +360,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * </ul>
 	 * </p>
 	 */
-	public static final Action RENDER = new Action("render");
+	public static final Action RENDER = new Action("RENDER");
 
 	/**
 	 * Change record of a model.
