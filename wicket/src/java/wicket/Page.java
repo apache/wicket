@@ -280,7 +280,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * <li>Use redirectTo(Page page), You will be redirected to that page when
 	 * it is done you will have to specify where you will go next</li>
 	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
-	 * directly, no redirect wil happen</li>
+	 * directly, no redirect will happen</li>
 	 * </p>
 	 * <p>
 	 * NOTE: this method is not meant to be called by framework clients.
