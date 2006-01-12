@@ -512,7 +512,7 @@ public abstract class WebApplication extends Application
 		webSession.setApplication(this);
 
 		// Set session attribute name and attach/reattach http servlet session
-		webSession.init(getSessionAttributePrefix(request));
+		webSession.initForRequest();
 
 		return webSession;
 	}

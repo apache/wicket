@@ -17,18 +17,10 @@
  */
 package wicket.protocol.http;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.IRequestCycleFactory;
-import wicket.Request;
-import wicket.RequestCycle;
 import wicket.Session;
 
 /**
@@ -45,14 +37,8 @@ public class WebSession extends Session
 
 	private static final long serialVersionUID = 1L;
 
-	/** cached http session object. */
-	private transient HttpSession httpSession = null;
-
 	/** The request cycle factory for the session */
 	private transient IRequestCycleFactory requestCycleFactory;
-
-	/** The attribute in the HttpSession where this WebSession object is stored */
-	private transient String sessionAttributePrefix;
 
 	/** True, if session has been invalidated */
 	private transient boolean sessionInvalidated = false;
@@ -66,43 +52,6 @@ public class WebSession extends Session
 	protected WebSession(final WebApplication application)
 	{
 		super(application);
-	}
-
-	/**
-	 * Gets the underlying HttpSession object or null.
-	 * <p>
-	 * WARNING: it is a bad idea to depend on the http session object directly.
-	 * Please use the classes and methods that are exposed by Wicket instead.
-	 * Send an email to the mailing list in case it is not clear how to do
-	 * things or you think you miss funcionality which causes you to depend on
-	 * this directly.
-	 * </p>
-	 * 
-	 * @return The underlying HttpSession object (null if not created yet).
-	 */
-	public final HttpSession getHttpSession()
-	{
-		if (httpSession == null)
-		{
-			httpSession = createHttpSession();
-		}
-		return httpSession;
-	}
-
-	/**
-	 * Gets the id for this web session.
-	 * 
-	 * @return the id for this web session or super's invocation in case the
-	 *         http session was not yet defined
-	 */
-	public String getId()
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			return httpSession.getId();
-		}
-		return super.getId();
 	}
 
 	/**
@@ -123,18 +72,14 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			try
-			{
-				httpSession.invalidate();
-			}
-			catch (IllegalStateException e)
-			{
-				// Ignore
-			}
-		}
+		getSessionStore().invalidate();
+	}
+
+	/**
+	 * Any attach logic for session subclasses.
+	 */
+	protected void attach()
+	{
 	}
 
 	/**
@@ -146,66 +91,6 @@ public class WebSession extends Session
 		{
 			invalidateNow();
 		}
-	}
-
-	/**
-	 * @see Session#doGetAttribute(String)
-	 */
-	protected Object doGetAttribute(final String name)
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			return httpSession.getAttribute(sessionAttributePrefix + name);
-		}
-		return null;
-	}
-
-	/**
-	 * @see wicket.Session#doRemoveAttribute(java.lang.String)
-	 */
-	protected void doRemoveAttribute(final String name)
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			httpSession.removeAttribute(sessionAttributePrefix + name);
-		}
-	}
-
-	/**
-	 * @see Session#doSetAttribute(String, Object)
-	 */
-	protected void doSetAttribute(final String name, final Object object)
-	{
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			httpSession.setAttribute(sessionAttributePrefix + name, object);
-		}
-	}
-
-	/**
-	 * @see Session#getAttributeNames()
-	 */
-	protected List getAttributeNames()
-	{
-		final List list = new ArrayList();
-		HttpSession httpSession = getHttpSession();
-		if (httpSession != null)
-		{
-			final Enumeration names = httpSession.getAttributeNames();
-			final String prefix = sessionAttributePrefix;
-			while (names.hasMoreElements())
-			{
-				final String name = (String)names.nextElement();
-				if (name.startsWith(prefix))
-				{
-					list.add(name.substring(prefix.length()));
-				}
-			}
-		}
-		return list;
 	}
 
 	/**
@@ -235,46 +120,12 @@ public class WebSession extends Session
 
 	/**
 	 * Initializes this session for a request.
-	 * 
-	 * @param sessionAttributePrefix
-	 *            The session attribute name
 	 */
-	final void init(final String sessionAttributePrefix)
+	final void initForRequest()
 	{
-		if (sessionAttributePrefix == null)
-		{
-			throw new IllegalArgumentException("Argument sessionAttributePrefix must be not null");
-		}
-		
-		// Set session attribute name
-		this.sessionAttributePrefix = sessionAttributePrefix;
-
 		// Set the current session
 		set(this);
 
 		attach();
-	}
-
-	/**
-	 * Create the http session.
-	 * 
-	 * @return The http session
-	 */
-	private final HttpSession createHttpSession()
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		if (requestCycle != null)
-		{
-			Request request = requestCycle.getRequest();
-			if (request instanceof WebRequest)
-			{
-				WebRequest webRequest = (WebRequest)request;
-				if (webRequest != null)
-				{
-					return webRequest.getHttpServletRequest().getSession(true);
-				}
-			}
-		}
-		return null;
 	}
 }

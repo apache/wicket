@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.81 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,6 +31,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.application.IClassResolver;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionAttributeListener;
+import wicket.session.ISessionStore;
+import wicket.session.ISessionStoreFactory;
 import wicket.session.SessionAttributeEvent;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.convert.IConverter;
@@ -152,6 +154,9 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
+	/** the session store of this session. */
+	private transient ISessionStore sessionStore;
+
 	/** Attribute prefix for page maps stored in the session */
 	private final String pageMapAttributePrefix = "m:";
 
@@ -218,9 +223,6 @@ public abstract class Session implements Serializable
 
 		// Set locale to default locale
 		setLocale(application.getApplicationSettings().getDefaultLocale());
-
-		// Create default page map
-		newPageMap(null);
 	}
 
 	/**
@@ -285,7 +287,7 @@ public abstract class Session implements Serializable
 	 */
 	public String getId()
 	{
-		return String.valueOf(hashCode());
+		return getSessionStore().getId();
 	}
 
 	/**
@@ -456,7 +458,10 @@ public abstract class Session implements Serializable
 	/**
 	 * Invalidates this session.
 	 */
-	public abstract void invalidate();
+	public void invalidate()
+	{
+		getSessionStore().invalidate();
+	}
 
 	/**
 	 * Creates a new page map with a given name
@@ -619,13 +624,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Any attach logic for session subclasses.
-	 */
-	protected void attach()
-	{
-	}
-
-	/**
 	 * Any detach logic for session subclasses.
 	 */
 	protected void detach()
@@ -641,34 +639,27 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Internal implementation of {@link #getAttribute(String)}.
+	 * Gets the session store.
 	 * 
-	 * @param name
-	 *            the attribute name
-	 * @return the attribute value
-	 * @see #getAttribute(String)
+	 * @return the session store
 	 */
-	protected abstract Object doGetAttribute(String name);
+	protected final ISessionStore getSessionStore()
+	{
+		if (sessionStore == null)
+		{
+			ISessionStoreFactory sessionStoreFactory = application.getSessionSettings()
+					.getSessionStoreFactory();
+			sessionStore = sessionStoreFactory.newSessionStore(this);
 
-	/**
-	 * Internal implementation of {@link #removeAttribute(String)}.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @see #removeAttribute(String)
-	 */
-	protected abstract void doRemoveAttribute(String name);
-
-	/**
-	 * Internal implementation of {@link #setAttribute(String, Object)}.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 * @see #setAttribute(String, Object)
-	 */
-	protected abstract void doSetAttribute(String name, Object value);
+			// still null?
+			if (sessionStore == null)
+			{
+				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
+						+ " did not produce a session store");
+			}
+		}
+		return sessionStore;
+	}
 
 	/**
 	 * Calls
@@ -748,13 +739,16 @@ public abstract class Session implements Serializable
 	 */
 	protected final Object getAttribute(final String name)
 	{
-		return doGetAttribute(name);
+		return getSessionStore().getAttribute(name);
 	}
 
 	/**
 	 * @return List of attributes for this session
 	 */
-	protected abstract List getAttributeNames();
+	protected final List getAttributeNames()
+	{
+		return getSessionStore().getAttributeNames();
+	}
 
 	/**
 	 * Returns the registered listeners.
@@ -786,7 +780,7 @@ public abstract class Session implements Serializable
 		{
 			fireAttributeRemoved(name);
 
-			doRemoveAttribute(name);
+			getSessionStore().removeAttribute(name);
 		}
 		else
 		{
@@ -818,7 +812,7 @@ public abstract class Session implements Serializable
 		}
 
 		// set the actual attribute
-		doSetAttribute(name, value);
+		getSessionStore().setAttribute(name, value);
 
 		// Do some extra profiling/ debugging. This can be a great help
 		// just for testing whether your webbapp will behave when using

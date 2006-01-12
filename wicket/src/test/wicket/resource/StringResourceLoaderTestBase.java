@@ -18,7 +18,6 @@
  */
 package wicket.resource;
 
-import java.util.List;
 import java.util.Locale;
 
 import junit.framework.Assert;
@@ -69,33 +68,10 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void invalidate()
-			{
-			}
-
-			protected List getAttributeNames()
-			{
-				return null;
-			}
-
 			protected IRequestCycleFactory getRequestCycleFactory()
 			{
 				return null;
 			}
-
-			protected void doSetAttribute(String name, Object value)
-			{
-			}
-
-			protected Object doGetAttribute(String name)
-			{
-				return null;
-			}
-
-			protected void doRemoveAttribute(String name)
-			{
-			}
-
 		});
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();
