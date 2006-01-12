@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: UnauthorizedInstantiationException.java,v 1.2 2006/01/02 07:15:49
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,7 @@ package wicket.authorization;
  * Exception that is thrown when the creation of a component is not allowed.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class UnauthorizedInstantiationException extends AuthorizationException
 {
@@ -28,40 +29,12 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 
 	/**
 	 * Construct.
-	 */
-	public UnauthorizedInstantiationException()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
 	 * 
-	 * @param message
+	 * @param c
+	 *            The unauthorized component class
 	 */
-	public UnauthorizedInstantiationException(String message)
+	public UnauthorizedInstantiationException(final Class c)
 	{
-		super(message);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	public UnauthorizedInstantiationException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param cause
-	 */
-	public UnauthorizedInstantiationException(Throwable cause)
-	{
-		super(cause);
+		super("Not authorized to instantiate class " + c);
 	}
 }

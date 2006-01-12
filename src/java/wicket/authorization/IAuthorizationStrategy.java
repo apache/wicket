@@ -35,49 +35,6 @@ import wicket.Component;
 public interface IAuthorizationStrategy
 {
 	/**
-	 * Gets whether a component is allowed to be enabled. If this method returns
-	 * true, a component may decide by itself (typically using it's enabled
-	 * property) whether it is enabled or not. If this method returns false, the
-	 * passed component is marked disabled, regardless its enabled property.
-	 * <p>
-	 * When a component is not allowed to be enabled (in effect disabled through
-	 * the implementation of this interface), Wicket will try to prevent model
-	 * updates too. This is not completely fail safe, as constructs like:
-	 * 
-	 * <pre>
-	 * User u = (User)getModelObject();
-	 * u.setName(&quot;got you there!&quot;);
-	 * </pre>
-	 * 
-	 * can't be prevented. Indeed it can be argued that any model protection is
-	 * best dealt with in your model objects to be completely secured. Wicket
-	 * will catch all normal framework-directed use though.
-	 */
-	public AuthorizationAction ACTION_ENABLED_STATE = new AuthorizationAction("enabled");
-
-	/**
-	 * Gets whether the given component may be rendered. If this method returns
-	 * false, the component is not rendered, and neither are it's children.
-	 * <p>
-	 * There are two uses for this method:
-	 * <ul>
-	 * <li>The 'normal' use is for controlling whether a component is rendered
-	 * without having any effect on the rest of the processing. If a strategy
-	 * lets this method return 'false', then the target component and its
-	 * children will not be rendered, in the same fashion as if that component
-	 * had visibility property 'false'.</li>
-	 * <li>The other use is when a component should block the rendering of the
-	 * whole page. So instead of 'hiding' a component, what we generally want to
-	 * achieve here is that we force the user to logon/give-credentials for a
-	 * higher level of authorization. For this functionality, the strategy
-	 * implementation should throw a {@link AuthorizationException}, which will
-	 * then be handled further by the framework.</li>
-	 * </ul>
-	 * </p>
-	 */
-	public AuthorizationAction ACTION_RENDER = new AuthorizationAction("render");
-
-	/**
 	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
 	 */
 	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
@@ -91,10 +48,10 @@ public interface IAuthorizationStrategy
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
-		 *      wicket.Component)
+		 * @see wicket.authorization.IAuthorizationStrategy#allowAction(wicket.Component,
+		 *      wicket.authorization.Action)
 		 */
-		public boolean allow(AuthorizationAction action, Component c)
+		public boolean allowAction(Component c, Action action)
 		{
 			return true;
 		}
@@ -115,18 +72,17 @@ public interface IAuthorizationStrategy
 	 * Gets whether the given action is permitted. If it is, this method should
 	 * return true. If it isn't, this method should either return false or - in
 	 * case of a serious breach - throw a security exception. Returning is
-	 * generally preferable over trhowing an exception as that doesn't break the
+	 * generally preferable over throwing an exception as that doesn't break the
 	 * normal flow.
 	 * 
+	 * @param component
+	 *            The component to check for
 	 * @param action
-	 *            the authorization to check on
-	 * 
-	 * @param c
-	 *            Whe component to check for
+	 *            The action to check
 	 * @return Whether the given component may be rendered
 	 * @throws AuthorizationException
 	 *             In case the action is not allowed, and when it should block
 	 *             the whole page from being rendered
 	 */
-	boolean allow(AuthorizationAction action, Component c);
+	boolean allowAction(Component component, Action action);
 }

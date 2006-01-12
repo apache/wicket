@@ -25,7 +25,6 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
-import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
@@ -78,9 +77,8 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public Object getObject(Component component)
 		{
-			return (getApplication().getSecuritySettings().getAuthorizationStrategy().allow(
-					IAuthorizationStrategy.ACTION_ENABLED_STATE, FormComponent.this) && FormComponent.this
-					.isEnabled()) ? null : "disabled";
+			return (component.getAuthorizationStrategy().allowAction(FormComponent.this,
+					ENABLE) && FormComponent.this.isEnabled()) ? null : "disabled";
 		}
 	}
 

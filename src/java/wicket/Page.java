@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.161 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,7 +27,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.authorization.IAuthorizationStrategy;
 import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
@@ -948,14 +947,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// we set any result; positive or negative as a temporary boolean
 		// in the components, and when a authorization exception is thrown
 		// it will be block the rendering of this page
-		final IAuthorizationStrategy authorizationStrategy = getApplication().getSecuritySettings()
-				.getAuthorizationStrategy();
 		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
 			{
-				component.setRenderAllowed(authorizationStrategy.allow(
-						IAuthorizationStrategy.ACTION_RENDER, component));
+				component.setRenderAllowed(component.getAuthorizationStrategy().allowAction(
+						component, RENDER));
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});

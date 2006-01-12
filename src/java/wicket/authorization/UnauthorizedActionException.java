@@ -1,6 +1,6 @@
 /*
- * $Id: UnauthorizedEnabledStateException.java,v 1.1 2005/12/22 22:32:24
- * jonathanlocke Exp $ $Revision$ $Date$
+ * $Id: UnauthorizedActionException.java,v 1.1 2005/12/22 22:27:01 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,53 +17,28 @@
  */
 package wicket.authorization;
 
+import wicket.Component;
+
 /**
- * Exception that is thrown when a component that may not be enabled given the
- * current authorization context.
+ * Exception that is thrown when an action is not authorized.
  * 
+ * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class UnauthorizedEnabledStateException extends AuthorizationException
+public class UnauthorizedActionException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-	 */
-	public UnauthorizedEnabledStateException()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
 	 * 
-	 * @param message
+	 * @param component
+	 *            The component
+	 * @param action
+	 *            The action
 	 */
-	public UnauthorizedEnabledStateException(String message)
+	public UnauthorizedActionException(Component component, Action action)
 	{
-		super(message);
+		super("Component " + component + " does not permit action " + action);
 	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	public UnauthorizedEnabledStateException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param cause
-	 */
-	public UnauthorizedEnabledStateException(Throwable cause)
-	{
-		super(cause);
-	}
-
 }
