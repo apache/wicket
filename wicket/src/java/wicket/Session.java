@@ -234,7 +234,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The authorization strategy for this session
 	 */
-	public final IAuthorizationStrategy getAuthorizationStrategy()
+	public IAuthorizationStrategy getAuthorizationStrategy()
 	{
 		return application.getSecuritySettings().getAuthorizationStrategy();
 	}
