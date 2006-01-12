@@ -40,18 +40,18 @@ public interface IAuthorizationStrategy
 	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowInstantiation(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 		 */
-		public boolean allowInstantiation(final Class c)
+		public boolean authorizeInstantiation(final Class c)
 		{
 			return true;
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowAction(wicket.Component,
+		 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
 		 *      wicket.authorization.Action)
 		 */
-		public boolean allowAction(Component c, Action action)
+		public boolean authorizeAction(Component c, Action action)
 		{
 			return true;
 		}
@@ -66,7 +66,7 @@ public interface IAuthorizationStrategy
 	 *            The component class to check
 	 * @return Whether the given component may be created
 	 */
-	boolean allowInstantiation(Class componentClass);
+	boolean authorizeInstantiation(Class componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should
@@ -84,5 +84,5 @@ public interface IAuthorizationStrategy
 	 *             In case the action is not allowed, and when it should block
 	 *             the whole page from being rendered
 	 */
-	boolean allowAction(Component component, Action action);
+	boolean authorizeAction(Component component, Action action);
 }
