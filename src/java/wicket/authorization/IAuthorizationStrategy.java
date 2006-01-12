@@ -79,7 +79,7 @@ public interface IAuthorizationStrategy
 	 *            The component to be acted upon
 	 * @param action
 	 *            The action to authorize on the component
-	 * @return Whether the given action may be take on the given component
+	 * @return Whether the given action may be taken on the given component
 	 * @throws AuthorizationException
 	 *            Can be thrown by implementation if action is unauthorized
 	 */
