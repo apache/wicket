@@ -76,10 +76,10 @@ public interface IAuthorizationStrategy
 	 * normal flow.
 	 * 
 	 * @param component
-	 *            The component to check for
+	 *            The component to be acted upon
 	 * @param action
-	 *            The action to check
-	 * @return Whether the given component may be rendered
+	 *            The action to authorize on the component
+	 * @return Whether the given action may be take on the given component
 	 * @throws AuthorizationException
 	 *             In case the action is not allowed, and when it should block
 	 *             the whole page from being rendered
