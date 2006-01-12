@@ -214,4 +214,12 @@ public class HeaderSectionTest extends TestCase
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_15() throws Exception
+	{
+	    executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
+	}
 }
