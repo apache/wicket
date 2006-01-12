@@ -12,48 +12,22 @@ import wicket.Component;
  */
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
+	/** List of strategies to consult */
 	private ArrayList strategies = new ArrayList();
-
-	/**
-	 * Constructor
-	 * 
-	 * @param strat
-	 *            authorization strategy
-	 */
-	public CompoundAuthorizationStrategy(IAuthorizationStrategy strat)
-	{
-		add(strat);
-	}
-
-	/**
-	 * Convinience constructor that adds two strategies to the chain
-	 * 
-	 * @param strat1
-	 *            authorization strategy
-	 * @param strat2
-	 *            authorization strategy
-	 */
-	public CompoundAuthorizationStrategy(IAuthorizationStrategy strat1,
-			IAuthorizationStrategy strat2)
-	{
-		add(strat1);
-		add(strat2);
-	}
 
 	/**
 	 * Adds a strategy to the chain
 	 * 
-	 * @param strat
-	 * @return this for chaining
+	 * @param strategy
+	 *            Strategy to add
 	 */
-	public CompoundAuthorizationStrategy add(IAuthorizationStrategy strat)
+	public void add(IAuthorizationStrategy strategy)
 	{
-		if (strat == null)
+		if (strategy == null)
 		{
-			throw new IllegalArgumentException("argument [strat] cannot be null");
+			throw new IllegalArgumentException("Strategy argument cannot be null");
 		}
-		strategies.add(strat);
-		return this;
+		strategies.add(strategy);
 	}
 
 	/**
@@ -63,8 +37,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
-			IAuthorizationStrategy strat = (IAuthorizationStrategy)strategies.get(i);
-			if (!strat.authorizeInstantiation(componentClass))
+			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			if (!strategy.authorizeInstantiation(componentClass))
 			{
 				return false;
 			}
@@ -80,8 +54,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
-			IAuthorizationStrategy strat = (IAuthorizationStrategy)strategies.get(i);
-			if (!strat.authorizeAction(component, action))
+			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			if (!strategy.authorizeAction(component, action))
 			{
 				return false;
 			}
