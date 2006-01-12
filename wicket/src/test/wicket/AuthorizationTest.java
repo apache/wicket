@@ -21,7 +21,7 @@ package wicket;
 import java.io.Serializable;
 
 import junit.framework.TestCase;
-import wicket.authorization.AuthorizationAction;
+import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.html.WebComponent;
@@ -139,12 +139,12 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
-			 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
-			 *      wicket.Component)
+			 * @see wicket.authorization.IAuthorizationStrategy#allowAction(wicket.Component,
+			 *      wicket.authorization.Action)
 			 */
-			public boolean allow(AuthorizationAction action, Component c)
+			public boolean allowAction(Component component, Action action)
 			{
-				if ((action.equals(IAuthorizationStrategy.ACTION_RENDER)) && c instanceof Label)
+				if (action == Component.RENDER && component instanceof Label)
 				{
 					return false;
 				}
@@ -188,11 +188,10 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester();
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-
-			public boolean allow(AuthorizationAction action, Component c)
+			public boolean allow(Component c, Action action)
 			{
-				if ((action.equals(IAuthorizationStrategy.ACTION_ENABLED_STATE))
-						&& c instanceof TextField && c.getId().equals("stringInput"))
+				if (action == Component.ENABLE && c instanceof TextField
+						&& c.getId().equals("stringInput"))
 				{
 					return false;
 				}
@@ -229,10 +228,10 @@ public class AuthorizationTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
-		 *      wicket.Component)
+		 * @see wicket.authorization.IAuthorizationStrategy#allowAction(
+		 *      wicket.Component, wicket.authorization.Action)
 		 */
-		public boolean allow(AuthorizationAction action, Component c)
+		public boolean allowAction(Component c, Action action)
 		{
 			return true;
 		}

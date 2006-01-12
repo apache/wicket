@@ -27,9 +27,10 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
-import wicket.authorization.UnauthorizedEnabledStateException;
+import wicket.authorization.UnauthorizedActionException;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
 import wicket.behavior.IBehaviorListener;
@@ -314,6 +315,52 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/** True while rendering is in progress */
 	private transient boolean rendering;
+
+	/**
+	 * Action used with IAuthorizationStrategy to determine whether a component
+	 * is allowed to be enabled.
+	 * <p>
+	 * If enabling is authorized, a component may decide by itself (typically
+	 * using it's enabled property) whether it is enabled or not. If enabling is
+	 * not authorized, the given component is marked disabled, regardless its
+	 * enabled property.
+	 * <p>
+	 * When a component is not allowed to be enabled (in effect disabled through
+	 * the implementation of this interface), Wicket will try to prevent model
+	 * updates too. This is not completely fail safe, as constructs like:
+	 * 
+	 * <pre>
+	 * User u = (User)getModelObject();
+	 * u.setName(&quot;got you there!&quot;);
+	 * </pre>
+	 * 
+	 * can't be prevented. Indeed it can be argued that any model protection is
+	 * best dealt with in your model objects to be completely secured. Wicket
+	 * will catch all normal framework-directed use though.
+	 */
+	public static final Action ENABLE = new Action("enable");
+
+	/**
+	 * Action used with IAuthorizationStrategy to determine whether a component
+	 * and its children are allowed to be rendered.
+	 * <p>
+	 * There are two uses for this method:
+	 * <ul>
+	 * <li>The 'normal' use is for controlling whether a component is rendered
+	 * without having any effect on the rest of the processing. If a strategy
+	 * lets this method return 'false', then the target component and its
+	 * children will not be rendered, in the same fashion as if that component
+	 * had visibility property 'false'.</li>
+	 * <li>The other use is when a component should block the rendering of the
+	 * whole page. So instead of 'hiding' a component, what we generally want to
+	 * achieve here is that we force the user to logon/give-credentials for a
+	 * higher level of authorization. For this functionality, the strategy
+	 * implementation should throw a {@link AuthorizationException}, which will
+	 * then be handled further by the framework.</li>
+	 * </ul>
+	 * </p>
+	 */
+	public static final Action RENDER = new Action("render");
 
 	/**
 	 * Change record of a model.
@@ -707,6 +754,21 @@ public abstract class Component implements Serializable, IBehaviorListener
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
+	}
+
+	/**
+	 * @return The authorization strategy for this component
+	 */
+	public final IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		if (parent == null)
+		{
+			return Application.get().getSecuritySettings().getAuthorizationStrategy();
+		}
+		else
+		{
+			return getApplication().getSecuritySettings().getAuthorizationStrategy();
+		}
 	}
 
 	/**
@@ -1612,11 +1674,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allow(
-				IAuthorizationStrategy.ACTION_ENABLED_STATE, this))
+		if (!getAuthorizationStrategy().allowAction(this, ENABLE))
 		{
-			throw new UnauthorizedEnabledStateException(
-					"operation not allowed in the current authorization context");
+			throw new UnauthorizedActionException(this, Component.ENABLE);
 		}
 
 		// Check whether this will result in an actual change
@@ -2548,15 +2608,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/**
 	 * Check whether this component may be created at all. Throws a
 	 * {@link AuthorizationException} when it may not be created
-	 * 
 	 */
 	private final void checkAuthorization()
 	{
-		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowInstantiation(
-				getClass()))
+		if (!getAuthorizationStrategy().allowInstantiation(getClass()))
 		{
-			throw new UnauthorizedInstantiationException(
-					"insufficiently authorized to create component " + getClass());
+			throw new UnauthorizedInstantiationException(getClass());
 		}
 	}
 

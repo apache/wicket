@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,31 +20,34 @@ package wicket.authorization;
 import java.io.Serializable;
 
 /**
- * Represent the target of an authorization attempt.
+ * A token for a given action that needs to be authorized. For example,
+ * Component.RENDER.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
+ * @since 1.2
  */
-public final class AuthorizationAction implements Serializable
+public final class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
 
-	/** the action. */
-	private final String action;
+	/** The name of this action. */
+	private final String name;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param action
+	 * @param name
 	 *            the action
 	 */
-	public AuthorizationAction(String action)
+	public Action(String name)
 	{
-		if (action == null)
+		if (name == null)
 		{
-			throw new IllegalArgumentException("argument action may not be null");
+			throw new IllegalArgumentException("Name argument may not be null");
 		}
 
-		this.action = action;
+		this.name = name;
 	}
 
 	/**
@@ -52,10 +55,10 @@ public final class AuthorizationAction implements Serializable
 	 */
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof AuthorizationAction)
+		if (obj instanceof Action)
 		{
-			AuthorizationAction that = (AuthorizationAction)obj;
-			return action.equals(that.action);
+			Action that = (Action)obj;
+			return name.equals(that.name);
 		}
 		return false;
 	}
@@ -65,8 +68,8 @@ public final class AuthorizationAction implements Serializable
 	 */
 	public int hashCode()
 	{
-		int result = "AuthorizationAction".hashCode();
-		result += action.hashCode();
+		int result = "Action".hashCode();
+		result += name.hashCode();
 		return 17 * result;
 	}
 
@@ -75,6 +78,6 @@ public final class AuthorizationAction implements Serializable
 	 */
 	public String toString()
 	{
-		return "AuthorizationAction@" + hashCode() + "{" + action + "}";
+		return name;
 	}
 }
