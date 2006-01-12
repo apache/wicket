@@ -48,14 +48,16 @@ public class ComponentFragment extends Fragment implements IFragmentCollector {
 			.append("=\"").append(attr.getValue()).append("\"");
 		}
 		
-		if (fragments!=null) {
+		if (tag.isEmpty()) {
+			builder.append("/>");
+		} else {
 			builder.append(">");
-			for (Fragment frag:fragments) {
-				builder.append(frag.toString());
+			if (fragments!=null) {
+				for (Fragment frag:fragments) {
+					builder.append(frag.toString());
+				}
 			}
 			builder.append("</").append(tag.getName()).append(">");
-		} else {
-			builder.append("/>");
 		}
 		return builder.toString();
 	}

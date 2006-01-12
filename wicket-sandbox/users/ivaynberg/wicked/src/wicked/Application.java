@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import wicked.markup.Markup;
-import wicked.markup.parser.BasicParser;
+import wicked.markup.parser.BasicSAXParser;
+import wicked.markup.parser.BasicXPPParser;
 import wicked.markup.parser.IMarkupParser;
 
 public class Application {
@@ -37,7 +38,7 @@ public class Application {
 			}
 			
 			
-			IMarkupParser parser=new BasicParser();
+			IMarkupParser parser=new BasicXPPParser();
 	
 			Markup markup=parser.parse(markupStream);
 			

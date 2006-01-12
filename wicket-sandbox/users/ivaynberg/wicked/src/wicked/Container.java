@@ -39,14 +39,20 @@ public class Container extends Component {
 
 	public void render(OutputStream stream) {
 		ComponentFragment frag = getFragment();
-		renderOpenTag(stream);
 
-		renderBody(stream, frag.getFragments());
+		if (frag.getTag().isEmpty() && frag.getFragments() == null) {
+			renderEmptyTag(stream);
+		} else {
 
-		renderCloseTag(stream);
+			renderOpenTag(stream);
+
+			renderBody(stream, frag.getFragments());
+
+			renderCloseTag(stream);
+		}
 	}
 
-	//TODO should the fragments be passed in or aquired through getfragment() ?
+	// TODO should the fragments be passed in or aquired through getfragment() ?
 	public void renderBody(OutputStream stream, List<Fragment> fragments) {
 		if (fragments != null) {
 

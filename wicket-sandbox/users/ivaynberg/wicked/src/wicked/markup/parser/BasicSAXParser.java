@@ -18,7 +18,7 @@ import wicked.markup.Markup;
 import wicked.markup.StaticFragment;
 import wicked.markup.Tag;
 
-public class BasicParser implements IMarkupParser {
+public class BasicSAXParser implements IMarkupParser {
 
 	public Markup parse(InputStream markupStream) {
 

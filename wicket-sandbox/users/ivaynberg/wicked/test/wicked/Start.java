@@ -3,6 +3,10 @@ package wicked;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import wicked.markup.Markup;
+import wicked.markup.parser.BasicXPPParser;
+import wicked.markup.parser.IMarkupParser;
+
 
 public class Start {
 
@@ -11,8 +15,12 @@ public class Start {
 		Application app=new Application();
 		Application.set(app);
 
+		IMarkupParser parser=new BasicXPPParser();
+		Markup markup=parser.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream("wicked/TestPage.html"));
+		
 		repeaterTest();
-		//pageTest();
+		pageTest();
+		
 	}
 	
 	public static void repeaterTest() {

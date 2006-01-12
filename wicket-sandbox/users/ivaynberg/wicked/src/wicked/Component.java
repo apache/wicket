@@ -61,8 +61,8 @@ public class Component {
 		}
 		return (Page) c;
 	}
-	
-	public void renderOpenTag(OutputStream stream) {
+
+	private void renderTagOpening(OutputStream stream) {
 		ComponentFragment frag = getFragment();
 		Tag tag = frag.getTag();
 		try {
@@ -76,6 +76,14 @@ public class Component {
 				stream.write(attr.getValue().getBytes());
 				stream.write("\"".getBytes());
 			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void renderOpenTag(OutputStream stream) {
+		renderTagOpening(stream);
+		try {
 			stream.write(">".getBytes());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -94,9 +102,24 @@ public class Component {
 		}
 	}
 
+	public void renderEmptyTag(OutputStream stream) {
+		renderTagOpening(stream);
+		try {
+			stream.write("/>".getBytes());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void render(OutputStream stream) {
-		renderOpenTag(stream);
-		renderCloseTag(stream);
+		Tag tag = getFragment().getTag();
+		if (tag.isEmpty()) {
+			renderEmptyTag(stream);
+		} else {
+			renderOpenTag(stream);
+			renderCloseTag(stream);
+		}
+
 	}
 
 	public void checkTag() {
