@@ -20,7 +20,6 @@ package wicket.markup.parser;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.parser.filter.PrependContextPathHandler;
-import wicket.protocol.http.MockWebApplication;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -44,7 +43,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	 */
 	protected void setUp() throws Exception
 	{
-		application = new MockWebApplication(null);
+		super.setUp();
 		
 		application.getMarkupSettings().setMarkupParserFactory(
 				new MarkupParserFactory(application.getMarkupSettings(), new PrependContextPathHandler()));
