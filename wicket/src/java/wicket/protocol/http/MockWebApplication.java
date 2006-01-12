@@ -113,6 +113,7 @@ public class MockWebApplication extends WebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
+    /** The homepage */
 	private Class homePage;
 	
 	/**
@@ -136,12 +137,14 @@ public class MockWebApplication extends WebApplication
 
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
-		
 	}
 
+	/**
+	 * 
+	 * @see wicket.Application#init()
+	 */
 	protected void init()
 	{
-
 	}
 	
 	/**
@@ -377,7 +380,8 @@ public class MockWebApplication extends WebApplication
 	 * Sets the home page for this mock application
 	 * @param clazz
 	 */
-	public void setHomePage(Class clazz) {
-		homePage=clazz;
+	public void setHomePage(Class clazz) 
+	{
+		homePage = clazz;
 	}
 }
