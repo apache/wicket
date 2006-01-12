@@ -54,6 +54,29 @@ public class Action implements Serializable
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof Action)
+		{
+			Action that = (Action)obj;
+			return name.equals(that.name);
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "Action".hashCode();
+		result += name.hashCode();
+		return 17 * result;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
