@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.application.IClassResolver;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
@@ -228,6 +229,14 @@ public abstract class Session implements Serializable
 	public final Application getApplication()
 	{
 		return application;
+	}
+
+	/**
+	 * @return The authorization strategy for this session
+	 */
+	public final IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return application.getSecuritySettings().getAuthorizationStrategy();
 	}
 
 	/**
