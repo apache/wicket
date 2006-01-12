@@ -774,18 +774,18 @@ public abstract class RequestCycle
 		// clean up target stack; calling cleanUp has effects like
 		// NOTE: don't remove the targets as testing code might need them
 		// furthermore, the targets will be cg-ed with this cycle too
-		for (Iterator i = requestTargets.iterator(); i.hasNext();)
+		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
 		{
-			IRequestTarget t = (IRequestTarget)i.next();
-			if (t != null)
+			IRequestTarget target = (IRequestTarget)iter.next();
+			if (target != null)
 			{
 				try
 				{
-					t.cleanUp(this);
+					target.cleanUp(this);
 				}
 				catch (RuntimeException e)
 				{
-					log.error("there was an error cleaning up target " + t + ".", e);
+					log.error("there was an error cleaning up target " + target + ".", e);
 				}
 			}
 		}
@@ -852,7 +852,6 @@ public abstract class RequestCycle
 		// decode the request parameters into a strongly typed parameters
 		// object that is to be used by the target resolving
 		final RequestParameters requestParameters = encoder.decode(getRequest());
-
 		if (requestParameters == null)
 		{
 			throw new WicketRuntimeException("request parameters must be not-null (provided by "
@@ -927,28 +926,23 @@ public abstract class RequestCycle
 			{
 				case PREPARE_REQUEST: 
 				{
-
 					// prepare the request
 					prepare();
-
 					break;
 				}
-				
 				case DECODE_PARAMETERS: 
 				{
-
 					// get the request parameters object using the request
 					// encoder of the processor
 					requestParameters = getRequestParameters(processor);
-
 					break;
 				}
-				
 				case RESOLVE_TARGET: 
 				{
 					// resolve the target of the request using the request
 					// parameters
 					final IRequestTarget target = processor.resolve(this, requestParameters);
+					
 					// has to result in a request target
 					if (target == null)
 					{
@@ -958,11 +952,9 @@ public abstract class RequestCycle
 					requestTargets.push(target);
 					break;
 				}
-				
 				case CHECK_ACCESS: 
 				{
 					// manually set step to check access
-
 					IRequestTarget target = getRequestTarget();
 
 					boolean access = true;
@@ -972,10 +964,9 @@ public abstract class RequestCycle
 					}
 
 					// check access or earlier (like in a component constructor)
-					// might
-					// have called setRequestTarget. If that is the case, put
-					// that one
-					// on top; otherwise put our resolved target on top
+					// might have called setRequestTarget. If that is the case, 
+					// put that one on top; otherwise put our resolved target 
+					// on top
 					IRequestTarget otherTarget = getRequestTarget();
 					if (otherTarget != target)
 					{
@@ -987,29 +978,25 @@ public abstract class RequestCycle
 						requestTargets.push(target);
 						requestTargets.push(otherTarget);
 					}
-					else if( !access )
+					else if (!access)
 					{
-						setResponsePage(getApplication().getApplicationSettings().getAccessDeniedPage());
+						setResponsePage(getApplication().getApplicationSettings()
+								.getAccessDeniedPage());
 					}
 					break;
 				}
-				
 				case PROCESS_EVENTS: 
 				{
-
 					// determine what kind of synchronization is to be used, and
 					// handle any events with that and generate a response in
 					// that same block
 					// NOTE: because of synchronization, we need to take the
 					// steps PROCESS_EVENS and RESPOND together
 					processEventsAndRespond(processor);
-
 					break;
 				}
-				
 				case RESPOND: 
 				{
-
 					// generate a response
 					// NOTE: we reach this block when during event processing
 					// and response generation the request target was changed,
@@ -1018,10 +1005,8 @@ public abstract class RequestCycle
 					// block here, so be very careful not to do other
 					// synchronization (possibly introducing a deadlock)
 					processor.respond(this);
-
 					break;
 				}
-				
 				default: 
 				{
 					// nothing
