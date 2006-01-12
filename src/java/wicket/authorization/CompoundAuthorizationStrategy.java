@@ -44,20 +44,22 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * Adds a strategy to the chain
 	 * 
 	 * @param strat
+	 * @return this for chaining
 	 */
-	public void add(IAuthorizationStrategy strat)
+	public CompoundAuthorizationStrategy add(IAuthorizationStrategy strat)
 	{
 		if (strat == null)
 		{
 			throw new IllegalArgumentException("argument [strat] cannot be null");
 		}
 		strategies.add(strat);
+		return this;
 	}
 
 	/**
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 	 */
-	public boolean authorizeInstantiation(Class componentClass)
+	public final boolean authorizeInstantiation(Class componentClass)
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
@@ -74,7 +76,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean authorizeAction(Component component, Action action)
+	public final boolean authorizeAction(Component component, Action action)
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
