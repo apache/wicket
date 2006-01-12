@@ -40,11 +40,13 @@ import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
+import wicket.protocol.http.HttpSessionStoreFactory;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
+import wicket.session.ISessionStoreFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.convert.ConverterFactory;
@@ -166,9 +168,12 @@ public final class Settings
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
 
-	/** The eviction strategy for this page map */
+	/** The eviction strategy. */
 	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
 			15);
+
+	/** the session store factory. */
+	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
 
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
@@ -859,6 +864,22 @@ public final class Settings
 	public void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy)
 	{
 		this.pageMapEvictionStrategy = pageMapEvictionStrategy;
+	}
+
+	/**
+	 * @see wicket.settings.ISessionSettings#getSessionStoreFactory()
+	 */
+	public ISessionStoreFactory getSessionStoreFactory()
+	{
+		return sessionStoreFactory;
+	}
+
+	/**
+	 * @see wicket.settings.ISessionSettings#setSessionStoreFactory(wicket.session.ISessionStoreFactory)
+	 */
+	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
+	{
+		this.sessionStoreFactory = sessionStoreFactory;
 	}
 
 	/**
