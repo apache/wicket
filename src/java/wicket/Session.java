@@ -657,17 +657,7 @@ public abstract class Session implements Serializable
 	 */
 	protected final void removeAttribute(String name)
 	{
-		// get the old value if any
-		Object oldValue = getAttribute(name);
-
-		if (oldValue != null)
-		{
-			getSessionStore().removeAttribute(name);
-		}
-		else
-		{
-			log.warn("attribute " + name + " could not be removed as it didn't exist in " + this);
-		}
+		getSessionStore().removeAttribute(name);
 	}
 
 	/**
