@@ -96,7 +96,7 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 
-			public boolean allowInstantiation(Class c)
+			public boolean authorizeInstantiation(Class c)
 			{
 				return false;
 			}
@@ -139,10 +139,10 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
-			 * @see wicket.authorization.IAuthorizationStrategy#allowAction(wicket.Component,
+			 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
 			 *      wicket.authorization.Action)
 			 */
-			public boolean allowAction(Component component, Action action)
+			public boolean authorizeAction(Component component, Action action)
 			{
 				if (action == Component.RENDER && component instanceof Label)
 				{
@@ -220,18 +220,18 @@ public class AuthorizationTest extends TestCase
 	private static class DummyAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowInstantiation(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 		 */
-		public boolean allowInstantiation(Class c)
+		public boolean authorizeInstantiation(Class c)
 		{
 			return true;
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowAction(
+		 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(
 		 *      wicket.Component, wicket.authorization.Action)
 		 */
-		public boolean allowAction(Component c, Action action)
+		public boolean authorizeAction(Component c, Action action)
 		{
 			return true;
 		}

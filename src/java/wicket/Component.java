@@ -582,7 +582,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final boolean authorize(Action action)
 	{
-		return getSession().getAuthorizationStrategy().allowAction(this, action);
+		return getSession().getAuthorizationStrategy().authorizeAction(this, action);
 	}
 
 	/**
@@ -2573,7 +2573,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	private final void authorizeInstantiation()
 	{
-		if (!getSession().getAuthorizationStrategy().allowInstantiation(getClass()))
+		if (!getSession().getAuthorizationStrategy().authorizeInstantiation(getClass()))
 		{
 			throw new UnauthorizedInstantiationException(getClass());
 		}
