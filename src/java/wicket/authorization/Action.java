@@ -20,8 +20,9 @@ package wicket.authorization;
 import java.io.Serializable;
 
 /**
- * A token/key that represents a given component action that needs to be
- * authorized. For example, Component.RENDER or Component.ENABLE.
+ * A class for constructing singleton constants that represent a given component
+ * action that needs to be authorized. For example, Component.RENDER or
+ * Component.ENABLE.
  * 
  * @see wicket.Component#RENDER
  * @see wicket.Component#ENABLE
