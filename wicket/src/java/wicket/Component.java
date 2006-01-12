@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.AuthorizationException;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedEnabledStateException;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
@@ -1611,8 +1612,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allowEnabledState(
-				this))
+		if (!getApplication().getSecuritySettings().getAuthorizationStrategy().allow(
+				IAuthorizationStrategy.ACTION_ENABLED_STATE, this))
 		{
 			throw new UnauthorizedEnabledStateException(
 					"operation not allowed in the current authorization context");

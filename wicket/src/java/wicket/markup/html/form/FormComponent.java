@@ -25,6 +25,7 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Page;
 import wicket.WicketRuntimeException;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
@@ -77,7 +78,8 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public Object getObject(Component component)
 		{
-			return (getApplication().getSecuritySettings().getAuthorizationStrategy().allowEnabledState(FormComponent.this) && FormComponent.this
+			return (getApplication().getSecuritySettings().getAuthorizationStrategy().allow(
+					IAuthorizationStrategy.ACTION_ENABLED_STATE, FormComponent.this) && FormComponent.this
 					.isEnabled()) ? null : "disabled";
 		}
 	}
@@ -112,24 +114,23 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * sessions. This is false by default.
 	 */
 	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
-	
+
 	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
 
 	/**
-	 * Raw Input entered by the user
-	 * or NO_RAW_INPUT if nothing is filled in.
+	 * Raw Input entered by the user or NO_RAW_INPUT if nothing is filled in.
 	 */
 	private String rawInput = NO_RAW_INPUT;
 
 	/**
 	 * Indicates if the model is considered up to date with the last user input.
-	 * If true, the model value will be used to render the component.
-	 * If false, the rawInput value (last user input) will be used to render the component.
-	 * (Can be false if validation fails, or if component not validated/updated after a user input,
-	 * for example if a Button with defaultFormProcessing property set to true, aka "immediate button")  
+	 * If true, the model value will be used to render the component. If false,
+	 * the rawInput value (last user input) will be used to render the
+	 * component. (Can be false if validation fails, or if component not
+	 * validated/updated after a user input, for example if a Button with
+	 * defaultFormProcessing property set to true, aka "immediate button")
 	 */
-//	private boolean modelUpToDate = true;
-	
+	// private boolean modelUpToDate = true;
 	/**
 	 * The list of validators for this form component as either an IValidator
 	 * instance or an array of IValidator instances.
@@ -307,9 +308,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		if(NO_RAW_INPUT.equals(rawInput))
+		if (NO_RAW_INPUT.equals(rawInput))
 		{
-			return getModelValue();		
+			return getModelValue();
 		}
 		else
 		{
@@ -632,22 +633,22 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return 1;
 	}
-	
+
 	/**
-	 * Used by Form to tell the FormComponent that a new user input is available  
+	 * Used by Form to tell the FormComponent that a new user input is available
 	 */
-	final void registerNewUserInput() 
+	final void registerNewUserInput()
 	{
-		if (isVisibleInHierarchy()) 
+		if (isVisibleInHierarchy())
 		{
 			rawInput = getUserInput();
 		}
 	}
-	
+
 	/**
 	 * @return The value of the user input for this form component
 	 */
-	private String getUserInput() 
+	private String getUserInput()
 	{
 		String rawInput;
 		// Get input as String array
@@ -666,5 +667,5 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return rawInput;
 	}
-	
+
 }

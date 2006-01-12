@@ -21,6 +21,7 @@ package wicket;
 import java.io.Serializable;
 
 import junit.framework.TestCase;
+import wicket.authorization.AuthorizationAction;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.html.WebComponent;
@@ -137,9 +138,13 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester();
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-			public boolean allowRender(Component c)
+			/**
+			 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
+			 *      wicket.Component)
+			 */
+			public boolean allow(AuthorizationAction action, Component c)
 			{
-				if (c instanceof Label)
+				if ((action.equals(IAuthorizationStrategy.ACTION_RENDER)) && c instanceof Label)
 				{
 					return false;
 				}
@@ -183,9 +188,11 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester();
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-			public boolean allowEnabledState(Component c)
+
+			public boolean allow(AuthorizationAction action, Component c)
 			{
-				if (c instanceof TextField && c.getId().equals("stringInput"))
+				if ((action.equals(IAuthorizationStrategy.ACTION_ENABLED_STATE))
+						&& c instanceof TextField && c.getId().equals("stringInput"))
 				{
 					return false;
 				}
@@ -222,17 +229,10 @@ public class AuthorizationTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowRender(wicket.Component)
+		 * @see wicket.authorization.IAuthorizationStrategy#allow(wicket.authorization.AuthorizationAction,
+		 *      wicket.Component)
 		 */
-		public boolean allowRender(Component c)
-		{
-			return true;
-		}
-
-		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#allowEnabledState(wicket.Component)
-		 */
-		public boolean allowEnabledState(Component c)
+		public boolean allow(AuthorizationAction action, Component c)
 		{
 			return true;
 		}
@@ -241,7 +241,7 @@ public class AuthorizationTest extends TestCase
 	/**
 	 * Test page for authentication tests.
 	 */
-	public  static class AuthTestPage1 extends WebPage
+	public static class AuthTestPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
