@@ -761,14 +761,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final IAuthorizationStrategy getAuthorizationStrategy()
 	{
-		if (parent == null)
-		{
-			return Application.get().getSecuritySettings().getAuthorizationStrategy();
-		}
-		else
-		{
-			return getApplication().getSecuritySettings().getAuthorizationStrategy();
-		}
+		return getSession().getAuthorizationStrategy();
 	}
 
 	/**
@@ -1676,7 +1669,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Check authorization
 		if (!getAuthorizationStrategy().allowAction(this, ENABLE))
 		{
-			throw new UnauthorizedActionException(this, Component.ENABLE);
+			throw new UnauthorizedActionException(this, ENABLE);
 		}
 
 		// Check whether this will result in an actual change
