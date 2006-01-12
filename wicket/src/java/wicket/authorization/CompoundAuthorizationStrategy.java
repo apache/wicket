@@ -62,5 +62,4 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 		}
 		return true;
 	}
-
 }
