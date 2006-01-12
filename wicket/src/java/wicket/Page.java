@@ -951,8 +951,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			public Object component(Component component)
 			{
-				component.setRenderAllowed(component.getAuthorizationStrategy().allowAction(
-						component, RENDER));
+				component.setRenderAllowed(component.authorize(RENDER));
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});

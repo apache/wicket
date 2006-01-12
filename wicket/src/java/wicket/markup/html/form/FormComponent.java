@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.55 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -77,8 +77,9 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public Object getObject(Component component)
 		{
-			return (component.getAuthorizationStrategy().allowAction(FormComponent.this,
-					ENABLE) && FormComponent.this.isEnabled()) ? null : "disabled";
+			return (FormComponent.this.authorize(ENABLE) && FormComponent.this.isEnabled())
+					? null
+					: "disabled";
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.235 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
-import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
@@ -221,101 +220,6 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviorListener
 {
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
-
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** Basic model IModelComparator implementation for normal object models */
-	private static final IModelComparator defaultModelComparator = new IModelComparator()
-	{
-		public boolean compare(Component component, Object b)
-		{
-			final Object a = component.getModelObject();
-			if (a == null && b == null)
-			{
-				return true;
-			}
-			if (a == null || b == null)
-			{
-				return false;
-			}
-			return a.equals(b);
-		}
-	};
-
-	/** Log. */
-	private static Log log = LogFactory.getLog(Component.class);
-
-	/** List of behaviours to be applied for this Component */
-	private List behaviours = null;
-
-	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
-
-	/** Component id. */
-	private String id;
-
-	/**
-	 * The position within the markup stream, where the markup for the component
-	 * begins. Compared to MarkupContainer's markupStream this is NOT just a
-	 * temporary variable to render a page.
-	 */
-	private int markupStreamPosition = -1;
-
-	/** The model for this component. */
-	private IModel model;
-
-	/** Any parent container. */
-	private MarkupContainer parent;
-
-	/**
-	 * Internal indicator of whether this component may be rendered given the
-	 * current context's authorization. It overrides the visible flag in case
-	 * this is false. Authorization is done before trying to render any
-	 * component (otherwise we would end up with a half rendered page in the
-	 * buffer), and as an optimization, the result for the current request is
-	 * stored in this variable.
-	 */
-	private transient boolean renderAllowed = true;
-
-	/** True while rendering is in progress */
-	private transient boolean rendering;
-
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * is allowed to be enabled.
@@ -361,6 +265,101 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * </p>
 	 */
 	public static final Action RENDER = new Action("RENDER");
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** Basic model IModelComparator implementation for normal object models */
+	private static final IModelComparator defaultModelComparator = new IModelComparator()
+	{
+		public boolean compare(Component component, Object b)
+		{
+			final Object a = component.getModelObject();
+			if (a == null && b == null)
+			{
+				return true;
+			}
+			if (a == null || b == null)
+			{
+				return false;
+			}
+			return a.equals(b);
+		}
+	};
+
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
+
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** Boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(Component.class);
+
+	/** List of behaviours to be applied for this Component */
+	private List behaviours = null;
+
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
+
+	/** Component id. */
+	private String id;
+
+	/**
+	 * The position within the markup stream, where the markup for the component
+	 * begins. Compared to MarkupContainer's markupStream this is NOT just a
+	 * temporary variable to render a page.
+	 */
+	private int markupStreamPosition = -1;
+
+	/** The model for this component. */
+	private IModel model;
+
+	/** Any parent container. */
+	private MarkupContainer parent;
+
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer), and as an optimization, the result for the current request is
+	 * stored in this variable.
+	 */
+	private transient boolean renderAllowed = true;
+
+	/** True while rendering is in progress */
+	private transient boolean rendering;
 
 	/**
 	 * Change record of a model.
@@ -523,7 +522,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public Component(final String id)
 	{
-		checkAuthorization();
+		authorizeInstantiation();
 		setId(id);
 	}
 
@@ -541,7 +540,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public Component(final String id, final IModel model)
 	{
-		checkAuthorization();
+		authorizeInstantiation();
 		setId(id);
 		setModel(model);
 	}
@@ -572,6 +571,18 @@ public abstract class Component implements Serializable, IBehaviorListener
 		behaviour.bind(this);
 		return this;
 
+	}
+
+	/**
+	 * Authorizes an action for a component.
+	 * 
+	 * @param action
+	 *            The action to authorize
+	 * @return True if the action is allowed
+	 */
+	public final boolean authorize(Action action)
+	{
+		return getSession().getAuthorizationStrategy().allowAction(this, action);
 	}
 
 	/**
@@ -754,14 +765,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
-	}
-
-	/**
-	 * @return The authorization strategy for this component
-	 */
-	public final IAuthorizationStrategy getAuthorizationStrategy()
-	{
-		return getSession().getAuthorizationStrategy();
 	}
 
 	/**
@@ -1347,6 +1350,26 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * For component level re-render (e.g. AJAX) please call
 	 * Component.doRender(). Though render() does seem to work, it will fail for
 	 * panel children.
+	 */
+	public final void render()
+	{
+		// Allow currently invisible components to be re-rendered as well
+		MarkupStream markupStream = null;
+		if (getParent() != null)
+		{
+			markupStream = findMarkupStream();
+		}
+
+		render(markupStream);
+	}
+
+	/**
+	 * Performs a render of this component as part of a Page level render
+	 * process.
+	 * <p>
+	 * For component level re-render (e.g. AJAX) please call
+	 * Component.doRender(). Though render() does seem to work, it will fail for
+	 * panel children.
 	 * 
 	 * @param markupStream
 	 */
@@ -1393,26 +1416,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 		{
 			rendering = false;
 		}
-	}
-
-	/**
-	 * Performs a render of this component as part of a Page level render
-	 * process.
-	 * <p>
-	 * For component level re-render (e.g. AJAX) please call
-	 * Component.doRender(). Though render() does seem to work, it will fail for
-	 * panel children.
-	 */
-	public final void render()
-	{
-		// Allow currently invisible components to be re-rendered as well
-		MarkupStream markupStream = null;
-		if (getParent() != null)
-		{
-			markupStream = findMarkupStream();
-		}
-
-		render(markupStream);
 	}
 
 	/**
@@ -1667,7 +1670,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!getAuthorizationStrategy().allowAction(this, ENABLE))
+		if (!authorize(ENABLE))
 		{
 			throw new UnauthorizedActionException(this, ENABLE);
 		}
@@ -2399,40 +2402,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * If yet unknown, set the markup stream position with the current position
-	 * of markupStream. Else set the markupStream.setCurrentPosition based the
-	 * position already known to the component.
-	 * <p>
-	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
-	 * re-render is allowed.
-	 * 
-	 * @param markupStream
-	 */
-	private final void validateMarkupStream(final MarkupStream markupStream)
-	{
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		final Component parent = getParent();
-		if (this.isAuto() || (parent != null && parent.isRendering()))
-		{
-			// Remember the position while rendering the component the first
-			// time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else if (this.markupStreamPosition < 0)
-		{
-			throw new WicketRuntimeException(
-					"The markup stream of the component should be known by now, but isn't: "
-							+ this.toString());
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
-	}
-
-	/**
 	 * Visits the parents of this component.
 	 * 
 	 * @param c
@@ -2602,9 +2571,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Check whether this component may be created at all. Throws a
 	 * {@link AuthorizationException} when it may not be created
 	 */
-	private final void checkAuthorization()
+	private final void authorizeInstantiation()
 	{
-		if (!getAuthorizationStrategy().allowInstantiation(getClass()))
+		if (!getSession().getAuthorizationStrategy().allowInstantiation(getClass()))
 		{
 			throw new UnauthorizedInstantiationException(getClass());
 		}
@@ -2643,5 +2612,39 @@ public abstract class Component implements Serializable, IBehaviorListener
 	private boolean isRendering()
 	{
 		return rendering;
+	}
+
+	/**
+	 * If yet unknown, set the markup stream position with the current position
+	 * of markupStream. Else set the markupStream.setCurrentPosition based the
+	 * position already known to the component.
+	 * <p>
+	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
+	 * re-render is allowed.
+	 * 
+	 * @param markupStream
+	 */
+	private final void validateMarkupStream(final MarkupStream markupStream)
+	{
+		// Allow the component to be re-rendered without a page. Partial
+		// re-rendering is a requirement of AJAX.
+		final Component parent = getParent();
+		if (this.isAuto() || (parent != null && parent.isRendering()))
+		{
+			// Remember the position while rendering the component the first
+			// time
+			this.markupStreamPosition = markupStream.getCurrentIndex();
+		}
+		else if (this.markupStreamPosition < 0)
+		{
+			throw new WicketRuntimeException(
+					"The markup stream of the component should be known by now, but isn't: "
+							+ this.toString());
+		}
+		else
+		{
+			// Re-set the markups index to the beginning of the component tag
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
 	}
 }
