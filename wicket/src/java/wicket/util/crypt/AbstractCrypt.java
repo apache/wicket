@@ -87,7 +87,26 @@ public abstract class AbstractCrypt implements ICrypt
 		try
 		{
 			byte[] cipherText = encryptStringToByteArray(plainText);
-			return new BASE64Encoder().encode(cipherText);
+			String text = new BASE64Encoder().encode(cipherText);
+			
+			// A standard compliant base64 encoder will insert a newline 
+			// after 76 chars. Remove it. Hopefully the decoder is flexible
+			// enough to cope with the missing new line.
+			if ((text.indexOf("\n") != -1) || (text.indexOf("\r") != -1))
+			{
+				StringBuffer buf = new StringBuffer(text.length());
+				for (int i=0; i < text.length(); i++)
+				{
+					char ch = text.charAt(i);
+					if ((ch != '\n') && (ch != '\r'))
+					{
+						buf.append(ch);
+					}
+				}
+				text = buf.toString();
+			}
+			
+			return text;
 		}
 		catch (GeneralSecurityException e)
 		{
