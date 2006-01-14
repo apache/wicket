@@ -243,7 +243,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * will catch all normal framework-directed use though.
 	 */
 	public static final Action ENABLE = new Action("ENABLE");
-
+	
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * and its children are allowed to be rendered.
@@ -325,6 +325,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
+
+	/** Separator for component paths */
+	private static final char PATH_SEPARATOR = ':';
 
 	/** List of behaviors to be applied for this Component */
 	private List behaviors = null;
@@ -774,7 +777,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final String getClassRelativePath()
 	{
-		return getClass().getName() + "." + getPageRelativePath();
+		return getClass().getName() + PATH_SEPARATOR + getPageRelativePath();
 	}
 
 	/**
@@ -959,7 +962,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final String getPageRelativePath()
 	{
-		return Strings.afterFirstPathComponent(getPath(), ':');
+		return Strings.afterFirstPathComponent(getPath(), PATH_SEPARATOR);
 	}
 
 	/**
@@ -984,7 +987,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		{
 			if (buffer.length() > 0)
 			{
-				buffer.insert(0, ':');
+				buffer.insert(0, PATH_SEPARATOR);
 			}
 			buffer.insert(0, c.getId());
 		}
