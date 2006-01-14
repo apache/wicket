@@ -29,6 +29,9 @@ public class UnauthorizedActionException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
 
+	/** The action */
+	private Action action;
+	
 	/**
 	 * Construct.
 	 * 
@@ -40,5 +43,14 @@ public class UnauthorizedActionException extends AuthorizationException
 	public UnauthorizedActionException(Component component, Action action)
 	{
 		super("Component " + component + " does not permit action " + action);
+		this.action = action;
+	}
+	
+	/**
+	 * @return The action that was forbidden
+	 */
+	public Action getAction()
+	{
+		return action;
 	}
 }
