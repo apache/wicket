@@ -115,7 +115,7 @@ public abstract class Session implements Serializable
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/** Thread-local current session. */
-	private static final ThreadLocal CURRENT = new ThreadLocal();
+	private static final ThreadLocal currentSession = new ThreadLocal();
 
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
@@ -147,11 +147,11 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** the session store of this session. */
-	private transient ISessionStore sessionStore;
-
 	/** Attribute prefix for page maps stored in the session */
 	private final String pageMapAttributePrefix = "m:";
+
+	/** the session store of this session. */
+	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -177,7 +177,7 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		Session session = (Session)CURRENT.get();
+		Session session = (Session)currentSession.get();
 		if (session == null)
 		{
 			throw new WicketRuntimeException("there is not session attached to current thread "
@@ -200,7 +200,7 @@ public abstract class Session implements Serializable
 		{
 			throw new IllegalArgumentException("Argument session must me not null");
 		}
-		CURRENT.set(session);
+		currentSession.set(session);
 	}
 
 	/**
@@ -608,29 +608,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets the session store.
-	 * 
-	 * @return the session store
-	 */
-	protected final ISessionStore getSessionStore()
-	{
-		if (sessionStore == null)
-		{
-			ISessionStoreFactory sessionStoreFactory = application.getSessionSettings()
-					.getSessionStoreFactory();
-			sessionStore = sessionStoreFactory.newSessionStore(this);
-
-			// still null?
-			if (sessionStore == null)
-			{
-				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
-						+ " did not produce a session store");
-			}
-		}
-		return sessionStore;
-	}
-
-	/**
 	 * Gets the attribute value with the given name
 	 * 
 	 * @param name
@@ -654,6 +631,29 @@ public abstract class Session implements Serializable
 	 * @return Request cycle factory for this kind of session.
 	 */
 	protected abstract IRequestCycleFactory getRequestCycleFactory();
+
+	/**
+	 * Gets the session store.
+	 * 
+	 * @return the session store
+	 */
+	protected final ISessionStore getSessionStore()
+	{
+		if (sessionStore == null)
+		{
+			ISessionStoreFactory sessionStoreFactory = application.getSessionSettings()
+					.getSessionStoreFactory();
+			sessionStore = sessionStoreFactory.newSessionStore(this);
+
+			// still null?
+			if (sessionStore == null)
+			{
+				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
+						+ " did not produce a session store");
+			}
+		}
+		return sessionStore;
+	}
 
 	/**
 	 * Removes the attribute with the given name.
