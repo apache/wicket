@@ -44,12 +44,10 @@ public interface IBehavior extends Serializable
 	void bind(Component hostComponent);
 
 	/**
-	 * Called when a component that has this behavior coupled was rendered.
-	 * 
-	 * @param hostComponent
-	 *            the component that has this behavior coupled
+	 * Detaches all models, called by components which have this behavior
+	 * attached
 	 */
-	void rendered(Component hostComponent);
+	void detachModel();
 
 	/**
 	 * Called any time a component that has this behavior registered is
@@ -63,8 +61,10 @@ public interface IBehavior extends Serializable
 	void onComponentTag(Component component, ComponentTag tag);
 
 	/**
-	 * Detaches all models, called by components which have this behavior
-	 * attached
+	 * Called when a component that has this behavior coupled was rendered.
+	 * 
+	 * @param hostComponent
+	 *            the component that has this behavior coupled
 	 */
-	void detachModel();
+	void rendered(Component hostComponent);
 }
