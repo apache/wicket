@@ -104,7 +104,7 @@ public abstract class Application
 	public static final String DEVELOPMENT = "development";
 
 	/** Thread local holder of the application object. */
-	private static final ThreadLocal currentApplication = new ThreadLocal();
+	private static final ThreadLocal current = new ThreadLocal();
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Application.class);
@@ -128,7 +128,7 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		Application application = (Application)currentApplication.get();
+		Application application = (Application)current.get();
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread "
@@ -145,7 +145,7 @@ public abstract class Application
 	 */
 	public static void set(Application application)
 	{
-		currentApplication.set(application);
+		current.set(application);
 	}
 
 	/**

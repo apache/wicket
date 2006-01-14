@@ -115,7 +115,7 @@ public abstract class Session implements Serializable
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/** Thread-local current session. */
-	private static final ThreadLocal currentSession = new ThreadLocal();
+	private static final ThreadLocal current = new ThreadLocal();
 
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
@@ -177,7 +177,7 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		Session session = (Session)currentSession.get();
+		Session session = (Session)current.get();
 		if (session == null)
 		{
 			throw new WicketRuntimeException("there is not session attached to current thread "
@@ -200,7 +200,7 @@ public abstract class Session implements Serializable
 		{
 			throw new IllegalArgumentException("Argument session must me not null");
 		}
-		currentSession.set(session);
+		current.set(session);
 	}
 
 	/**
