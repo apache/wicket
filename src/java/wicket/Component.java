@@ -580,7 +580,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 *            The action to authorize
 	 * @return True if the action is allowed
 	 * @throws AuthorizationException
-	 *            Can be thrown by implementation if action is unauthorized
+	 *             Can be thrown by implementation if action is unauthorized
 	 */
 	public final boolean authorize(Action action)
 	{
@@ -1120,7 +1120,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * will return null.
 	 * 
 	 * @return The variation of this component.
-	 * 
 	 */
 	public String getVariation()
 	{
@@ -1184,7 +1183,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * components that add a disabled='disabled' attribute when enabled is
 	 * false.
 	 * 
-	 * @return whether this component is enabled.
+	 * @return Whether this component is enabled.
 	 */
 	public boolean isEnabled()
 	{
@@ -1192,12 +1191,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * @return Returns the isVersioned.
+	 * @return True if this component is versioned
 	 */
 	public boolean isVersioned()
 	{
 		// Is the component itself versioned?
-		if (!getFlag(FLAG_VERSIONED) || (!getFlag(FLAG_IS_RENDERED_ONCE)))
+		if (!getFlag(FLAG_VERSIONED) || !getFlag(FLAG_IS_RENDERED_ONCE))
 		{
 			return false;
 		}
@@ -1316,7 +1315,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		if (id == null)
 		{
 			throw new WicketRuntimeException(
-					"parameter behaviourId was not provided: unable to locate listener");
+					"Parameter behaviourId was not provided: unable to locate listener");
 		}
 
 		int idAsInt = Integer.parseInt(id);
@@ -1324,7 +1323,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 		if (behaviourListener == null)
 		{
-			throw new WicketRuntimeException("no behaviour listener found with behaviourId " + id);
+			throw new WicketRuntimeException("No behaviour listener found with behaviourId " + id);
 		}
 
 		behaviourListener.onRequest();
@@ -1338,7 +1337,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		if (parent == null)
 		{
-			throw new IllegalStateException("cannot remove " + this + " from null parent!");
+			throw new IllegalStateException("Cannot remove " + this + " from null parent!");
 		}
 
 		parent.remove(this);
@@ -1420,7 +1419,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * <p>
 	 * Renders the component at the current position in the given markup stream.
 	 * The method onComponentTag() is called to allow the component to mutate
@@ -1616,12 +1615,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Sets the given model.
 	 * <p>
 	 * WARNING: DO NOT OVERRIDE THIS METHOD UNLESS YOU HAVE A VERY GOOD REASON
-	 * FOR IT. OVERRIDING THIS MIGHT OPEN UP SECURITY LEAKS AND BROKEN
+	 * FOR IT. OVERRIDING THIS MIGHT OPEN UP SECURITY LEAKS AND BREAK
 	 * BACK-BUTTON SUPPORT.
 	 * </p>
 	 * 
 	 * @param model
-	 *            the model
+	 *            The model
 	 * @return This
 	 */
 	public Component setModel(final IModel model)
@@ -1721,7 +1720,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * THIS IS PART OF WICKETS INTERNAL API. DO NOT RELY ON IT WITHIN YOUR CODE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * <p>
 	 * 
 	 * @param b
@@ -1852,7 +1851,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the url for the listener interface (e.g. ILinkListener).
+	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
 	 * @param listenerInterface
 	 *            The listener interface that the URL should call
