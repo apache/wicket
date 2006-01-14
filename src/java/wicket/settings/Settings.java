@@ -93,6 +93,9 @@ public final class Settings
 	/** In order to remove <?xml?> from output as required by IE quirks mode */
 	boolean stripXmlDeclarationFromOutput;
 
+	/** Class of access denied page. */
+	private Class accessDeniedPage;
+
 	/** The application */
 	private Application application;
 
@@ -144,9 +147,6 @@ public final class Settings
 	/** Class of internal error page. */
 	private Class internalErrorPage;
 
-	/** Class of access denied page. */
-	private Class accessDeniedPage;
-
 	/** I18N support */
 	private Localizer localizer;
 
@@ -172,9 +172,6 @@ public final class Settings
 	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
 			15);
 
-	/** the session store factory. */
-	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
-
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
 
@@ -195,9 +192,9 @@ public final class Settings
 	/** resource locator for this application */
 	private ResourceStreamLocator resourceStreamLocator;
 
-
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
+
 
 	/**
 	 * List of {@link IResponseFilter}s.
@@ -216,6 +213,9 @@ public final class Settings
 	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
+
+	/** the session store factory. */
+	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
@@ -327,6 +327,14 @@ public final class Settings
 			overriddenStringResourceLoaders = true;
 		}
 		stringResourceLoaders.add(loader);
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#getAccessDeniedPage()
+	 */
+	public Class getAccessDeniedPage()
+	{
+		return accessDeniedPage;
 	}
 
 	/**
@@ -606,6 +614,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISessionSettings#getSessionStoreFactory()
+	 */
+	public ISessionStoreFactory getSessionStoreFactory()
+	{
+		return sessionStoreFactory;
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -678,6 +694,20 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
+	 */
+	public void setAccessDeniedPage(Class accessDeniedPage)
+	{
+		if (accessDeniedPage == null)
+		{
+			throw new IllegalArgumentException("Argument accessDeniedPage may not be null");
+		}
+		checkPageClass(accessDeniedPage);
+
+		this.accessDeniedPage = accessDeniedPage;
+	}
+
+	/**
 	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
 	 */
 	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
@@ -689,6 +719,7 @@ public final class Settings
 		this.authorizationStrategy = strategy;
 	}
 
+
 	/**
 	 * @see wicket.settings.IMarkupSettings#setAutomaticLinking(boolean)
 	 */
@@ -696,6 +727,7 @@ public final class Settings
 	{
 		this.automaticLinking = automaticLinking;
 	}
+
 
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)
@@ -714,7 +746,6 @@ public final class Settings
 		return this;
 	}
 
-
 	/**
 	 * @see wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
 	 */
@@ -722,7 +753,6 @@ public final class Settings
 	{
 		this.componentUseCheck = componentUseCheck;
 	}
-
 
 	/**
 	 * @see wicket.settings.IMarkupSettings#setCompressWhitespace(boolean)
@@ -867,22 +897,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISessionSettings#getSessionStoreFactory()
-	 */
-	public ISessionStoreFactory getSessionStoreFactory()
-	{
-		return sessionStoreFactory;
-	}
-
-	/**
-	 * @see wicket.settings.ISessionSettings#setSessionStoreFactory(wicket.session.ISessionStoreFactory)
-	 */
-	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
-	{
-		this.sessionStoreFactory = sessionStoreFactory;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#setPropertiesFactory(wicket.resource.PropertiesFactory)
 	 */
 	public void setPropertiesFactory(PropertiesFactory factory)
@@ -931,6 +945,14 @@ public final class Settings
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
+	}
+
+	/**
+	 * @see wicket.settings.ISessionSettings#setSessionStoreFactory(wicket.session.ISessionStoreFactory)
+	 */
+	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
+	{
+		this.sessionStoreFactory = sessionStoreFactory;
 	}
 
 	/**
@@ -1021,27 +1043,5 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#getAccessDeniedPage()
-	 */
-	public Class getAccessDeniedPage()
-	{
-		return accessDeniedPage;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
-	 */
-	public void setAccessDeniedPage(Class accessDeniedPage)
-	{
-		if (accessDeniedPage == null)
-		{
-			throw new IllegalArgumentException("Argument accessDeniedPage may not be null");
-		}
-		checkPageClass(accessDeniedPage);
-
-		this.accessDeniedPage = accessDeniedPage;
 	}
 }

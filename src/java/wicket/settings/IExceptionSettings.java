@@ -19,6 +19,25 @@ import wicket.util.lang.EnumeratedType;
 public interface IExceptionSettings
 {
 	/**
+	 * Indicates that an exception page appropriate to development should be
+	 * shown when an unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+				"SHOW_EXCEPTION_PAGE");
+
+	/**
+	 * Indicates a generic internal error page should be shown when an
+	 * unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+				"SHOW_INTERNAL_ERROR_PAGE");
+	/**
+	 * Indicates that no exception page should be shown when an unexpected
+	 * exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+				"SHOW_NO_EXCEPTION_PAGE");
+	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
@@ -32,28 +51,22 @@ public interface IExceptionSettings
 	}
 
 	/**
-	 * Indicates that an exception page appropriate to development should be
-	 * shown when an unexpected exception is thrown.
+	 * @return Whether to throw an exception when a missing resource is
+	 *         requested
 	 */
-	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_EXCEPTION_PAGE");
-	/**
-	 * Indicates a generic internal error page should be shown when an
-	 * unexpected exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_INTERNAL_ERROR_PAGE");
-	/**
-	 * Indicates that no exception page should be shown when an unexpected
-	 * exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_NO_EXCEPTION_PAGE");
+	boolean getThrowExceptionOnMissingResource();
 
 	/**
 	 * @return Returns the unexpectedExceptionDisplay.
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
+
+	/**
+	 * @param throwExceptionOnMissingResource
+	 *            Whether to throw an exception when a missing resource is
+	 *            requested
+	 */
+	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
 
 	/**
 	 * The exception display type determines how the framework displays
@@ -78,17 +91,4 @@ public interface IExceptionSettings
 	 *            The unexpectedExceptionDisplay to set.
 	 */
 	void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay);
-
-	/**
-	 * @param throwExceptionOnMissingResource
-	 *            Whether to throw an exception when a missing resource is
-	 *            requested
-	 */
-	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
-
-	/**
-	 * @return Whether to throw an exception when a missing resource is
-	 *         requested
-	 */
-	boolean getThrowExceptionOnMissingResource();
 }

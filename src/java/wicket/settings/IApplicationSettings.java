@@ -24,6 +24,14 @@ import wicket.util.convert.IConverterFactory;
 public interface IApplicationSettings
 {
 	/**
+	 * Gets the access denied page class.
+	 * 
+	 * @return Returns the accessDeniedPage.
+	 * @see IApplicationSettings#setAccessDeniedPage(Class)
+	 */
+	Class getAccessDeniedPage();
+
+	/**
 	 * Gets the default resolver to use when finding classes
 	 * 
 	 * @return Default class resolver
@@ -59,12 +67,12 @@ public interface IApplicationSettings
 	Class getPageExpiredErrorPage();
 
 	/**
-	 * Gets the access denied page class.
+	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
 	 * 
-	 * @return Returns the accessDeniedPage.
-	 * @see IApplicationSettings#setAccessDeniedPage(Class)
+	 * @param accessDeniedPage
+	 *            The accessDeniedPage to set.
 	 */
-	Class getAccessDeniedPage();
+	void setAccessDeniedPage(final Class accessDeniedPage);
 
 	/**
 	 * Sets the default class resolver to use when finding classes.
@@ -106,13 +114,5 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
-
-	/**
-	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
-	 * 
-	 * @param accessDeniedPage
-	 *            The accessDeniedPage to set.
-	 */
-	void setAccessDeniedPage(final Class accessDeniedPage);
 	
 }

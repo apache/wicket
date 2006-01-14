@@ -14,14 +14,14 @@ package wicket.settings;
 public interface IDebugSettings
 {
 	/**
+	 * @return true if componentUseCheck is enabled
+	 */
+	boolean getComponentUseCheck();
+
+	/**
 	 * Sets componentUseCheck debug settings
 	 * 
 	 * @param check
 	 */
 	void setComponentUseCheck(boolean check);
-
-	/**
-	 * @return true if componentUseCheck is enabled
-	 */
-	boolean getComponentUseCheck();
 }
