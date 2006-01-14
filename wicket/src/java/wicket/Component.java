@@ -769,7 +769,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * @return A path of the form <page-class-name>. <page-relative-path>
+	 * @return A path of the form [page-class-name].[page-relative-path]
 	 * @see Component#getPageRelativePath()
 	 */
 	public final String getClassRelativePath()
@@ -871,7 +871,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Gets the backing model object; this is shorthand for
 	 * getModel().getObject().
 	 * 
-	 * @return the backing model object
+	 * @return The backing model object
 	 */
 	public final Object getModelObject()
 	{
