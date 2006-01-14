@@ -248,7 +248,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			{
 				break;
 			}
-			inputName.insert(0, ':');
+			inputName.insert(0, Component.PATH_SEPARATOR);
 			id = c.getId();
 		}
 		return inputName.toString();

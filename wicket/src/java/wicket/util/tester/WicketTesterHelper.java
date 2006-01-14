@@ -78,7 +78,7 @@ public class WicketTesterHelper
 				}
 
 				// remove the path component
-				name = Strings.lastPathComponent(name, ':');
+				name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
 
 				object.path = component.getPageRelativePath();
 				object.type = name;

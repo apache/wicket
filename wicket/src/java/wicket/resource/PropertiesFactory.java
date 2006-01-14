@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -148,12 +149,12 @@ public class PropertiesFactory
 		}
 		if (style != null)
 		{
-			buffer.append(':');
+			buffer.append(Component.PATH_SEPARATOR);
 			buffer.append(style);
 		}
 		if (locale != null)
 		{
-			buffer.append(':');
+			buffer.append(Component.PATH_SEPARATOR);
 			buffer.append(locale.toString());
 		}
 
