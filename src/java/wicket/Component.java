@@ -926,6 +926,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Gets the page holding this component.
 	 * 
 	 * @return The page holding this component
+	 * @throws IllegalStateException
+	 *             Thrown if component is not yet attached to a Page.
 	 */
 	public final Page getPage()
 	{
