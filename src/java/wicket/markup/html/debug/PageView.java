@@ -29,6 +29,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
+import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 
 /**
@@ -96,12 +97,13 @@ public final class PageView extends Panel
 			 */
 			protected void populateItem(final ListItem listItem)
 			{
-				final ComponentData cdata = (ComponentData)listItem.getModelObject();
+				final ComponentData componentData = (ComponentData)listItem.getModelObject();
 
 				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label("path", cdata.path));
-				listItem.add(new Label("type", cdata.type));
-				listItem.add(new Label("model", cdata.value));
+				listItem.add(new Label("path", componentData.path));
+				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
+				listItem.add(new Label("type", componentData.type));
+				listItem.add(new Label("model", componentData.value));
 			}
 		});
 	}
@@ -123,7 +125,7 @@ public final class PageView extends Panel
 			{
 			    if (!component.getPath().startsWith(PageView.this.getPath()))
 			    {
-					final ComponentData object = new ComponentData();
+					final ComponentData componentData = new ComponentData();
 	
 					// anonymous class? Get the parent's class name
 					String name = component.getClass().getName();
@@ -135,18 +137,19 @@ public final class PageView extends Panel
 					// remove the path component
 					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
 	
-					object.path = component.getPageRelativePath();
-					object.type = name;
+					componentData.path = component.getPageRelativePath();
+					componentData.size = component.getSize();
+					componentData.type = name;
 					try 
 					{
-						object.value = component.getModelObjectAsString();
+						componentData.value = component.getModelObjectAsString();
 					}
 					catch (Exception e)
 					{
-						object.value = e.getMessage();
+						componentData.value = e.getMessage();
 					}
 						
-					data.add(object);
+					data.add(componentData);
 			    }
 			    
 				return IVisitor.CONTINUE_TRAVERSAL;
@@ -173,5 +176,8 @@ public final class PageView extends Panel
 
 		/** Component value. */
 		public String value;
+		
+		/** Size of component in bytes */
+		public int size;
 	}
 }

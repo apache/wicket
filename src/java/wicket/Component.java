@@ -46,6 +46,7 @@ import wicket.settings.IApplicationSettings;
 import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
+import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -1049,6 +1050,18 @@ public abstract class Component implements Serializable, IBehaviorListener
 	public final Session getSession()
 	{
 		return Session.get();
+	}
+
+	/**
+	 * @return Size of this page in bytes
+	 */
+	public int getSize()
+	{
+		final MarkupContainer originalParent = this.parent;
+		this.parent = null;
+		final int size = Objects.sizeof(this);
+		this.parent = originalParent;
+		return size;
 	}
 
 	/**
