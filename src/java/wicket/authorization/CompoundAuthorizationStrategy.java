@@ -27,7 +27,7 @@ import wicket.Component;
  * 
  * @author ivaynberg
  */
-public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
+public final class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
 	private ArrayList strategies = new ArrayList();
@@ -38,7 +38,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * @param strategy
 	 *            Strategy to add
 	 */
-	public void add(IAuthorizationStrategy strategy)
+	public final void add(IAuthorizationStrategy strategy)
 	{
 		if (strategy == null)
 		{
