@@ -368,7 +368,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** former model. */
+		/** Former model. */
 		private IModel model;
 
 		/**
@@ -434,10 +434,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** subject. */
+		/** Subject. */
 		private final Component component;
 
-		/** former value. */
+		/** Former value. */
 		private final boolean enabled;
 
 		/**
@@ -475,10 +475,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** subject. */
+		/** Subject. */
 		private final Component component;
 
-		/** former value. */
+		/** Former value. */
 		private final boolean visible;
 
 		/**
