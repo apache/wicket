@@ -50,14 +50,14 @@ public class Localizer
 	/** Log */
 	private static final Log log = LogFactory.getLog(Localizer.class);
 
+	/** ConcurrentReaderHashMap does not allow null values. This is a substitute */
+	private static final String NULL = new String();
+
 	/** The application and its settings to use to control the utils. */
 	private Application application;
 
 	/** Because properties search can be expensive, we cache the value */
 	private Map cachedValues = new ConcurrentReaderHashMap();
-
-	/** ConcurrentReaderHashMap does not allow null values. This is a substitute */
-	private static final String NULL = new String();
 
 	/**
 	 * Create the utils instance class backed by the configuration information
@@ -91,6 +91,14 @@ public class Localizer
 						cachedValues.clear();
 					}
 				});
+	}
+
+	/**
+	 * Remove all cached properties
+	 */
+	public final void clearCache()
+	{
+		this.cachedValues.clear();
 	}
 
 	/**
@@ -130,51 +138,6 @@ public class Localizer
 			throws MissingResourceException
 	{
 		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
-	}
-
-	/**
-	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for
-	 * @param model
-	 *            The model to use for property substitutions in the strings
-	 *            (optional)
-	 * @param defaultValue
-	 *            The default value (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 */
-	public String getString(final String key, final Component component, final IModel model,
-			final String defaultValue) throws MissingResourceException
-	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(),
-				defaultValue);
-	}
-
-	/**
-	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for
-	 * @param defaultValue
-	 *            The default value (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 */
-	public String getString(final String key, final Component component, final String defaultValue)
-			throws MissingResourceException
-	{
-		return getString(key, component, null, component.getLocale(), component.getStyle(),
-				defaultValue);
 	}
 
 	/**
@@ -261,6 +224,51 @@ public class Localizer
 	}
 
 	/**
+	 * @see #getString(String, Component, IModel, Locale, String, String)
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for
+	 * @param model
+	 *            The model to use for property substitutions in the strings
+	 *            (optional)
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final IModel model,
+			final String defaultValue) throws MissingResourceException
+	{
+		return getString(key, component, model, component.getLocale(), component.getStyle(),
+				defaultValue);
+	}
+
+	/**
+	 * @see #getString(String, Component, IModel, Locale, String, String)
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final String defaultValue)
+			throws MissingResourceException
+	{
+		return getString(key, component, null, component.getLocale(), component.getStyle(),
+				defaultValue);
+	}
+
+	/**
 	 * 
 	 * <p>
 	 * Note: This implementation does NOT allow variable substitution
@@ -321,6 +329,118 @@ public class Localizer
 	}
 
 	/**
+	 * Helper method to create a unique id for caching previously loaded
+	 * resources.
+	 * 
+	 * @param clazz
+	 *            The class that the resources is being loaded for
+	 * @param locale
+	 *            The locale of the resources
+	 * @param style
+	 *            The style of the resources (see {@link wicket.Session})
+	 * @param key
+	 *            The message key
+	 * @return The unique cache id
+	 */
+	private String createCacheId(final Class clazz, final Locale locale, final String style,
+			final String key)
+	{
+		String id = application.getResourceSettings().getPropertiesFactory().createResourceKey(
+				clazz, locale, style)
+				+ '.' + key;
+		return id;
+	}
+
+	/**
+	 * Helper method to create a unique id for caching previously loaded
+	 * resources.
+	 * 
+	 * @param cacheId
+	 *            The resources cache id
+	 * @return The unique cache id
+	 */
+	private String getCachedValue(final String cacheId)
+	{
+		String value = (String)cachedValues.get(cacheId);
+		if (value != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Found message key in cache: " + cacheId);
+			}
+
+			if (value == NULL)
+			{
+				value = null;
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * Traverse the component hierachy up to the Page and add each component
+	 * class to the list (stack) returned
+	 * 
+	 * @param component
+	 *            The component to evaluate
+	 * @return The stack of classes
+	 */
+	private List getComponentStack(final Component component)
+	{
+		if (component == null)
+		{
+			return null;
+		}
+
+		if (component.getPage() == null)
+		{
+			throw new IllegalArgumentException("Component without associated Page: "
+					+ component.toString(true));
+		}
+
+		// Build search stack
+		List searchStack = new ArrayList();
+		searchStack.add(component.getClass());
+
+		if (!(component instanceof Page))
+		{
+			MarkupContainer container = component.getParent();
+			while (true)
+			{
+				searchStack.add(container.getClass());
+				if (container instanceof Page)
+				{
+					break;
+				}
+
+				container = container.getParent();
+			}
+		}
+		return searchStack;
+	}
+
+	/**
+	 * Helper method to handle preoprty variable substituion in strings.
+	 * 
+	 * @param component
+	 *            The component requesting a model value
+	 * @param string
+	 *            The string to substitute into
+	 * @param model
+	 *            The model
+	 * @return The resulting string
+	 */
+	private String substitutePropertyExpressions(final Component component, final String string,
+			final IModel model)
+	{
+		if (string != null && model != null)
+		{
+			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
+		}
+		return string;
+	}
+
+	/**
 	 * For each StringResourceLoader registered with the application, load the
 	 * properties file associated with the classes in the searchStack, the
 	 * locale and the style. The searchStack is traversed in reverse order.
@@ -370,125 +490,5 @@ public class Localizer
 		}
 
 		return string;
-	}
-
-	/**
-	 * Helper method to handle preoprty variable substituion in strings.
-	 * 
-	 * @param component
-	 *            The component requesting a model value
-	 * @param string
-	 *            The string to substitute into
-	 * @param model
-	 *            The model
-	 * @return The resulting string
-	 */
-	private String substitutePropertyExpressions(final Component component, final String string,
-			final IModel model)
-	{
-		if (string != null && model != null)
-		{
-			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
-		}
-		return string;
-	}
-
-	/**
-	 * Helper method to create a unique id for caching previously loaded
-	 * resources.
-	 * 
-	 * @param cacheId
-	 *            The resources cache id
-	 * @return The unique cache id
-	 */
-	private String getCachedValue(final String cacheId)
-	{
-		String value = (String)cachedValues.get(cacheId);
-		if (value != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Found message key in cache: " + cacheId);
-			}
-
-			if (value == NULL)
-			{
-				value = null;
-			}
-		}
-		return value;
-	}
-
-	/**
-	 * Helper method to create a unique id for caching previously loaded
-	 * resources.
-	 * 
-	 * @param clazz
-	 *            The class that the resources is being loaded for
-	 * @param locale
-	 *            The locale of the resources
-	 * @param style
-	 *            The style of the resources (see {@link wicket.Session})
-	 * @param key
-	 *            The message key
-	 * @return The unique cache id
-	 */
-	private String createCacheId(final Class clazz, final Locale locale, final String style,
-			final String key)
-	{
-		String id = application.getResourceSettings().getPropertiesFactory().createResourceKey(
-				clazz, locale, style)
-				+ '.' + key;
-		return id;
-	}
-
-	/**
-	 * Remove all cached properties
-	 */
-	public final void clearCache()
-	{
-		this.cachedValues.clear();
-	}
-
-	/**
-	 * Traverse the component hierachy up to the Page and add each component
-	 * class to the list (stack) returned
-	 * 
-	 * @param component
-	 *            The component to evaluate
-	 * @return The stack of classes
-	 */
-	private List getComponentStack(final Component component)
-	{
-		if (component == null)
-		{
-			return null;
-		}
-
-		if (component.getPage() == null)
-		{
-			throw new IllegalArgumentException("Component without associated Page: "
-					+ component.toString(true));
-		}
-
-		// Build search stack
-		List searchStack = new ArrayList();
-		searchStack.add(component.getClass());
-
-		if (!(component instanceof Page))
-		{
-			MarkupContainer container = component.getParent();
-			while (true)
-			{
-				searchStack.add(container.getClass());
-				if (container instanceof Page)
-				{
-					break;
-				}
-
-				container = container.getParent();
-			}
-		}
-		return searchStack;
 	}
 }
