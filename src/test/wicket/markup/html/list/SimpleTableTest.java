@@ -26,7 +26,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class SimpleTableTest extends TestCase
 {
@@ -49,7 +49,7 @@ public class SimpleTableTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testSimpleTable() throws Exception

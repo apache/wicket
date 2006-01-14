@@ -27,7 +27,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class IncrementalTableNavigationTest extends TestCase
 {
@@ -50,7 +50,7 @@ public class IncrementalTableNavigationTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception

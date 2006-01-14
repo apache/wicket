@@ -37,7 +37,7 @@ import wicket.model.Model;
  * Similar to this container, a <code>IBehavior</code> is available which does
  * the same, but does not require an additional Container.
  * 
- * @see wicket.markup.transformer.XsltTransfomerBehaviour
+ * @see wicket.markup.transformer.XsltTransfomerBehavior
  * 
  * @author Juergen Donnerstag
  */

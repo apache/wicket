@@ -36,7 +36,7 @@ import wicket.response.StringResponse;
  * TODO IBehavior does not have an event which gets called in case of an
  * exception. Hence the response object might not be restored.
  */
-public abstract class AbstractTransformerBehaviour extends AbstractBehavior
+public abstract class AbstractTransformerBehavior extends AbstractBehavior
 		implements
 			ITransformer
 {
@@ -47,7 +47,7 @@ public abstract class AbstractTransformerBehaviour extends AbstractBehavior
 	/**
 	 * Construct.
 	 */
-	public AbstractTransformerBehaviour()
+	public AbstractTransformerBehavior()
 	{
 	}
 

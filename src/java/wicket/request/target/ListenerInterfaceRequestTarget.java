@@ -57,13 +57,13 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the target component
 	 * @param listenerMethod
 	 *            the listener method
-	 * @param behaviourId
-	 *            optionally the id of the behaviour to dispatch to
+	 * @param behaviorId
+	 *            optionally the id of the behavior to dispatch to
 	 */
 	public ListenerInterfaceRequestTarget(Page page, Component component, Method listenerMethod,
-			String behaviourId)
+			String behaviorId)
 	{
-		super(page, component, listenerMethod, behaviourId);
+		super(page, component, listenerMethod, behaviorId);
 	}
 
 	/**

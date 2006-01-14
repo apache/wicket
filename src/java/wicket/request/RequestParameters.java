@@ -56,10 +56,10 @@ public class RequestParameters implements Serializable
 	private String interfaceName;
 
 	/**
-	 * in case this request points to a dispatched call to a behaviour that is
-	 * coupled to a component, this is the registration id of the behaviour.
+	 * in case this request points to a dispatched call to a behavior that is
+	 * coupled to a component, this is the registration id of the behavior.
 	 */
-	private String behaviourId;
+	private String behaviorId;
 
 	/** any id of a non-page target component. */
 	private String componentId;
@@ -274,24 +274,24 @@ public class RequestParameters implements Serializable
 	}
 
 	/**
-	 * Gets the component registration id of any behaviour.
+	 * Gets the component registration id of any behavior.
 	 * 
-	 * @return behaviourId the id
+	 * @return behaviorId the id
 	 */
-	public String getBehaviourId()
+	public String getBehaviorId()
 	{
-		return behaviourId;
+		return behaviorId;
 	}
 
 	/**
-	 * Sets the component registration id of any behaviour.
+	 * Sets the component registration id of any behavior.
 	 * 
-	 * @param behaviourId
+	 * @param behaviorId
 	 *            the id
 	 */
-	public void setBehaviourId(String behaviourId)
+	public void setBehaviorId(String behaviorId)
 	{
-		this.behaviourId = behaviourId;
+		this.behaviorId = behaviorId;
 	}
 
 	/**
@@ -307,7 +307,7 @@ public class RequestParameters implements Serializable
 			b.append(" versionNumber=").append(getVersionNumber());
 			b.append(" interfaceName=").append(getInterfaceName());
 			b.append(" componentId=").append(getComponentId());
-			b.append(" behaviourId=").append(getBehaviourId());
+			b.append(" behaviorId=").append(getBehaviorId());
 		}
 		if (getBookmarkablePageClass() != null)
 		{

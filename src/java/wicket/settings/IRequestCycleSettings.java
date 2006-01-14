@@ -49,7 +49,7 @@ import wicket.settings.Settings.RenderStrategy;
  * </ul>
  * </li>
  * </ul>
- * Note that this parameter sets the default behaviour, but that you can
+ * Note that this parameter sets the default behavior, but that you can
  * manually set whether any redirecting is done by calling method
  * RequestCycle.setRedirect. Setting the redirect flag when the application is
  * configured to use ONE_PASS_RENDER, will result in a redirect of type
@@ -68,7 +68,7 @@ public interface IRequestCycleSettings
 	 * All logical parts of a request (the action and render part) are handled
 	 * within the same request. To enable a the client side redirect for a
 	 * request, users can set the 'redirect' property of {@link RequestCycle}to
-	 * true (getRequestCycle.setRedirect(true)), after which the behaviour will
+	 * true (getRequestCycle.setRedirect(true)), after which the behavior will
 	 * be like RenderStragegy 'REDIRECT_TO_RENDER'.
 	 * <p>
 	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
@@ -203,7 +203,7 @@ public interface IRequestCycleSettings
 	 * strategy, as it shields you from the double submit problem, while being
 	 * more efficient and less error prone regarding to detachable models.</li>
 	 * </ul>
-	 * Note that this parameter sets the default behaviour, but that you can
+	 * Note that this parameter sets the default behavior, but that you can
 	 * manually set whether any redirecting is done by calling method
 	 * RequestCycle.setRedirect. Setting the redirect flag when the application
 	 * is configured to use ONE_PASS_RENDER, will result in a redirect of type

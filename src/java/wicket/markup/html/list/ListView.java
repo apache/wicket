@@ -66,7 +66,7 @@ import wicket.version.undo.Change;
  * ListView replaces all child components by new instances. The idea behind
  * this, is that you allways render the fresh data, and as people usually use
  * ListViews for displaying read-only lists (at least, that's what we think),
- * this is good default behaviour. <br />
+ * this is good default behavior. <br />
  * However, as the components are replaced before the rendering starts, the
  * search for specific messages for these components fail as they are replace
  * with other instances. Another problem is that 'wrong' user input is kept as

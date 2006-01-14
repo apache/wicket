@@ -31,7 +31,7 @@ import wicket.response.StringResponse;
  * The HtmlHeaderContainer is automatically created and added to the component
  * hierarchie by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
  * handle/render the &gt;head&gt; tag and its body. However depending on the
- * parent component, the behaviour must be different. E.g. if parent component
+ * parent component, the behavior must be different. E.g. if parent component
  * is a Page all components of the page's hierarchy must be asked if they have
  * something to contribute to the &lt;head&gt; section of the html response. If
  * yes, it must <b>immediately </b> be rendered.

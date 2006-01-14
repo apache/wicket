@@ -27,7 +27,7 @@ import java.util.Locale;
  * <p>
  * Each particular implementation of this interface may define its own mechanism
  * for searching for resources. Please see the documents for each particular
- * implementation to determine this behaviour and to see how it can be
+ * implementation to determine this behavior and to see how it can be
  * configured.
  * <p>
  * It is important to note that if a resource is not found by a particular

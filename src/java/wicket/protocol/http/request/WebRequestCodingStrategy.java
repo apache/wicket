@@ -101,7 +101,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * <br />
 	 * the sorting by longest path first guarantees that the iterator will
 	 * return the mount /page/test before it returns mount /page therefore
-	 * giving deterministic behaviour to path resolution by always trying to
+	 * giving deterministic behavior to path resolution by always trying to
 	 * match the longest possible path first.
 	 * </p>
 	 */
@@ -318,7 +318,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				interfaceName = "IRedirectListener";
 			}
 			parameters.setInterfaceName(interfaceName);
-			parameters.setBehaviourId(request.getParameter("behaviourId"));
+			parameters.setBehaviorId(request.getParameter("behaviorId"));
 		}
 	}
 

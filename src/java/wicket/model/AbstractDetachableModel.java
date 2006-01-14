@@ -131,13 +131,13 @@ public abstract class AbstractDetachableModel implements IModel
 
 	/**
 	 * Attaches to the current request. Implement this method with custom
-	 * behaviour, such as loading the model object.
+	 * behavior, such as loading the model object.
 	 */
 	protected abstract void onAttach();
 
 	/**
 	 * Detaches from the current request. Implement this method with custom
-	 * behaviour, such as setting the model object to null.
+	 * behavior, such as setting the model object to null.
 	 */
 	protected abstract void onDetach();
 
