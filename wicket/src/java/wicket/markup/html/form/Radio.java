@@ -32,6 +32,7 @@ import wicket.util.lang.Objects;
  * @see wicket.markup.html.form.RadioGroup
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Sven Meier (svenmeier)
  * 
  */
 public class Radio extends WebMarkupContainer
@@ -91,6 +92,24 @@ public class Radio extends WebMarkupContainer
 			tag.put("checked", "checked");
 		}
 
+		if (group.wantOnSelectionChangedNotifications())
+		{
+			// url that points to this components IOnChangeListener method
+			final String url = group.urlFor(IOnChangeListener.class);
+
+			try
+			{
+				Form form = group.getForm();
+				tag.put("onClick", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onClick", "location.href='" + url + "&" + group.getInputName()
+						+ "=' + this.value;");
+			}
+		}
+		
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
