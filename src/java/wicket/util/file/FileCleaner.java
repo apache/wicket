@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.io;
+package wicket.util.file;
 
 import java.io.File;
 import java.lang.ref.PhantomReference;
@@ -30,7 +30,6 @@ import java.util.Vector;
  */
 public class FileCleaner
 {
-
 	/**
 	 * Queue of <code>Tracker</code> instances being watched.
 	 */
@@ -46,7 +45,6 @@ public class FileCleaner
 	 */
 	private static Thread reaper = new Thread("File Reaper")
 	{
-
 		/**
 		 * Run the reaper thread that will delete files as their associated marker objects
 		 * are reclaimed by the garbage collector.
