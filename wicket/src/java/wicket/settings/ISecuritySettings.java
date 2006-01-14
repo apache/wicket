@@ -17,6 +17,13 @@ public interface ISecuritySettings
 	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
 
 	/**
+	 * Gets the authorization strategy.
+	 * 
+	 * @return Returns the authorizationStrategy.
+	 */
+	IAuthorizationStrategy getAuthorizationStrategy();
+
+	/**
 	 * Get the defaults to be used by persistence manager
 	 * 
 	 * @return CookieValuePersisterSettings
@@ -24,17 +31,9 @@ public interface ISecuritySettings
 	CookieValuePersisterSettings getCookieValuePersisterSettings();
 
 	/**
-	 * @param cookieValuePersisterSettings
-	 *            The cookieValuePersisterSettings to set.
+	 * @return crypt factory used to generate crypt objects
 	 */
-	void setCookieValuePersisterSettings(CookieValuePersisterSettings cookieValuePersisterSettings);
-
-	/**
-	 * Gets the authorization strategy.
-	 * 
-	 * @return Returns the authorizationStrategy.
-	 */
-	IAuthorizationStrategy getAuthorizationStrategy();
+	ICryptFactory getCryptFactory();
 
 	/**
 	 * Sets the authorization strategy.
@@ -46,15 +45,16 @@ public interface ISecuritySettings
 	void setAuthorizationStrategy(IAuthorizationStrategy strategy);
 
 	/**
+	 * @param cookieValuePersisterSettings
+	 *            The cookieValuePersisterSettings to set.
+	 */
+	void setCookieValuePersisterSettings(CookieValuePersisterSettings cookieValuePersisterSettings);
+
+	/**
 	 * Sets the factory that will be used to create crypt objects. The crypt
 	 * object returned from the first call is cached.
 	 * 
 	 * @param cryptFactory
 	 */
 	void setCryptFactory(ICryptFactory cryptFactory);
-
-	/**
-	 * @return crypt factory used to generate crypt objects
-	 */
-	ICryptFactory getCryptFactory();
 }

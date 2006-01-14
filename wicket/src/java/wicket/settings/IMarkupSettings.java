@@ -28,6 +28,54 @@ public interface IMarkupSettings
 	boolean getAutomaticLinking();
 
 	/**
+	 * @return Returns the compressWhitespace.
+	 * @see Settings#setCompressWhitespace(boolean)
+	 */
+	boolean getCompressWhitespace();
+
+	/**
+	 * @return Returns the defaultAfterDisabledLink.
+	 */
+	String getDefaultAfterDisabledLink();
+
+	/**
+	 * @return Returns the defaultBeforeDisabledLink.
+	 */
+	String getDefaultBeforeDisabledLink();
+
+	/**
+	 * @since 1.1
+	 * @return Returns default encoding of markup files. If null, the operating
+	 *         system provided encoding will be used.
+	 */
+	String getDefaultMarkupEncoding();
+
+	/**
+	 * @return markup parser factory
+	 */
+	IMarkupParserFactory getMarkupParserFactory();
+
+	/**
+	 * @return Returns the stripComments.
+	 * @see Settings#setStripComments(boolean)
+	 */
+	boolean getStripComments();
+
+	/**
+	 * Gets whether to remove wicket tags from the output.
+	 * 
+	 * @return whether to remove wicket tags from the output
+	 */
+	boolean getStripWicketTags();
+
+	/**
+	 * 
+	 * @since 1.1
+	 * @return if true, xml declaration will be removed.
+	 */
+	boolean getStripXmlDeclarationFromOutput();
+
+	/**
 	 * Application default for automatic link resolution. Please
 	 * 
 	 * @see wicket.markup.resolver.AutoLinkResolver and
@@ -58,10 +106,16 @@ public interface IMarkupSettings
 	void setCompressWhitespace(final boolean compressWhitespace);
 
 	/**
-	 * @return Returns the compressWhitespace.
-	 * @see Settings#setCompressWhitespace(boolean)
+	 * @param defaultAfterDisabledLink
+	 *            The defaultAfterDisabledLink to set.
 	 */
-	boolean getCompressWhitespace();
+	void setDefaultAfterDisabledLink(String defaultAfterDisabledLink);
+
+	/**
+	 * @param defaultBeforeDisabledLink
+	 *            The defaultBeforeDisabledLink to set.
+	 */
+	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
 
 	/**
 	 * Set default encoding for markup files. If null, the encoding provided by
@@ -73,39 +127,13 @@ public interface IMarkupSettings
 	void setDefaultMarkupEncoding(final String encoding);
 
 	/**
-	 * @since 1.1
-	 * @return Returns default encoding of markup files. If null, the operating
-	 *         system provided encoding will be used.
+	 * Sets the markup parser factory that will be used to generate parsers for
+	 * markup. By default {@link MarkupParserFactory} will be used.
+	 * 
+	 * @param factory
+	 *            new factory
 	 */
-	String getDefaultMarkupEncoding();
-
-	/**
-	 * @return Returns the defaultAfterDisabledLink.
-	 */
-	String getDefaultAfterDisabledLink();
-
-	/**
-	 * @param defaultAfterDisabledLink
-	 *            The defaultAfterDisabledLink to set.
-	 */
-	void setDefaultAfterDisabledLink(String defaultAfterDisabledLink);
-
-	/**
-	 * @return Returns the defaultBeforeDisabledLink.
-	 */
-	String getDefaultBeforeDisabledLink();
-
-	/**
-	 * @param defaultBeforeDisabledLink
-	 *            The defaultBeforeDisabledLink to set.
-	 */
-	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
-
-	/**
-	 * @return Returns the stripComments.
-	 * @see Settings#setStripComments(boolean)
-	 */
-	boolean getStripComments();
+	void setMarkupParserFactory(IMarkupParserFactory factory);
 
 	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment
@@ -125,38 +153,10 @@ public interface IMarkupSettings
 	void setStripWicketTags(boolean stripWicketTags);
 
 	/**
-	 * Gets whether to remove wicket tags from the output.
-	 * 
-	 * @return whether to remove wicket tags from the output
-	 */
-	boolean getStripWicketTags();
-
-	/**
-	 * 
-	 * @since 1.1
-	 * @return if true, xml declaration will be removed.
-	 */
-	boolean getStripXmlDeclarationFromOutput();
-
-	/**
 	 * 
 	 * @since 1.1
 	 * @param strip
 	 *            if true, xml declaration will be stripped from output
 	 */
 	void setStripXmlDeclarationFromOutput(final boolean strip);
-
-	/**
-	 * Sets the markup parser factory that will be used to generate parsers for
-	 * markup. By default {@link MarkupParserFactory} will be used.
-	 * 
-	 * @param factory
-	 *            new factory
-	 */
-	void setMarkupParserFactory(IMarkupParserFactory factory);
-
-	/**
-	 * @return markup parser factory
-	 */
-	IMarkupParserFactory getMarkupParserFactory();
 }

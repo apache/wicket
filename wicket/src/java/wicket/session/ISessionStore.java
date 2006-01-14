@@ -27,23 +27,6 @@ import java.util.List;
 public interface ISessionStore
 {
 	/**
-	 * Gets the id for this session.
-	 * 
-	 * @return the id for this session
-	 */
-	String getId();
-
-	/**
-	 * Adds or replaces the attribute with the given name and value.
-	 * 
-	 * @param name
-	 *            the name of the attribute
-	 * @param value
-	 *            the value of the attribute
-	 */
-	void setAttribute(String name, Object value);
-
-	/**
 	 * Gets the attribute value with the given name
 	 * 
 	 * @param name
@@ -51,6 +34,23 @@ public interface ISessionStore
 	 * @return The value of the attribute
 	 */
 	Object getAttribute(final String name);
+
+	/**
+	 * @return List of attributes for this session
+	 */
+	List getAttributeNames();
+
+	/**
+	 * Gets the id for this session.
+	 * 
+	 * @return the id for this session
+	 */
+	String getId();
+
+	/**
+	 * Invalidates the session.
+	 */
+	void invalidate();
 
 	/**
 	 * Removes the attribute with the given name.
@@ -61,12 +61,12 @@ public interface ISessionStore
 	void removeAttribute(String name);
 
 	/**
-	 * @return List of attributes for this session
+	 * Adds or replaces the attribute with the given name and value.
+	 * 
+	 * @param name
+	 *            the name of the attribute
+	 * @param value
+	 *            the value of the attribute
 	 */
-	List getAttributeNames();
-
-	/**
-	 * Invalidates the session.
-	 */
-	void invalidate();
+	void setAttribute(String name, Object value);
 }
