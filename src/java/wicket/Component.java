@@ -528,7 +528,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
-	 * This is constructor includes a model.
+	 * This constructor includes a model.
 	 * 
 	 * @param id
 	 *            The non-null id of this component
