@@ -588,10 +588,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Registers a debug message for this component
+	 * Registers a debug feedback message for this component
 	 * 
 	 * @param message
-	 *            The message
+	 *            The feedback message
 	 */
 	public final void debug(final String message)
 	{
@@ -651,10 +651,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Registers an error message for this component
+	 * Registers an error feedback message for this component
 	 * 
 	 * @param message
-	 *            The message
+	 *            The feedback message
 	 */
 	public final void error(final String message)
 	{
@@ -662,10 +662,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Registers an fatal error message for this component
+	 * Registers an fatal error feedback message for this component
 	 * 
 	 * @param message
-	 *            The message
+	 *            The feedback message
 	 */
 	public final void fatal(final String message)
 	{
@@ -1143,10 +1143,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Registers a info message for this component
+	 * Registers an informational feedback message for this component
 	 * 
 	 * @param message
-	 *            The message
+	 *            The feedback message
 	 */
 	public final void info(final String message)
 	{
@@ -1895,10 +1895,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Registers a warning message for this component.
+	 * Registers a warning feedback message for this component.
 	 * 
 	 * @param message
-	 *            The message
+	 *            The feedback message
 	 */
 	public final void warn(final String message)
 	{
