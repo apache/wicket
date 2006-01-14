@@ -1053,7 +1053,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * @return Size of this page in bytes
+	 * @return Size of this Component in bytes
 	 */
 	public int getSize()
 	{
