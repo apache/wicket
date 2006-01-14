@@ -182,7 +182,7 @@ public abstract class RequestCycle
 	private static final int CLEANUP_REQUEST = 8;
 
 	/** Thread-local that holds the current request cycle. */
-	private static final ThreadLocal CURRENT = new ThreadLocal();
+	private static final ThreadLocal current = new ThreadLocal();
 
 	/**
 	 * Decoding request parameters into a strongly typed
@@ -275,7 +275,7 @@ public abstract class RequestCycle
 	 */
 	public final static RequestCycle get()
 	{
-		return (RequestCycle)CURRENT.get();
+		return (RequestCycle)current.get();
 	}
 
 	/**
@@ -338,7 +338,7 @@ public abstract class RequestCycle
 		this.originalResponse = response;
 
 		// Set this RequestCycle into ThreadLocal variable
-		CURRENT.set(this);
+		current.set(this);
 	}
 
 	/**
@@ -1081,6 +1081,6 @@ public abstract class RequestCycle
 
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
-		CURRENT.set(null);
+		current.set(null);
 	}
 }
