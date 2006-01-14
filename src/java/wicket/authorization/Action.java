@@ -21,8 +21,10 @@ import java.io.Serializable;
 
 /**
  * A class for constructing singleton constants that represent a given component
- * action that needs to be authorized. For example, Component.RENDER or
- * Component.ENABLE.
+ * action that needs to be authorized. The Wicket core framework defines
+ * Component.RENDER and Component.ENABLE actions, but future versions of the
+ * framework may add more actions and user defined components can define their
+ * own actions as well.
  * 
  * @see wicket.Component#RENDER
  * @see wicket.Component#ENABLE

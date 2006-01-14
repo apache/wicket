@@ -81,6 +81,8 @@ public interface IAuthorizationStrategy
 	 * @return Whether the given action may be taken on the given component
 	 * @throws AuthorizationException
 	 *            Can be thrown by implementation if action is unauthorized
+	 * @see Component#ENABLE
+	 * @see Component#RENDER
 	 */
 	boolean authorizeAction(Component component, Action action);
 }
