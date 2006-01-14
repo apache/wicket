@@ -115,10 +115,10 @@ public abstract class Application
 	/** Name of application subclass. */
 	private final String name;
 
-	/** Settings for application. */
+	/** Settings for this application. */
 	private Settings settings;
 
-	/** Shared resources for the application */
+	/** Shared resources for this application */
 	private final SharedResources sharedResources;
 
 	/**
@@ -418,7 +418,7 @@ public abstract class Application
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
 	 * CALL.
 	 * 
-	 * Internal intialization.
+	 * Internal initialization.
 	 */
 	protected void internalInit()
 	{
@@ -475,20 +475,20 @@ public abstract class Application
 			for (Enumeration e = getClass().getClassLoader().getResources("wicket.properties"); e
 					.hasMoreElements();)
 			{
-				InputStream is = null;
+				InputStream in = null;
 				try
 				{
 					final URL url = (URL)e.nextElement();
 					final Properties properties = new Properties();
-					is = url.openStream();
-					properties.load(is);
+					in = url.openStream();
+					properties.load(in);
 					initializeComponents(properties);
 				}
 				finally
 				{
-					if (is != null)
+					if (in != null)
 					{
-						is.close();
+						in.close();
 					}
 				}
 			}
