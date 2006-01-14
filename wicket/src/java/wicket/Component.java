@@ -619,7 +619,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Page.doRender() is used to render a whole page. With AJAX however it must
-	 * be possible to re-render anyone component contained in a page. That is
+	 * be possible to re-render any one component contained in a page. That is
 	 * what Component.doRender() is for.
 	 */
 	public void doRender()
