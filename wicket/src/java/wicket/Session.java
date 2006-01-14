@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.104 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -150,7 +150,7 @@ public abstract class Session implements Serializable
 	/** Attribute prefix for page maps stored in the session */
 	private final String pageMapAttributePrefix = "m:";
 
-	/** the session store of this session. */
+	/** The session store of this session. */
 	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
@@ -253,7 +253,6 @@ public abstract class Session implements Serializable
 	 * client to stay the same for the whole session, and implementations of
 	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
 	 * 
-	 * 
 	 * @return the client info object based on this request
 	 */
 	public ClientInfo getClientInfo()
@@ -266,11 +265,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets the unique id for this session (or a constant defining this is
-	 * constant. By default returns the hasCode of this object as a String.
+	 * Gets the unique id for this session from the underlying SessionStore
 	 * 
-	 * @return the unique id for this session (or a constant defining this is
-	 *         constant
+	 * @return The unique id for this session
 	 */
 	public String getId()
 	{
@@ -403,12 +400,12 @@ public abstract class Session implements Serializable
 	/**
 	 * @return Size of this session, including all the pagemaps it contains
 	 */
-	public int getSize()
+	public final int getSize()
 	{
 		int size = Objects.sizeof(this);
-		for (Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
-			PageMap pageMap = (PageMap)iterator.next();
+			final PageMap pageMap = (PageMap)iterator.next();
 			size += pageMap.getSize();
 		}
 		return size;
@@ -523,6 +520,8 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
 	 * Sets the client info object for this session. This will only work when
 	 * {@link #getClientInfo()} is not overriden.
 	 * 
@@ -561,7 +560,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
+	 * <p>
 	 * The page will be 'touched' in the session. If it wasn't added yet to the
 	 * pagemap, it will be added to the page map else it will set this page to
 	 * the front.
@@ -570,7 +569,7 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param page
 	 */
-	public void touch(Page page)
+	public final void touch(Page page)
 	{
 		// Touch the page in its pagemap.
 		page.getPageMap().put(page);
@@ -645,7 +644,7 @@ public abstract class Session implements Serializable
 					.getSessionStoreFactory();
 			sessionStore = sessionStoreFactory.newSessionStore(this);
 
-			// still null?
+			// Still null?
 			if (sessionStore == null)
 			{
 				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
@@ -670,16 +669,16 @@ public abstract class Session implements Serializable
 	 * Adds or replaces the attribute with the given name and value.
 	 * 
 	 * @param name
-	 *            the name of the attribute
+	 *            The name of the attribute
 	 * @param value
-	 *            the value of the attribute
+	 *            The value of the attribute
 	 */
 	protected final void setAttribute(String name, Object value)
 	{
-		// get the old value if any
+		// Get the old value if any
 		Object oldValue = getAttribute(name);
 
-		// set the actual attribute
+		// Set the actual attribute
 		getSessionStore().setAttribute(name, value);
 
 		// Do some extra profiling/ debugging. This can be a great help
