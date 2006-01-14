@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.PageParameters;
 
 /**
  */
@@ -26,10 +25,9 @@ public class TreePage extends AbstractTreePage
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 *  Page parameters
 	 */
-	public TreePage(final PageParameters parameters)
+	public TreePage()
 	{
-		super(parameters);
 	}
 }

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,9 +32,9 @@ public class AutolinkPage_3 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+
 	 */
-	public AutolinkPage_3(final PageParameters parameters) 
+	public AutolinkPage_3() 
 	{
     }
 }

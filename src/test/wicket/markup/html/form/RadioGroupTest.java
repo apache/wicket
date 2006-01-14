@@ -20,7 +20,6 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
@@ -112,7 +111,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		RequestCycle cycle = application.createRequestCycle();
 
-		MockPage page = new MockPage(new PageParameters());
+		MockPage page = new MockPage();
 
 		// create component hierarchy
 

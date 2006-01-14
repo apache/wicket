@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
 
 
@@ -30,12 +29,10 @@ public class MarkupInheritanceExtension_7 extends MarkupInheritanceBase_7
 	
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritanceExtension_7(final PageParameters parameters) 
+	public MarkupInheritanceExtension_7() 
 	{
-	    super(parameters);
-	    
 	    add(new Label("headerLabel", "my header"));
 	    add(new Label("label3", "extension label"));
     }

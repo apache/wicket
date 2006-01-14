@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import wicket.PageParameters;
 
 
 /**
@@ -32,10 +31,10 @@ public class Href_2 extends Href_1
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public Href_2(final PageParameters parameters) 
+	public Href_2() 
 	{
-	    super(parameters);
+	    
     }
 }

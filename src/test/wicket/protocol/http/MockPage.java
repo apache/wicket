@@ -18,7 +18,6 @@
  */
 package wicket.protocol.http;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -36,9 +35,9 @@ public class MockPage extends WebPage {
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MockPage(final PageParameters parameters) {
+	public MockPage() {
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink") {
 			private static final long serialVersionUID = 1L;

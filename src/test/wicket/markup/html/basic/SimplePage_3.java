@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.basic;
 
-import wicket.PageParameters;
 
 
 /**
@@ -32,12 +31,9 @@ public class SimplePage_3 extends SimplePage
 	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public SimplePage_3(final PageParameters parameters) 
+	public SimplePage_3() 
 	{
-		super(parameters);
-
 		get("myLabel").setVisible(false);
 	    get("test").setVisible(false);
 	    get("myPanel").setVisible(false);

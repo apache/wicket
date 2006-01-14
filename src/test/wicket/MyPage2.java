@@ -29,9 +29,9 @@ public class MyPage2 extends WebPage
 	
     /**
      * Construct.
-     * @param parameters
+     * 
      */
-    public MyPage2(final PageParameters parameters)
+    public MyPage2()
     {
     }
 }

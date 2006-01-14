@@ -18,7 +18,6 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.link.ExternalLink;
 
@@ -34,9 +33,8 @@ public class HeaderSectionPage_8 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public HeaderSectionPage_8(final PageParameters parameters) 
+	public HeaderSectionPage_8() 
 	{
 	    add(new HeaderSectionPanel("panel"));
 	    add(new ExternalLink("cssHref", "myStyle.css"));

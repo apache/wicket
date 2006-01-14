@@ -18,7 +18,6 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,9 +32,8 @@ public class HeaderSectionPage_1 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public HeaderSectionPage_1(final PageParameters parameters) 
+	public HeaderSectionPage_1() 
 	{
     }
 }

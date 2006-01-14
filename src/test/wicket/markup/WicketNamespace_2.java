@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
@@ -34,9 +33,9 @@ public class WicketNamespace_2 extends WebPage
 	
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public WicketNamespace_2(final PageParameters parameters) 
+	public WicketNamespace_2() 
 	{
 	    add(new Label("label", "my label test"));
     }

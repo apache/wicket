@@ -21,7 +21,6 @@ package wicket.markup.outputTransformer;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.SimpleBorder;
@@ -44,9 +43,9 @@ public class Page_2 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public Page_2(final PageParameters parameters) 
+	public Page_2() 
 	{
 		add(new Label("myLabel", "Test Label"));
 		

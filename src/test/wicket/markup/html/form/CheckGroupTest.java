@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
@@ -126,7 +125,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		RequestCycle cycle = application.createRequestCycle();
 
-		MockPage page = new MockPage(new PageParameters());
+		MockPage page = new MockPage();
 
 		// create component hierarchy
 

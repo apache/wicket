@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,9 +32,9 @@ public class PanelPage_2 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public PanelPage_2(final PageParameters parameters) 
+	public PanelPage_2() 
 	{
 	    Panel panel = new SimplePanel_2("myPanel");
 	    add(panel);

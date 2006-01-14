@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -35,9 +34,9 @@ public class MarkupInheritanceBase_5 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritanceBase_5(final PageParameters parameters)
+	public MarkupInheritanceBase_5()
 	{
 		add(new Label("label1", new PropertyModel(this, "counter")));
 		add(new Link("link")

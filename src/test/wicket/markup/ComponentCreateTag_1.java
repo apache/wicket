@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,9 +32,8 @@ public class ComponentCreateTag_1 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public ComponentCreateTag_1(final PageParameters parameters) 
+	public ComponentCreateTag_1() 
 	{
     }
 }

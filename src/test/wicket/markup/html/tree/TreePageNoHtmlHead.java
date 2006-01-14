@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.PageParameters;
 
 /**
  */
@@ -27,10 +26,9 @@ public class TreePageNoHtmlHead extends AbstractTreePage
 
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 *  Page parameters
 	 */
-	public TreePageNoHtmlHead(final PageParameters parameters)
+	public TreePageNoHtmlHead()
 	{
-		super(parameters);
 	}
 }

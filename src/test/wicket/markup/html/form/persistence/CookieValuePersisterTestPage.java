@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form.persistence;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -37,9 +36,9 @@ public class CookieValuePersisterTestPage extends WebPage
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public CookieValuePersisterTestPage(final PageParameters parameters)
+	public CookieValuePersisterTestPage()
 	{
 
 		// Create and add feedback panel to page

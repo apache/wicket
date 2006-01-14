@@ -37,9 +37,9 @@ public class AttributeModifierComponentPage extends WebPage
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public AttributeModifierComponentPage(final PageParameters parameters)
+	public AttributeModifierComponentPage()
 	{
 		// Label with attribute modifier
 		Label label1 = new Label("label1", new Model("Label 1"));

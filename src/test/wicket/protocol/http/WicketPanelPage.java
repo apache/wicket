@@ -18,7 +18,6 @@
  */
 package wicket.protocol.http;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,9 +32,9 @@ public class WicketPanelPage extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public WicketPanelPage(final PageParameters parameters) 
+	public WicketPanelPage() 
 	{
 	    add(new WicketPanel("myPanel"));
     }
