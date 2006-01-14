@@ -191,14 +191,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
 
-	/** Version manager for this page */
-	private IPageVersionManager versionManager;
-
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page
 	 * map, will be set in urlFor
 	 */
 	private transient boolean stateless = true;
+
+	/** Version manager for this page */
+	private IPageVersionManager versionManager;
 
 	/**
 	 * Class used for holding meta data entries for components on this Page.
@@ -604,15 +604,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Return true from this method if you want to keep a page out of
-	 *         the session.
-	 */
-	public final boolean isStateless()
-	{
-		return stateless;
-	}
-
-	/**
 	 * Redirect to this page.
 	 * 
 	 * @see wicket.IRedirectListener#onRedirect()
@@ -753,7 +744,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
 	}
 
-
 	/**
 	 * Returns a URL that references a given interface on a component. When the
 	 * URL is requested from the server at a later time, the interface will be
@@ -782,6 +772,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(requestCycle, target);
 	}
+
 
 	/**
 	 * Returns a URL that references the given request target.
@@ -1092,6 +1083,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return Return true from this method if you want to keep a page out of
+	 *         the session.
+	 */
+	final boolean isStateless()
+	{
+		return stateless;
 	}
 
 	/**
