@@ -32,29 +32,6 @@ import wicket.util.string.Strings;
 public class Files
 {
 	/**
-	 * Private constructor to prevent instantiation.
-	 */
-	private Files()
-	{
-	}
-
-	/**
-	 * Gets extension from path
-	 * 
-	 * @param path
-	 *            The path
-	 * @return The extension, like "bmp" or "html", or null if none can be found
-	 */
-	public static String extension(final String path)
-	{
-		if (path.indexOf('.') != -1)
-		{
-			return Strings.lastPathComponent(path, '.');
-		}
-		return null;
-	}
-
-	/**
 	 * Strips off the given extension (probably returned from Files.extension())
 	 * from the path, yielding a base pathname.
 	 * 
@@ -74,6 +51,22 @@ public class Files
 	}
 
 	/**
+	 * Gets extension from path
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The extension, like "bmp" or "html", or null if none can be found
+	 */
+	public static String extension(final String path)
+	{
+		if (path.indexOf('.') != -1)
+		{
+			return Strings.lastPathComponent(path, '.');
+		}
+		return null;
+	}
+
+	/**
 	 * Gets filename from path
 	 * 
 	 * @param path
@@ -83,29 +76,6 @@ public class Files
 	public static String filename(final String path)
 	{
 		return Strings.lastPathComponent(path.replace('/', java.io.File.separatorChar), java.io.File.separatorChar);
-	}
-
-	/**
-	 * Writes the given input stream to the given file
-	 * 
-	 * @param file
-	 *            The file to write to
-	 * @param input
-	 *            The input
-	 * @throws IOException
-	 */
-	public static final void writeTo(final java.io.File file, final InputStream input)
-			throws IOException
-	{
-		FileOutputStream fos = new FileOutputStream(file);
-		try
-		{
-			Streams.copy(input, fos);
-		}
-		finally
-		{
-			fos.close();
-		}
 	}
 
 	/**
@@ -135,5 +105,35 @@ public class Files
 			return file.delete();
 		}
 		return true;
+	}
+
+	/**
+	 * Writes the given input stream to the given file
+	 * 
+	 * @param file
+	 *            The file to write to
+	 * @param input
+	 *            The input
+	 * @throws IOException
+	 */
+	public static final void writeTo(final java.io.File file, final InputStream input)
+			throws IOException
+	{
+		FileOutputStream out = new FileOutputStream(file);
+		try
+		{
+			Streams.copy(input, out);
+		}
+		finally
+		{
+			out.close();
+		}
+	}
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Files()
+	{
 	}
 }

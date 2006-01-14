@@ -44,17 +44,17 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * The output stream to which data will be written prior to the theshold being
-	 * reached.
-	 */
-	private ByteArrayOutputStream memoryOutputStream;
-
-
-	/**
 	 * The output stream to which data will be written at any given time. This will always
 	 * be one of <code>memoryOutputStream</code> or <code>diskOutputStream</code>.
 	 */
 	private OutputStream currentOutputStream;
+
+
+	/**
+	 * The output stream to which data will be written prior to the theshold being
+	 * reached.
+	 */
+	private ByteArrayOutputStream memoryOutputStream;
 
 
 	/**
@@ -86,49 +86,6 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Returns the current output stream. This may be memory based or disk based,
-	 * depending on the current state with respect to the threshold.
-	 * @return The underlying output stream.
-	 * @exception IOException if an error occurs.
-	 */
-	protected OutputStream getStream() throws IOException
-	{
-		return currentOutputStream;
-	}
-
-
-	/**
-	 * Switches the underlying output stream from a memory based stream to one that is
-	 * backed by disk. This is the point at which we realise that too much data is being
-	 * written to keep in memory, so we elect to switch to disk-based storage.
-	 * @exception IOException if an error occurs.
-	 */
-	protected void thresholdReached() throws IOException
-	{
-		byte[] data = memoryOutputStream.toByteArray();
-		FileOutputStream fos = new FileOutputStream(outputFile);
-		fos.write(data);
-		currentOutputStream = fos;
-		memoryOutputStream = null;
-	}
-
-
-	// --------------------------------------------------------- Public methods
-
-
-	/**
-	 * Determines whether or not the data for this output stream has been retained in
-	 * memory.
-	 * @return <code>true</code> if the data is available in memory; <code>false</code>
-	 *         otherwise.
-	 */
-	public boolean isInMemory()
-	{
-		return (!isThresholdExceeded());
-	}
-
-
-	/**
 	 * Returns the data for this output stream as an array of bytes, assuming that the
 	 * data has been retained in memory. If the data was written to disk, this method
 	 * returns <code>null</code>.
@@ -155,5 +112,48 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	public File getFile()
 	{
 		return outputFile;
+	}
+
+
+	// --------------------------------------------------------- Public methods
+
+
+	/**
+	 * Determines whether or not the data for this output stream has been retained in
+	 * memory.
+	 * @return <code>true</code> if the data is available in memory; <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean isInMemory()
+	{
+		return (!isThresholdExceeded());
+	}
+
+
+	/**
+	 * Returns the current output stream. This may be memory based or disk based,
+	 * depending on the current state with respect to the threshold.
+	 * @return The underlying output stream.
+	 * @exception IOException if an error occurs.
+	 */
+	protected OutputStream getStream() throws IOException
+	{
+		return currentOutputStream;
+	}
+
+
+	/**
+	 * Switches the underlying output stream from a memory based stream to one that is
+	 * backed by disk. This is the point at which we realise that too much data is being
+	 * written to keep in memory, so we elect to switch to disk-based storage.
+	 * @exception IOException if an error occurs.
+	 */
+	protected void thresholdReached() throws IOException
+	{
+		byte[] data = memoryOutputStream.toByteArray();
+		FileOutputStream fos = new FileOutputStream(outputFile);
+		fos.write(data);
+		currentOutputStream = fos;
+		memoryOutputStream = null;
 	}
 }
