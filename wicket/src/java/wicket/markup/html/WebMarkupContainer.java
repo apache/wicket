@@ -119,18 +119,18 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 
 		// get head and body contributions in one loop
 		// NOTE: THIS CODE MUST BE IN SYNC WITH SAME PIECE OF CODE in WEBCOMPONENT
-		List behaviours = getBehaviours();
-		for (Iterator i = behaviours.iterator(); i.hasNext();)
+		List behaviors = getBehaviors();
+		for (Iterator i = behaviors.iterator(); i.hasNext();)
 		{
-			IBehavior behaviour = (IBehavior)i.next();
-			if (behaviour instanceof IHeaderContributor)
+			IBehavior behavior = (IBehavior)i.next();
+			if (behavior instanceof IHeaderContributor)
 			{
-				((IHeaderContributor)behaviour).renderHead(container);
+				((IHeaderContributor)behavior).renderHead(container);
 			}
 
-			if (behaviour instanceof IBodyOnLoadContributor)
+			if (behavior instanceof IBodyOnLoadContributor)
 			{
-				String stmt = ((IBodyOnLoadContributor)behaviour).getBodyOnLoad();
+				String stmt = ((IBodyOnLoadContributor)behavior).getBodyOnLoad();
 				if (stmt != null)
 				{
 					((WebPage)getPage()).appendToBodyOnLoad(stmt);

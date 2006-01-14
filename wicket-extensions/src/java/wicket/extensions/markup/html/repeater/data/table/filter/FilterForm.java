@@ -87,7 +87,7 @@ public class FilterForm extends Form
 	}
 
 	/**
-	 * Adds behaviour to the form component to allow this form to keep track of
+	 * Adds behavior to the form component to allow this form to keep track of
 	 * the component's focus which will be restored after a form submit.
 	 * 
 	 * @param fc

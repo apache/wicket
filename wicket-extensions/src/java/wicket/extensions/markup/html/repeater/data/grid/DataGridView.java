@@ -132,7 +132,7 @@ public class DataGridView extends AbstractDataGridView
 	 * Hook to post process a row item. Users should override this to modify the
 	 * generated row item.
 	 * 
-	 * This is a good place to add an attribute modifier or behaviour if needed.
+	 * This is a good place to add an attribute modifier or behavior if needed.
 	 * 
 	 * @param item
 	 *            Item container representing the row
@@ -151,7 +151,7 @@ public class DataGridView extends AbstractDataGridView
 	 * Hook to post process a cell item. Users should override this to modify
 	 * the generated cell item.
 	 * 
-	 * This is a good place to add an attribute modifier or behaviour if needed.
+	 * This is a good place to add an attribute modifier or behavior if needed.
 	 * 
 	 * @param item
 	 *            Item container representing the cell

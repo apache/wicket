@@ -62,7 +62,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	/** Throw an exception on the issue detected */
 	public static final int ERR_THROW_EXCEPTION = 0;
 	
-	/** Default behaviour in case of a potential HTML issue detected */
+	/** Default behavior in case of a potential HTML issue detected */
 	private final int problemEscalation; 
 	    
 	/**

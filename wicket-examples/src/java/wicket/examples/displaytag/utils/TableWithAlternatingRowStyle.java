@@ -61,7 +61,7 @@ public abstract class TableWithAlternatingRowStyle extends ListView
 	                // add/modify the attribute controlling the CSS style
 	                tag.put("class", (getIndex() % 2) == 0 ? "even" : "odd");
 	                
-	                // continue with default behaviour
+	                // continue with default behavior
 	                super.onComponentTag(tag);
 	            }
 	        };

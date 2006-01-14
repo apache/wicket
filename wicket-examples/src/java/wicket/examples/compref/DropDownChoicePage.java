@@ -73,7 +73,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// which can be found in DropDownChoicePage.properties
 		form.add(new DropDownChoice("site", SITES));
 
-		// Allthough the default behaviour of displaying the string representations of the choices
+		// Allthough the default behavior of displaying the string representations of the choices
 		// by calling toString on the object might be alright in some cases, you usually want to have
 		// more control over it. You achieve this by providing an instance of IChoiceRenderer,
 		// like the example below. Don't forget to check out the default implementation of
@@ -158,7 +158,7 @@ public class DropDownChoicePage extends WicketExamplePage
                     + "&nbsp;&nbsp;&nbsp;&nbsp;// which can be found in DropDownChoicePage.properties\n"
                     + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new DropDownChoice(\"site\", SITES));\n"
                     + "\n"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;// Allthough the default behaviour of displaying the string representations of the choices\n"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;// Allthough the default behavior of displaying the string representations of the choices\n"
                     + "&nbsp;&nbsp;&nbsp;&nbsp;// by calling toString on the object might be alright in some cases, you usually want to have\n"
                     + "&nbsp;&nbsp;&nbsp;&nbsp;// more control over it. You achieve this by providing an instance of IChoiceRenderer.\n"
                     + "&nbsp;&nbsp;&nbsp;&nbsp;// Don't forget to check out the default implementation of IChoiceRenderer, ChoiceRenderer.\n"

@@ -97,7 +97,7 @@ public class GoAndClearFilter extends GoFilter
 	}
 
 	/**
-	 * This method should be implemented by subclasses to provide behaviour for
+	 * This method should be implemented by subclasses to provide behavior for
 	 * the clear button.
 	 * 
 	 * @param button

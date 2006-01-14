@@ -49,7 +49,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 /**
  * Base class for forms. To implement a form, subclass this class, add
  * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
- * You can nest multiple buttons if you want to vary submit behaviour. However,
+ * You can nest multiple buttons if you want to vary submit behavior. However,
  * it is not necessary to use Wicket's button class, just putting e.g. &lt;input
  * type="submit" value="go"&gt; suffices.
  * <p>
@@ -76,7 +76,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * delegateSubmit with optionally the submitting button is called. The default
  * when there is a submitting button is to first call onSubmit on that button,
  * and after that call onSubmit on this form. Clients may override
- * delegateSubmit if they want different behaviour. </li>
+ * delegateSubmit if they want different behavior. </li>
  * </ul>
  * </li>
  * </li>

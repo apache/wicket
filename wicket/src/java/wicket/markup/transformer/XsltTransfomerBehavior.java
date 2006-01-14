@@ -37,14 +37,14 @@ import wicket.markup.ComponentTag;
  * 
  * @author Juergen Donnerstag
  */
-public class XsltTransfomerBehaviour extends AbstractTransformerBehaviour
+public class XsltTransfomerBehavior extends AbstractTransformerBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public XsltTransfomerBehaviour()
+	public XsltTransfomerBehavior()
 	{
 	}
 

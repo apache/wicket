@@ -22,11 +22,11 @@ import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
- * Behaviours are kind of plug-ins for Components. They allow to be added to a
+ * Behaviors are kind of plug-ins for Components. They allow to be added to a
  * component and get essential events forwarded by the component. Currently they
  * can be bound to a concrete component (the bind method is called when the
- * behaviour is attached), but they don't need to. They can modify the
- * components markup by changing the rendered ComponentTag. Behaviours could
+ * behavior is attached), but they don't need to. They can modify the
+ * components markup by changing the rendered ComponentTag. Behaviors could
  * have own models as well, they are notified when these are to be detached by
  * the component.
  * 
@@ -44,15 +44,15 @@ public interface IBehavior extends Serializable
 	void bind(Component hostComponent);
 
 	/**
-	 * Called when a component that has this behaviour coupled was rendered.
+	 * Called when a component that has this behavior coupled was rendered.
 	 * 
 	 * @param hostComponent
-	 *            the component that has this behaviour coupled
+	 *            the component that has this behavior coupled
 	 */
 	void rendered(Component hostComponent);
 
 	/**
-	 * Called any time a component that has this behaviour registered is
+	 * Called any time a component that has this behavior registered is
 	 * rendering the component tag.
 	 * 
 	 * @param component
@@ -63,7 +63,7 @@ public interface IBehavior extends Serializable
 	void onComponentTag(Component component, ComponentTag tag);
 
 	/**
-	 * Detaches all models, called by components which have this behaviour
+	 * Detaches all models, called by components which have this behavior
 	 * attached
 	 */
 	void detachModel();

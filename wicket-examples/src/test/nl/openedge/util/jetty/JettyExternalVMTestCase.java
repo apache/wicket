@@ -118,7 +118,7 @@ public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 
 	/**
 	 * Start Jetty; inhereting classes can override methods beforeSetUp and afterSetUp for test case
-	 * specific behaviour.
+	 * specific behavior.
 	 * 
 	 * @throws Exception
 	 */
@@ -159,7 +159,7 @@ public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 
 	/**
 	 * Stop Jetty; inhereting classes can override methods beforeTearDown and afterTearDown for test
-	 * case specific behaviour.
+	 * case specific behavior.
 	 * 
 	 * @throws Exception
 	 */

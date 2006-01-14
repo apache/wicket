@@ -38,7 +38,7 @@ import wicket.util.string.StringList;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class SortableTableHeadersTest extends TestCase
 {
@@ -64,7 +64,7 @@ public class SortableTableHeadersTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * 
 	 * @throws Exception
 	 */

@@ -32,7 +32,7 @@ import wicket.response.StringResponse;
  * <p>
  * Please see <code>IBehavior</code> for an alternativ based on IBehavior
  * 
- * @see wicket.markup.transformer.AbstractTransformerBehaviour
+ * @see wicket.markup.transformer.AbstractTransformerBehavior
  * @see wicket.markup.transformer.ITransformer
  * 
  * @author Juergen Donnerstag

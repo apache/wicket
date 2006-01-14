@@ -38,8 +38,8 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			IListenerInterfaceRequestTarget,
 			IEventProcessor
 {
-	/** optionally the id of the behaviour to dispatch to. */
-	private final String behaviourId;
+	/** optionally the id of the behavior to dispatch to. */
+	private final String behaviorId;
 
 	/** the target component. */
 	private final Component component;
@@ -73,11 +73,11 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the target component
 	 * @param listenerMethod
 	 *            the listener method
-	 * @param behaviourId
-	 *            optionally the id of the behaviour to dispatch to
+	 * @param behaviorId
+	 *            optionally the id of the behavior to dispatch to
 	 */
 	public AbstractListenerInterfaceRequestTarget(Page page, Component component,
-			Method listenerMethod, String behaviourId)
+			Method listenerMethod, String behaviorId)
 	{
 		super(page);
 
@@ -94,7 +94,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		}
 
 		this.listenerMethod = listenerMethod;
-		this.behaviourId = behaviourId;
+		this.behaviorId = behaviorId;
 	}
 
 	/**
@@ -108,13 +108,13 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			AbstractListenerInterfaceRequestTarget that = (AbstractListenerInterfaceRequestTarget)obj;
 			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
 			{
-				if (behaviourId != null)
+				if (behaviorId != null)
 				{
-					return behaviourId.equals(that.behaviourId);
+					return behaviorId.equals(that.behaviorId);
 				}
 				else
 				{
-					return that.behaviourId == null;
+					return that.behaviorId == null;
 				}
 			}
 		}
@@ -122,11 +122,11 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviourId()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviorId()
 	 */
-	public final String getBehaviourId()
+	public final String getBehaviorId()
 	{
-		return behaviourId;
+		return behaviorId;
 	}
 
 	/**
@@ -153,7 +153,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		int result = getClass().hashCode();
 		result += component.hashCode();
 		result += listenerMethod.hashCode();
-		result += behaviourId != null ? behaviourId.hashCode() : 0;
+		result += behaviorId != null ? behaviorId.hashCode() : 0;
 		return 17 * result;
 	}
 
@@ -166,9 +166,9 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 				.append(getPage().toString()).append("->").append(getTarget().getId()).append("->")
 				.append(getListenerMethod().getDeclaringClass()).append(".").append(
 						getListenerMethod().getName());
-		if (getBehaviourId() != null)
+		if (getBehaviorId() != null)
 		{
-			b.append(" (behaviour ").append(getBehaviourId()).append(")");
+			b.append(" (behavior ").append(getBehaviorId()).append(")");
 		}
 		return b.toString();
 	}

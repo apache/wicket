@@ -130,7 +130,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 		final ComponentTag openTag = tag;
 		checkComponentTag(tag, "thead");
 
-		// Continue with default behaviour
+		// Continue with default behavior
 		super.onRender(markupStream);
 	}
 }

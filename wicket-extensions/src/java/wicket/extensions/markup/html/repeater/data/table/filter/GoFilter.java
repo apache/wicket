@@ -83,7 +83,7 @@ public class GoFilter extends Panel
 
 	/**
 	 * This method can be overridden by subclasses to provide non-standard
-	 * behaviour for the 'go' button.
+	 * behavior for the 'go' button.
 	 * 
 	 * @param button
 	 *            the 'go' button, can be used to get to the Form object and

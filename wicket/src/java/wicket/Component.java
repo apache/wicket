@@ -326,8 +326,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
-	/** List of behaviours to be applied for this Component */
-	private List behaviours = null;
+	/** List of behaviors to be applied for this Component */
+	private List behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
@@ -546,29 +546,29 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Adds an behaviour modifier to the component.
+	 * Adds an behavior modifier to the component.
 	 * 
-	 * @param behaviour
-	 *            The behaviour modifier to be added
+	 * @param behavior
+	 *            The behavior modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(final IBehavior behaviour)
+	public final Component add(final IBehavior behavior)
 	{
-		if (behaviour == null)
+		if (behavior == null)
 		{
 			throw new IllegalArgumentException("Argument may not be null");
 		}
 
 		// Lazy create
-		if (behaviours == null)
+		if (behaviors == null)
 		{
-			behaviours = new ArrayList(1);
+			behaviors = new ArrayList(1);
 		}
 
-		behaviours.add(behaviour);
+		behaviors.add(behavior);
 
 		// Give handler the opportunity to bind this component
-		behaviour.bind(this);
+		behavior.bind(this);
 		return this;
 
 	}
@@ -607,12 +607,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 		detachModel();
 
 		// Also detach models from any contained attribute modifiers
-		if (behaviours != null)
+		if (behaviors != null)
 		{
-			for (Iterator i = behaviours.iterator(); i.hasNext();)
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
-				IBehavior behaviour = (IBehavior)i.next();
-				behaviour.detachModel();
+				IBehavior behavior = (IBehavior)i.next();
+				behavior.detachModel();
 			}
 		}
 	}
@@ -973,9 +973,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the components' path.
+	 * Gets this component's path.
 	 * 
-	 * @return Dotted path to this component in the component hierarchy
+	 * @return Colon separated path to this component in the component hierarchy
 	 */
 	public final String getPath()
 	{
@@ -1039,11 +1039,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the current session object. Although this method is not final
-	 * (because Page overrides it), it is not intended to be overridden by
-	 * clients and clients of the framework should not do so!
+	 * Gets the current Session object.
 	 * 
-	 * @return The session that this component is in
+	 * @return The Session that this component is in
 	 */
 	public final Session getSession()
 	{
@@ -1181,7 +1179,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Gets whether this component is enabled. Specific components may decide to
-	 * implement special behaviour that uses this property, like web form
+	 * implement special behavior that uses this property, like web form
 	 * components that add a disabled='disabled' attribute when enabled is
 	 * false.
 	 * 
@@ -1306,29 +1304,32 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Component has to implement {@link IBehaviorListener} to be able to pass
-	 * through events to behaviours without ending up with many if/else blocks.
+	 * through events to behaviors without ending up with many if/else blocks.
 	 * 
 	 * @see wicket.behavior.IBehaviorListener#onRequest()
+	 * @throws IllegalStateException
+	 *             Thrown if no behavior listener can be found using request
+	 *             parameter behaviorId
 	 */
 	public void onRequest()
 	{
-		String id = getRequest().getParameter("behaviourId");
+		final String id = getRequest().getParameter("behaviorId");
 
 		if (id == null)
 		{
-			throw new WicketRuntimeException(
-					"Parameter behaviourId was not provided: unable to locate listener");
+			throw new IllegalStateException(
+					"Parameter behaviorId was not provided: unable to locate listener");
 		}
 
-		int idAsInt = Integer.parseInt(id);
-		IBehaviorListener behaviourListener = (IBehaviorListener)behaviours.get(idAsInt);
+		final int idAsInt = Integer.parseInt(id);
+		final IBehaviorListener behaviorListener = (IBehaviorListener)behaviors.get(idAsInt);
 
-		if (behaviourListener == null)
+		if (behaviorListener == null)
 		{
-			throw new WicketRuntimeException("No behaviour listener found with behaviourId " + id);
+			throw new IllegalStateException("No behavior listener found with behaviorId " + id);
 		}
 
-		behaviourListener.onRequest();
+		behaviorListener.onRequest();
 	}
 
 	/**
@@ -1503,12 +1504,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 
-		if (behaviours != null)
+		if (behaviors != null)
 		{
-			for (Iterator i = behaviours.iterator(); i.hasNext();)
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
-				IBehavior behaviour = (IBehavior)i.next();
-				behaviour.rendered(this);
+				IBehavior behavior = (IBehavior)i.next();
+				behavior.rendered(this);
 			}
 		}
 	}
@@ -1547,7 +1548,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Sets whether this component is enabled. Specific components may decide to
-	 * implement special behaviour that uses this property, like web form
+	 * implement special behavior that uses this property, like web form
 	 * components that add a disabled='disabled' attribute when enabled is
 	 * false. If it is not enabled, it will not be allowed to call any listener
 	 * method on it (e.g. Link.onClick) and the model object will be protected
@@ -1866,34 +1867,34 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the url for the provided behaviour listener.
+	 * Gets the url for the provided behavior listener.
 	 * 
-	 * @param behaviourListener
-	 *            the behaviour listener to get the url for
+	 * @param behaviorListener
+	 *            the behavior listener to get the url for
 	 * @return The URL
 	 * @see Page#urlFor(Component, Class)
 	 */
-	public final String urlFor(final IBehaviorListener behaviourListener)
+	public final String urlFor(final IBehaviorListener behaviorListener)
 	{
-		if (behaviourListener == null)
+		if (behaviorListener == null)
 		{
-			throw new IllegalArgumentException("Argument behaviourListener must be not null");
+			throw new IllegalArgumentException("Argument behaviorListener must be not null");
 		}
 
-		if (behaviours == null)
+		if (behaviors == null)
 		{
-			throw new IllegalArgumentException("behaviourListener " + behaviourListener
+			throw new IllegalArgumentException("behaviorListener " + behaviorListener
 					+ " was not registered with this component");
 		}
 
-		int index = behaviours.indexOf(behaviourListener);
+		int index = behaviors.indexOf(behaviorListener);
 		if (index == -1)
 		{
-			throw new IllegalArgumentException("behaviourListener " + behaviourListener
+			throw new IllegalArgumentException("behaviorListener " + behaviorListener
 					+ " was not registered with this component");
 		}
 
-		return urlFor(IBehaviorListener.class) + "&behaviourId=" + index;
+		return urlFor(IBehaviorListener.class) + "&behaviorId=" + index;
 	}
 
 	/**
@@ -2037,47 +2038,47 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/**
 	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
-	 * Returns an empty list rather than null if there are no behaviours coupled
+	 * Returns an empty list rather than null if there are no behaviors coupled
 	 * to this component.
 	 * 
-	 * @return the currently coupled behaviours as a unmodifiable list
+	 * @return the currently coupled behaviors as a unmodifiable list
 	 */
-	protected final List/* <IBehavior> */getBehaviours()
+	protected final List/* <IBehavior> */getBehaviors()
 	{
-		if (behaviours == null)
+		if (behaviors == null)
 		{
 			return Collections.EMPTY_LIST;
 		}
 
-		return Collections.unmodifiableList(behaviours);
+		return Collections.unmodifiableList(behaviors);
 	}
 
 	/**
 	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
 	 * the provided type as a unmodifiable list or null if there are no
-	 * behaviours attached. Returns an empty list rather than null if there are
-	 * no behaviours coupled to this component.
+	 * behaviors attached. Returns an empty list rather than null if there are
+	 * no behaviors coupled to this component.
 	 * 
 	 * @param type
 	 *            the type
 	 * 
-	 * @return the subset of the currently coupled behaviours that are of the
+	 * @return the subset of the currently coupled behaviors that are of the
 	 *         provided type as a unmodifiable list or null
 	 */
-	protected final List/* <IBehavior> */getBehaviours(Class type)
+	protected final List/* <IBehavior> */getBehaviors(Class type)
 	{
-		if (behaviours == null)
+		if (behaviors == null)
 		{
 			return Collections.EMPTY_LIST;
 		}
 
-		List subset = new ArrayList(behaviours.size()); // avoid growing
-		for (Iterator i = behaviours.iterator(); i.hasNext();)
+		List subset = new ArrayList(behaviors.size()); // avoid growing
+		for (Iterator i = behaviors.iterator(); i.hasNext();)
 		{
-			Object behaviour = i.next();
-			if (type.isAssignableFrom(behaviour.getClass()))
+			Object behavior = i.next();
+			if (type.isAssignableFrom(behavior.getClass()))
 			{
-				subset.add(behaviour);
+				subset.add(behavior);
 			}
 		}
 		return Collections.unmodifiableList(subset);
@@ -2193,15 +2194,15 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Components are allowed to reject behaviour modifiers.
+	 * Components are allowed to reject behavior modifiers.
 	 * 
-	 * @param behaviour
-	 * @return false, if the component should not apply this behaviour
+	 * @param behavior
+	 * @return false, if the component should not apply this behavior
 	 */
-	protected boolean isBehaviourAccepted(final IBehavior behaviour)
+	protected boolean isBehaviorAccepted(final IBehavior behavior)
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
-		if ((behaviour instanceof AttributeModifier)
+		if ((behavior instanceof AttributeModifier)
 				&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
 		{
 			return false;
@@ -2309,19 +2310,19 @@ public abstract class Component implements Serializable, IBehaviorListener
 		final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
-			// Apply behaviour modifiers
-			if ((behaviours != null) && !behaviours.isEmpty() && !tag.isClose()
+			// Apply behavior modifiers
+			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose()
 					&& (isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 
-				for (Iterator i = behaviours.iterator(); i.hasNext();)
+				for (Iterator i = behaviors.iterator(); i.hasNext();)
 				{
-					IBehavior behaviour = (IBehavior)i.next();
-					// components may reject some behaviour components
-					if (isBehaviourAccepted(behaviour))
+					IBehavior behavior = (IBehavior)i.next();
+					// components may reject some behavior components
+					if (isBehaviorAccepted(behavior))
 					{
-						behaviour.onComponentTag(this, tag);
+						behavior.onComponentTag(this, tag);
 					}
 				}
 			}

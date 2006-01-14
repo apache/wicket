@@ -658,7 +658,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Handler that is called when a node link is clicked; this implementation sets the
 	 * expanded state just as a click on a junction would do. Override this for custom
-	 * behaviour.
+	 * behavior.
 	 * @param node the tree node model
 	 */
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)

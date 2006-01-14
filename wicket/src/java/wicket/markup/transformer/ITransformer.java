@@ -21,7 +21,7 @@ import wicket.Component;
 
 /**
  * A common interface to be implemented be OutputTransformerContainers and
- * TranformerBehaviours which post-process the output markup of a component.
+ * TranformerBehaviors which post-process the output markup of a component.
  * 
  * @author Juergen Donnerstag
  */

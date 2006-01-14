@@ -26,7 +26,7 @@ import wicket.version.undo.Change;
  * <p>
  * Within a form, you can nest Button components. Note that you don't have to do
  * this to let the form work (a simple &lt;input type="submit".. suffices), but
- * if you want to have different kinds of submit behaviour it might be a good
+ * if you want to have different kinds of submit behavior it might be a good
  * idea to use Buttons.
  * </p>
  * <p>
