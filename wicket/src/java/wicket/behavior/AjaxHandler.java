@@ -47,19 +47,53 @@ public abstract class AjaxHandler
 			IHeaderContributor,
 			IBodyOnLoadContributor
 {
-	/** the component that this handler is bound to. */
-	private Component component;
-
 	/** thread local for onload contributions. */
 	private static final ThreadLocal bodyOnloadContribHolder = new ThreadLocal();
 
 	/** thread local for head contributions. */
 	private static final ThreadLocal headContribHolder = new ThreadLocal();
 
+	/** the component that this handler is bound to. */
+	private Component component;
+
 	/**
 	 * Construct.
 	 */
 	public AjaxHandler()
+	{
+	}
+
+	/**
+	 * Bind this handler to the given component.
+	 * 
+	 * @param hostComponent
+	 *            the component to bind to
+	 */
+	public final void bind(Component hostComponent)
+	{
+		if (hostComponent == null)
+		{
+			throw new IllegalArgumentException("Argument hostComponent must be not null");
+		}
+
+		if (this.component != null)
+		{
+			throw new IllegalStateException("this kind of handler cannot be attached to "
+					+ "multiple components; it is already attached to component " + this.component
+					+ ", but component " + hostComponent + " wants to be attached too");
+
+		}
+
+		this.component = hostComponent;
+
+		// call the calback
+		onBind();
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#detachModel()
+	 */
+	public void detachModel()
 	{
 	}
 
@@ -98,6 +132,53 @@ public abstract class AjaxHandler
 	}
 
 	/**
+	 * Gets the url that references this handler.
+	 * 
+	 * @return the url that references this handler
+	 */
+	public final String getCallbackUrl()
+	{
+		return component.urlFor(this);
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
+	 *      wicket.markup.ComponentTag)
+	 */
+	public final void onComponentTag(Component component, ComponentTag tag)
+	{
+		onComponentTag(tag);
+	}
+
+	/**
+	 * Called any time a component that has this handler registered is rendering
+	 * the component tag. Use this method e.g. to bind to javascript event
+	 * handlers of the tag
+	 * 
+	 * @param tag
+	 *            the tag that is rendered
+	 */
+	public void onComponentTag(ComponentTag tag)
+	{
+	}
+
+	/**
+	 * Called when an Ajax request is to be handled.
+	 */
+	public final void onRequest()
+	{
+		respond();
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 */
+	public void rendered(Component hostComponent)
+	{
+		onComponentRendered();
+	}
+
+	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	public final void renderHead(HtmlHeaderContainer container)
@@ -126,41 +207,51 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
-	 *      wicket.markup.ComponentTag)
-	 */
-	public final void onComponentTag(Component component, ComponentTag tag)
-	{
-		onComponentTag(tag);
-	}
-
-	/**
-	 * Called any time a component that has this handler registered is rendering
-	 * the component tag. Use this method e.g. to bind to javascript event
-	 * handlers of the tag
+	 * Convenience method to add a javascript reference.
 	 * 
-	 * @param tag
-	 *            the tag that is rendered
+	 * @param container
+	 *            the header container
+	 * @param ref
+	 *            reference to add
 	 */
-	public void onComponentTag(ComponentTag tag)
+	protected void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
 	{
+		String url = container.getPage().urlFor(ref.getPath());
+		String s = "\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"" + url
+				+ "\"></script>\n";
+		write(container, s);
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#detachModel()
-	 */
-	public void detachModel()
-	{
-	}
-
-	/**
-	 * Gets the url that references this handler.
+	 * Gets the onload statement(s) for the body component. Override this method
+	 * to provide custom contributions.
 	 * 
-	 * @return the url that references this handler
+	 * @return the onload statement(s) for the body component
 	 */
-	public final String getCallbackUrl()
+	protected String getBodyOnloadContribution()
 	{
-		return component.urlFor(this);
+		return null;
+	}
+
+	/**
+	 * One time (per page) body onload contribution that is the same for all
+	 * ajax variant implementations (e.g. Dojo, Rico, Qooxdoo).
+	 * 
+	 * @return the onload statement(s) for the body component
+	 */
+	protected String getBodyOnloadInitContribution()
+	{
+		return null;
+	}
+
+	/**
+	 * Gets the component that this handler is bound to.
+	 * 
+	 * @return the component that this handler is bound to
+	 */
+	protected final Component getComponent()
+	{
+		return component;
 	}
 
 	/**
@@ -189,36 +280,13 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * Do a one time (per page) header contribution that is the same for all
-	 * ajax variant implementations (e.g. Dojo, Scriptaculous). This
-	 * implementation does nothing.
+	 * Gets the response type mime, e.g. 'text/html' or 'text/javascript'.
 	 * 
-	 * @param container
-	 *            head container
+	 * @return the response type mime
 	 */
-	protected void renderHeadInitContribution(HtmlHeaderContainer container)
+	protected String getResponseType()
 	{
-	}
-
-	/**
-	 * Let this handler print out the needed header contributions. This
-	 * implementation does nothing.
-	 * 
-	 * @param container
-	 *            head container
-	 */
-	protected void renderHeadContribution(HtmlHeaderContainer container)
-	{
-	}
-
-	/**
-	 * Gets the component that this handler is bound to.
-	 * 
-	 * @return the component that this handler is bound to
-	 */
-	protected final Component getComponent()
-	{
-		return component;
+		return "text/html";
 	}
 
 	/**
@@ -227,36 +295,6 @@ public abstract class AjaxHandler
 	 */
 	protected void onBind()
 	{
-	}
-
-	/**
-	 * One time (per page) body onload contribution that is the same for all
-	 * ajax variant implementations (e.g. Dojo, Rico, Qooxdoo).
-	 * 
-	 * @return the onload statement(s) for the body component
-	 */
-	protected String getBodyOnloadInitContribution()
-	{
-		return null;
-	}
-
-	/**
-	 * Gets the onload statement(s) for the body component. Override this method
-	 * to provide custom contributions.
-	 * 
-	 * @return the onload statement(s) for the body component
-	 */
-	protected String getBodyOnloadContribution()
-	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
-	 */
-	public void rendered(Component hostComponent)
-	{
-		onComponentRendered();
 	}
 
 	/**
@@ -271,64 +309,26 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * Gets the response type mime, e.g. 'text/html' or 'text/javascript'.
-	 * 
-	 * @return the response type mime
-	 */
-	protected String getResponseType()
-	{
-		return "text/html";
-	}
-
-	/**
-	 * Convenience method to add a javascript reference.
+	 * Let this handler print out the needed header contributions. This
+	 * implementation does nothing.
 	 * 
 	 * @param container
-	 *            the header container
-	 * @param ref
-	 *            reference to add
+	 *            head container
 	 */
-	protected void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
+	protected void renderHeadContribution(HtmlHeaderContainer container)
 	{
-		String url = container.getPage().urlFor(ref.getPath());
-		String s = "\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"" + url
-				+ "\"></script>\n";
-		write(container, s);
 	}
 
 	/**
-	 * Bind this handler to the given component.
+	 * Do a one time (per page) header contribution that is the same for all
+	 * ajax variant implementations (e.g. Dojo, Scriptaculous). This
+	 * implementation does nothing.
 	 * 
-	 * @param hostComponent
-	 *            the component to bind to
+	 * @param container
+	 *            head container
 	 */
-	public final void bind(Component hostComponent)
+	protected void renderHeadInitContribution(HtmlHeaderContainer container)
 	{
-		if (hostComponent == null)
-		{
-			throw new IllegalArgumentException("Argument hostComponent must be not null");
-		}
-
-		if (this.component != null)
-		{
-			throw new IllegalStateException("this kind of handler cannot be attached to "
-					+ "multiple components; it is already attached to component " + this.component
-					+ ", but component " + hostComponent + " wants to be attached too");
-
-		}
-
-		this.component = hostComponent;
-
-		// call the calback
-		onBind();
-	}
-
-	/**
-	 * Called when an Ajax request is to be handled.
-	 */
-	public final void onRequest()
-	{
-		respond();
 	}
 
 	/**

@@ -38,9 +38,9 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 * @see wicket.behavior.IBehavior#detachModel()
 	 */
-	public void rendered(Component hostComponent)
+	public void detachModel()
 	{
 	}
 
@@ -53,9 +53,9 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#detachModel()
+	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
-	public void detachModel()
+	public void rendered(Component hostComponent)
 	{
 	}
 }
