@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.105 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -56,23 +55,35 @@ import wicket.util.time.Duration;
  * generally should <i>not </i> directly subclass this class. Instead, you will
  * want to subclass some subclass of Application, like WebApplication, which is
  * appropriate for the protocol and markup type you are working with.
- * 
+ * <p>
  * Application has the following interesting features / attributes:
  * <ul>
- * <li><b>Name </b>- The application's name, which is the same as its class
+ * <li><b>Name </b>- The Application's name, which is the same as its class
  * name.
  * 
- * <li><b>Shared Resources </b>- Resources added to an application with any of
- * the Application.addResource() methods have application-wide scope and can be
- * referenced using a logical scope and a name with the ResourceReference class.
- * resourceReferences can then be used by multiple components in the same
- * application without additional overhead (beyond the ResourceReference
- * instance held by each referee) and will yield a stable URL, permitting
- * efficient browser caching of the resource (even if the resource is
- * dynamically generated). Resources shared in this manner may also be
- * localized. See {@link wicket.ResourceReference} for more details.
+ * <li><b>Home Page </b>- The Application's home Page class. Subclasses must
+ * override getHomePage() to provide this property value.
  * 
- * <li><b>A Session Factory </b>- The Application subclass WebApplication
+ * <li><b>Settings </b>- Application settings are partitioned into sets of
+ * related settings using interfaces in the wicket.settings package. These
+ * interfaces are returned by the following methods, which should be used to
+ * configure framework settings for your application: getApplicationSettings(),
+ * getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
+ * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and
+ * getSessionSettings(). If you want good default settings for DEVELOPMENT or
+ * DEPLOYMENT, you can first call one of the configure() methods.
+ * 
+ * <li><b>Shared Resources </b>- Resources added to an Application's
+ * SharedResources have application-wide scope and can be referenced using a
+ * logical scope and a name with the ResourceReference class. ResourceReferences
+ * can then be used by multiple components in the same application without
+ * additional overhead (beyond the ResourceReference instance held by each
+ * referee) and will yield a stable URL, permitting efficient browser caching of
+ * the resource (even if the resource is dynamically generated). Resources
+ * shared in this manner may also be localized. See
+ * {@link wicket.ResourceReference} for more details.
+ * 
+ * <li><b>Session Factory </b>- The Application subclass WebApplication
  * supplies an implementation of getSessionFactory() which returns an
  * implementation of ISessionFactory that creates WebSession Session objects
  * appropriate for web applications. You can (and probably will want to)
@@ -86,10 +97,16 @@ import wicket.util.time.Duration;
  */
 public abstract class Application
 {
-	/** thread local holder of the application object. */
-	private static final ThreadLocal CURRENT = new ThreadLocal();
+	/** Configuration type constant for deployment */
+	public static final String DEPLOYMENT = "deployment";
 
-	/** log. */
+	/** Configuration type constant for development */
+	public static final String DEVELOPMENT = "development";
+
+	/** Thread local holder of the application object. */
+	private static final ThreadLocal currentApplication = new ThreadLocal();
+
+	/** Log. */
 	private static Log log = LogFactory.getLog(Application.class);
 
 	/** Markup cache for this application */
@@ -98,7 +115,6 @@ public abstract class Application
 	/** Name of application subclass. */
 	private final String name;
 
-
 	/** Settings for application. */
 	private Settings settings;
 
@@ -106,16 +122,16 @@ public abstract class Application
 	private final SharedResources sharedResources;
 
 	/**
-	 * Get application for current session.
+	 * Get Application for current thread.
 	 * 
-	 * @return The current application
+	 * @return The current thread's Application
 	 */
 	public static Application get()
 	{
-		Application application = (Application)CURRENT.get();
+		Application application = (Application)currentApplication.get();
 		if (application == null)
 		{
-			throw new WicketRuntimeException("there is not application attached to current thread "
+			throw new WicketRuntimeException("There is no application attached to current thread "
 					+ Thread.currentThread().getName());
 		}
 		return application;
@@ -129,7 +145,7 @@ public abstract class Application
 	 */
 	public static void set(Application application)
 	{
-		CURRENT.set(application);
+		currentApplication.set(application);
 	}
 
 	/**
@@ -140,7 +156,7 @@ public abstract class Application
 		// Create name from subclass
 		this.name = Classes.name(getClass());
 
-		// Construct markup cache fot this application
+		// Construct markup cache for this application
 		this.markupCache = new MarkupCache(this);
 
 		// Create shared resources repository
@@ -159,19 +175,14 @@ public abstract class Application
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
 	}
-	
-	/**
-	 * @return home page class
-	 */
-	public abstract Class getHomePage();
 
 	/**
-	 * Configures application settings for a given configuration type.
+	 * Convenience method that sets application settings to good defaults for
+	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
 	 * 
 	 * @param configurationType
-	 *            The configuration type. Must currently be either "development"
-	 *            or "deployment". If the type is 'development', the classpath
-	 *            is polled for changes
+	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
+	 * @see wicket.Application#configure(String, IResourceFinder)
 	 */
 	public final void configure(final String configurationType)
 	{
@@ -179,15 +190,20 @@ public abstract class Application
 	}
 
 	/**
-	 * Configures application settings for a given configuration type.
+	 * Configures application settings to good defaults for the given
+	 * configuration type (either DEVELOPMENT or DEPLOYMENT).
 	 * 
 	 * @param configurationType
-	 *            The configuration type. Must currently be either "development"
-	 *            or "deployment". If the type is 'development', the given
-	 *            resourceFinder is polled for changes
+	 *            The configuration type. Must currently be either DEVELOPMENT
+	 *            or DEPLOYMENT. Currently, if the configuration type is
+	 *            DEVELOPMENT, resources are polled for changes, component usage
+	 *            is checked, wicket tags are not stripped from ouput and a
+	 *            detailed exception page is used. If the type is DEPLOYMENT,
+	 *            component usage is not checked, wicket tags are stripped from
+	 *            output and a non-detailed exception page is used to display
+	 *            errors.
 	 * @param resourceFinder
-	 *            Finder for looking up resources
-	 * @see File#pathSeparator
+	 *            Resource finder for looking up resources
 	 */
 	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
 	{
@@ -195,7 +211,7 @@ public abstract class Application
 		{
 			getResourceSettings().setResourceFinder(resourceFinder);
 		}
-		if ("development".equalsIgnoreCase(configurationType))
+		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
@@ -203,7 +219,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		}
-		else if ("deployment".equalsIgnoreCase(configurationType))
+		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
 			getDebugSettings().setComponentUseCheck(false);
 			getMarkupSettings().setStripWicketTags(true);
@@ -218,16 +234,13 @@ public abstract class Application
 	}
 
 	/**
-	 * Convenience method that configures application settings for a given
-	 * configuration type.
+	 * Convenience method that sets application settings to good defaults for
+	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
 	 * 
 	 * @param configurationType
-	 *            The configuration type. Must currently be either "development"
-	 *            or "deployment". If the type is 'development', the given
-	 *            resourceFolder is polled for changes
+	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
 	 * @param resourceFolder
 	 *            Folder for polling resources
-	 * @see File#pathSeparator
 	 */
 	public final void configure(final String configurationType, final String resourceFolder)
 	{
@@ -266,9 +279,17 @@ public abstract class Application
 	}
 
 	/**
+	 * Application subclasses must specify a home page class by implementing
+	 * this abstract method.
+	 * 
+	 * @return Home page class for this application
+	 */
+	public abstract Class getHomePage();
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
-	 * @return Returns the markup cache associated with the application
+	 * @return The markup cache associated with the application
 	 */
 	public final MarkupCache getMarkupCache()
 	{
@@ -368,14 +389,13 @@ public abstract class Application
 	{
 		if (settings == null)
 		{
-			settings = createApplicationSettings();
+			settings = new Settings(this);
 		}
 		return settings;
 	}
 
-
 	/**
-	 * @return Returns the sharedResources.
+	 * @return The SharedResources for this application.
 	 */
 	public final SharedResources getSharedResources()
 	{
@@ -383,7 +403,7 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Factory for creating sessions
+	 * @return Factory for creating session instances
 	 */
 	protected abstract ISessionFactory getSessionFactory();
 
@@ -409,18 +429,13 @@ public abstract class Application
 		initializeComponents();
 	}
 
-	private Settings createApplicationSettings()
-	{
-		return new Settings(this);
-	}
-
 	/**
 	 * Instantiate initializer with the given class name
 	 * 
 	 * @param className
 	 *            The name of the initializer class
 	 */
-	private void initialize(final String className)
+	private final void initialize(final String className)
 	{
 		if (!Strings.isEmpty(className))
 		{
@@ -486,9 +501,9 @@ public abstract class Application
 
 	/**
 	 * @param properties
-	 *            Properties table with names of any library initializers in it
+	 *            Properties map with names of any library initializers in it
 	 */
-	private void initializeComponents(final Properties properties)
+	private final void initializeComponents(final Properties properties)
 	{
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));

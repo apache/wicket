@@ -759,7 +759,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 *         belongs to
 	 * @see Settings
 	 * @deprecated
-	 * 
 	 */
 	// TODO remove this method in wicket post 1.2
 	public final Settings getApplicationSettings()
