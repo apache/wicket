@@ -244,6 +244,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public static final Action ENABLE = new Action("ENABLE");
 	
+	/** Separator for component paths */
+	public static final char PATH_SEPARATOR = ':';
+
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * and its children are allowed to be rendered.
@@ -325,9 +328,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
-
-	/** Separator for component paths */
-	private static final char PATH_SEPARATOR = ':';
 
 	/** List of behaviors to be applied for this Component */
 	private List behaviors = null;

@@ -196,7 +196,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				throw new WicketRuntimeException("Attempt to access unknown interface "
 						+ interfaceName);
 			}
-			String componentPart = Strings.afterFirstPathComponent(componentPath, ':');
+			String componentPart = Strings.afterFirstPathComponent(componentPath, Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(componentPart))
 			{
 				// we have an interface that is not redirect, but no

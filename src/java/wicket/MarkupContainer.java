@@ -231,7 +231,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// Get child's id, if any
-		final String id = Strings.firstPathComponent(path, ':');
+		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		// Get child by id
 		final Component child = children_get(id);
@@ -240,7 +240,7 @@ public abstract class MarkupContainer extends Component
 		if (child != null)
 		{
 			// Recurse on latter part of path
-			return child.get(Strings.afterFirstPathComponent(path, ':'));
+			return child.get(Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR));
 		}
 
 		// No child with the given id
@@ -452,17 +452,17 @@ public abstract class MarkupContainer extends Component
 
 			// Loop through child components
 			int size = children_size();
-			for (int i=0; i < size; i++)
+			for (int i = 0; i < size; i++)
 			{
 				// Get next child
 				final Component child = children_get(i);
-				
-				// Do not call remove() because the state change would than be 
+
+				// Do not call remove() because the state change would than be
 				// recorded twice.
 				child.detachModel();
 				child.setParent(null);
 			}
-			
+
 			this.children = null;
 		}
 	}
@@ -1240,7 +1240,8 @@ public abstract class MarkupContainer extends Component
 				}
 
 				// 3rd try: Try application's component resolvers
-				final List componentResolvers = this.getApplication().getPageSettings().getComponentResolvers();
+				final List componentResolvers = this.getApplication().getPageSettings()
+						.getComponentResolvers();
 				final Iterator iterator = componentResolvers.iterator();
 				while (iterator.hasNext())
 				{

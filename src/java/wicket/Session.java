@@ -114,9 +114,6 @@ public abstract class Session implements Serializable
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
-	/** Separator for component paths. */
-	private static final char COMPONENT_PATH_SEPERATOR = ':';
-
 	/** Thread-local current session. */
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
@@ -313,7 +310,7 @@ public abstract class Session implements Serializable
 
 		// Retrieve the page for the first path component from this session
 		Page page = getPage(pageMapName, Integer.parseInt(Strings.firstPathComponent(path,
-				COMPONENT_PATH_SEPERATOR)));
+				Component.PATH_SEPARATOR)));
 
 		// Is there a page with the right id at all?
 		if (page != null)
