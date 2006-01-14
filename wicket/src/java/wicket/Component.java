@@ -210,7 +210,7 @@ import wicket.version.undo.Change;
  * {@link Component#isVersioned()}.
  * 
  * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page
- * has been rendered at least once by calling doRender(9.
+ * has been rendered at least once by calling doRender().
  * 
  * @author Jonathan Locke
  * @author Chris Turner
