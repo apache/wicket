@@ -26,15 +26,27 @@ package wicket.authorization;
 public class UnauthorizedInstantiationException extends AuthorizationException
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** The component class that could not be instantiated */
+	private Class componentClass;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param c
+	 * @param componentClass
 	 *            The unauthorized component class
 	 */
-	public UnauthorizedInstantiationException(final Class c)
+	public UnauthorizedInstantiationException(final Class componentClass)
 	{
-		super("Not authorized to instantiate class " + c);
+		super("Not authorized to instantiate class " + componentClass);
+		this.componentClass = componentClass;
+	}
+	
+	/**
+	 * @return The component class that could not be instantiated
+	 */
+	public Class getComponentClass()
+	{
+		return componentClass;
 	}
 }
