@@ -1867,10 +1867,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the url for the provided behavior listener.
+	 * Gets a url for the provided behavior listener.
 	 * 
 	 * @param behaviorListener
-	 *            the behavior listener to get the url for
+	 *            The behavior listener to get a url for
 	 * @return The URL
 	 * @see Page#urlFor(Component, Class)
 	 */
@@ -1883,14 +1883,14 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 		if (behaviors == null)
 		{
-			throw new IllegalArgumentException("behaviorListener " + behaviorListener
+			throw new IllegalArgumentException("Behavior listener " + behaviorListener
 					+ " was not registered with this component");
 		}
 
 		int index = behaviors.indexOf(behaviorListener);
 		if (index == -1)
 		{
-			throw new IllegalArgumentException("behaviorListener " + behaviorListener
+			throw new IllegalArgumentException("Behavior listener " + behaviorListener
 					+ " was not registered with this component");
 		}
 
@@ -1914,9 +1914,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * @param change
 	 *            The change
 	 */
-	protected final void addStateChange(Change change)
+	protected final void addStateChange(final Change change)
 	{
-		Page page = findPage();
+		final Page page = findPage();
 		if (page != null)
 		{
 			page.componentStateChanging(this, change);
@@ -2016,7 +2016,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		if (parent == null)
 		{
-			throw new IllegalStateException("cannot find markupstream for " + this
+			throw new IllegalStateException("Cannot find markupstream for " + this
 					+ " as there is no parent");
 		}
 
@@ -2041,7 +2041,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Returns an empty list rather than null if there are no behaviors coupled
 	 * to this component.
 	 * 
-	 * @return the currently coupled behaviors as a unmodifiable list
+	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
 	protected final List/* <IBehavior> */getBehaviors()
 	{
@@ -2060,9 +2060,9 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * no behaviors coupled to this component.
 	 * 
 	 * @param type
-	 *            the type
+	 *            The type
 	 * 
-	 * @return the subset of the currently coupled behaviors that are of the
+	 * @return The subset of the currently coupled behaviors that are of the
 	 *         provided type as a unmodifiable list or null
 	 */
 	protected final List/* <IBehavior> */getBehaviors(Class type)
@@ -2197,7 +2197,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * Components are allowed to reject behavior modifiers.
 	 * 
 	 * @param behavior
-	 * @return false, if the component should not apply this behavior
+	 * @return False, if the component should not apply this behavior
 	 */
 	protected boolean isBehaviorAccepted(final IBehavior behavior)
 	{
@@ -2319,7 +2319,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 				for (Iterator i = behaviors.iterator(); i.hasNext();)
 				{
 					IBehavior behavior = (IBehavior)i.next();
-					// components may reject some behavior components
+					
+					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
 					{
 						behavior.onComponentTag(this, tag);
