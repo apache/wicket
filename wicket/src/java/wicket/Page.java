@@ -699,29 +699,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param pageMapName
-	 *            Sets this page into the page map with the given name. If the
-	 *            page map does not yet exist, it is automatically created.
-	 */
-	public final void setPageMap(final String pageMapName)
-	{
-		// Save name for restoring transient
-		this.pageMapName = pageMapName;
-
-		// Get or create page map
-		final Session session = getSession();
-		this.pageMap = session.getPageMap(pageMapName);
-		if (this.pageMap == null)
-		{
-			// TODO This could potentially enable denial of service attacks. We
-			// may want to limit pagemaps created via URLs (see Session.java)
-			this.pageMap = session.newPageMap(pageMapName);
-		}
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component will be rendered standalone.
@@ -773,7 +750,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return requestCodingStrategy.encode(requestCycle, target);
 	}
 
-
 	/**
 	 * Returns a URL that references the given request target.
 	 * 
@@ -788,6 +764,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(requestCycle, requestTarget);
 	}
+
 
 	/**
 	 * Returns a URL that references a shared resource through the provided
@@ -1158,6 +1135,27 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				newMetaData[metaData.length] = m;
 				metaData = newMetaData;
 			}
+		}
+	}
+
+	/**
+	 * @param pageMapName
+	 *            Sets this page into the page map with the given name. If the
+	 *            page map does not yet exist, it is automatically created.
+	 */
+	final void setPageMap(final String pageMapName)
+	{
+		// Save name for restoring transient
+		this.pageMapName = pageMapName;
+
+		// Get or create page map
+		final Session session = getSession();
+		this.pageMap = session.getPageMap(pageMapName);
+		if (this.pageMap == null)
+		{
+			// TODO This could potentially enable denial of service attacks. We
+			// may want to limit pagemaps created via URLs (see Session.java)
+			this.pageMap = session.newPageMap(pageMapName);
 		}
 	}
 
