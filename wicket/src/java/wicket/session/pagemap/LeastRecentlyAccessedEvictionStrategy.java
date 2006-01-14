@@ -22,7 +22,6 @@ import java.util.List;
 
 import wicket.PageMap;
 
-
 /**
  * A simple eviction strategy that evicts the least recently accessed page
  * source from the given page map.
