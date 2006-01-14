@@ -579,6 +579,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * @param action
 	 *            The action to authorize
 	 * @return True if the action is allowed
+	 * @throws AuthorizationException
+	 *            Can be thrown by implementation if action is unauthorized
 	 */
 	public final boolean authorize(Action action)
 	{
