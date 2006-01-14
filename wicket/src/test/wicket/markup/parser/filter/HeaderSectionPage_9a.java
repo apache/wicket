@@ -18,8 +18,8 @@
  */
 package wicket.markup.parser.filter;
 
+
 import wicket.MarkupContainer;
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -34,9 +34,8 @@ public class HeaderSectionPage_9a extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public HeaderSectionPage_9a(final PageParameters parameters) 
+	public HeaderSectionPage_9a() 
 	{
 	    add(new HeaderSectionPanel_2("panel"));
 	    ((MarkupContainer)get("panel")).get("cssHref").setVisible(false);

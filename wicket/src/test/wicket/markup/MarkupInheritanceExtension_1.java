@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 
 
 /**
@@ -29,10 +28,10 @@ public class MarkupInheritanceExtension_1 extends MarkupInheritanceBase_1
 	
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritanceExtension_1(final PageParameters parameters) 
+	public MarkupInheritanceExtension_1() 
 	{
-	    super(parameters);
+	    super();
     }
 }

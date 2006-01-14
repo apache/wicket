@@ -25,8 +25,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import wicket.PageParameters;
-
 /**
  * Examples that shows how you can display a tree like structure (in this case
  * nested lists with string elements) using nested panels and using a tree
@@ -40,9 +38,9 @@ public class TreePageWithBorder extends BorderedPage
 
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 *  Page parameters
 	 */
-	public TreePageWithBorder(final PageParameters parameters)
+	public TreePageWithBorder()
 	{
 		// create a list with sublists
 		List l1 = new ArrayList();

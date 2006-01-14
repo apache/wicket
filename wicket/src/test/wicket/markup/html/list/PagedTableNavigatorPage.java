@@ -21,7 +21,6 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
@@ -35,9 +34,9 @@ public class PagedTableNavigatorPage extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 *  page parameters.
 	 */
-	public PagedTableNavigatorPage(final PageParameters parameters)
+	public PagedTableNavigatorPage()
 	{
 		super();
 		List list = new ArrayList();

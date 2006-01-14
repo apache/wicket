@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.border;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -34,9 +33,9 @@ public class BoxBorderTestPage_1 extends WebPage
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public BoxBorderTestPage_1(final PageParameters parameters)
+	public BoxBorderTestPage_1()
 	{
 	    add(new BorderComponent1("border1"));
 	    add(new BorderComponent2("border2"));

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.basic;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -33,10 +32,8 @@ public class SimplePage_4 extends WebPage
 	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public SimplePage_4(final PageParameters parameters) 
+	public SimplePage_4() 
 	{
-		super(parameters);
     }
 }

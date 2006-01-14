@@ -21,7 +21,6 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
@@ -36,9 +35,9 @@ public class IncrementalTableNavigationPage extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 *  page parameters.
 	 */
-	public IncrementalTableNavigationPage(final PageParameters parameters)
+	public IncrementalTableNavigationPage()
 	{
 		super();
 		List list = new ArrayList();

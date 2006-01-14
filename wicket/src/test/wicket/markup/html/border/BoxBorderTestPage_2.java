@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.border;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
@@ -36,9 +35,9 @@ public class BoxBorderTestPage_2 extends WebPage
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public BoxBorderTestPage_2(final PageParameters parameters)
+	public BoxBorderTestPage_2()
 	{
 		 BoxBorder border = new BoxBorder("box");
 		 add(border);

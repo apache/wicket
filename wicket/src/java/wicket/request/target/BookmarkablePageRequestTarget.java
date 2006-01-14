@@ -32,10 +32,7 @@ import wicket.request.IRequestCycleProcessor;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BookmarkablePageRequestTarget
-		implements
-			IBookmarkablePageRequestTarget,
-			IAccessCheck
+public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget, IAccessCheck
 {
 	/** the page that was created in response for cleanup */
 	private Page page;
@@ -267,7 +264,15 @@ public class BookmarkablePageRequestTarget
 		// construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
 				.getPageFactory();
-		return pageFactory.newPage(pageClass, params);
+
+		if (params==null||params.size() == 0)
+		{
+			return pageFactory.newPage(pageClass);
+		}
+		else
+		{
+			return pageFactory.newPage(pageClass, params);
+		}
 	}
 
 	/**

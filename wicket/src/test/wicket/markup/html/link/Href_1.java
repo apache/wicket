@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 
@@ -33,10 +32,9 @@ public class Href_1 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 * @param parameters
+	 * Constructt
 	 */
-	public Href_1(final PageParameters parameters) 
+	public Href_1() 
 	{
 	    add(new WebMarkupContainer("link1"));
 	    add(new WebMarkupContainer("link2"));

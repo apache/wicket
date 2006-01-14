@@ -113,9 +113,9 @@ public class MockWebApplication extends WebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
-    /** The homepage */
+	/** The homepage */
 	private Class homePage;
-	
+
 	/**
 	 * Create the mock http application that can be used for testing.
 	 * 
@@ -146,7 +146,7 @@ public class MockWebApplication extends WebApplication
 	protected void init()
 	{
 	}
-	
+
 	/**
 	 * Get the page that was just rendered by the last request cycle processing.
 	 * 
@@ -250,7 +250,7 @@ public class MockWebApplication extends WebApplication
 		setupRequestAndResponse();
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
 		cycle.request(component);
-		
+
 		if (component instanceof Page)
 		{
 			this.lastRenderedPage = (Page)component;
@@ -287,7 +287,7 @@ public class MockWebApplication extends WebApplication
 		generateLastRenderedPage(cycle);
 
 		Session.set(getWicketSession());
-		
+
 		if (getLastRenderedPage() instanceof ExceptionErrorPage)
 		{
 			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
@@ -314,7 +314,14 @@ public class MockWebApplication extends WebApplication
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
 					Class pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
-					lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
+					if (parameters==null||parameters.size() == 0)
+					{
+						lastRenderedPage = new DefaultPageFactory().newPage(pageClass);
+					}
+					else
+					{
+						lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
+					}
 				}
 			}
 		}
@@ -375,12 +382,13 @@ public class MockWebApplication extends WebApplication
 	{
 		return homePage;
 	}
-	
+
 	/**
 	 * Sets the home page for this mock application
+	 * 
 	 * @param clazz
 	 */
-	public void setHomePage(Class clazz) 
+	public void setHomePage(Class clazz)
 	{
 		homePage = clazz;
 	}

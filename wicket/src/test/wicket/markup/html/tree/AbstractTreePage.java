@@ -25,7 +25,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 /**
@@ -36,9 +35,9 @@ public class AbstractTreePage extends WebPage
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 *  Page parameters
 	 */
-	public AbstractTreePage(final PageParameters parameters)
+	public AbstractTreePage()
 	{
 		// create a list with sublists
 		List l1 = new ArrayList();

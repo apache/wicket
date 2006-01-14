@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -30,9 +29,9 @@ public class MarkupInheritancePage_6 extends WebPage
 	
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritancePage_6(final PageParameters parameters)
+	public MarkupInheritancePage_6()
 	{
 		add(new MarkupInheritanceExtensionPanel_6("panel"));
 	}

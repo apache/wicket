@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
@@ -34,9 +33,8 @@ public class ComponentCreateTag_3 extends WebPage
 	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public ComponentCreateTag_3(final PageParameters parameters) 
+	public ComponentCreateTag_3() 
 	{
 	    // <wicket:component> are treated as anonymous because they not
 	    // accessible nor available right now. Thus you do not add

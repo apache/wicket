@@ -247,14 +247,25 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			Page newPage = null;
-			
+
 			IPageFactory pageFactory = session.getPageFactory();
-			// FIXME: need to take a second look on synchronizing in the resolve/render phase
-			// at this time, the session isn't accessed in a atomic, isolated manner during
+			PageParameters params = new PageParameters(requestParameters.getParameters());
+			// FIXME: need to take a second look on synchronizing in the
+			// resolve/render phase
+			// at this time, the session isn't accessed in a atomic, isolated
+			// manner during
 			// the request.
-			synchronized (session) {
-				newPage = pageFactory.newPage(pageClass,
-					new PageParameters(requestParameters.getParameters()));
+			synchronized (session)
+			{
+				if (params.size() == 0)
+				{
+					newPage = pageFactory.newPage(pageClass);
+				}
+				else
+				{
+					newPage = pageFactory.newPage(pageClass, params);
+				}
+
 			}
 			// the response might have been set in the constructor of
 			// the bookmarkable page
@@ -315,8 +326,16 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// else the home page was not mounted; render it now so
 			// that we will keep a clean path
 			PageParameters parameters = new PageParameters(requestParameters.getParameters());
-			Page newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			
+			Page newPage = null;
+			if (parameters.size() == 0)
+			{
+				newPage = session.getPageFactory().newPage(homePageClass);
+			}
+			else
+			{
+				newPage = session.getPageFactory().newPage(homePageClass, parameters);
+			}
+
 			// The response might have been set in the home page constructor
 			IRequestTarget requestTarget = requestCycle.getRequestTarget();
 

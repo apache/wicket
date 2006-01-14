@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 
@@ -34,9 +33,9 @@ public class Href_3 extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public Href_3(final PageParameters parameters) 
+	public Href_3() 
 	{
 	    add(new WebMarkupContainer("link1"));
 	    add(new WebMarkupContainer("link2").setVisible(false));
