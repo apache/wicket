@@ -43,12 +43,11 @@ import java.util.List;
  */
 public class ByteArrayOutputStream extends OutputStream
 {
-
 	private List buffers = new java.util.ArrayList();
+	private int count;
+	private byte[] currentBuffer;
 	private int currentBufferIndex;
 	private int filledBufferSum;
-	private byte[] currentBuffer;
-	private int count;
 
 	/**
 	 * Creates a new byte array output stream. The buffer capacity is initially 1024
@@ -74,91 +73,6 @@ public class ByteArrayOutputStream extends OutputStream
 		needNewBuffer(size);
 	}
 
-	private byte[] getBuffer(int index)
-	{
-		return (byte[])buffers.get(index);
-	}
-
-	private void needNewBuffer(int newcount)
-	{
-		if (currentBufferIndex < buffers.size() - 1)
-		{
-			// Recycling old buffer
-			filledBufferSum += currentBuffer.length;
-
-			currentBufferIndex++;
-			currentBuffer = getBuffer(currentBufferIndex);
-		}
-		else
-		{
-			// Creating new buffer
-			int newBufferSize;
-			if (currentBuffer == null)
-			{
-				newBufferSize = newcount;
-				filledBufferSum = 0;
-			}
-			else
-			{
-				newBufferSize = Math.max(currentBuffer.length << 1, newcount - filledBufferSum);
-				filledBufferSum += currentBuffer.length;
-			}
-
-			currentBufferIndex++;
-			currentBuffer = new byte[newBufferSize];
-			buffers.add(currentBuffer);
-		}
-	}
-
-	/**
-	 * @see java.io.OutputStream#write(byte[], int, int)
-	 */
-	public synchronized void write(byte[] b, int off, int len)
-	{
-		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length)
-				|| ((off + len) < 0))
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		else if (len == 0)
-		{
-			return;
-		}
-		int newcount = count + len;
-		int remaining = len;
-		int inBufferPos = count - filledBufferSum;
-		while (remaining > 0)
-		{
-			int part = Math.min(remaining, currentBuffer.length - inBufferPos);
-			System.arraycopy(b, off + len - remaining, currentBuffer, inBufferPos, part);
-			remaining -= part;
-			if (remaining > 0)
-			{
-				needNewBuffer(newcount);
-				inBufferPos = 0;
-			}
-		}
-		count = newcount;
-	}
-
-	/**
-	 * Calls the write(byte[]) method.
-	 * @see java.io.OutputStream#write(int)
-	 */
-	public synchronized void write(int b)
-	{
-		write(new byte[] { (byte)b }, 0, 1);
-	}
-
-	/**
-	 * Gets the size.
-	 * @return the size
-	 */
-	public int size()
-	{
-		return count;
-	}
-
 	/**
 	 * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class
 	 * can be called after the stream has been closed without generating an
@@ -182,25 +96,12 @@ public class ByteArrayOutputStream extends OutputStream
 	}
 
 	/**
-	 * Write to the given output stream.
-	 * @param out the output stream to write to
-	 * @throws IOException
-	 * @see java.io.ByteArrayOutputStream#writeTo(OutputStream)
+	 * Gets the size.
+	 * @return the size
 	 */
-	public synchronized void writeTo(OutputStream out) throws IOException
+	public int size()
 	{
-		int remaining = count;
-		for (int i = 0; i < buffers.size(); i++)
-		{
-			byte[] buf = getBuffer(i);
-			int c = Math.min(buf.length, remaining);
-			out.write(buf, 0, c);
-			remaining -= c;
-			if (remaining == 0)
-			{
-				break;
-			}
-		}
+		return count;
 	}
 
 	/**
@@ -244,6 +145,104 @@ public class ByteArrayOutputStream extends OutputStream
 	public String toString(String enc) throws UnsupportedEncodingException
 	{
 		return new String(toByteArray(), enc);
+	}
+
+	/**
+	 * @see java.io.OutputStream#write(byte[], int, int)
+	 */
+	public synchronized void write(byte[] b, int off, int len)
+	{
+		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length)
+				|| ((off + len) < 0))
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		else if (len == 0)
+		{
+			return;
+		}
+		int newcount = count + len;
+		int remaining = len;
+		int inBufferPos = count - filledBufferSum;
+		while (remaining > 0)
+		{
+			int part = Math.min(remaining, currentBuffer.length - inBufferPos);
+			System.arraycopy(b, off + len - remaining, currentBuffer, inBufferPos, part);
+			remaining -= part;
+			if (remaining > 0)
+			{
+				needNewBuffer(newcount);
+				inBufferPos = 0;
+			}
+		}
+		count = newcount;
+	}
+
+	/**
+	 * Calls the write(byte[]) method.
+	 * @see java.io.OutputStream#write(int)
+	 */
+	public synchronized void write(int b)
+	{
+		write(new byte[] { (byte)b }, 0, 1);
+	}
+
+	/**
+	 * Write to the given output stream.
+	 * @param out the output stream to write to
+	 * @throws IOException
+	 * @see java.io.ByteArrayOutputStream#writeTo(OutputStream)
+	 */
+	public synchronized void writeTo(OutputStream out) throws IOException
+	{
+		int remaining = count;
+		for (int i = 0; i < buffers.size(); i++)
+		{
+			byte[] buf = getBuffer(i);
+			int c = Math.min(buf.length, remaining);
+			out.write(buf, 0, c);
+			remaining -= c;
+			if (remaining == 0)
+			{
+				break;
+			}
+		}
+	}
+
+	private byte[] getBuffer(int index)
+	{
+		return (byte[])buffers.get(index);
+	}
+
+	private void needNewBuffer(int newcount)
+	{
+		if (currentBufferIndex < buffers.size() - 1)
+		{
+			// Recycling old buffer
+			filledBufferSum += currentBuffer.length;
+
+			currentBufferIndex++;
+			currentBuffer = getBuffer(currentBufferIndex);
+		}
+		else
+		{
+			// Creating new buffer
+			int newBufferSize;
+			if (currentBuffer == null)
+			{
+				newBufferSize = newcount;
+				filledBufferSum = 0;
+			}
+			else
+			{
+				newBufferSize = Math.max(currentBuffer.length << 1, newcount - filledBufferSum);
+				filledBufferSum += currentBuffer.length;
+			}
+
+			currentBufferIndex++;
+			currentBuffer = new byte[newBufferSize];
+			buffers.add(currentBuffer);
+		}
 	}
 
 }
