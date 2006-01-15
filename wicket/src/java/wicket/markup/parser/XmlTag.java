@@ -44,7 +44,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private AttributeMap attributes = new AttributeMap();
+	private AttributeMap attributes;
 
 	/** Column number. */
 	int columnNumber;
@@ -127,6 +127,17 @@ public class XmlTag extends MarkupElement
 	 */
 	public AttributeMap getAttributes()
 	{
+		if (attributes == null)
+		{
+			if (copyOf == this)
+			{
+				attributes = new AttributeMap();
+			}
+			else
+			{
+				attributes = new AttributeMap(copyOf.attributes);
+			}
+		}
 		return attributes;
 	}
 
@@ -219,7 +230,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String getString(final String key)
 	{
-		return attributes.getString(key);
+		return getAttributes().getString(key);
 	}
 
 	/**
@@ -307,7 +318,10 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			isMutable = false;
-			attributes.makeImmutable();
+			if (attributes != null)
+			{
+				attributes.makeImmutable();
+			}
 		}
 	}
 
@@ -333,7 +347,6 @@ public class XmlTag extends MarkupElement
 			tag.pos = pos;
 			tag.length = length;
 			tag.text = text;
-			tag.attributes = new AttributeMap(attributes);
 			tag.type = type;
 			tag.isMutable = true;
 			tag.closes = closes;
@@ -391,7 +404,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final String value)
 	{
-		return attributes.put(key, (value != null) ? value.toString() : null);
+		return getAttributes().put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
@@ -408,7 +421,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final StringValue value)
 	{
-		return attributes.put(key, (value != null) ? value.toString() : null);
+		return getAttributes().put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
@@ -435,7 +448,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public void remove(final String key)
 	{
-		attributes.remove(key);
+		getAttributes().remove(key);
 	}
 
 	/**
@@ -515,7 +528,7 @@ public class XmlTag extends MarkupElement
 	public String toDebugString()
 	{
 		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = "
-				+ length + ", attributes = [" + attributes + "], type = " + type + "]";
+				+ length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
 	/**
@@ -569,6 +582,7 @@ public class XmlTag extends MarkupElement
 
 		buffer.append(name);
 
+		final AttributeMap attributes = getAttributes();
 		if (attributes.size() > 0)
 		{
 			final Iterator iterator = attributes.keySet().iterator();
@@ -581,7 +595,9 @@ public class XmlTag extends MarkupElement
 					buffer.append(" ");
 					buffer.append(key);
 					String value = getString(key);
-					if (value != null) // attributes without values are possible, e.g. 'disabled'
+					
+					// Attributes without values are possible, e.g. 'disabled'
+					if (value != null) 
 					{
 						buffer.append("=\"");
 						value = Strings.replaceAll(value,"\"", "\\\"");
