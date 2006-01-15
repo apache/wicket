@@ -135,7 +135,7 @@ public final class PageMap implements Serializable
 	 * @return Size of this page map, including a sum of the sizes of all the
 	 *         pages it contains.
 	 */
-	public int getSize()
+	public final int getSize()
 	{
 		int size = Objects.sizeof(this);
 		for (Iterator iterator = getEntries().iterator(); iterator.hasNext();)
@@ -202,7 +202,7 @@ public final class PageMap implements Serializable
 	 * @return The session attribute for the given page (for replication of
 	 *         state)
 	 */
-	String attributeForId(final int id)
+	final String attributeForId(final int id)
 	{
 		return attributePrefix() + id;
 	}
@@ -210,7 +210,7 @@ public final class PageMap implements Serializable
 	/**
 	 * @return The attribute prefix for this page map
 	 */
-	String attributePrefix()
+	final String attributePrefix()
 	{
 		return session.pageMapEntryAttributePrefix + name + ":";
 	}
