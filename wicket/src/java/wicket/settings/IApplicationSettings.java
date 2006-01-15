@@ -67,7 +67,8 @@ public interface IApplicationSettings
 	Class getPageExpiredErrorPage();
 
 	/**
-	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
+	 * Sets the access denied page class. The class must be bookmarkable and
+	 * must extend Page.
 	 * 
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
@@ -113,5 +114,4 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
-	
 }
