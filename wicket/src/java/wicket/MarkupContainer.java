@@ -564,15 +564,19 @@ public abstract class MarkupContainer extends Component
 		{
 			public Object component(final Component component)
 			{
-				if (component instanceof MarkupContainer)
-				{
-					((MarkupContainer)component).setMarkupStream(null);
-				}
-
-				component.markStreamPositionInvalid();
+				component.resetMarkupStream();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+	
+	/**
+	 * Resets the markup stream for this container for reuse
+	 */
+	final void resetMarkupStream()
+	{
+		setMarkupStream(null);
+		markStreamPositionInvalid();
 	}
 
 	/**
