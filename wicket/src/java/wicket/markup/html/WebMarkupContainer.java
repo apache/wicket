@@ -145,7 +145,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	 */
 	private void checkBodyOnLoad()
 	{
-		// gracefull getAssociateMarkupStream. Throws no exception in case
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
 				.getMarkupStream(this, false);
