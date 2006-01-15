@@ -312,10 +312,10 @@ public class ValueMap extends HashMap
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map t)
+	public void putAll(final Map map)
 	{
 		checkMutability();
-		super.putAll(t);
+		super.putAll(map);
 	}
 
 	/**
