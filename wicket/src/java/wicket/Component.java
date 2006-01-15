@@ -2572,7 +2572,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		if (this.parent != null && log.isDebugEnabled())
 		{
-			log.debug("replacing parent " + this.parent + " with " + parent);
+			log.debug("Replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
 	}
