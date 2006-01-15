@@ -306,7 +306,6 @@ public final class StringList extends AbstractStringList
 	{
 		return new IStringIterator()
 		{
-
 			private final Iterator iterator = strings.iterator();
 
 			public boolean hasNext()
