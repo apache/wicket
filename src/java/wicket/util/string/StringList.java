@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -249,10 +249,10 @@ public final class StringList extends AbstractStringList
 	 */
 	public void add(final int pos, final String string)
 	{
-		strings.add(pos, string==null?"":string);
+		strings.add(pos, string == null ? "" : string);
 
 		// Increase total length
-		totalLength += string == null?0:string.length();
+		totalLength += string == null ? 0 : string.length();
 	}
 
 	/**
