@@ -676,14 +676,14 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final Object visitChildren(final Class c, final IVisitor visitor)
 	{
-		// Iterate through children on this container
-		for (Iterator iterator = iterator(); iterator.hasNext();)
+		// Iterate through children of this container
+		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
-			final Component child = (Component)iterator.next();
+			final Component child = (Component)children_get(i);
 
 			// Is the child of the correct class (or was no class specified)?
-			if ((c == null) || c.isInstance(child))
+			if (c == null || c.isInstance(child))
 			{
 				// Call visitor
 				final Object value = visitor.component(child);
