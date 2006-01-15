@@ -740,10 +740,9 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#setClassResolver(wicket.application.IClassResolver)
 	 */
-	public IPageSettings setClassResolver(final IClassResolver defaultClassResolver)
+	public void setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		this.classResolver = defaultClassResolver;
-		return this;
 	}
 
 	/**

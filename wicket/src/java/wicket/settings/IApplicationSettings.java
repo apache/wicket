@@ -79,9 +79,8 @@ public interface IApplicationSettings
 	 * 
 	 * @param defaultClassResolver
 	 *            The default class resolver
-	 * @return This
 	 */
-	IPageSettings setClassResolver(final IClassResolver defaultClassResolver);
+	void setClassResolver(final IClassResolver defaultClassResolver);
 
 	/**
 	 * Sets converter factory
