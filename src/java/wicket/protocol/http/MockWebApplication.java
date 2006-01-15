@@ -245,7 +245,7 @@ public class MockWebApplication extends WebApplication
 	 * 
 	 * @param component
 	 */
-	public void rerender(final Component component)
+	public void processRequestCycle(final Component component)
 	{
 		setupRequestAndResponse();
 		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
