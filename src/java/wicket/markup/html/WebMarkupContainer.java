@@ -203,7 +203,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	 */
 	private final WebMarkupContainer getHeaderPart()
 	{
-		// gracefull getAssociateMarkupStream. Throws no exception in case
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
 				.getMarkupStream(this, false);
