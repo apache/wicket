@@ -27,7 +27,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.authorization.IAuthorizationStrategy;
 import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
@@ -167,9 +166,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * implement page eviction policies.
 	 */
 	private short accessSequenceNumber;
-
-	/** True if an authorization strategy other than ALLOW_ALL is in use */
-	private transient boolean authorizationStrategyInUse = false;
 
 	/** Used to create page-unique numbers */
 	private short autoIndex;
@@ -918,27 +914,30 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void onRender(final MarkupStream markupStream)
 	{
-		// Visit all this page's children to check rendering authorization.
-		// We set any result; positive or negative as a temporary boolean
-		// in the components, and when a authorization exception is thrown
-		// it will block the rendering of this page
-		final boolean allowAll = getSession().getAuthorizationStrategy() == IAuthorizationStrategy.ALLOW_ALL;
-		if (authorizationStrategyInUse || !allowAll)
+		// Visit all this page's children to reset markup streams and check
+		// rendering authorization, as appropriate. We set any result; positive
+		// or negative as a temporary boolean in the components, and when a
+		// authorization exception is thrown it will block the rendering of this
+		// page
+		visitChildren(new IVisitor()
 		{
-			visitChildren(new IVisitor()
+			public Object component(Component component)
 			{
-				public Object component(Component component)
+				// Find out if this component can be rendered
+				boolean renderAllowed = component.authorize(RENDER);
+				if (renderAllowed)
 				{
-					component.setRenderAllowed(component.authorize(RENDER));
-					return IVisitor.CONTINUE_TRAVERSAL;
+					// It could be that the markup stream has been reloaded
+					// (modified)
+					// and that the markup stream positions are no longer valid.
+					component.resetMarkupStream();
 				}
-			});
-			authorizationStrategyInUse = !allowAll;
-		}
 
-		// It could be that the markup stream has been reloaded (modified)
-		// and that the markup stream positions are no longer valid.
-		resetMarkupStreams();
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 
 		// Set page's associated markup stream
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();

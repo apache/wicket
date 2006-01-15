@@ -2554,6 +2554,14 @@ public abstract class Component implements Serializable, IBehaviorListener
 			}
 		}
 	}
+	
+	/**
+	 * Resets the markup stream for this component for reuse
+	 */
+	void resetMarkupStream()
+	{
+		markStreamPositionInvalid();
+	}
 
 	/**
 	 * @param auto
