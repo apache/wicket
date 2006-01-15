@@ -44,15 +44,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *       &lt;servlet&gt;
- *           &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *           &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *           &lt;init-param&gt;
- *               &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *               &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *           &lt;/init-param&gt;
- *           &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *       &lt;/servlet&gt;
+ *         &lt;servlet&gt;
+ *             &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *             &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *             &lt;init-param&gt;
+ *                 &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                 &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *             &lt;/init-param&gt;
+ *             &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *         &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -64,10 +64,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *       &lt;init-param&gt;
- *         &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *           &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *       &lt;/init-param&gt;
+ *         &lt;init-param&gt;
+ *           &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *             &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *         &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -84,11 +84,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *       public void init() throws ServletException
- *       {
- *           ServletConfig config = getServletConfig();
- *           String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *           ...
+ *         public void init() throws ServletException
+ *         {
+ *             ServletConfig config = getServletConfig();
+ *             String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *             ...
  * </pre>
  * 
  * </p>
@@ -135,18 +135,18 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		// first, set the webapplication for this thread
+		// First, set the webapplication for this thread
 		Application.set(webApplication);
 
-		// try to see if there is a redirect stored
+		// Try to see if there is a redirect stored
 		if (webApplication.getRequestCycleSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
 		{
 			String sessionId = servletRequest.getSession(true).getId();
 			String queryString = servletRequest.getQueryString();
 			String requestUri = servletRequest.getRequestURI();
 			String bufferId = (queryString == null) ? requestUri : requestUri + "?" + queryString;
-			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(sessionId,
-					bufferId);
+			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+					sessionId, bufferId);
 
 			if (bufferedResponse != null)
 			{
@@ -179,8 +179,9 @@ public class WicketServlet extends HttpServlet
 			}
 		}
 
-		// create a new webrequest
+		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
+
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
 
@@ -192,7 +193,7 @@ public class WicketServlet extends HttpServlet
 
 		try
 		{
-			// create a new request cycle
+			// Create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
 			// Process request
@@ -202,7 +203,8 @@ public class WicketServlet extends HttpServlet
 		{
 			// Close response
 			response.close();
-			// clean up thread local
+
+			// Clean up thread local
 			Application.set(null);
 		}
 	}
@@ -281,18 +283,18 @@ public class WicketServlet extends HttpServlet
 
 		if (appFactoryClassName == null)
 		{
-			// if no context param was specified we return the default factory
+			// If no context param was specified we return the default factory
 			return new ContextParamWebApplicationFactory();
 		}
 		else
 		{
 			try
 			{
-				// try to find the specified factory class
+				// Try to find the specified factory class
 				final Class factoryClass = getClass().getClassLoader().loadClass(
 						appFactoryClassName);
 
-				// instantiate the factory
+				// Instantiate the factory
 				return (IWebApplicationFactory)factoryClass.newInstance();
 			}
 			catch (ClassCastException e)
@@ -329,6 +331,7 @@ public class WicketServlet extends HttpServlet
 		{
 			final String resourceReferenceKey = pathInfo.substring(RESOURCES_PATH_PREFIX.length());
 			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
+
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
 
