@@ -43,7 +43,6 @@ import wicket.request.target.SharedResourceRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
-import wicket.settings.IRequestCycleSettings;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -813,38 +812,41 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Set-up response with appropriate content type and locale. The locale is
-	 * set equal to the session locale. The content type header contains
-	 * information about the markup type (@see #getMarkupType()) and the
-	 * encoding. The response (and request) encoding is determined by an
+	 * Set-up response with appropriate content type, locale and encoding. The
+	 * locale is set equal to the session's locale. The content type header
+	 * contains information about the markup type (@see #getMarkupType()) and
+	 * the encoding. The response (and request) encoding is determined by an
 	 * application setting (@see
-	 * ApplicationSettings#getResponseRequestEncoding()). In addition and in
-	 * case the page's markup contains a xml declaration like &lt?xml ... ?&gt;
-	 * an xml declaration with proper encoding information is written to the
-	 * output as well, provided it is not disabled by an applicaton setting
-	 * (@see ApplicationSettings#getStripXmlDeclarationFromOutput()).
+	 * ApplicationSettings#getResponseRequestEncoding()). In addition, if the
+	 * page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
+	 * declaration with proper encoding information is written to the output as
+	 * well, provided it is not disabled by an applicaton setting (@see
+	 * ApplicationSettings#getStripXmlDeclarationFromOutput()).
 	 * <p>
 	 * Note: Prior to Wicket 1.1 the output encoding was determined by the
 	 * page's markup encoding. Because this caused uncertainties about the
-	 * /request/ encoding, it has been changed in favour of the new, much saver,
+	 * /request/ encoding, it has been changed in favour of the new, much safer,
 	 * approach. Please see the Wiki for more details.
 	 */
 	protected void configureResponse()
 	{
-		// Get the response
-		final Response response = getResponse();
-		final Application application = Application.get();
-		final IRequestCycleSettings requestCycleSettings = application.getRequestCycleSettings();
-		final String responseRequestEncoding = requestCycleSettings.getResponseRequestEncoding();
+		// Get the response and application
+		final RequestCycle cycle = getRequestCycle();
+		final Application application = cycle.getApplication();
+		final Response response = cycle.getResponse();
+
+		// Determine encoding
+		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		response.setContentType("text/" + getMarkupType() + "; charset=" + responseRequestEncoding);
+		response.setContentType("text/" + getMarkupType() + "; charset=" + encoding);
 
+		// Write out an xml declaration if the markup stream and settings allow
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
 				&& (application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='" + responseRequestEncoding + "'?>");
+			response.write("<?xml version='1.0' encoding='" + encoding + "'?>");
 		}
 
 		// Set response locale from session locale
