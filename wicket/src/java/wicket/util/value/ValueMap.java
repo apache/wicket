@@ -343,13 +343,17 @@ public class ValueMap extends HashMap
 	 */
 	public String toString()
 	{
-		final StringList list = new StringList();
-		for (final Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		final StringBuilder builder = new StringBuilder();
+		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
 		{
-			final String key = (String)iterator.next();
-			list.add(key + " = \"" + getString(key) + "\"");
+			Map.Entry entry = (Map.Entry)iterator.next();
+			builder.append(entry.getKey() + " = \"" + entry.getValue() + "\"");
+			if (iterator.hasNext())
+			{
+				builder.append(' ');
+			}
 		}
-		return list.join(" ");
+		return builder.toString();
 	}
 	
 	/**
