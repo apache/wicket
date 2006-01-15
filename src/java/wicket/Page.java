@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.170 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
@@ -167,6 +168,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private short accessSequenceNumber;
 
+	/** True if an authorization strategy other than ALLOW_ALL is in use */
+	private transient boolean authorizationStrategyInUse = false;
+
 	/** Used to create page-unique numbers */
 	private short autoIndex;
 
@@ -196,7 +200,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * map, will be set in urlFor
 	 */
 	private transient boolean stateless = true;
-
+	
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
@@ -911,18 +915,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void onRender(final MarkupStream markupStream)
 	{
-		// visit all this page's children to check rendering authorization.
-		// we set any result; positive or negative as a temporary boolean
+		// Visit all this page's children to check rendering authorization.
+		// We set any result; positive or negative as a temporary boolean
 		// in the components, and when a authorization exception is thrown
-		// it will be block the rendering of this page
-		visitChildren(new IVisitor()
+		// it will block the rendering of this page
+		final boolean allowAll = getSession().getAuthorizationStrategy() == IAuthorizationStrategy.ALLOW_ALL;
+		if (authorizationStrategyInUse || !allowAll)
 		{
-			public Object component(Component component)
+			visitChildren(new IVisitor()
 			{
-				component.setRenderAllowed(component.authorize(RENDER));
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
+				public Object component(Component component)
+				{
+					component.setRenderAllowed(component.authorize(RENDER));
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+			authorizationStrategyInUse = !allowAll;
+		}
 
 		// It could be that the markup stream has been reloaded (modified)
 		// and that the markup stream positions are no longer valid.
