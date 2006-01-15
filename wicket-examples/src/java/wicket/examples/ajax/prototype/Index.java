@@ -1,7 +1,5 @@
 package wicket.examples.ajax.prototype;
 
-import wicket.Component;
-import wicket.RequestCycle;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ILinkListener;
@@ -10,77 +8,61 @@ import wicket.model.PropertyModel;
 import wicket.request.target.ComponentRequestTarget;
 
 /**
- * Example displaying partial page rendering using the counting link
- * example and prototype.js. Prototype.js is a javascript library that provides
- * several handy JavaScript functions, amongst others an Ajax.Updater function,
- * which updates the HTML document with the response of the Ajax call.
+ * Example displaying partial page rendering using the counting link example and
+ * prototype.js. Prototype.js is a javascript library that provides several
+ * handy JavaScript functions, amongst others an Ajax.Updater function, which
+ * updates the HTML document with the response of the Ajax call.
  */
 public class Index extends WicketExamplePage
 {
-	/** Counts the number of clicks. */
-	private Integer counter = new Integer(0);
+	/** Click count. */
+	private int count = 0;
+
+	/** Label showing count */
+	private final Label counter;
 
 	/**
 	 * Constructor.
 	 */
 	public Index()
 	{
-		// add the Ajaxian link to the page...
+		// Add the Ajaxian link to the page...
 		add(new Link("link")
 		{
 			/**
-			 * Handles a click on the link. This method is accessed normally using a standard
-			 * http request, but in this example, we use Ajax to perform the call.
+			 * Handles a click on the link. This method is accessed normally
+			 * using a standard http request, but in this example, we use Ajax
+			 * to perform the call.
 			 */
 			public void onClick()
 			{
-				// increase the counter
-				counter = new Integer(counter.intValue() + 1);
+				// Increment count
+				count++;
 
-				// the response should return the label displaying the counter.
-				Component component = getPage().get("counter");
-				ComponentRequestTarget target = new ComponentRequestTarget(component);
-				RequestCycle cycle = RequestCycle.get();
-				cycle.setRequestTarget(target);
+				// The response should refresh the label displaying the counter.
+				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter));
 			}
 
 			/**
-			 * Alter the javascript 'onclick' event to emit the Ajax call and update the
-			 * counter label.
+			 * Alter the javascript 'onclick' event to emit the Ajax call and
+			 * update the counter label.
 			 */
 			protected String getOnClickScript(String url)
 			{
-				StringBuffer sb = new StringBuffer();
-
-				sb.append("new Ajax.Updater('counter',");
-				sb.append("'" + urlFor(ILinkListener.class) + "',{method:'get'}");
-				sb.append(");");
-
-				// always return false, otherwise the submit event gets sent to
-				// the server. We are already processing the ajax event.
-				sb.append("return false;");
-
-				return sb.toString();
+				return "new Ajax.Updater('counter', '" + urlFor(ILinkListener.class)
+						+ "', {method:'get'}); return false;";
 			}
 		});
-		// add the label
-		add(new Label("counter", new PropertyModel(this, "counter")));
+
+		// Add the label
+		add(counter = new Label("counter", new PropertyModel(this, "count")));
 	}
 
 	/**
-	 * @return Returns the counter.
+	 * @return Returns the count.
 	 */
-	public Integer getCounter()
+	public int getCount()
 	{
-		return counter;
-	}
-
-	/**
-	 * @param counter
-	 *            The counter to set.
-	 */
-	public void setCounter(Integer counter)
-	{
-		this.counter = counter;
+		return count;
 	}
 }
