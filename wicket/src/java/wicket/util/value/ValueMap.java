@@ -75,7 +75,7 @@ public class ValueMap extends HashMap
 	 */
 	public ValueMap(final Map map)
 	{
-		putAll(map);
+		super.putAll(map);
 	}
 
 	/**
