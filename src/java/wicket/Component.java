@@ -624,7 +624,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/**
 	 * Page.doRender() is used to render a whole page. With AJAX however it must
 	 * be possible to re-render any one component contained in a page. That is
-	 * what Component.doRender() is for.
+	 * what Component.doRender() is for, though it is not necessary that the 
+	 * page has been rendered.
 	 */
 	public void doRender()
 	{
@@ -633,10 +634,27 @@ public abstract class Component implements Serializable, IBehaviorListener
 		MarkupStream originalMarkupStream = parent.getMarkupStream();
 
 		// Get the parent's associated markup stream.
-		MarkupStream markupStream = findParentWithAssociatedMarkup().getAssociatedMarkupStream();
+		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
+		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
 
 		// Make sure the markup stream is position at the correct element
-		markupStream.setCurrentIndex(this.markupStreamPosition);
+		if (this.markupStreamPosition != -1)
+		{
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+		else
+		{
+			String componentPath = getParent().getPageRelativePath();
+			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+			
+			this.markupStreamPosition = markupStream.findComponent(relativePath, getId());
+		}
+
+		if (this.markupStreamPosition == -1)
+		{
+			throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
+		}
 
 		try
 		{

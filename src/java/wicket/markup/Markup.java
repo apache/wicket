@@ -19,6 +19,7 @@
 package wicket.markup;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and 
@@ -202,5 +203,74 @@ public final class Markup
 	public String getWicketNamespace()
 	{
 	    return this.wicketNamespace;
+	}
+	
+	/**
+	 * Find the markup element index of the component with 'path'
+	 * 
+	 * @param path The component path expression
+	 * @param id The component's id to search for
+	 * @return -1, if not found
+	 */
+	public int findComponent(String path, final String id)
+	{
+		final String wicketId = ComponentTag.DEFAULT_WICKET_NAMESPACE + ":id";
+
+		// Find the tag. Rebuild the tree structure
+		Stack markupElements = new Stack();
+		
+		// The path of the current tag
+		String elementsPath = "";
+		
+		// The return value
+		int position = -1;
+		
+		// Iterate through all markup elements
+		for (int pos = 0; pos < markup.size(); pos ++)
+		{
+			// Only ComponentTags are of interest
+			MarkupElement element = (MarkupElement)markup.get(pos);
+			if (element instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag) element;
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					// If has wicket:id ..
+					boolean hasWicketId = tag.getAttributes().containsKey(wicketId);
+					if (hasWicketId)
+					{
+						// .. and wicket:id is equals to what I'm looking for
+						if (tag.getId().equals(id))
+						{
+							// .. and the path is right as well
+							if (elementsPath.equals(path))
+							{
+								// .. than we found it.
+								position = pos;
+								break;
+							}
+						}
+					}
+					
+					// If open tag, put the path of the current element onto the stack
+					// and adjust the path (walk into the subdirectory)
+					if (tag.isOpen())
+					{
+						markupElements.push(elementsPath);
+						if (hasWicketId)
+						{
+							elementsPath += ":" + tag.getId();
+						}
+					}
+				}
+				else if (tag.isClose())
+				{
+					// return to the parent "directory"
+					elementsPath = (String)markupElements.pop();
+				}
+			}
+		}
+		
+		return position;
 	}
 }

@@ -417,4 +417,16 @@ public class MarkupStream
 		}
 		return this.markup == markupStream.markup;
 	}
+	
+	/**
+	 * Find the markup element index of the component with 'path'
+	 * 
+	 * @param path The component path expression
+	 * @param id The component's id to search for
+	 * @return -1, if not found
+	 */
+	public int findComponent(String path, final String id)
+	{
+		return this.markup.findComponent(path, id);
+	}
 }
