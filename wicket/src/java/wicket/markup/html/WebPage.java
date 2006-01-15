@@ -169,7 +169,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	{
 		this.bodyOnLoad = null;
 
-		// A components interested in contributing to the header must
+		// Components interested in contributing to the header must
 		// implement IHeaderContributor.
 		visitChildren(IHeaderContributor.class, new IVisitor()
 		{
