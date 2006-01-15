@@ -65,7 +65,7 @@ public class SimpleTableTest extends TestCase
 		// Does re-render do as well ??
 	    ListView view = (ListView)application.getLastRenderedPage().get("table");
 	    assertNotNull(view);
-		application.rerender(view);
+		application.processRequestCycle(view);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));

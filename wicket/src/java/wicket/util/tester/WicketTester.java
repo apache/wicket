@@ -241,7 +241,7 @@ public class WicketTester extends MockWebApplication
 	public final Page startPage(final Page page)
 	{
 		setHomePage(DummyHomePage.class);
-		rerender(page);
+		processRequestCycle(page);
 
 		Page last = getLastRenderedPage();
 
