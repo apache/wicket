@@ -43,6 +43,7 @@ import wicket.request.target.SharedResourceRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -200,7 +201,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * map, will be set in urlFor
 	 */
 	private transient boolean stateless = true;
-	
+
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
@@ -832,18 +833,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// Get the response
 		final Response response = getResponse();
-		final Application app = Application.get();
+		final Application application = Application.get();
+		final IRequestCycleSettings requestCycleSettings = application.getRequestCycleSettings();
+		final String responseRequestEncoding = requestCycleSettings.getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		response.setContentType("text/" + getMarkupType() + "; charset="
-				+ app.getRequestCycleSettings().getResponseRequestEncoding());
+		response.setContentType("text/" + getMarkupType() + "; charset=" + responseRequestEncoding);
 
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
-				&& (app.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
+				&& (application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='"
-					+ app.getRequestCycleSettings().getResponseRequestEncoding() + "'?>");
+			response.write("<?xml version='1.0' encoding='" + responseRequestEncoding + "'?>");
 		}
 
 		// Set response locale from session locale
