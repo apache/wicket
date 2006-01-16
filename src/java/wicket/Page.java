@@ -365,7 +365,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			internalBeginRequest();
 
 			// Handle request by rendering page
-			render();
+			render(null);
 
 			// Check rendering if it happened fully
 			checkRendering(this);

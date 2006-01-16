@@ -117,7 +117,7 @@ public class ScopedComponentResolver implements IComponentResolver
 				IScopedComponent sc = (IScopedComponent)component;
 				if (sc.isRenderableInSubContainers())
 				{
-					component.render();
+					component.render(markupStream);
 					return true;
 				}
 			}
