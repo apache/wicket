@@ -822,6 +822,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected void onRender(final MarkupStream markupStream)
 	{
+		setMarkupStream(markupStream);
 		renderComponent(markupStream);
 	}
 

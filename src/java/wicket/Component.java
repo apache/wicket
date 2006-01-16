@@ -48,6 +48,7 @@ import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
 
 /**
@@ -622,10 +623,63 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * Get the ComponentTag from the Markup which is associated with the
+	 * component.
+	 * 
+	 * @return An unmutable map with the attributes of the components tag
+	 */
+	private final MarkupStream initializeMarkupStream()
+	{
+		// Save the parent's markup stream to re-assign it at the end
+		MarkupContainer parent = getParent();
+
+		// Get the parent's associated markup stream.
+		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
+		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
+
+		// Make sure the markup stream is positioned at the correct element
+		if (this.markupStreamPosition != -1)
+		{
+			markupStream.setCurrentIndex(this.markupStreamPosition);
+		}
+		else
+		{
+			String componentPath = parent.getPageRelativePath();
+			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+			
+			int index = markupStream.findComponentIndex(relativePath, getId());
+			if (index == -1)
+			{
+				throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
+			}
+			markupStream.setCurrentIndex(index);
+		}
+
+		return markupStream;
+	}
+
+	/**
+	 * Get the markup attributes which are associated with the component.
+	 * <p>
+	 * Note: The component must have been added (directly or indirectly)
+	 * to a container with an associated markup file (Page, Panel or Border).   
+	 * 
+	 * @return markup attributes
+	 */
+	public final ValueMap getMarkupAttributes()
+	{
+		return initializeMarkupStream().getTag().getAttributes();
+	}
+	
+	/**
 	 * Page.doRender() is used to render a whole page. With AJAX however it must
-	 * be possible to re-render any one component contained in a page. That is
-	 * what Component.doRender() is for, though it is not necessary that the 
-	 * page has been rendered.
+	 * be possible to render any one component contained in a page. That is
+	 * what Component.doRender() is for. 
+	 * <p>
+	 * Note: it is not necessary that the page has previously been rendered.
+     * But the component must have been added (directly or indirectly)
+	 * to a container with an associated markup file (Page, Panel or Border).   
 	 */
 	public void doRender()
 	{
@@ -633,28 +687,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 		MarkupContainer parent = getParent();
 		MarkupStream originalMarkupStream = parent.getMarkupStream();
 
-		// Get the parent's associated markup stream.
-		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
-		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
-
-		// Make sure the markup stream is position at the correct element
-		if (this.markupStreamPosition != -1)
-		{
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
-		else
-		{
-			String componentPath = getParent().getPageRelativePath();
-			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
-			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-			
-			this.markupStreamPosition = markupStream.findComponent(relativePath, getId());
-		}
-
-		if (this.markupStreamPosition == -1)
-		{
-			throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
-		}
+		MarkupStream markupStream = initializeMarkupStream();
+		this.markupStreamPosition = markupStream.getCurrentIndex();
 
 		try
 		{
@@ -663,7 +697,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 			// Render the component and all its children
 			internalBeginRequest();
-			render();
+			render(markupStream);
 		}
 		finally
 		{

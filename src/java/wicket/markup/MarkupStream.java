@@ -425,8 +425,8 @@ public final class MarkupStream
 	 * @param id The component's id to search for
 	 * @return -1, if not found
 	 */
-	public int findComponent(String path, final String id)
+	public int findComponentIndex(final String path, final String id)
 	{
-		return this.markup.findComponent(path, id);
+		return this.markup.findComponentIndex(path, id);
 	}
 }

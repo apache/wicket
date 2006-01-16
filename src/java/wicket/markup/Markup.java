@@ -212,7 +212,7 @@ public final class Markup
 	 * @param id The component's id to search for
 	 * @return -1, if not found
 	 */
-	public int findComponent(String path, final String id)
+	public int findComponentIndex(String path, final String id)
 	{
 		final String wicketId = ComponentTag.DEFAULT_WICKET_NAMESPACE + ":id";
 
@@ -259,7 +259,11 @@ public final class Markup
 						markupElements.push(elementsPath);
 						if (hasWicketId)
 						{
-							elementsPath += ":" + tag.getId();
+							if (elementsPath.length() > 0)
+							{
+								elementsPath += ":";
+							}
+							elementsPath += tag.getId();
 						}
 					}
 				}
