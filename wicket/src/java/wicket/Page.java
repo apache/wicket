@@ -574,7 +574,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final int getVersions()
 	{
-		return versionManager == null ? 1 : versionManager.getVersions();
+		return versionManager == null ? 1 : versionManager.getVersions()+1;
 	}
 
 	/**
