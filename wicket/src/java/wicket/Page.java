@@ -173,8 +173,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
 
-	/** The id for this page */
-	private short id;
+	/** Numeric version of this page's id */
+	private short numericId;
 
 	/**
 	 * MetaDataEntry array for efficient representation of metadata associated
@@ -450,7 +450,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final String getId()
 	{
-		return Integer.toString(id);
+		return Integer.toString(numericId);
 	}
 
 	/**
@@ -458,7 +458,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public int getNumericId()
 	{
-		return id;
+		return numericId;
 	}
 
 	/**
@@ -695,7 +695,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void setNumericId(final int id)
 	{
-		this.id = (short)id;
+		this.numericId = (short)id;
 	}
 
 	/**
