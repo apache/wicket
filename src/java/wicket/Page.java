@@ -173,14 +173,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
 
-	/** Numeric version of this page's id */
-	private short numericId;
-
 	/**
 	 * MetaDataEntry array for efficient representation of metadata associated
 	 * with child components
 	 */
 	private MetaDataEntry[] metaData;
+
+	/** Numeric version of this page's id */
+	private short numericId;
 
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
@@ -401,6 +401,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			renderedComponents = null;
 		}
 	}
+	
+	/**
+	 * Expire the oldest version of this page
+	 */
+	public final void expireOldestVersion()
+	{
+		if (versionManager != null)
+		{
+			versionManager.expireOldestVersion();
+		}
+	}
 
 	/**
 	 * @see wicket.session.pagemap.IPageMapEntry#getAccessSequenceNumber()
@@ -432,7 +443,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return versionManager == null ? 0 : versionManager.getCurrentVersionNumber();
 	}
-
+	
 	/**
 	 * @return Returns the feedbackMessages.
 	 */
@@ -556,6 +567,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				setFlag(FLAG_TRACK_CHANGES, originalTrackChanges);
 			}
 		}
+	}
+
+	/**
+	 * @return Number of versions of this page
+	 */
+	public final int getVersions()
+	{
+		return versionManager == null ? 1 : versionManager.getVersions();
 	}
 
 	/**

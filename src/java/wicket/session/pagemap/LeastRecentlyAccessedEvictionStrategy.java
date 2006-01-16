@@ -56,7 +56,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final PageMap pageMap)
 	{
-		if (pageMap.size() > maxVersions)
+		if (pageMap.getVersions() > maxVersions)
 		{
 			final List list = pageMap.getEntries();
 			IPageMapEntry leastRecentlyUsed = null;
@@ -73,16 +73,26 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 			}
 			if (leastRecentlyUsed != null)
 			{
-				final Page page = leastRecentlyUsed.getPage();
-				int currentVersionNumber = page.getCurrentVersionNumber(); 
-				if (currentVersionNumber > 1)
+				// If entry is a page
+				if (leastRecentlyUsed instanceof Page)
 				{
-					// Go back to previous version
-					page.getVersion(currentVersionNumber - 1);
+					Page page = (Page)leastRecentlyUsed;
+					
+					// If there is more than one version of this page
+					if (page.getVersions() > 1)
+					{
+						// expire the oldest version
+						page.expireOldestVersion();
+					}
+					else
+					{
+						// expire whole page
+						pageMap.remove(page);						
+					}
 				}
 				else
 				{
-					// Remove the entire page
+					// Remove the entry
 					pageMap.remove(leastRecentlyUsed);
 				}
 			}
