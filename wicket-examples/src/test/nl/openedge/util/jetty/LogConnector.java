@@ -56,7 +56,7 @@ public class LogConnector extends Thread
 	private StringBuffer buffer = new StringBuffer();
 
 	/** logger. */
-	private Log log = LogFactory.getLog(LogConnector.class);
+	private static Log log = LogFactory.getLog(LogConnector.class);
 
 	/** prefix all output to the log with this. */
 	private String linePrefix = "** REMOTE ** >";

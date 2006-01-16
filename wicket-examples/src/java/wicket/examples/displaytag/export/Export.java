@@ -34,7 +34,7 @@ import wicket.protocol.http.WebResponse;
  */
 public class Export
 {
-    final private Log log = LogFactory.getLog(Export.class);
+    final private static Log log = LogFactory.getLog(Export.class);
 
     /**
      * called when data are not displayed in a html page but should be exported.
