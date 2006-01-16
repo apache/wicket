@@ -329,9 +329,6 @@ public final class PageMap implements Serializable
 		// We should get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
-
-		// TODO General: Why this?
-		session.dirty();
 	}
 
 	/**
