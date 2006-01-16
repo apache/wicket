@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class MarkupStream
+public final class MarkupStream
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
