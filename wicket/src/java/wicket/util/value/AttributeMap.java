@@ -20,7 +20,7 @@ package wicket.util.value;
 import java.util.Map;
 
 /**
- * ValueMap for attribtues.
+ * ValueMap for attributes.
  * 
  * @author Eelco Hillenius
  */
