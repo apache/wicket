@@ -921,7 +921,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// page
 		visitChildren(new IVisitor()
 		{
-			public Object component(Component component)
+			public Object component(final Component component)
 			{
 				// Find out if this component can be rendered
 				boolean renderAllowed = component.authorize(RENDER);
