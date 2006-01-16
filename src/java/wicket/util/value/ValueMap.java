@@ -243,8 +243,7 @@ public class ValueMap extends HashMap
 	 */
 	public final String getString(final String key)
 	{
-		final Object o = getStringValue(key);
-
+		final Object o = get(key);
 		if (o == null)
 		{
 			return null;
@@ -264,7 +263,7 @@ public class ValueMap extends HashMap
 	 */
 	public StringValue getStringValue(final String key)
 	{
-		return StringValue.valueOf(get(key));
+		return StringValue.valueOf(getString(key));
 	}
 
 	/**
