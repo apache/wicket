@@ -131,27 +131,6 @@ public class LogConnector extends Thread
 	}
 
 	/**
-	 * Get log.
-	 * 
-	 * @return Log Returns the log.
-	 */
-	public Log getLog()
-	{
-		return log;
-	}
-
-	/**
-	 * Set log.
-	 * 
-	 * @param log
-	 *            log to set.
-	 */
-	public void setLog(Log log)
-	{
-		this.log = log;
-	}
-
-	/**
 	 * Get linePrefix; prefix all output to the log with this.
 	 * 
 	 * @return String Returns the linePrefix.
