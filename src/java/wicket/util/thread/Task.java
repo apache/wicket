@@ -51,7 +51,7 @@ public final class Task
 	private boolean isStarted = false;
 
 	/** The log to give to the user's code. */
-	private Log log = null;
+	private transient Log log = null;
 	/** The name of this task. */
 	private final String name;
 
