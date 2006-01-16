@@ -375,7 +375,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final Class pageClass = requestTarget.getPageClass();
 		final Class homePageClass = requestCycle.getApplication().getHomePage();
 
-		// TODO fix homepage class
+		// TODO General: Fix homepage class (what does this mean? - Jonathan)
 
 		final PageParameters parameters = requestTarget.getPageParameters();
 		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
@@ -511,7 +511,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		// TODO optimize algoritm if possible and/ or cache lookup results
+		// TODO Performance: Optimize algoritm if possible and/ or cache lookup results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
 			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();

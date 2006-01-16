@@ -30,8 +30,8 @@ import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 
 /**
- * THIS CODE IS CURRENTLY EXPERIMENTAL ONLY. IT IS LIKES TO CHANGE IN 
- * THE NEAR FUTURE.
+ * THIS CODE IS CURRENTLY EXPERIMENTAL ONLY. IT IS LIKES TO CHANGE IN THE NEAR
+ * FUTURE.
  * 
  * This is a markup inline filter. It identifies Wicket parameter tags like
  * &lt;wicket:param key=value/&gt; and assigns the key/value pair to the
@@ -40,10 +40,10 @@ import wicket.markup.parser.IXmlPullParser;
  * Example:
  * 
  * <pre>
- *    &lt;table&gt;&lt;tr wicket:id=&quot;myTable&quot;&gt;
- *      &lt;wicket:param rowsPerPage=10/&gt;
- *      ...
- *    &lt;/tr&gt;&lt;/table&gt;
+ *      &lt;table&gt;&lt;tr wicket:id=&quot;myTable&quot;&gt;
+ *        &lt;wicket:param rowsPerPage=10/&gt;
+ *        ...
+ *      &lt;/tr&gt;&lt;/table&gt;
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -81,7 +81,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 			parser = parser.getParent();
 		}
 		this.xmlParser = (IXmlPullParser)parser;
-		
+
 		setStripWicketTag(strip);
 	}
 
@@ -93,12 +93,12 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	 */
 	public void setStripWicketTag(final boolean strip)
 	{
-	    // It is dangerous. Most have stripping wicket tags switched off,
-	    // which causes subtle exception e.g. if the component calls
-	    // replaceComponentTagBody(). Thus, <wicket:param> tags will
-	    // currently always be removed from output.
-	    
-		//this.stripWicketTag = strip;
+		// It is dangerous. Most have stripping wicket tags switched off,
+		// which causes subtle exception e.g. if the component calls
+		// replaceComponentTagBody(). Thus, <wicket:param> tags will
+		// currently always be removed from output.
+
+		// this.stripWicketTag = strip;
 	}
 
 	/**
@@ -167,7 +167,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 
 		// By now we know it is a Wicket param tag.
-		// Only empty TEXT is allowed in between the preceding component 
+		// Only empty TEXT is allowed in between the preceding component
 		// tag and the param tag.
 		final CharSequence rawMarkup = xmlParser.getInputSubsequence(lastTag.getPos()
 				+ lastTag.getLength(), tag.getPos());
@@ -180,13 +180,14 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 			if (text.length() > 0)
 			{
 				throw new ParseException("There must not be any text between a component tag and "
-						+ "it's related param tag. Only spaces and line breaks are allowed.",
-						tag.getPos());
+						+ "it's related param tag. Only spaces and line breaks are allowed.", tag
+						.getPos());
 			}
 		}
 
-		// TODO: <wicket:params name = "myProperty">My completely free text that
-		// can contain everything</wicket:params> is currently not supported
+		// TODO Enhancement: <wicket:params name = "myProperty">My completely
+		// free text that can contain everything</wicket:params> is currently
+		// not supported
 
 		// Add the parameters to the previous component tag
 		lastTag.getAdditionalAttributes().putAll(tag.getAttributes());
@@ -202,7 +203,8 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 			// E.g. An "expected close tag" exception will be thrown if the
 			// component uses replaceComponentTagBody() to replace the body
 			// of the component (see src/test/.../MyLabel.html).
-			log.warn("Be careful. Not stripping <wicket:param> from output may cause subtle errors.");
+			log
+					.warn("Be careful. Not stripping <wicket:param> from output may cause subtle errors.");
 		}
 
 		return tag;

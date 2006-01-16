@@ -145,9 +145,9 @@ public class MarkupCache
 	private MarkupResourceStream newMarkupResourceStream(final Class containerClass,
 			final ContainerInfo containerInfo)
 	{
-		IResourceStream markupResource = application.getResourceSettings().getResourceStreamLocator().locate(
-				containerClass, containerInfo.getStyle(), containerInfo.getLocale(),
-				containerInfo.getFileExtension());
+		IResourceStream markupResource = application.getResourceSettings()
+				.getResourceStreamLocator().locate(containerClass, containerInfo.getStyle(),
+						containerInfo.getLocale(), containerInfo.getFileExtension());
 
 		if (markupResource == null)
 		{
@@ -241,7 +241,8 @@ public class MarkupCache
 		try
 		{
 			// read and parse the markup
-			Markup markup = application.getMarkupSettings().getMarkupParserFactory().newMarkupParser().readAndParse(markupResourceStream);
+			Markup markup = application.getMarkupSettings().getMarkupParserFactory()
+					.newMarkupParser().readAndParse(markupResourceStream);
 
 			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.
@@ -379,10 +380,9 @@ public class MarkupCache
 		}
 
 		// get the base markup
-		final Markup baseMarkup = getMarkup(
-				markup.getResource().getContainerInfo(), 
-				markup.getResource().getMarkupClass().getSuperclass());
-		
+		final Markup baseMarkup = getMarkup(markup.getResource().getContainerInfo(), markup
+				.getResource().getMarkupClass().getSuperclass());
+
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
@@ -424,8 +424,8 @@ public class MarkupCache
 		});
 
 		// Merge base and derived markup
-		// TODO The merged markup resource modify time is wrong. It should be
-		// the latest of all resources involved.
+		// TODO General: The merged markup resource modify time is wrong. It
+		// should be the latest of all resources involved.
 		Markup mergedMarkup = InheritedMarkupMerger.mergeMarkups(markup, baseMarkup, extendIndex);
 
 		return mergedMarkup;

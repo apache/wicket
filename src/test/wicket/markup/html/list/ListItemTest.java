@@ -74,7 +74,7 @@ public class ListItemTest extends TestCase
 	 */
 	public void testListItem()
 	{
-/*	TODO tests have to be reviewed based on new ListItem and ListView implementations    
+		/* TODO General: Tests have to be reviewed based on new ListItem and ListView implementations    
 		ListItem li;
 
 		try

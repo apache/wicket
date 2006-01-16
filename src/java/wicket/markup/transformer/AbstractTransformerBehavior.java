@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractTransformerBehavior.java,v 1.1 2006/01/14 17:37:55 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,12 +33,10 @@ import wicket.response.StringResponse;
  * 
  * @author Juergen Donnerstag
  * 
- * TODO IBehavior does not have an event which gets called in case of an
- * exception. Hence the response object might not be restored.
+ * TODO Robustness: IBehavior does not have an event which gets called in case
+ * of an exception. Hence the response object might not be restored.
  */
-public abstract class AbstractTransformerBehavior extends AbstractBehavior
-		implements
-			ITransformer
+public abstract class AbstractTransformerBehavior extends AbstractBehavior implements ITransformer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,7 +67,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.sourceforge.net");
-		
+
 		final RequestCycle requestCycle = RequestCycle.get();
 
 		// Temporarily replace the web response with a String response

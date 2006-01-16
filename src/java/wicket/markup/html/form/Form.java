@@ -339,9 +339,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * TODO may be we should re-think how Borders are implemented, because
-		 * there are just too many exceptions in the code base because of
-		 * borders. This time it is to solve the problem tested in
+		 * TODO General: Maybe we should re-think how Borders are implemented,
+		 * because there are just too many exceptions in the code base because
+		 * of borders. This time it is to solve the problem tested in
 		 * BoxBorderTestPage_3 where the Form is defined in the box border and
 		 * the FormComponents are in the "body". Thus, the formComponents are
 		 * not childs of the form. They are rather childs of the border, as the

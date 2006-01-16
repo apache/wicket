@@ -189,7 +189,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 */
 	public void updateModel()
 	{
-		// TODO can't test here for disabled input.. null value is a valid input for checkbox
+		// TODO General: Can't test here for disabled input... null value is a valid input for checkbox
 		try
 		{
 			setModelObject(Strings.toBoolean(getInput()));

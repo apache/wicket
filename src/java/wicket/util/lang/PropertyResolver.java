@@ -304,8 +304,8 @@ public class PropertyResolver
 						}
 						else
 						{
-							// TODO find a public FIELD
-							throw new WicketRuntimeException("no get method defined for class: " + clz
+							// TODO General: Find a public FIELD
+							throw new WicketRuntimeException("No get method defined for class: " + clz
 									+ " expression: " + exp);
 						}
 					}
@@ -343,7 +343,7 @@ public class PropertyResolver
 		}
 		catch (Exception ex)
 		{
-			// TODO log
+			// TODO Robustness: Log exception
 		}
 		return field;
 	}
@@ -372,7 +372,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO log
+				// TODO Robustness: Log exception
 			}
 		}
 		return method;
@@ -391,7 +391,7 @@ public class PropertyResolver
 		}
 		catch (Exception ex)
 		{
-			// TODO log
+			// TODO Robustness: Log exception
 		}
 		return method;
 	}
@@ -596,7 +596,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return value;
 		}
@@ -656,7 +656,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return null;
 		}
@@ -733,7 +733,8 @@ public class PropertyResolver
 			{
 				setMethod = findSetter(getMethod, object.getClass());
 			}
-			// TODO LOG
+
+			// TODO Robustness: Log this
 			if (setMethod == null)
 				return null;
 
@@ -746,7 +747,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return value;
 		}
@@ -846,7 +847,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return null;
 		}
@@ -860,7 +861,8 @@ public class PropertyResolver
 			{
 				setMethod = findSetter(getMethod, object.getClass());
 			}
-			// TODO LOG
+			
+			// TODO Robustness: Log this
 			if (setMethod == null)
 				return null;
 
@@ -873,7 +875,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return value;
 		}
@@ -928,7 +930,7 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				// TODO LOG
+				// TODO Robustness: Log exception
 			}
 			return value;
 		}

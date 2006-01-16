@@ -72,7 +72,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		StringBuffer url = new StringBuffer();
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		// TODO what to do with the page map?
+
+		// TODO General: What to do with the page map?
 		appendPageParameters(url, target.getPageParameters());
 		return url.toString();
 	}

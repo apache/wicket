@@ -729,7 +729,7 @@ public final class Strings
 	 * @return String with all single occurrences of newline replaced with
 	 *         &lt;br /&gt; and all multiple occurrences of newline replaced
 	 *         with &lt;p&gt;.
-	 * @todo TODO make paragraphs xhtml compliant.
+	 * TODO General: Make paragraphs xhtml compliant.
 	 */
 	public static String toMultilineMarkup(final String s)
 	{

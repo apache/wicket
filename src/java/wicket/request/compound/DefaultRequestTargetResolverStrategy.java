@@ -196,7 +196,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				throw new WicketRuntimeException("Attempt to access unknown interface "
 						+ interfaceName);
 			}
-			String componentPart = Strings.afterFirstPathComponent(componentPath, Component.PATH_SEPARATOR);
+			String componentPart = Strings.afterFirstPathComponent(componentPath,
+					Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(componentPart))
 			{
 				// we have an interface that is not redirect, but no
@@ -250,11 +251,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 			IPageFactory pageFactory = session.getPageFactory();
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			// FIXME: need to take a second look on synchronizing in the
-			// resolve/render phase
-			// at this time, the session isn't accessed in a atomic, isolated
-			// manner during
-			// the request.
+			// TODO Robustness: Need to take a second look on synchronizing in
+			// the resolve/render phase at this time, the session isn't accessed
+			// in a atomic, isolated manner during the request.
 			synchronized (session)
 			{
 				if (params.size() == 0)

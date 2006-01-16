@@ -102,7 +102,7 @@ public class WicketTesterTest extends TestCase
 		tester.assertInfoMessages(new String[] { "book 'xxName' created" });
 
 		// assert previous page expired.
-		// TODO No longer a valid test
+		// TODO General: No longer a valid test
 		// tester.assertExpirePreviousPage();
 	}
 	
