@@ -569,7 +569,7 @@ public abstract class MarkupContainer extends Component
 			}
 		});
 	}
-	
+
 	/**
 	 * Resets the markup stream for this container for reuse
 	 */
@@ -1259,9 +1259,8 @@ public abstract class MarkupContainer extends Component
 				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
 				{
 					// You can not render the base page of inherited markup as
-					// the
-					// <wicket:child/> tag will not be found. You must use the
-					// page (class) with the derived markup instead.
+					// the <wicket:child/> tag will not be found. You must use
+					// the page (class) with the derived markup instead.
 					markupStream.throwMarkupException("Classes of base pages which "
 							+ "require inherited markup may not be used directly. "
 							+ "You must instantiate the child pages instead: " + this);
