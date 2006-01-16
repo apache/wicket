@@ -168,7 +168,7 @@ public abstract class GridView extends DataViewBase
 			this.rows = rows;
 		}
 
-		// TODO Performance: can this be moved into the this.rows != rows if
+		// TODO Performance: Can this be moved into the this.rows != rows if
 		// block for optimization?
 		updateItemsPerPage();
 		return this;
@@ -202,7 +202,7 @@ public abstract class GridView extends DataViewBase
 
 			int row = 0;
 
-			// TODO General: do we really need this index?
+			// TODO General: Do we really need this index?
 			int index = 0;
 
 			do

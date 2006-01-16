@@ -259,7 +259,7 @@ public abstract class RequestCycle
 	private transient RequestParameters requestParameters;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO Performance: use a more efficient implementation, maybe with a default size of 3
+	// TODO Performance: Use a more efficient implementation, maybe with a default size of 3
 	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/** the time that this request cycle object was created. */

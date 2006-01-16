@@ -784,7 +784,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * @see Settings
 	 * @deprecated
 	 */
-	// TODO Post 1.2: remove this method
+	// TODO Post 1.2: Remove this method
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
