@@ -64,11 +64,11 @@ public abstract class Resource implements IResourceListener
 	/** Logger */
 	private static Log log = LogFactory.getLog(Resource.class);
 
-	/** The maximum duration a resource may be idle before it is removed */
-	private Duration idleTimeout = Duration.NONE;
-
 	/** True if this resource can be cached */
 	private boolean cacheable;
+
+	/** The maximum duration a resource may be idle before it is removed */
+	private Duration idleTimeout = Duration.NONE;
 
 	/** Any parameters associated with the request for this resource */
 	private ValueMap parameters;
@@ -83,6 +83,16 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
+	 * Returns the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @return The idle duration timeout
+	 */
+	public Duration getIdleTimeout()
+	{
+		return idleTimeout;
+	}
+
+	/**
 	 * @return Gets the resource to render to the requester
 	 */
 	public abstract IResourceStream getResourceStream();
@@ -93,29 +103,6 @@ public abstract class Resource implements IResourceListener
 	public final boolean isCacheable()
 	{
 		return cacheable;
-	}
-
-	/**
-	 * Sets the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @param value
-	 *            The idle duration timeout
-	 * @return this
-	 */
-	public Resource setIdleTimeout(Duration value)
-	{
-		idleTimeout = value;
-		return this;
-	}
-
-	/**
-	 * Returns the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @return The idle duration timeout
-	 */
-	public Duration getIdleTimeout()
-	{
-		return idleTimeout;
 	}
 
 	/**
@@ -158,17 +145,6 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Allows implementations to do configure the response, like setting headers
-	 * etc.
-	 * 
-	 * @param response
-	 *            the respone
-	 */
-	protected void configureResponse(final Response response)
-	{
-	}
-
-	/**
 	 * Should this resource be cacheable, so will it set the last modified and
 	 * the some cache headers in the response.
 	 * 
@@ -183,6 +159,19 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
+	 * Sets the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @param value
+	 *            The idle duration timeout
+	 * @return this
+	 */
+	public Resource setIdleTimeout(Duration value)
+	{
+		idleTimeout = value;
+		return this;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param parameters
@@ -191,6 +180,17 @@ public abstract class Resource implements IResourceListener
 	public void setParameters(final Map parameters)
 	{
 		this.parameters = new ValueMap(parameters);
+	}
+
+	/**
+	 * Allows implementations to do configure the response, like setting headers
+	 * etc.
+	 * 
+	 * @param response
+	 *            the respone
+	 */
+	protected void configureResponse(final Response response)
+	{
 	}
 
 	/**

@@ -84,11 +84,9 @@ public abstract class Request
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the absolute URL of this request for local use.
-	 * 
-	 * @return The absolute request URL for local use
+	 * @return Path info for request
 	 */
-	public abstract String getURL();
+	public abstract String getPath();
 
 	/**
 	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
@@ -100,7 +98,9 @@ public abstract class Request
 	public abstract String getRelativeURL();
 
 	/**
-	 * @return Path info for request
+	 * Retrieves the absolute URL of this request for local use.
+	 * 
+	 * @return The absolute request URL for local use
 	 */
-	public abstract String getPath();
+	public abstract String getURL();
 }
