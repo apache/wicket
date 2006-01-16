@@ -537,20 +537,20 @@ public final class Strings
 			return null;
 		}
 
-		// if searchFor is null or the empty string, then there is nothing to
+		// If searchFor is null or the empty string, then there is nothing to
 		// replace, so returning s is the only option here.
 		if (searchFor == null || "".equals(searchFor))
 		{
 			return s;
 		}
 
-		// if replaceWith is null, then the searchFor should be replaced with
-		// nothing,
-		// which can be seen as the empty string.
+		// If replaceWith is null, then the searchFor should be replaced with
+		// nothing, which can be seen as the empty string.
 		if (replaceWith == null)
 		{
 			replaceWith = "";
 		}
+		
 		// Look for first occurrence of searchFor
 		int matchIndex = s.indexOf(searchFor);
 		if (matchIndex == -1)
@@ -586,10 +586,10 @@ public final class Strings
 			}
 			while (matchIndex != -1);
 
-			// add tail of s
+			// Add tail of s
 			buffer.append(s.substring(pos));
 
-			// return processed buffer
+			// Return processed buffer
 			return buffer.toString();
 		}
 	}
