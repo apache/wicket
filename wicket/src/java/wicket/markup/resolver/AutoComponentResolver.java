@@ -119,7 +119,7 @@ public final class AutoComponentResolver implements IComponentResolver
                 final Component component = parent.get(tag.getId());
                 if (component != null)
                 {
-                    component.render();
+                    component.render(markupStream);
                     return true;
                 }
             }
