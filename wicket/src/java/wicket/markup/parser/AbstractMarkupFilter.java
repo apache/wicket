@@ -45,13 +45,15 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	{
 		return parent;
 	}
-	
+
 	/**
 	 * Set new parent.
-	 * @param parent The next element in the chain
+	 * 
+	 * @param parent
+	 *            The next element in the chain
 	 */
 	public final void setParent(final IMarkupFilter parent)
 	{
-	    this.parent = parent;
+		this.parent = parent;
 	}
 }
