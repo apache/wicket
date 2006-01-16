@@ -284,7 +284,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				else
 				{
 					String lowerCase = tagText.toLowerCase();
-					// TODO General: hard coded wicket:id check?? Can be othername??
+					// TODO General: Hard-coded wicket:id check?? Can be othername??
 					// Often save a (longer) comparison at the expense of a extra shorter one for 's' tags
 					if ((type == XmlTag.OPEN) && lowerCase.startsWith("s"))
 					{

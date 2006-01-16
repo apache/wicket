@@ -304,7 +304,7 @@ public class PropertyResolver
 						}
 						else
 						{
-							// TODO General: Find a public FIELD
+							// TODO Enhancement: Find a public FIELD
 							throw new WicketRuntimeException("No get method defined for class: " + clz
 									+ " expression: " + exp);
 						}

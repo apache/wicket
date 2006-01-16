@@ -324,7 +324,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		 */
 		public IModel getNestedModel()
 		{
-			// TODO General: check calls to this method; original: return paths;
+			// TODO General: Check calls to this method; original: return paths;
 			return null;
 		}
 	}
