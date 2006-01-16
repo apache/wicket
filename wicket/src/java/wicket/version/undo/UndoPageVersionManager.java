@@ -123,11 +123,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 		changeListStack.push(changeList);
 		
 		// If stack is overfull, remove oldest entry
-		if (changeListStack.size() > maxVersions)
+		if (getVersions() > maxVersions)
 		{
-			changeListStack.remove(0);
+			expireOldestVersion();
 		}
-		
+
 		// Make memory efficient for replication
 		changeListStack.trimToSize();
 
@@ -135,6 +135,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 		{
 			log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
 		}
+	}
+	
+	/**
+	 * Expires an old version
+	 */
+	public void expireOldestVersion()
+	{
+		changeListStack.remove(0);
 	}
 
 	/**
@@ -171,6 +179,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 			// The version is not available
 			return null;
 		}
+	}
+
+	/**
+	 * @see wicket.version.IPageVersionManager#getVersions()
+	 */
+	public int getVersions()
+	{
+		return changeListStack.size();
 	}
 
 	/**

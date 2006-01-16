@@ -152,6 +152,27 @@ public final class PageMap implements Serializable
 		}
 		return size;
 	}
+	
+	/**
+	 * @return Number of page versions stored in this page map
+	 */
+	public final int getVersions()
+	{
+		int versions = 0;
+		for (final Iterator iterator = getEntries().iterator(); iterator.hasNext();)
+		{
+			final IPageMapEntry entry = (IPageMapEntry)iterator.next();
+			if (entry instanceof Page)
+			{
+				versions += ((Page)entry).getVersions();
+			}
+			else
+			{
+				versions++;
+			}
+		}
+		return versions;
+	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.

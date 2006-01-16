@@ -92,19 +92,23 @@ public final class PageMapView extends Panel
 				listItem.add(link);
 				listItem.add(new Label("class", "" + entry.getClass().getName()));
 				int size;
+				int version;
 				int versions;
 				if (entry instanceof Page)
 				{
 					Page page = (Page)entry;
 					page.detachModels();
 					size = page.getSize();
-					versions = page.getCurrentVersionNumber() + 1;
+					version = page.getCurrentVersionNumber();
+					versions = page.getVersions();
 				}
 				else
 				{
 					size = Objects.sizeof(entry);
-					versions = 1;
+					version = 0;
+					versions = 0;
 				}
+				listItem.add(new Label("version", "" + version));
 				listItem.add(new Label("versions", "" + versions));
 				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
 			}

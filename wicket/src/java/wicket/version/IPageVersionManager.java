@@ -74,11 +74,12 @@ public interface IPageVersionManager extends Serializable
 
 	/**
 	 * Indicates an internal state for the given component is about to change.
-	 * @param change 
-	 * 			  The change which represents the internal state
+	 * 
+	 * @param change
+	 *            The change which represents the internal state
 	 */
 	void componentStateChanging(Change change);
-	
+
 	/**
 	 * Indicates that the given component was removed.
 	 * 
@@ -93,6 +94,11 @@ public interface IPageVersionManager extends Serializable
 	 * @see IPageVersionManager#beginVersion()
 	 */
 	void endVersion();
+	
+	/**
+	 * Expires oldest version
+	 */
+	void expireOldestVersion();
 
 	/**
 	 * Retrieves a given Page version.
@@ -102,6 +108,11 @@ public interface IPageVersionManager extends Serializable
 	 * @return The page or null if the version requested is not available
 	 */
 	Page getVersion(int versionNumber);
+
+	/**
+	 * @return The number of versions stored in this version manager
+	 */
+	int getVersions();
 
 	/**
 	 * @return Returns the current (newest) version number available through
