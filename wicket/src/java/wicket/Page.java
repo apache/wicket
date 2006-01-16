@@ -928,8 +928,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				if (renderAllowed)
 				{
 					// It could be that the markup stream has been reloaded
-					// (modified)
-					// and that the markup stream positions are no longer valid.
+					// (modified) and that the markup stream positions are no
+					// longer valid.
 					component.resetMarkupStream();
 				}
 
