@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -737,7 +737,7 @@ public final class Strings
 		{
 			return null;
 		}
-		
+
 		final StringBuffer buffer = new StringBuffer();
 		int newlineCount = 0;
 
@@ -791,13 +791,13 @@ public final class Strings
 	 */
 	public static String toString(final Object object)
 	{
-		if (object instanceof Throwable)
-		{
-			return toString((Throwable)object);
-		}
-		else if (object == null)
+		if (object == null)
 		{
 			return null;
+		}
+		else if (object instanceof Throwable)
+		{
+			return toString((Throwable)object);
 		}
 		else
 		{
