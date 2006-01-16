@@ -709,12 +709,17 @@ public abstract class Session implements Serializable
 	 */
 	protected void update()
 	{
+		// TODO Bug: It's doubtful this code works anymore because PageMaps are
+		// no longer referenced by Session (they are independent attributes). To
+		// get clustering to work, we're probably going to have to add a dirty
+		// boolean to PageMap and replicate each dirty pagemap in this method.
+
 		// If state is dirty
 		if (dirty)
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("updateCluster(): Session is dirty.  Replicating.");
+				log.debug("update: Session is dirty.  Replicating.");
 			}
 
 			// State is no longer dirty
@@ -727,7 +732,7 @@ public abstract class Session implements Serializable
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("updateCluster(): Session not dirty.");
+				log.debug("update: Session not dirty.");
 			}
 		}
 
