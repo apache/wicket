@@ -154,7 +154,7 @@ public final class Settings
 	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
 
 	/** The maximum number of versions of a page to track */
-	private int maxPageVersions = 10;
+	private int maxPageVersions = Integer.MAX_VALUE;
 
 	/** Map to look up resource factories by name */
 	private Map nameToResourceFactory = new HashMap();

@@ -1273,6 +1273,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				versionManager.endVersion();
 			}
 
+			// Evict any page version(s) as need be
+			getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
+
 			// Reset boolean for next request
 			setFlag(FLAG_NEW_VERSION, false);
 		}

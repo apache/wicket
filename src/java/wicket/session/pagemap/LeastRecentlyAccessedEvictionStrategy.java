@@ -20,11 +20,12 @@ package wicket.session.pagemap;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.Page;
 import wicket.PageMap;
 
 /**
  * A simple eviction strategy that evicts the least recently accessed page
- * source from the given page map.
+ * version from the given page map.
  * 
  * @author Jonathan Locke
  */
@@ -32,22 +33,22 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** Maximum number of pages in a page map before evictions start */
-	private int maxPages;
+	/** Maximum number of page versions in a page map before evictions start */
+	private int maxVersions;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param maxPages
-	 *            Maximum number of pages before eviction occurs
+	 * @param maxVersions
+	 *            Maximum number of page versions before eviction occurs
 	 */
-	public LeastRecentlyAccessedEvictionStrategy(int maxPages)
+	public LeastRecentlyAccessedEvictionStrategy(int maxVersions)
 	{
-		if (maxPages < 1)
+		if (maxVersions < 1)
 		{
-			throw new IllegalArgumentException("Value for maxPages must be >= 1");
+			throw new IllegalArgumentException("Value for maxVersions must be >= 1");
 		}
-		this.maxPages = maxPages;
+		this.maxVersions = maxVersions;
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final PageMap pageMap)
 	{
-		if (pageMap.size() > maxPages)
+		if (pageMap.size() > maxVersions)
 		{
 			final List list = pageMap.getEntries();
 			IPageMapEntry leastRecentlyUsed = null;
@@ -72,7 +73,18 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 			}
 			if (leastRecentlyUsed != null)
 			{
-				pageMap.remove(leastRecentlyUsed);
+				final Page page = leastRecentlyUsed.getPage();
+				int currentVersionNumber = page.getCurrentVersionNumber(); 
+				if (currentVersionNumber > 1)
+				{
+					// Go back to previous version
+					page.getVersion(currentVersionNumber - 1);
+				}
+				else
+				{
+					// Remove the entire page
+					pageMap.remove(leastRecentlyUsed);
+				}
 			}
 		}
 	}
@@ -82,6 +94,6 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public String toString()
 	{
-		return "[LeastRecentlyAccessedEvictionStrategy maxPages = " + maxPages + "]";
+		return "[LeastRecentlyAccessedEvictionStrategy maxVersions = " + maxVersions + "]";
 	}
 }
