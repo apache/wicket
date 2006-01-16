@@ -32,10 +32,10 @@ import wicket.util.string.Strings;
 public class RequiredValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Singleton instance */
 	private static final RequiredValidator instance = new RequiredValidator();
-	
+
 	/**
 	 * @return Instance of required validator
 	 */
@@ -43,30 +43,33 @@ public class RequiredValidator extends StringValidator
 	{
 		return instance;
 	}
-	
+
 	/**
-	 * Protectected constructor to force use of static singleton accessor method.
-	 * Or override it to implement resourceKey(Component)
+	 * Protectected constructor to force use of static singleton accessor
+	 * method. Or override it to implement resourceKey(Component)
 	 */
 	protected RequiredValidator()
 	{
 	}
-	
+
 	/**
 	 * Validates whether the input value is not-null or empty.
-	 *
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * 
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+	 *      java.lang.String)
 	 */
 	public final void onValidate(FormComponent formComponent, String value)
 	{
-		// if input was null then value was not submitted (disabled field), ignore it
-		// TODO for now only a test on a text component is done for the disabled == null.
-		// Checkbox, RadioChoice or CheckBoxMultipleChoice can all be null and not disabled. 
-		if (formComponent instanceof AbstractTextComponent && value == null) 
+		// if input was null then value was not submitted (disabled field),
+		// ignore it
+		// TODO General: For now only a test on a text component is done for the
+		// disabled == null. Checkbox, RadioChoice or CheckBoxMultipleChoice can
+		// all be null and not disabled.
+		if (formComponent instanceof AbstractTextComponent && value == null)
 		{
 			return;
 		}
-		
+
 		// Check value
 		if (Strings.isEmpty(value))
 		{

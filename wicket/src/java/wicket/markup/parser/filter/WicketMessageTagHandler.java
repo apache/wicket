@@ -46,7 +46,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/** Logging */
 	private final static Log log = LogFactory.getLog(WicketMessageTagHandler.class);
 
-	/** TODO Namespace should not be a constant */
+	/** TODO General: Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTR_NAME = "wicket:message";
 
 	/**

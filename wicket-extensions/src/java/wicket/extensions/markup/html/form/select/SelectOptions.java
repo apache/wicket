@@ -75,8 +75,8 @@ public class SelectOptions extends OrderedRepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					// TODO
-					throw new WicketRuntimeException("model not a collection");
+					// TODO Unknown: Unknown
+					throw new WicketRuntimeException("Model not a collection");
 				}
 
 				// iterator over model objects for SelectOption components

@@ -35,8 +35,9 @@ public class ExternalPageViewer
 {
 	private static final List browserPaths = new ArrayList();
 
-	//TODO I'm sure we can be smarter on this. Maybe throw in some JNI? Let's see whether Jonathan can help here.
-	//TODO where is this class used/ how is it supposed to be used?
+	// TODO General: I'm sure we can be smarter on this. Maybe throw in some
+	// JNI? Let's see whether Jonathan can help here.
+	// TODO General: Where is this class used/ how is it supposed to be used?
 	static
 	{
 		registerBrowserPath("C:/Program Files/Mozilla Firefox/firefox.exe");
@@ -53,7 +54,7 @@ public class ExternalPageViewer
 	{
 		this.tester = tester;
 	}
-	
+
 	/**
 	 * register addtional browser path for viewInBrowser()
 	 * 
@@ -63,7 +64,7 @@ public class ExternalPageViewer
 	{
 		browserPaths.add(path);
 	}
-	
+
 	/**
 	 * open a web browser and see lastet rendered WebPage.
 	 */

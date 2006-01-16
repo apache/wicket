@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data;
 
@@ -32,18 +31,21 @@ import wicket.version.undo.Change;
  * top-down so that for each third item a new row is created.
  * <p>
  * Example
+ * 
  * <pre>
- * &lt;tbody&gt;
- *   &lt;tr wicket:id="rows" class"even"&gt;
- *     &lt;td wicket:id="cols"&gt;
- *       &lt;span wicket:id="id"&gt;Test ID&lt;/span&gt;
- *     &lt;/td&gt;
- *   &lt;/tr&gt;
- * &lt;/tbody&gt;  
+ *   &lt;tbody&gt;
+ *     &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
+ *       &lt;td wicket:id=&quot;cols&quot;&gt;
+ *         &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
+ *       &lt;/td&gt;
+ *     &lt;/tr&gt;
+ *   &lt;/tbody&gt;  
  * </pre>
+ * 
  * and in java:
+ * 
  * <pre>
- * add(new GridView("rows", dataProvider).setColumns(3));
+ * add(new GridView(&quot;rows&quot;, dataProvider).setColumns(3));
  * </pre>
  * 
  * @author Igor Vaynberg
@@ -76,6 +78,7 @@ public abstract class GridView extends DataViewBase
 	{
 		return columns;
 	}
+
 	/**
 	 * Sets number of columns
 	 * 
@@ -164,8 +167,9 @@ public abstract class GridView extends DataViewBase
 			}
 			this.rows = rows;
 		}
-		// TODO can this be moved into the this.rows!=rows if block for
-		// optimization?
+
+		// TODO Performance: can this be moved into the this.rows != rows if
+		// block for optimization?
 		updateItemsPerPage();
 		return this;
 	}
@@ -198,18 +202,18 @@ public abstract class GridView extends DataViewBase
 
 			int row = 0;
 
-			// TODO do we really need this index?
+			// TODO General: do we really need this index?
 			int index = 0;
 
 			do
 			{
-				// build a row
+				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
 				OrderedRepeatingView rowView = new OrderedRepeatingView("cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
-				// populate the row
+				// Populate the row
 				for (int i = 0; i < cols; i++)
 				{
 					final Item cellItem;

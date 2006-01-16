@@ -34,7 +34,7 @@ import wicket.model.IModel;
  * control over the markup between the &lt;select&gt; tag and its children
  * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags.
  * 
- * TODO example
+ * TODO General: Example
  * 
  * @see SelectOption
  * @see SelectOptions

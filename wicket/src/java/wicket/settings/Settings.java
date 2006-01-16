@@ -199,7 +199,7 @@ public final class Settings
 	/**
 	 * List of {@link IResponseFilter}s.
 	 */
-	// TODO revisit... I don't think everyone agrees with
+	// TODO General: Revisit... I don't think everyone agrees with
 	// this (e.g. why not use servlet filters to acchieve the same)
 	// and if we want to support this, it could more elegantly
 	// be made part of e.g. request targets or a request processing

@@ -25,7 +25,8 @@ import wicket.Page;
 import wicket.RequestCycle;
 
 /**
- * TODO DOC
+ * TODO Documentation: Document this class!
+ * 
  * @author jcompagner
  */
 public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceRequestTarget

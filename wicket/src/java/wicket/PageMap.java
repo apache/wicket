@@ -246,7 +246,7 @@ public final class PageMap implements Serializable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retrieves page with given id.
 	 * 
@@ -299,9 +299,9 @@ public final class PageMap implements Serializable
 				// Increase pagemap size
 				size++;
 			}
-			
+
 			// Set attribute
-			session.setAttribute(attribute, entry);		
+			session.setAttribute(attribute, entry);
 
 			// Evict any page(s) as need be
 			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);
@@ -324,12 +324,13 @@ public final class PageMap implements Serializable
 		final RequestCycle cycle = session.getRequestCycle();
 		IRequestCycleProcessor processor = cycle.getProcessor();
 		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
-		// TODO this conflicts with the use of IRequestCodingStrategy. We should
-		// get rid of encodeURL in favor of IRequestCodingStrategy
+
+		// TODO General: This conflicts with the use of IRequestCodingStrategy.
+		// We should get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		cycle.redirectTo(page);
 
-		// TODO why this?
+		// TODO General: Why this?
 		session.dirty();
 	}
 

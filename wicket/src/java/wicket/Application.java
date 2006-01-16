@@ -384,7 +384,7 @@ public abstract class Application
 	 * @see Application#getSessionSettings()
 	 * @deprecated
 	 */
-	// TODO make private in post 1.2
+	// TODO Post 1.2: make private
 	public Settings getSettings()
 	{
 		if (settings == null)

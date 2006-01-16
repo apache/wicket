@@ -259,7 +259,7 @@ public abstract class RequestCycle
 	private transient RequestParameters requestParameters;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO use a more efficient implementation, maybe with a default size of 3
+	// TODO Performance: use a more efficient implementation, maybe with a default size of 3
 	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/** the time that this request cycle object was created. */
@@ -609,7 +609,7 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// TODO this has to be done after the unit tests are fixed
+		// TODO Robustness: This has to be done after the unit tests are fixed
 		// // if we are already responding, we can't change the request target
 		// // as that would either have no effect, or - in case we would set
 		// // the currentStep back to PROCESS_EVENTS, we would have double
@@ -1041,7 +1041,7 @@ public abstract class RequestCycle
 			// get the processor
 			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
-			// TODO catch infinite loops
+			// TODO Robustness: Catch infinite loops
 			while (currentStep < DONE)
 			{
 				step(processor);

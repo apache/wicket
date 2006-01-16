@@ -171,7 +171,7 @@ public class XmlPullParserTest extends TestCase
         assertNotNull(ex);
 
         // no extra characters allowed before <?xml>
-        // TODO I'd certainly prefer an exception
+        // TODO General: I'd certainly prefer an exception
         parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();

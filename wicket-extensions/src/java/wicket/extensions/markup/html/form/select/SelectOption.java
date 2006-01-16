@@ -29,7 +29,7 @@ import wicket.util.lang.Objects;
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
  * 
- * TODO example
+ * TODO General: Example
  *  
  * @see Select
  * 

@@ -254,7 +254,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		PageParameters params = pageParameters;
 
-		// TODO ? the parameters should already have been resolved ?
+		// TODO General: The parameters should already have been resolved?
 		/*
 		 * if (isMounted()) { //decode page parameters from url Request request =
 		 * requestCycle.getRequest(); String urlFragment =

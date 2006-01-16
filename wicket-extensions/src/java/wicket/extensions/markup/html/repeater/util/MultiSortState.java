@@ -30,7 +30,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
  * @author Igor Vaynberg
  * @author Phil Kulak
  */
-//TODO finish
+// TODO General: Finish
 /*public */class MultiSortState implements ISortState
 {
 	/**
@@ -227,8 +227,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	 */
 	public void setPropertySortOrder(String property, int state)
 	{
-		// TODO Auto-generated method stub
-		
+		// TODO General: Auto-generated method stub
 	}
 
 	/**
@@ -236,8 +235,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	 */
 	public int getPropertySortOrder(String property)
 	{
-		// TODO Auto-generated method stub
+		// TODO General: Auto-generated method stub
 		return 0;
 	}
-
 }

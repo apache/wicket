@@ -90,7 +90,7 @@ public abstract class TemplatePage extends WicketExamplePage
 	 */
 	public boolean isVersioned()
 	{
-		//TODO versioning gives problems... probably has to do with markup inheritance
+		// TODO Bug: Versioning gives problems... probably has to do with markup inheritance
 		return false;
 	}
 }

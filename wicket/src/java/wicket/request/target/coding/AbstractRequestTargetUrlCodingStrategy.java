@@ -75,7 +75,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy implements IRequest
 		}
 
 		String[] pairs = urlFragment.split("/");
-		// TODO check pairs.length%2==0
+
+		// TODO Robustness: Check pairs.length % 2 == 0
 		for (int i = 0; i < pairs.length - 1; i += 2)
 		{
 			params.put(pairs[i], pairs[i + 1]);

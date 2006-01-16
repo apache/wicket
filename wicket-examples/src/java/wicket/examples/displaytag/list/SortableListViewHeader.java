@@ -87,7 +87,7 @@ public abstract class SortableListViewHeader extends Border
 	 */
 	protected final String getCssClass()
 	{
-		// TODO This needs to be integrated with our CSS design
+		// TODO General: This needs to be integrated with our CSS design
 		return group.getCssClass(getId(), ascending);
 	}
 

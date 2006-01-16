@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,7 +51,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 
 	/** The URL to this resource. */
 	private URL url;
-	
+
 	/**
 	 * the handle to the file if it is a file resource
 	 */
@@ -89,8 +89,8 @@ public final class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (Exception ex)
 			{
-				log.info("cannot convert url: " + url + " to file (" + ex.getMessage() +
-						"), falling back to the inputstream for polling");
+				log.info("cannot convert url: " + url + " to file (" + ex.getMessage()
+						+ "), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
 			{
@@ -113,9 +113,9 @@ public final class UrlResourceStream extends AbstractResourceStream
 			if (connection != null)
 			{
 				if (connection instanceof HttpURLConnection)
-		        { 
-		             ((HttpURLConnection)connection).disconnect();
-		        }
+				{
+					((HttpURLConnection)connection).disconnect();
+				}
 				else
 				{
 					try
@@ -156,8 +156,8 @@ public final class UrlResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * Method to test the content type on null or unknown.
-	 * if this is the case the content type is tried to be resolved throw the servlet context
+	 * Method to test the content type on null or unknown. if this is the case
+	 * the content type is tried to be resolved throw the servlet context
 	 */
 	private void testContentType()
 	{
@@ -166,8 +166,10 @@ public final class UrlResourceStream extends AbstractResourceStream
 			Application application = Application.get();
 			if (application instanceof WebApplication)
 			{
-				// TODO for non webapplication another method should be implemented (getMimeType on application?)
-				contentType = ((WebApplication)application).getWicketServlet().getServletContext().getMimeType(url.getFile());
+				// TODO General: For non webapplication another method should be
+				// implemented (getMimeType on application?)
+				contentType = ((WebApplication)application).getWicketServlet().getServletContext()
+						.getMimeType(url.getFile());
 				if (contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
@@ -230,9 +232,9 @@ public final class UrlResourceStream extends AbstractResourceStream
 			URLConnection urlConnection = null;
 			try
 			{
-				
+
 				urlConnection = url.openConnection();
-	
+
 				// update the last modified time.
 				long lastModified = urlConnection.getLastModified();
 				if (lastModified != this.lastModified)
@@ -251,9 +253,9 @@ public final class UrlResourceStream extends AbstractResourceStream
 				if (urlConnection != null)
 				{
 					if (urlConnection instanceof HttpURLConnection)
-			        { 
-			             ((HttpURLConnection)urlConnection).disconnect();
-			        }
+					{
+						((HttpURLConnection)urlConnection).disconnect();
+					}
 					else
 					{
 						try

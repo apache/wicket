@@ -102,11 +102,9 @@ public abstract class AbstractValidator implements IValidator
 		// Return formatted error message
 		Localizer localizer = formComponent.getLocalizer();
 
-		// TODO I didn't find a simpler way to getString() throw a
-		// MissingResourceException
-		// without changes the application settings. I guess this is something
-		// to change in
-		// 1.2 or 1.3
+		// TODO Post 1.2: I didn't find a simpler way to getString() throw a
+		// MissingResourceException without changes the application settings. I
+		// guess this is something to change in 1.2 or 1.3
 		String message = localizer.getString(resourceKey, formComponent.getParent(), resourceModel,
 				"");
 		if ((message == null) || (message.length() == 0))
@@ -118,7 +116,7 @@ public abstract class AbstractValidator implements IValidator
 						formComponent.getClass().getName(), resourceKey);
 			}
 			else
-			// TODO quick fix for now to get settings working again
+			// TODO General: Quick fix for now to get settings working again
 			{
 				message = "[Warning: String resource for '" + resourceKey + "' not found]";
 			}

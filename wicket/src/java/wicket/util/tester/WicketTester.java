@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.12 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -154,7 +154,7 @@ import wicket.util.lang.Classes;
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
  * 
- * TODO ingram: example usage of FormTester
+ * TODO General: Example usage of FormTester
  * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
@@ -676,8 +676,8 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert previous rendered page expired
 	 * 
-	 * TODO This test is no longer valid because it depends on an implementation
-	 * detail that just changed!
+	 * TODO General: This test is no longer valid because it depends on an
+	 * implementation detail that just changed!
 	 * 
 	 * public void assertExpirePreviousPage() { PageMap pageMap =
 	 * getWicketSession().getPageMap(null); Field internalMapCacheField; try {
