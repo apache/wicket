@@ -900,6 +900,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @deprecated refactor this to use the
 	 *             {@link wicket.request.IRequestCodingStrategy}
 	 */
+	// TODO Post 1.2: Remove this method?
 	private void dispatchEvent(final Page page, final String url)
 	{
 		RequestCycle requestCycle = RequestCycle.get();

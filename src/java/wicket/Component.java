@@ -767,6 +767,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * @deprecated
 	 */
+	// TODO Post 1.2: Remove this method
 	public final IApplicationSettings getApplicationPages()
 	{
 		return getApplication().getSettings();
@@ -2318,6 +2319,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * @deprecated since 1.2 Please implement onRender(MarkupStream) instead
 	 */
+	// TODO Post 1.2: Remove this method?
 	protected final void onRender()
 	{
 		onRender(findMarkupStream());
