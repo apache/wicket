@@ -24,10 +24,10 @@ import wicket.markup.MarkupElement;
 /**
  * Wicket uses a streaming XML parser to read the markup. A chain of
  * IMarkupFilters is used e.g. to remove comments, allow for html typical markup
- * (some tags don't need to be closed explicitly), etc..
+ * (some tags don't need to be closed explicitly), etc.
  * <p>
  * The streaming XML parser must implement IMarkupFilter itself and thus is
- * ususally the first element of the chain.
+ * usually the first element of the chain.
  * 
  * @author Juergen Donnerstag
  */
@@ -39,14 +39,8 @@ public interface IMarkupFilter
 	 * 
 	 * @return The next filter in the chain, or null if the last one.
 	 */
-	public abstract IMarkupFilter getParent();
-	
-	/**
-	 * Set parent.
-	 * @param parent The next element in the chain
-	 */
-	public abstract void setParent(final IMarkupFilter parent);
-	
+	IMarkupFilter getParent();
+
 	/**
 	 * Get the next MarkupElement from the parent MarkupFilter and handle it if
 	 * the specific filter criteria are met. Depending on the filter, it may
@@ -56,5 +50,13 @@ public interface IMarkupFilter
 	 * @return Return the next eligible MarkupElement
 	 * @throws ParseException
 	 */
-	public abstract MarkupElement nextTag() throws ParseException;
+	MarkupElement nextTag() throws ParseException;
+
+	/**
+	 * Set parent filter.
+	 * 
+	 * @param parent
+	 *            The next element in the chain
+	 */
+	void setParent(final IMarkupFilter parent);
 }
