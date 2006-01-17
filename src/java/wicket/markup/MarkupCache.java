@@ -186,7 +186,6 @@ public class MarkupCache
 
 		// Look up markup tag list by class, locale, style and markup type
 		final String key = markupKey(containerInfo, clazz);
-
 		Markup markup = (Markup)markupCache.get(key);
 
 		// If no markup in the cache
@@ -194,7 +193,6 @@ public class MarkupCache
 		{
 			synchronized (markupCache)
 			{
-	
 				markup = (Markup)markupCache.get(key);
 	
 				// If no markup in the cache
@@ -202,7 +200,6 @@ public class MarkupCache
 				{
 					// Locate markup resource, searching up class hierarchy
 					MarkupResourceStream markupResource = null;
-	
 					while ((markupResource == null) && (containerClass != MarkupContainer.class))
 					{
 						// Look for markup resource for containerClass
@@ -355,8 +352,8 @@ public class MarkupCache
 	 */
 	public void clear()
 	{
-		this.markupCache.clear();
 		this.afterLoadListeners.clear();
+		this.markupCache.clear();
 	}
 
 	/**
@@ -430,7 +427,6 @@ public class MarkupCache
 		// TODO General: The merged markup resource modify time is wrong. It
 		// should be the latest of all resources involved.
 		Markup mergedMarkup = InheritedMarkupMerger.mergeMarkups(markup, baseMarkup, extendIndex);
-
 		return mergedMarkup;
 	}
 
@@ -457,7 +453,6 @@ public class MarkupCache
 				}
 			}
 		}
-
 		return -1;
 	}
 }

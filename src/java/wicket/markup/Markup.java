@@ -1,29 +1,33 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
- *	http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
- * Holds markup as a resource (the stream that the markup came from) and 
- * a list of MarkupElements (the markup itself). 
+ * Holds markup as a resource (the stream that the markup came from) and a list
+ * of MarkupElements (the markup itself).
  * 
  * @see MarkupElement
  * @see ComponentTag
@@ -32,58 +36,42 @@ import java.util.Stack;
  */
 public final class Markup
 {
+	private final static Log log = LogFactory.getLog(Markup.class);
+	
 	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
-	
+	public static final Markup NO_MARKUP = new Markup();
+
 	/** The list of markup elements */
-	private /* final */ List markup;
-	
+	private/* final */List markup;
+
 	/** The markup's resource stream for diagnostic purposes */
-	private final MarkupResourceStream resource;
-	
+	private MarkupResourceStream resource;
+
 	/** If found in the markup, the <?xml ...?> string */
-	private final String xmlDeclaration;
-	
-	/** The encoding as found in <?xml ... encoding="" ?>.	Null, else */
-	private final String encoding;
+	private String xmlDeclaration;
+
+	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
+	private String encoding;
 
 	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
-	private final String wicketNamespace;
-    
-    /** Markup has been searched for the header, but it doesn't contain any */
-    public final static int NO_HEADER_FOUND = -1;
+	private String wicketNamespace;
 
-	/** If the markup contains a header section, the index will point to
-	 * the MarkupElement.
+	/** Markup has been searched for the header, but it doesn't contain any */
+	public final static int NO_HEADER_FOUND = -1;
+
+	/**
+	 * If the markup contains a header section, the index will point to the
+	 * MarkupElement.
 	 */
 	private int headerIndex = NO_HEADER_FOUND;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param resource The resource where the markup was found
-	 * @param markup The markup elements
-	 * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
-	 * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
-	 * @param wicketNamespace Wicket namespace taken from xmlns:wicket="http://wicket.sourceforge.net"
-	 */
-	Markup(final MarkupResourceStream resource, final List markup, final String xmlDeclaration, 
-	        final String encoding, final String wicketNamespace)
-	{
-		this.resource = resource;
-		this.markup = markup;
-		this.xmlDeclaration = xmlDeclaration;
-		this.encoding = encoding;
-		this.wicketNamespace = wicketNamespace;
-		
-		initialize();
-	}
-	
+
 	/**
 	 * Kind of copy constructor, though new markup elements are attached
 	 * 
-	 * @param markup The Markup which variables are copied
-	 * @param markupElements The new list of markup elements
+	 * @param markup
+	 *            The Markup which variables are copied
+	 * @param markupElements
+	 *            The new list of markup elements
 	 */
 	Markup(final Markup markup, final List markupElements)
 	{
@@ -92,8 +80,17 @@ public final class Markup
 		this.xmlDeclaration = markup.xmlDeclaration;
 		this.encoding = markup.encoding;
 		this.wicketNamespace = markup.wicketNamespace;
-		
+
 		initialize();
+	}
+
+	/**
+	 * Constructor
+	 */
+	Markup()
+	{
+		this.markup = new ArrayList();
+		this.wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 	}
 
 	/**
@@ -101,25 +98,25 @@ public final class Markup
 	 */
 	private void initialize()
 	{
-	    if (markup != null)
-	    {
-	   	 	// Initialize the index where <wicket:extend> can be found.
-		    for (int i=0; i < markup.size(); i++)
-		    {
-		        MarkupElement elem = (MarkupElement) markup.get(i);
-		        if (elem instanceof WicketTag)
-		        {
-		            WicketTag tag = (WicketTag) elem;
+		if (markup != null)
+		{
+			// Initialize the index where <wicket:extend> can be found.
+			for (int i = 0; i < markup.size(); i++)
+			{
+				MarkupElement elem = (MarkupElement)markup.get(i);
+				if (elem instanceof WicketTag)
+				{
+					WicketTag tag = (WicketTag)elem;
 					if ((tag.isHeadTag() == true) && (tag.getNamespace() != null))
 					{
-		                headerIndex = i;
-		                break;
-		            }
-		        }
-		    }
-	    }
+						headerIndex = i;
+						break;
+					}
+				}
+			}
+		}
 	}
-	
+
 	/**
 	 * @return String representation of markup list
 	 */
@@ -136,7 +133,8 @@ public final class Markup
 	}
 
 	/**
-	 * @param index Index into markup list
+	 * @param index
+	 *            Index into markup list
 	 * @return Markup element
 	 */
 	MarkupElement get(final int index)
@@ -146,6 +144,7 @@ public final class Markup
 
 	/**
 	 * Gets the resource that contains this markup
+	 * 
 	 * @return The resource where this markup came from
 	 */
 	MarkupResourceStream getResource()
@@ -162,8 +161,7 @@ public final class Markup
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the
-	 * markup.
+	 * Return the XML declaration string, in case if found in the markup.
 	 * 
 	 * @return Null, if not found.
 	 */
@@ -173,10 +171,10 @@ public final class Markup
 	}
 
 	/**
-	 * Gets the markup encoding.  A markup encoding may be specified in
-	 * a markup file with an XML encoding specifier of the form
-	 * &lt;?xml ... encoding="..." ?&gt;.
-	 *
+	 * Gets the markup encoding. A markup encoding may be specified in a markup
+	 * file with an XML encoding specifier of the form &lt;?xml ...
+	 * encoding="..." ?&gt;.
+	 * 
 	 * @return Encoding, or null if not found.
 	 */
 	public String getEncoding()
@@ -185,14 +183,14 @@ public final class Markup
 	}
 
 	/**
-	 * Get the current index pointing to the start element of the 
-	 * header section.
+	 * Get the current index pointing to the start element of the header
+	 * section.
 	 * 
 	 * @return index
 	 */
 	public int getHeaderIndex()
 	{
-	    return this.headerIndex;
+		return this.headerIndex;
 	}
 
 	/**
@@ -202,14 +200,16 @@ public final class Markup
 	 */
 	public String getWicketNamespace()
 	{
-	    return this.wicketNamespace;
+		return this.wicketNamespace;
 	}
-	
+
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 
-	 * @param path The component path expression
-	 * @param id The component's id to search for
+	 * @param path
+	 *            The component path expression
+	 * @param id
+	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
 	public int findComponentIndex(String path, final String id)
@@ -218,21 +218,21 @@ public final class Markup
 
 		// Find the tag. Rebuild the tree structure
 		Stack markupElements = new Stack();
-		
+
 		// The path of the current tag
 		String elementsPath = "";
-		
+
 		// The return value
 		int position = -1;
-		
+
 		// Iterate through all markup elements
-		for (int pos = 0; pos < markup.size(); pos ++)
+		for (int pos = 0; pos < markup.size(); pos++)
 		{
 			// Only ComponentTags are of interest
 			MarkupElement element = (MarkupElement)markup.get(pos);
 			if (element instanceof ComponentTag)
 			{
-				ComponentTag tag = (ComponentTag) element;
+				ComponentTag tag = (ComponentTag)element;
 				if (tag.isOpen() || tag.isOpenClose())
 				{
 					// If has wicket:id ..
@@ -251,8 +251,9 @@ public final class Markup
 							}
 						}
 					}
-					
-					// If open tag, put the path of the current element onto the stack
+
+					// If open tag, put the path of the current element onto the
+					// stack
 					// and adjust the path (walk into the subdirectory)
 					if (tag.isOpen())
 					{
@@ -274,7 +275,96 @@ public final class Markup
 				}
 			}
 		}
-		
+
 		return position;
+	}
+
+	/**
+	 * Sets encoding.
+	 * 
+	 * @param encoding
+	 *            encoding
+	 */
+	final void setEncoding(final String encoding)
+	{
+		this.encoding = encoding;
+	}
+
+	/**
+	 * Sets wicketNamespace.
+	 * 
+	 * @param wicketNamespace
+	 *            wicketNamespace
+	 */
+	final void setWicketNamespace(final String wicketNamespace)
+	{
+		this.wicketNamespace = wicketNamespace;
+		
+		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
+		{
+			log.info("You are using a non-standard component name: " + wicketNamespace);
+		}
+	}
+
+	/**
+	 * Sets xmlDeclaration.
+	 * 
+	 * @param xmlDeclaration
+	 *            xmlDeclaration
+	 */
+	final void setXmlDeclaration(final String xmlDeclaration)
+	{
+		this.xmlDeclaration = xmlDeclaration;
+	}
+
+	/**
+	 * Sets the resource stream associated with the markup. It is for diagnostic
+	 * purposes only.
+	 * 
+	 * @param resource
+	 *            the markup resource stream
+	 */
+	final void setResource(final MarkupResourceStream resource)
+	{
+		this.resource = resource;
+	}
+
+	/**
+	 * Add a MarkupElement
+	 * 
+	 * @param markupElement
+	 */
+	final void addMarkupElement(final MarkupElement markupElement)
+	{
+		this.markup.add(markupElement);
+	}
+
+	/**
+	 * Make all tags immutable and the list of elements unmodifable
+	 */
+	final void makeImmutable()
+	{
+		for (int i = 0; i < this.markup.size(); i++)
+		{
+			MarkupElement elem = (MarkupElement)this.markup.get(i);
+			if (elem instanceof ComponentTag)
+			{
+				((ComponentTag)elem).makeImmutable();
+			}
+		}
+
+		this.markup = Collections.unmodifiableList(this.markup);
+		
+		initialize();
+	}
+	
+	/**
+	 * Clear the list of markup elements. All other settings
+	 * remain unchanged.
+	 *
+	 */
+	final void clear()
+	{
+		this.markup = new ArrayList();
 	}
 }
