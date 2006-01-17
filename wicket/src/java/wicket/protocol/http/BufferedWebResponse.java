@@ -32,7 +32,7 @@ public class BufferedWebResponse extends WebResponse
 	private String redirectURL;
 
 	/** Buffer to hold page */
-	private StringBuffer buffer = new StringBuffer(2048);
+	private StringBuffer buffer = new StringBuffer(4096);
 
 	/**
 	 * Constructor for testing harness.
