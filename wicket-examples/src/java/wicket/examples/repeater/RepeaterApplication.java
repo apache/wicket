@@ -17,8 +17,8 @@
  */
 package wicket.examples.repeater;
 
+import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
 
 /**
  * application class for repeater examples application
@@ -36,7 +36,7 @@ public class RepeaterApplication extends WebApplication
 	 */
 	public RepeaterApplication()
 	{
-		getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
 
