@@ -154,6 +154,13 @@ public final class PageMap implements Serializable
 		accessStack.clear();
 	}
 
+	// FIXME General: We should include an ISessionSettings.trackStatelessPages
+	// flag and let users track accesses to stateless pages. This would allow us
+	// to delete the long, complicated warning below and replace it with a
+	// shorter one. The stateless pages would still not go into the session.
+	// Just the Access information would be replicated through the PageMap
+	// object.
+
 	/**
 	 * Returns a stack of PageMap.Access entries pushed in the order that the
 	 * pages and versions were accessed.
