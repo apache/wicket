@@ -19,7 +19,6 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -48,7 +48,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
-	private final Map markupCache = new HashMap();
+	private final Map markupCache = new ConcurrentHashMap();
 
 	/**
 	 * Markup inheritance requires that merged markup gets re-merged either
@@ -184,46 +184,52 @@ public class MarkupCache
 			}
 		}
 
-		synchronized (markupCache)
+		// Look up markup tag list by class, locale, style and markup type
+		final String key = markupKey(containerInfo, clazz);
+
+		Markup markup = (Markup)markupCache.get(key);
+
+		// If no markup in the cache
+		if (markup == null)
 		{
-			// Look up markup tag list by class, locale, style and markup type
-			final String key = markupKey(containerInfo, clazz);
-
-			Markup markup = (Markup)markupCache.get(key);
-
-			// If no markup in the cache
-			if (markup == null)
+			synchronized (markupCache)
 			{
-				// Locate markup resource, searching up class hierarchy
-				MarkupResourceStream markupResource = null;
-
-				while ((markupResource == null) && (containerClass != MarkupContainer.class))
+	
+				markup = (Markup)markupCache.get(key);
+	
+				// If no markup in the cache
+				if (markup == null)
 				{
-					// Look for markup resource for containerClass
-					markupResource = newMarkupResourceStream(containerClass, containerInfo);
-
-					containerClass = containerClass.getSuperclass();
-				}
-
-				// Found markup?
-				if (markupResource != null)
-				{
-					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResource);
-				}
-				else
-				{
-					// flag markup as non-existent (as opposed to null, which
-					// might mean that it's simply not loaded into the cache)
-					markup = Markup.NO_MARKUP;
-
-					// Save any markup list (or absence of one) for next time
-					markupCache.put(key, markup);
+					// Locate markup resource, searching up class hierarchy
+					MarkupResourceStream markupResource = null;
+	
+					while ((markupResource == null) && (containerClass != MarkupContainer.class))
+					{
+						// Look for markup resource for containerClass
+						markupResource = newMarkupResourceStream(containerClass, containerInfo);
+	
+						containerClass = containerClass.getSuperclass();
+					}
+	
+					// Found markup?
+					if (markupResource != null)
+					{
+						// load the markup and watch for changes
+						markup = loadMarkupAndWatchForChanges(key, markupResource);
+					}
+					else
+					{
+						// flag markup as non-existent (as opposed to null, which
+						// might mean that it's simply not loaded into the cache)
+						markup = Markup.NO_MARKUP;
+	
+						// Save any markup list (or absence of one) for next time
+						markupCache.put(key, markup);
+					}
 				}
 			}
-
-			return markup;
 		}
+		return markup;
 	}
 
 	/**
@@ -249,10 +255,7 @@ public class MarkupCache
 			markup = checkForMarkupInheritance(key, markup);
 
 			// add the markup to the cache
-			synchronized (markupCache)
-			{
-				markupCache.put(key, markup);
-			}
+			markupCache.put(key, markup);
 
 			// trigger all listeners registered on the markup just loaded
 			afterLoadListeners.notifyListeners(markupResourceStream);
