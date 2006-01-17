@@ -109,7 +109,6 @@ public class SubmitLink extends Button
     {
 		Form form = getSubmitLinkForm();
 		StringBuffer sb = new StringBuffer(100);
-		sb.append("javascript:");
 		sb.append("document.getElementById('");
 		sb.append(form.getHiddenFieldId());
 		sb.append("').name=\'");
@@ -117,7 +116,7 @@ public class SubmitLink extends Button
 		sb.append("';");
 		sb.append("document.getElementById('");
 		sb.append(form.getJavascriptId());
-		sb.append("').submit();");
+		sb.append("').submit();return false;");
 		return sb.toString();
     }
 
