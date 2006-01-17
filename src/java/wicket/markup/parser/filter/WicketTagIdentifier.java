@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -47,37 +48,21 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/** Logging */
 	private static final Log log = LogFactory.getLog(WicketTagIdentifier.class);
 
-	/** Wicket namespace */
-	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
+	/** The current markup needed to get the markups namespace */
+	private final Markup markup;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param namespace
-	 *            component namespace
+	 * @param markup
+	 *            The markup as known by now
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public WicketTagIdentifier(final String namespace, final IMarkupFilter parent)
+	public WicketTagIdentifier(final Markup markup, final IMarkupFilter parent)
 	{
 		super(parent);
-		setWicketNamespace(namespace);
-	}
-
-	/**
-	 * Name of the desired componentId tag attribute.
-	 * 
-	 * @param namespace
-	 *            component namespace
-	 */
-	public void setWicketNamespace(final String namespace)
-	{
-		this.wicketNamespace = namespace;
-
-		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
-		{
-			log.info("You are using a non-standard component name: " + wicketNamespace);
-		}
+		this.markup = markup;
 	}
 
 	/**
@@ -104,9 +89,11 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			return xmlTag;
 		}
 
+		final String namespace = this.markup.getWicketNamespace();
+		
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
-		if (wicketNamespace.equalsIgnoreCase(xmlTag.getNamespace()))
+		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
 			// It is <wicket:...>
 			tag = new WicketTag(xmlTag);
@@ -121,7 +108,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		}
 
 		// If the form <tag wicket:id = "value"> is used
-		final String value = tag.getAttributes().getString(wicketNamespace + ":id");
+		final String value = tag.getAttributes().getString(namespace + ":id");
 		if (value != null)
 		{
 			if (value.trim().length() == 0)

@@ -72,10 +72,6 @@ public class MarkupParserFactory implements IMarkupParserFactory
 				}
 			}
 		};
-
-		parser.configure(settings);
 		return parser;
-
 	}
-
 }

@@ -22,6 +22,7 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
@@ -65,12 +66,10 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param strip
-	 *            True, if Wicket param tags shall be removed
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public WicketParamTagHandler(final boolean strip, final IMarkupFilter parent)
+	public WicketParamTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
 
@@ -82,7 +81,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 		this.xmlParser = (IXmlPullParser)parser;
 
-		setStripWicketTag(strip);
+		setStripWicketTag(Application.get().getMarkupSettings().getStripWicketTags());
 	}
 
 	/**

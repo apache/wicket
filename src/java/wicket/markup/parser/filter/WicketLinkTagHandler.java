@@ -20,6 +20,7 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -59,15 +60,13 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param enable
-	 *            if true, autolinks are enabled
 	 * @param parent
 	 *            The next element in the chain.
 	 */
-	public WicketLinkTagHandler(final boolean enable, final IMarkupFilter parent)
+	public WicketLinkTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
-		setAutomaticLinking(enable);
+		setAutomaticLinking(Application.get().getMarkupSettings().getAutomaticLinking());
 	}
 
 	/**
