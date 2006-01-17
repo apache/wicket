@@ -17,8 +17,6 @@
  */
 package wicket.examples;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,22 +52,5 @@ public abstract class WicketExampleApplication extends WebApplication
 		// box.
 		getSecuritySettings().setCryptFactory(
 				new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
-	}
-
-	/**
-	 * Determine operations mode: deployment or development
-	 */
-	protected void init()
-	{
-		ServletContext servletContext = this.getWicketServlet().getServletContext();
-		if (servletContext.getInitParameter("deployment") != null)
-		{
-			// Use deployment settings
-			configure("deployment");
-		}
-		else
-		{
-			configure("development");
-		}
 	}
 }
