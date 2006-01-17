@@ -33,7 +33,6 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
-import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
@@ -111,8 +110,17 @@ import wicket.util.string.Strings;
  */
 public abstract class Session implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/** Prefix for attributes holding page map entries */
+	static final String pageMapEntryAttributePrefix = "p:";
+
+	/** Attribute prefix for page maps stored in the session */
+	private static final String pageMapAttributePrefix = "m:";
+
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
@@ -120,17 +128,8 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-	/** Prefix for attributes holding page map entries */
-	final String pageMapEntryAttributePrefix = "p:";
-
 	/** Application that this is a session of. */
 	private transient Application application;
-
-	/**
-	 * Cached instance of agent info which is typically designated by calling
-	 * {@link RequestCycle#newClientInfo()}.
-	 */
-	private ClientInfo clientInfo;
 
 	/** The converter instance. */
 	private transient IConverter converter;
@@ -138,17 +137,24 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** The locale to use when loading resources for this session. */
-	private Locale locale;
-
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Attribute prefix for page maps stored in the session */
-	private final String pageMapAttributePrefix = "m:";
 
 	/** The session store of this session. */
 	private transient ISessionStore sessionStore;
+
+	/** A store for dirty objects for one request */
+	private transient List dirtyObjects;
+
+	/**
+	 * Cached instance of agent info which is typically designated by calling
+	 * {@link RequestCycle#newClientInfo()}.
+	 */
+	private ClientInfo clientInfo;
+
+	/** The locale to use when loading resources for this session. */
+	private Locale locale;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -498,6 +504,7 @@ public abstract class Session implements Serializable
 	public final void setClientInfo(ClientInfo clientInfo)
 	{
 		this.clientInfo = clientInfo;
+		dirty();
 	}
 
 	/**
@@ -539,7 +546,7 @@ public abstract class Session implements Serializable
 	public final void touch(Page page)
 	{
 		// Touch the page in its pagemap.
-		page.getPageMap().put(page);
+		page.getPageMap().put(page.getPageMapEntry());
 	}
 
 	/**
@@ -676,11 +683,6 @@ public abstract class Session implements Serializable
 	 */
 	protected void update()
 	{
-		// TODO Bug: It's doubtful this code works anymore because PageMaps are
-		// no longer referenced by Session (they are independent attributes). To
-		// get clustering to work, we're probably going to have to add a dirty
-		// boolean to PageMap and replicate each dirty pagemap in this method.
-
 		// If state is dirty
 		if (dirty)
 		{
@@ -703,26 +705,31 @@ public abstract class Session implements Serializable
 			}
 		}
 
-		// Go through all entries, replicating any dirty pages
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		// Go through all dirty entries, replicating any dirty objects
+		for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
 		{
-			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(pageMapEntryAttributePrefix))
+			String attribute = null;
+			Object object = iterator.next();
+			if(object instanceof Page)
 			{
-				// Get next entry
-				IPageMapEntry entry = (IPageMapEntry)getAttribute(attribute);
-
-				// If entry is dirty
-				if (entry.isDirty())
-				{
-					// Make it undirty
-					entry.setDirty(false);
-
-					// Set session attribute to replicate the page
-					setAttribute(attribute, entry);
-				}
+				final Page page = (Page)object;  
+				attribute = page.getPageMap().attributeForId(page.getNumericId());
+				object = page.getPageMapEntry();
+			}
+			else if(object instanceof PageMap)
+			{
+				attribute = attributeForPageMapName(((PageMap)object).getName());
+			}
+			
+			// only replicate if the object was really already in the map.
+			// for example stateless pages will not be in the map so they shouldn't be added
+			Object previous = getAttribute(attribute);
+			if(previous != null)
+			{
+				setAttribute(attribute, object);
 			}
 		}
+		dirtyObjects = null;
 	}
 
 	/**
@@ -758,5 +765,29 @@ public abstract class Session implements Serializable
 	private final String attributeForPageMapName(final String pageMapName)
 	{
 		return pageMapAttributePrefix + pageMapName;
+	}
+
+	/**
+	 * @param map
+	 */
+	void dirtyPageMap(final PageMap map)
+	{
+		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
+		if(!dirtyObjects.contains(map))
+		{
+			dirtyObjects .add(map);
+		}
+	}
+
+	/**
+	 * @param page 
+	 */
+	void dirtyPage(final Page page)
+	{
+		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
+		if(!dirtyObjects.contains(page))
+		{
+			dirtyObjects .add(page);
+		}
 	}
 }
