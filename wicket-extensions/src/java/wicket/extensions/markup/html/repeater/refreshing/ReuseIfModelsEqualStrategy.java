@@ -40,6 +40,8 @@ import wicket.model.IModel;
  */
 public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 {
+	private static final long serialVersionUID = 1L;
+	
 	private static IItemReuseStrategy instance = new ReuseIfModelsEqualStrategy();
 
 	/**

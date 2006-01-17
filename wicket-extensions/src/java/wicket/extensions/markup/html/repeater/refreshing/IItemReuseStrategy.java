@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.refreshing;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Iterator;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IItemReuseStrategy
+public interface IItemReuseStrategy extends Serializable
 {
 
 	/**

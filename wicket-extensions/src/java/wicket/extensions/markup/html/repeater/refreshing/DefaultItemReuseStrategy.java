@@ -33,6 +33,8 @@ import wicket.model.IModel;
  */
 public class DefaultItemReuseStrategy implements IItemReuseStrategy
 {
+	private static final long serialVersionUID = 1L;
+	
 	private static final IItemReuseStrategy instance = new DefaultItemReuseStrategy();
 
 	/**
