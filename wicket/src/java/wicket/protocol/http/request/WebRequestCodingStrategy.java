@@ -152,7 +152,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (encoder != null)
 		{
 			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
-			return urlPrefix(requestCycle) + pathForTarget(requestTarget);
+			return prefix.append(pathForTarget(requestTarget)).toString();
 		}
 
 		// no mount found; go on with default processing
@@ -373,12 +373,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			IBookmarkablePageRequestTarget requestTarget)
 	{
 		final Class pageClass = requestTarget.getPageClass();
-		final Class homePageClass = requestCycle.getApplication().getHomePage();
-
-		// TODO General: Fix homepage class (what does this mean? - Jonathan)
 
 		final PageParameters parameters = requestTarget.getPageParameters();
-		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
+		final StringBuffer url = new StringBuffer(64);
+		url.append(urlPrefix(requestCycle));
 		url.append("?bookmarkablePage=");
 		url.append(pageClass.getName());
 
@@ -444,7 +442,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	protected final String encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
-		final StringBuffer url = new StringBuffer(urlPrefix(requestCycle));
+		final StringBuffer url = new StringBuffer(64);
+		url.append(urlPrefix(requestCycle));
 		url.append("?path=");
 		Component component = requestTarget.getTarget();
 		url.append(component.getPath());
@@ -485,7 +484,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	protected final String encode(RequestCycle requestCycle,
 			ISharedResourceRequestTarget requestTarget)
 	{
-		String prefix = urlPrefix(requestCycle).toString();
+		String prefix = urlPrefix(requestCycle);
 		String resourceKey = requestTarget.getResourceKey();
 		if ((resourceKey == null) || (resourceKey.trim().length() == 0))
 		{

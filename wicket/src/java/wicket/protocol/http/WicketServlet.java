@@ -144,7 +144,11 @@ public class WicketServlet extends HttpServlet
 			String sessionId = servletRequest.getSession(true).getId();
 			String queryString = servletRequest.getQueryString();
 			String requestUri = servletRequest.getRequestURI();
-			String bufferId = (queryString == null) ? requestUri : requestUri + "?" + queryString;
+			String bufferId = requestUri;
+			if(queryString != null)
+			{
+				bufferId = new StringBuffer(requestUri.length() + queryString.length() + 1).append(requestUri).append("?").append(queryString).toString();
+			}
 			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
 					sessionId, bufferId);
 
