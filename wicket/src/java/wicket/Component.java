@@ -1634,7 +1634,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-			// TODO General: We can't record any state change as Link.onComponentTag
+			// FIXME General: We can't record any state change as Link.onComponentTag
 			// potentially sets this property we probably don't need to support
 			// this, but I'll keep this commented so that we can think about it
 			// I (johan) changed the way Link.onComponentTag works. It will

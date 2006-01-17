@@ -25,7 +25,7 @@ import wicket.Page;
 import wicket.RequestCycle;
 
 /**
- * TODO Documentation: Document this class!
+ * FIXME Documentation: Document this class!
  * 
  * @author jcompagner
  */

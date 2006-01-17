@@ -122,7 +122,7 @@ class NullWebRequest extends WebRequest
 	 */
 	public String getRelativeURL()
 	{
-		// TODO Robustness: Check if null is ok here
+		// FIXME Robustness: Check if null is ok here
 		return null;
 	}
 
@@ -131,7 +131,7 @@ class NullWebRequest extends WebRequest
 	 */
 	public WebRequest newMultipartWebRequest(Bytes maxsize)
 	{
-		// TODO Robustness: Check if null is ok here
+		// FIXME Robustness: Check if null is ok here
 		return null;
 	}
 
@@ -140,7 +140,7 @@ class NullWebRequest extends WebRequest
 	 */
 	public Locale getLocale()
 	{
-		// TODO Robustness: Check if null is ok here
+		// FIXME Robustness: Check if null is ok here
 		return null;
 	}
 }

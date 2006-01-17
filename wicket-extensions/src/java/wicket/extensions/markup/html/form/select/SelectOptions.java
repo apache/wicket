@@ -75,7 +75,7 @@ public class SelectOptions extends OrderedRepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					// TODO Unknown: Unknown
+					// FIXME Unknown: Unknown
 					throw new WicketRuntimeException("Model not a collection");
 				}
 

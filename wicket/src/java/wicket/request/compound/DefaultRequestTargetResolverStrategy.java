@@ -251,7 +251,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 			IPageFactory pageFactory = session.getPageFactory();
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			// TODO Robustness: Need to take a second look on synchronizing in
+			// FIXME Robustness: Need to take a second look on synchronizing in
 			// the resolve/render phase at this time, the session isn't accessed
 			// in a atomic, isolated manner during the request.
 			synchronized (session)

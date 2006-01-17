@@ -116,7 +116,7 @@ public abstract class AbstractValidator implements IValidator
 						formComponent.getClass().getName(), resourceKey);
 			}
 			else
-			// TODO General: Quick fix for now to get settings working again
+			// FIXME General: Quick fix for now to get settings working again
 			{
 				message = "[Warning: String resource for '" + resourceKey + "' not found]";
 			}

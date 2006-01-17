@@ -609,7 +609,7 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// TODO Robustness: This has to be done after the unit tests are fixed
+		// FIXME Robustness: This has to be done after the unit tests are fixed
 		// // if we are already responding, we can't change the request target
 		// // as that would either have no effect, or - in case we would set
 		// // the currentStep back to PROCESS_EVENTS, we would have double
@@ -1041,7 +1041,7 @@ public abstract class RequestCycle
 			// get the processor
 			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
-			// TODO Robustness: Catch infinite loops
+			// FIXME Robustness: Catch infinite loops
 			while (currentStep < DONE)
 			{
 				step(processor);
