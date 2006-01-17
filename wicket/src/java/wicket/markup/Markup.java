@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public final class Markup
 {
 	private final static Log log = LogFactory.getLog(Markup.class);
-	
+
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
 
@@ -299,7 +299,7 @@ public final class Markup
 	final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
-		
+
 		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{
 			log.info("You are using a non-standard component name: " + wicketNamespace);
@@ -354,17 +354,20 @@ public final class Markup
 		}
 
 		this.markup = Collections.unmodifiableList(this.markup);
-		
+
 		initialize();
 	}
-	
+
 	/**
-	 * Clear the list of markup elements. All other settings
-	 * remain unchanged.
-	 *
+	 * Reset the markup to its defaults, except for the wicket namespace which
+	 * remains unchanged.
 	 */
-	final void clear()
+	final void reset()
 	{
 		this.markup = new ArrayList();
+		this.resource = null;
+		this.xmlDeclaration = null;
+		this.encoding = null;
+		this.headerIndex = NO_HEADER_FOUND;
 	}
 }

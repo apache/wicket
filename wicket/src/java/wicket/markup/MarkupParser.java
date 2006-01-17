@@ -59,9 +59,6 @@ public class MarkupParser
 
     /** The markup handler chain: each filter has a specific task */
     private IMarkupFilter markupFilterChain;
-
-    /** The handler detecting wicket tags: wicket namespace */
-    private WicketTagIdentifier detectWicketComponents;
     
     /** The markup created by reading the markup file */
     private final Markup markup;
@@ -98,8 +95,7 @@ public class MarkupParser
 	private final IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
-        this.detectWicketComponents = new WicketTagIdentifier(markup, xmlParser);
-        IMarkupFilter filter = this.detectWicketComponents;
+        IMarkupFilter filter = new WicketTagIdentifier(markup, xmlParser);
 
         filter = new TagTypeHandler(filter);
         filter = new HtmlHandler(filter);
@@ -161,7 +157,7 @@ public class MarkupParser
             ResourceStreamNotFoundException
     {
     	// Remove all existing markup elements
-    	this.markup.clear();
+    	this.markup.reset();
     	
     	// For diagnostic purposes
     	this.markup.setResource(resource);
@@ -191,7 +187,7 @@ public class MarkupParser
     	ResourceStreamNotFoundException
     {
     	// Remove all existing markup elements
-    	this.markup.clear();
+    	this.markup.reset();
     	
     	// Initialize the xml parser
         this.xmlParser.parse(string);
