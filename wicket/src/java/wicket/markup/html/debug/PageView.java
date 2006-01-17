@@ -138,7 +138,7 @@ public final class PageView extends Panel
 					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
 	
 					componentData.path = component.getPageRelativePath();
-					componentData.size = component.getSize();
+					componentData.size = component.getSizeInBytes();
 					componentData.type = name;
 					try 
 					{

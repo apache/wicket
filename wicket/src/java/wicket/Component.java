@@ -1108,7 +1108,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/**
 	 * @return Size of this Component in bytes
 	 */
-	public int getSize()
+	public int getSizeInBytes()
 	{
 		final MarkupContainer originalParent = this.parent;
 		this.parent = null;

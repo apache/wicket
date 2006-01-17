@@ -11,11 +11,12 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 </style>
 <body>
   <wicket:panel>
-  	PageMap "<span wicket:id="name">main</span>" (Size = <span wicket:id="size">1.2K</span>):
+  	PageMap "<span wicket:id="name">main</span>" (Size = <span wicket:id="size">1.2K</span>) accesses (most recent first):
   	<p/>
     <table class="tablestyle">
       <thead>
         <tr>
+          <th align="left">#&nbsp;&nbsp;&nbsp;</th>
           <th align="left">Id&nbsp;&nbsp;&nbsp;</th>
           <th align="left">Class&nbsp;&nbsp;&nbsp;</th>
           <th align="left">Version&nbsp;&nbsp;&nbsp;</th>
@@ -24,7 +25,8 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
         </tr>
 	  </thead>
       <tbody>
-		<tr wicket:id="entries">
+		<tr wicket:id="accesses">
+		  <td valign="top" align="left"><span wicket:id="access">1</span>&nbsp;&nbsp;&nbsp;</td>
 		  <td valign="top" align="left"><a wicket:id="link" href="#"><span wicket:id="id">1</span></a>&nbsp;&nbsp;&nbsp;</td>
 		  <td valign="top" align="left"><span wicket:id="class">Home.class</span>&nbsp;&nbsp;&nbsp;</td>
 		  <td valign="top" align="left"><span wicket:id="version">1</span>&nbsp;&nbsp;&nbsp;</td>

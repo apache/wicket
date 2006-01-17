@@ -161,12 +161,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 
-	/**
-	 * The access sequence number for this page within the session. Used to
-	 * implement page eviction policies.
-	 */
-	private short accessSequenceNumber;
-
 	/** Used to create page-unique numbers */
 	private short autoIndex;
 
@@ -414,14 +408,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @see wicket.session.pagemap.IPageMapEntry#getAccessSequenceNumber()
-	 */
-	public int getAccessSequenceNumber()
-	{
-		return accessSequenceNumber;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Get a page unique number, which will be increased with each call.
@@ -506,7 +492,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @return Size of this page in bytes
 	 */
-	public final int getSize()
+	public final int getSizeInBytes()
 	{
 		this.pageMap = null;
 		return Objects.sizeof(this);
@@ -574,7 +560,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final int getVersions()
 	{
-		return versionManager == null ? 1 : versionManager.getVersions()+1;
+		return versionManager == null ? 1 : versionManager.getVersions() + 1;
 	}
 
 	/**
@@ -684,15 +670,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * @param accessSequenceNumber
-	 *            New access sequence number for this page
-	 */
-	public void setAccessSequenceNumber(int accessSequenceNumber)
-	{
-		this.accessSequenceNumber = (short)accessSequenceNumber;
 	}
 
 	/**
