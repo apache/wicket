@@ -140,14 +140,13 @@ import wicket.version.undo.UndoPageVersionManager;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
 
 	/** Access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
-
-	/** True if this page is dirty. */
-	private static final short FLAG_IS_DIRTY = FLAG_RESERVED1;
 
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
@@ -588,14 +587,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return True if this Page is dirty and needs to be replicated
-	 */
-	public final boolean isDirty()
-	{
-		return getFlag(FLAG_IS_DIRTY);
-	}
-
-	/**
 	 * Override this method and return true if your page is used to display
 	 * Wicket errors. This can help the framework prevent infinite failure
 	 * loops.
@@ -673,12 +664,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @param dirty
-	 *            True to make this page dirty, false to make it clean.
 	 */
-	public final void setDirty(final boolean dirty)
+	public final void dirty()
 	{
-		setFlag(FLAG_IS_DIRTY, dirty);
+		Session.get().dirtyPage(this);
 	}
 
 	/**
@@ -964,7 +953,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		checkHierarchyChange(component);
 
-		setDirty(true);
+		dirty();
 		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentAdded(component);
@@ -981,7 +970,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		checkHierarchyChange(component);
 
-		setDirty(true);
+		dirty();
 		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentModelChanging(component);
@@ -998,7 +987,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		checkHierarchyChange(component);
 
-		setDirty(true);
+		dirty();
 		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentRemoved(component);
@@ -1037,7 +1026,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		checkHierarchyChange(component);
 
-		setDirty(true);
+		dirty();
 		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentStateChanging(change);
@@ -1282,9 +1271,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init()
 	{
-		// All Pages are born dirty so they get clustered right away
-		setDirty(true);
-
 		// Set the pagemap
 		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
 				"pagemap") : null);
@@ -1294,6 +1280,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// Set versioning of page based on default
 		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
+
+		// All Pages are born dirty so they get clustered right away
+		dirty();
+
 	}
 
 	/**
