@@ -110,17 +110,11 @@ import wicket.util.string.Strings;
  */
 public abstract class Session implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-	
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
-
+	
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
-
-	/** Attribute prefix for page maps stored in the session */
-	private static final String pageMapAttributePrefix = "m:";
-
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
@@ -128,24 +122,14 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
+
+	/** Attribute prefix for page maps stored in the session */
+	private static final String pageMapAttributePrefix = "m:";
+
+	private static final long serialVersionUID = 1L;
+
 	/** Application that this is a session of. */
 	private transient Application application;
-
-	/** The converter instance. */
-	private transient IConverter converter;
-
-	/** True if session state has been changed */
-	private transient boolean dirty = false;
-
-	/** Factory for constructing Pages for this Session */
-	private transient IPageFactory pageFactory;
-
-
-	/** The session store of this session. */
-	private transient ISessionStore sessionStore;
-
-	/** A store for dirty objects for one request */
-	private transient List dirtyObjects;
 
 	/**
 	 * Cached instance of agent info which is typically designated by calling
@@ -153,8 +137,24 @@ public abstract class Session implements Serializable
 	 */
 	private ClientInfo clientInfo;
 
+	/** The converter instance. */
+	private transient IConverter converter;
+
+	/** True if session state has been changed */
+	private transient boolean dirty = false;
+
+
+	/** A store for dirty objects for one request */
+	private transient List dirtyObjects;
+
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
+
+	/** Factory for constructing Pages for this Session */
+	private transient IPageFactory pageFactory;
+
+	/** The session store of this session. */
+	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -733,6 +733,30 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @param page 
+	 */
+	void dirtyPage(final Page page)
+	{
+		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
+		if(!dirtyObjects.contains(page))
+		{
+			dirtyObjects .add(page);
+		}
+	}
+
+	/**
+	 * @param map
+	 */
+	void dirtyPageMap(final PageMap map)
+	{
+		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
+		if(!dirtyObjects.contains(map))
+		{
+			dirtyObjects .add(map);
+		}
+	}
+
+	/**
 	 * Gets the converter instance.
 	 * 
 	 * @return the converter
@@ -765,29 +789,5 @@ public abstract class Session implements Serializable
 	private final String attributeForPageMapName(final String pageMapName)
 	{
 		return pageMapAttributePrefix + pageMapName;
-	}
-
-	/**
-	 * @param map
-	 */
-	void dirtyPageMap(final PageMap map)
-	{
-		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
-		if(!dirtyObjects.contains(map))
-		{
-			dirtyObjects .add(map);
-		}
-	}
-
-	/**
-	 * @param page 
-	 */
-	void dirtyPage(final Page page)
-	{
-		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
-		if(!dirtyObjects.contains(page))
-		{
-			dirtyObjects .add(page);
-		}
 	}
 }
