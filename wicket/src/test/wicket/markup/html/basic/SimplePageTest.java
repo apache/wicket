@@ -29,6 +29,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.panel.Panel;
+import wicket.util.value.ValueMap;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -200,6 +201,64 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"myLabel2\">Test Label2</span>", document);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_2b() throws Exception
+	{
+		// Render the component without having rendered the page previously
+		SimplePage page = new SimplePage();
+
+	    Label label = (Label)page.get("myLabel");
+	    assertNotNull(label);
+		ValueMap attr = label.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myLabel", attr.getString("wicket:id"));
+		
+	    Panel panel = (Panel)page.get("myPanel");
+	    assertNotNull(panel);
+		attr = panel.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myPanel", attr.getString("wicket:id"));
+		
+	    label = (Label)page.get("myPanel:label");
+	    assertNotNull(label);
+		attr = label.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("label", attr.getString("wicket:id"));
+		
+	    Border border = (Border)page.get("myBorder");
+	    assertNotNull(border);
+		attr = border.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myBorder", attr.getString("wicket:id"));
+		
+	    border = (Border)page.get("myBorder2");
+	    assertNotNull(border);
+		attr = border.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myBorder2", attr.getString("wicket:id"));
+
+		// do the same test twice. Igor reported a problem with that, so we have to test it.
+	    border = (Border)page.get("myBorder2");
+	    assertNotNull(border);
+		attr = border.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myBorder2", attr.getString("wicket:id"));
+		
+	    WebMarkupContainer container = (WebMarkupContainer)page.get("test");
+	    assertNotNull(container);
+		attr = container.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("test", attr.getString("wicket:id"));
+		
+	    label = (Label)page.get("test:myLabel2");
+	    assertNotNull(label);
+		attr = label.getMarkupAttributes();
+		assertNotNull(attr);
+		assertEquals("myLabel2", attr.getString("wicket:id"));
 	}
 
 	/**
