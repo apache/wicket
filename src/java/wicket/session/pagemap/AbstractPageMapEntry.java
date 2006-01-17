@@ -27,17 +27,8 @@ import wicket.Page;
  */
 public abstract class AbstractPageMapEntry implements IPageMapEntry
 {
-	private short accessSequenceNumber;
 	private boolean dirty;
 	private short id;
-
-	/**
-	 * @see wicket.session.pagemap.IPageMapEntry#getAccessSequenceNumber()
-	 */
-	public int getAccessSequenceNumber()
-	{
-		return accessSequenceNumber;
-	}
 
 	/**
 	 * @see wicket.session.pagemap.IPageMapEntry#getNumericId()
@@ -72,14 +63,6 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	public boolean isDirty()
 	{
 		return dirty;
-	}
-
-	/**
-	 * @see wicket.session.pagemap.IPageMapEntry#setAccessSequenceNumber(int)
-	 */
-	public void setAccessSequenceNumber(int accessSequenceNumber)
-	{
-		this.accessSequenceNumber = (short)this.accessSequenceNumber;
 	}
 
 	/**

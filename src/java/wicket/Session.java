@@ -120,9 +120,6 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-	/** Number designating when a page was accessed */
-	short accessSequenceNumber;
-
 	/** Prefix for attributes holding page map entries */
 	final String pageMapEntryAttributePrefix = "p:";
 
@@ -219,6 +216,21 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Removes all pages from the session. Although this method should rarely be
+	 * needed, it is available (possibly for security reasons).
+	 */
+	public final void clear()
+	{
+		visitPageMaps(new IPageMapVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				pageMap.clear();
+			}
+		});
+	}
+
+	/**
 	 * Get the application that is currently working with this session.
 	 * 
 	 * @return Returns the application.
@@ -305,30 +317,13 @@ public abstract class Session implements Serializable
 			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
 		}
 
-		// Retrieve the page for the first path component from this session
-		Page page = getPage(pageMapName, Integer.parseInt(Strings.firstPathComponent(path,
-				Component.PATH_SEPARATOR)));
-
-		// Is there a page with the right id at all?
-		if (page != null)
+		// Get page map by name
+		final PageMap pageMap = getPageMap(pageMapName);
+		if (pageMap != null)
 		{
-			// Get the version of the page requested from the page
-			final Page version = page.getVersion(versionNumber);
-
-			// Is the requested version available?
-			if (version != null)
-			{
-				// Need to update session with new page?
-				if (version != page)
-				{
-					// This is our new page
-					page = version;
-
-					// Replaces old page entry
-					page.getPageMap().put(page);
-				}
-				return page;
-			}
+			// Get page entry for id and version
+			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+			return pageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
 	}
@@ -400,13 +395,13 @@ public abstract class Session implements Serializable
 	/**
 	 * @return Size of this session, including all the pagemaps it contains
 	 */
-	public final int getSize()
+	public final int getSizeInBytes()
 	{
 		int size = Objects.sizeof(this);
 		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
 			final PageMap pageMap = (PageMap)iterator.next();
-			size += pageMap.getSize();
+			size += pageMap.getSizeInBytes();
 		}
 		return size;
 	}
@@ -476,34 +471,6 @@ public abstract class Session implements Serializable
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
-	}
-
-	/**
-	 * Removes the given page from the cache. This method may be useful if you
-	 * have special knowledge that a given page cannot be accessed again. For
-	 * example, the user may have closed a popup window.
-	 * 
-	 * @param page
-	 *            The page to remove
-	 */
-	public final void remove(final Page page)
-	{
-		page.getPageMap().remove(page);
-	}
-
-	/**
-	 * Removes all pages from the session. Although this method should rarely be
-	 * needed, it is available (possibly for security reasons).
-	 */
-	public final void removeAll()
-	{
-		visitPageMaps(new IPageMapVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				pageMap.removeAll();
-			}
-		});
 	}
 
 	/**
@@ -759,18 +726,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Indicates an access to a given entry
-	 * 
-	 * @param entry
-	 *            The entry
-	 */
-	final void access(IPageMapEntry entry)
-	{
-		accessSequenceNumber++;
-		entry.setAccessSequenceNumber(accessSequenceNumber);
-	}
-
-	/**
 	 * Gets the converter instance.
 	 * 
 	 * @return the converter
@@ -784,26 +739,6 @@ public abstract class Session implements Serializable
 					.newConverter(getLocale());
 		}
 		return converter;
-	}
-
-	/**
-	 * Get the page with the given id.
-	 * 
-	 * @param pageMapName
-	 *            Page map name
-	 * @param id
-	 *            Page id
-	 * @return Page with the given id
-	 */
-	final Page getPage(final String pageMapName, final int id)
-	{
-		// This call will always mark the Page dirty
-		PageMap pageMap = getPageMap(pageMapName);
-		if (pageMap == null)
-		{
-			return null;
-		}
-		return pageMap.get(id);
 	}
 
 	/**

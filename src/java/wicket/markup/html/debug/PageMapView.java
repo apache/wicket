@@ -17,13 +17,15 @@
  */
 package wicket.markup.html.debug;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
+import wicket.PageMap.Access;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
@@ -58,24 +60,16 @@ public final class PageMapView extends Panel
 
 		// Basic attributes
 		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label("size", "" + Bytes.bytes(pageMap.getSize())));
+		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
-		// Get pagemaps
-		final List entries = pageMap.getEntries();
-
-		// Sort on access
-		Collections.sort(entries, new Comparator()
-		{
-			public int compare(Object a, Object b)
-			{
-				IPageMapEntry ea = (IPageMapEntry)a;
-				IPageMapEntry eb = (IPageMapEntry)b;
-				return eb.getAccessSequenceNumber() - ea.getAccessSequenceNumber();
-			}
-		});
+		// Get entry accesses 
+		final Stack accessStack = pageMap.getAccessStack();
+		final List reversedAccessStack = new ArrayList();
+		reversedAccessStack.addAll(accessStack);
+		Collections.reverse(reversedAccessStack);
 
 		// Create the table containing the list the components
-		add(new ListView("entries", entries)
+		add(new ListView("accesses", reversedAccessStack)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -84,7 +78,8 @@ public final class PageMapView extends Panel
 			 */
 			protected void populateItem(final ListItem listItem)
 			{
-				IPageMapEntry entry = (IPageMapEntry)listItem.getModelObject();
+				final Access access = (Access)listItem.getModelObject();
+				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
 				Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
@@ -98,7 +93,7 @@ public final class PageMapView extends Panel
 				{
 					Page page = (Page)entry;
 					page.detachModels();
-					size = page.getSize();
+					size = page.getSizeInBytes();
 					version = page.getCurrentVersionNumber();
 					versions = page.getVersions();
 				}
@@ -108,7 +103,8 @@ public final class PageMapView extends Panel
 					version = 0;
 					versions = 0;
 				}
-				listItem.add(new Label("version", "" + version));
+				listItem.add(new Label("access", "" + (accessStack.size() - listItem.getIndex())));
+				listItem.add(new Label("version", "" + access.getVersion()));
 				listItem.add(new Label("versions", "" + versions));
 				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
 			}

@@ -35,13 +35,6 @@ import wicket.Page;
 public interface IPageMapEntry extends Serializable
 {
 	/**
-	 * @return A sequence number that can be used to compare when two page map
-	 *         entries were accessed. Given two entries, the one with the higher
-	 *         access sequence number was the one more recently accessed.
-	 */
-	int getAccessSequenceNumber();
-
-	/**
 	 * @return A stable identifier for this page map entry
 	 */
 	int getNumericId();
@@ -61,12 +54,6 @@ public interface IPageMapEntry extends Serializable
 	 * @return True if this entry is dirty and requires replication
 	 */
 	boolean isDirty();
-
-	/**
-	 * @param accessSequenceNumber
-	 *            New access sequence numnber for this entry
-	 */
-	void setAccessSequenceNumber(int accessSequenceNumber);
 
 	/**
 	 * @param dirty

@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -38,6 +39,9 @@ public final class PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Stack of entry accesses by id */
+	private final Stack/* <Access> */accessStack = new Stack();
+
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
 
@@ -50,8 +54,38 @@ public final class PageMap implements Serializable
 	/** The session where this PageMap resides */
 	private transient Session session;
 
-	/** Number of pages in the map */
-	private int size = 0;
+	/**
+	 * Holds information about a pagemap access
+	 * 
+	 * @author Jonathan
+	 */
+	public static class Access implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		int id;
+		int version;
+
+		/**
+		 * Gets id.
+		 * 
+		 * @return id
+		 */
+		public final int getId()
+		{
+			return id;
+		}
+
+		/**
+		 * Gets version.
+		 * 
+		 * @return version
+		 */
+		public final int getVersion()
+		{
+			return version;
+		}
+	}
 
 	/**
 	 * Visitor interface for visiting entries in this map
@@ -82,23 +116,49 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Pops the top entry off the entry access stack and returns it.
+	 * <p>
+	 * NOTE: This method returns the most recently accessed stateful page map
+	 * entry. However, it will not always work perfectly when stateless pages
+	 * are involved. If stateless pages are in the browser, they will not be on
+	 * the access stack. If the user goes back to a stateless page and navigates
+	 * forward, the stack will not be correctly adjusted (unlike with stateful
+	 * pages). Instead the new stateful page will be on top of the access stack
+	 * and any unreachable page versions that the user may have backed up over
+	 * will still be in the session instead of being eliminated. This is not a
+	 * major problem, however as they will expire in the normal way.
 	 * 
-	 * @return List of entries in this page map
+	 * @return Previous pagemap entry in terms of access
 	 */
-	public final List getEntries()
+	public final IPageMapEntry back()
 	{
-		final List attributes = session.getAttributeNames();
-		final List list = new ArrayList();
-		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		return getEntry(popAccess().getId());
+	}
+
+	/**
+	 * Removes all pages from this map
+	 */
+	public final void clear()
+	{
+		// Remove all entries
+		visitEntries(new IVisitor()
 		{
-			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(attributePrefix()))
+			public void entry(IPageMapEntry entry)
 			{
-				list.add((IPageMapEntry)session.getAttribute(attribute));
+				remove(entry);
 			}
-		}
-		return list;
+		});
+
+		// Clear access stack
+		accessStack.clear();
+	}
+
+	/**
+	 * @return Stack containing ids of entries in access order.
+	 */
+	public final Stack getAccessStack()
+	{
+		return accessStack;
 	}
 
 	/**
@@ -132,10 +192,10 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @return Size of this page map, including a sum of the sizes of all the
-	 *         pages it contains.
+	 * @return Size of this page map in bytes, including a sum of the sizes of
+	 *         all the pages it contains.
 	 */
-	public final int getSize()
+	public final int getSizeInBytes()
 	{
 		int size = Objects.sizeof(this);
 		for (Iterator iterator = getEntries().iterator(); iterator.hasNext();)
@@ -143,7 +203,7 @@ public final class PageMap implements Serializable
 			IPageMapEntry entry = (IPageMapEntry)iterator.next();
 			if (entry instanceof Page)
 			{
-				size += ((Page)entry).getSize();
+				size += ((Page)entry).getSizeInBytes();
 			}
 			else
 			{
@@ -152,26 +212,13 @@ public final class PageMap implements Serializable
 		}
 		return size;
 	}
-	
+
 	/**
 	 * @return Number of page versions stored in this page map
 	 */
 	public final int getVersions()
 	{
-		int versions = 0;
-		for (final Iterator iterator = getEntries().iterator(); iterator.hasNext();)
-		{
-			final IPageMapEntry entry = (IPageMapEntry)iterator.next();
-			if (entry instanceof Page)
-			{
-				versions += ((Page)entry).getVersions();
-			}
-			else
-			{
-				versions++;
-			}
-		}
-		return versions;
+		return accessStack.size();
 	}
 
 	/**
@@ -205,16 +252,7 @@ public final class PageMap implements Serializable
 	{
 		// Remove entry from session
 		session.removeAttribute(attributeForId(entry.getNumericId()));
-		size--;
 		return entry;
-	}
-
-	/**
-	 * @return Number of entires in this page map
-	 */
-	public final int size()
-	{
-		return size;
 	}
 
 	/**
@@ -273,19 +311,43 @@ public final class PageMap implements Serializable
 	 * 
 	 * @param id
 	 *            The page identifier
+	 * @param versionNumber
+	 *            The version to get
 	 * @return Any page having the given id
 	 */
-	final Page get(final int id)
+	final Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
 		if (entry != null)
 		{
 			// Entry has been accessed
-			session.access(entry);
+			access(entry, versionNumber);
 
 			// Get page as dirty
-			final Page page = entry.getPage();
+			Page page = entry.getPage();
 			page.setDirty(true);
+
+			// Get the version of the page requested from the page
+			final Page version = page.getVersion(versionNumber);
+
+			// Is the requested version available?
+			if (version != null)
+			{
+				// Need to update session with new page?
+				if (version != page)
+				{
+					// This is our new page
+					page = version;
+
+					// Replaces old page entry
+					page.getPageMap().put(page);
+				}
+			}
+			else
+			{
+				throw new IllegalStateException("Unable to get version " + versionNumber
+						+ " of page " + page);
+			}
 			return page;
 		}
 		return null;
@@ -309,17 +371,10 @@ public final class PageMap implements Serializable
 		if (!(entry instanceof Page && ((Page)entry).isStateless()))
 		{
 			// Entry has been accessed
-			session.access(entry);
+			pushAccess(entry);
 
 			// Store entry in session
 			final String attribute = attributeForId(entry.getNumericId());
-
-			// If we're adding a new attribute
-			if (session.getAttribute(attribute) == null)
-			{
-				// Increase pagemap size
-				size++;
-			}
 
 			// Set attribute
 			session.setAttribute(attribute, entry);
@@ -353,20 +408,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Removes all pages from this map
-	 */
-	final void removeAll()
-	{
-		visitEntries(new IVisitor()
-		{
-			public void entry(IPageMapEntry entry)
-			{
-				remove(entry);
-			}
-		});
-	}
-
-	/**
 	 * @param session
 	 *            Session to set
 	 */
@@ -390,5 +431,121 @@ public final class PageMap implements Serializable
 				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
+	}
+
+	/**
+	 * @param entry
+	 *            Add entry to access list
+	 * @param version
+	 *            Version number being accessed
+	 */
+	private final void access(final IPageMapEntry entry, final int version)
+	{
+		// See if the version being accessed is already in the stack
+		boolean add = true;
+		int id = entry.getNumericId();
+		for (int i = 0; i < accessStack.size(); i++)
+		{
+			final Access access = (Access)accessStack.get(i);
+
+			// If we found id and version in access stack
+			if (access.id == id && access.version == version)
+			{
+				// No need to add since id and version are already in stack
+				add = false;
+
+				// Pop entries to reveal that version at top of stack
+				// because the user used the back button
+				while (i < accessStack.size() - 1)
+				{
+					// Pop unreachable access off top of stack
+					final Access topAccess = popAccess();
+
+					// Get entry for access
+					final IPageMapEntry top = getEntry(topAccess.getId());
+
+					// If it's a page we can remove version info
+					if (top instanceof Page)
+					{
+						// If there's more than one version
+						Page topPage = (Page)top;
+						if (topPage.getVersions() > 1)
+						{
+							// Remove versions
+							topPage.getVersion(topAccess.getVersion());
+						}
+						else
+						{
+							// Remove whole page
+							remove(topPage);
+						}
+					}
+					else
+					{
+						// Remove entry
+						remove(top);
+					}
+				}
+			}
+		}
+
+		// If the user did not use the back button
+		if (add)
+		{
+			pushAccess(entry);
+		}
+	}
+
+	/**
+	 * @return List of entries in this page map
+	 */
+	private final List getEntries()
+	{
+		final List attributes = session.getAttributeNames();
+		final List list = new ArrayList();
+		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(attributePrefix()))
+			{
+				list.add((IPageMapEntry)session.getAttribute(attribute));
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * @return Access entry on top of the access stack
+	 */
+	private final Access popAccess()
+	{
+		return (Access)accessStack.pop();
+	}
+
+	/**
+	 * @param entry
+	 *            Entry that was accessed
+	 */
+	private final void pushAccess(IPageMapEntry entry)
+	{
+		// Create new access entry
+		final Access access = new Access();
+		access.id = entry.getNumericId();
+		access.version = versionOf(entry);
+		accessStack.push(access);
+	}
+
+	/**
+	 * @param entry
+	 *            Page map entry
+	 * @return Version of entry
+	 */
+	private final int versionOf(final IPageMapEntry entry)
+	{
+		if (entry instanceof Page)
+		{
+			return ((Page)entry).getCurrentVersionNumber();
+		}
+		return 0;
 	}
 }

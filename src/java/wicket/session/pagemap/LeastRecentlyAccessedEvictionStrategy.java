@@ -17,9 +17,6 @@
  */
 package wicket.session.pagemap;
 
-import java.util.Iterator;
-import java.util.List;
-
 import wicket.Page;
 import wicket.PageMap;
 
@@ -32,7 +29,7 @@ import wicket.PageMap;
 public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionStrategy
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Maximum number of page versions in a page map before evictions start */
 	private int maxVersions;
 
@@ -56,49 +53,38 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final PageMap pageMap)
 	{
+		// Do we need to evict under this strategy?
 		if (pageMap.getVersions() > maxVersions)
 		{
-			final List list = pageMap.getEntries();
-			IPageMapEntry leastRecentlyUsed = null;
-			int min = Integer.MAX_VALUE;
-			for (Iterator iterator = list.iterator(); iterator.hasNext();)
+			// Remove oldest entry from access stack
+			final PageMap.Access oldestAccess = (PageMap.Access)pageMap.getAccessStack().remove(0);
+			final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
+
+			// If entry is a page (cannot be null if we're evicting)
+			if (oldestEntry instanceof Page)
 			{
-				IPageMapEntry entry = (IPageMapEntry)iterator.next();
-				int accessSequenceNumber = entry.getAccessSequenceNumber();
-				if (accessSequenceNumber < min)
+				Page page = (Page)oldestEntry;
+
+				// If there is more than one version of this page
+				if (page.getVersions() > 1)
 				{
-					min = accessSequenceNumber;
-					leastRecentlyUsed = entry;
-				}
-			}
-			if (leastRecentlyUsed != null)
-			{
-				// If entry is a page
-				if (leastRecentlyUsed instanceof Page)
-				{
-					Page page = (Page)leastRecentlyUsed;
-					
-					// If there is more than one version of this page
-					if (page.getVersions() > 1)
-					{
-						// expire the oldest version
-						page.expireOldestVersion();
-					}
-					else
-					{
-						// expire whole page
-						pageMap.remove(page);						
-					}
+					// expire the oldest version
+					page.expireOldestVersion();
 				}
 				else
 				{
-					// Remove the entry
-					pageMap.remove(leastRecentlyUsed);
+					// expire whole page
+					pageMap.remove(page);
 				}
+			}
+			else
+			{
+				// Remove the entry
+				pageMap.remove(oldestEntry);
 			}
 		}
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
