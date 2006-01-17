@@ -385,11 +385,16 @@ public abstract class WebApplication extends Application
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(getWicketServlet().getServletContext()));
-
-		final String configuration = wicketServlet.getInitParameter("configuration");
+		
+		String configuration = System.getProperty(Application.CONFIGURATION);
+		if(configuration == null) configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
 		if (configuration != null)
 		{
 			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+		}
+		else
+		{
+			configure(Application.DEPLOYMENT, wicketServlet.getInitParameter("sourceFolder"));
 		}
 	}
 
