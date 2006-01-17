@@ -1,6 +1,6 @@
 /*
- * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10 21:28:56 eelco12
- * Exp $ $Revision$ $Date$
+ * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +28,9 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractRequestTargetUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
+public abstract class AbstractRequestTargetUrlCodingStrategy
+		implements
+			IRequestTargetUrlCodingStrategy
 {
 	/** mounted path. */
 	private final String mountPath;
@@ -67,21 +69,30 @@ public abstract class AbstractRequestTargetUrlCodingStrategy implements IRequest
 	 */
 	protected PageParameters decodePageParameters(String urlFragment)
 	{
-		PageParameters params = new PageParameters();
-
+		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
 		{
 			urlFragment = urlFragment.substring(1);
 		}
 
-		String[] pairs = urlFragment.split("/");
+		// Split into pairs
+		final String[] pairs = urlFragment.split("/");
 
-		// FIXME Robustness: Check pairs.length % 2 == 0
-		for (int i = 0; i < pairs.length - 1; i += 2)
+		// If we don't have an even number of pairs
+		if (pairs.length % 2 != 0)
 		{
-			params.put(pairs[i], pairs[i + 1]);
+			// give up
+			throw new IllegalStateException("URL fragment has unmatched key/value pair: "
+					+ urlFragment);
 		}
-		return params;
+
+		// Loop through pairs
+		PageParameters parameters = new PageParameters();
+		for (int i = 0; i < pairs.length; i += 2)
+		{
+			parameters.put(pairs[i], pairs[i + 1]);
+		}
+		return parameters;
 	}
 
 	/**
