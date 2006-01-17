@@ -403,14 +403,15 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @param entry
-	 *            The entry to put into this map
+	 * @param page
+	 *            The page to put into this map
 	 */
 	final synchronized void put(final Page page)
 	{
 		if (!page.isStateless())
 		{
 			IPageMapEntry entry = page.getPageMapEntry();
+			
 			// Entry has been accessed
 			pushAccess(entry);
 
@@ -442,7 +443,7 @@ public final class PageMap implements Serializable
 		IRequestCycleProcessor processor = cycle.getProcessor();
 		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 
-		// TODO General: This conflicts with the use of IRequestCodingStrategy.
+		// FIXME General: This conflicts with the use of IRequestCodingStrategy.
 		// We should get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		session.dirtyPageMap(this);

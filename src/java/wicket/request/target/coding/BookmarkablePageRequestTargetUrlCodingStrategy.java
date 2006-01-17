@@ -73,7 +73,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
-		// TODO General: What to do with the page map?
+		// FIXME General: What to do with the page map?
 		appendPageParameters(url, target.getPageParameters());
 		return url.toString();
 	}

@@ -277,7 +277,7 @@ public class ListMultipleChoice extends AbstractChoice
 		final String[] ids = inputAsStringArray();
 
 		// if input was null then value was not submitted (disabled field), ignore it
-		// TODO General: This can't be done! null is nothing selected! we need check for isEnabled for this.
+		// FIXME General: This can't be done! null is nothing selected! we need check for isEnabled for this.
 //		if (ids != null)
 		{
 			// Get the list of selected values
