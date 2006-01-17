@@ -591,7 +591,9 @@ public final class PageMap implements Serializable
 		access.version = versionOf(entry);
 		int index = accessStack.indexOf(access);
 		if (index == 0)
+		{
 			return;
+		}
 		else if (index > 0)
 		{
 			accessStack.remove(index);
