@@ -159,7 +159,8 @@ public final class PageMap implements Serializable
 	// to delete the long, complicated warning below and replace it with a
 	// shorter one. The stateless pages would still not go into the session.
 	// Just the Access information would be replicated through the PageMap
-	// object.
+	// object using a subclass like StatelessPageAccess having a class and
+	// PageParameters.
 
 	/**
 	 * Returns a stack of PageMap.Access entries pushed in the order that the
