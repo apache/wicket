@@ -32,7 +32,7 @@ public class StringBufferWriter extends Writer
 	 */
 	public StringBufferWriter()
 	{
-		buffer = new StringBuffer(2048);
+		buffer = new StringBuffer(4096);
 	}
 
 	/**
