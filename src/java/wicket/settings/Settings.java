@@ -169,8 +169,7 @@ public final class Settings
 	private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/** The eviction strategy. */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
-			15);
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(5);
 
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
