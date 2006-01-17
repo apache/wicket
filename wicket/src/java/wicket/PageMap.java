@@ -53,7 +53,7 @@ public final class PageMap implements Serializable
 
 	/** The session where this PageMap resides */
 	private transient Session session;
-
+	
 	/**
 	 * Holds information about a pagemap access
 	 * 
@@ -84,6 +84,27 @@ public final class PageMap implements Serializable
 		public final int getVersion()
 		{
 			return version;
+		}
+		
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode()
+		{
+			return id + (version<<16);
+		}
+		
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		public boolean equals(Object obj)
+		{
+			if(obj instanceof Access)
+			{
+				Access tmp = (Access)obj;
+				return tmp.id == id && tmp.version == version;
+			}
+			return false;
 		}
 	}
 
@@ -289,7 +310,7 @@ public final class PageMap implements Serializable
 	 */
 	final String attributePrefix()
 	{
-		return session.pageMapEntryAttributePrefix + name + ":";
+		return Session.pageMapEntryAttributePrefix + name + ":";
 	}
 
 	/**
@@ -318,7 +339,7 @@ public final class PageMap implements Serializable
 			interceptContinuationURL = null;
 
 			// Force session to replicate page maps
-			session.dirty();
+			session.dirtyPageMap(this);
 			return true;
 		}
 		return false;
@@ -343,7 +364,8 @@ public final class PageMap implements Serializable
 
 			// Get page as dirty
 			Page page = entry.getPage();
-			page.setDirty(true);
+			// TODO is this really the case is a page always dirty even if we just render it again?
+			page.dirty();
 
 			// Get the version of the page requested from the page
 			final Page version = page.getVersion(versionNumber);
@@ -358,7 +380,7 @@ public final class PageMap implements Serializable
 					page = version;
 
 					// Replaces old page entry
-					page.getPageMap().put(page);
+					page.getPageMap().put(page.getPageMapEntry());
 				}
 			}
 			else
@@ -376,7 +398,7 @@ public final class PageMap implements Serializable
 	 */
 	final int nextId()
 	{
-		session.dirty();
+		session.dirtyPageMap(this);
 		return this.pageId++;
 	}
 
@@ -422,6 +444,7 @@ public final class PageMap implements Serializable
 		// TODO General: This conflicts with the use of IRequestCodingStrategy.
 		// We should get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
+		session.dirtyPageMap(this);
 		cycle.redirectTo(page);
 	}
 
@@ -547,6 +570,7 @@ public final class PageMap implements Serializable
 	 */
 	private final Access popAccess()
 	{
+		session.dirtyPageMap(this);
 		return (Access)accessStack.pop();
 	}
 
@@ -560,7 +584,14 @@ public final class PageMap implements Serializable
 		final Access access = new Access();
 		access.id = entry.getNumericId();
 		access.version = versionOf(entry);
+		int index = accessStack.indexOf(access);
+		if(index == 0) return;
+		else if(index > 0)
+		{
+			accessStack.remove(index);
+		}
 		accessStack.push(access);
+		session.dirtyPageMap(this);
 	}
 
 	/**
@@ -574,6 +605,8 @@ public final class PageMap implements Serializable
 		{
 			return ((Page)entry).getCurrentVersionNumber();
 		}
+		// TODO don't we really need the version number here? So entry.getPage().getCurrentVersionNumber()
+		// because if we don't that the access map doesn't hold any version info
 		return 0;
 	}
 }
