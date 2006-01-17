@@ -122,15 +122,6 @@ public abstract class FormComponent extends WebMarkupContainer
 	private String rawInput = NO_RAW_INPUT;
 
 	/**
-	 * Indicates if the model is considered up to date with the last user input.
-	 * If true, the model value will be used to render the component. If false,
-	 * the rawInput value (last user input) will be used to render the
-	 * component. (Can be false if validation fails, or if component not
-	 * validated/updated after a user input, for example if a Button with
-	 * defaultFormProcessing property set to true, aka "immediate button")
-	 */
-	// private boolean modelUpToDate = true;
-	/**
 	 * The list of validators for this form component as either an IValidator
 	 * instance or an array of IValidator instances.
 	 */
