@@ -84,7 +84,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * Gets the display value that is visible to the end user.
 			 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 			 */
-			public String getDisplayValue(Object object)
+			public Object getDisplayValue(Object object)
 			{
 				// Use an ugly switch statement. Usually you would hide this in your business
 				// object or in a utility.

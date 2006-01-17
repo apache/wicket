@@ -234,7 +234,7 @@ public class FormInput extends WicketExamplePage
 		/**
 		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
-		public String getDisplayValue(Object object)
+		public Object getDisplayValue(Object object)
 		{
 			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale()); 
