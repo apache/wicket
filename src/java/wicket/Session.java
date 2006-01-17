@@ -546,7 +546,7 @@ public abstract class Session implements Serializable
 	public final void touch(Page page)
 	{
 		// Touch the page in its pagemap.
-		page.getPageMap().put(page.getPageMapEntry());
+		page.getPageMap().put(page);
 	}
 
 	/**

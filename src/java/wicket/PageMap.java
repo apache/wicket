@@ -380,7 +380,7 @@ public final class PageMap implements Serializable
 					page = version;
 
 					// Replaces old page entry
-					page.getPageMap().put(page.getPageMapEntry());
+					page.getPageMap().put(page);
 				}
 			}
 			else
@@ -406,10 +406,11 @@ public final class PageMap implements Serializable
 	 * @param entry
 	 *            The entry to put into this map
 	 */
-	final synchronized void put(final IPageMapEntry entry)
+	final synchronized void put(final Page page)
 	{
-		if (!(entry instanceof Page && ((Page)entry).isStateless()))
+		if (!page.isStateless())
 		{
+			IPageMapEntry entry = page.getPageMapEntry();
 			// Entry has been accessed
 			pushAccess(entry);
 
