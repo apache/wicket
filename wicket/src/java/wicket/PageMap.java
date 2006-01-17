@@ -116,23 +116,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Gets the most recently accessed page map entry off the top of the entry
-	 * access stack. This is guaranteed to be the most recently accessed entry
-	 * IF AND ONLY IF the user just came from a stateful page. If the user could
-	 * get to the current page from a stateless page, this method may not work
-	 * if the user uses the back button. For a detailed explanation of this
-	 * issue, see getAccessStack().
-	 * 
-	 * @see PageMap#getAccessStack()
-	 * 
-	 * @return Previous pagemap entry in terms of access
-	 */
-	public final IPageMapEntry lastAccessed()
-	{
-		return getEntry(peekAccess().getId());
-	}
-
-	/**
 	 * Removes all pages from this map
 	 */
 	public final void clear()
@@ -247,6 +230,23 @@ public final class PageMap implements Serializable
 	public final boolean isDefault()
 	{
 		return name == null;
+	}
+
+	/**
+	 * Gets the most recently accessed page map entry off the top of the entry
+	 * access stack. This is guaranteed to be the most recently accessed entry
+	 * IF AND ONLY IF the user just came from a stateful page. If the user could
+	 * get to the current page from a stateless page, this method may not work
+	 * if the user uses the back button. For a detailed explanation of this
+	 * issue, see getAccessStack().
+	 * 
+	 * @see PageMap#getAccessStack()
+	 * 
+	 * @return Previous pagemap entry in terms of access
+	 */
+	public final IPageMapEntry lastAccessed()
+	{
+		return getEntry(peekAccess().getId());
 	}
 
 	/**
