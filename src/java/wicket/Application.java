@@ -97,6 +97,9 @@ import wicket.util.time.Duration;
  */
 public abstract class Application
 {
+	/** Configuration constant for the 2 types */
+	public static final String CONFIGURATION = "configuration";
+
 	/** Configuration type constant for deployment */
 	public static final String DEPLOYMENT = "deployment";
 
@@ -245,7 +248,10 @@ public abstract class Application
 	public final void configure(final String configurationType, final String resourceFolder)
 	{
 		configure(configurationType);
-		getResourceSettings().addResourceFolder(resourceFolder);
+		if(resourceFolder != null)
+		{
+			getResourceSettings().addResourceFolder(resourceFolder);
+		}
 	}
 
 	/**
