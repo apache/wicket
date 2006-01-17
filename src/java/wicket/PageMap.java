@@ -116,17 +116,14 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Pops the top entry off the entry access stack and returns it.
-	 * <p>
-	 * NOTE: This method returns the most recently accessed stateful page map
-	 * entry. However, it will not always work perfectly when stateless pages
-	 * are involved. If stateless pages are in the browser, they will not be on
-	 * the access stack. If the user goes back to a stateless page and navigates
-	 * forward, the stack will not be correctly adjusted (unlike with stateful
-	 * pages). Instead the new stateful page will be on top of the access stack
-	 * and any unreachable page versions that the user may have backed up over
-	 * will still be in the session instead of being eliminated. This is not a
-	 * major problem, however as they will expire in the normal way.
+	 * Pops the top entry off the entry access stack and returns it. This is
+	 * guaranteed to be the most recently accessed page map entry IF AND ONLY IF
+	 * the user just came from a stateful page. If the user could get to the
+	 * current page from a stateless page, this method may not work if the user
+	 * uses the back button. See detailed explanation for getAccessStack() to
+	 * understand this limitation!
+	 * 
+	 * @see PageMap#getAccessStack()
 	 * 
 	 * @return Previous pagemap entry in terms of access
 	 */
@@ -154,6 +151,27 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Returns a stack of PageMap.Access entries pushed in the order that the
+	 * pages and versions were accessed.
+	 * <p>
+	 * IMPORTANT NOTE: This stack will be in sync with the browser stack EXCEPT
+	 * in certain circumstances where stateless pages and the back button are
+	 * involved. The problem is this: if stateless pages are rendered to the
+	 * browser, they will not be on the access stack because they are not in the
+	 * PageMap at all. So, if the user goes back to a stateless page and
+	 * navigates forward to a stateful page, the stack will not be correctly
+	 * adjusted (unlike with stateful pages, where it will always be adjusted
+	 * correctly). Instead, the new stateful page will be on top of the access
+	 * stack and any unreachable page versions that the user may have backed up
+	 * over will still be in the session and on the access stack instead of
+	 * being eliminated. This is not a major problem, however as they will
+	 * expire in the normal way (although they will take up pagemap space until
+	 * they do). It's important to realize that this is a problem with stateless
+	 * pages and not with the implementation of PageMap, which is now actually a
+	 * better implementation than in previous versions because it at least CAN
+	 * remove unused information from the map when the back button is used on
+	 * stateful pages.
+	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
 	public final Stack getAccessStack()
