@@ -662,7 +662,11 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Get the markup attributes which are associated with the component.
+	 * Get a copy of the markup's attributes which are associated with the 
+	 * component.
+	 * <p>
+	 * Modifications to the map returned don't change the tags attributes. 
+     * It is just a copy.
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly)
 	 * to a container with an associated markup file (Page, Panel or Border).   
@@ -671,7 +675,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final ValueMap getMarkupAttributes()
 	{
-		return initializeMarkupStream().getTag().getAttributes();
+		return new ValueMap(initializeMarkupStream().getTag().getAttributes());
 	}
 	
 	/**
