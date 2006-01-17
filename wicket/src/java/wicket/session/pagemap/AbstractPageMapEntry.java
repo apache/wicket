@@ -27,7 +27,6 @@ import wicket.Page;
  */
 public abstract class AbstractPageMapEntry implements IPageMapEntry
 {
-	private boolean dirty;
 	private short id;
 
 	/**
@@ -55,22 +54,6 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	public Class getPageClass()
 	{
 		return getPage().getClass();
-	}
-
-	/**
-	 * @see wicket.session.pagemap.IPageMapEntry#isDirty()
-	 */
-	public boolean isDirty()
-	{
-		return dirty;
-	}
-
-	/**
-	 * @see wicket.session.pagemap.IPageMapEntry#setDirty(boolean)
-	 */
-	public void setDirty(boolean dirty)
-	{
-		this.dirty = dirty;
 	}
 
 	/**

@@ -51,17 +51,6 @@ public interface IPageMapEntry extends Serializable
 	Class getPageClass();
 
 	/**
-	 * @return True if this entry is dirty and requires replication
-	 */
-	boolean isDirty();
-
-	/**
-	 * @param dirty
-	 *            True if this entry is now dirty
-	 */
-	void setDirty(boolean dirty);
-
-	/**
 	 * @param id
 	 *            The numeric id for this entry
 	 */
