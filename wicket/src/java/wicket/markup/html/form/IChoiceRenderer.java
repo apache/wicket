@@ -34,7 +34,7 @@ public interface IChoiceRenderer extends Serializable
 	 *            the actual object
 	 * @return the value meant for displaying to an end user
 	 */
-	String getDisplayValue(Object object);
+	Object getDisplayValue(Object object);
 
 	/**
 	 * This method is called to get the id value of an object (used as the value

@@ -111,7 +111,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 	/**
 	 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 	 */
-	public String getDisplayValue(Object object)
+	public Object getDisplayValue(Object object)
 	{
 		Object returnValue = object;
 		if ((displayExpression != null) && (object != null))
