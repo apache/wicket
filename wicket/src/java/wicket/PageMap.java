@@ -53,7 +53,7 @@ public final class PageMap implements Serializable
 
 	/** The session where this PageMap resides */
 	private transient Session session;
-	
+
 	/**
 	 * Holds information about a pagemap access
 	 * 
@@ -85,21 +85,21 @@ public final class PageMap implements Serializable
 		{
 			return version;
 		}
-		
+
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
 		public int hashCode()
 		{
-			return id + (version<<16);
+			return id + (version << 16);
 		}
-		
+
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		public boolean equals(Object obj)
 		{
-			if(obj instanceof Access)
+			if (obj instanceof Access)
 			{
 				Access tmp = (Access)obj;
 				return tmp.id == id && tmp.version == version;
@@ -364,7 +364,8 @@ public final class PageMap implements Serializable
 
 			// Get page as dirty
 			Page page = entry.getPage();
-			// TODO is this really the case is a page always dirty even if we just render it again?
+			// TODO is this really the case is a page always dirty even if we
+			// just render it again?
 			page.dirty();
 
 			// Get the version of the page requested from the page
@@ -413,7 +414,7 @@ public final class PageMap implements Serializable
 		{
 			// Get page map entry from page
 			final IPageMapEntry entry = page.getPageMapEntry();
-			
+
 			// Entry has been accessed
 			pushAccess(entry);
 
@@ -589,8 +590,9 @@ public final class PageMap implements Serializable
 		access.id = entry.getNumericId();
 		access.version = versionOf(entry);
 		int index = accessStack.indexOf(access);
-		if(index == 0) return;
-		else if(index > 0)
+		if (index == 0)
+			return;
+		else if (index > 0)
 		{
 			accessStack.remove(index);
 		}
@@ -609,8 +611,9 @@ public final class PageMap implements Serializable
 		{
 			return ((Page)entry).getCurrentVersionNumber();
 		}
-		// TODO don't we really need the version number here? So entry.getPage().getCurrentVersionNumber()
-		// because if we don't that the access map doesn't hold any version info
+
+		// If entry is not a page, it cannot have versions because the Page
+		// is constructed on the fly.
 		return 0;
 	}
 }
