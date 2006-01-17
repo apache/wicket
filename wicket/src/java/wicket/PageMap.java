@@ -408,9 +408,11 @@ public final class PageMap implements Serializable
 	 */
 	final synchronized void put(final Page page)
 	{
+		// Page only goes into session if it is stateless
 		if (!page.isStateless())
 		{
-			IPageMapEntry entry = page.getPageMapEntry();
+			// Get page map entry from page
+			final IPageMapEntry entry = page.getPageMapEntry();
 			
 			// Entry has been accessed
 			pushAccess(entry);
