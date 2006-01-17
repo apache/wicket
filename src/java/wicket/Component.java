@@ -222,6 +222,8 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IBehaviorListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * is allowed to be enabled.
