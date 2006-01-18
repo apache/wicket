@@ -86,7 +86,7 @@ public final class PageMapView extends Panel
 				link.add(new Label("id", "" + entry.getNumericId()));
 				listItem.add(link);
 				listItem.add(new Label("class", "" + entry.getClass().getName()));
-				int size;
+				long size;
 				int version;
 				int versions;
 				if (entry instanceof Page)

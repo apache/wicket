@@ -178,6 +178,6 @@ public final class PageView extends Panel
 		public String value;
 		
 		/** Size of component in bytes */
-		public int size;
+		public long size;
 	}
 }
