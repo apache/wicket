@@ -900,9 +900,6 @@ public class IOUtils
 	{
 		OutputStreamWriter out = new OutputStreamWriter(output);
 		copy(input, out);
-
-		// TODO General: Unless anyone is planning on rewriting
-		// OutputStreamWriter, we have to flush here.
 		out.flush();
 	}
 
@@ -944,9 +941,6 @@ public class IOUtils
 		{
 			OutputStreamWriter out = new OutputStreamWriter(output, encoding);
 			copy(input, out);
-			
-			// TODO General: Unless anyone is planning on rewriting
-			// OutputStreamWriter, we have to flush here.
 			out.flush();
 		}
 	}
