@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,12 +17,7 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketRuntimeException;
 
@@ -33,14 +28,11 @@ import wicket.WicketRuntimeException;
  */
 public class BufferedWebResponse extends WebResponse
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(BufferedWebResponse.class);
-
 	/** URL to redirect to when response is flushed, if any */
-	private String redirectUrl;
+	private String redirectURL;
 
 	/** Buffer to hold page */
-	private StringBuffer buffer = new StringBuffer(1024);
+	private StringBuffer buffer = new StringBuffer(4096);
 
 	/**
 	 * Constructor for testing harness.
@@ -54,9 +46,8 @@ public class BufferedWebResponse extends WebResponse
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	BufferedWebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	BufferedWebResponse(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
@@ -68,10 +59,10 @@ public class BufferedWebResponse extends WebResponse
 	public void close()
 	{
         // If a redirection was specified
-        if (redirectUrl != null)
+        if (redirectURL != null)
         {
             // actually redirect
-            super.redirect(redirectUrl);
+            super.redirect(redirectURL);
         }
         else
         {
@@ -91,12 +82,11 @@ public class BufferedWebResponse extends WebResponse
 	 */
 	public final void redirect(final String url)
 	{
-        if (redirect)
+        if (redirectURL != null)
         {
-        	throw new WicketRuntimeException("Already redirecting to '" + redirectUrl + "'. Cannot redirect more than once");
+        	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
         }
-		super.redirect = true;
-		this.redirectUrl = url;
+		this.redirectURL = url;
 	}
 
 	/**
@@ -108,5 +98,17 @@ public class BufferedWebResponse extends WebResponse
 	public void write(final String string)
 	{
 		buffer.append(string);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 */
+	public final void filter()
+	{
+        if (redirectURL == null && buffer.length() != 0)
+        {
+        	this.buffer = filter(buffer);
+
+        }
 	}
 }

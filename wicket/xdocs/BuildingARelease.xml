@@ -33,6 +33,15 @@
 				</p>
 			</subsection>
 		</section>
+		<section name="Prerequisites">
+			<p>
+				In order to be able to create the news RSS feed, you will need to add the Xalan jar
+				to the <code>MAVEN_HOME/lib/endorsed</code> directory. If you fail to do so, the
+				<code>maven xdoc</code> goal will fail with a JAXP error. You can copy the 
+				<code>xalan-2.6.2.jar</code> from your local maven repository (probably located in
+				your home directory in <code>.maven/repository/xalan/jars</code>).
+			</p>
+		</section>
 		<section name="Preparing the Release">
 			<p>
 				This section describes the preparation step to perform a release of the Wicket

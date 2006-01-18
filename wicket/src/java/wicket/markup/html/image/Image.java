@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.27 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,82 +17,160 @@
  */
 package wicket.markup.html.image;
 
-import java.io.Serializable;
-import java.util.Locale;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketRuntimeException;
+import wicket.IResourceListener;
+import wicket.Resource;
+import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.image.resource.ImageResource;
-import wicket.markup.html.image.resource.StaticImageResource;
-import wicket.util.string.Strings;
+import wicket.markup.html.WebComponent;
+import wicket.markup.html.image.resource.LocalizedImageResource;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
- * An image component represents a localizable image resource. The image name
- * comes from the src attribute of the image tag that the component is attached
- * to. The image component responds to requests made via IResourceListener's
- * resourceRequested method. The image or subclass responds by returning an
- * IResource from getImageResource(String), where String is the source attribute
- * of the image tag.
+ * An Image component displays a localizable image resource.
+ * <p>
+ * For details of how Images load, generate and manage images, see
+ * {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
  */
-public class Image extends AbstractImage
+public class Image extends WebComponent implements IResourceListener
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 555385780092173403L;
-
+	private static final long serialVersionUID = 1L;
+	
+	private static final Log log = LogFactory.getLog(Image.class);
+	
 	/** The image resource this image component references */
-	private ImageResource imageResource;
-
-	/** The locale of the image resource */
-	private Locale locale;
+	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
+	 * This constructor can be used if you have a img tag that has a src that points to a 
+	 * PackageResource  (which will be created and bind to the shared resources)
+	 * Or if you have a value attribute in youre tag for which the image factory can make an image.
+	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public Image(final String name)
+	public Image(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
-	 * Constructs from a
+	 * Constructs an image from an image resourcereference.
+	 * That resource reference will bind its resource to the current SharedResources.
 	 * 
-	 * @param name
-	 *            See Component#Component(String)
+	 * If you are using non sticky session clustering and the resource reference
+     * is pointing to a Resource that isn't guaranteed to be on every server,
+     * for example a dynamic image or resources that aren't added with a IInitializer
+     * at application startup. Then if only that resource is requested from another
+     * server, without the rendering of the page, the image won't be there and will
+     * result in a broken link.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param resourceReference
+	 *            The shared image resource
+	 */
+	public Image(final String id, final ResourceReference resourceReference)
+	{
+		super(id);
+		localizedImageResource.setResourceReference(resourceReference);
+	}
+
+	/**
+	 * Constructs an image directly from an image resource.
+	 * 
+	 * This one doesn't have the 'non sticky session clustering' problem that the 
+	 * ResourceReference constructor has.
+	 * But this will result in a non 'stable' url and the url will have request parameters. 
+	 * 
+	 * @param id
+	 *            See Component
 	 * 
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public Image(final String name, final ImageResource imageResource)
+	public Image(final String id, final Resource imageResource)
 	{
-		super(name);
-		this.imageResource = imageResource;
+		super(id);
+		setImageResource(imageResource);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final Serializable object)
+	public Image(final String id, final IModel model)
 	{
-		super(name, object);
+		super(id, model);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @param id
+	 *            See Component
+	 * @param string
+	 *            Name of image
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final Serializable object, final String expression)
+	public Image(final String id, final String string)
 	{
-		super(name, object, expression);
+		this(id, new Model(string));
 	}
 
 	/**
-	 * @see AbstractImage#getResourcePath()
+	 * @see wicket.IResourceListener#onResourceRequested()
 	 */
-	public String getResourcePath()
+	public void onResourceRequested()
 	{
-		return imageResource.getPath();
+		localizedImageResource.onResourceRequested();
+	}
+
+	/**
+	 * @param imageResource
+	 *            The new ImageResource to set.
+	 */
+	public void setImageResource(final Resource imageResource)
+	{
+		this.localizedImageResource.setResource(imageResource);
+	}
+
+	/**
+	 * @param resourceReference
+	 *            The shared ImageResource to set.
+	 */
+	public void setImageResourceReference(final ResourceReference resourceReference)
+	{
+		this.localizedImageResource.setResourceReference(resourceReference);
+	}
+
+	/**
+	 * @return Resource returned from subclass
+	 */
+	protected Resource getImageResource()
+	{
+		return null;
+	}
+
+	/**
+	 * @return ResourceReference returned from subclass
+	 */	
+	protected ResourceReference getImageResourceReference()
+	{
+		return null;
+	}
+
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		// Images don't support Compound models. They either have a simple
+		// model, explicitly set, or they use their tag's src or value
+		// attribute to determine the image.
+		return null;
 	}
 
 	/**
@@ -100,42 +178,19 @@ public class Image extends AbstractImage
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// If locale has changed from the initial locale used to attach image
-		// resource, then we need to reload the resource in the new locale
-		if (locale != null && locale != getLocale())
-		{
-			imageResource = null;
-		}
-
-		// Need to load image resource for this component?
-		if (imageResource == null)
-		{
-			final String modelString = getModelObjectAsString();
-			final String resourcePath;
-			if (Strings.isEmpty(modelString))
-			{
-				resourcePath = tag.getString("src");
-			}
-			else
-			{
-				resourcePath = modelString;
-			}
-
-			final Package basePackage = findParentWithAssociatedMarkup().getClass().getPackage();
-			this.imageResource = StaticImageResource.get(getClass().getClassLoader(), basePackage,
-					resourcePath, getLocale(), getStyle());
-
-			if (this.imageResource == null)
-			{
-				throw new WicketRuntimeException("Unable to find image resource [basePackage = "
-						+ basePackage + ", resourcePath = " + resourcePath + ", locale = "
-						+ getLocale() + ", style = " + getStyle() + "]");
-			}
-
-			this.locale = getLocale();
-		}
-
+		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
+		final Resource resource = getImageResource();
+		if (resource != null)
+		{
+			localizedImageResource.setResource(resource);
+		}
+		final ResourceReference resourceReference = getImageResourceReference();
+		if (resourceReference != null)
+		{
+			localizedImageResource.setResourceReference(resourceReference);
+		}
+		localizedImageResource.setSrcAttribute(tag);
 	}
 
 	/**

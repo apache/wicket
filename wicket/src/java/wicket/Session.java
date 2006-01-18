@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * $Id$ $Revision:
+ * 1.104 $ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,45 +17,64 @@
  */
 package wicket;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import wicket.util.collections.MostRecentlyUsedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.application.IClassResolver;
+import wicket.authorization.IAuthorizationStrategy;
+import wicket.request.ClientInfo;
+import wicket.session.ISessionStore;
+import wicket.session.ISessionStoreFactory;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Bytes;
+import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 
 /**
  * Holds information about a user session, including some fixed number of most
  * recent pages (and all their nested component information).
- * <p>
- * The Session for a RequestCycle can be retrieved by calling
- * RequestCycle.getSession(). If a RequestCycle object is not available, the
- * Session can be retrieved for a Component by calling Component.getSession().
- * If neither is available, the currently active Session for the calling thread
- * can be retrieved by calling the static method Session.get(). This last form
- * should only be used if the first two forms cannot be used.
- * <p>
- * As currently implemented, each Component does not itself have a reference to
- * the session that contains it. However, the Page component at the root of the
- * containment hierarchy does have a reference to the Session that holds the
- * page. So Component.getSession() traverses the component hierarchy to the root
- * Page and then calls Page.getSession().
- * <p>
- * A session has a locale property to support localization. The locale for a
- * session can be set by calling setLocale(). The locale determines how
- * localized resources are found and loaded. Besides having an appearance based
- * on locale, resources can also have different looks in the same locale (a.k.a.
- * "skins"). The style for a session determines the look which is used within
- * the appopriate locale. The session style ("skin") can be set with the
- * setStyle() method.
- * <p>
- * Searching for resources occurs in the following order (where sourcePath is
+ * <ul>
+ * <li><b>Access via RequestCycle </b>- The Session for a {@link RequestCycle}
+ * can be retrieved by calling {@link RequestCycle#getSession()}.
+ * 
+ * <li><b>Access via Component </b>- If a RequestCycle object is not available,
+ * the Session can be retrieved for a Component by calling
+ * {@link Component#getSession()}. As currently implemented, each Component
+ * does not itself have a reference to the session that contains it. However,
+ * the Page component at the root of the containment hierarchy does have a
+ * reference to the Session that holds the Page. So
+ * {@link Component#getSession()} traverses the component hierarchy to the root
+ * Page and then calls {@link Page#getSession()}.
+ * 
+ * <li><b>Access via Thread Local </b>- In the odd case where neither a
+ * RequestCycle nor a Component is available, the currently active Session for
+ * the calling thread can be retrieved by calling the static method
+ * Session.get(). This last form should only be used if the first two forms
+ * cannot be used since thread local access can involve a potentially more
+ * expensive hash map lookup.
+ * 
+ * <li><b>Locale </b>- A session has a Locale property to support localization.
+ * The Locale for a session can be set by calling
+ * {@link Session#setLocale(Locale)}. The Locale for a Session determines how
+ * localized resources are found and loaded.
+ * 
+ * <li><b>Style </b>- Besides having an appearance based on locale, resources
+ * can also have different looks in the same locale (a.k.a. "skins"). The style
+ * for a session determines the look which is used within the appopriate locale.
+ * The session style ("skin") can be set with the setStyle() method.
+ * 
+ * <li><b>Resource Loading </b>- Based on the Session locale and style,
+ * searching for resources occurs in the following order (where sourcePath is
  * set via the ApplicationSettings object for the current Application, and style
  * and locale are Session properties):
- * <p>
  * <ul>
  * 1. [sourcePath]/name[style][locale].[extension] <br>
  * 2. [sourcePath]/name[locale].[extension] <br>
@@ -66,119 +85,162 @@ import wicket.util.string.Strings;
  * 7. [classPath]/name[style].[extension] <br>
  * 8. [classPath]/name.[extension] <br>
  * </ul>
- * <p>
- * Arbitrary objects can be attached to a Session via setProperty() and
- * retrieved again via getProperty(). Session properties no longer in use can be
- * removed via removeProperty().
- * <p>
- * Sessions have a class resolver and page factory property which implement
- * IClassResolver and IPageFactory in order to find classes and instantiate
- * pages.
- * <p>
- * Pages can be removed from the Session forcibly by calling remove(Page) or
- * removeAll(), although such an action should rarely be necessary.
- * <p>
- * Although public, the removeNewerThan(Page) and getFreshestPage() methods are
- * intended for internal use only and may not be supported in the future.
- * Framework clients should not call these methods.
- *
+ * 
+ * <li><b>Session Properties </b>- Arbitrary objects can be attached to a
+ * Session by installing a session factory on your Application class which
+ * creates custom Session subclasses that have typesafe properties specific to
+ * the application (see {@link Application} for details). To discourage
+ * non-typesafe access to Session properties, no setProperty() or getProperty()
+ * method is provided. In a clustered environment, you should take care to
+ * 
+ * 
+ * <li><b>Class Resolver </b>- Sessions have a class resolver (
+ * {@link IClassResolver}) implementation that is used to locate classes for
+ * components such as pages.
+ * 
+ * <li><b>Page Factory </b>- A pluggable implementation of {@link IPageFactory}
+ * is used to instantiate pages for the session.
+ * 
+ * <li><b>Removal </b>- Pages can be removed from the Session forcibly by
+ * calling remove(Page) or removeAll(), although such an action should rarely be
+ * necessary.
+ * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public abstract class Session implements Serializable
 {
-	/** Separator for component paths. */
-	private static final char componentPathSeparator = '.';
+	/** Name of session attribute under which this session is stored */
+	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/** Prefix for attributes holding page map entries */
+	static final String pageMapEntryAttributePrefix = "p:";
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
 
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(Session.class);
+
+
+	/** Attribute prefix for page maps stored in the session */
+	private static final String pageMapAttributePrefix = "m:";
+
+	private static final long serialVersionUID = 1L;
+
 	/** Application that this is a session of. */
 	private transient Application application;
 
-	/** Resolver for finding classes for this Session */
-	private transient IClassResolver classResolver;
-
-	/** Active request cycle */
-	private transient RequestCycle cycle;
-
-	/** URL to continue to after a given page. */
-	private String interceptContinuationURL;
-
-	/** The locale to use when loading resources for this session. */
-	private Locale locale = Locale.getDefault();
+	/**
+	 * Cached instance of agent info which is typically designated by calling
+	 * {@link RequestCycle#newClientInfo()}.
+	 */
+	private ClientInfo clientInfo;
+	
+	/** The current pagemap for this request */
+	private transient PageMap currentPageMap;
 
 	/** The converter instance. */
 	private transient IConverter converter;
 
+	/** True if session state has been changed */
+	private transient boolean dirty = false;
+
+	/** A store for dirty objects for one request */
+	private transient List dirtyObjects;
+
+	/** The locale to use when loading resources for this session. */
+	private Locale locale;
+
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Next available page identifier. */
-	private int pageId = 0;
-
-	/** The still-live pages for this user session. */
-	private final Map pages;
+	/** The session store of this session. */
+	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
 	/**
-	 * Interface called when visiting session pages.
-	 *
+	 * Visitor interface for visiting page maps
+	 * 
 	 * @author Jonathan Locke
 	 */
-	static interface IPageVisitor
+	public static interface IPageMapVisitor
 	{
 		/**
-		 * Visit method.
-		 *
-		 * @param page
-		 *            the page
+		 * @param pageMap
+		 *            The page map
 		 */
-		public void page(final Page page);
+		public void pageMap(final PageMap pageMap);
 	}
 
 	/**
 	 * Get the session for the calling thread.
-	 *
+	 * 
 	 * @return Session for calling thread
 	 */
 	public static Session get()
 	{
-		return (Session)current.get();
+		Session session = (Session)current.get();
+		if (session == null)
+		{
+			throw new WicketRuntimeException("there is not session attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return session;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets session for calling thread.
-	 *
+	 * 
 	 * @param session
 	 *            The session
 	 */
 	public static void set(final Session session)
 	{
+		if (session == null)
+		{
+			throw new IllegalArgumentException("Argument session must me not null");
+		}
 		current.set(session);
 	}
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param application
 	 *            The application that this is a session of
 	 */
 	protected Session(final Application application)
 	{
+		// Save application
 		this.application = application;
-		setPageFactory(application.getSettings().getDefaultPageFactory());
-		setClassResolver(application.getSettings().getDefaultClassResolver());
-		this.pages = MostRecentlyUsedMap
-				.newInstance(application.getSettings().getMaxSessionPages());
+
+		// Set locale to default locale
+		setLocale(application.getApplicationSettings().getDefaultLocale());
+	}
+
+	/**
+	 * Removes all pages from the session. Although this method should rarely be
+	 * needed, it is available (possibly for security reasons).
+	 */
+	public final void clear()
+	{
+		visitPageMaps(new IPageMapVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				pageMap.clear();
+			}
+		});
 	}
 
 	/**
 	 * Get the application that is currently working with this session.
-	 *
+	 * 
 	 * @return Returns the application.
 	 */
 	public final Application getApplication()
@@ -187,84 +249,91 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @return The authorization strategy for this session
+	 */
+	public IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return application.getSecuritySettings().getAuthorizationStrategy();
+	}
+
+	/**
 	 * @return The class resolver for this Session
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		if ( classResolver == null ) return application.getSettings().getDefaultClassResolver();
-		else return classResolver;
+		return application.getApplicationSettings().getClassResolver();
 	}
 
 	/**
-	 * Gets the converter instance.
-	 *
-	 * @return the converter
-	 */
-	public final IConverter getConverter()
-	{
-		if (converter == null)
-		{
-			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(locale);
-		}
-		return converter;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * Gets the client info object for this session. This method lazily gets the
+	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
+	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
+	 * the info object based on the current request when no client info object
+	 * was set yet, and then caches the returned object; we can expect the
+	 * client to stay the same for the whole session, and implementations of
+	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
 	 * 
-	 * Get the freshest page in the session.
-	 *
-	 * @return The freshest page in the session
+	 * @return the client info object based on this request
 	 */
-	public final Page getFreshestPage()
+	public ClientInfo getClientInfo()
 	{
-		// No fresh page found at first
-		Page freshest = null;
-
-		// Loop through session pages
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		if (clientInfo == null)
 		{
-			// Get next page
-			final Page current = (Page)iterator.next();
-
-			// If the page isn't stale
-			if (!current.isStale())
-			{
-				// and we don't yet have a freshest page OR the current page is
-				// fresher
-				if ((freshest == null) || (current.getId() < freshest.getId()))
-				{
-					// then we found a fresher page
-					freshest = current;
-				}
-			}
+			this.clientInfo = getRequestCycle().newClientInfo();
 		}
+		return clientInfo;
+	}
 
-		return freshest;
+	/**
+	 * Gets the unique id for this session from the underlying SessionStore
+	 * 
+	 * @return The unique id for this session
+	 */
+	public String getId()
+	{
+		return getSessionStore().getId();
 	}
 
 	/**
 	 * Get this session's locale.
-	 *
+	 * 
 	 * @return This session's locale
 	 */
-	public final Locale getLocale()
+	public Locale getLocale()
 	{
-		return this.locale;
+		return locale;
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
 	 * Get the page for the given path.
-	 *
+	 * 
+	 * @param pageMapName
+	 *            The name of the page map where the page is
 	 * @param path
 	 *            Component path
-	 * @return The page based on the first path component (the page id)
+	 * @param versionNumber
+	 *            The version of the page required
+	 * @return The page based on the first path component (the page id), or null
+	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String path)
+	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
-		// Retrieve the page for the first path component from this session
-		return getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
+		if (log.isDebugEnabled())
+		{
+			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
+		}
+
+		// Get page map by name
+		currentPageMap = getPageMap(pageMapName);
+		if (currentPageMap != null)
+		{
+			// Get page entry for id and version
+			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+			return currentPageMap.get(Integer.parseInt(id), versionNumber);
+		}
+		return null;
 	}
 
 	/**
@@ -272,24 +341,83 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		if ( pageFactory == null ) return application.getSettings().getDefaultPageFactory();
-		else return pageFactory;
+		if (pageFactory == null)
+		{
+			pageFactory = application.getSessionSettings().getPageFactory();
+		}
+		return pageFactory;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
-	 *
+	 * @param page
+	 *            The page, or null if no page context is available
+	 * @return The page factory for the page, or the default page factory if
+	 *         page was null
+	 */
+	public final IPageFactory getPageFactory(final Page page)
+	{
+		if (page != null)
+		{
+			return page.getPageFactory();
+		}
+		return getPageFactory();
+	}
+
+	/**
+	 * @param pageMapName
+	 *            Name of page map, or null for default page map
+	 * @return PageMap for name
+	 */
+	public final PageMap getPageMap(String pageMapName)
+	{
+		return (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+	}
+
+	/**
+	 * @return A list of all PageMaps in this session.
+	 */
+	public final List getPageMaps()
+	{
+		final List list = new ArrayList();
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				list.add((PageMap)getAttribute(attribute));
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
 	 * @return The currently active request cycle for this session
 	 */
 	public final RequestCycle getRequestCycle()
 	{
-		return cycle;
+		return RequestCycle.get();
 	}
 
 	/**
-	 * Get the style.
-	 *
-	 * @return Returns the style.
+	 * @return Size of this session, including all the pagemaps it contains
+	 */
+	public final int getSizeInBytes()
+	{
+		int size = Objects.sizeof(this);
+		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		{
+			final PageMap pageMap = (PageMap)iterator.next();
+			size += pageMap.getSizeInBytes();
+		}
+		return size;
+	}
+
+	/**
+	 * Get the style (see {@link wicket.Session}).
+	 * 
+	 * @return Returns the style (see {@link wicket.Session})
 	 */
 	public final String getStyle()
 	{
@@ -297,85 +425,78 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Invalidates this session
+	 * Set the session for each PageMap
 	 */
-	public abstract void invalidate();
-
-	/**
-	 * Removes the given page from the cache. This method may be useful if you
-	 * have special knowledge that a given page cannot be accessed again. For
-	 * example, the user may have closed a popup window.
-	 *
-	 * @param page
-	 *            The page to remove
-	 */
-	public final void remove(final Page page)
+	public final void init()
 	{
-		pages.remove(new Integer(page.getId()));
+		visitPageMaps(new IPageMapVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				}
+				pageMap.setSession(Session.this);
+			}
+		});
 	}
 
 	/**
-	 * Removes all pages from the session. Although this method should rarely be
-	 * needed, it is available (possibly for security reasons).
+	 * Invalidates this session.
 	 */
-	public final void removeAll()
+	public void invalidate()
 	{
-		pages.clear();
+		getSessionStore().invalidate();
 	}
 
 	/**
-	 * Set class resolver for this session
-	 *
-	 * @param classResolver
-	 *            The class resolver
-	 */
-	public final void setClassResolver(final IClassResolver classResolver)
-	{
-		this.classResolver = classResolver;
-	}
-
-	/**
-	 * Set the locale.
-	 *
-	 * @param locale
-	 *            New locale
-	 */
-	public final void setLocale(final Locale locale)
-	{
-		this.locale = locale;
-        this.converter = null;
-	}
-
-	/**
-	 * Set page factory for this session
-	 *
-	 * @param pageFactory
-	 *            The page factory
-	 */
-	public final void setPageFactory(final IPageFactory pageFactory)
-	{
-		this.pageFactory = pageFactory;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * Creates a new page map with a given name
 	 * 
-	 * Sets the currently active request cycle for this session.
-	 *
-	 * @param cycle
-	 *            The request cycle
+	 * @param name
+	 *            The name for the new page map
+	 * @return The newly created page map
 	 */
-	public final void setRequestCycle(final RequestCycle cycle)
+	public final PageMap newPageMap(final String name)
 	{
-		this.cycle = cycle;
+		final PageMap pageMap = new PageMap(name, this);
+		setAttribute(attributeForPageMapName(name), pageMap);
+		return pageMap;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Creates a new RequestCycle for the given request and response using the
+	 * session's request cycle factory.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The new request cycle.
+	 */
+	public final RequestCycle newRequestCycle(final Request request, final Response response)
+	{
+		return getRequestCycleFactory().newRequestCycle(this, request, response);
+	}
+
+	/**
+	 * @param page
+	 *            The page to redirect to
+	 */
+	public final void redirectToInterceptPage(final Page page)
+	{
+		currentPageMap.redirectToInterceptPage(page);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets the application that this session is associated with.
-	 *
-	 * @param application The application
+	 * 
+	 * @param application
+	 *            The application
 	 */
 	public final void setApplication(final Application application)
 	{
@@ -383,79 +504,318 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Set the style.
-	 *
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Sets the client info object for this session. This will only work when
+	 * {@link #getClientInfo()} is not overriden.
+	 * 
+	 * @param clientInfo
+	 *            the client info object
+	 */
+	public final void setClientInfo(ClientInfo clientInfo)
+	{
+		this.clientInfo = clientInfo;
+		dirty();
+	}
+
+	/**
+	 * Set the locale for this session.
+	 * 
+	 * @param locale
+	 *            New locale
+	 */
+	public final void setLocale(final Locale locale)
+	{
+		this.locale = locale;
+		this.converter = null;
+		dirty();
+	}
+
+	/**
+	 * Set the style (see {@link wicket.Session}).
+	 * 
 	 * @param style
 	 *            The style to set.
 	 */
 	public final void setStyle(final String style)
 	{
 		this.style = style;
+		dirty();
 	}
 
 	/**
-	 * Adds page to session if not already added.
-	 *
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * The page will be 'touched' in the session. If it wasn't added yet to the
+	 * pagemap, it will be added to the page map else it will set this page to
+	 * the front.
+	 * 
+	 * If another page was removed because of this it will be cleaned up.
+	 * 
 	 * @param page
-	 *            Page to add to this session
 	 */
-	final void addPage(final Page page)
+	public final void touch(Page page)
 	{
-		// Set session and identifier
-		page.setId(pageId++);
-
-		// Add to page map
-		pages.put(new Integer(page.getId()), page);
+		// Touch the page in its pagemap.
+		page.getPageMap().put(page);
 	}
 
 	/**
-	 * Get the interceptContinuationURL.
-	 *
-	 * @return Returns the interceptContinuationURL.
-	 */
-	final String getInterceptContinuationURL()
-	{
-		return interceptContinuationURL;
-	}
-
-	/**
-	 * Get the page with the given id.
-	 *
-	 * @param id
-	 *            Page id
-	 * @return Page with the given id
-	 */
-	final Page getPage(final int id)
-	{
-		return (Page)pages.get(new Integer(id));
-	}
-
-	/**
-	 * Set the interceptContinuationURL.
-	 *
-	 * @param interceptContinuationURL
-	 *            The interceptContinuationURL to set.
-	 */
-	final void setInterceptContinuationURL(final String interceptContinuationURL)
-	{
-		this.interceptContinuationURL = interceptContinuationURL;
-	}
-
-	/**
-	 * Visits the pages in this session.
-	 *
 	 * @param visitor
-	 *            The visitor to call
+	 *            The visitor to call at each Page in this PageMap.
 	 */
-	final void visitPages(final IPageVisitor visitor)
+	public final void visitPageMaps(final IPageMapVisitor visitor)
 	{
-		// Loop through pages in page map
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			// Visit next page
-			visitor.page((Page)iterator.next());
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				visitor.pageMap((PageMap)getAttribute(attribute));
+			}
 		}
 	}
+
+	/**
+	 * Any detach logic for session subclasses.
+	 */
+	protected void detach()
+	{
+	}
+
+	/**
+	 * Marks session state as dirty
+	 */
+	protected final void dirty()
+	{
+		this.dirty = true;
+	}
+
+	/**
+	 * Gets the attribute value with the given name
+	 * 
+	 * @param name
+	 *            The name of the attribute to store
+	 * @return The value of the attribute
+	 */
+	protected final Object getAttribute(final String name)
+	{
+		return getSessionStore().getAttribute(name);
+	}
+
+	/**
+	 * @return List of attributes for this session
+	 */
+	protected final List getAttributeNames()
+	{
+		return getSessionStore().getAttributeNames();
+	}
+
+	/**
+	 * @return Request cycle factory for this kind of session.
+	 */
+	protected abstract IRequestCycleFactory getRequestCycleFactory();
+
+	/**
+	 * Gets the session store.
+	 * 
+	 * @return the session store
+	 */
+	protected final ISessionStore getSessionStore()
+	{
+		if (sessionStore == null)
+		{
+			ISessionStoreFactory sessionStoreFactory = application.getSessionSettings()
+					.getSessionStoreFactory();
+			sessionStore = sessionStoreFactory.newSessionStore(this);
+
+			// Still null?
+			if (sessionStore == null)
+			{
+				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
+						+ " did not produce a session store");
+			}
+		}
+		return sessionStore;
+	}
+
+	/**
+	 * Called if the user needs to be authenticated as the result of an attempt
+	 * to instantiate an unauthorized Page.
+	 */
+	protected void onUnauthorizedPageAccess()
+	{
+		final Class signInPageClass = getApplication().getApplicationSettings().getSignInPage();
+		if (signInPageClass != null)
+		{
+			final Page signInPage = getPageFactory().newPage(signInPageClass);
+			redirectToInterceptPage(signInPage);
+		}
+	}
+
+	/**
+	 * Removes the attribute with the given name.
+	 * 
+	 * @param name
+	 *            the name of the attribute to remove
+	 */
+	protected final void removeAttribute(String name)
+	{
+		getSessionStore().removeAttribute(name);
+	}
+
+	/**
+	 * Adds or replaces the attribute with the given name and value.
+	 * 
+	 * @param name
+	 *            The name of the attribute
+	 * @param value
+	 *            The value of the attribute
+	 */
+	protected final void setAttribute(String name, Object value)
+	{
+		// Get the old value if any
+		Object oldValue = getAttribute(name);
+
+		// Set the actual attribute
+		getSessionStore().setAttribute(name, value);
+
+		// Do some extra profiling/ debugging. This can be a great help
+		// just for testing whether your webbapp will behave when using
+		// session replication
+		if (log.isDebugEnabled())
+		{
+			String valueTypeName = (value != null ? value.getClass().getName() : "null");
+			int size;
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(value);
+				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
+						+ Bytes.bytes(out.size()));
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException(
+						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
+								+ valueTypeName, e);
+			}
+		}
+	}
+
+	/**
+	 * Updates the session, e.g. for replication purposes.
+	 */
+	protected void update()
+	{
+		// If state is dirty
+		if (dirty)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("update: Session is dirty.  Replicating.");
+			}
+
+			// State is no longer dirty
+			this.dirty = false;
+
+			// Set attribute.
+			setAttribute(SESSION_ATTRIBUTE_NAME, this);
+		}
+		else
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("update: Session not dirty.");
+			}
+		}
+
+		// Go through all dirty entries, replicating any dirty objects
+		for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
+		{
+			String attribute = null;
+			Object object = iterator.next();
+			if (object instanceof Page)
+			{
+				final Page page = (Page)object;
+				attribute = page.getPageMap().attributeForId(page.getNumericId());
+				object = page.getPageMapEntry();
+			}
+			else if (object instanceof PageMap)
+			{
+				attribute = attributeForPageMapName(((PageMap)object).getName());
+			}
+
+			// only replicate if the object was really already in the map.
+			// for example stateless pages will not be in the map so they
+			// shouldn't be added
+			Object previous = getAttribute(attribute);
+			if (previous != null)
+			{
+				setAttribute(attribute, object);
+			}
+		}
+		dirtyObjects = null;
+	}
+
+	/**
+	 * @param page
+	 */
+	void dirtyPage(final Page page)
+	{
+		if (dirtyObjects == null)
+			dirtyObjects = new ArrayList(4);
+		if (!dirtyObjects.contains(page))
+		{
+			dirtyObjects.add(page);
+		}
+	}
+
+	/**
+	 * @param map
+	 */
+	void dirtyPageMap(final PageMap map)
+	{
+		if (dirtyObjects == null)
+			dirtyObjects = new ArrayList(4);
+		if (!dirtyObjects.contains(map))
+		{
+			dirtyObjects.add(map);
+		}
+	}
+
+	/**
+	 * Gets the converter instance.
+	 * 
+	 * @return the converter
+	 */
+	final IConverter getConverter()
+	{
+		if (converter == null)
+		{
+			// Let the factory create a new converter
+			converter = getApplication().getApplicationSettings().getConverterFactory()
+					.newConverter(getLocale());
+		}
+		return converter;
+	}
+
+	/**
+	 * @param pageMap
+	 *            Page map to remove
+	 */
+	final void removePageMap(final PageMap pageMap)
+	{
+		removeAttribute(attributeForPageMapName(pageMap.getName()));
+	}
+
+	/**
+	 * @param pageMapName
+	 *            Name of page map
+	 * @return Session attribute holding page map
+	 */
+	private final String attributeForPageMapName(final String pageMapName)
+	{
+		return pageMapAttributePrefix + pageMapName;
+	}
 }
-
-

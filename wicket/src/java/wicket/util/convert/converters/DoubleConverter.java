@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.10 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Double.
  * 
@@ -27,32 +29,27 @@ import java.util.Locale;
  */
 public final class DoubleConverter extends AbstractDecimalConverter
 {
-	/**
-	 * Constructor.
-	 */
-	public DoubleConverter()
-	{
-	}
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * The singleton instance for a double converter
 	 */
-	public DoubleConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
+	public static final ITypeConverter INSTANCE = new DoubleConverter();
+	
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Double.MAX_VALUE*-1, Double.MAX_VALUE);
+                -Double.MAX_VALUE, Double.MAX_VALUE,locale);
         //Double.MIN is the smallest nonzero positive number, not the largest negative number
+
+        if (number == null)
+        {
+        	return null;
+        }
+
         return new Double(number.doubleValue());
 	}
 

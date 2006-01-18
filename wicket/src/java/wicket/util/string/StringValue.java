@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,6 +17,7 @@
  */
 package wicket.util.string;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -44,11 +45,13 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class StringValue
+public class StringValue implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
+	
 	/** The underlying string. */
 	private final String text;
 
@@ -356,7 +359,7 @@ public class StringValue
 	 */
 	public final boolean toBoolean() throws StringValueConversionException
 	{
-		return Strings.toBoolean(text);
+		return Strings.isTrue(text);
 	}
 
 	/**
@@ -382,7 +385,7 @@ public class StringValue
 	 */
 	public final Boolean toBooleanObject() throws StringValueConversionException
 	{
-		return new Boolean(toBoolean());
+		return Strings.toBoolean(text);
 	}
 
 	/**

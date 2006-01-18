@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -34,5 +34,5 @@ public interface IConverterFactory
 	 * @param locale The Locale to create the converter for 
 	 * @return A new IConverter instance
 	 */
-	public IConverter newConverter(final Locale locale);
+	IConverter newConverter(final Locale locale);
 }

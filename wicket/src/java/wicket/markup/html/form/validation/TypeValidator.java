@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -26,18 +26,25 @@ import wicket.Session;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
  * Validates input by trying it to convert to the given type using the
  * {@link wicket.util.convert.IConverter}instance of the component doing the
  * validation.
+ * <p>
+ * This component adds ${type}, ${exception}, ${locale} and ${format} to the
+ * model for error message interpolation. Format is only valid if the type
+ * conversion involves a date.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class TypeValidator extends AbstractValidator
+public class TypeValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The locale to use */
 	private Locale locale = null;
 
@@ -81,6 +88,37 @@ public class TypeValidator extends AbstractValidator
 	}
 
 	/**
+	 * Validates input by trying it to convert to the given type using the
+	 * {@link wicket.util.convert.IConverter}instance of the component doing
+	 * the validation.
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 */
+	public void onValidate(FormComponent formComponent, String value)
+	{
+		// If value is non-empty
+		if (!Strings.isEmpty(value))
+		{
+			// Check value by attempting to convert it
+			final IConverter converter = formComponent.getConverter();
+			try
+			{
+				converter.convert(value, type);
+			}
+			catch (Exception e)
+			{
+				if (e instanceof ConversionException)
+				{
+					error(formComponent, messageModel(formComponent, (ConversionException)e));
+				}
+				else
+				{
+					error(formComponent, messageModel(formComponent, new ConversionException(e)));
+				}
+			}
+		}
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
@@ -89,78 +127,27 @@ public class TypeValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates input by trying it to convert to the given type using the
-	 * {@link wicket.util.convert.IConverter}instance of the component doing
-	 * the validation.
-	 * 
-	 * @param component
-	 *            The component that wants to validate its input
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-	 */
-	public final void validate(final FormComponent component)
-	{
-		// Get component value
-		final String value = component.getRequestString();
-
-		// If value is non-empty
-		if (!Strings.isEmpty(value))
-		{
-			// Check value by attempting to convert it
-			final IConverter converter = component.getConverter();
-			try
-			{
-				converter.convert(value, type);
-			}
-			catch (ConversionException e)
-			{
-				conversionError(component, value, e);
-			}
-		}
-	}
-
-	/**
-	 * Gets the error message.
-	 * 
-	 * @param input
-	 *            The input
-	 * @param component
-	 *            the component
-	 * @param e
-	 *            the conversion exception
-	 */
-	protected void conversionError(final FormComponent component, final String input,
-			final ConversionException e)
-	{
-		error(component, resourceKey(component), messageModel(component, input, e));
-	}
-
-	/**
 	 * Gets the message context.
-	 * 
-	 * @param input
-	 *            The input
-	 * @param component
-	 *            the component
-	 * @param e
-	 *            the conversion exception
+	 *
+	 * @param formComponent form component 
+	 * @param e the conversion exception
 	 * @return a map with variables for interpolation
 	 */
-	protected Map messageModel(final FormComponent component, final String input,
-			final ConversionException e)
+	protected Map messageModel(FormComponent formComponent, final ConversionException e)
 	{
-		final Map model = super.messageModel(component, input);
-		model.put("type", type);
+		final Map model = super.messageModel(formComponent);
+		model.put("type", Classes.name(type));
 		final Locale locale = e.getLocale();
 		if (locale != null)
 		{
 			model.put("locale", locale);
 		}
-		model.put("exception", e.getMessage());
-        Format format = e.getFormat();
-        if (format instanceof SimpleDateFormat)
-        {
-    		model.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
-        }
+		model.put("exception", e);
+		Format format = e.getFormat();
+		if (format instanceof SimpleDateFormat)
+		{
+			model.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+		}
 		return model;
 	}
 

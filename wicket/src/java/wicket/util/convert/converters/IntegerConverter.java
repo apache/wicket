@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Integer.
  * 
@@ -27,31 +29,26 @@ import java.util.Locale;
  */
 public final class IntegerConverter extends AbstractIntegerConverter
 {
-	/**
-	 * Constructor
-	 */
-	public IntegerConverter()
-	{
-	}
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * The singleton instance for a integer converter
 	 */
-	public IntegerConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
+	public static final ITypeConverter INSTANCE = new IntegerConverter();
+	
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Integer.MIN_VALUE, Integer.MAX_VALUE);
+				Integer.MIN_VALUE, Integer.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Integer(number.intValue());
 	}
 

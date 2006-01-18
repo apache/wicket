@@ -19,6 +19,10 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
@@ -30,6 +34,7 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class ComponentCreateTagTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(ComponentCreateTagTest.class);
 
 	private MockWebApplication application;
 
@@ -95,15 +100,29 @@ public class ComponentCreateTagTest extends TestCase
 	}
 
 	/**
+	 * <wicket:param> attached
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
 	 */
 	public void executeTest(final Class pageClass, final String filename) throws Exception
 	{
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
-		application.getSettings().setStripWicketTags(true);
+		application = new MockWebApplication(null) {
+			public Class getHomePage()
+			{
+				return pageClass;
+			}
+		};
+		application.getMarkupSettings().setStripWicketTags(true);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -111,7 +130,7 @@ public class ComponentCreateTagTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}

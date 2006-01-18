@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Context path="/spring2">
-  <!-- used for springframework2 example -->
-  <Logger className="org.apache.catalina.logger.FileLogger" prefix="wicket.examples.springframework2." suffix=".log" timestamp="true"/>
-</Context>

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.debug;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
@@ -30,25 +29,21 @@ import wicket.markup.html.basic.Label;
  */
 public class WicketComponentTreeTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public WicketComponentTreeTestPage(final PageParameters parameters)
+	public WicketComponentTreeTestPage()
 	{
 	    add(new Label("label1", "test1"));
 	    
 	    // Create a dummy component with inner class
-	    add(new Label("label2", "test2")
-	            {
-	        		public void onRender()
-	        		{
-	        		    setModelObject("test22");
-	        		    super.onRender();
-	        		}
-	            });
+	    add(new Label("label2", "test22"));
 	    
-		add(new WicketComponentTree("componentList", this));
+	    // Add component tree
+		add(new PageView("componentList", this));
 	}
 }

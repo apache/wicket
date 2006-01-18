@@ -1,11 +1,11 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -28,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.util.time.Time;
 
 /**
  * Implements responses over the HTTP protocol by holding an underlying
@@ -41,69 +43,78 @@ import wicket.WicketRuntimeException;
  */
 public class WebResponse extends Response
 {
-    /** Log. */
-    private static final Log log = LogFactory.getLog(WebResponse.class);
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WebResponse.class);
 
-    /** True if response is a redirect. */
-    protected boolean redirect;
+	/** True if response is a redirect. */
+	protected boolean redirect;
 
-    /** The underlying response object. */
-    private final HttpServletResponse httpServletResponse;
+	/** The underlying response object. */
+	private final HttpServletResponse httpServletResponse;
 
-    /**
-     * Constructor for testing harness.
-     */
-    WebResponse()
-    {
-        this.httpServletResponse = null;
-    }
+	/**
+	 * Constructor for testing harness.
+	 */
+	public WebResponse()
+	{
+		this.httpServletResponse = null;
+	}
 
-    /**
-     * Package private constructor.
-     * 
-     * @param httpServletResponse
-     *            The servlet response object
-     * @throws IOException
-     */
-    WebResponse(final HttpServletResponse httpServletResponse) throws IOException
-    {
-        this.httpServletResponse = httpServletResponse;
-    }
+	/**
+	 * Package private constructor.
+	 * 
+	 * @param httpServletResponse
+	 *            The servlet response object
+	 */
+	public WebResponse(final HttpServletResponse httpServletResponse)
+	{
+		this.httpServletResponse = httpServletResponse;
+	}
 
-    /**
-     * Closes response output.
-     */
-    public void close()
-    {
-        // NOTE: Servlet container will close the response output stream
-        // automatically, so we do nothing here.
-    }
+	/**
+	 * Add a cookie to the web response
+	 * 
+	 * @param cookie
+	 */
+	public void addCookie(final Cookie cookie)
+	{
+		getHttpServletResponse().addCookie(cookie);
+	}
+	
+	/**
+	 * Closes response output.
+	 */
+	public void close()
+	{
+		// NOTE: Servlet container will close the response output stream
+		// automatically, so we do nothing here.
+	}
 
-    /**
-     * Returns the given url encoded.
-     * 
-     * @param url
-     *            The URL to encode
-     * @return The encoded url
-     */
-    public final String encodeURL(final String url)
-    {
-        if (httpServletResponse != null)
-        {
-            return httpServletResponse.encodeURL(url);
-        }
-        return url;
-    }
+	/**
+	 * Returns the given url encoded.
+	 * 
+	 * @param url
+	 *            The URL to encode
+	 * @return The encoded url
+	 */
+	public String encodeURL(String url)
+	{
+		if (httpServletResponse != null)
+		{
+			return httpServletResponse.encodeURL(url);
+		}
+		return url;
+	}
 
-    /**
-     * Gets the wrapped http servlet response object.
-     * 
-     * @return The wrapped http servlet response object
-     */
-    public final HttpServletResponse getHttpServletResponse()
-    {
-        return httpServletResponse;
-    }
+	/**
+	 * Gets the wrapped http servlet response object.
+	 * 
+	 * @return The wrapped http servlet response object
+	 */
+	public final HttpServletResponse getHttpServletResponse()
+	{
+		return httpServletResponse;
+	}
 
 	/**
 	 * @see wicket.Response#getOutputStream()
@@ -116,97 +127,144 @@ public class WebResponse extends Response
 		}
 		catch (IOException e)
 		{
-            throw new WicketRuntimeException("Error while getting output stream.", e);			
+			throw new WicketRuntimeException("Error while getting output stream.", e);
 		}
 	}
 
-    /**
-     * Whether this response is going to redirect the user agent.
-     * 
-     * @return True if this response is going to redirect the user agent
-     */
-    public final boolean isRedirect()
-    {
-        return redirect;
-    }
+	/**
+	 * Whether this response is going to redirect the user agent.
+	 * 
+	 * @return True if this response is going to redirect the user agent
+	 */
+	public final boolean isRedirect()
+	{
+		return redirect;
+	}
 
-    /**
-     * Redirects to the given url.
-     * 
-     * @param url
-     *            The URL to redirect to
-     */
-    public void redirect(final String url)
-    {
-        if (httpServletResponse != null)
-        {
-            try
-            {
-                if (httpServletResponse.isCommitted())
-                {
-                    log.error("Unable to redirect. HTTP Response has already been committed.");
-                }
+	/**
+	 * Redirects to the given url.
+	 * 
+	 * @param url
+	 *            The URL to redirect to
+	 */
+	public void redirect(final String url)
+	{
+		if (!redirect)
+		{
+			if (httpServletResponse != null)
+			{
+				try
+				{
+					if (httpServletResponse.isCommitted())
+					{
+						log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+					}
+	
+					if (log.isDebugEnabled())
+					{
+						log.debug("Redirecting to " + url);
+					}
+	
+					httpServletResponse.sendRedirect(url);
+					redirect = true;
+				}
+				catch (IOException e)
+				{
+					throw new WicketRuntimeException("Redirect failed", e);
+				}
+			}
+		}
+		else
+		{
+			log.info("Already redirecting to an url current one ignored: " + url);
+		}
+	}
 
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Redirecting to " + url);
-                }
+	/**
+	 * Set the content type on the response.
+	 * 
+	 * @param mimeType
+	 *            The mime type
+	 */
+	public final void setContentType(final String mimeType)
+	{
+		httpServletResponse.setContentType(mimeType);
+	}
 
-                httpServletResponse.sendRedirect(url);
-                redirect = true;
-            }
-            catch (IOException e)
-            {
-                throw new WicketRuntimeException("Redirect failed", e);
-            }
-        }
-    }
+	/**
+	 * @see wicket.Response#setContentLength(long)
+	 */
+	public void setContentLength(long length)
+	{
+		httpServletResponse.setContentLength((int)length);
+	}
 
-    /**
-     * Set the content type on the response.
-     * 
-     * @param mimeType
-     *            The mime type
-     */
-    public final void setContentType(final String mimeType)
-    {
-        httpServletResponse.setContentType(mimeType);
-    }
+	/**
+	 * @see wicket.Response#setLastModifiedTime(wicket.util.time.Time)
+	 */
+	public void setLastModifiedTime(Time time)
+	{
+		if (time != null && time.getMilliseconds() != -1)
+		{
+			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
+		}
+	}
 
-    /**
-     * Output stream encoding. If the deployment descriptor contains a
-     * locale-encoding-mapping-list element, and that element provides a mapping
-     * for the given locale, that mapping is used. Otherwise, the mapping from
-     * locale to character encoding is container dependent. Default is
-     * ISO-8859-1.
-     * 
-     * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
-     * 
-     * @param locale
-     *            The locale use for mapping the character encoding
-     */
-    public final void setLocale(final Locale locale)
-    {
-        httpServletResponse.setLocale(locale);
-    }
+	/**
+	 * Output stream encoding. If the deployment descriptor contains a
+	 * locale-encoding-mapping-list element, and that element provides a mapping
+	 * for the given locale, that mapping is used. Otherwise, the mapping from
+	 * locale to character encoding is container dependent. Default is
+	 * ISO-8859-1.
+	 * 
+	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
+	 * 
+	 * @param locale
+	 *            The locale use for mapping the character encoding
+	 */
+	public final void setLocale(final Locale locale)
+	{
+		httpServletResponse.setLocale(locale);
+	}
 
-    /**
-     * Writes string to response output.
-     * 
-     * @param string
-     *            The string to write
-     */
-    public void write(final String string)
-    {
-        try
-        {
-            httpServletResponse.getWriter().write(string);
-        }
-        catch (IOException e)
-        {
-            throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
-        }
-    }
+	/**
+	 * Writes string to response output.
+	 * 
+	 * @param string
+	 *            The string to write
+	 */
+	public void write(final String string)
+	{
+		try
+		{
+			httpServletResponse.getWriter().write(string);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+		}
+	}
+
+	/**
+	 * Set a header to the date value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param date
+	 */
+	public void setDateHeader(String header, long date)
+	{
+		httpServletResponse.setDateHeader(header, date);
+	}
+	
+
+	/**
+	 * Set a header to the string value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param value
+	 */
+	public void setHeader(String header, String value)
+	{
+		httpServletResponse.setHeader(header, value);
+	}
 }
-
-

@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,93 +17,31 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
+import wicket.IRequestCycleFactory;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 
 /**
- * Session subclass for HTTP protocol which holds an underlying WebSession
- * object and provides access to that object via getHttpServletSession. A method
- * which abstracts session invalidation is also provided via invalidate().
+ * Session subclass for HTTP protocol which holds an HttpSession object and
+ * provides access to that object via getHttpSession(). A method which abstracts
+ * session invalidation is also provided via invalidate().
  * 
  * @author Jonathan Locke
  */
 public class WebSession extends Session
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = -7738551549126761943L;
+	/** log. careful, this log is used to trigger profiling too! */
+	private static Log log = LogFactory.getLog(WebSession.class);
 
-	/** The underlying WebSession object */
-	private transient javax.servlet.http.HttpSession httpSession;
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Gets session from request, creating a new one if it doesn't already exist
-	 * 
-	 * @param application
-	 *            The application object
-	 * @param request
-	 *            The http request object
-	 * @return The session object
-	 */
-	static WebSession getSession(final Application application, final HttpServletRequest request)
-	{
-		// Get session, creating if it doesn't exist
-		final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
+	/** The request cycle factory for the session */
+	private transient IRequestCycleFactory requestCycleFactory;
 
-		// The request session object is unique per web application, but wicket
-		// requires it
-		// to be unique per servlet. That is, there must be a 1..n relationship
-		// between
-		// HTTP sessions (JSESSIONID) and Wicket applications.
-		final String sessionAttributeName = "session" + request.getServletPath();
-
-		// Get Session abstraction from httpSession attribute
-		WebSession httpSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
-
-		if (httpSession == null)
-		{
-			// Create session using session factory
-			final Session session = application.getSessionFactory().newSession();
-			if (session instanceof WebSession)
-			{
-				httpSession = (WebSession)session;
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-						"Session created by a WebApplication session factory must be a subclass of WebSession");
-			}
-
-			// Save servlet session in there
-			httpSession.httpSession = httpServletSession;
-
-			// Set the client Locale for this session
-			httpSession.setLocale(request.getLocale());
-
-			// Attach to httpSession
-			httpServletSession.setAttribute(sessionAttributeName, httpSession);
-		}
-		else
-		{
-			// Reattach http servlet session
-			httpSession.httpSession = httpServletSession;
-
-			// In a clustered environment the session is not replicated
-			// if it is not dirty. If we just read the http session object
-			// and manipulate that then the http servlet session never gets
-			// flagged as being dirty. We therefore need to force a
-			// change on the http servlet session to ensure clustering
-			// occurs.
-			httpServletSession.setAttribute(sessionAttributeName, httpSession);
-		}
-
-		// Set the current session to the session we just retrieved
-		Session.set(httpSession);
-
-		return httpSession;
-	}
+	/** True, if session has been invalidated */
+	private transient boolean sessionInvalidated = false;
 
 	/**
 	 * Constructor
@@ -111,31 +49,83 @@ public class WebSession extends Session
 	 * @param application
 	 *            The application
 	 */
-	protected WebSession(final Application application)
+	protected WebSession(final WebApplication application)
 	{
 		super(application);
 	}
 
 	/**
-	 * @return The underlying WebSession object
-	 */
-	public javax.servlet.http.HttpSession getHttpSession()
-	{
-		return httpSession;
-	}
-
-	/**
-	 * Invalidates this session
+	 * Invalidates this session at the end of the current request. If you need
+	 * to invalidate the session immediately, you can do this by calling
+	 * invalidateNow(), however this will remove all Wicket components from this
+	 * session, which means that you will no longer be able to work with them.
 	 */
 	public void invalidate()
 	{
-		try
+		sessionInvalidated = true;
+	}
+
+	/**
+	 * Invalidates this session immediately. Calling this method will remove all
+	 * Wicket components from this session, which means that you will no longer
+	 * be able to work with them.
+	 */
+	public void invalidateNow()
+	{
+		getSessionStore().invalidate();
+	}
+
+	/**
+	 * Any attach logic for session subclasses.
+	 */
+	protected void attach()
+	{
+	}
+
+	/**
+	 * @see wicket.Session#detach()
+	 */
+	protected void detach()
+	{
+		if (sessionInvalidated)
 		{
-			httpSession.invalidate();
+			invalidateNow();
 		}
-		catch (IllegalStateException e)
+	}
+
+	/**
+	 * @see wicket.Session#getRequestCycleFactory()
+	 */
+	protected IRequestCycleFactory getRequestCycleFactory()
+	{
+		if (requestCycleFactory == null)
 		{
-			; // ignore
+			this.requestCycleFactory = ((WebApplication)getApplication())
+					.getDefaultRequestCycleFactory();
 		}
+
+		return this.requestCycleFactory;
+	}
+
+	/**
+	 * Updates the session, e.g. for replication purposes.
+	 */
+	protected void update()
+	{
+		if (sessionInvalidated == false)
+		{
+			super.update();
+		}
+	}
+
+	/**
+	 * Initializes this session for a request.
+	 */
+	final void initForRequest()
+	{
+		// Set the current session
+		set(this);
+
+		attach();
 	}
 }

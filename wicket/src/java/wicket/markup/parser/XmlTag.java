@@ -2,10 +2,10 @@
  * $Id$ $Revision$
  * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,12 +17,14 @@
  */
 package wicket.markup.parser;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.StringValue;
-import wicket.util.value.ValueMap;
+import wicket.util.string.Strings;
+import wicket.util.value.AttributeMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -32,22 +34,17 @@ import wicket.util.value.ValueMap;
  */
 public class XmlTag extends MarkupElement
 {
-	/**
-	 * A close tag, like &lt;/TAG&gt;.
-	 */
+	/** A close tag, like &lt;/TAG&gt;. */
 	public static final Type CLOSE = new Type("CLOSE");
-	/**
-	 * An open tag, like &lt;TAG componentName = "xyz"&gt;.
-	 */
+	
+	/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
 	public static final Type OPEN = new Type("OPEN");
 
-	/**
-	 * An open/close tag, like &lt;TAG componentName = "xyz"/&gt;.
-	 */
+	/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	ValueMap attributes = new ValueMap();
+	private AttributeMap attributes;
 
 	/** Column number. */
 	int columnNumber;
@@ -90,11 +87,12 @@ public class XmlTag extends MarkupElement
 	 */
 	public static final class Type extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
 		/**
 		 * Construct.
 		 * 
 		 * @param name
-		 *            name of type
+		 *			  name of type
 		 */
 		Type(final String name)
 		{
@@ -114,7 +112,7 @@ public class XmlTag extends MarkupElement
 	 * Gets whether this tag closes the provided open tag.
 	 * 
 	 * @param open
-	 *            The open tag
+	 *			  The open tag
 	 * @return True if this tag closes the given open tag
 	 */
 	public final boolean closes(final XmlTag open)
@@ -127,8 +125,19 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public ValueMap getAttributes()
+	public AttributeMap getAttributes()
 	{
+		if (attributes == null)
+		{
+			if (copyOf == this)
+			{
+				attributes = new AttributeMap();
+			}
+			else
+			{
+				attributes = new AttributeMap(copyOf.attributes);
+			}
+		}
 		return attributes;
 	}
 
@@ -163,7 +172,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets the name of the tag, for example the tag <b>'s name would be 'b'.
+	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s name would be 'b'.
 	 * 
 	 * @return The tag's name
 	 */
@@ -183,7 +192,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
+	 * Namespace of the tag, if available.	For example, &lt;wicket:link&gt;.
 	 * 
 	 * @return The tag's namespace
 	 */
@@ -216,12 +225,12 @@ public class XmlTag extends MarkupElement
 	 * Get a string attribute.
 	 * 
 	 * @param key
-	 *            The key
+	 *			  The key
 	 * @return The string value
 	 */
 	public String getString(final String key)
 	{
-		return attributes.getString(key);
+		return getAttributes().getString(key);
 	}
 
 	/**
@@ -264,18 +273,6 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets whether this tag is an open tag with the given component name.
-	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an open tag with the given component name
-	 */
-	public boolean isOpen(final String componentName)
-	{
-		return isOpen() && name.equals(componentName);
-	}
-
-	/**
 	 * Gets whether this tag is an open/ close tag.
 	 * 
 	 * @return True if this tag is an open and a close tag
@@ -286,18 +283,31 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets whether this tag is an openclose tag with the given component name.
+	 * Compare tag name including namespace
 	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an openclose tag with the given component
-	 *         name
+	 * @param tag
+	 * @return true if name and namespace are equal 
 	 */
-	public boolean isOpenClose(final String componentName)
+	public boolean hasEqualTagName(final XmlTag tag)
 	{
-		return isOpenClose() && componentName.equals(componentName);
+		if (!getName().equalsIgnoreCase(tag.getName()))
+		{
+			return false;
+		}
+		
+		if ((getNamespace() == null) && (tag.getNamespace() == null))
+		{
+			return true;
+		}
+		
+		if ((getNamespace() != null) && (tag.getNamespace() != null))
+		{
+			return getNamespace().equalsIgnoreCase(tag.getNamespace());
+		}
+		
+		return false;
 	}
-
+	
 	/**
 	 * Makes this tag object immutable by making the attribute map unmodifiable.
 	 * Immutable tags cannot be made mutable again. They can only be copied into
@@ -308,7 +318,10 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			isMutable = false;
-			attributes.makeImmutable();
+			if (attributes != null)
+			{
+				attributes.makeImmutable();
+			}
 		}
 	}
 
@@ -317,7 +330,7 @@ public class XmlTag extends MarkupElement
 	 * it is immutable.
 	 * 
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *         if it is immutable.
+	 *		   if it is immutable.
 	 */
 	public XmlTag mutable()
 	{
@@ -334,7 +347,6 @@ public class XmlTag extends MarkupElement
 			tag.pos = pos;
 			tag.length = length;
 			tag.text = text;
-			tag.attributes = new ValueMap(attributes);
 			tag.type = type;
 			tag.isMutable = true;
 			tag.closes = closes;
@@ -348,81 +360,102 @@ public class XmlTag extends MarkupElement
 	 * Puts a boolean attribute.
 	 * 
 	 * @param key
-	 *            The key
+	 *			  The key
 	 * @param value
-	 *            The value
+	 *			  The value
+	 * @return previous value associated with specified key, or null if there
+	 *		   was no mapping for key. A null return can also indicate that the
+	 *		   map previously associated null with the specified key, if the
+	 *		   implementation supports null values.
 	 */
-	public void put(final String key, final boolean value)
+	public Object put(final String key, final boolean value)
 	{
-		put(key, Boolean.toString(value));
+		return put(key, Boolean.toString(value));
 	}
 
 	/**
 	 * Puts an int attribute.
 	 * 
 	 * @param key
-	 *            The key
+	 *			  The key
 	 * @param value
-	 *            The value
+	 *			  The value
+	 * @return previous value associated with specified key, or null if there
+	 *		   was no mapping for key. A null return can also indicate that the
+	 *		   map previously associated null with the specified key, if the
+	 *		   implementation supports null values.
 	 */
-	public void put(final String key, final int value)
+	public Object put(final String key, final int value)
 	{
-		put(key, Integer.toString(value));
+		return put(key, Integer.toString(value));
 	}
 
 	/**
 	 * Puts a string attribute.
 	 * 
 	 * @param key
-	 *            The key
+	 *			  The key
 	 * @param value
-	 *            The value
+	 *			  The value
+	 * @return previous value associated with specified key, or null if there
+	 *		   was no mapping for key. A null return can also indicate that the
+	 *		   map previously associated null with the specified key, if the
+	 *		   implementation supports null values.
 	 */
-	public void put(final String key, final String value)
+	public Object put(final String key, final String value)
 	{
-		attributes.put(key, value);
+		return getAttributes().put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
 	 * Puts a {@link StringValue}attribute.
 	 * 
 	 * @param key
-	 *            The key
+	 *			  The key
 	 * @param value
-	 *            The value
+	 *			  The value
+	 * @return previous value associated with specified key, or null if there
+	 *		   was no mapping for key. A null return can also indicate that the
+	 *		   map previously associated null with the specified key, if the
+	 *		   implementation supports null values.
 	 */
-	public void put(final String key, final StringValue value)
+	public Object put(final String key, final StringValue value)
 	{
-		attributes.put(key, value);
+		return getAttributes().put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
-	 * Puts all {@link StringValue}attributes in map
+	 * Puts all attributes in map
 	 * 
 	 * @param map
-	 *            a key/value map
+	 *			  A key/value map
 	 */
 	public void putAll(final Map map)
 	{
-		attributes.putAll(map);
+		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext(); )
+		{
+			final String key = (String)iterator.next();
+			Object value = map.get(key);
+			put(key, (value != null) ? value.toString() : null);
+		}
 	}
 
 	/**
 	 * Removes an attribute.
 	 * 
 	 * @param key
-	 *            The key to remove
+	 *			  The key to remove
 	 */
 	public void remove(final String key)
 	{
-		attributes.remove(key);
+		getAttributes().remove(key);
 	}
 
 	/**
 	 * Sets the tag name.
 	 * 
 	 * @param name
-	 *            New tag name
+	 *			  New tag name
 	 */
 	public void setName(final String name)
 	{
@@ -438,12 +471,31 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Sets the tag namespace.
+	 * 
+	 * @param namespace
+	 *			  New tag name
+	 */
+	public void setNamespace(final String namespace)
+	{
+		if (isMutable)
+		{
+			this.namespace = namespace;
+			this.nameChanged = true;
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Attempt to set namespace of immutable tag");
+		}
+	}
+
+	/**
 	 * Assuming this is a close tag, assign it's corresponding open tag.
 	 * 
 	 * @param tag
-	 *            the open-tag
+	 *			  the open-tag
 	 * @throws RuntimeException
-	 *             if 'this' is not a close tag
+	 *			   if 'this' is not a close tag
 	 */
 	public void setOpenTag(final XmlTag tag)
 	{
@@ -454,7 +506,7 @@ public class XmlTag extends MarkupElement
 	 * Sets type of this tag if it is not immutable.
 	 * 
 	 * @param type
-	 *            The new type
+	 *			  The new type
 	 */
 	public void setType(final Type type)
 	{
@@ -476,7 +528,7 @@ public class XmlTag extends MarkupElement
 	public String toDebugString()
 	{
 		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = "
-				+ length + ", attributes = [" + attributes + "], type = " + type + "]";
+				+ length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
 	/**
@@ -486,12 +538,12 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toString()
 	{
-		if (!isMutable)
+		if (!isMutable && (text != null))
 		{
 			return text;
 		}
 
-		return toXmlString();
+		return toXmlString(null);
 	}
 
 	/**
@@ -508,9 +560,10 @@ public class XmlTag extends MarkupElement
 	 * Assuming some attributes have been changed, toXmlString() rebuilds the
 	 * String on based on the tags informations.
 	 * 
+	 * @param attributeToBeIgnored	
 	 * @return A xml string matching the tag
 	 */
-	public String toXmlString()
+	public String toXmlString(final String attributeToBeIgnored)
 	{
 		final StringBuffer buffer = new StringBuffer();
 
@@ -529,10 +582,30 @@ public class XmlTag extends MarkupElement
 
 		buffer.append(name);
 
+		final AttributeMap attributes = getAttributes();
 		if (attributes.size() > 0)
 		{
-			buffer.append(' ');
-			buffer.append(attributes);
+			final Iterator iterator = attributes.keySet().iterator();
+			for (; iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				if ((key != null) && ((attributeToBeIgnored == null) || 
+						!key.equalsIgnoreCase(attributeToBeIgnored)))
+				{
+					buffer.append(" ");
+					buffer.append(key);
+					String value = getString(key);
+					
+					// Attributes without values are possible, e.g. 'disabled'
+					if (value != null) 
+					{
+						buffer.append("=\"");
+						value = Strings.replaceAll(value,"\"", "\\\"");
+						buffer.append(value);
+						buffer.append("\"");
+					}
+				}
+			}
 		}
 
 		if (type == OPEN_CLOSE)

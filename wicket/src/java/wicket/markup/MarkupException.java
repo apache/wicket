@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -18,7 +18,7 @@
 package wicket.markup;
 
 import wicket.WicketRuntimeException;
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Runtime exception that is thrown when markup parsing fails.
@@ -27,11 +27,10 @@ import wicket.util.resource.IResource;
  */
 public final class MarkupException extends WicketRuntimeException
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 8431706931407810523L;
-
+	private static final long serialVersionUID = 1L;
+	
 	/** The markup stream that was being parsed when the exception was thrown */
-	private final MarkupStream markupStream;
+	private MarkupStream markupStream;
 
 	/**
 	 * Constructor
@@ -51,7 +50,7 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param message
 	 *            The message
 	 */
-	public MarkupException(final IResource resource, final String message)
+	public MarkupException(final IResourceStream resource, final String message)
 	{
 		super(resource.toString() + ": " + message);
 		markupStream = null;
@@ -65,7 +64,7 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param cause
 	 *            The causing exception
 	 */
-	public MarkupException(final IResource resource, final String message, final Throwable cause)
+	public MarkupException(final IResourceStream resource, final String message, final Throwable cause)
 	{
 		super(resource.toString() + ": " + message, cause);
 		markupStream = null;
@@ -89,5 +88,14 @@ public final class MarkupException extends WicketRuntimeException
 	public MarkupStream getMarkupStream()
 	{
 		return markupStream;
+	}
+	
+	/**
+	 * Set the markup stream which caused the exception
+	 * @param markupStream
+	 */
+	public void setMarkupStream(final MarkupStream markupStream)
+	{
+		this.markupStream = markupStream;
 	}
 }

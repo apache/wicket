@@ -2,11 +2,11 @@
  * $Id$
  * $Revision$ $Date$
  *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -26,8 +26,7 @@ import wicket.markup.html.WebPage;
  */
 public class PageExpiredErrorPage extends WebPage
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -4566588225634687534L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor.
@@ -35,5 +34,21 @@ public class PageExpiredErrorPage extends WebPage
 	public PageExpiredErrorPage()
 	{
 		add(homePageLink("homePageLink"));
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
 	}
 }

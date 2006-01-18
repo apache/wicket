@@ -20,6 +20,10 @@ package wicket;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
@@ -34,6 +38,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class AttributeModifierComponentTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
 
 	private MockWebApplication application;
 
@@ -49,8 +54,12 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(AttributeModifierComponentPage.class);
+		application = new MockWebApplication(null) {
+			public Class getHomePage()
+			{
+				return AttributeModifierComponentPage.class;
+			}
+		};
 	}
 
 	/**
@@ -64,7 +73,7 @@ public class AttributeModifierComponentTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 		Assert.assertTrue(validateDocument(document));
 	}
 

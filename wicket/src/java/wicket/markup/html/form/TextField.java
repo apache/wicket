@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.10 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,10 +17,9 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.TypeValidator;
+import wicket.model.IModel;
 
 /**
  * A simple text field.
@@ -29,70 +28,49 @@ import wicket.markup.html.form.validation.TypeValidator;
  */
 public class TextField extends AbstractTextComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
-    
-    /** Model type for conversions */
-    private Class type;
-
-    /**
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public TextField(String name, Serializable object)
-    {
-        super(name, object);
-    }
-
-    /**
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public TextField(String name, Serializable object, String expression)
-    {
-        super(name, object, expression);
-    }
-
-    /**
-     * @param name See Component constructor
-     * @param object See Component constructor
-     * @param type The type to use when updating the model for this text field
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public TextField(String name, Serializable object, Class type)
-    {
-        super(name, object);
-        this.type = type;
-        add(new TypeValidator(type));
-    }
-
-    /**
-     * @param name See Component constructor
-     * @param object See Component constructor
-     * @param expression See Component constructor
-     * @param type The type to use when updating the model for this text field
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public TextField(String name, Serializable object, String expression, Class type)
-    {
-        super(name, object, expression);
-        this.type = type;
-        add(new TypeValidator(type));
-    }
-    
-    /**
-	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * @see wicket.Component#Component(String)
 	 */
-	protected void updateModel()
+	public TextField(final String id)
 	{
-        if (type != null)
-        {
-            // Set model to request string converted to the appropriate type
-        	setModelObject(getConverter().convert(getRequestString(), type));
-        }
-        else
-        {
-            // Update String model
-        	super.updateModel();
-        }
+		super(id);
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param type
+	 *            Type for field validation
+	 */
+	public TextField(final String id, final Class type)
+	{
+		super(id);
+		add(new TypeValidator(type));
+	}
+
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public TextField(final String id, final IModel object)
+	{
+		super(id, object);
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public TextField(final String id, IModel model, Class type)
+	{
+		super(id, model);
+		add(new TypeValidator(type));
 	}
 
 	/**
@@ -104,28 +82,44 @@ public class TextField extends AbstractTextComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-        // Must be attached to an input tag
+		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
-        
-        // If this is not a subclass (PasswordTextField)
-        if (getClass() == TextField.class)
-        {
-            // check for text type
-    		checkComponentTagAttribute(tag, "type", "text");
-        }
-        
-        // Default handling for component tag
-		super.onComponentTag(tag);
-        
-		if (getInvalidInput() == null)
+
+		// If this is not a subclass (PasswordTextField)
+		if (getClass() == TextField.class)
 		{
-			// No validation errors
-			tag.put("value", getModelObjectAsString());
+			// check for text type
+			checkComponentTagAttribute(tag, "type", "text");
 		}
-		else
+
+		// No validation errors
+		tag.put("value", getValue());
+		
+		// Default handling for component tag
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
+	 */
+	public void updateModel()
+	{
+		String input = getInput();
+		// if input was null then value was not submitted (disabled field), ignore it
+		if (input != null)
 		{
-			// Invalid input detected
-			tag.put("value", getInvalidInput());
+			// Get any validation type
+			final Class type = getValidationType();
+			if (type != null)
+			{
+				// Set model to request string converted to the appropriate type
+				setModelObject(getConverter().convert(input, type));
+			}
+			else
+			{
+				// Update String model
+				super.updateModel();
+			}
 		}
 	}
 }

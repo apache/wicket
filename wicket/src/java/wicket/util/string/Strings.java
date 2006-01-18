@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,10 +17,12 @@
  */
 package wicket.util.string;
 
-import org.dom4j.Node;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A variety of static String utility methods.
@@ -47,7 +49,12 @@ import java.io.StringWriter;
  */
 public final class Strings
 {
+	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+
 	/**
+	 * Returns everything after the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -57,6 +64,10 @@ public final class Strings
 	 */
 	public static String afterFirst(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -86,6 +97,8 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything after the last occurence of the given character in s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -95,6 +108,10 @@ public final class Strings
 	 */
 	public static String afterLast(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -106,6 +123,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -115,6 +135,10 @@ public final class Strings
 	 */
 	public static String beforeFirst(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -126,6 +150,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the last occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -135,6 +162,10 @@ public final class Strings
 	 */
 	public static String beforeLast(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -164,7 +195,7 @@ public final class Strings
 	}
 
 	/**
-	 * Capitalizes a string
+	 * Capitalizes a string.
 	 * 
 	 * @param s
 	 *            The string
@@ -172,6 +203,10 @@ public final class Strings
 	 */
 	public static String capitalize(final String s)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final char[] chars = s.toCharArray();
 
 		if (chars.length > 0)
@@ -211,6 +246,27 @@ public final class Strings
 	 */
 	public static String escapeMarkup(final String s, final boolean escapeSpaces)
 	{
+		return escapeMarkup(s, escapeSpaces, false);
+	}
+
+	/**
+	 * Converts a Java String to an HTML markup String by replacing illegal
+	 * characters with HTML entities where appropriate. Spaces are converted to
+	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
+	 * converted to four non-breaking spaces, less than signs are converted to
+	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
+	 * 
+	 * @param s
+	 *            The string to escape
+	 * @param escapeSpaces
+	 *            True to replace ' ' with nonbreaking space
+	 * @param convertToHtmlUnicodeEscapes
+	 *            True to convert non-7 bit characters to unicode HTML (&#...)
+	 * @return The escaped string
+	 */
+	public static String escapeMarkup(final String s, final boolean escapeSpaces,
+			final boolean convertToHtmlUnicodeEscapes)
+	{
 		if (s == null)
 		{
 			return null;
@@ -219,7 +275,8 @@ public final class Strings
 		{
 			final StringBuffer buffer = new StringBuffer();
 
-			for (int i = 0; i < s.length(); i++)
+			int len = s.length();
+			for (int i = 0; i < len; i++)
 			{
 				final char c = s.charAt(i);
 
@@ -229,8 +286,7 @@ public final class Strings
 						if (escapeSpaces)
 						{
 							// Assumption is four space tabs (sorry, but that's
-							// just
-							// how it is!)
+							// just how it is!)
 							buffer.append("&nbsp;&nbsp;&nbsp;&nbsp;");
 						}
 						else
@@ -258,14 +314,85 @@ public final class Strings
 						buffer.append("&gt;");
 						break;
 
+					case '&' :
+
+						// if this is an entity (&#), then do not convert
+						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
+						{
+							buffer.append(c);
+
+						}
+						else
+						{
+							// it is not an entity, so convert it to &amp;
+							buffer.append("&amp;");
+						}
+						break;
+
+					case '"' :
+						buffer.append("&quot;");
+						break;
+
+					case '\'' :
+						buffer.append("&#039;");
+						break;
+
 					default :
-						buffer.append(c);
+
+						if (convertToHtmlUnicodeEscapes)
+						{
+							int ci = 0xffff & c;
+							if (ci < 160)
+							{
+								// nothing special only 7 Bit
+								buffer.append(c);
+							}
+							else
+							{
+								// Not 7 Bit use the unicode system
+								buffer.append("&#");
+								buffer.append(new Integer(ci).toString());
+								buffer.append(';');
+							}
+						}
+						else
+						{
+							buffer.append(c);
+						}
+
 						break;
 				}
 			}
 
 			return buffer.toString();
 		}
+	}
+
+	/**
+	 * Replace HTML numbers like &#20540 by the appropriate character.
+	 * 
+	 * @param str
+	 *            The text to be evaluated
+	 * @return The text with "numbers" replaced
+	 */
+	public static String replaceHtmlEscapeNumber(String str)
+	{
+		if (str == null)
+		{
+			return null;
+		}
+		Matcher matcher = htmlNumber.matcher(str);
+		while (matcher.find())
+		{
+			int pos = matcher.start();
+			int end = matcher.end();
+			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
+			char ch = (char)number;
+			str = str.substring(0, pos) + ch + str.substring(end);
+			matcher = htmlNumber.matcher(str);
+		}
+
+		return str;
 	}
 
 	/**
@@ -284,6 +411,10 @@ public final class Strings
 	 */
 	public static String firstPathComponent(final String path, final char separator)
 	{
+		if (path == null)
+		{
+			return null;
+		}
 		final int index = path.indexOf(separator);
 
 		if (index == -1)
@@ -295,6 +426,11 @@ public final class Strings
 	}
 
 	/**
+	 * Checks whether the <code>string</code> is considered empty. Empty means
+	 * that the string may contain whitespace, but no visible characters.
+	 * 
+	 * "\n\t " is considered empty, while " a" is not.
+	 * 
 	 * @param string
 	 *            The string
 	 * @return True if the string is null or ""
@@ -302,6 +438,59 @@ public final class Strings
 	public static boolean isEmpty(final String string)
 	{
 		return string == null || string.trim().equals("");
+	}
+
+	/**
+	 * Converts the text in <code>s</code> to a corresponding boolean. On,
+	 * yes, y, true and 1 are converted to <code>true</code>. Off, no, n,
+	 * false and 0 (zero) are converted to <code>false</code>. An empty
+	 * string is converted to <code>false</code>. Conversion is
+	 * case-insensitive, and does <em>not</em> take internationalization into
+	 * account.
+	 * 
+	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
+	 * 
+	 * @param s
+	 *            the value to convert into a boolean
+	 * @return Boolean the converted value of <code>s</code>
+	 * @throws StringValueConversionException
+	 *             when the value of <code>s</code> is not recognized.
+	 */
+	public static boolean isTrue(final String s) throws StringValueConversionException
+	{
+		if (s != null)
+		{
+			if (s.equalsIgnoreCase("true"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("false"))
+			{
+				return false;
+			}
+
+			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
+					|| s.equalsIgnoreCase("1"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
+					|| s.equalsIgnoreCase("0"))
+			{
+				return false;
+			}
+
+			if (isEmpty(s))
+			{
+				return false;
+			}
+
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
+		}
+
+		return false;
 	}
 
 	/**
@@ -331,58 +520,120 @@ public final class Strings
 	}
 
 	/**
-	 * Replace all occurrences of one string replaceWith another string
+	 * Replace all occurrences of one string replaceWith another string.
 	 * 
 	 * @param s
-	 *            The string
+	 *            The string to process
 	 * @param searchFor
 	 *            The value to search for
 	 * @param replaceWith
 	 *            The value to searchFor replaceWith
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
-	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
+	public static String replaceAll(final String s, final String searchFor, String replaceWith)
 	{
-		if (s != null)
+		if (s == null)
 		{
-			// Go through the string
-			final StringBuffer buf = new StringBuffer();
-			int pos = 0;
-
-			while (true)
-			{
-				// Get the next index of the string to searchFor
-				// starting from the position pos
-				final int matchIndex = s.indexOf(searchFor, pos);
-
-				// If there's no match
-				if (matchIndex == -1)
-				{
-					// Append rest
-					buf.append(s.substring(pos));
-
-					break;
-				}
-				else
-				{
-					// Found a match. Append up to the match
-					buf.append(s.substring(pos, matchIndex));
-
-					// Move the forward past the searchFor string
-					pos = matchIndex + searchFor.length();
-
-					// Add replaceWith
-					buf.append(replaceWith);
-				}
-			}
-
-			return buf.toString();
+			return null;
 		}
 
-		return null;
+		// If searchFor is null or the empty string, then there is nothing to
+		// replace, so returning s is the only option here.
+		if (searchFor == null || "".equals(searchFor))
+		{
+			return s;
+		}
+
+		// If replaceWith is null, then the searchFor should be replaced with
+		// nothing, which can be seen as the empty string.
+		if (replaceWith == null)
+		{
+			replaceWith = "";
+		}
+		
+		// Look for first occurrence of searchFor
+		int matchIndex = s.indexOf(searchFor);
+		if (matchIndex == -1)
+		{
+			// No replace operation needs to happen
+			return s;
+		}
+		else
+		{
+			// Allocate a StringBuffer that will hold one replacement with a
+			// little extra room.
+			int size = s.length();
+			final int replaceWithLength = replaceWith.length();
+			final int searchForLength = searchFor.length();
+			if (replaceWithLength > searchForLength)
+			{
+				size += (replaceWithLength - searchForLength);
+			}
+			final StringBuffer buffer = new StringBuffer(size + 16);
+
+			int pos = 0;
+			do
+			{
+				// Append text up to the match
+				buffer.append(s.substring(pos, matchIndex));
+
+				// Add replaceWith text
+				buffer.append(replaceWith);
+
+				// Find next occurrence, if any
+				pos = matchIndex + searchForLength;
+				matchIndex = s.indexOf(searchFor, pos);
+			}
+			while (matchIndex != -1);
+
+			// Add tail of s
+			buffer.append(s.substring(pos));
+
+			// Return processed buffer
+			return buffer.toString();
+		}
 	}
 
 	/**
+	 * Simpler, faster version of String.split() for splitting on a simple
+	 * character.
+	 * 
+	 * @param s
+	 *            The string to split
+	 * @param c
+	 *            The character to split on
+	 * @return The array of strings
+	 */
+	public static String[] split(final String s, final char c)
+	{
+		if (s == null)
+		{
+			return new String[0];
+		}
+		final List strings = new ArrayList();
+		int pos = 0;
+		while (true)
+		{
+			int next = s.indexOf(c, pos);
+			if (next == -1)
+			{
+				strings.add(s.substring(pos));
+				break;
+			}
+			else
+			{
+				strings.add(s.substring(pos, next));
+			}
+			pos = next + 1;
+		}
+		final String[] result = new String[strings.size()];
+		strings.toArray(result);
+		return result;
+	}
+
+	/**
+	 * Strips the ending from the string <code>s</code>.
+	 * 
 	 * @param s
 	 *            The string to strip
 	 * @param ending
@@ -392,8 +643,28 @@ public final class Strings
 	 */
 	public static String stripEnding(final String s, final String ending)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// Stripping a null or empty string from the end returns the
+		// original string.
+		if (ending == null || "".equals(ending))
+		{
+			return s;
+		}
+		final int endingLength = ending.length();
+		final int sLength = s.length();
+
+		// When the length of the ending string is larger
+		// than the original string, the original string is returned.
+		if (endingLength > sLength)
+		{
+			return s;
+		}
 		final int index = s.lastIndexOf(ending);
-		final int endpos = s.length() - ending.length();
+		final int endpos = sLength - endingLength;
 
 		if (index == endpos)
 		{
@@ -403,37 +674,32 @@ public final class Strings
 		return s;
 	}
 
+
 	/**
+	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
+	 * values of s.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Boolean value
+	 *            The string to convert.
+	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
 	 * @throws StringValueConversionException
+	 *             when s is not a valid value
+	 * @see #isTrue(String)
 	 */
-	public static boolean toBoolean(final String s) throws StringValueConversionException
+	public static Boolean toBoolean(final String s) throws StringValueConversionException
 	{
-		if (s != null)
-		{
-			if (s.equalsIgnoreCase("true"))
-			{
-				return true;
-			}
-
-			if (s.equalsIgnoreCase("false"))
-			{
-				return false;
-			}
-
-			throw new StringValueConversionException("Boolean value was not 'true' or 'false'");
-		}
-
-		throw new StringValueConversionException("Boolean value was null");
+		return Boolean.valueOf(isTrue(s));
 	}
 
 	/**
+	 * Converts the 1 character string s to a character.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Character value
+	 *            The 1 character string to convert to a char.
+	 * @return Character value to convert
 	 * @throws StringValueConversionException
+	 *             when the string is longer or shorter than 1 character, or
+	 *             <code>null</code>.
 	 */
 	public static char toChar(final String s) throws StringValueConversionException
 	{
@@ -455,20 +721,27 @@ public final class Strings
 
 	/**
 	 * Converts a String to multiline HTML markup by replacing newlines with
-	 * line break entities (&lt;br&gt;) and multiple occurrences of newline with
-	 * paragraph break entities (&lt;p&gt;).
+	 * line break entities (&lt;br /&gt;) and multiple occurrences of newline
+	 * with paragraph break entities (&lt;p&gt;).
 	 * 
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br&gt; and all multiple occurrences of newline replaced with
-	 *         &lt;p&gt;.
+	 *         &lt;br /&gt; and all multiple occurrences of newline replaced
+	 *         with &lt;p&gt;.
+	 * TODO General: Make paragraphs xhtml compliant.
 	 */
 	public static String toMultilineMarkup(final String s)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
 		final StringBuffer buffer = new StringBuffer();
 		int newlineCount = 0;
 
+		buffer.append("<p>");
 		for (int i = 0; i < s.length(); i++)
 		{
 			final char c = s.charAt(i);
@@ -485,11 +758,11 @@ public final class Strings
 				default :
 					if (newlineCount == 1)
 					{
-						buffer.append("<br>");
+						buffer.append("<br />");
 					}
 					else if (newlineCount > 1)
 					{
-						buffer.append("<p>");
+						buffer.append("</p><p>");
 					}
 
 					buffer.append(c);
@@ -497,12 +770,20 @@ public final class Strings
 					break;
 			}
 		}
-
+		if (newlineCount == 1)
+		{
+			buffer.append("<br />");
+		}
+		else if (newlineCount > 1)
+		{
+			buffer.append("</p><p>");
+		}
+		buffer.append("</p>");
 		return buffer.toString();
 	}
 
 	/**
-	 * Converts the given object to a string
+	 * Converts the given object to a string.
 	 * 
 	 * @param object
 	 *            The object
@@ -510,17 +791,13 @@ public final class Strings
 	 */
 	public static String toString(final Object object)
 	{
-		if (object instanceof Throwable)
-		{
-			return toString((Throwable)object);
-		}
-		else if (object instanceof Node)
-		{
-			return ((Node)object).getText();
-		}
-		else if (object == null)
+		if (object == null)
 		{
 			return null;
+		}
+		else if (object instanceof Throwable)
+		{
+			return toString((Throwable)object);
 		}
 		else
 		{
@@ -529,7 +806,7 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Throwable to a string
+	 * Converts a Throwable to a string.
 	 * 
 	 * @param throwable
 	 *            The throwable
@@ -537,13 +814,20 @@ public final class Strings
 	 */
 	public static String toString(final Throwable throwable)
 	{
-		final StringWriter stringWriter = new StringWriter();
-		throwable.printStackTrace(new PrintWriter(stringWriter));
-		return stringWriter.toString().replaceAll("\t", "    ");
+		if (throwable != null)
+		{
+			final StringWriter stringWriter = new StringWriter();
+			throwable.printStackTrace(new PrintWriter(stringWriter));
+			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
+		}
+		else
+		{
+			return "<Null Throwable>";
+		}
 	}
 
 	/**
-	 * Private constructor prevents construction
+	 * Private constructor prevents construction.
 	 */
 	private Strings()
 	{

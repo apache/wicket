@@ -21,11 +21,8 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 
 
 /**
@@ -33,12 +30,13 @@ import wicket.markup.html.list.ListView;
  */
 public class SimpleTablePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 *  page parameters.
 	 */
-	public SimpleTablePage(final PageParameters parameters)
+	public SimpleTablePage()
 	{
 		super();
 		List list = new ArrayList();
@@ -47,6 +45,8 @@ public class SimpleTablePage extends WebPage
 		list.add("three");
 		add(new ListView("table", list)
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

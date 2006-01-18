@@ -21,7 +21,6 @@ package wicket.markup;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -34,15 +33,15 @@ import wicket.model.Model;
  */
 public class MyTable extends ListView
 {
-    private int rows = 10;
+	private static final long serialVersionUID = 1L;
     
     /**
      * Construct.
-     * @param componentName
+     * @param id
      */
-    public MyTable(final String componentName)
+    public MyTable(final String id)
     {
-        super(componentName, new Model(null));
+        super(id, new Model(null));
     }
 
     protected void populateItem(ListItem listItem)
@@ -57,20 +56,13 @@ public class MyTable extends ListView
      */
     public void setRowsPerPage(final int rows)
     {
-        this.rows = rows;
-        
         List list = new ArrayList();
 
         for (int i=0; i < rows; i++)
         {
             list.add("row: " + String.valueOf(i));
         }
-        
-        this.setModelObject(list);
-        
-        if (this.findParent(Page.class) != null)
-        {
-            this.invalidateModel();
-        }
+                
+        setModelObject(list);
     }
 }

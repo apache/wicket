@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.10 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,8 +19,8 @@ package wicket.markup.html.panel;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.parser.XmlTag;
+import wicket.markup.html.OpenWebMarkupContainer;
+import wicket.model.IModel;
 
 /**
  * A panel is a reusable component that holds markup and other components.
@@ -28,8 +28,8 @@ import wicket.markup.parser.XmlTag;
  * Whereas WebMarkupContainer is an inline container like
  * <pre>
  *  ...
- *  &lt;span id=&quot;wicket-xxx&quot;&gt;
- *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *  &lt;span wicket:id=&quot;xxx&quot;&gt;
+ *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/span&gt;
  *  ...
@@ -37,59 +37,48 @@ import wicket.markup.parser.XmlTag;
  * a Panel has its own associated markup file and the container content is
  * taken from that file, like:
  * <pre>
- *  &lt;span id=&quot;wicket-mypanel&quot;/&gt;
+ *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
  * 
  *  TestPanel.html
  *  &lt;wicket:panel&gt;
- *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
-public class Panel extends WebMarkupContainer
+public class Panel extends OpenWebMarkupContainer
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = -5449444447932560536L;
-
-    /**
+	private static final long serialVersionUID = 1L;
+	
+	/**
      * @see wicket.Component#Component(String)
      */
-    public Panel(final String componentName)
+    public Panel(final String id)
     {
-        super(componentName);
+        super(id);
     }
+    
+    /**
+     * @see wicket.Component#Component(String, IModel)
+     */
+    public Panel(final String id, final IModel model)
+    {
+        super(id, model);
+    }    
 
     /**
-     * Renders this component.
+     * 
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected final void onRender()
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        // Render the tag that included this html compoment
-        final MarkupStream markupStream = findMarkupStream();
-
-        if (!markupStream.atOpenCloseTag())
-        {
-            markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
-        }
-
-        // In order to be html compliant (though we are xhtml compliant already) 
-        // and even more intuitiv, we open up the tag, change it from open-close to
-        // open, the panel now becomes the tag body and we'll close it manually
-        // later.
-        final ComponentTag openTag = markupStream.getTag().mutable();
-        openTag.setType(XmlTag.OPEN);
-		renderComponentTag(openTag);
-
         // Render the associated markup
         renderAssociatedMarkup("panel",
-                "Markup for a panel component must begin with '<wicket:panel>'");
-        
-        // Close the manually opened panel tag.
-        getResponse().write(openTag.syntheticCloseTagString());
-		markupStream.next();
+                "Markup for a panel component has to contain part '<wicket:panel>'");
+
+        super.onComponentTagBody(markupStream, openTag);
     }
 }
-
-

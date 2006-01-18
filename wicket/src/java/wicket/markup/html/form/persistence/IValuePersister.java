@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.13 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -41,7 +41,7 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void save(FormComponent component);
+	void save(FormComponent component);
 
 	/**
 	 * Loads any persisted value for a given form component
@@ -49,7 +49,7 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void load(FormComponent component);
+	void load(FormComponent component);
 
 	/**
 	 * Remove any persisted value for a given form component.
@@ -57,6 +57,6 @@ public interface IValuePersister extends Serializable
 	 * @param component
 	 *            The form component
 	 */
-	public void clear(FormComponent component);
+	void clear(FormComponent component);
 }
 

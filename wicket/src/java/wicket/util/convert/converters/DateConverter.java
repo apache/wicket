@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.6 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,7 +19,9 @@ package wicket.util.convert.converters;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Converts from Object to Date.
@@ -28,63 +30,73 @@ import java.util.Locale;
  */
 public final class DateConverter extends AbstractConverter
 {
-	/** The date format to use. */
-	private DateFormat dateFormat;
+	private static final long serialVersionUID = 1L;
+
+	/** The date format to use for the specific locales (used as the key)*/
+	private Map dateFormats = new HashMap();
+
+	/** 
+     * Specify whether or not date/time parsing is to be lenient.  With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  With strict parsing,
+     * inputs must match the object's format.
+	 */
+	private final boolean lenient;
 
 	/**
-	 * Constructor
+	 * Construct. Lenient is false.
 	 */
 	public DateConverter()
 	{
+		super();
+		lenient = false;
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * Construct.
+	 * @param lenient when true, parsing is lenient. With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  With strict parsing,
+     * inputs must match the object's format.
 	 */
-	public DateConverter(final Locale locale)
+	public DateConverter(boolean lenient)
 	{
-		super(locale);
+		super();
+		this.lenient = lenient;
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
-        return parse(getDateFormat(), value);
+        return parse(getDateFormat(locale), value);
 	}
 
 	/**
+	 * @param locale 
 	 * @return Returns the date format.
 	 */
-	public final DateFormat getDateFormat()
+	public final DateFormat getDateFormat(Locale locale)
 	{
+		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
 		if (dateFormat == null)
 		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			dateFormat.setLenient(lenient);
+			dateFormats.put(locale, dateFormat);
 		}
 		return dateFormat;
 	}
 
 	/**
+	 * @param locale 
 	 * @param dateFormat
 	 *            The dateFormat to set.
 	 */
-	public void setDateFormat(final DateFormat dateFormat)
+	public void setDateFormat(final Locale locale, final DateFormat dateFormat)
 	{
-		this.dateFormat = dateFormat;
-	}
-
-	/**
-	 * @see wicket.util.convert.ILocalizable#setLocale(java.util.Locale)
-	 */
-	public void setLocale(final Locale locale)
-	{
-		super.setLocale(locale);
-		this.dateFormat = null;
+		this.dateFormats.put(locale,dateFormat);
 	}
 
 	/**

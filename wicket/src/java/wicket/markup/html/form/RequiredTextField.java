@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,61 +17,58 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.model.IModel;
 
 /**
- * A text field which automatically adds a RequiredValidator.  This is mainly
- * for convenience, since you can always add(new RequiredValidator()) manually.
+ * A text field which automatically adds a RequiredValidator. This is mainly for
+ * convenience, since you can always add(new RequiredValidator()) manually.
  * 
  * @author Jonathan Locke
  */
 public class RequiredTextField extends TextField
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public RequiredTextField(final String id)
+	{
+		super(id);
+		add(RequiredValidator.getInstance());
+	}
 
-    /**
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public RequiredTextField(String name, Serializable object)
-    {
-        super(name, object);
-        add(new RequiredValidator());
-    }
+	/**
+	 * @see TextField#TextField(String, Class)
+	 */
+	public RequiredTextField(final String id, final Class type)
+	{
+		super(id, type);
+		add(RequiredValidator.getInstance());
+	}
 
-    /**
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public RequiredTextField(String name, Serializable object, String expression)
-    {
-        super(name, object, expression);
-        add(new RequiredValidator());
-    }
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public RequiredTextField(final String id, final IModel model)
+	{
+		super(id, model);
+		add(RequiredValidator.getInstance());
+	}
 
-    /**
-     * @param name See Component constructor
-     * @param object See Component constructor
-     * @param type The type to use when updating the model for this text field
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public RequiredTextField(String name, Serializable object, Class type)
-    {
-        super(name, object, type);
-        add(new RequiredValidator());
-    }
-
-    /**
-     * @param name See Component constructor
-     * @param object See Component constructor
-     * @param expression See Component constructor
-     * @param type The type to use when updating the model for this text field
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public RequiredTextField(String name, Serializable object, String expression, Class type)
-    {
-        super(name, object, expression, type);
-        add(new RequiredValidator());
-    }
+	/**
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public RequiredTextField(final String id, IModel model, Class type)
+	{
+		super(id, model, type);
+		add(RequiredValidator.getInstance());
+	}
 }

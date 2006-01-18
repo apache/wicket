@@ -1,0 +1,23 @@
+<!--
+    ====================================================================
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html xmlns:wicket>
+<body>
+  <span wicket:id="myLabel">Test Label</span>
+  body<span wicket:id="myLabel2">Test Label2</span>
+  <wicket:panel>Inside the panel<span wicket:id="label">mein Label</span></wicket:panel>
+  <wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>
+  <span wicket:id="myBorder2" testAttr="myValue"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>
+</body>
+</html>

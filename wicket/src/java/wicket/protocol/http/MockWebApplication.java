@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,23 +17,35 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import java.util.HashMap;
+import java.util.Map;
 
-import wicket.ApplicationSettings;
+import javax.servlet.ServletContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Application;
+import wicket.Component;
+import wicket.IRequestTarget;
 import wicket.Page;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.WebSession;
+import wicket.PageParameters;
+import wicket.Session;
+import wicket.WicketRuntimeException;
+import wicket.markup.html.pages.ExceptionErrorPage;
+import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.IBookmarkablePageRequestTarget;
+import wicket.request.IPageRequestTarget;
+import wicket.session.DefaultPageFactory;
+import wicket.settings.IRequestCycleSettings;
+import wicket.util.file.WebApplicationPath;
 
 /**
  * This class provides a mock implementation of a Wicket HTTP based application
  * that can be used for testing. It emulates all of the functionality of an
  * HttpServlet in a controlled, single-threaded environment. It is supported
- * with mock objects for WebSession, HttpServletRequest, HttpServletResponse
- * and ServletContext.
+ * with mock objects for WebSession, HttpServletRequest, HttpServletResponse and
+ * ServletContext.
  * <p>
  * In its most basic usage you can just create a new MockWebApplication. This
  * should be sufficient to allow you to construct components and pages and so on
@@ -68,187 +80,316 @@ import wicket.protocol.http.WebSession;
  */
 public class MockWebApplication extends WebApplication
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = 8409647488957949834L;
+	/** Logging */
+	private static Log log = LogFactory.getLog(MockWebApplication.class);
 
-    /** Mock http servlet context. */
-    private final MockServletContext context;
+	/** Mock http servlet context. */
+	private final MockServletContext context;
 
-    /** The last rendered page. */
-    private Page lastRenderedPage;
+	/** The last rendered page. */
+	private Page lastRenderedPage;
 
-    /** Mock http servlet request. */
-    private final MockHttpServletRequest servletRequest;
+	/** The previously rendered page */
+	private Page previousRenderedPage;
 
-    /** Mock http servlet response. */
-    private final MockHttpServletResponse servletResponse;
+	/** Mock http servlet request. */
+	private final MockHttpServletRequest servletRequest;
 
-    /** Mock http servlet session. */
-    private final MockHttpSession servletSession;
+	/** Mock http servlet response. */
+	private final MockHttpServletResponse servletResponse;
 
-    /** Application settings. */
-    private final ApplicationSettings settings;
+	/** Mock http servlet session. */
+	private final MockHttpSession servletSession;
 
-    /** Request. */
-    private WebRequest wicketRequest;
+	/** Request. */
+	private WebRequest wicketRequest;
 
-    /** Response. */
-    private WebResponse wicketResponse;
+	/** Parameters to be set on the next request. */
+	private Map parametersForNextRequest = new HashMap();
 
-    /** Session. */
-    private WebSession wicketSession;
+	/** Response. */
+	private WebResponse wicketResponse;
 
-    /**
-     * Create the mock http application that can be used for testing.
-     * 
-     * @param path
-     *            The absolute path on disk to the web application contents
-     *            (e.g. war root) - may be null
-     * @see wicket.protocol.http.MockServletContext
-     */
-    public MockWebApplication(final String path)
-    {
-        settings = new ApplicationSettings(this);
-        context = new MockServletContext(this, path);
-        servletSession = new MockHttpSession(context);
-        servletRequest = new MockHttpServletRequest(this, servletSession, context);
-        servletResponse = new MockHttpServletResponse();
-        wicketSession = WebSession.getSession(this, servletRequest);
-    }
+	/** Session. */
+	private WebSession wicketSession;
 
-    /**
-     * Get the page that was just rendered by the last request cycle processing.
-     * 
-     * @return The last rendered page
-     */
-    public Page getLastRenderedPage()
-    {
-        return lastRenderedPage;
-    }
+	/** The homepage */
+	private Class homePage;
 
-    /**
-     * Get the context object so that we can apply configurations to it. This
-     * method always returns an instance of <code>MockServletContext</code>,
-     * so it is fine to cast the result to this class in order to get access to
-     * the set methods.
-     * 
-     * @return The servlet context
-     */
-    public ServletContext getServletContext()
-    {
-        return context;
-    }
+	/**
+	 * Create the mock http application that can be used for testing.
+	 * 
+	 * @param path
+	 *            The absolute path on disk to the web application contents
+	 *            (e.g. war root) - may be null
+	 * @see wicket.protocol.http.MockServletContext
+	 */
+	public MockWebApplication(final String path)
+	{
+		Application.set(this);
 
-    /**
-     * Get the request object so that we can apply configurations to it.
-     * 
-     * @return The request object
-     */
-    public MockHttpServletRequest getServletRequest()
-    {
-        return servletRequest;
-    }
+		context = new MockServletContext(this, path);
+		servletSession = new MockHttpSession(context);
+		servletRequest = new MockHttpServletRequest(this, servletSession, context);
+		servletResponse = new MockHttpServletResponse();
+		wicketRequest = newWebRequest(servletRequest);
+		wicketSession = getSession(wicketRequest);
 
-    /**
-     * Get the response object so that we can apply configurations to it.
-     * 
-     * @return The response object
-     */
-    public MockHttpServletResponse getServletResponse()
-    {
-        return servletResponse;
-    }
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
+		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+	}
 
-    /**
-     * Get the session object so that we can apply configurations to it.
-     * 
-     * @return The session object
-     */
-    public MockHttpSession getServletSession()
-    {
-        return servletSession;
-    }
+	/**
+	 * 
+	 * @see wicket.Application#init()
+	 */
+	protected void init()
+	{
+	}
 
-    /**
-     * Get the application settings.
-     * 
-     * @return The application settings.
-     */
-    public ApplicationSettings getSettings()
-    {
-        return settings;
-    }
+	/**
+	 * Get the page that was just rendered by the last request cycle processing.
+	 * 
+	 * @return The last rendered page
+	 */
+	public Page getLastRenderedPage()
+	{
+		return lastRenderedPage;
+	}
 
-    /**
-     * Get the wicket request object.
-     * 
-     * @return The wicket request object
-     */
-    public WebRequest getWicketRequest()
-    {
-        return wicketRequest;
-    }
+	/**
+	 * Get the page that was previously
+	 * 
+	 * @return The last rendered page
+	 */
+	public Page getPreviousRenderedPage()
+	{
+		return previousRenderedPage;
+	}
 
-    /**
-     * Get the wicket response object.
-     * 
-     * @return The wicket response object
-     */
-    public WebResponse getWicketResponse()
-    {
-        return wicketResponse;
-    }
+	/**
+	 * Get the context object so that we can apply configurations to it. This
+	 * method always returns an instance of <code>MockServletContext</code>,
+	 * so it is fine to cast the result to this class in order to get access to
+	 * the set methods.
+	 * 
+	 * @return The servlet context
+	 */
+	public ServletContext getServletContext()
+	{
+		return context;
+	}
 
-    /**
-     * Get the wicket session.
-     * 
-     * @return The wicket session object
-     */
-    public WebSession getWicketSession()
-    {
-        return wicketSession;
-    }
+	/**
+	 * Get the request object so that we can apply configurations to it.
+	 * 
+	 * @return The request object
+	 */
+	public MockHttpServletRequest getServletRequest()
+	{
+		return servletRequest;
+	}
 
-    /**
-     * Create and process the request cycle using the current request and
-     * response information.
-     * 
-     * @throws ServletException
-     *             If the render cycle fails
-     */
-    public void processRequestCycle() throws ServletException
-    {
-        WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
-                wicketResponse);
-        cycle.render();
-        lastRenderedPage = cycle.getPage();
-    }
+	/**
+	 * Get the response object so that we can apply configurations to it.
+	 * 
+	 * @return The response object
+	 */
+	public MockHttpServletResponse getServletResponse()
+	{
+		return servletResponse;
+	}
 
-    /**
-     * Create and process the request cycle using the current request and
-     * response information.
-     * 
-     * @return A new and initialized WebRequestCyle
-     */
-    public WebRequestCycle createRequestCycle()
-    {
-        return new WebRequestCycle(this, wicketSession, wicketRequest, wicketResponse);
-    }
+	/**
+	 * Get the session object so that we can apply configurations to it.
+	 * 
+	 * @return The session object
+	 */
+	public MockHttpSession getServletSession()
+	{
+		return servletSession;
+	}
 
-    /**
-     * Reset the request and the response back to a starting state and recreate
-     * the necessary wicket request, response and session objects. The request
-     * and response objects can be accessed and initialised at this point.
-     * 
-     * @throws IOException
-     */
-    public void setupRequestAndResponse() throws IOException
-    {
-        servletRequest.initialize();
-        servletResponse.initialize();
-        wicketSession = WebSession.getSession(this, servletRequest);
-        wicketRequest = new WebRequest(servletRequest);
-        wicketResponse = new WebResponse(servletResponse);
-    }
+	/**
+	 * Get the wicket request object.
+	 * 
+	 * @return The wicket request object
+	 */
+	public WebRequest getWicketRequest()
+	{
+		return wicketRequest;
+	}
 
+	/**
+	 * Get the wicket response object.
+	 * 
+	 * @return The wicket response object
+	 */
+	public WebResponse getWicketResponse()
+	{
+		return wicketResponse;
+	}
+
+	/**
+	 * Get the wicket session.
+	 * 
+	 * @return The wicket session object
+	 */
+	public WebSession getWicketSession()
+	{
+		return wicketSession;
+	}
+
+	/**
+	 * Initialize a new WebRequestCycle and all its dependent objects
+	 * 
+	 * @param component
+	 */
+	public void processRequestCycle(final Component component)
+	{
+		setupRequestAndResponse();
+		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		cycle.request(component);
+
+		if (component instanceof Page)
+		{
+			this.lastRenderedPage = (Page)component;
+		}
+	}
+
+	/**
+	 * Create and process the request cycle using the current request and
+	 * response information.
+	 */
+	public void processRequestCycle()
+	{
+		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		cycle.request();
+
+		previousRenderedPage = lastRenderedPage;
+
+		// handle redirects which are usually managed by the browser
+		// transparently
+		final MockHttpServletResponse httpResponse = (MockHttpServletResponse)cycle
+				.getWebResponse().getHttpServletResponse();
+
+		if (httpResponse.isRedirect())
+		{
+			generateLastRenderedPage(cycle);
+
+			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)((WebRequest)cycle
+					.getWebRequest()).getHttpServletRequest();
+
+			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+			wicketSession = getSession(wicketRequest);
+			new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
+		}
+		generateLastRenderedPage(cycle);
+
+		Session.set(getWicketSession());
+
+		if (getLastRenderedPage() instanceof ExceptionErrorPage)
+		{
+			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
+					.getRootCause());
+		}
+	}
+
+	private void generateLastRenderedPage(WebRequestCycle cycle)
+	{
+		lastRenderedPage = cycle.getResponsePage();
+		if (lastRenderedPage == null)
+		{
+			Class responseClass = cycle.getResponsePageClass();
+			if (responseClass != null)
+			{
+				Session.set(cycle.getSession());
+				IRequestTarget target = cycle.getRequestTarget();
+				if (target instanceof IPageRequestTarget)
+				{
+					lastRenderedPage = ((IPageRequestTarget)target).getPage();
+				}
+				else if (target instanceof IBookmarkablePageRequestTarget)
+				{
+					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
+					Class pageClass = pageClassRequestTarget.getPageClass();
+					PageParameters parameters = pageClassRequestTarget.getPageParameters();
+					if (parameters==null||parameters.size() == 0)
+					{
+						lastRenderedPage = new DefaultPageFactory().newPage(pageClass);
+					}
+					else
+					{
+						lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Create and process the request cycle using the current request and
+	 * response information.
+	 * 
+	 * @return A new and initialized WebRequestCyle
+	 */
+	public WebRequestCycle createRequestCycle()
+	{
+		return new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+	}
+
+	/**
+	 * Reset the request and the response back to a starting state and recreate
+	 * the necessary wicket request, response and session objects. The request
+	 * and response objects can be accessed and initialised at this point.
+	 */
+	public void setupRequestAndResponse()
+	{
+		servletRequest.initialize();
+		servletResponse.initialize();
+		servletRequest.setParameters(parametersForNextRequest);
+		parametersForNextRequest.clear();
+		wicketRequest = new ServletWebRequest(servletRequest);
+		wicketSession = getSession(wicketRequest);
+		wicketResponse = new WebResponse(servletResponse);
+	}
+
+	/**
+	 * Gets the parameters to be set on the next request.
+	 * 
+	 * @return the parameters to be set on the next request
+	 */
+	public Map getParametersForNextRequest()
+	{
+		return parametersForNextRequest;
+	}
+
+	/**
+	 * Sets the parameters to be set on the next request.
+	 * 
+	 * @param parametersForNextRequest
+	 *            the parameters to be set on the next request
+	 */
+	public void setParametersForNextRequest(Map parametersForNextRequest)
+	{
+		this.parametersForNextRequest = parametersForNextRequest;
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return homePage;
+	}
+
+	/**
+	 * Sets the home page for this mock application
+	 * 
+	 * @param clazz
+	 */
+	public void setHomePage(Class clazz)
+	{
+		homePage = clazz;
+	}
 }

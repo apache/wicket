@@ -118,11 +118,15 @@ pure-and-simple HTML markup that web designers are familiar with, to some kind o
 This special HTML can be more difficult to preview, edit and understand.
 </p>
 <p>
-Wicket does not introduce any special syntax to HTML. This means that you can use
-Macromedia Dreamweaver, Microsoft Front Page, Word, Adobe Go Live, or any other existing
-HTML editor to work on your web pages and web components. To accomplish this, Wicket
-consistently uses a single component name attribute (the name of which you can choose)
-to mark HTML tags that should receive special treatment by the toolkit.
+Wicket does not introduce any special syntax to HTML.  Instead, it extends HTML in a 
+standards-compliant way via a Wicket namespace that is fully compliant with the 
+XHTML standard. This means that you can use Macromedia Dreamweaver, Microsoft Front Page, 
+Word, Adobe Go Live, or any other existing HTML editor to work on your web pages 
+and Wicket components. To accomplish this, Wicket consistently uses a single id attribute 
+in the Wicket namespace ("wicket:id") to mark HTML tags that should receive special 
+treatment by the toolkit.  If you prefer not to render Wicket namespaced tags and 
+attributes to your end-users, Wicket has a simple setting to strip them all out, 
+resulting in ordinary, standards-compliant HTML.
 </p>
 <p>
 No "special sauce" in your HTML means designers can mock up pages that you can use directly

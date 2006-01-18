@@ -20,19 +20,25 @@ package wicket.markup.html.list;
 
 import java.util.ArrayList;
 
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
+import wicket.WicketTestCase;
 import wicket.model.Model;
-
-import junit.framework.TestCase;
 
 
 /**
  * Test for tables.
  * @author Juergen Donnerstag
  */
-public class TableTest extends TestCase
+public class TableTest extends WicketTestCase
 {
+	/**
+	 * Construct.
+	 * @param name
+	 */
+	public TableTest(String name)
+	{
+		super(name);
+	}
+
 	/**
 	 * creates a table.
 	 * @param modelListSize
@@ -49,9 +55,11 @@ public class TableTest extends TestCase
 
 		return new PageableListView("table", new Model(modelList), pageSize)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 	}
@@ -104,9 +112,11 @@ public class TableTest extends TestCase
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
 		table = new PageableListView("table", new Model(null), 10)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 		assertEquals(0, table.getStartIndex());

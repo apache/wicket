@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.9 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,25 +17,24 @@
  */
 package wicket.markup.html.link;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebComponent;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * An image map holds links with different hot-area shapes.
  * 
  * @author Jonathan Locke
  */
-public final class ImageMap extends WebComponent
+public final class ImageMap extends WebMarkupContainer
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 209001445308790198L;
-
+	private static final long serialVersionUID = 1L;
+	
 	/** list of shape links. */
 	private final List shapeLinks = new ArrayList();
 
@@ -44,9 +43,11 @@ public final class ImageMap extends WebComponent
 	 */
 	private static final class CircleLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** The circle's radius. */
 		private final int radius;
-		
+
 		/** Upper left x */
 		private final int x;
 
@@ -95,6 +96,8 @@ public final class ImageMap extends WebComponent
 	 */
 	private static final class PolygonLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** Its coordinates. */
 		private final int[] coordinates;
 
@@ -144,6 +147,8 @@ public final class ImageMap extends WebComponent
 	 */
 	private static final class RectangleLink extends ShapeLink
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** left upper x. */
 		private final int x1;
 
@@ -259,12 +264,12 @@ public final class ImageMap extends WebComponent
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            Component name
+	 * @param id
+	 *            See Component
 	 */
-	public ImageMap(final String name)
+	public ImageMap(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
@@ -282,8 +287,8 @@ public final class ImageMap extends WebComponent
 	 */
 	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link link)
 	{
+		add(link);
 		shapeLinks.add(new CircleLink(x1, y1, radius, link));
-
 		return this;
 	}
 
@@ -298,8 +303,8 @@ public final class ImageMap extends WebComponent
 	 */
 	public ImageMap addPolygonLink(final int[] coordinates, final Link link)
 	{
+		add(link);
 		shapeLinks.add(new PolygonLink(coordinates, link));
-
 		return this;
 	}
 
@@ -320,21 +325,18 @@ public final class ImageMap extends WebComponent
 	public ImageMap addRectangleLink(final int x1, final int y1, final int x2, final int y2,
 			final Link link)
 	{
+		add(link);
 		shapeLinks.add(new RectangleLink(x1, y1, x2, y2, link));
-
 		return this;
 	}
 
 	/**
 	 * Renders this component.
 	 * 
-	 * @see wicket.Component#onRender()
+	 * @see wicket.Component#onRender(MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Get markup stream
-		final MarkupStream markupStream = findMarkupStream();
-
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
 
@@ -356,9 +358,11 @@ public final class ImageMap extends WebComponent
 		for (Iterator iterator = shapeLinks.iterator(); iterator.hasNext();)
 		{
 			final ShapeLink shapeLink = (ShapeLink)iterator.next();
-
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
+
+			// Tell framework that this link was actually rendered
+			shapeLink.link.rendered();
 		}
 
 		imageMap.append("\n</map>");

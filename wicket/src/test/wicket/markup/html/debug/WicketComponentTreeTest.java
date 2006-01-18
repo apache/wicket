@@ -17,22 +17,19 @@
  */
 package wicket.markup.html.debug;
 
-import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import junit.framework.TestCase;
-import wicket.MarkupContainer;
-import wicket.markup.html.list.DiffUtil;
-import wicket.markup.html.list.ListView;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketTestCase;
 
 /**
- * Test the component: WicketComponentTree
+ * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
-public class WicketComponentTreeTest extends TestCase
+public class WicketComponentTreeTest extends WicketTestCase
 {
-	private MockWebApplication application;
+	private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
 
 	/**
 	 * Create the test.
@@ -46,37 +43,11 @@ public class WicketComponentTreeTest extends TestCase
 	}
 
 	/**
-	 * @throws Exception
-	 */
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(WicketComponentTreeTestPage.class);
-	}
-
-	/**
 	 * Test a simply page containing the debug component
 	 * @throws Exception
 	 */
 	public void test1() throws Exception
 	{
-		// Do the processing
-	    application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		final ListView components = (ListView)((MarkupContainer)application.getLastRenderedPage().get("componentList")).get("components");
-		assertEquals(2, components.getList().size());
-		
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
-		assertTrue(validatePage(document, "WicketComponentTreeTestPage_ExpectedResult.html"));
+		this.executeTest(WicketComponentTreeTestPage.class, "WicketComponentTreeTestPage_ExpectedResult.html");
 	}
-	
-	private boolean validatePage(final String document, final String file) throws IOException
-	{
-		return DiffUtil.validatePage(document, this.getClass(), file);
-	}
-
 }

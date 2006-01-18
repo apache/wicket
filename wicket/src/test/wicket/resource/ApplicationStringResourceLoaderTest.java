@@ -20,13 +20,12 @@ package wicket.resource;
 
 import java.util.Locale;
 
-import wicket.Application;
-import wicket.ApplicationPages;
-import wicket.ApplicationSettings;
-import wicket.ISessionFactory;
-import wicket.resource.ApplicationStringResourceLoader;
-import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
+import wicket.Application;
+import wicket.ISessionFactory;
+import wicket.request.IRequestCycleProcessor;
+import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -59,52 +58,25 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	public void testLoaderUnknownResources()
 	{
 		Application app = new Application()
-		{
-			public String getName()
-			{
-				return "MissingResourceApp";
-			}
-
-			public ApplicationSettings getSettings()
-			{
-				return settings;
-			}
-            
-            public ApplicationPages getPages()
-            {
-                return pages;
-            }
-            
+		{                        
 			public ISessionFactory getSessionFactory()
 			{
 				return null;
 			}
 
-            private ApplicationPages pages = new ApplicationPages();
-			private ApplicationSettings settings = new ApplicationSettings(this);
+			protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
+			{
+				return null;
+			}
+
+			public Class getHomePage()
+			{
+				return null;
+			}
 		};
 
 		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component,
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
 				"test.string", Locale.getDefault(), null));
 	}
-
-	/**
-	 * 
-	 */
-	public void testNullApplication()
-	{
-		try
-		{
-			new ApplicationStringResourceLoader(null);
-			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Extected result
-		}
-	}
-
 }
-
-// 

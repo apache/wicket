@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
+ * $Id$
+ * $Revision$ $Date$
+ *
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,46 +18,69 @@
 package wicket.markup.html.image.resource;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
-import wicket.util.time.Time;
+import wicket.resource.DynamicByteArrayResource;
 
 /**
- * An image subclass that allows easy rendering of dynamic images. An image can
- * be set with setImage(BufferedImage) and its format can be specified with
- * setExtension(String). After this, the image will be cached as an input stream
- * and will render as would any other Image resource.
- * 
+ * An ImageResource subclass for dynamic images (images created
+ * programmatically). Subclasses override getImageData() to provide the image
+ * data to send back to the user. A given subclass may decide how to produce
+ * this data and whether/how to buffer it.
+ * <p>
+ * The RenderedDynamicImageResource subclass is designed for images that can be
+ * regenerated when the component is deserialized (the image data is transient).
+ * A good example of a RenderedDynamicImageResource is the
+ * DefaultButtonImageResource class, which can regenerate a given button image
+ * at any time. This makes it very lightweight when clustered. The
+ * BufferedDynamicImageResource class, on the other hand, is designed for images
+ * that cannot be regenerated on demand. It buffers its image data in a
+ * non-transient way, which means that the entire image will be serialized and
+ * copied when the resource is replicated in a cluster!
+ * <p>
+ * The helper method toImageData(BufferedImage) is provided so that subclasses
+ * can easily turn a BufferedImage into a suitable return value when
+ * implementing getImageData().
+ * <p>
+ * The format of the image (and therefore the resource's extension) can be
+ * specified with setFormat(String). The default format is "PNG" because JPEG is
+ * lossy and makes generated images look bad and GIF has patent issues.
+ *
  * @author Jonathan Locke
+ * @author Gili Tzabari
  */
-public abstract class DynamicImageResource extends ImageResource
+public abstract class DynamicImageResource extends DynamicByteArrayResource
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/** The image type */
 	private String format = "png";
+
+
+	/**
+	 * default constructor
+	 */
+	public DynamicImageResource()
+	{
+		super();
+	}
+
 	
 	/**
 	 * @return Returns the image format.
 	 */
-	public String getFormat()
+	public final String getFormat()
 	{
 		return format;
 	}
+
 	
 	/**
 	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
-	 * 
+	 *
 	 * @param format
 	 *            The image format to set.
 	 */
@@ -65,14 +88,35 @@ public abstract class DynamicImageResource extends ImageResource
 	{
 		this.format = format;
 	}
+	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#getData()
+	 */
+	protected byte[] getData()
+	{
+		return getImageData();
+	}
+	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#getContentType()
+	 */
+	public String getContentType()
+	{
+		return "image/" + format;
+	}
 
 	/**
+	 * Get image data for our dynamic image resource. If the subclass
+	 * regenerates the data, it should set the lastModifiedTime when it does so.
+	 * This ensures that image caching works correctly.
+	 *
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
 	
 	/**
-	 * @param image The image to turn into data
+	 * @param image
+	 *            The image to turn into data
 	 * @return The image data for this dynamic image
 	 */
 	protected byte[] toImageData(final BufferedImage image)
@@ -86,7 +130,7 @@ public abstract class DynamicImageResource extends ImageResource
 			final ImageWriter writer = (ImageWriter)ImageIO.getImageWritersByFormatName(format)
 					.next();
 
-			// Write out gif
+			// Write out image
 			writer.setOutput(ImageIO.createImageOutputStream(out));
 			writer.write(image);
 
@@ -98,45 +142,4 @@ public abstract class DynamicImageResource extends ImageResource
 			throw new WicketRuntimeException("Unable to convert dynamic image to stream", e);
 		}
 	}
-	
-	/**
-	 * @return Gets the image resource to attach to the component.
-	 */
-	protected IResource getResource()
-	{
-		return new IResource()
-		{
-			private InputStream inputStream = null;
-
-			public void close() throws IOException
-			{
-				if (inputStream != null)
-                {
-					inputStream.close();
-					inputStream = null;
-                }
-			}
-
-			public String getContentType()
-			{
-				return "image/" + format;
-			}
-
-			public InputStream getInputStream() throws ResourceNotFoundException
-			{
-				if (inputStream == null)
-				{
-					inputStream = new ByteArrayInputStream(getImageData());
-				}
-				return inputStream;
-			}
-
-			public Time lastModifiedTime()
-			{
-				return Time.now();
-			}
-		};
-	}
 }
-
-

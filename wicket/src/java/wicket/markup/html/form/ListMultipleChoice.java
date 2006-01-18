@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,79 +24,185 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
-import wicket.model.PropertyModel;
-import wicket.model.Model;
+import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
  * A multiple choice list component.
- *
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
+ * @author Martijn Dashorst
  */
 public class ListMultipleChoice extends AbstractChoice
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -1000324612688307682L;
+	private static final long serialVersionUID = 1L;
+	
+	/** The default maximum number of rows to display. */
+	private static int defaultMaxRows = 8;
+
+	/** The maximum number of rows to display. */
+	private int maxRows;
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
+	 * Gets the default maximum number of rows to display.
+	 * 
+	 * @return Returns the defaultMaxRows.
 	 */
-	public ListMultipleChoice(final String componentName, final Serializable model,
-			final String expression, final Collection values)
+	protected static int getDefaultMaxRows()
 	{
-		super(componentName, new PropertyModel(new Model(model), expression), values);
-		setRenderNullOption(false);
+		return defaultMaxRows;
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 * Sets the default maximum number of rows to display.
+	 * 
+	 * @param defaultMaxRows
+	 *            The defaultMaxRows to set.
 	 */
-	public ListMultipleChoice(final String componentName, final Serializable model,
-			final Collection values)
+	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
-		super(componentName, model, values);
-		setRenderNullOption(false);
+		ListMultipleChoice.defaultMaxRows = defaultMaxRows;
+	}
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 */
+	public ListMultipleChoice(final String id)
+	{
+		super(id);
 	}
 
 	/**
-	 * @see FormComponent#getValue()
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public final String getValue()
+	public ListMultipleChoice(final String id, final List choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * Creates a multiple choice list with a maximum number of visible rows.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param choices
+	 *            list of choices
+	 * @param maxRows
+	 *            the maximum number of visible rows.
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 */
+	public ListMultipleChoice(final String id, final List choices, final int maxRows)
+	{
+		super(id, choices);
+		this.maxRows = maxRows;
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      List,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List)
+	 */
+	public ListMultipleChoice(final String id, IModel object, final List choices)
+	{
+		super(id, object, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(final String id, IModel object, final List choices,
+			final IChoiceRenderer renderer)
+	{
+		super(id, object, choices, renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel)
+	 */
+	public ListMultipleChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IModel)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+
+
+	/**
+	 * Sets the number of visible rows in the listbox.
+	 * 
+	 * @param maxRows
+	 *            the number of visible rows
+	 * @return this
+	 */
+	public final ListMultipleChoice setMaxRows(final int maxRows)
+	{
+		this.maxRows = maxRows;
+		return this;
+	}
+
+	/**
+	 * @see FormComponent#getModelValue()
+	 */
+	public final String getModelValue()
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer value = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		if (selectedValues != null)
 		{
-			final List list = getValues();
-			final Iterator it = selectedValues.iterator();
-			while (it.hasNext())
+			final List choices = getChoices();
+			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
-				final int index = list.indexOf(it.next());
-				if (list instanceof IDetachableChoiceList)
-				{
-					value.append(((IDetachableChoiceList)list).getId(index));
-				}
-				else
-				{
-					value.append(index);
-				}
-				// the id's can't have ; in there id!! should we escape it or
-				// something??
-				value.append(";");
+				final Object object = iterator.next();
+
+				int index = choices.indexOf(object);
+				buffer.append(getChoiceRenderer().getIdValue(object, index));
+				buffer.append(";");
 			}
 		}
-		return value.toString();
+		return buffer.toString();
 	}
 
 	/**
-	 * Sets the cookie value for this component.
-	 *
-	 * @param value
-	 *            the cookie value for this component
-	 * @see FormComponent#setValue(java.lang.String)
+	 * @see FormComponent#setModelValue(java.lang.String)
 	 */
-	public final void setValue(final String value)
+	public final void setModelValue(final String value)
 	{
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues == null)
@@ -109,94 +214,108 @@ public class ListMultipleChoice extends AbstractChoice
 		{
 			selectedValues.clear();
 		}
-		final List list = getValues();
-		final StringTokenizer st = new StringTokenizer(value, ";");
-		while (st.hasMoreTokens())
+		final List choices = getChoices();
+		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+				.hasMoreTokens();)
 		{
-			final String idOrIndex = st.nextToken();
-			if (list instanceof IDetachableChoiceList)
+			String selected = tokenizer.nextToken();
+
+			for (int index = 0; index < choices.size(); index++)
 			{
-				selectedValues.add(((IDetachableChoiceList)list).objectForId(idOrIndex));
+				// Get next choice
+				final Object choice = choices.get(index);
+				if (getChoiceRenderer().getIdValue(choice, index).equals(selected))
+				{
+					selectedValues.add(choice);
+					break;
+				}
 			}
-			else
-			{
-				final int index = Integer.parseInt(idOrIndex);
-				selectedValues.add(list.get(index));
-			}
+
 		}
 	}
 
 	/**
-	 * Updates this forms model from the request.
-	 *
-	 * @see FormComponent#updateModel()
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int)
 	 */
-	public final void updateModel()
+	protected final boolean isSelected(Object choice, int index)
 	{
-		// Get the list of selected values
-		Collection selectedValues = (Collection)getModelObject();
+		// Get value of the form "id1;id2;id3"
+		final String value = getValue();
 
-		if (selectedValues != null)
+		// Have a value at all?
+		if (value != null)
 		{
-			selectedValues.clear();
-		}
-		else
-		{
-			selectedValues = new ArrayList();
-			setModelObject(selectedValues);
-		}
-
-		// Get indices selected from request
-		final String[] indicesOrIds = getRequestStrings();
-
-		if (indicesOrIds != null)
-		{
-			final List list = getValues();
-
-			// Loop through selected indices
-			for (int i = 0; i < indicesOrIds.length; i++)
+			// Loop through ids
+			for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+					.hasMoreTokens();)
 			{
-				if (list instanceof IDetachableChoiceList)
+				final String id = tokenizer.nextToken();
+				if (id.equals(getChoiceRenderer().getIdValue(choice, index)))
 				{
-					selectedValues.add(((IDetachableChoiceList)list).objectForId(indicesOrIds[i]));
-				}
-				else
-				{
-					final int index = Integer.parseInt(indicesOrIds[i]);
-					// Add the value at the given index to the collection of
-					// selected values
-					selectedValues.add(list.get(index));
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	/**
-	 * Processes the component tag.
-	 *
-	 * @param tag
-	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		tag.put("multiple", true);
+		tag.put("size", Math.min(maxRows, getChoices().size()));
 	}
 
 	/**
-	 * Gets whether the given value represents the current selection.
-	 *
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
+	 * @see FormComponent#updateModel()
 	 */
-	protected final boolean isSelected(Object currentValue)
+	public final void updateModel()
 	{
-		Collection collection = (Collection)getModelObject();
-		if (collection != null)
-			return collection.contains(currentValue);
-		return false;
+		final String[] ids = inputAsStringArray();
+
+		// if input was null then value was not submitted (disabled field), ignore it
+		// FIXME General: This can't be done! null is nothing selected! we need check for isEnabled for this.
+//		if (ids != null)
+		{
+			// Get the list of selected values
+			Collection selectedValues = (Collection)getModelObject();
+	
+			if (selectedValues != null)
+			{
+				selectedValues.clear();
+			}
+	
+			// Get indices selected from request
+	
+			// If one or more ids is selected
+			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+			{
+				if(selectedValues == null)
+				{
+					selectedValues = new ArrayList();
+				}
+				// Get values that could be selected
+				final List choices = getChoices();
+	
+				// Loop through selected indices
+				for (int i = 0; i < ids.length; i++)
+				{
+					for (int index = 0; index < choices.size(); index++)
+					{
+						// Get next choice
+						final Object choice = choices.get(index);
+						if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+						{
+							selectedValues.add(choice);
+							break;
+						}
+					}
+				}
+			}
+			setModelObject(selectedValues);
+		}
 	}
 }

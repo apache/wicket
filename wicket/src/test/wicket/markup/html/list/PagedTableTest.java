@@ -18,16 +18,16 @@
  */
 package wicket.markup.html.list;
 
+import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
-import junit.framework.TestCase;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class PagedTableTest extends TestCase
 {
@@ -50,20 +50,20 @@ public class PagedTableTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(PagedTablePage.class);
+		application.setHomePage(PagedTablePage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage1(document));
 
-		Link link = (Link)page.get("navigation.1.pageLink");
+		Link link = (Link)page.get("navigation:1:pageLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
@@ -78,8 +78,6 @@ public class PagedTableTest extends TestCase
 	 */
 	private boolean validatePage1(String document)
 	{
-		System.err.println(document);
-
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -100,7 +98,7 @@ public class PagedTableTest extends TestCase
 
 		Tag ulNav = new Tag("ul");
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new Tag("i").addExpectedChild(new Tag("span")
+				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("1"))))));
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
 				"span").addExpectedChild(new TextContent("2")))));
@@ -139,7 +137,7 @@ public class PagedTableTest extends TestCase
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
 				"span").addExpectedChild(new TextContent("1")))));
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new Tag("i").addExpectedChild(new Tag("span")
+				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("2"))))));
 
 		body.addExpectedChild(ulNav);

@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.5 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -89,6 +89,8 @@ import wicket.util.thread.ICode;
  */
 public final class Duration extends AbstractTimeValue
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
 
@@ -111,8 +113,6 @@ public final class Duration extends AbstractTimeValue
 	private static final Pattern pattern = Pattern.compile(
 			"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
 			Pattern.CASE_INSENSITIVE);
-	/** serialVersionUID */
-	private static final long serialVersionUID = 1212559549133827631L;
 
 	/**
 	 * @param code
@@ -172,6 +172,18 @@ public final class Duration extends AbstractTimeValue
 	public static Duration days(final int days)
 	{
 		return hours(24 * days);
+	}
+
+	/**
+	 * The amount of time elapsed since start time
+	 * 
+	 * @param start
+	 *            The start time
+	 * @return The elapsed period
+	 */
+	public static Duration elapsed(final Time start)
+	{
+		return Time.now().subtract(start);
 	}
 
 	/**

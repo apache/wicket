@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.7 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,11 +19,9 @@ package wicket.util.convert;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import ognl.OgnlOps;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -34,6 +32,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
+import wicket.util.lang.Objects;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -70,6 +69,8 @@ import wicket.util.convert.converters.StringConverter;
  */
 public final class Converter implements IConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
 
@@ -78,15 +79,19 @@ public final class Converter implements IConverter
 	 */
 	private IConverter defaultConverter = new IConverter()
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
-		 * Converts the given value object to class c using OgnlOps.
+		 * Converts the given value object to class c.
 		 * 
 		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 		 *      java.lang.Class)
 		 */
 		public Object convert(Object value, Class c)
 		{
-			return OgnlOps.convertValue(value, c);
+			if(value == null || "".equals(value)) return null;
+			
+			return Objects.convertValue(value, c);
 		}
 
 		public Locale getLocale()
@@ -107,22 +112,22 @@ public final class Converter implements IConverter
 	 */
 	public Converter()
 	{
-		set(Boolean.TYPE, new BooleanConverter());
-		set(Boolean.class, new BooleanConverter());
-		set(Byte.TYPE, new ByteConverter());
-		set(Byte.class, new ByteConverter());
-		set(Character.TYPE, new CharacterConverter());
-		set(Character.class, new CharacterConverter());
-		set(Double.TYPE, new DoubleConverter());
-		set(Double.class, new DoubleConverter());
-		set(Float.TYPE, new FloatConverter());
-		set(Float.class, new FloatConverter());
-		set(Integer.TYPE, new IntegerConverter());
-		set(Integer.class, new IntegerConverter());
-		set(Long.TYPE, new LongConverter());
-		set(Long.class, new LongConverter());
-		set(Short.TYPE, new ShortConverter());
-		set(Short.class, new ShortConverter());
+		set(Boolean.TYPE, BooleanConverter.INSTANCE);
+		set(Boolean.class, BooleanConverter.INSTANCE);
+		set(Byte.TYPE, ByteConverter.INSTANCE);
+		set(Byte.class, ByteConverter.INSTANCE);
+		set(Character.TYPE, CharacterConverter.INSTANCE);
+		set(Character.class, CharacterConverter.INSTANCE);
+		set(Double.TYPE, DoubleConverter.INSTANCE);
+		set(Double.class, DoubleConverter.INSTANCE);
+		set(Float.TYPE, FloatConverter.INSTANCE);
+		set(Float.class, FloatConverter.INSTANCE);
+		set(Integer.TYPE, IntegerConverter.INSTANCE);
+		set(Integer.class, IntegerConverter.INSTANCE);
+		set(Long.TYPE, LongConverter.INSTANCE);
+		set(Long.class, LongConverter.INSTANCE);
+		set(Short.TYPE, ShortConverter.INSTANCE);
+		set(Short.class, ShortConverter.INSTANCE);
 		set(String.class, new StringConverter());
 		set(Date.class, new DateConverter());
 	}
@@ -189,7 +194,7 @@ public final class Converter implements IConverter
 		try
 		{
 			// Use type converter to convert to value
-			return converter.convert(value);
+			return converter.convert(value,locale);
 		}
 		catch (ConversionException e)
 		{
@@ -286,12 +291,6 @@ public final class Converter implements IConverter
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
-
-		// Set locale on each string type converter
-		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-		{
-			((ITypeConverter)iterator.next()).setLocale(locale);
-		}
 
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);

@@ -2,10 +2,10 @@
  * $Id: AbstractDecimalConverter.java,v 1.2 2005/02/09 04:55:38 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -27,38 +27,16 @@ import java.util.Locale;
  */
 public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
-	/** Current format */
-	private NumberFormat numberFormat;
-
 	/**
-	 * Constructor
-	 */
-	public AbstractIntegerConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
 	 * @param locale
-	 *            The locale for this converter
-	 */
-	public AbstractIntegerConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
+	 *            The locale
 	 * @return Returns the numberFormat.
 	 */
-	public final NumberFormat getNumberFormat()
+	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		if (numberFormat == null)
-		{
-			numberFormat = NumberFormat.getIntegerInstance(getLocale());
-			numberFormat.setParseIntegerOnly(true);
-			numberFormat.setGroupingUsed(false);
-		}
+		final NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);
+		numberFormat.setParseIntegerOnly(true);
+		numberFormat.setGroupingUsed(false);
 		return numberFormat;
 	}
 }

@@ -2,10 +2,10 @@
  * $Id$ $Revision$
  * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,81 +17,84 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
+import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
  * Abstract base class for TextArea and TextField.
  * 
  * @author Jonathan Locke
  */
-abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent extends FormComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -1323747673401786242L;
-
 	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
+	 * @see wicket.Component#Component(String)
 	 */
-	private String invalidInput;
-
-	/**
-     * @see wicket.Component#Component(String, Serializable)
-	 */
-	AbstractTextComponent(final String name, final Serializable object)
+	public AbstractTextComponent(String id)
 	{
-		super(name, object);
+		super(id);
+		setConvertEmptyInputStringToNull(true);
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	AbstractTextComponent(final String name, final Serializable object, final String expression)
+	AbstractTextComponent(final String id, final IModel model)
 	{
-		super(name, object, expression);
+		super(id, model);
+		setConvertEmptyInputStringToNull(true);
 	}
 
-    /**
-     * @see FormComponent#supportsPersistence()
-     */
-    protected final boolean supportsPersistence()
-    {
-        return true;
-    }
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @return <code>true</code> when the value will be set to
+	 *         <code>null</code> when the input is empty.
+	 */
+	public final boolean getConvertEmptyInputStringToNull()
+	{
+		return getFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL);
+	}
+	
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @param flag
+	 *            the value to set this flag.
+	 * @return this
+	 */
+	public final FormComponent setConvertEmptyInputStringToNull(boolean flag)
+	{
+		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
+		return this;
+	}
+
+	/**
+	 * @see FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
 
 	/**
 	 * Updates this components' model from the request.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-    protected void updateModel()
+	public void updateModel()
 	{
-		setModelObject(getRequestString());
+		String input = getInput();
+		// if input was null then value was not submitted (disabled field), ignore it
+		if (input != null)
+		{
+			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+			{
+				input = null;
+			}
+			setModelObject(input);
+		}
 	}
-    
-    /**
-     * @return Returns the invalidInput.
-     */
-    protected String getInvalidInput()
-    {
-        return invalidInput;
-    }
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#onInvalid()
-	 */
-	protected void onInvalid()
-	{
-		// Store the user input for form repopulation
-		invalidInput = getRequestString();
-	}
- 
-    /**
-     * @see wicket.markup.html.form.FormComponent#onValid()
-     */
-    protected void onValid()
-    {
-        invalidInput = null;     	
-    }
 }

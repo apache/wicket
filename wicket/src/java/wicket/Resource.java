@@ -1,11 +1,11 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,99 +17,92 @@
  */
 package wicket;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
+import java.net.SocketException;
 import java.util.Map;
-import java.util.Random;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
-import wicket.util.resource.IResource;
-import wicket.util.string.Strings;
+import wicket.util.resource.IResourceStream;
+import wicket.util.time.Duration;
+import wicket.util.time.Time;
+import wicket.util.value.ValueMap;
 
 /**
  * A Resource is something that implements IResourceListener and provides a
- * getOutputStream(Response) implementation to get an output stream from the
- * Response and getResource() which returns the IResource to be rendered back to
+ * getResource() method which returns the raw IResource to be rendered back to
  * the client browser.
+ * <p>
+ * Resources themselves do not currently have URLs. Instead, they are referred
+ * to by components that have URLs.
+ * <p>
+ * Resources can be shared throughout an application by adding them to
+ * Application with addResource(Class scope, String name) or addResource(String
+ * name). A resource added in such a way is a named resource and is accessible
+ * throughout the application via Application.getResource(Class scope, String
+ * name) or Application.getResource(String name). The ResourceReference class
+ * enables easy access to such resources in a way that is light on clusters.
+ * <p>
+ * While resources can be shared between components, it is important to
+ * emphasize that components <i>cannot </i> be shared among containers. For
+ * example, you can create a button image resource with new
+ * DefaultButtonImageResource(...) and store that in the Application with
+ * addResource(). You can then assign that logical resource via
+ * ResourceReference to several ImageButton components. While the button image
+ * resource can be shared between components like this, the ImageButton
+ * components in this example are like all other components in Wicket and cannot
+ * be shared.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Gili Tzabari
  */
 public abstract class Resource implements IResourceListener
 {
-	/** Random number generator */
-	private static Random random = new Random();
+	/** Logger */
+	private static Log log = LogFactory.getLog(Resource.class);
 
-	/** Map from id to resource */
-	private static Map resourceForId = Collections.synchronizedMap(new HashMap());
+	/** True if this resource can be cached */
+	private boolean cacheable;
 
-	/** Resource URL prefix value */
-	private static final String urlPrefix = "r";
+	/** The maximum duration a resource may be idle before it is removed */
+	private Duration idleTimeout = Duration.NONE;
 
-	/** The id of this resource */
-	private final long id;
-
-	/** The resource this class is rendering */
-	private IResource resource;
-
-	/**
-	 * @param path
-	 *            The path to parse
-	 * @return The resource at the given path
-	 */
-	public static Resource forPath(final String path)
-	{
-		// If path is of the right form
-		if (path != null && path.startsWith(urlPrefix))
-		{
-			// Parse out id from <prefix><number>.<extension>
-			final String suffix = path.substring(urlPrefix.length());			
-			final long id = Long.parseLong(Strings.beforeFirst(suffix, '.'));
-			
-			// Return resource for id
-			return (Resource)resourceForId.get(new Long(id));
-		}
-		return null;
-	}
+	/** Any parameters associated with the request for this resource */
+	private ValueMap parameters;
 
 	/**
 	 * Constructor
 	 */
 	protected Resource()
 	{
-		this.id = Math.abs(random.nextLong());
-		resourceForId.put(new Long(id), this);
+		// By default all resources are cacheable
+		cacheable = true;
 	}
 
 	/**
-	 * Call this when you are done with this resource to remove its entry from
-	 * the resource id map.
+	 * Returns the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @return The idle duration timeout
 	 */
-	public void dispose()
+	public Duration getIdleTimeout()
 	{
-		resourceForId.remove(new Long(id));
-		reset();
+		return idleTimeout;
 	}
 
 	/**
-	 * Sets any loaded resource to null, thus forcing a reload on the next
-	 * request.
+	 * @return Gets the resource to render to the requester
 	 */
-	protected final void reset()
-	{
-		this.resource = null;
-	}
+	public abstract IResourceStream getResourceStream();
 
 	/**
-	 * @return The unique path to this resource
+	 * @return boolean True or False if this resource is cacheable
 	 */
-	public String getPath()
+	public final boolean isCacheable()
 	{
-		setResource();
-		final String extension = Strings.afterFirst(resource.getContentType(), '/');
-		return urlPrefix + id + "." + extension;
+		return cacheable;
 	}
 
 	/**
@@ -122,67 +115,177 @@ public abstract class Resource implements IResourceListener
 		// Get request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
-		// The cycle's page is set to null so that it won't be rendered back to
-		// the client since the resource being requested has nothing to do with
-		// pages
-		cycle.setPage((Page)null);
+		// Reset parameters
+		parameters = null;
 
 		// Fetch resource from subclass if necessary
-		setResource();
+		IResourceStream resourceStream = init();
 
 		// Get servlet response to use when responding with resource
 		final Response response = cycle.getResponse();
 
 		// Configure response with content type of resource
-		response.setContentType(resource.getContentType());
+		response.setContentType(resourceStream.getContentType());
+		response.setContentLength((int)resourceStream.length());
+
+		if (isCacheable())
+		{
+			// Don't set this above setContentLength call above.
+			// The call above could create and set the last modified time.
+			response.setLastModifiedTime(resourceStream.lastModifiedTime());
+		}
+		else
+		{
+			response.setLastModifiedTime(Time.valueOf(-1));
+		}
+		configureResponse(response);
 
 		// Respond with resource
-		respond(response);
+		respond(resourceStream, response);
 	}
 
 	/**
-	 * @return Gets the resource to render to the requester
+	 * Should this resource be cacheable, so will it set the last modified and
+	 * the some cache headers in the response.
+	 * 
+	 * @param cacheable
+	 *            boolean if the lastmodified and cache headers must be set.
+	 * @return this
 	 */
-	protected abstract IResource getResource();
+	public final Resource setCacheable(boolean cacheable)
+	{
+		this.cacheable = cacheable;
+		return this;
+	}
+
+	/**
+	 * Sets the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @param value
+	 *            The idle duration timeout
+	 * @return this
+	 */
+	public Resource setIdleTimeout(Duration value)
+	{
+		idleTimeout = value;
+		return this;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * @param parameters
+	 *            Map of query parameters that paramterize this resource
+	 */
+	public void setParameters(final Map parameters)
+	{
+		this.parameters = new ValueMap(parameters);
+	}
+
+	/**
+	 * Allows implementations to do configure the response, like setting headers
+	 * etc.
+	 * 
+	 * @param response
+	 *            the respone
+	 */
+	protected void configureResponse(final Response response)
+	{
+	}
+
+	/**
+	 * @return Any query parameters associated with the request for this
+	 *         resource
+	 */
+	protected ValueMap getParameters()
+	{
+		if (parameters == null)
+		{
+			setParameters(RequestCycle.get().getRequest().getParameterMap());
+		}
+		return parameters;
+	}
+
+	/**
+	 * Sets any loaded resource to null, thus forcing a reload on the next
+	 * request.
+	 */
+	protected void invalidate()
+	{
+	}
+
+	/**
+	 * Set resource field by calling subclass
+	 * 
+	 * @return The resource stream for the current request
+	 */
+	private final IResourceStream init()
+	{
+		IResourceStream stream = getResourceStream();
+
+		if (stream == null)
+		{
+			throw new WicketRuntimeException("Could not get resource stream");
+		}
+		return stream;
+	}
 
 	/**
 	 * Respond with resource
 	 * 
+	 * @param resourceStream
+	 *            The current resourcestream of the resource
 	 * @param response
 	 *            The response to write to
 	 */
-	private final void respond(final Response response)
+	private final void respond(final IResourceStream resourceStream, final Response response)
 	{
 		try
 		{
-			final OutputStream out = new BufferedOutputStream(response.getOutputStream());
+			final OutputStream out = response.getOutputStream();
 			try
 			{
-				Streams.writeStream(new BufferedInputStream(resource.getInputStream()), out);
+				Streams.copy(resourceStream.getInputStream(), out);
 			}
 			finally
 			{
-				resource.close();
+				resourceStream.close();
 				out.flush();
 			}
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Unable to render resource " + resource, e);
-		}
-	}
-
-	/**
-	 * Set resource field by calling subclass 
-	 */
-	private void setResource()
-	{
-		if (this.resource == null)
-		{
-			this.resource = getResource();
-			if (this.resource == null)
+			Throwable throwable = e;
+			boolean ignoreException = false;
+			while (throwable != null)
 			{
-				throw new WicketRuntimeException("Could not get resource");
+				if (throwable instanceof SocketException)
+				{
+					String message = throwable.getMessage();
+					ignoreException = message != null
+							&& (message.indexOf("Connection reset by peer") != -1 || message
+									.indexOf("Software caused connection abort") != -1);
+				}
+				else
+				{
+					ignoreException = throwable.getClass().getName()
+							.indexOf("ClientAbortException") != 0;
+				}
+				if (ignoreException)
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("Socket exception ignored for sending Resource "
+								+ "response to client (ClientAbort)", e);
+					}
+					break;
+				}
+				throwable = throwable.getCause();
+			}
+			if (!ignoreException)
+			{
+				throw new WicketRuntimeException("Unable to render resource stream "
+						+ resourceStream, e);
 			}
 		}
 	}

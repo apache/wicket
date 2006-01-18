@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -57,8 +57,7 @@ import java.util.StringTokenizer;
  */
 public final class StringList extends AbstractStringList
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = 3913242296604884174L;
+	private static final long serialVersionUID = 1L;
 
 	// The underlying list of strings
 	private final List strings;
@@ -67,7 +66,7 @@ public final class StringList extends AbstractStringList
 	private int totalLength;
 
 	/**
-	 * Returns a list of a string repeated a given number of times
+	 * Returns a list of a string repeated a given number of times.
 	 * 
 	 * @param count
 	 *            The number of times to repeat the string
@@ -88,7 +87,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Extracts tokens from a comma and space delimited string
+	 * Extracts tokens from a comma and space delimited string.
 	 * 
 	 * @param string
 	 *            The string
@@ -100,7 +99,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Extracts tokens from a delimited string
+	 * Extracts tokens from a delimited string.
 	 * 
 	 * @param string
 	 *            The string
@@ -158,9 +157,11 @@ public final class StringList extends AbstractStringList
 	 */
 	public static StringList valueOf(final Object[] objects)
 	{
-		final StringList strings = new StringList(objects.length);
+		// check for null parameter
+		int length = (objects == null) ? 0 : objects.length;
+		final StringList strings = new StringList(length);
 
-		for (int i = 0; i < objects.length; i++)
+		for (int i = 0; i < length; i++)
 		{
 			strings.add(StringValue.valueOf(objects[i]));
 		}
@@ -169,7 +170,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Returns a string list with just one string in it
+	 * Returns a string list with just one string in it.
 	 * 
 	 * @param string
 	 *            The string
@@ -179,13 +180,16 @@ public final class StringList extends AbstractStringList
 	{
 		final StringList strings = new StringList();
 
-		strings.add(string);
+		if (string != null)
+		{
+			strings.add(string);
+		}
 
 		return strings;
 	}
 
 	/**
-	 * Converts a string array to a string list
+	 * Converts a string array to a string list.
 	 * 
 	 * @param array
 	 *            The array
@@ -193,9 +197,10 @@ public final class StringList extends AbstractStringList
 	 */
 	public static StringList valueOf(final String[] array)
 	{
-		final StringList strings = new StringList(array.length);
+		int length = (array == null) ? 0 : array.length;
+		final StringList strings = new StringList(length);
 
-		for (int i = 0; i < array.length; i++)
+		for (int i = 0; i < length; i++)
 		{
 			strings.add(array[i]);
 		}
@@ -204,7 +209,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public StringList()
 	{
@@ -212,7 +217,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param size
 	 *            Number of elements to preallocate
@@ -223,7 +228,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Adds a string to this list
+	 * Adds a string to the back of this list.
 	 * 
 	 * @param string
 	 *            String to add
@@ -231,14 +236,27 @@ public final class StringList extends AbstractStringList
 	public void add(final String string)
 	{
 		// Add to list
-		strings.add(string);
-
-		// Increase total length
-		totalLength += string.length();
+		add(size(), string);
 	}
 
 	/**
-	 * Adds a string value to this list as a string
+	 * Adds the string to the stringlist at position pos.
+	 * 
+	 * @param pos
+	 *            the position to add the string at
+	 * @param string
+	 *            the string to add.
+	 */
+	public void add(final int pos, final String string)
+	{
+		strings.add(pos, string == null ? "" : string);
+
+		// Increase total length
+		totalLength += string == null ? 0 : string.length();
+	}
+
+	/**
+	 * Adds a string value to this list as a string.
 	 * 
 	 * @param value
 	 *            The value to add
@@ -259,7 +277,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Gets the string at the given index
+	 * Gets the string at the given index.
 	 * 
 	 * @param index
 	 *            The index
@@ -280,7 +298,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Returns a typesafe iterator over this collection of strings
+	 * Returns a typesafe iterator over this collection of strings.
 	 * 
 	 * @return Typesafe string iterator
 	 */
@@ -288,7 +306,6 @@ public final class StringList extends AbstractStringList
 	{
 		return new IStringIterator()
 		{
-
 			private final Iterator iterator = strings.iterator();
 
 			public boolean hasNext()
@@ -304,29 +321,30 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Adds the given string to the front of the list
+	 * Adds the given string to the front of the list.
 	 * 
 	 * @param string
 	 *            The string to add
 	 */
 	public void prepend(final String string)
 	{
-		strings.add(0, string);
+		add(0, string);
 	}
 
 	/**
-	 * Removes the string at the given index
+	 * Removes the string at the given index.
 	 * 
 	 * @param index
 	 *            The index
 	 */
 	public void remove(final int index)
 	{
-		strings.remove(index);
+		String string = (String)strings.remove(index);
+		totalLength = totalLength - string.length();
 	}
 
 	/**
-	 * Removes the last string in this list
+	 * Removes the last string in this list.
 	 */
 	public void removeLast()
 	{
@@ -334,7 +352,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * @return The number of strings in this list
+	 * @return The number of strings in this list.
 	 */
 	public int size()
 	{
@@ -342,7 +360,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Sorts this string list alphabetically
+	 * Sorts this string list alphabetically.
 	 */
 	public void sort()
 	{
@@ -350,7 +368,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Converts this string list to a string array
+	 * Converts this string list to a string array.
 	 * 
 	 * @return The string array
 	 */
@@ -360,7 +378,7 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * @return The total length of all strings in this list
+	 * @return The total length of all strings in this list.
 	 */
 	public int totalLength()
 	{

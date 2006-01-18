@@ -2,10 +2,10 @@
  * $Id$ $Revision$
  * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,7 +19,6 @@ package wicket.util.time;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,6 +34,8 @@ import java.util.Date;
  */
 public final class Time extends AbstractTime
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
 	public static final Time START_OF_UNIX_TIME = milliseconds(0);
 
@@ -43,8 +44,6 @@ public final class Time extends AbstractTime
 
 	/** Parser in 'yyyy.MM.dd-h.mma' format. */
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma");
-	/** serialVersionUID. */
-	private static final long serialVersionUID = 4441606416914169210L;
 
 	/**
 	 * Gets a Time instance based on the given miliseconds.
@@ -287,17 +286,6 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Gets a Date object for this time object. A new Date object is always
-	 * returned rather than attempting to cache a date since Date is mutable.
-	 * 
-	 * @return This immutable time object as a mutable java.util.Date object
-	 */
-	public Date getDate()
-	{
-		return new Date(getMilliseconds());
-	}
-
-	/**
 	 * Gets the day of month field of the current calendar.
 	 * 
 	 * @return the field value
@@ -452,6 +440,17 @@ public final class Time extends AbstractTime
 	public Duration subtract(final Time that)
 	{
 		return Duration.milliseconds(this.getMilliseconds() - that.getMilliseconds());
+	}
+
+	/**
+	 * Gets a Date object for this time object. A new Date object is always
+	 * returned rather than attempting to cache a date since Date is mutable.
+	 * 
+	 * @return This immutable time object as a mutable java.util.Date object
+	 */
+	public Date toDate()
+	{
+		return new Date(getMilliseconds());
 	}
 
 	/**

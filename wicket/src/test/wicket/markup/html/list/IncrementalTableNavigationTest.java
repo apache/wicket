@@ -18,16 +18,16 @@
  */
 package wicket.markup.html.list;
 
+import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
-import junit.framework.TestCase;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class IncrementalTableNavigationTest extends TestCase
 {
@@ -50,13 +50,13 @@ public class IncrementalTableNavigationTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(IncrementalTableNavigationPage.class);
+		application.setHomePage(IncrementalTableNavigationPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		IncrementalTableNavigationPage page = (IncrementalTableNavigationPage)application
@@ -86,8 +86,6 @@ public class IncrementalTableNavigationTest extends TestCase
 	 */
 	private boolean validatePage1(String document)
 	{
-		// System.err.println(document);
-
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -106,7 +104,7 @@ public class IncrementalTableNavigationTest extends TestCase
 		// note that we DO NOT expect the third element as this is not on the current page
 		body.addExpectedChild(ulTable);
 
-		body.addExpectedChild(new Tag("span").addExpectedChild(new Tag("i")
+		body.addExpectedChild(new Tag("span").addExpectedChild(new Tag("em")
 				.addExpectedChild(new TextContent("Prev"))));
 
 		body.addExpectedChild(new Tag("a").addExpectedChild(new TextContent("NextNext")));
@@ -123,8 +121,6 @@ public class IncrementalTableNavigationTest extends TestCase
 	 */
 	private boolean validatePage2(String document)
 	{
-		// System.err.println(document);
-
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -159,8 +155,6 @@ public class IncrementalTableNavigationTest extends TestCase
 	 */
 	private boolean validatePage3(String document)
 	{
-		// System.err.println(document);
-
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");

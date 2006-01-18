@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -18,16 +18,17 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
- * Abstract base class for all AbstractChoice (html select) options.
+ * Abstract base class for all choice (html select) options.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -35,149 +36,247 @@ import wicket.markup.MarkupStream;
  */
 abstract class AbstractChoice extends FormComponent
 {
-	// TODO This string needs to be localized
-	/**
-	 * Default value to display when a null option is rendered. Initially set to 'Choose One'.
-	 */
-	private static final String DEFAULT_NULL_OPTION_VALUE = "Choose One";
+	/** The list of objects. */
+	private IModel choices;
 
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -8334966481181600604L;
-
-	/** Whether the null option must be rendered if current selection == null. */
-	private boolean renderNullOption = true;
-
-	/** The list of values. */
-	private List values;
-
-	/** Is the null value a valid value? */
-	private boolean emptyAllowed = false;
+	/** The renderer used to generate display/id values for the objects. */
+	private IChoiceRenderer renderer;
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
-	 * @see wicket.Component#Component(String, Serializable)
-	 */
-	public AbstractChoice(String name, Serializable object, final Collection values)
-	{
-		super(name, object);
-		setValues(values);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public AbstractChoice(String name, Serializable object, String expression,
-			final Collection values)
-	{
-		super(name, object, expression);
-		setValues(values);
-	}
-
-	/**
-	 * Gets the list of values.
+	 * Constructor.
 	 * 
-	 * @return the list of values
+	 * @param id
+	 *            See Component
+	 * @see wicket.Component#Component(String)
 	 */
-	public List getValues()
+	public AbstractChoice(final String id)
 	{
-		if (values instanceof IDetachableChoiceList)
+		super(id);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final List choices)
+	{
+		this(id, new Model((Serializable)choices),new ChoiceRenderer());
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final List choices,final IChoiceRenderer renderer)
+	{
+		this(id,new Model((Serializable)choices),renderer);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final List choices)
+	{
+		this(id, model, new Model((Serializable)choices), new ChoiceRenderer());
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param choices
+	 *            The drop down choices
+	 * @param renderer
+	 *            The rendering engine
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
+	{
+		this(id, model, new Model((Serializable)choices), renderer);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final IModel choices)
+	{
+		this(id, choices,new ChoiceRenderer());
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final IModel choices,final IChoiceRenderer renderer)
+	{
+		super(id);
+		this.choices = choices;
+		this.renderer = renderer;
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final IModel choices)
+	{
+		this(id, model, choices, new ChoiceRenderer());
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
+	 * @param choices
+	 *            The drop down choices
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final IModel choices, final IChoiceRenderer renderer)
+	{
+		super(id, model);
+		this.choices = choices;
+		this.renderer = renderer;
+	}
+
+	
+	/**
+	 * @return The collection of object that this choice has
+	 */
+	public List getChoices()
+	{
+		return (List)choices.getObject(this);
+	}
+
+	/**
+	 * Sets the list of choices.
+	 * 
+	 * @param choices
+	 *            the list of choices
+	 */
+	public final void setChoices(List choices)
+	{
+		if ((this.choices != null) && (this.choices != choices))
 		{
-			((IDetachableChoiceList)values).attach();
+			if (isVersioned())
+			{
+				addStateChange(new Change()
+				{
+					private static final long serialVersionUID = 1L;
+					
+					final IModel oldList = AbstractChoice.this.choices;
+					public void undo()
+					{
+						AbstractChoice.this.choices = oldList;
+					}
+
+					public String toString()
+					{
+						return "ChoiceListChange[component: " + getPath() + ", old choices: "
+								+ oldList + "]";
+					}
+				});
+			}
 		}
-		return this.values;
+		this.choices = new Model((Serializable)choices);
 	}
 
 	/**
-	 * Gets whether the null option must be rendered if current selection == null. The default is
-	 * true.
-	 * 
-	 * @return boolean
+	 * @return The IChoiceRenderer used for rendering the data objects
 	 */
-	public boolean getRenderNullOption()
+	public final IChoiceRenderer getChoiceRenderer()
 	{
-		return renderNullOption;
+		return renderer;
 	}
 
 	/**
-	 * Sets whether the null option must be rendered if current selection == null.
-	 * 
-	 * @param renderNullOption
-	 *            whether the null option must be rendered if current selection == null.
+	 * Set the choice renderer to be used.
+	 *  
+	 * @param renderer
 	 */
-	public void setRenderNullOption(boolean renderNullOption)
+	public final void setChoiceRenderer(IChoiceRenderer renderer)
 	{
-		this.renderNullOption = renderNullOption;
+	    this.renderer = renderer;
 	}
-
+	
 	/**
-	 * Sets the values to use for the dropdown.
-	 * 
-	 * @param values
-	 *            values to set
-	 * @return dropdown choice
-	 */
-	public AbstractChoice setValues(final Collection values)
-	{
-		if (values == null)
-		{
-			this.values = Collections.EMPTY_LIST;
-		}
-		else if (values instanceof List)
-		{
-			this.values = (List)values;
-		}
-		else
-		{
-			this.values = new ArrayList(values);
-		}
-		return this;
-	}
-
-	/**
-	 * Updates the model of this component from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public abstract void updateModel();
-
-
-	/*
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
 	{
 		super.detachModel();
-		if (values instanceof IDetachableChoiceList)
-		{
-			((IDetachableChoiceList)values).detach();
-		}
+		
+		choices.detach();
 	}
 
 	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+	 * @param selected
+	 *            The object that's currently selected
+	 * @return Any default choice, such as "Choose One", depending on the
+	 *         subclass
 	 */
-	protected void onComponentTag(final ComponentTag tag)
+	protected String getDefaultChoice(final Object selected)
 	{
-		checkComponentTag(tag, "select");
-		super.onComponentTag(tag);
+		return "";
 	}
+
+	/**
+	 * Gets whether the given value represents the current selection.
+	 * 
+	 * @param object
+	 *            The object to check
+	 * @param index
+	 *            The index in the choices collection this object is in.
+	 * @return Whether the given value represents the current selection
+	 */
+	protected abstract boolean isSelected(final Object object, int index);
 
 	/**
 	 * Handle the container's body.
@@ -188,100 +287,52 @@ abstract class AbstractChoice extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final StringBuffer options = new StringBuffer();
+		List choices = getChoices();
+		final StringBuffer buffer = new StringBuffer( (choices.size()*50)+16);
 		final Object selected = getModelObject();
-		final List list = getValues();
 
-		if (emptyAllowed && selected == null)
+		// Append default option
+		buffer.append(getDefaultChoice(selected));
+
+		for (int index=0;index<choices.size();index++)
 		{
-			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
-
-			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
-					emptyOne).append("</option>");
-		}
-		else if (emptyAllowed)
-		{
-			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
-
-			options.append("\n<option value=\"").append("\">").append(emptyOne).append("</option>");
-		}
-		else if (selected == null && getRenderNullOption())
-		{
-			final String chooseOne = getLocalizer().getString(getName() + ".null", this,
-					DEFAULT_NULL_OPTION_VALUE);
-
-			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
-					chooseOne).append("</option>");
+			final Object choice = choices.get(index);
+			appendOptionHtml(buffer, choice, index);
 		}
 
-		for (int i = 0; i < list.size(); i++)
-		{
-			final Object value = list.get(i);
-
-			if (value != null)
-			{
-				final String id;
-				final String displayValue;
-				if (list instanceof IDetachableChoiceList)
-				{
-					IDetachableChoiceList choiceList = (IDetachableChoiceList)list;
-					id = choiceList.getId(i);
-					displayValue = choiceList.getDisplayValue(i);
-
-				}
-				else
-				{
-					id = Integer.toString(i);
-					displayValue = value.toString();
-				}
-				final boolean currentOptionIsSelected = isSelected(value);
-				options.append("\n<option ");
-				if (currentOptionIsSelected)
-                {
-					options.append("selected=\"selected\"");
-                }
-				options.append("value=\"");
-				options.append(id);
-				options.append("\">");
-				options.append(getLocalizer().getString(getName() + "." + displayValue, this,
-						displayValue));
-				options.append("</option>");
-			}
-			else
-			{
-				throw new IllegalArgumentException(
-						"Dropdown choice contains null value in values collection at index " + i);
-			}
-		}
-
-		options.append("\n");
-		replaceComponentTagBody(markupStream, openTag, options.toString());
+		buffer.append("\n");
+		replaceComponentTagBody(markupStream, openTag, buffer.toString());
 	}
 
 	/**
-	 * Gets whether the given value represents the current selection.
+	 * Generats and appends html for a single choice into the provided buffer
 	 * 
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
+	 * @param buffer
+	 *            string buffer that will have the generated html appended
+	 * @param choice
+	 *            choice object
+	 * @param index
+	 * 
 	 */
-	protected boolean isSelected(Object currentValue)
+	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index)
 	{
-		Object modelObject = getModelObject();
-		if (modelObject == null)
+		final String displayValue = (String)getConverter().convert(renderer.getDisplayValue(choice), String.class);
+		buffer.append("\n<option ");
+		if (isSelected(choice, index))
 		{
-			if (currentValue == null)
-				return true;
-			else
-				return false;
+			buffer.append("selected=\"selected\"");
 		}
-		boolean equals = currentValue.equals(modelObject);
-		return equals;
+		buffer.append("value=\"");
+		buffer.append(renderer.getIdValue(choice, index));
+		buffer.append("\">");
+		String display = getLocalizer().getString(displayValue, this, displayValue);
+		String escaped = Strings.escapeMarkup(display, false, true);
+		buffer.append(escaped);
+		buffer.append("</option>");
 	}
-
+	
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
@@ -291,22 +342,10 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value?
+	 * Updates the model of this component from the request.
 	 * 
-	 * @return <code>true</code> when the <code>null</code> value is allowed.
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public boolean isEmptyAllowed()
-	{
-		return emptyAllowed;
-	}
+	public abstract void updateModel();
 
-	/**
-	 * Is the <code>null</code> value a valid value?
-	 * @param emptyAllowed
-	 *            The emptyAllowed to set.
-	 */
-	public void setEmptyAllowed(boolean emptyAllowed)
-	{
-		this.emptyAllowed = emptyAllowed;
-	}
 }

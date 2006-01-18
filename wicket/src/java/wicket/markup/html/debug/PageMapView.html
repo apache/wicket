@@ -1,0 +1,40 @@
+<html xmlns:wicket>
+<style type="text/css">
+body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
+h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;font-size : -1;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+h2 {font-size : 1.2em;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+pre { border : 1px solid #ddd; margin-left : 2em; }
+.resource { color : blue; }
+.tablestyle { margin-left : 2em; border : 1px solid #bbb; }
+</style>
+<body>
+  <wicket:panel>
+  	PageMap "<span wicket:id="name">main</span>" (Size = <span wicket:id="size">1.2K</span>) accesses (most recent first):
+  	<p/>
+    <table class="tablestyle">
+      <thead>
+        <tr>
+          <th align="left">#&nbsp;&nbsp;&nbsp;</th>
+          <th align="left">Id&nbsp;&nbsp;&nbsp;</th>
+          <th align="left">Class&nbsp;&nbsp;&nbsp;</th>
+          <th align="left">Version&nbsp;&nbsp;&nbsp;</th>
+          <th align="left">Versions&nbsp;&nbsp;&nbsp;</th>
+          <th align="left">Size</th>
+        </tr>
+	  </thead>
+      <tbody>
+		<tr wicket:id="accesses">
+		  <td valign="top" align="left"><span wicket:id="access">1</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><a wicket:id="link" href="#"><span wicket:id="id">1</span></a>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="class">Home.class</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="version">1</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="versions">1</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="size">123K</span>&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+      </tbody>
+	</table>
+  </wicket:panel>
+</body>
+</html>

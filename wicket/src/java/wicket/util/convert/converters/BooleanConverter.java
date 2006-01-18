@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,6 +17,12 @@
  */
 package wicket.util.convert.converters;
 
+import java.util.Locale;
+
+import wicket.util.convert.ITypeConverter;
+import wicket.util.string.StringValueConversionException;
+import wicket.util.string.Strings;
+
 /**
  * Converts from Object to Boolean.
  * 
@@ -25,28 +31,25 @@ package wicket.util.convert.converters;
  */
 public final class BooleanConverter extends AbstractConverter
 {
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
-	{
-		final String stringValue = value.toString();
+	private static final long serialVersionUID = 1L;
 
-		if (stringValue.equalsIgnoreCase("yes") || stringValue.equalsIgnoreCase("y")
-				|| stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("on")
-				|| stringValue.equalsIgnoreCase("1"))
+	/**
+	 * The singleton instance for a boolean converter
+	 */
+	public static final ITypeConverter INSTANCE = new BooleanConverter();
+
+	/**
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 */
+	public Object convert(final Object value, final Locale locale)
+	{
+		try
 		{
-			return Boolean.TRUE;
+			return Strings.toBoolean(value.toString());
 		}
-		else if (stringValue.equalsIgnoreCase("no") || stringValue.equalsIgnoreCase("n")
-				|| stringValue.equalsIgnoreCase("false") || stringValue.equalsIgnoreCase("off")
-				|| stringValue.equalsIgnoreCase("0"))
+		catch (StringValueConversionException e)
 		{
-			return Boolean.FALSE;
-		}
-		else
-		{
-			throw newConversionException("Cannot convert '" + value + "' to Boolean", value);
+			throw newConversionException("Cannot convert '" + value + "' to Boolean", value,locale);
 		}
 	}
 

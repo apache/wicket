@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -33,6 +33,27 @@ import java.util.Map;
 public abstract class Request
 {
 	/**
+	 * Construct.
+	 */
+	public Request()
+	{
+	}
+
+	/**
+	 * An implementation of this method is only required if a subclass wishes to
+	 * support sessions via URL rewriting. This default implementation simply
+	 * returns the URL String it is passed.
+	 * 
+	 * @param url
+	 *            The URL to decode
+	 * @return The decoded url
+	 */
+	public String decodeURL(final String url)
+	{
+		return url;
+	}
+
+	/**
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
@@ -41,7 +62,7 @@ public abstract class Request
 	 * Gets a given (query) parameter by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter value
 	 */
 	public abstract String getParameter(final String key);
@@ -57,17 +78,29 @@ public abstract class Request
 	 * Gets an array of multiple parameters by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter values
 	 */
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the URL of this request.
+	 * @return Path info for request
+	 */
+	public abstract String getPath();
+
+	/**
+	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
+	 * url without the context path and without a leading '/'). Use this method
+	 * e.g. to load resources using the servlet context.
 	 * 
-	 * @return The full original request URL
+	 * @return Request URL
+	 */
+	public abstract String getRelativeURL();
+
+	/**
+	 * Retrieves the absolute URL of this request for local use.
+	 * 
+	 * @return The absolute request URL for local use
 	 */
 	public abstract String getURL();
 }
-
-

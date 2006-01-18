@@ -18,10 +18,14 @@
  */
 package wicket.protocol.http;
 
+import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
-import junit.framework.TestCase;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -31,6 +35,7 @@ import junit.framework.TestCase;
  */
 public class WicketTagPanelTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(WicketTagPanelTest.class);
 
 	private MockWebApplication application;
 
@@ -49,7 +54,7 @@ public class WicketTagPanelTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(WicketPanelPage.class);
+		application.setHomePage(WicketPanelPage.class);
 	}
 
 	/**
@@ -63,7 +68,7 @@ public class WicketTagPanelTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 		assertTrue(validatePage1(document));
 	}
 
@@ -96,13 +101,13 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 		assertTrue(validatePage2(document));
 	}
 

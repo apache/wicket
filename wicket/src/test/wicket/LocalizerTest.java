@@ -20,18 +20,13 @@ package wicket;
 
 import java.util.MissingResourceException;
 
-import wicket.ApplicationSettings;
-import wicket.Component;
-import wicket.Application;
-import wicket.Localizer;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.resource.ApplicationStringResourceLoader;
-import wicket.resource.DummyApplication;
-import wicket.util.value.ValueMap;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.model.Model;
+import wicket.resource.DummyApplication;
+import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.settings.IResourceSettings;
+import wicket.util.value.ValueMap;
 
 /**
  * Test cases for the <code>Localizer</code> class.
@@ -42,7 +37,7 @@ public class LocalizerTest extends TestCase
 {
 	private Application application;
 
-	private ApplicationSettings settings;
+	private IResourceSettings settings;
 
 	private Localizer localizer;
 
@@ -65,9 +60,9 @@ public class LocalizerTest extends TestCase
 	{
 		super.setUp();
 		application = new DummyApplication();
-		settings = application.getSettings();
+		settings = application.getResourceSettings();
 		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
-		localizer = application.getLocalizer();
+		localizer = application.getResourceSettings().getLocalizer();
 	}
 
 	/**
@@ -135,12 +130,12 @@ public class LocalizerTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testGetStringOGNLSubstitution()
+	public void testGetStringPropertySubstitution()
 	{
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
 		Model model = new Model(vm);
-		Assert.assertEquals("OGNL substitution should occur", "Welcome, John Doe", 
+		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", 
 		        localizer.getString("test.substitute", null, model, null, null, null));
 	}
 
@@ -149,6 +144,8 @@ public class LocalizerTest extends TestCase
 	 */
 	public void testAllOtherMethodsDelegateCorrectly()
 	{
+	    // Null components are not longer allowed
+/*	    
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
 				"DEFAULT"));
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null));
@@ -156,10 +153,6 @@ public class LocalizerTest extends TestCase
 				"DEFAULT"));
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
 				(IModel)null));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", "DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel)null,
-				"DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel)null));
+*/				
 	}
 }
