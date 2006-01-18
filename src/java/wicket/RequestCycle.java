@@ -260,7 +260,8 @@ public abstract class RequestCycle
 	private transient RequestParameters requestParameters;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO Performance: Use a more efficient implementation, maybe with a default size of 3
+	// TODO Performance: Use a more efficient implementation, maybe with a
+	// default size of 3
 	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
 
 	/** the time that this request cycle object was created. */
@@ -506,7 +507,8 @@ public abstract class RequestCycle
 	{
 		if (e instanceof UnauthorizedInstantiationException)
 		{
-			final Class componentClass = ((UnauthorizedInstantiationException)e).getComponentClass();
+			final Class componentClass = ((UnauthorizedInstantiationException)e)
+					.getComponentClass();
 			if (componentClass.isAssignableFrom(Page.class))
 			{
 				getSession().onUnauthorizedPageAccess();
@@ -516,11 +518,10 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Redirects browser to the given page. NOTE: Usually, you should never call
-	 * this method directly, but work with setResponsePage instead. This method
-	 * is part of Wicket's internal behavior and should only be used when you
-	 * want to circumvent the normal framework behavior and issue the redirect
-	 * directly.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Redirects browser to the given page. Don't use this method directly, but
+	 * use {@link #setResponsePage(Page)} instead.
 	 * 
 	 * @param page
 	 *            The page to redirect to
@@ -933,25 +934,22 @@ public abstract class RequestCycle
 		{
 			switch (currentStep)
 			{
-				case PREPARE_REQUEST: 
-				{
+				case PREPARE_REQUEST : {
 					// prepare the request
 					prepare();
 					break;
 				}
-				case DECODE_PARAMETERS: 
-				{
+				case DECODE_PARAMETERS : {
 					// get the request parameters object using the request
 					// encoder of the processor
 					requestParameters = getRequestParameters(processor);
 					break;
 				}
-				case RESOLVE_TARGET: 
-				{
+				case RESOLVE_TARGET : {
 					// resolve the target of the request using the request
 					// parameters
 					final IRequestTarget target = processor.resolve(this, requestParameters);
-					
+
 					// has to result in a request target
 					if (target == null)
 					{
@@ -961,8 +959,7 @@ public abstract class RequestCycle
 					requestTargets.push(target);
 					break;
 				}
-				case CHECK_ACCESS: 
-				{
+				case CHECK_ACCESS : {
 					// manually set step to check access
 					IRequestTarget target = getRequestTarget();
 
@@ -973,8 +970,8 @@ public abstract class RequestCycle
 					}
 
 					// check access or earlier (like in a component constructor)
-					// might have called setRequestTarget. If that is the case, 
-					// put that one on top; otherwise put our resolved target 
+					// might have called setRequestTarget. If that is the case,
+					// put that one on top; otherwise put our resolved target
 					// on top
 					IRequestTarget otherTarget = getRequestTarget();
 					if (otherTarget != target)
@@ -994,8 +991,7 @@ public abstract class RequestCycle
 					}
 					break;
 				}
-				case PROCESS_EVENTS: 
-				{
+				case PROCESS_EVENTS : {
 					// determine what kind of synchronization is to be used, and
 					// handle any events with that and generate a response in
 					// that same block
@@ -1004,8 +1000,7 @@ public abstract class RequestCycle
 					processEventsAndRespond(processor);
 					break;
 				}
-				case RESPOND: 
-				{
+				case RESPOND : {
 					// generate a response
 					// NOTE: we reach this block when during event processing
 					// and response generation the request target was changed,
@@ -1016,8 +1011,7 @@ public abstract class RequestCycle
 					processor.respond(this);
 					break;
 				}
-				default: 
-				{
+				default : {
 					// nothing
 				}
 			}
