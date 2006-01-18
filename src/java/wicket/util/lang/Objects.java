@@ -27,6 +27,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import wicket.util.io.ByteCountingOutputStream;
+
 /**
  * Object utilities.
  * 
@@ -595,11 +597,11 @@ public abstract class Objects implements NumericTypes
 	 *            Object to compute size of
 	 * @return The size of the object in bytes
 	 */
-	public static int sizeof(final Object object)
+	public static long sizeof(final Object object)
 	{
 		try
 		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			final ByteCountingOutputStream out = new ByteCountingOutputStream();
 			new ObjectOutputStream(out).writeObject(object);
 			out.close();
 			return out.size();

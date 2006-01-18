@@ -225,9 +225,9 @@ public final class PageMap implements Serializable
 	 * @return Size of this page map in bytes, including a sum of the sizes of
 	 *         all the pages it contains.
 	 */
-	public final int getSizeInBytes()
+	public final long getSizeInBytes()
 	{
-		int size = Objects.sizeof(this);
+		long size = Objects.sizeof(this);
 		for (Iterator iterator = getEntries().iterator(); iterator.hasNext();)
 		{
 			IPageMapEntry entry = (IPageMapEntry)iterator.next();

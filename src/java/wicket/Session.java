@@ -403,9 +403,9 @@ public abstract class Session implements Serializable
 	/**
 	 * @return Size of this session, including all the pagemaps it contains
 	 */
-	public final int getSizeInBytes()
+	public final long getSizeInBytes()
 	{
-		int size = Objects.sizeof(this);
+		long size = Objects.sizeof(this);
 		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
 			final PageMap pageMap = (PageMap)iterator.next();
