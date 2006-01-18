@@ -483,10 +483,6 @@ public abstract class MarkupContainer extends Component
 		final MarkupStream originalMarkupStream = getMarkupStream();
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
 
-		// It could be that the markup stream has been reloaded (modified)
-		// and that the markup stream positions are no longer valid.
-		resetMarkupStreams();
-
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
 		setMarkupStream(associatedMarkupStream);
@@ -549,34 +545,6 @@ public abstract class MarkupContainer extends Component
 		}
 
 		return this;
-	}
-
-	/**
-	 * Reset this page. Called if rendering is interrupted by an exception to
-	 * put the page back into a state where it can function again.
-	 */
-	final void resetMarkupStreams()
-	{
-		// When an exception is thrown while rendering a page, there may
-		// be invalid markup streams set on various containers. We need
-		// to reset these to null to ensure they get recreated correctly.
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				component.resetMarkupStream();
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
-	 * Resets the markup stream for this container for reuse
-	 */
-	final void resetMarkupStream()
-	{
-		setMarkupStream(null);
-		markStreamPositionInvalid();
 	}
 
 	/**
@@ -822,7 +790,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	protected void onRender(final MarkupStream markupStream)
 	{
-		setMarkupStream(markupStream);
 		renderComponent(markupStream);
 	}
 

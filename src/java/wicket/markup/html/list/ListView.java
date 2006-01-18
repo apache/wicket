@@ -603,6 +603,6 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected void renderItem(final ListItem item)
 	{
-		item.render();
+		item.render(getMarkupStream());
 	}
 }

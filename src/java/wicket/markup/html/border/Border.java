@@ -254,6 +254,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			markupStream.throwMarkupException(
 			        "There must be exactly one <wicket:body> tag for each border compoment.");
         }
+        
+        setMarkupStream(null);
 	}
 
 	/**
