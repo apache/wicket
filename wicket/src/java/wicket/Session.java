@@ -136,7 +136,7 @@ public abstract class Session implements Serializable
 	 * {@link RequestCycle#newClientInfo()}.
 	 */
 	private ClientInfo clientInfo;
-	
+
 	/** The current pagemap for this request */
 	private transient PageMap currentPageMap;
 
@@ -160,6 +160,9 @@ public abstract class Session implements Serializable
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
+
+	/** Number of pagemaps in this session */
+	private int pageMaps = 0;
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -459,6 +462,15 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap newPageMap(final String name)
 	{
+		// Check that session doesn't have too many page maps already
+		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
+		if (++pageMaps > maxPageMaps)
+		{
+			throw new IllegalStateException("Session cannot contain more than " + maxPageMaps
+					+ " page maps");
+		}
+		
+		// Create new page map
 		final PageMap pageMap = new PageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		return pageMap;

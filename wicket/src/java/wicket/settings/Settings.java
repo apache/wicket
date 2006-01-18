@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.19 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -150,8 +150,11 @@ public final class Settings
 	/** I18N support */
 	private Localizer localizer;
 
-	/** factory for creating markup parsers */
+	/** Factory for creating markup parsers */
 	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
+
+	/** To help prevent denial of service attacks */
+	private int maxPageMaps = 20;
 
 	/** The maximum number of versions of a page to track */
 	private int maxPageVersions = Integer.MAX_VALUE;
@@ -169,7 +172,8 @@ public final class Settings
 	private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/** The eviction strategy. */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(5);
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
+			5);
 
 	/** The factory to be used for the property files */
 	private PropertiesFactory propertiesFactory;
@@ -215,7 +219,7 @@ public final class Settings
 
 	/** The session store factory. */
 	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
-	
+
 	/** Page class to use for user sign-ins */
 	private Class signInPage;
 
@@ -487,6 +491,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISessionSettings#getMaxPageMaps()
+	 */
+	public final int getMaxPageMaps()
+	{
+		return maxPageMaps;
+	}
+
+	/**
 	 * @see wicket.settings.IPageSettings#getMaxPageVersions()
 	 */
 	public int getMaxPageVersions()
@@ -703,6 +715,7 @@ public final class Settings
 		return versionPagesByDefault;
 	}
 
+
 	/**
 	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
@@ -729,7 +742,6 @@ public final class Settings
 		}
 		this.authorizationStrategy = strategy;
 	}
-
 
 	/**
 	 * @see wicket.settings.IMarkupSettings#setAutomaticLinking(boolean)
@@ -861,6 +873,14 @@ public final class Settings
 		}
 
 		this.markupParserFactory = factory;
+	}
+
+	/**
+	 * @see wicket.settings.ISessionSettings#setMaxPageMaps(int)
+	 */
+	public final void setMaxPageMaps(int maxPageMaps)
+	{
+		this.maxPageMaps = maxPageMaps;
 	}
 
 	/**
