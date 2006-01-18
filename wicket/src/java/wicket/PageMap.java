@@ -299,7 +299,8 @@ public final class PageMap implements Serializable
 		// We should get rid of encodeURL in favor of IRequestCodingStrategy
 		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
 		session.dirtyPageMap(this);
-		cycle.redirectTo(page);
+		cycle.setRedirect(true);
+		cycle.setResponsePage(page);
 	}
 
 	/**
@@ -360,12 +361,25 @@ public final class PageMap implements Serializable
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
 		{
-			// Redirect there
-			cycle.getResponse().redirect(interceptContinuationURL);
-
-			// Since we are explicitly redirecting to a page already, we do not
-			// want a second redirect to occur automatically
-			cycle.setRedirect(false);
+			cycle.setRequestTarget( new IRequestTarget()
+			{
+				final String responseUrl = interceptContinuationURL;
+				public Object getLock(RequestCycle requestCycle)
+				{
+					return null;
+				}
+			
+				public void cleanUp(RequestCycle requestCycle)
+				{
+				}
+			
+				public void respond(RequestCycle requestCycle)
+				{
+					// Redirect there
+					cycle.getResponse().redirect(responseUrl);
+				}
+			
+			});
 
 			// Reset interception URL
 			interceptContinuationURL = null;
