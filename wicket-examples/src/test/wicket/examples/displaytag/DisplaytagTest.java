@@ -81,6 +81,7 @@ public class DisplaytagTest extends WebTestCase
         assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleSorting");
+        dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleGrouping");

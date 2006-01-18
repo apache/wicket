@@ -40,9 +40,8 @@ public class ExampleSorting extends Displaytag
     /**
      * Constructor.
      * 
-     * @param parameters Page parameters
      */
-    public ExampleSorting(final PageParameters parameters)
+    public ExampleSorting()
     {
         // Test data
         final List data = new TestList(6, false);

@@ -18,7 +18,6 @@
  */
 package wicket.examples.displaytag;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 
 /**
@@ -33,15 +32,6 @@ public class Displaytag extends WicketExamplePage
      */
     public Displaytag()
     {
-        this(null);
     }
-    
-    /**
-     * Constructor.
-     * 
-     * @param parameters Page parameters
-     */
-    public Displaytag(final PageParameters parameters)
-    {
-    }
+  
 }
