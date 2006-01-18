@@ -392,12 +392,6 @@ public class Localizer
 			return null;
 		}
 
-		if (component.getPage() == null)
-		{
-			throw new IllegalArgumentException("Component without associated Page: "
-					+ component.toString(true));
-		}
-
 		// Build search stack
 		List searchStack = new ArrayList();
 		searchStack.add(component.getClass());

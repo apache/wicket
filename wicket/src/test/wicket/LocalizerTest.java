@@ -22,6 +22,7 @@ import java.util.MissingResourceException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.markup.html.basic.Label;
 import wicket.model.Model;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.ApplicationStringResourceLoader;
@@ -141,18 +142,34 @@ public class LocalizerTest extends TestCase
 
 	/**
 	 * 
+	 *
 	 */
-	public void testAllOtherMethodsDelegateCorrectly()
+	public void testInComponentConstructor()
 	{
-	    // Null components are not longer allowed
-/*	    
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
-				"DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", null, null,
-				"DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
-				(IModel)null));
-*/				
+		Component myComponent = new MyLabel("myLabel");
+	}
+
+	/**
+	 * 
+	 */
+	public static class MyLabel extends Label
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param id
+		 */
+		public MyLabel(final String id)
+		{
+			super(id);
+
+			Localizer localizer = Application.get().getResourceSettings().getLocalizer();
+			
+			// should work properly in a component constructor (without parent) as well
+			Assert.assertEquals("Expected string should be returned", "This is a test", 
+			        localizer.getString("test.string", this, "DEFAULT"));
+			
+		}
 	}
 }
