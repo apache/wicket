@@ -361,24 +361,25 @@ public final class PageMap implements Serializable
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
 		{
-			cycle.setRequestTarget( new IRequestTarget()
+			cycle.setRequestTarget(new IRequestTarget()
 			{
 				final String responseUrl = interceptContinuationURL;
+
 				public Object getLock(RequestCycle requestCycle)
 				{
 					return null;
 				}
-			
+
 				public void cleanUp(RequestCycle requestCycle)
 				{
 				}
-			
+
 				public void respond(RequestCycle requestCycle)
 				{
 					// Redirect there
 					cycle.getResponse().redirect(responseUrl);
 				}
-			
+
 			});
 
 			// Reset interception URL
@@ -410,8 +411,9 @@ public final class PageMap implements Serializable
 
 			// Get page as dirty
 			Page page = entry.getPage();
-			// TODO is this really the case is a page always dirty even if we
-			// just render it again?
+
+			// TODO Performance: Is this really the case is a page always dirty
+			// even if we just render it again?
 			page.dirty();
 
 			// Get the version of the page requested from the page
