@@ -17,40 +17,25 @@
  */
 package wicket.examples.displaytag.list;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.URL;
-
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketTestCase;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
 import wicket.settings.Settings;
-import wicket.util.io.Streams;
-import wicket.util.string.StringList;
 
 
 /**
  * Test for simple table behavior.
  */
-public class SortableTableHeadersTest extends TestCase
+public class SortableTableHeadersTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(SortableTableHeadersTest.class);
-
-	/**
-	 * Construct.
-	 */
-	public SortableTableHeadersTest()
-	{
-		super();
-	}
 
 	/**
 	 * Construct.
@@ -77,7 +62,7 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_1.html"));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "SortableTableHeadersExpectedResult_1.html"));
 
 		Link link = (Link)page.get("header:id:actionLink");
 		assertTrue(link.isEnabled());
@@ -103,8 +88,7 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
-
-		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_2.html"));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "SortableTableHeadersExpectedResult_2.html"));
 
 		// reverse sorting
 		link = (Link)page.get("header:name:actionLink");
@@ -123,74 +107,6 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
-
-		assertTrue(validatePage(document, "SortableTableHeadersExpectedResult_3.html"));
-	}
-
-	/**
-	 * Validates page 1 of paged table.
-	 * 
-	 * @param document
-	 *            The document
-	 * @param file
-	 *            the file
-	 * @return The validation result
-	 * @throws IOException
-	 */
-	private boolean validatePage(final String document, final String file) throws IOException
-	{
-		String filename = this.getClass().getPackage().getName();
-		filename = filename.replace('.', '/');
-		filename += "/" + file;
-
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
-		if (in == null)
-		{
-			throw new IOException("File not found: " + filename);
-		}
-
-		String reference = Streams.readString(in);
-
-		boolean equals = document.equals(reference);
-		if (equals == false)
-		{
-			// Change the condition to true, if you want to make the new output
-			// the reference output for future tests. That is, it is regarded as
-			// correct. It'll replace the current reference files. Thus change
-			// it only for one test-run.
-			if (false)
-			{
-				in.close();
-				in = null;
-
-				final URL url = this.getClass().getClassLoader().getResource(filename);
-				filename = url.getFile();
-				filename = filename.replaceAll("/build/test-classes/", "/src/test/");
-				PrintWriter out = new PrintWriter(new FileOutputStream(filename));
-				out.print(document);
-				out.close();
-				return true;
-			}
-
-			log.error("File name: " + file);
-			/*  */
-			log.error("===================");
-			log.error(document);
-			log.error("===================");
-
-			log.error(reference);
-			log.error("===================");
-			/* */
-
-			String[] test1 = StringList.tokenize(document, "\n").toArray();
-			String[] test2 = StringList.tokenize(reference, "\n").toArray();
-			Diff diff = new Diff(test1, test2);
-			Diff.change script = diff.diff_2(false);
-			DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
-			p.setOutput(new PrintWriter(System.err));
-			p.print_script(script);
-		}
-
-		return equals;
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "SortableTableHeadersExpectedResult_3.html"));
 	}
 }

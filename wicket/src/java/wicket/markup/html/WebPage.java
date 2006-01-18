@@ -180,15 +180,7 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
-					boolean previousValue = component.setRendering(true);
-					try
-					{
-						((IHeaderContributor)component).renderHead(container);
-					}
-					finally
-					{
-						component.setRendering(previousValue);
-					}
+					((IHeaderContributor)component).renderHead(container);
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}

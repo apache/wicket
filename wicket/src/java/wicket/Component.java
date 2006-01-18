@@ -342,13 +342,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	/** Component id. */
 	private String id;
 
-	/**
-	 * The position within the markup stream, where the markup for the component
-	 * begins. Compared to MarkupContainer's markupStream this is NOT just a
-	 * temporary variable to render a page.
-	 */
-	private int markupStreamPosition = -1;
-
 	/** The model for this component. */
 	private IModel model;
 
@@ -364,9 +357,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * stored in this variable.
 	 */
 	private transient boolean renderAllowed = true;
-
-	/** True while rendering is in progress */
-	private transient boolean rendering;
 
 	/**
 	 * Change record of a model.
@@ -640,24 +630,16 @@ public abstract class Component implements Serializable, IBehaviorListener
 		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
 
 		// Make sure the markup stream is positioned at the correct element
-		if (this.markupStreamPosition != -1)
+		String componentPath = parent.getPageRelativePath();
+		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+		
+		int index = markupStream.findComponentIndex(relativePath, getId());
+		if (index == -1)
 		{
-			markupStream.setCurrentIndex(this.markupStreamPosition);
+			throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
 		}
-		else
-		{
-			String componentPath = parent.getPageRelativePath();
-			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
-			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-			
-			int index = markupStream.findComponentIndex(relativePath, getId());
-			if (index == -1)
-			{
-				throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
-			}
-			markupStream.setCurrentIndex(index);
-		}
-
+		markupStream.setCurrentIndex(index);
 		return markupStream;
 	}
 
@@ -694,7 +676,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 		MarkupStream originalMarkupStream = parent.getMarkupStream();
 
 		MarkupStream markupStream = initializeMarkupStream();
-		this.markupStreamPosition = markupStream.getCurrentIndex();
 
 		try
 		{
@@ -1442,6 +1423,21 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * The markup stream will be assigned to the component at the beginning
+	 * of the component render phase. It is temporary working variable only.
+	 * 
+	 * @see #findMarkupStream()
+	 * @see MarkupContainer#getMarkupStream()
+	 * 
+	 * @param markupStream 
+	 *           The current markup stream which should be applied
+	 *           by the component to render itself
+	 */
+	protected void setMarkupStream(final MarkupStream markupStream)
+	{
+	}
+	
+	/**
 	 * Performs a render of this component as part of a Page level render
 	 * process.
 	 * <p>
@@ -1453,46 +1449,33 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
+		setMarkupStream(markupStream);
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
 
-		rendering = true;
-
-		try
+		// Determine if component is visible using it's authorization status
+		// and the isVisible property.
+		if (renderAllowed && isVisible())
 		{
-			if (getParent() != null)
+			// Rendering is beginning
+			if (log.isDebugEnabled())
 			{
-				validateMarkupStream(markupStream);
+				log.debug("Begin render " + this);
 			}
+			
+			// Call implementation to render component
+			onRender(markupStream);
+			
+			// Component has been rendered
+			rendered();
 
-			// Determine if component is visible using it's authorization status
-			// and the isVisible property.
-			if (renderAllowed && isVisible())
+			if (log.isDebugEnabled())
 			{
-				// Rendering is beginning
-				if (log.isDebugEnabled())
-				{
-					log.debug("Begin render " + this);
-				}
-
-				// Call implementation to render component
-				onRender(markupStream);
-
-				// Component has been rendered
-				rendered();
-
-				if (log.isDebugEnabled())
-				{
-					log.debug("End render " + this);
-				}
-			}
-			else
-			{
-				findMarkupStream().skipComponent();
+				log.debug("End render " + this);
 			}
 		}
-		finally
+		else
 		{
-			rendering = false;
+			findMarkupStream().skipComponent();
 		}
 	}
 
@@ -1795,21 +1778,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
 		return this;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * <p>
-	 * 
-	 * @param b
-	 *            Boolean to set the rendering
-	 * @return the previous value of the rendering.
-	 */
-	public final boolean setRendering(boolean b)
-	{
-		boolean tmp = rendering;
-		rendering = b;
-		return tmp;
 	}
 
 	/**
@@ -2297,14 +2265,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Invalidates the markupstream position, called when the markup did change
-	 */
-	protected final void markStreamPositionInvalid()
-	{
-		markupStreamPosition = -1;
-	}
-
-	/**
 	 * Called when a request begins.
 	 */
 	protected void onBeginRequest()
@@ -2596,14 +2556,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 			}
 		}
 	}
-	
-	/**
-	 * Resets the markup stream for this component for reuse
-	 */
-	void resetMarkupStream()
-	{
-		markStreamPositionInvalid();
-	}
 
 	/**
 	 * @param auto
@@ -2692,47 +2644,5 @@ public abstract class Component implements Serializable, IBehaviorListener
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
-	}
-
-	/**
-	 * @return boolean if this component is currently rendering itself
-	 */
-	private boolean isRendering()
-	{
-		return rendering;
-	}
-
-	/**
-	 * If yet unknown, set the markup stream position with the current position
-	 * of markupStream. Else set the markupStream.setCurrentPosition based the
-	 * position already known to the component.
-	 * <p>
-	 * Note: Parameter markupStream.getCurrentPosition() will be updated, if
-	 * re-render is allowed.
-	 * 
-	 * @param markupStream
-	 */
-	private final void validateMarkupStream(final MarkupStream markupStream)
-	{
-		// Allow the component to be re-rendered without a page. Partial
-		// re-rendering is a requirement of AJAX.
-		final Component parent = getParent();
-		if (this.isAuto() || (parent != null && parent.isRendering()))
-		{
-			// Remember the position while rendering the component the first
-			// time
-			this.markupStreamPosition = markupStream.getCurrentIndex();
-		}
-		else if (this.markupStreamPosition < 0)
-		{
-			throw new WicketRuntimeException(
-					"The markup stream of the component should be known by now, but isn't: "
-							+ this.toString());
-		}
-		else
-		{
-			// Re-set the markups index to the beginning of the component tag
-			markupStream.setCurrentIndex(this.markupStreamPosition);
-		}
 	}
 }

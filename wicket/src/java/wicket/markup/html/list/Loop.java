@@ -198,6 +198,6 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	protected void renderItem(final LoopItem item)
 	{
-		item.render();
+		item.render(getMarkupStream());
 	}
 }

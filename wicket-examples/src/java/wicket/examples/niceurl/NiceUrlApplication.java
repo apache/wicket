@@ -54,7 +54,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 				new MarkupParserFactory(getMarkupSettings(), new PrependContextPathHandler()));
 	}
 
-
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
@@ -62,5 +61,4 @@ public class NiceUrlApplication extends WicketExampleApplication
 	{
 		return Home.class;
 	}
-
 }

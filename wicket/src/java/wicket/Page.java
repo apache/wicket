@@ -910,13 +910,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			{
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.authorize(RENDER);
-				if (renderAllowed)
-				{
-					// It could be that the markup stream has been reloaded
-					// (modified) and that the markup stream positions are no
-					// longer valid.
-					component.resetMarkupStream();
-				}
 
 				// Authorize rendering
 				component.setRenderAllowed(renderAllowed);

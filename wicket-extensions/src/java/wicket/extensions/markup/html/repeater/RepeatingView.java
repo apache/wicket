@@ -154,7 +154,7 @@ public class RepeatingView extends WebMarkupContainer
 	 */
 	protected void renderChild(final Component child)
 	{
-		child.render();
+		child.render(getMarkupStream());
 	}
 
 }
