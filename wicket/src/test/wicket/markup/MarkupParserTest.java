@@ -22,11 +22,11 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketTestCase;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
@@ -42,10 +42,19 @@ import wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class MarkupParserTest extends TestCase
+public final class MarkupParserTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(MarkupParserTest.class);
 
+	/**
+	 * Construct.
+	 * @param name
+	 */
+	public MarkupParserTest(String name)
+	{
+		super(name);
+	}
+	
 	/**
 	 * 
 	 * @throws StringValueConversionException
