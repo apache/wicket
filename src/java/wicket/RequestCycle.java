@@ -26,6 +26,7 @@ import java.util.Stack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
 import wicket.request.IBookmarkablePageRequestTarget;
@@ -503,6 +504,14 @@ public abstract class RequestCycle
 	 */
 	public Page onRuntimeException(Page page, RuntimeException e)
 	{
+		if (e instanceof UnauthorizedInstantiationException)
+		{
+			final Class componentClass = ((UnauthorizedInstantiationException)e).getComponentClass();
+			if (componentClass.isAssignableFrom(Page.class))
+			{
+				getSession().onUnauthorizedPageAccess();
+			}
+		}
 		return null;
 	}
 

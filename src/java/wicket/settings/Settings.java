@@ -213,8 +213,11 @@ public final class Settings
 	 */
 	private String responseRequestEncoding = "UTF-8";
 
-	/** the session store factory. */
+	/** The session store factory. */
 	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
+	
+	/** Page class to use for user sign-ins */
+	private Class signInPage;
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
@@ -621,6 +624,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IApplicationSettings#getSignInPage()
+	 */
+	public Class getSignInPage()
+	{
+		return signInPage;
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -706,6 +717,7 @@ public final class Settings
 		this.accessDeniedPage = accessDeniedPage;
 	}
 
+
 	/**
 	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
 	 */
@@ -726,7 +738,6 @@ public final class Settings
 	{
 		this.automaticLinking = automaticLinking;
 	}
-
 
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)
@@ -951,6 +962,14 @@ public final class Settings
 	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
 	{
 		this.sessionStoreFactory = sessionStoreFactory;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#setSignInPage(java.lang.Class)
+	 */
+	public void setSignInPage(Class signInPage)
+	{
+		this.signInPage = signInPage;
 	}
 
 	/**

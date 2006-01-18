@@ -112,7 +112,7 @@ public abstract class Session implements Serializable
 {
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
-	
+
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
 
@@ -136,13 +136,15 @@ public abstract class Session implements Serializable
 	 * {@link RequestCycle#newClientInfo()}.
 	 */
 	private ClientInfo clientInfo;
+	
+	/** The current pagemap for this request */
+	private transient PageMap currentPageMap;
 
 	/** The converter instance. */
 	private transient IConverter converter;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
-
 
 	/** A store for dirty objects for one request */
 	private transient List dirtyObjects;
@@ -324,12 +326,12 @@ public abstract class Session implements Serializable
 		}
 
 		// Get page map by name
-		final PageMap pageMap = getPageMap(pageMapName);
-		if (pageMap != null)
+		currentPageMap = getPageMap(pageMapName);
+		if (currentPageMap != null)
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			return pageMap.get(Integer.parseInt(id), versionNumber);
+			return currentPageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
 	}
@@ -477,6 +479,15 @@ public abstract class Session implements Serializable
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
+	}
+
+	/**
+	 * @param page
+	 *            The page to redirect to
+	 */
+	public final void redirectToInterceptPage(final Page page)
+	{
+		currentPageMap.redirectToInterceptPage(page);
 	}
 
 	/**
@@ -629,6 +640,20 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Called if the user needs to be authenticated as the result of an attempt
+	 * to instantiate an unauthorized Page.
+	 */
+	protected void onUnauthorizedPageAccess()
+	{
+		final Class signInPageClass = getApplication().getApplicationSettings().getSignInPage();
+		if (signInPageClass != null)
+		{
+			final Page signInPage = getPageFactory().newPage(signInPageClass);
+			redirectToInterceptPage(signInPage);
+		}
+	}
+
+	/**
 	 * Removes the attribute with the given name.
 	 * 
 	 * @param name
@@ -710,21 +735,22 @@ public abstract class Session implements Serializable
 		{
 			String attribute = null;
 			Object object = iterator.next();
-			if(object instanceof Page)
+			if (object instanceof Page)
 			{
-				final Page page = (Page)object;  
+				final Page page = (Page)object;
 				attribute = page.getPageMap().attributeForId(page.getNumericId());
 				object = page.getPageMapEntry();
 			}
-			else if(object instanceof PageMap)
+			else if (object instanceof PageMap)
 			{
 				attribute = attributeForPageMapName(((PageMap)object).getName());
 			}
-			
+
 			// only replicate if the object was really already in the map.
-			// for example stateless pages will not be in the map so they shouldn't be added
+			// for example stateless pages will not be in the map so they
+			// shouldn't be added
 			Object previous = getAttribute(attribute);
-			if(previous != null)
+			if (previous != null)
 			{
 				setAttribute(attribute, object);
 			}
@@ -733,14 +759,15 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * @param page 
+	 * @param page
 	 */
 	void dirtyPage(final Page page)
 	{
-		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
-		if(!dirtyObjects.contains(page))
+		if (dirtyObjects == null)
+			dirtyObjects = new ArrayList(4);
+		if (!dirtyObjects.contains(page))
 		{
-			dirtyObjects .add(page);
+			dirtyObjects.add(page);
 		}
 	}
 
@@ -749,10 +776,11 @@ public abstract class Session implements Serializable
 	 */
 	void dirtyPageMap(final PageMap map)
 	{
-		if(dirtyObjects == null) dirtyObjects = new ArrayList(4);
-		if(!dirtyObjects.contains(map))
+		if (dirtyObjects == null)
+			dirtyObjects = new ArrayList(4);
+		if (!dirtyObjects.contains(map))
 		{
-			dirtyObjects .add(map);
+			dirtyObjects.add(map);
 		}
 	}
 
