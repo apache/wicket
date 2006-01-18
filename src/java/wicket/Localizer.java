@@ -405,7 +405,7 @@ public class Localizer
 		if (!(component instanceof Page))
 		{
 			MarkupContainer container = component.getParent();
-			while (true)
+			while (container != null)
 			{
 				searchStack.add(container.getClass());
 				if (container instanceof Page)
