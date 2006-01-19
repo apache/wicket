@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Igor Vaynberg">added RedirectException that allows an immediate redirect to a page</action>
       <action type="fix" dev="Juergen Donnerstag" due-to="Jim McLaughlin">Containers within wicket:head regions didn't behave properly</action>
       <action type="fix" dev="Johan Compagner" due-to="Bryn Cook">RadioChoice didn't register the IOnChangeListener to the RequestCycle</action>
       <action type="update" dev="Johan Compagner">REDIREC_TO_BUFFER strategy changes, Now when responding the Response object is for WebPages always a WebResponse, Headers and Cookies will be now set</action>
