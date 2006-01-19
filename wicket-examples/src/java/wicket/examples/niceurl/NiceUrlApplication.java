@@ -51,7 +51,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
 
 		getMarkupSettings().setMarkupParserFactory(
-				new MarkupParserFactory(getMarkupSettings(), new PrependContextPathHandler()));
+				new MarkupParserFactory(this, new PrependContextPathHandler()));
 	}
 
 	/**

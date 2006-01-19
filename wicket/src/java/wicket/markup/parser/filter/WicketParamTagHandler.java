@@ -22,13 +22,13 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
+import wicket.settings.IMarkupSettings;
 
 /**
  * THIS CODE IS CURRENTLY EXPERIMENTAL ONLY. IT IS LIKES TO CHANGE IN THE NEAR
@@ -63,13 +63,22 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	/** True, if wicket param tags shall be removed from output */
 	private boolean stripWicketTag = true;
 
+	/** 
+	 * The application settings required.
+	 * Note: you can rely on Application.get().getMarkupSettings() as reading
+	 * the markup happens in another thread due to ModificationWatcher. 
+	 */
+	private IMarkupSettings settings;
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param parent
 	 *            The next MarkupFilter in the chain
+	 * @param settings
+	 *            The application seetings
 	 */
-	public WicketParamTagHandler(final IMarkupFilter parent)
+	public WicketParamTagHandler(final IMarkupFilter parent, final IMarkupSettings settings)
 	{
 		super(parent);
 
@@ -81,7 +90,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 		this.xmlParser = (IXmlPullParser)parser;
 
-		setStripWicketTag(Application.get().getMarkupSettings().getStripWicketTags());
+		setStripWicketTag(settings.getStripWicketTags());
 	}
 
 	/**

@@ -46,7 +46,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 		super.setUp();
 		
 		application.getMarkupSettings().setMarkupParserFactory(
-				new MarkupParserFactory(application.getMarkupSettings(), new PrependContextPathHandler()));
+				new MarkupParserFactory(application, new PrependContextPathHandler()));
 	}
 
 	/**
