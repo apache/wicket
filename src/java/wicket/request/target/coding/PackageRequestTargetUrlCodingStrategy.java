@@ -29,6 +29,7 @@ import wicket.util.lang.PackageName;
  * Encodes and decodes mounts for a whole package.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg
  */
 public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
@@ -66,7 +67,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		final String bookmarkablePageClassName = packageName + remainder.substring(1, ix);
+		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(1, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
 		PageParameters parameters = decodePageParameters(parametersFragment);
