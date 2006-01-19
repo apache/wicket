@@ -60,7 +60,9 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 
 	/**
 	 * Locate a resource. See class comments for more details.
-	 * @param clazz class loader
+	 * 
+	 * @param clazz
+	 *            The class requesting the resource
 	 * @param path
 	 *            The path of the resource without extension
 	 * @param style
@@ -72,7 +74,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	 * 
 	 * @return The Resource, or null if not found.
 	 */
-	public IResourceStream locate(Class clazz, final String path, final String style,
+	public IResourceStream locate(final Class clazz, final String path, final String style,
 			final Locale locale, final String extension)
 	{
 		// 1. Try style, locale and extension
@@ -98,7 +100,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 3. Try style and extension
 		if (style != null)
 		{
-			final IResourceStream resource = locate(clazz.getClassLoader(), path + '_' + style + extension);
+			final IResourceStream resource = locate(clazz, path + '_' + style + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -106,28 +108,30 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		}
 
 		// 4. Try just extension
-		return locate(clazz.getClassLoader(), path + extension);
+		return locate(clazz, path + extension);
 	}
 
 	/**
 	 * Subclass implementation locates the resource at the given path. Different
 	 * subclasses may take different approaches to the search.
 	 * 
-	 * @param classLoader  The ClassLoaderclass 
+	 * @param clazz
+	 *            The class requesting the resource
 	 * 
 	 * @param path
 	 *            The complete path of the resource to locate. Separators must
 	 *            be forward slashes.
 	 * @return The Resource, or null if not found.
 	 */
-	protected abstract IResourceStream locate(final ClassLoader classLoader, final String path);
+	protected abstract IResourceStream locate(final Class clazz, final String path);
 
 	/**
 	 * Locate a file based on its path (potentially with a style), a locale and
 	 * an extension. See class comments for more details on how the locale is
 	 * used and the order applied to find the resource.
 	 * 
-	 * @param clazz The class loader
+	 * @param clazz
+	 *            The class requesting the resource
 	 * @param path
 	 *            Full path to resource, possibly including style, but not
 	 *            locale or extension
@@ -137,13 +141,13 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	 *            The resource's extension
 	 * @return The resource, or null if not found.
 	 */
-	private IResourceStream locate(final Class clazz, final String path,
-			final Locale locale, final String extension)
+	private IResourceStream locate(final Class clazz, final String path, final Locale locale,
+			final String extension)
 	{
-		ClassLoader classLoader  = clazz.getClassLoader();
 		// 1. Apply Locale default toString() implementation. See Locale.
 		{
-			final IResourceStream resource = locate(classLoader, path + '_' + locale.toString() + extension);
+			final IResourceStream resource = locate(clazz, path + '_' + locale.toString()
+					+ extension);
 			if (resource != null)
 			{
 				resource.setLocale(locale);
@@ -158,11 +162,11 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 2. If country and language are available
 		if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 		{
-			final IResourceStream resource = locate(classLoader, path + '_' + language + '_' + country
+			final IResourceStream resource = locate(clazz, path + '_' + language + '_' + country
 					+ extension);
 			if (resource != null)
 			{
-				resource.setLocale(new Locale(language,country));
+				resource.setLocale(new Locale(language, country));
 				return resource;
 			}
 		}
@@ -170,7 +174,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 3. If language is available
 		if (!Strings.isEmpty(language))
 		{
-			final IResourceStream resource = locate(classLoader, path + '_' + language + extension);
+			final IResourceStream resource = locate(clazz, path + '_' + language + extension);
 			if (resource != null)
 			{
 				resource.setLocale(new Locale(language));

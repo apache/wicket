@@ -45,6 +45,6 @@ public interface IResourceStreamLocator
 	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(Class clazz, String path, String style,
-			Locale locale, String extension);
+	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
+			String extension);
 }
