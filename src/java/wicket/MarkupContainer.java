@@ -87,6 +87,8 @@ import wicket.version.undo.Change;
  */
 public abstract class MarkupContainer extends Component
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Log for reporting. */
 	private static final Log log = LogFactory.getLog(MarkupContainer.class);
 
