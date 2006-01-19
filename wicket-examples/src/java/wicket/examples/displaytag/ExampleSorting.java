@@ -20,7 +20,6 @@ package wicket.examples.displaytag;
 
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;

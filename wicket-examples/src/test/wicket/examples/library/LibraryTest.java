@@ -52,9 +52,16 @@ public class LibraryTest extends WicketWebTestCase
     public void testHelloWorld() throws Exception 
     {
         beginAt("/library");
-        this.dumpResponse(System.out);
+//        this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - library");
-        assertWicketIdTagText("exampleTitle", "library");
+        assertTextPresent("Username and password are both");
+        
+        this.setFormElement("username", "wicket");
+        this.setFormElement("password", "wicket");
+        this.submit("submit");
+//        this.dumpResponse(System.out);
+        assertTitleEquals("Wicket Examples - library");
+        assertTextPresent("Effective Java (Joshua Bloch)");
     }
 
 	/**

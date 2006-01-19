@@ -54,7 +54,7 @@ public class NiceUrlTest extends WicketWebTestCase
         beginAt("/niceurl");
         this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - niceurl");
-        assertTextInElement("message", "Hello World!");
+        assertTextPresent("This example displays how you can work with 'nice' urls for bookmarkable pages.");
     }
 
 	/**
