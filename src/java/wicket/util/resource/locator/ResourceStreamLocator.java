@@ -85,7 +85,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(final Class c, final String style, final Locale locale,
 			final String extension)
 	{
-		return locate(c.getClassLoader(), c.getName().replace('.', '/'), style, locale, extension);
+		return locate(c, c.getName().replace('.', '/'), style, locale, extension);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * convenience method will extract the extension from the path. If the
 	 * extension does not start with a dot, one will be added automatically.
 	 * 
-	 * @param loader
+	 * @param clazz
 	 *            class loader
 	 * @param path
 	 *            The path of the resource
@@ -107,7 +107,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(ClassLoader loader, String path, final String style,
+	public IResourceStream locate(Class clazz, String path, final String style,
 			final Locale locale, final String extension)
 	{
 		// If no extension specified, extract extension
@@ -129,6 +129,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			}
 		}
 
-		return locator.locate(loader, path, style, locale, extensionString);
+		return locator.locate(clazz, path, style, locale, extensionString);
 	}
 }

@@ -47,13 +47,13 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 		
 		setResourceStreamLocator(new IResourceStreamLocator()
 		{
-			public IResourceStream locate(ClassLoader loader, String path, String style,
+			public IResourceStream locate(Class clazz, String path, String style,
 					Locale locale, String extension)
 			{
 				Iterator iter = locators.iterator();
 				while (iter.hasNext())
 				{
-					IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(loader,
+					IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz,
 							path, style, locale, extension);
 					if (resource != null)
 					{

@@ -102,7 +102,7 @@ public class PropertiesFactory
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
 			final IResourceStream resource = application.getResourceSettings().getResourceStreamLocator().locate(clazz,
-					style, locale, "properties");
+					clazz.getName().replace('.', '/'), style, locale, "properties");
 
 			if (resource != null)
 			{
