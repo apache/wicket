@@ -291,7 +291,7 @@ public class MockWebApplication extends WebApplication
 		if (getLastRenderedPage() instanceof ExceptionErrorPage)
 		{
 			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
-					.getRootCause());
+					.getThrowable());
 		}
 	}
 

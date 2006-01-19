@@ -37,7 +37,7 @@ public class ExceptionErrorPage extends WebPage
 	private static final long serialVersionUID = 1L;
 	 
 	/** Keep a reference to the root cause. WicketTester will use it */
-	private transient Throwable rootCause;
+	private transient Throwable throwable;
 
 	/**
 	 * Constructor.
@@ -49,7 +49,7 @@ public class ExceptionErrorPage extends WebPage
 	 */
 	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
-		this.rootCause = throwable;
+		this.throwable = throwable;
 		
 		// Add exception label
 		add(new MultiLineLabel("exception", Strings.toString(throwable)));
@@ -97,6 +97,16 @@ public class ExceptionErrorPage extends WebPage
 	}
 	
 	/**
+	 * Get access to the exception
+	 * 
+	 * @return The exception
+	 */
+	public Throwable getThrowable() 
+	{
+		return throwable;
+	}
+
+	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
 	public boolean isErrorPage()
@@ -110,15 +120,5 @@ public class ExceptionErrorPage extends WebPage
 	public boolean isVersioned()
 	{
 		return false;
-	}
-
-	/**
-	 * Get access to the root cause of the exception
-	 * 
-	 * @return root cause
-	 */
-	public Throwable getRootCause() 
-	{
-		return rootCause;
 	}
 }
