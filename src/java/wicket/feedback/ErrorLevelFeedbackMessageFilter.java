@@ -25,6 +25,8 @@ package wicket.feedback;
  */
 public class ErrorLevelFeedbackMessageFilter implements IFeedbackMessageFilter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The minimum error level */
 	private final int minimumErrorLevel;
 

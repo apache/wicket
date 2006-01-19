@@ -27,6 +27,8 @@ import wicket.MarkupContainer;
  */
 public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
+	private static final long serialVersionUID = 1L;
+
 	private final MarkupContainer container;
 
 	/**
