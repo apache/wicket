@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.28 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,7 +50,7 @@ import wicket.version.undo.Change;
 public class Button extends FormComponent
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * If false, all standard processing like validating and model updating is
 	 * skipped.
@@ -66,7 +66,14 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * Constructor taking an model for rendering the 'label' of the button
+	 * (the value attribute of the input/button tag). Use a 
+	 * {@link wicket.model.StringResourceModel} for a localized value.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param object
+	 *            model for the 'value' of the button
 	 */
 	public Button(final String id, final IModel object)
 	{
@@ -104,7 +111,7 @@ public class Button extends FormComponent
 			addStateChange(new Change()
 			{
 				private static final long serialVersionUID = 1L;
-				
+
 				boolean formerValue = Button.this.defaultFormProcessing;
 
 				public void undo()
