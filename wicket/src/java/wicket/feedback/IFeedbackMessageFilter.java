@@ -17,12 +17,14 @@
  */
 package wicket.feedback;
 
+import java.io.Serializable;
+
 /**
  * Interface for filtering feedback messages
  * 
  * @author Jonathan Locke
  */
-public interface IFeedbackMessageFilter
+public interface IFeedbackMessageFilter extends Serializable
 {
 	/**
 	 * @param message
