@@ -17,21 +17,32 @@
  */
 package wicket.request.target.coding;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Application;
 import wicket.PageParameters;
 
 /**
  * Abstract class for mount encoders that uses paths and forward slashes.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRequestTargetUrlCodingStrategy
 		implements
 			IRequestTargetUrlCodingStrategy
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
+
+	
 	/** mounted path. */
 	private final String mountPath;
 
@@ -75,6 +86,10 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			urlFragment = urlFragment.substring(1);
 		}
 
+		if (urlFragment.length()==0) {
+			return new PageParameters();
+		}
+		
 		// Split into pairs
 		final String[] pairs = urlFragment.split("/");
 
@@ -113,7 +128,17 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				url.append("/").append(entry.getKey()).append("/").append(entry.getValue());
+				String escapedValue=(String)entry.getValue();
+				try
+				{
+					escapedValue=URLEncoder.encode(escapedValue, Application.get()
+							.getRequestCycleSettings().getResponseRequestEncoding());
+				}
+				catch (UnsupportedEncodingException e)
+				{
+					log.error(e.getMessage(), e);
+				}
+				url.append("/").append(entry.getKey()).append("/").append(escapedValue);
 			}
 		}
 	}
