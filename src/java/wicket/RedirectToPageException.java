@@ -9,7 +9,9 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class RedirectException extends RuntimeException
+// TODO General: do we need a better name for this exception since there is no
+// redirect?
+public class RedirectToPageException extends AbortAndRespondException
 {
 	/**
 	 * 
@@ -23,7 +25,7 @@ public class RedirectException extends RuntimeException
 	 * @param pageClass
 	 *            class of bookmarkable page
 	 */
-	public RedirectException(Class pageClass)
+	public RedirectToPageException(Class pageClass)
 	{
 		RequestCycle.get().setResponsePage(pageClass);
 	}
@@ -37,7 +39,7 @@ public class RedirectException extends RuntimeException
 	 * @param params
 	 *            bookmarkable page parameters
 	 */
-	public RedirectException(Class pageClass, PageParameters params)
+	public RedirectToPageException(Class pageClass, PageParameters params)
 	{
 		RequestCycle.get().setResponsePage(pageClass, params);
 	}
@@ -48,7 +50,7 @@ public class RedirectException extends RuntimeException
 	 * @param page
 	 *            redirect page
 	 */
-	public RedirectException(Page page)
+	public RedirectToPageException(Page page)
 	{
 		RequestCycle.get().setResponsePage(page);
 	}
