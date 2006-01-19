@@ -44,11 +44,11 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	public DefaultResourceStreamLocator(final IResourceFinder finder)
 	{
 		super(null);
-		
+
 		setResourceStreamLocator(new IResourceStreamLocator()
 		{
-			public IResourceStream locate(Class clazz, String path, String style,
-					Locale locale, String extension)
+			public IResourceStream locate(Class clazz, String path, String style, Locale locale,
+					String extension)
 			{
 				Iterator iter = locators.iterator();
 				while (iter.hasNext())
@@ -69,7 +69,7 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	}
 
 	/**
-	 * Add a resource stream locator 
+	 * Add a resource stream locator
 	 * 
 	 * @param index
 	 * @param locator
@@ -80,7 +80,7 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	}
 
 	/**
-	 * Add a resource stream locator 
+	 * Add a resource stream locator
 	 * 
 	 * @param locator
 	 */
@@ -97,7 +97,7 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	 */
 	public IResourceStreamLocator remove(final int index)
 	{
-		return (IResourceStreamLocator) locators.remove(index);
+		return (IResourceStreamLocator)locators.remove(index);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ClassLoaderResourceStreamLocator.java,v 1.4 2005/08/24 20:42:59
+ * jdonnerstag Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,11 +45,17 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader,
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
 	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(ClassLoader classLoader, final String path)
+	protected IResourceStream locate(final Class clazz, final String path)
 	{
+		ClassLoader classLoader = null;
+		if (clazz != null)
+		{
+			classLoader = clazz.getClassLoader();
+		}
+
 		if (classLoader == null)
 		{
 			// use context classloader when no specific classloader is set
