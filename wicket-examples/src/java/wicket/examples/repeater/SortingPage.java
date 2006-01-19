@@ -73,9 +73,21 @@ public class SortingPage extends BasePage
 
 		dataView.setItemsPerPage(8);
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp));
+		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		{
+			protected void onSortChanged()
+			{
+				dataView.setCurrentPage(0);
+			}
+		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp));
+		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		{
+			protected void onSortChanged()
+			{
+				dataView.setCurrentPage(0);
+			}
+		});
 
 		add(dataView);
 

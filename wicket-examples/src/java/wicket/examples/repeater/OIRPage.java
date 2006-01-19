@@ -1,19 +1,19 @@
 /*
  * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.repeater;
 
@@ -76,8 +76,8 @@ public class OIRPage extends BasePage
 	 */
 	public OIRPage()
 	{
-		SortableContactDataProvider dp=new SortableContactDataProvider();
-		
+		SortableContactDataProvider dp = new SortableContactDataProvider();
+
 		final DataView dataView = new DataView("oir", dp)
 		{
 
@@ -122,9 +122,22 @@ public class OIRPage extends BasePage
 		dataView.setItemsPerPage(8);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp));
+		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		{
+			protected void onSortChanged()
+			{
+				dataView.setCurrentPage(0);
+			}
+		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp));
+		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		{
+			protected void onSortChanged()
+			{
+				dataView.setCurrentPage(0);
+			}
+		});
+
 
 		add(dataView);
 
