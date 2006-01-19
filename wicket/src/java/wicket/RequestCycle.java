@@ -1021,7 +1021,7 @@ public abstract class RequestCycle
 		{
 			// this exception is handled higher in the stack. we let it bubble
 			// up to unroll the stack as far as possible
-			if (e instanceof RedirectException)
+			if (e instanceof AbortAndRespondException)
 			{
 				throw e;
 			}
@@ -1061,7 +1061,7 @@ public abstract class RequestCycle
 					step(processor);
 					currentStep++;
 				}
-				catch (RedirectException e)
+				catch (AbortAndRespondException e)
 				{
 					// if a redirect exception has been issued we abort what we
 					// were doing and begin responding to the top target on the
