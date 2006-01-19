@@ -279,31 +279,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's url is saved for future use by method
-	 * continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
-	 * 
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		final RequestCycle cycle = session.getRequestCycle();
-		IRequestCycleProcessor processor = cycle.getProcessor();
-		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
-
-		// FIXME General: This conflicts with the use of IRequestCodingStrategy.
-		// We should get rid of encodeURL in favor of IRequestCodingStrategy
-		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
-		session.dirtyPageMap(this);
-		cycle.setRedirect(true);
-		cycle.setResponsePage(page);
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Removes this PageMap from the Session.
@@ -365,13 +340,13 @@ public final class PageMap implements Serializable
 			{
 				final String responseUrl = interceptContinuationURL;
 
+				public void cleanUp(RequestCycle requestCycle)
+				{
+				}
+
 				public Object getLock(RequestCycle requestCycle)
 				{
 					return null;
-				}
-
-				public void cleanUp(RequestCycle requestCycle)
-				{
 				}
 
 				public void respond(RequestCycle requestCycle)
@@ -475,6 +450,31 @@ public final class PageMap implements Serializable
 			// Evict any page(s) as need be
 			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);
 		}
+	}
+
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's url is saved for future use by method
+	 * continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current url at some later time; otherwise just use
+	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
+	 * 
+	 * @param page
+	 *            The sign in page
+	 */
+	final void redirectToInterceptPage(final Page page)
+	{
+		final RequestCycle cycle = session.getRequestCycle();
+		IRequestCycleProcessor processor = cycle.getProcessor();
+		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
+
+		// FIXME General: This conflicts with the use of IRequestCodingStrategy.
+		// We should get rid of encodeURL in favor of IRequestCodingStrategy
+		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
+		session.dirtyPageMap(this);
+		cycle.setRedirect(true);
+		cycle.setResponsePage(page);
 	}
 
 	/**
