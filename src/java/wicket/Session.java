@@ -137,11 +137,11 @@ public abstract class Session implements Serializable
 	 */
 	private ClientInfo clientInfo;
 
-	/** The current pagemap for this request */
-	private transient PageMap currentPageMap;
-
 	/** The converter instance. */
 	private transient IConverter converter;
+
+	/** The current pagemap for this request */
+	private transient PageMap currentPageMap;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
@@ -155,14 +155,14 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
+	/** Number of pagemaps in this session */
+	private int pageMaps = 0;
+
 	/** The session store of this session. */
 	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
-
-	/** Number of pagemaps in this session */
-	private int pageMaps = 0;
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -239,6 +239,18 @@ public abstract class Session implements Serializable
 				pageMap.clear();
 			}
 		});
+	}
+
+	/**
+	 * Redirects to any intercept page previously specified by a call to
+	 * redirectToInterceptPage.
+	 * 
+	 * @return True if an original destination was redirected to
+	 * @see PageMap#redirectToInterceptPage(Page)
+	 */
+	public final boolean continueToOriginalDestination()
+	{
+		return currentPageMap.continueToOriginalDestination();
 	}
 
 	/**
@@ -492,7 +504,7 @@ public abstract class Session implements Serializable
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
-
+	
 	/**
 	 * @param page
 	 *            The page to redirect to
