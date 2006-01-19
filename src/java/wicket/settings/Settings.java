@@ -151,7 +151,7 @@ public final class Settings
 	private Localizer localizer;
 
 	/** Factory for creating markup parsers */
-	private IMarkupParserFactory markupParserFactory = new MarkupParserFactory(this);
+	private IMarkupParserFactory markupParserFactory;
 
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 20;
@@ -197,7 +197,6 @@ public final class Settings
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
-
 
 	/**
 	 * List of {@link IResponseFilter}s.
@@ -269,6 +268,7 @@ public final class Settings
 	public Settings(final Application application)
 	{
 		this.application = application;
+		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
 	}

@@ -25,12 +25,12 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.settings.IResourceSettings;
 
 /**
  * THIS IS EXPERIMENTAL ONLY AND DISABLED BY DEFAULT
@@ -55,24 +55,40 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 */
 	public static boolean enable = false;
 
-	/** The MarkupContainer requesting the information incl. class, locale and style */
+	/**
+	 * The MarkupContainer requesting the information incl. class, locale and
+	 * style
+	 */
 	private final ContainerInfo containerInfo;
 
 	/** temporary storage unomdified while the object instance exists */
 	private final List searchStack;
-	
+
+	/**
+	 * The application settings required. Note: you can rely on
+	 * Application.get().getResourceSettings() as reading the markup happens in
+	 * another thread due to ModificationWatcher.
+	 */
+	private IResourceSettings settings;
+
 	/**
 	 * Construct.
 	 * 
-	 * @param containerInfo
-	 *            The container requesting the current markup incl class, style and locale
 	 * @param parent
 	 *            The next MarkupFilter in the processing chain
+	 * @param containerInfo
+	 *            The container requesting the current markup incl class, style
+	 *            and locale
+	 * @param settings
+	 *            The application settings
 	 */
-	public WicketMessageTagHandler(final ContainerInfo containerInfo, final IMarkupFilter parent)
+	public WicketMessageTagHandler(final IMarkupFilter parent, final ContainerInfo containerInfo,
+			final IResourceSettings settings)
 	{
 		super(parent);
+
 		this.containerInfo = containerInfo;
+		this.settings = settings;
 
 		this.searchStack = new ArrayList();
 		searchStack.add(containerInfo.getContainerClass());
@@ -133,8 +149,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String value = Application.get().getResourceSettings().getLocalizer().getString(messageKey,
-						null, searchStack, containerInfo.getLocale(), containerInfo.getStyle());
+				String value = settings.getLocalizer().getString(messageKey, null, searchStack,
+						containerInfo.getLocale(), containerInfo.getStyle());
 
 				if (value.length() > 0)
 				{

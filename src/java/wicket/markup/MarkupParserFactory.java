@@ -1,8 +1,8 @@
 package wicket.markup;
 
+import wicket.Application;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlPullParser;
-import wicket.settings.IMarkupSettings;
 
 /**
  * Default implementation of IMarkupParserFactory
@@ -12,54 +12,54 @@ import wicket.settings.IMarkupSettings;
 public class MarkupParserFactory implements IMarkupParserFactory
 {
 	private IMarkupFilter[] filters;
-	private IMarkupSettings settings;
+	private Application application;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param settings
-	 *            markup settings necessary to configure the parser
+	 * @param application
+	 *            Application settings necessary to configure the parser
 	 */
-	public MarkupParserFactory(IMarkupSettings settings)
+	public MarkupParserFactory(final Application application)
 	{
-		this.settings = settings;
+		this.application = application;
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param settings
-	 *            markup settings necessary to configure the parser
+	 * @param application
+	 *            Application settings necessary to configure the parser
 	 * @param filters
 	 *            additional markup filters
 	 */
-	public MarkupParserFactory(IMarkupSettings settings, IMarkupFilter[] filters)
+	public MarkupParserFactory(final Application application, IMarkupFilter[] filters)
 	{
-		this(settings);
+		this(application);
 		this.filters = filters;
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param settings
-	 *            markup settings necessary to configure the parser
+	 * @param application
+	 *            Application settings necessary to configure the parser
 	 * @param filter
 	 *            additional markup filter
 	 */
-	public MarkupParserFactory(IMarkupSettings settings, IMarkupFilter filter)
+	public MarkupParserFactory(final Application application, IMarkupFilter filter)
 	{
-		this(settings);
+		this(application);
 		this.filters = new IMarkupFilter[] { filter };
 	}
-	
+
 	/**
 	 * @see wicket.markup.IMarkupParserFactory#newMarkupParser()
 	 */
 	public MarkupParser newMarkupParser()
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser(settings
-				.getDefaultMarkupEncoding()))
+		final MarkupParser parser = new MarkupParser(application, new XmlPullParser(application
+				.getMarkupSettings().getDefaultMarkupEncoding()))
 		{
 			public void initFilterChain()
 			{

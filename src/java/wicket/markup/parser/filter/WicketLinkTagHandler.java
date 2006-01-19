@@ -20,13 +20,13 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
-import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.settings.IMarkupSettings;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -57,16 +57,25 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/** Current status */
 	private boolean autolinking = true;
 
+	/** 
+	 * The application settings required.
+	 * Note: you can rely on Application.get().getMarkupSettings() as reading
+	 * the markup happens in another thread due to ModificationWatcher. 
+	 */
+	private IMarkupSettings settings;
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param parent
 	 *            The next element in the chain.
+	 * @param settings
+	 *            The application settings
 	 */
-	public WicketLinkTagHandler(final IMarkupFilter parent)
+	public WicketLinkTagHandler(final IMarkupFilter parent, final IMarkupSettings settings)
 	{
 		super(parent);
-		setAutomaticLinking(Application.get().getMarkupSettings().getAutomaticLinking());
+		setAutomaticLinking(settings.getAutomaticLinking());
 	}
 
 	/**
