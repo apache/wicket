@@ -1,11 +1,9 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
+ * 
  * ================================================================================
- * Copyright (c)
- * All rechten voorbehouden.
+ * Copyright (c) All rechten voorbehouden.
  */
 package nl.openedge.util.jetty;
 
@@ -32,12 +30,18 @@ final class Util
 	/**
 	 * Add arguments for command call.
 	 * 
-	 * @param cmd commands and args to add arguments to
-	 * @param jettyConfig jetty configuration location
-	 * @param port the port for listening
-	 * @param webappContextRoot context root
-	 * @param contextPath context path
-	 * @param useJettyPlus whether to use JettyPlus
+	 * @param cmd
+	 *            commands and args to add arguments to
+	 * @param jettyConfig
+	 *            jetty configuration location
+	 * @param port
+	 *            the port for listening
+	 * @param webappContextRoot
+	 *            context root
+	 * @param contextPath
+	 *            context path
+	 * @param useJettyPlus
+	 *            whether to use JettyPlus
 	 * @return String[] new command with arguments
 	 */
 	public static String[] addCommandArguments(String[] cmd, String jettyConfig, int port,

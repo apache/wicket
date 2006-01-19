@@ -1,11 +1,9 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
+ * $Revision$ $Date$
+ * 
  * ================================================================================
- * Copyright (c)
- * All rechten voorbehouden.
+ * Copyright (c) All rechten voorbehouden.
  */
 package nl.openedge.util.jetty;
 
@@ -25,7 +23,9 @@ public class JettyMonitorException extends Exception
 
 	/**
 	 * Construct.
-	 * @param message exception message
+	 * 
+	 * @param message
+	 *            exception message
 	 */
 	public JettyMonitorException(String message)
 	{
@@ -34,7 +34,9 @@ public class JettyMonitorException extends Exception
 
 	/**
 	 * Construct.
-	 * @param cause exception cause
+	 * 
+	 * @param cause
+	 *            exception cause
 	 */
 	public JettyMonitorException(Throwable cause)
 	{
@@ -43,8 +45,11 @@ public class JettyMonitorException extends Exception
 
 	/**
 	 * Construct.
-	 * @param message exception message
-	 * @param cause exception cause
+	 * 
+	 * @param message
+	 *            exception message
+	 * @param cause
+	 *            exception cause
 	 */
 	public JettyMonitorException(String message, Throwable cause)
 	{

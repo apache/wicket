@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag.list;
 
@@ -38,7 +37,9 @@ public class SortableTableHeadersPage extends WebPage
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 * 
+	 * @param parameters
+	 *            page parameters.
 	 */
 	public SortableTableHeadersPage(final PageParameters parameters)
 	{
@@ -84,6 +85,7 @@ public class SortableTableHeadersPage extends WebPage
 
 			/**
 			 * Define how to do sorting
+			 * 
 			 * @see SortableListViewHeaders#getObjectToCompare(SortableListViewHeader,
 			 *      java.lang.Object)
 			 */
@@ -123,6 +125,7 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Gets email.
+		 * 
 		 * @return email
 		 */
 		public final String getEmail()
@@ -132,7 +135,9 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Sets email.
-		 * @param email email
+		 * 
+		 * @param email
+		 *            email
 		 */
 		public final void setEmail(String email)
 		{
@@ -141,6 +146,7 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Gets id.
+		 * 
 		 * @return id
 		 */
 		public final int getId()
@@ -150,7 +156,9 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Sets id.
-		 * @param id id
+		 * 
+		 * @param id
+		 *            id
 		 */
 		public final void setId(int id)
 		{
@@ -159,6 +167,7 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Gets name.
+		 * 
 		 * @return name
 		 */
 		public final String getName()
@@ -168,7 +177,9 @@ public class SortableTableHeadersPage extends WebPage
 
 		/**
 		 * Sets name.
-		 * @param name name
+		 * 
+		 * @param name
+		 *            name
 		 */
 		public final void setName(String name)
 		{

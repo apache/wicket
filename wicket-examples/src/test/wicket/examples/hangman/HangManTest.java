@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.12 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.hangman;
 
@@ -22,9 +21,7 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 import junit.framework.Test;
-import junit.framework.TestSuite;
-import net.sourceforge.jwebunit.WebTestCase;
-import nl.openedge.util.jetty.JettyDecorator;
+import wicket.examples.WicketWebTestCase;
 
 /**
  * Testcase for the <code>Game</code> class.
@@ -32,14 +29,22 @@ import nl.openedge.util.jetty.JettyDecorator;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangManTest extends WebTestCase
+public class HangManTest extends WicketWebTestCase
 {
+	/**
+	 * 
+	 * @return Test
+	 */
+	public static Test suite()
+	{
+		return suite(HangManTest.class);
+	}
 
 	/**
 	 * Create the test case.
 	 * 
 	 * @param message
-	 *           The test name
+	 *            The test name
 	 */
 	public HangManTest(String message)
 	{
@@ -51,11 +56,11 @@ public class HangManTest extends WebTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHangmanWinGame() throws Exception
+	public void test_1() throws Exception
 	{
 		Game hangman = new Game();
 		hangman.newGame(5, new WordGenerator(new String[] { "testing" }));
-		
+
 		Assert.assertEquals(5, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
@@ -100,7 +105,7 @@ public class HangManTest extends WebTestCase
 		Assert.assertTrue(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
 	}
-	
+
 	private Letter letter(Game hangman, char c)
 	{
 		for (Iterator iter = hangman.getLetters().iterator(); iter.hasNext();)
@@ -110,7 +115,7 @@ public class HangManTest extends WebTestCase
 			{
 				return letter;
 			}
-		}		
+		}
 		return null;
 	}
 
@@ -118,7 +123,7 @@ public class HangManTest extends WebTestCase
 	{
 		return hangman.guess(letter(hangman, c));
 	}
-	
+
 	/**
 	 * Tests the hangman class directly for a lost game.
 	 * 
@@ -128,7 +133,7 @@ public class HangManTest extends WebTestCase
 	{
 		Game hangman = new Game();
 		hangman.newGame(2, new WordGenerator(new String[] { "foo" }));
-		
+
 		Assert.assertEquals(2, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
@@ -215,6 +220,7 @@ public class HangManTest extends WebTestCase
 
 	/**
 	 * Performs a guess.
+	 * 
 	 * @param hangman
 	 * @param c
 	 * @param expected
@@ -224,22 +230,5 @@ public class HangManTest extends WebTestCase
 		Assert.assertFalse(letter(hangman, c).isGuessed());
 		Assert.assertEquals(expected, guess(hangman, c));
 		Assert.assertTrue(letter(hangman, c).isGuessed());
-	}
-
-	/**
-	 * Creates the testsuite.
-	 * 
-	 * @return the testsuite.
-	 */
-	public static Test suite()
-	{
-		TestSuite suite = new TestSuite();
-		suite.addTestSuite(HangManTest.class);
-
-		JettyDecorator deco = new JettyDecorator(suite);
-		deco.setPort(8098);
-		deco.setWebappContextRoot("src/webapp");
-		deco.setContextPath("/wicket-examples");
-		return deco;
 	}
 }

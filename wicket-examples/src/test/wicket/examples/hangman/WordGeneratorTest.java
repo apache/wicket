@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.hangman;
 
@@ -29,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Test case for the <code>WordGenerator</code> class.
- *
+ * 
  * @author Chris Turner
  * @version 1.0
  */
@@ -40,8 +39,9 @@ public class WordGeneratorTest extends TestCase
 
 	/**
 	 * Create the test case.
-	 *
-	 * @param message The test name
+	 * 
+	 * @param message
+	 *            The test name
 	 */
 	public WordGeneratorTest(String message)
 	{
@@ -50,6 +50,7 @@ public class WordGeneratorTest extends TestCase
 
 	/**
 	 * Tests word generator
+	 * 
 	 * @throws Exception
 	 */
 	public void testWordGenerator() throws Exception
@@ -70,13 +71,15 @@ public class WordGeneratorTest extends TestCase
 		{
 			Word word = wg.next();
 			log.info("Word found: " + word);
-			Assert.assertTrue("Word " + word + " should have been returned only once", words.remove(word));
+			Assert.assertTrue("Word " + word + " should have been returned only once", words
+					.remove(word));
 		}
 		Assert.assertTrue("All words should have been returned twice", words.isEmpty());
 	}
 
 	/**
 	 * Tests word generator
+	 * 
 	 * @throws Exception
 	 */
 	public void testSuppliedWordConstructor() throws Exception

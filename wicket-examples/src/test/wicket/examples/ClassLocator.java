@@ -15,42 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.linkomatic;
-
-import junit.framework.Test;
-import wicket.examples.WicketWebTestCase;
+package wicket.examples;
 
 /**
- * jWebUnit test for Hello World.
+ * 
+ * @author Juergen Donnerstag
  */
-public class LinkomaticTest extends WicketWebTestCase
+public class ClassLocator extends SecurityManager
 {
 	/**
 	 * 
-	 * @return Test
+	 * @return Class
 	 */
-	public static Test suite()
+	public static Class getCallerClass()
 	{
-		return suite(LinkomaticTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public LinkomaticTest(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * Test page.
-	 */
-	public void testHelloWorld()
-	{
-		beginAt("/linkomatic");
-		assertTitleEquals("Wicket Examples - linkomatic");
+		return new ClassLocator().getClassContext()[2];
 	}
 }
