@@ -18,15 +18,19 @@
 	</locale-encoding-mapping-list>
 	-->	  
   
-<!--  With wicket examples this is the means to configure deployment
-      resp. a development configuration.  
-      Comment the following lines for "development" (reloading when templates change) 
+<!--  
+      There are three means to configure Wickets configuration mode and they are
+      tested in the order given. 
+      1) A system property: -Dwicket.configuration
+      2) servlet specific <init-param>
+      3) context specific <context-param>
+      The value might be either "development" (reloading when templates change)
+      or "deployment". If no configuration is found, "deployment" is the default.
 -->
-
-		<!-- context-param>
-		  <param-name>deployment</param-name>
-		  <param-value>true</param-value>
-		</context-param-->
+	<context-param>
+	  <param-name>configuration</param-name>
+	  <param-value>development</param-value>
+	</context-param>
 
 	<servlet>
 		<servlet-name>AjaxPrototypeApplication</servlet-name>
@@ -213,6 +217,10 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.template.TemplateApplication</param-value>
+		</init-param>
+		<init-param>
+		  <param-name>configuration</param-name>
+		  <param-value>development</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

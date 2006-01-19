@@ -372,10 +372,15 @@ public abstract class WebApplication extends Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * Internal intialization. Reads servlet init parameter "configuration". If
-	 * the parameter is "development", settings appropriate for development are
-	 * set. If it's "deployment", deployment settings are used. If development
-	 * configuration is specified and a "sourceFolder" init parameter is also
+	 * Internal intialization. First determine the deployment mode. First 
+	 * check the system property -Dwicket.configuration. If it does not exist
+	 * check the servlet init parameter (
+	 * <code>&lt;init-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). 
+	 * If not found check the servlet context init paramert
+	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). 
+	 * If the parameter is "development", settings appropriate for development are
+	 * set. If it's "deployment" (which is default), deployment settings are used. 
+	 * If development is specified and a "sourceFolder" init parameter is also
 	 * set, then resources in that folder will be polled for changes.
 	 */
 	protected void internalInit()
@@ -385,9 +390,22 @@ public abstract class WebApplication extends Application
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(getWicketServlet().getServletContext()));
+
+		// Check if system property -Dwicket.configuration exists
+		String configuration = System.getProperty("wicket." + Application.CONFIGURATION);
+
+		// If no system parameter check servlet specific <init-param>
+		if (configuration == null) 
+		{
+			configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
+		}
+		// If no system parameter and not <init-param>, than check <context-param>
+		if (configuration == null) 
+		{
+			configuration = wicketServlet.getServletContext().getInitParameter(Application.CONFIGURATION);
+		}
 		
-		String configuration = System.getProperty(Application.CONFIGURATION);
-		if(configuration == null) configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
+		// Deployment mode is default if not settings have been found
 		if (configuration != null)
 		{
 			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
