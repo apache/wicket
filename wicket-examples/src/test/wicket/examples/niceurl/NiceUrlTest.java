@@ -56,5 +56,28 @@ public class NiceUrlTest extends WicketWebTestCase
 		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - niceurl");
 		assertTextPresent("This example displays how you can work with 'nice' urls for bookmarkable pages.");
+		
+		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 1");
+		assertTitleEquals("Wicket Examples - niceurl");
+
+		this.clickLinkWithText("[go back]");
+		assertTitleEquals("Wicket Examples - niceurl");
+		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 2");
+		assertTitleEquals("Wicket Examples - niceurl");
+
+		this.clickLinkWithText("[go back]");
+		assertTitleEquals("Wicket Examples - niceurl");
+		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 3");
+		assertTitleEquals("Wicket Examples - niceurl");
+
+		this.clickLinkWithText("[go back]");
+		assertTitleEquals("Wicket Examples - niceurl");
+		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 4");
+		assertTitleEquals("Wicket Examples - niceurl");
+
+		this.clickLinkWithText("[go back]");
+		assertTitleEquals("Wicket Examples - niceurl");
+		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 5");
+		assertTitleEquals("Wicket Examples - niceurl");
 	}
 }
