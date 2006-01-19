@@ -128,7 +128,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				String escapedValue=(String)entry.getValue();
+				String escapedValue=(String)entry.getValue().toString();
 				try
 				{
 					escapedValue=URLEncoder.encode(escapedValue, Application.get()
