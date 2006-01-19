@@ -216,6 +216,7 @@ public abstract class Application
 		}
 		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
+			log.info("You are in DEVELOPMENT mode");
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
 			getMarkupSettings().setStripWicketTags(false);
@@ -248,7 +249,7 @@ public abstract class Application
 	public final void configure(final String configurationType, final String resourceFolder)
 	{
 		configure(configurationType);
-		if(resourceFolder != null)
+		if (resourceFolder != null)
 		{
 			getResourceSettings().addResourceFolder(resourceFolder);
 		}
