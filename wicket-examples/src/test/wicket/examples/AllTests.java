@@ -21,16 +21,25 @@ package wicket.examples;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
+import wicket.examples.ajax.prototype.AjaxTest;
+import wicket.examples.compref.ComprefTest;
 import wicket.examples.displaytag.DisplaytagTest;
 import wicket.examples.displaytag.list.SortableTableHeadersTest;
+import wicket.examples.encodings.EncodingTest;
 import wicket.examples.forminput.FormInputTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.hangman.HangManTest;
 import wicket.examples.hangman.WordGeneratorTest;
+import wicket.examples.hellobrowser.HelloBrowserTest;
 import wicket.examples.helloworld.HelloWorldTest;
+import wicket.examples.images.ImagesTest;
+import wicket.examples.library.LibraryTest;
 import wicket.examples.linkomatic.LinkomaticTest;
+import wicket.examples.niceurl.NiceUrlTest;
 import wicket.examples.panels.signin.CookieTest;
+import wicket.examples.repeater.RepeaterTest;
 import wicket.examples.signin2.Signin2Test;
+import wicket.examples.template.TemplateTest;
 
 /**
  * All tests in the project; used by Maven.
@@ -90,6 +99,15 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(LinkomaticTest.class);
 		suite.addTestSuite(Signin2Test.class);
 		suite.addTestSuite(CookieTest.class);
+		suite.addTestSuite(AjaxTest.class);
+		suite.addTestSuite(ComprefTest.class);
+		suite.addTestSuite(EncodingTest.class);
+		suite.addTestSuite(HelloBrowserTest.class);
+		suite.addTestSuite(NiceUrlTest.class);
+		suite.addTestSuite(TemplateTest.class);
+		suite.addTestSuite(RepeaterTest.class);
+		suite.addTestSuite(ImagesTest.class);
+		suite.addTestSuite(LibraryTest.class);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
