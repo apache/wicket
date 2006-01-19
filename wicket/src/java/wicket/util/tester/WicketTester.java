@@ -660,6 +660,8 @@ public class WicketTester extends MockWebApplication
 		FeedbackMessages feedbackMessages = getLastRenderedPage().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public boolean accept(FeedbackMessage message)
 			{
 				return message.getLevel() == level;

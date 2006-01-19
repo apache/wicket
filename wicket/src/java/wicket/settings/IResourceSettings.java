@@ -10,6 +10,7 @@ import wicket.model.IModel;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
+import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -140,7 +141,7 @@ public interface IResourceSettings
 	/**
 	 * @return Resource locator for this application
 	 */
-	ResourceStreamLocator getResourceStreamLocator();
+	IResourceStreamLocator getResourceStreamLocator();
 
 	/**
 	 * @return Resource watcher with polling frequency determined by setting, or

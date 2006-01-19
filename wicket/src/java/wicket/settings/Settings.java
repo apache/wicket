@@ -58,6 +58,7 @@ import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -577,7 +578,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getResourceStreamLocator()
 	 */
-	public ResourceStreamLocator getResourceStreamLocator()
+	public IResourceStreamLocator getResourceStreamLocator()
 	{
 		if (resourceStreamLocator == null)
 		{

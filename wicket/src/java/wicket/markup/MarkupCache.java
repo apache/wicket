@@ -146,7 +146,7 @@ public class MarkupCache
 			final ContainerInfo containerInfo)
 	{
 		IResourceStream markupResource = application.getResourceSettings()
-				.getResourceStreamLocator().locate(containerClass, containerInfo.getStyle(),
+				.getResourceStreamLocator().locate(containerClass, containerClass.getName().replace('.', '/'),containerInfo.getStyle(),
 						containerInfo.getLocale(), containerInfo.getFileExtension());
 
 		if (markupResource == null)

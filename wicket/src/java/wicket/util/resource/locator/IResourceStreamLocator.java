@@ -31,7 +31,7 @@ public interface IResourceStreamLocator
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
 	 * 
-	 * @param classLoader
+	 * @param clazz
 	 *            The class loader for delegating the loading of the resource
 	 * @param path
 	 *            The path of the resource
@@ -45,6 +45,6 @@ public interface IResourceStreamLocator
 	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(ClassLoader classLoader, String path, String style,
+	public IResourceStream locate(Class clazz, String path, String style,
 			Locale locale, String extension);
 }
