@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.133 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -169,6 +169,7 @@ import wicket.util.lang.Classes;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class RequestCycle
 {
@@ -1018,6 +1019,14 @@ public abstract class RequestCycle
 		}
 		catch (RuntimeException e)
 		{
+			// this exception is handled higher in the stack. we let it bubble
+			// up to unroll the stack as far as possible
+			if (e instanceof RedirectException)
+			{
+				throw e;
+			}
+
+
 			// set step manually to handle exception
 			currentStep = HANDLE_EXCEPTION;
 
@@ -1047,8 +1056,19 @@ public abstract class RequestCycle
 			// FIXME Robustness: Catch infinite loops
 			while (currentStep < DONE)
 			{
-				step(processor);
-				currentStep++;
+				try
+				{
+					step(processor);
+					currentStep++;
+				}
+				catch (RedirectException e)
+				{
+					// if a redirect exception has been issued we abort what we
+					// were doing and begin responding to the top target on the
+					// stack
+					currentStep = RESPOND;
+				}
+
 			}
 		}
 		finally
