@@ -219,12 +219,13 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 *            The object to check
 	 * @param index
 	 *            The index of the object in the collection
+	 * @param selected 
+	 * 			  The current selected id value  
 	 * @return Whether the given value represents the current selection
 	 */
-	protected boolean isSelected(final Object object, int index)
+	protected boolean isSelected(final Object object, int index, String selected)
 	{
-		final String value = getValue();
-		return value != null && value.equals(getChoiceRenderer().getIdValue(object, index));
+		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));
 	}
 
 	/**

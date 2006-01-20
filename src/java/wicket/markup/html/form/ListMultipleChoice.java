@@ -235,9 +235,9 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int, String)
 	 */
-	protected final boolean isSelected(Object choice, int index)
+	protected final boolean isSelected(Object choice, int index, String selected)
 	{
 		// Get value of the form "id1;id2;id3"
 		final String value = getValue();

@@ -351,6 +351,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		// Iterate through choices
 		final List choices = getChoices();
 
+		final String selected = getValue();
 		// Loop through choices
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -374,7 +375,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 
 				// Add checkbox element
 				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"checkbox\""
-						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
+						+ (isSelected(choice, index, selected) ? " checked=\"checked\"" : "") + " value=\""
 						+ id + "\" id=\"" + idAttr + "\"/>");
 
 				// Add label for checkbox

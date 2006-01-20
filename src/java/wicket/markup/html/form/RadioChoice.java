@@ -398,6 +398,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		// Iterate through choices
 		final List choices = getChoices();
 
+		final String selected = getValue();
 		// Loop through choices
 
 
@@ -423,7 +424,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 				// Add radio tag
 				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
-						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
+						+ (isSelected(choice, index, selected) ? " checked=\"checked\"" : "") + " value=\""
 						+ id + "\" id=\"" + idAttr + "\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
