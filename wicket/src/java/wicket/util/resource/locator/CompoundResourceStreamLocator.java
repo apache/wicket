@@ -30,8 +30,9 @@ import wicket.util.resource.IResourceStream;
  * time, the given finder and the default classloader are searched.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
  */
-public final class DefaultResourceStreamLocator extends ResourceStreamLocator
+public final class CompoundResourceStreamLocator implements IResourceStreamLocator
 {
 	private final List locators = new ArrayList();
 
@@ -41,33 +42,33 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	 * @param finder
 	 *            The finder to search
 	 */
-	public DefaultResourceStreamLocator(final IResourceFinder finder)
+	public CompoundResourceStreamLocator(final IResourceFinder finder)
 	{
-		super(null);
-
-		setResourceStreamLocator(new IResourceStreamLocator()
-		{
-			public IResourceStream locate(Class clazz, String path, String style, Locale locale,
-					String extension)
-			{
-				Iterator iter = locators.iterator();
-				while (iter.hasNext())
-				{
-					IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz,
-							path, style, locale, extension);
-					if (resource != null)
-					{
-						return resource;
-					}
-				}
-				return null;
-			}
-		});
+		super();
 
 		locators.add(new ResourceFinderResourceStreamLocator(finder));
 		locators.add(new ClassLoaderResourceStreamLocator());
 	}
 
+	/**
+	 * @see wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class, java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
+	 */
+	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
+			String extension)
+	{
+		Iterator iter = locators.iterator();
+		while (iter.hasNext())
+		{
+			IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz,
+					path, style, locale, extension);
+			if (resource != null)
+			{
+				return resource;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Add a resource stream locator
 	 * 
