@@ -33,7 +33,7 @@ import wicket.markup.parser.XmlTag;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.StringValueConversionException;
 
 
@@ -180,10 +180,10 @@ public final class MarkupParserTest extends WicketTestCase
 		// tokens.get(0).toString());
 	}
 
-	private MarkupResourceStream newMarkupResourceStream(final ResourceStreamLocator locator, final Class c,
+	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator, final Class c,
 			final String style, final Locale locale, final String extension)
 	{
-		IResourceStream resource = locator.locate(c, style, locale, extension);
+		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'),style, locale, extension);
 		MarkupResourceStream res = new MarkupResourceStream(resource, null, null);
 		return res;
 	}
@@ -200,8 +200,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(application, new XmlPullParser(null));
 		parser.setWicketNamespace("wcn");
 
-		ResourceStreamLocator locator = new ResourceStreamLocator(
-				new ClassLoaderResourceStreamLocator());
+		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
 
 		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1", null, "html");
 

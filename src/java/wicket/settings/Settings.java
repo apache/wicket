@@ -57,7 +57,7 @@ import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
-import wicket.util.resource.locator.DefaultResourceStreamLocator;
+import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -583,7 +583,7 @@ public final class Settings
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getResourceFinder());
+			resourceStreamLocator = new CompoundResourceStreamLocator(getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}
