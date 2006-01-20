@@ -20,6 +20,8 @@ package wicket.markup.parser;
 /**
  * Base class for markup filters
  * 
+ * @see wicket.markup.MarkupParser
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
