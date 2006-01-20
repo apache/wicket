@@ -31,6 +31,7 @@ import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 
@@ -229,17 +230,17 @@ public abstract class FormComponent extends WebMarkupContainer
 	public String getInputName()
 	{
 		String id = getId();
-		final StringBuffer inputName = new StringBuffer(id.length());
+		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
 		Component c = this;
 		while (true)
 		{
-			inputName.insert(0, id);
+			inputName.prepend(id);
 			c = c.getParent();
 			if (c == null || c instanceof Form || c instanceof Page)
 			{
 				break;
 			}
-			inputName.insert(0, Component.PATH_SEPARATOR);
+			inputName.prepend(Component.PATH_SEPARATOR);
 			id = c.getId();
 		}
 		return inputName.toString();
