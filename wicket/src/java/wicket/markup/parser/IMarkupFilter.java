@@ -29,6 +29,7 @@ import wicket.markup.MarkupElement;
  * The streaming XML parser must implement IMarkupFilter itself and thus is
  * usually the first element of the chain.
  * 
+ * @see wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
 public interface IMarkupFilter
