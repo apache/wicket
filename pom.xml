@@ -8,6 +8,22 @@
   <name>Wicket</name>
   <description></description>
   <url>http://wicket.sourceforge.net</url>
+  <inceptionYear>2004</inceptionYear>
+
+  <organization>
+    <name>Wicket developers</name>
+    <url>http://wicket.sourceforge.net</url>
+  </organization>
+  
+  <issueManagement>
+    <url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
+  </scm>
 
   <mailingLists>
     <mailingList>
