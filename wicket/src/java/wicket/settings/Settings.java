@@ -59,7 +59,6 @@ import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -194,7 +193,7 @@ public final class Settings
 	private Duration resourcePollFrequency = null;
 
 	/** resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
+	private IResourceStreamLocator resourceStreamLocator;
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
@@ -962,9 +961,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.ResourceStreamLocator)
+	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamLocator)
 	 */
-	public void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator)
+	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
 	{
 		this.resourceStreamLocator = resourceStreamLocator;
 	}
