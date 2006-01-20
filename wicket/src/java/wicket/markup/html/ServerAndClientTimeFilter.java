@@ -59,15 +59,18 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken)/1000 + "s");
 			
-			String defaultValue = "Server parsetime: " + ((double)timeTaken)/1000 + "s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's";
+			StringBuffer defaultValue = new StringBuffer(128);
+			defaultValue.append("Server parsetime: ");
+			defaultValue.append(((double)timeTaken)/1000);
+			defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			
-			String txt = Application.get().getResourceSettings().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue);
-			StringBuffer endScript = new StringBuffer("\n<script>\nwindow.defaultStatus='");
+			String txt = Application.get().getResourceSettings().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue.toString());
+			StringBuffer endScript = new StringBuffer(150);
+			endScript.append("\n<script>\nwindow.defaultStatus='");
 			endScript.append(txt);
 			endScript.append("';\n</script>\n");
 			responseBuffer.insert(bodyIndex-1, endScript);
-			StringBuffer beginScript = new StringBuffer("\n<script>\nvar clientTimeVariable = new Date().getTime();\n</script>\n");
-			responseBuffer.insert(headIndex+6, beginScript);
+			responseBuffer.insert(headIndex+6, "\n<script>\nvar clientTimeVariable = new Date().getTime();\n</script>\n");
 		}
 		log.info(timeTaken + "ms server time taken for request " + RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
 		return responseBuffer;
