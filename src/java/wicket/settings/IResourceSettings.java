@@ -11,7 +11,6 @@ import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
 import wicket.util.resource.locator.IResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -213,7 +212,7 @@ public interface IResourceSettings
 	 * @param resourceStreamLocator
 	 *            new resource stream locator
 	 */
-	void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator);
+	void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator);
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
