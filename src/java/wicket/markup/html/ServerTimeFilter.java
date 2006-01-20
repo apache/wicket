@@ -48,7 +48,8 @@ public class ServerTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if(index != -1)
 		{
-			StringBuffer script = new StringBuffer("\n<script>\nwindow.defaultStatus='Server time: ");
+			StringBuffer script = new StringBuffer(20);
+			script.append("\n<script>\nwindow.defaultStatus='Server time: ");
 			script.append( ((double)timeTaken)/1000);
 			script.append("s';\n</script>\n");
 			responseBuffer.insert(index+6, script);

@@ -273,9 +273,9 @@ public final class Strings
 		}
 		else
 		{
-			final StringBuffer buffer = new StringBuffer();
-
 			int len = s.length();
+			final StringBuffer buffer = new StringBuffer((int)(len*1.1));
+
 			for (int i = 0; i < len; i++)
 			{
 				final char c = s.charAt(i);
