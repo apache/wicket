@@ -405,14 +405,14 @@ public abstract class WebApplication extends Application
 			configuration = wicketServlet.getServletContext().getInitParameter(Application.CONFIGURATION);
 		}
 		
-		// Deployment mode is default if not settings have been found
+		// Development mode is default if not settings have been found
 		if (configuration != null)
 		{
 			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
 		else
 		{
-			configure(Application.DEPLOYMENT, wicketServlet.getInitParameter("sourceFolder"));
+			configure(Application.DEVELOPMENT, wicketServlet.getInitParameter("sourceFolder"));
 		}
 	}
 
