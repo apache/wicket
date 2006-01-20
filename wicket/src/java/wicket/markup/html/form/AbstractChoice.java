@@ -274,9 +274,10 @@ abstract class AbstractChoice extends FormComponent
 	 *            The object to check
 	 * @param index
 	 *            The index in the choices collection this object is in.
+	 * @param selected TODO
 	 * @return Whether the given value represents the current selection
 	 */
-	protected abstract boolean isSelected(final Object object, int index);
+	protected abstract boolean isSelected(final Object object, int index, String selected);
 
 	/**
 	 * Handle the container's body.
@@ -291,7 +292,7 @@ abstract class AbstractChoice extends FormComponent
 	{
 		List choices = getChoices();
 		final StringBuffer buffer = new StringBuffer( (choices.size()*50)+16);
-		final Object selected = getModelObject();
+		final String selected = getValue();
 
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
@@ -299,7 +300,7 @@ abstract class AbstractChoice extends FormComponent
 		for (int index=0;index<choices.size();index++)
 		{
 			final Object choice = choices.get(index);
-			appendOptionHtml(buffer, choice, index);
+			appendOptionHtml(buffer, choice, index, selected);
 		}
 
 		buffer.append("\n");
@@ -314,13 +315,14 @@ abstract class AbstractChoice extends FormComponent
 	 * @param choice
 	 *            choice object
 	 * @param index
+	 * @param selected TODO
 	 * 
 	 */
-	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index)
+	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index, String selected)
 	{
 		final String displayValue = (String)getConverter().convert(renderer.getDisplayValue(choice), String.class);
 		buffer.append("\n<option ");
-		if (isSelected(choice, index))
+		if (isSelected(choice, index, selected))
 		{
 			buffer.append("selected=\"selected\"");
 		}
