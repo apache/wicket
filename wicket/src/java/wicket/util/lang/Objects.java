@@ -135,7 +135,7 @@ public abstract class Objects implements NumericTypes
 		{
 			try
 			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
 				new ObjectOutputStream(out).writeObject(object);
 				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
 						.readObject();
