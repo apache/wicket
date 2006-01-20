@@ -47,6 +47,7 @@ import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
@@ -1023,14 +1024,14 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final String getPath()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final PrependingStringBuffer buffer = new PrependingStringBuffer(32);
 		for (Component c = this; c != null; c = c.getParent())
 		{
 			if (buffer.length() > 0)
 			{
-				buffer.insert(0, PATH_SEPARATOR);
+				buffer.prepend(PATH_SEPARATOR);
 			}
-			buffer.insert(0, c.getId());
+			buffer.prepend(c.getId());
 		}
 		return buffer.toString();
 	}
