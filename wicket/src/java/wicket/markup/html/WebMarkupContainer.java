@@ -93,27 +93,31 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		// A component's header section must only be added once,
 		// no matter how often the same Component has been added
 		// to the page or any other container in the hierachy.
-		if ((headerPart != null) && (container.get(headerPart.getId()) == null))
+		if (headerPart != null)
 		{
-			container.autoAdd(headerPart);
-
-			// Check if the component requires some <body onload="..">
-			// attribute to be copied to the page's body tag.
-			checkBodyOnLoad();
-		}
-		else if (headerPart != null)
-		{
-			// already added but all the components in this header part must be
-			// touched (that they are rendered)
-			Response response = getRequestCycle().getResponse();
-			try
+			if (container.get(headerPart.getId()) == null)
 			{
-				getRequestCycle().setResponse(NullResponse.getInstance());
 				container.autoAdd(headerPart);
+	
+				// Check if the component requires some <body onload="..">
+				// attribute to be copied to the page's body tag.
+				checkBodyOnLoad();
 			}
-			finally
+			else
 			{
-				getRequestCycle().setResponse(response);
+				// TODO I haven't found a more efficient solution yet
+				// already added but all the components in this header part must be
+				// touched (that they are rendered)
+				Response response = getRequestCycle().getResponse();
+				try
+				{
+					getRequestCycle().setResponse(NullResponse.getInstance());
+					container.autoAdd(headerPart);
+				}
+				finally
+				{
+					getRequestCycle().setResponse(response);
+				}
 			}
 		}
 
@@ -263,22 +267,20 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	}
 
 	/**
-	 * A transparent container which handles the wicket:head region of 
-	 * a container (e.g. Panel).
-	 * <p>
-	 * Note: this container overrides isTransparent() and implements 
-	 * IComponentResolver
+	 * For each wicket:head tag a HeaderPartContainer is created and 
+	 * added to the HtmlHeaderContainer which has been added to the Page.
 	 */
 	private static final class HeaderPartContainer extends WebMarkupContainer
 			implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
+		/** The panel or bordered page the header part is associated with */
 		private final MarkupContainer container;
 
 		/**
-		 * @param id
-		 * @param container
+		 * @param id The component id
+		 * @param container The Panel (or bordered page) the header part is associated with
 		 */
 		public HeaderPartContainer(final String id, final MarkupContainer container)
 		{
@@ -301,17 +303,11 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		public final boolean resolve(final MarkupContainer container,
 				final MarkupStream markupStream, final ComponentTag tag)
 		{
+			// The tag must be resolved against the panel and not against the page
 			Component component = this.container.get(tag.getId());
 			if (component != null)
 			{
-				if (component.isVisible() == true)
-				{
-					component.render(markupStream);
-				}
-				else
-				{
-					findMarkupStream().skipComponent();
-				}
+				component.render(markupStream);
 				return true;
 			}
 
