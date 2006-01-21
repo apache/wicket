@@ -180,7 +180,7 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("Encoder must be not null");
 		}
 
-		getDefaultRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
+		getRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
 	}
 
 	/**
@@ -296,7 +296,7 @@ public abstract class WebApplication extends Application
 	public final void unmount(String path)
 	{
 		checkMountPath(path);
-		getDefaultRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
+		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
@@ -333,13 +333,24 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return the default request cycle processor
 	 */
-	protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
+	protected final IRequestCycleProcessor getRequestCycleProcessor()
 	{
 		if (requestCycleProcessor == null)
 		{
-			requestCycleProcessor = new DefaultWebRequestCycleProcessor();
+			requestCycleProcessor = newRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
+	}
+	
+	/**
+	 * May be replaced by subclasses which whishes to uses there own 
+	 * implementation of IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new DefaultWebRequestCycleProcessor();
 	}
 
 	/**
