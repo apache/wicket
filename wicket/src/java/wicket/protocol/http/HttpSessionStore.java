@@ -139,8 +139,7 @@ public class HttpSessionStore implements ISessionStore
 		{
 			WebApplication application = (WebApplication)Application.get();
 			WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
-			String servletContextName = application.getSessionAttributePrefix(cycle.getWebRequest());
-			sessionAttributePrefix = "wicket:" + servletContextName + ":";
+			sessionAttributePrefix = application.getSessionAttributePrefix(cycle.getWebRequest());
 		}
 		return sessionAttributePrefix;
 	}
