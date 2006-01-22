@@ -44,6 +44,7 @@ import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
+import wicket.util.string.Strings;
 
 
 /**
@@ -592,4 +593,20 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("mounting path has to start with '/'");
 		}
 	}
+	
+	/**
+	 * @param wicketServletName
+	 *            wicket servlet name
+	 * @return context key under which an instance of webapplication would be
+	 *         stored
+	 */
+	public final static String getServletContextKey(String wicketServletName)
+	{
+		if (Strings.isEmpty(wicketServletName))
+		{
+			throw new IllegalArgumentException("servletName cannot be empty");
+		}
+		return "wicket:" + wicketServletName;
+	}
+	
 }
