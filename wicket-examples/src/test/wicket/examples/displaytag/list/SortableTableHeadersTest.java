@@ -22,9 +22,9 @@ import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketTestCase;
+import wicket.examples.DiffUtil;
+import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
 import wicket.settings.Settings;
