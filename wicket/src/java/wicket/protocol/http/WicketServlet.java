@@ -44,15 +44,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *         &lt;servlet&gt;
- *             &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *             &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *             &lt;init-param&gt;
- *                 &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                 &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *             &lt;/init-param&gt;
- *             &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *         &lt;/servlet&gt;
+ *             &lt;servlet&gt;
+ *                 &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                 &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                 &lt;init-param&gt;
+ *                     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                     &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                 &lt;/init-param&gt;
+ *                 &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *             &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -64,10 +64,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *         &lt;init-param&gt;
- *           &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *             &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *         &lt;/init-param&gt;
+ *             &lt;init-param&gt;
+ *               &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                 &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *             &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -84,11 +84,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *         public void init() throws ServletException
- *         {
- *             ServletConfig config = getServletConfig();
- *             String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *             ...
+ *             public void init() throws ServletException
+ *             {
+ *                 ServletConfig config = getServletConfig();
+ *                 String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                 ...
  * </pre>
  * 
  * </p>
@@ -145,9 +145,10 @@ public class WicketServlet extends HttpServlet
 			String queryString = servletRequest.getQueryString();
 			String requestUri = servletRequest.getRequestURI();
 			String bufferId = requestUri;
-			if(queryString != null)
+			if (queryString != null)
 			{
-				bufferId = new StringBuffer(requestUri.length() + queryString.length() + 1).append(requestUri).append("?").append(queryString).toString();
+				bufferId = new StringBuffer(requestUri.length() + queryString.length() + 1).append(
+						requestUri).append("?").append(queryString).toString();
 			}
 			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
 					sessionId, bufferId);
@@ -243,6 +244,12 @@ public class WicketServlet extends HttpServlet
 
 		// Set this WicketServlet as the servlet for the web application
 		this.webApplication.setWicketServlet(this);
+
+		// Store instance of this application object in servlet context to make
+		// integration with outside world easier
+		String contextKey = WebApplication
+				.getServletContextKey(getServletConfig().getServletName());
+		getServletContext().setAttribute(contextKey, this.webApplication);
 
 		// Finished
 		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
@@ -367,4 +374,5 @@ public class WicketServlet extends HttpServlet
 		}
 		return -1;
 	}
+
 }
