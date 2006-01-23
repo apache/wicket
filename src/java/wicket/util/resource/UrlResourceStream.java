@@ -39,7 +39,7 @@ import wicket.util.time.Time;
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class UrlResourceStream extends AbstractResourceStream
+public class UrlResourceStream extends AbstractResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
