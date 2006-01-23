@@ -229,10 +229,18 @@ public class MarkupCache
 		return markup;
 	}
 
-
-	private void removeMarkup(String key, MarkupResourceStream markupResourceStream)
+	/**
+	 * Remove the markup from the cache and trigger all associated listeners
+	 *  
+	 * @param key 
+	 *         The cache key
+	 * @param markupResourceStream 
+	 *         The resource stream
+	 */
+	private void removeMarkup(final String key, final MarkupResourceStream markupResourceStream)
 	{
 		markupCache.remove(key);
+		
 		// trigger all listeners registered on the markup that is removed
 		afterLoadListeners.notifyListeners(markupResourceStream);
 		afterLoadListeners.remove(markupResourceStream);
@@ -313,6 +321,9 @@ public class MarkupCache
 				public void onChange()
 				{
 					log.info("Reloading markup from " + markupResourceStream);
+
+					// Remove the markup from the cache. It will be reloaded
+					// next time it the markup is requested.
 					removeMarkup(key, markupResourceStream);
 					watcher.remove(markupResourceStream);
 				}
