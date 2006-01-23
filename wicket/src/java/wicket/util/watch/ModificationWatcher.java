@@ -130,7 +130,12 @@ public final class ModificationWatcher
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
-		return (IModifiable) modifiableToEntry.remove(modifiable);
+		final Entry entry = (Entry)modifiableToEntry.remove(modifiable);
+		if(entry != null)
+		{
+			return entry.modifiable;
+		}
+		return null;
 	}
 	
 	/**
