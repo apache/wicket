@@ -17,9 +17,9 @@
  */
 package wicket.util.watch;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.ChangeListenerSet;
 import wicket.util.listener.IChangeListener;
 
@@ -32,7 +32,7 @@ import wicket.util.listener.IChangeListener;
 public final class Watcher
 {
 	/** Maps objects to change listener sets */
-	private final Map keyToEntry = new HashMap();
+	private final Map keyToEntry  = new ConcurrentHashMap();
 
 	// Class for holding entries to watch
 	private static final class Entry
