@@ -229,6 +229,15 @@ public class MarkupCache
 		return markup;
 	}
 
+
+	private void removeMarkup(String key, MarkupResourceStream markupResourceStream)
+	{
+		markupCache.remove(key);
+		// trigger all listeners registered on the markup that is removed
+		afterLoadListeners.notifyListeners(markupResourceStream);
+		afterLoadListeners.remove(markupResourceStream);
+	}
+
 	/**
 	 * Loads markup from a resource stream.
 	 * 
@@ -304,7 +313,8 @@ public class MarkupCache
 				public void onChange()
 				{
 					log.info("Reloading markup from " + markupResourceStream);
-					loadMarkup(key, markupResourceStream);
+					removeMarkup(key, markupResourceStream);
+					watcher.remove(markupResourceStream);
 				}
 			});
 		}
@@ -399,7 +409,7 @@ public class MarkupCache
 			public void onChange()
 			{
 				log.info("Reloading derived markup from " + markup.getResource());
-				loadMarkup(key, markup.getResource());
+				removeMarkup(key, markup.getResource());
 			}
 
 			/**
