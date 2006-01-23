@@ -379,7 +379,7 @@ public class MarkupParser
 		// Note: <html ...> are usually no wicket tags and thus treated as raw
 		// markup and thus removing xmlns:wicket from markup does not have any
 		// effect. The solution approach does not work.
-		if ((attrValue != null) && Application.get().getMarkupSettings().getStripWicketTags())
+		if ((attrValue != null) && this.application.getMarkupSettings().getStripWicketTags())
 		{
 			attributes.remove(attrValue);
 			return true;
