@@ -30,11 +30,32 @@ import wicket.markup.ComponentTag;
  */
 public abstract class AbstractBehavior implements IBehavior
 {
+	/** The component the behavior is attached to */
+	private Component hostComponent;
+
+	/**
+	 * Construct.
+	 */
+	public AbstractBehavior()
+	{
+	}
+
+	/**
+	 * Get the host component
+	 * 
+	 * @return host component
+	 */
+	public final Component getComponent()
+	{
+		return this.hostComponent;
+	}
+
 	/**
 	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
 	 */
-	public void bind(Component hostComponent)
+	public void bind(final Component hostComponent)
 	{
+		this.hostComponent = hostComponent;
 	}
 
 	/**
@@ -47,15 +68,19 @@ public abstract class AbstractBehavior implements IBehavior
 	/**
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
+	 * 
+	 * @TODO What is the component needed for?!?!
 	 */
-	public void onComponentTag(Component component, ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 	}
 
 	/**
 	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 * 
+	 * @TODO What is the component needed for?!?!
 	 */
-	public void rendered(Component hostComponent)
+	public void rendered(final Component hostComponent)
 	{
 	}
 }

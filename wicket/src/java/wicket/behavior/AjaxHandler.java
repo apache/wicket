@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -138,7 +138,26 @@ public abstract class AjaxHandler
 	 */
 	public final String getCallbackUrl()
 	{
-		return component.urlFor(this);
+		if (getComponent() == null)
+		{
+			throw new IllegalArgumentException(
+					"Behavior must be bound to a component to create the URL");
+		}
+
+		if (this instanceof IBehaviorListener)
+		{
+			throw new IllegalArgumentException(
+					"The behavior must implement IBehaviorListener to accept requests");
+		}
+
+		int index = getComponent().getBehaviors().indexOf(this);
+		if (index == -1)
+		{
+			throw new IllegalArgumentException("Behavior " + this
+					+ " was not registered with this component: " + getComponent().toString());
+		}
+
+		return getComponent().urlFor(IBehaviorListener.class) + "&behaviorId=" + index;
 	}
 
 	/**
@@ -268,9 +287,9 @@ public abstract class AjaxHandler
 	/**
 	 * Gets the response to render to the requester. This is used by AjaxHandler
 	 * default request target implementation,
-	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If you override
-	 * {@link #respond()} and provide another kind of target, this method will
-	 * not be used.
+	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If you
+	 * override {@link #respond()} and provide another kind of target, this
+	 * method will not be used.
 	 * 
 	 * @return the response to render to the requester
 	 */

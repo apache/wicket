@@ -19,10 +19,14 @@ package wicket.request.target;
 
 import java.lang.reflect.Method;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.request.IListenerInterfaceRequestTarget;
+import wicket.request.RequestParameters;
+import wicket.settings.Settings;
 
 /**
  * The abstract implementation of
@@ -38,8 +42,8 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			IListenerInterfaceRequestTarget,
 			IEventProcessor
 {
-	/** optionally the id of the behavior to dispatch to. */
-	private final String behaviorId;
+	/** The request parameters. */
+	private final RequestParameters requestParameters;
 
 	/** the target component. */
 	private final Component component;
@@ -57,7 +61,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 * @param listenerMethod
 	 *            the listener method
 	 */
-	public AbstractListenerInterfaceRequestTarget(Page page, Component component,
+	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
 			Method listenerMethod)
 	{
 		this(page, component, listenerMethod, null);
@@ -73,11 +77,11 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the target component
 	 * @param listenerMethod
 	 *            the listener method
-	 * @param behaviorId
-	 *            optionally the id of the behavior to dispatch to
+	 * @param requestParameters
+	 *            the request parameter
 	 */
-	public AbstractListenerInterfaceRequestTarget(Page page, Component component,
-			Method listenerMethod, String behaviorId)
+	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
+			final Method listenerMethod, final RequestParameters requestParameters)
 	{
 		super(page);
 
@@ -94,7 +98,33 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		}
 
 		this.listenerMethod = listenerMethod;
-		this.behaviorId = behaviorId;
+		this.requestParameters = requestParameters;
+	}
+
+	/**
+	 * Common functionality to be called by processEvents()
+	 * 
+	 * @param requestCycle
+	 *            The request cycle
+	 */
+	protected void onProcessEvents(final RequestCycle requestCycle)
+	{
+		// Assume cluster needs to be updated now, unless listener
+		// invocation changes this
+		requestCycle.setUpdateSession(true);
+
+		// Clear all feedback messages if it isn't a redirect
+		getPage().getFeedbackMessages().clear();
+
+		getPage().startComponentRender(getTarget());
+
+		final Application application = requestCycle.getApplication();
+		// and see if we have to redirect the render part by default
+		Settings.RenderStrategy strategy = application.getRequestCycleSettings()
+				.getRenderStrategy();
+		boolean issueRedirect = (strategy == Settings.REDIRECT_TO_RENDER || strategy == Settings.REDIRECT_TO_BUFFER);
+
+		requestCycle.setRedirect(issueRedirect);
 	}
 
 	/**
@@ -108,13 +138,13 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			AbstractListenerInterfaceRequestTarget that = (AbstractListenerInterfaceRequestTarget)obj;
 			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
 			{
-				if (behaviorId != null)
+				if (requestParameters != null)
 				{
-					return behaviorId.equals(that.behaviorId);
+					return requestParameters.equals(that.requestParameters);
 				}
 				else
 				{
-					return that.behaviorId == null;
+					return that.requestParameters == null;
 				}
 			}
 		}
@@ -122,11 +152,11 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getBehaviorId()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getRequestParameters()
 	 */
-	public final String getBehaviorId()
+	public final RequestParameters getRequestParameters()
 	{
-		return behaviorId;
+		return this.requestParameters;
 	}
 
 	/**
@@ -153,7 +183,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		int result = getClass().hashCode();
 		result += component.hashCode();
 		result += listenerMethod.hashCode();
-		result += behaviorId != null ? behaviorId.hashCode() : 0;
+		result += requestParameters != null ? requestParameters.hashCode() : 0;
 		return 17 * result;
 	}
 
@@ -162,15 +192,16 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
+		StringBuffer buf = new StringBuffer(getClass().getName()).append("@").append(hashCode())
 				.append(getPage().toString()).append("->").append(getTarget().getId()).append("->")
 				.append(getListenerMethod().getDeclaringClass()).append(".").append(
 						getListenerMethod().getName());
-		if (getBehaviorId() != null)
+
+		if (requestParameters != null)
 		{
-			b.append(" (behavior ").append(getBehaviorId()).append(")");
+			buf.append(" (request paramaters: ").append(requestParameters.toString()).append(")");
 		}
-		return b.toString();
+		return buf.toString();
 	}
 
 	/**

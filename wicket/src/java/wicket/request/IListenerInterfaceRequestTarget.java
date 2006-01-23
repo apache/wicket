@@ -44,10 +44,9 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 	Method getListenerMethod();
 
 	/**
-	 * Gets the optional behavior id in case this call points a dispatched
-	 * method (i.e. a coupled behavior such as an {@link wicket.behavior.AjaxHandler}).
+	 * Get the request parameters
 	 * 
-	 * @return the optional behavior id
+	 * @return The request parameters 
 	 */
-	String getBehaviorId();
+	RequestParameters getRequestParameters();
 }
