@@ -1100,7 +1100,15 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		final MarkupContainer originalParent = this.parent;
 		this.parent = null;
-		final long size = Objects.sizeof(this);
+		long size = -1;
+		try
+		{
+			size = Objects.sizeof(this);
+		} 
+		catch(Exception e)
+		{
+			log.error("Exception getting size for component " + this, e);
+		}
 		this.parent = originalParent;
 		return size;
 	}
