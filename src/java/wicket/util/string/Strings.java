@@ -17,8 +17,6 @@
  */
 package wicket.util.string;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -816,13 +814,67 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			final StringWriter stringWriter = new StringWriter();
-			throwable.printStackTrace(new PrintWriter(stringWriter));
-			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
+			ArrayList al = new ArrayList();
+			Throwable cause = throwable;
+			al.add(cause);
+			while(cause.getCause() != null && cause != cause.getCause())
+			{
+				cause = cause.getCause();
+				al.add(cause);
+			}
+
+			StringBuffer sb = new StringBuffer(256);
+			// first print the last cause
+			int length = al.size()-1;
+			cause = (Throwable)al.get(length);
+			
+			sb.append("Root cause:\n\n");
+			outputThrowable(cause, sb,false);
+
+			if(length > 0)
+			{
+				sb.append("\n\nComplete stack:\n\n");
+				for (int i = 0; i < length; i++)
+				{
+					outputThrowable((Throwable)al.get(i), sb,true);
+					sb.append("\n");
+				}
+			}
+			return sb.toString();
+//			final StringWriter stringWriter = new StringWriter();
+//			throwable.printStackTrace(new PrintWriter(stringWriter));
+//			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
 		}
 		else
 		{
 			return "<Null Throwable>";
+		}
+	}
+
+	/**
+	 * Outputs the throwable and its stacktrace to the stringbuffer.
+	 * If stopAtWicketSerlvet is true then the output will stop when the wicket servlet is reached.
+	 * sun.reflect. packages are filtered out.
+	 *  
+	 * @param cause
+	 * @param sb
+	 * @param stopAtWicketServlet
+	 */
+	private static void outputThrowable(Throwable cause, StringBuffer sb, boolean stopAtWicketServlet)
+	{
+		sb.append(cause);
+		sb.append("\n");
+		StackTraceElement[] trace = cause.getStackTrace();
+		for (int i=0; i < trace.length; i++)
+		{
+			String traceString = trace[i].toString();
+			if(!traceString.startsWith("sun.reflect.") && i > 1)
+			{
+				sb.append("     at ");
+				sb.append(traceString);
+				sb.append("\n");
+				if(stopAtWicketServlet && traceString.startsWith("wicket.protocol.http.WicketServlet")) return;
+			}
 		}
 	}
 
