@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.behavior.IBehaviorListener;
 import wicket.request.RequestParameters;
 
 /**
@@ -30,7 +31,7 @@ import wicket.request.RequestParameters;
  * 
  * @author Eelco Hillenius
  */
-public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceRequestTarget
+public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarget
 {
 	/**
 	 * Construct.
@@ -42,7 +43,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 * @param listenerMethod
 	 *            the listener method
 	 */
-	public ListenerInterfaceRequestTarget(final Page page, final Component component,
+	public BehaviorRequestTarget(final Page page, final Component component,
 			final Method listenerMethod)
 	{
 		this(page, component, listenerMethod, null);
@@ -60,7 +61,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 * @param requestParameters
 	 *            the request parameters
 	 */
-	public ListenerInterfaceRequestTarget(final Page page, final Component component,
+	public BehaviorRequestTarget(final Page page, final Component component,
 			final Method listenerMethod, final RequestParameters requestParameters)
 	{
 		super(page, component, listenerMethod, requestParameters);
@@ -71,7 +72,27 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
+		// Preprocess like standard component request. Do all the initialization necessary
 		onProcessEvents(requestCycle);
-		invokeInterface(getTarget(), getListenerMethod(), getPage());
+		
+		// Get the IBehavior for the component based on the request parameters
+		final Component component = getTarget();
+		final String id = getRequestParameters().getBehaviorId();
+		if (id == null)
+		{
+			throw new IllegalStateException(
+					"Parameter behaviorId was not provided: unable to locate listener. Component: " 
+					+ component.toString());
+		}
+
+		final int idAsInt = Integer.parseInt(id);
+		final IBehaviorListener behaviorListener = (IBehaviorListener)component.getBehaviors().get(idAsInt);
+		if (behaviorListener == null)
+		{
+			throw new IllegalStateException("No behavior listener found with behaviorId " + id + "; Component: " + component.toString());
+		}
+
+		// Invoke the interface method
+		behaviorListener.onRequest();
 	}
 }

@@ -36,6 +36,7 @@ import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
+import wicket.request.target.BehaviorRequestTarget;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentResourceRequestTarget;
 import wicket.request.target.ExpiredPageClassRequestTarget;
@@ -66,8 +67,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
 	 *      RequestParameters)
 	 */
-	public final IRequestTarget resolve(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	public final IRequestTarget resolve(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		String path = requestCycle.getRequest().getPath();
 
@@ -78,7 +79,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			// the path was mounted, so return that directly
 			return mounted;
-		} // else try different methods
+		} 
 
 		// See whether this request points to a rendered page
 		if (requestParameters.getComponentPath() != null)
@@ -117,7 +118,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 * @return the shared resource as a request target
 	 */
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-			RequestParameters requestParameters)
+			final RequestParameters requestParameters)
 	{
 		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(resourceKey);
@@ -135,8 +136,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the previously rendered page as a request target
 	 */
-	protected IRequestTarget resolveRenderedPage(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		String componentPath = requestParameters.getComponentPath();
 		Session session = requestCycle.getSession();
@@ -215,6 +216,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			{
 				return new ComponentResourceRequestTarget(page, component, listenerMethod);
 			}
+			else if (interfaceName.equals("IBehaviorListener"))
+			{
+				return new BehaviorRequestTarget(page, component, listenerMethod);
+			}
 			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
 		}
 	}
@@ -228,8 +233,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
-	protected IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
@@ -295,8 +300,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
-	protected IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		Session session = requestCycle.getSession();
 		Application application = session.getApplication();
@@ -318,6 +323,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				// The home page was mounted at the given path.
 				// Issue a redirect to that path
 				requestCycle.setRedirect(true);
+				
 				// our poke target is good enough
 				return pokeTarget;
 			}

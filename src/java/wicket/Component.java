@@ -32,7 +32,6 @@ import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
-import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
@@ -221,7 +220,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Juergen Donnerstag
  */
-public abstract class Component implements Serializable, IBehaviorListener
+public abstract class Component implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -1368,36 +1367,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Component has to implement {@link IBehaviorListener} to be able to pass
-	 * through events to behaviors without ending up with many if/else blocks.
-	 * 
-	 * @see wicket.behavior.IBehaviorListener#onRequest()
-	 * @throws IllegalStateException
-	 *             Thrown if no behavior listener can be found using request
-	 *             parameter behaviorId
-	 */
-	public void onRequest()
-	{
-		final String id = getRequest().getParameter("behaviorId");
-
-		if (id == null)
-		{
-			throw new IllegalStateException(
-					"Parameter behaviorId was not provided: unable to locate listener");
-		}
-
-		final int idAsInt = Integer.parseInt(id);
-		final IBehaviorListener behaviorListener = (IBehaviorListener)behaviors.get(idAsInt);
-
-		if (behaviorListener == null)
-		{
-			throw new IllegalStateException("No behavior listener found with behaviorId " + id);
-		}
-
-		behaviorListener.onRequest();
-	}
-
-	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
 	 */
@@ -1919,37 +1888,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets a url for the provided behavior listener.
-	 * 
-	 * @param behaviorListener
-	 *            The behavior listener to get a url for
-	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
-	 */
-	public final String urlFor(final IBehaviorListener behaviorListener)
-	{
-		if (behaviorListener == null)
-		{
-			throw new IllegalArgumentException("Argument behaviorListener must be not null");
-		}
-
-		if (behaviors == null)
-		{
-			throw new IllegalArgumentException("Behavior listener " + behaviorListener
-					+ " was not registered with this component");
-		}
-
-		int index = behaviors.indexOf(behaviorListener);
-		if (index == -1)
-		{
-			throw new IllegalArgumentException("Behavior listener " + behaviorListener
-					+ " was not registered with this component");
-		}
-
-		return urlFor(IBehaviorListener.class) + "&behaviorId=" + index;
-	}
-
-	/**
 	 * Registers a warning feedback message for this component.
 	 * 
 	 * @param message
@@ -2095,7 +2033,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	protected final List/* <IBehavior> */getBehaviors()
+	public final List/* <IBehavior> */getBehaviors()
 	{
 		if (behaviors == null)
 		{
