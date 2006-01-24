@@ -53,6 +53,7 @@ import wicket.util.string.Strings;
  * default resolving.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg
  */
 public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
@@ -152,7 +153,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			if (interfaceName != null)
 			{
 				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName);
+						interfaceName, requestParameters);
 			}
 			else
 			{
@@ -180,10 +181,11 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            The component path for looking up the component in the page.
 	 * @param interfaceName
 	 *            The interface to resolve.
+	 * @param requestParameters 
 	 * @return The RequestTarget that was resolved
 	 */
 	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle,
-			final Page page, final String componentPath, final String interfaceName)
+			final Page page, final String componentPath, final String interfaceName, RequestParameters requestParameters)
 	{
 		if (interfaceName.equals("IRedirectListener"))
 		{
@@ -218,9 +220,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			}
 			else if (interfaceName.equals("IBehaviorListener"))
 			{
-				return new BehaviorRequestTarget(page, component, listenerMethod);
+				return new BehaviorRequestTarget(page, component, listenerMethod, requestParameters);
 			}
-			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
+			return new ListenerInterfaceRequestTarget(page, component, listenerMethod, requestParameters);
 		}
 	}
 
