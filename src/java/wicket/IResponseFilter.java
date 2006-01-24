@@ -17,6 +17,7 @@
 package wicket;
 
 import wicket.settings.Settings;
+import wicket.util.string.StringBuffer;
 
 /**
  * A response filter can be added to the

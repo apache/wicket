@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
+import wicket.util.string.StringBuffer;
 import wicket.util.time.Time;
 
 /**

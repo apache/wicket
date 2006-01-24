@@ -246,6 +246,24 @@ public class WebResponse extends Response
 	}
 
 	/**
+	 * Writes char array to response output.
+	 * 
+	 * @param array
+	 *  		  The char array to write
+	 */
+	public void write(final char[] array)
+	{
+		try
+		{
+			httpServletResponse.getWriter().write(array);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+		}
+	}
+	
+	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
 	 * @param header

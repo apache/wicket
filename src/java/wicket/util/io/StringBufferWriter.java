@@ -19,6 +19,8 @@ package wicket.util.io;
 
 import java.io.Writer;
 
+import wicket.util.string.StringBuffer;
+
 /**
  * @author jcompagner
  */

@@ -29,6 +29,7 @@ import wicket.IResponseFilter;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.model.Model;
+import wicket.util.string.StringBuffer;
 
 /**
  * This is a filter that injects javascript code to the top head portion and after the body so that
