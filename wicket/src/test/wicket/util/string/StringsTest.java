@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.12 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.string;
 
@@ -163,7 +162,8 @@ public final class StringsTest extends TestCase
 
 	/**
 	 * Tests the escapeMarkup method with unicode escapes.
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	public void testEscapeMarkupUnicode() throws UnsupportedEncodingException
 	{
@@ -172,17 +172,19 @@ public final class StringsTest extends TestCase
 
 		// The escaped unicode is Çüיגהאוחךכ"
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
-				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb", false, true));
+				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
+						false, true));
 
-		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"), false,
-				true));
+		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"),
+				false, true));
 		assertEquals(convertNonASCIIString("\n \t&#233;"), Strings.escapeMarkup(
 				convertNonASCIIString("\n \t&#233;"), false, false));
 	}
 
 	/**
 	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	public void testReplaceHtmlEscapeNumber() throws UnsupportedEncodingException
 	{
@@ -192,8 +194,8 @@ public final class StringsTest extends TestCase
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
 				"\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
-				Strings.replaceHtmlEscapeNumber(
-						"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+				Strings
+						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
 
 	private String convertNonASCIIString(String str) throws UnsupportedEncodingException
@@ -407,10 +409,13 @@ public final class StringsTest extends TestCase
 		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\r\ndef"));
 		assertEquals("<p>abc<br />def<br />ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi"));
 
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n"));
-		
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
+				.toMultilineMarkup("abc\n\ndef\n\nghi"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
+				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings
+				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n"));
+
 		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n"));
 		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc"));
 	}
@@ -431,8 +436,8 @@ public final class StringsTest extends TestCase
 		catch (IllegalArgumentException e)
 		{
 			final String toString = Strings.toString((Object)e);
-			assertEquals("java.lang.IllegalArgumentException: Foo", Strings.beforeFirst(toString,
-					'\n').trim());
+			String before = Strings.beforeFirst(toString, '\n').trim();
+			assertEquals("Root cause:", before);
 		}
 	}
 
