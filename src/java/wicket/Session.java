@@ -755,31 +755,34 @@ public abstract class Session implements Serializable
 		}
 
 		// Go through all dirty entries, replicating any dirty objects
-		for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
+		if (dirtyObjects != null)
 		{
-			String attribute = null;
-			Object object = iterator.next();
-			if (object instanceof Page)
+			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
 			{
-				final Page page = (Page)object;
-				attribute = page.getPageMap().attributeForId(page.getNumericId());
-				object = page.getPageMapEntry();
+				String attribute = null;
+				Object object = iterator.next();
+				if (object instanceof Page)
+				{
+					final Page page = (Page)object;
+					attribute = page.getPageMap().attributeForId(page.getNumericId());
+					object = page.getPageMapEntry();
+				}
+				else if (object instanceof PageMap)
+				{
+					attribute = attributeForPageMapName(((PageMap)object).getName());
+				}
+	
+				// only replicate if the object was really already in the map.
+				// for example stateless pages will not be in the map so they
+				// shouldn't be added
+				Object previous = getAttribute(attribute);
+				if (previous != null)
+				{
+					setAttribute(attribute, object);
+				}
 			}
-			else if (object instanceof PageMap)
-			{
-				attribute = attributeForPageMapName(((PageMap)object).getName());
-			}
-
-			// only replicate if the object was really already in the map.
-			// for example stateless pages will not be in the map so they
-			// shouldn't be added
-			Object previous = getAttribute(attribute);
-			if (previous != null)
-			{
-				setAttribute(attribute, object);
-			}
+			dirtyObjects = null;
 		}
-		dirtyObjects = null;
 	}
 
 	/**
