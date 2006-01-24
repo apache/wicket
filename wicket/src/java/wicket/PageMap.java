@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.session.pagemap.IPageMapEntry;
@@ -39,6 +42,9 @@ public final class PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Log. */
+	private static final Log log = LogFactory.getLog(PageMap.class);
+	
 	/** Stack of entry accesses by id */
 	private final Stack/* <Access> */accessStack = new Stack();
 
@@ -409,8 +415,8 @@ public final class PageMap implements Serializable
 			}
 			else
 			{
-				throw new IllegalStateException("Unable to get version " + versionNumber
-						+ " of page " + page);
+				log.info("Unable to get version " + versionNumber + " of page " + page);
+				return null;
 			}
 			return page;
 		}

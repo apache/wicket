@@ -518,9 +518,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 			else
 			{
-				throw new IllegalStateException(
-						"No version manager available to retrieve requested versionNumber "
-								+ versionNumber);
+				log.info("No version manager available to retrieve requested versionNumber "
+						+ versionNumber);
+				return null;
 			}
 		}
 		else
