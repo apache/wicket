@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.WicketRuntimeException;
+import wicket.util.string.StringBuffer;
 
 /**
  * Subclass of WebResponse which buffers output and any redirection.
@@ -69,7 +70,7 @@ public class BufferedWebResponse extends WebResponse
             // Write the buffer to the response stream
             if (buffer.length() != 0)
             {
-                super.write(buffer.toString());
+                super.write(buffer.getValue());
             }
         }
 	}

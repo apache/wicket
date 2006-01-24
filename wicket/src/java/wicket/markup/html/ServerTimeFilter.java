@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
+import wicket.util.string.StringBuffer;
 
 /**
  * This filter logs the server time so the time it takes from the start of a request and the end of the response.
