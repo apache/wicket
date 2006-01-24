@@ -39,6 +39,7 @@ import wicket.util.resource.IResourceStream;
  * 
  * @author Eelco Hillenius
  * @author Ralf Ebert
+ * @author Igor Vaynberg
  */
 public abstract class AjaxHandler
 		implements
@@ -144,7 +145,7 @@ public abstract class AjaxHandler
 					"Behavior must be bound to a component to create the URL");
 		}
 
-		if (this instanceof IBehaviorListener)
+		if (!(this instanceof IBehaviorListener))
 		{
 			throw new IllegalArgumentException(
 					"The behavior must implement IBehaviorListener to accept requests");
