@@ -47,7 +47,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 	private static Log log = LogFactory.getLog(ServerAndClientTimeFilter.class);
 
 	/**
-	 * @see wicket.IResponseFilter#filter(java.lang.StringBuffer)
+	 * @see wicket.IResponseFilter#filter(AppendingStringBuffer)
 	 */
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
