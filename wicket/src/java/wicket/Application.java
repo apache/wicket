@@ -209,7 +209,8 @@ public abstract class Application
 		componentResolvers.add(new HtmlHeaderResolver());
 		componentResolvers.add(new BodyOnLoadResolver());
 		componentResolvers.add(new WicketLinkResolver());
-
+		componentResolvers.add(new WicketMessageResolver());
+		
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
 	}

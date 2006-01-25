@@ -34,6 +34,8 @@ public class EmptyDataProvider implements ISortableDataProvider
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final SortState sortState=new SortState(SortState.NONE, 0);
+	
 	private static EmptyDataProvider INSTANCE = new EmptyDataProvider();
 
 	/**
@@ -44,30 +46,48 @@ public class EmptyDataProvider implements ISortableDataProvider
 		return INSTANCE;
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider#addSort(java.lang.String)
+	 */
 	public void addSort(String property)
 	{
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider#getSortList()
+	 */
 	public List getSortList()
 	{
 		return Collections.EMPTY_LIST;
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.sort.ISortableDataProvider#getSortState(java.lang.String)
+	 */
 	public SortState getSortState(String property)
 	{
-		return null;
+		return sortState;
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int, int)
+	 */
 	public Iterator iterator(int first, int count)
 	{
 		return Collections.EMPTY_LIST.iterator();
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#size()
+	 */
 	public int size()
 	{
 		return 0;
 	}
 
+	/**
+	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
+	 */
 	public IModel model(Object object)
 	{
 		return null;

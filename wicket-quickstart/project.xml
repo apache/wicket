@@ -5,7 +5,7 @@
   <groupId>wicket</groupId>
   <id>wicket-quickstart</id>
   <name>QuickStart</name>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.1.1</currentVersion>
   <organization>
     <name>Wicket</name>
     <url>http://wicket.sourceforge.net</url>
@@ -16,14 +16,14 @@
   <logo>/images/projectLogo.png</logo>
   <description>A quickstart project for the Wicket framework. This project will get you up and running using Jetty as a servlet container and web server. This will allow you to quickly start developing your first Wicket application.</description>
   <shortDescription>Quickstart project for web applications using Wicket.</shortDescription>
-  <url>http://wicket.sourceforge.net/${pom.artifactId}</url>
+  <url>http://wicket.sourceforge.net/wicket-quickstart</url>
   <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
   <siteAddress>shell.sourceforge.net</siteAddress>
-  <siteDirectory>/home/groups/w/wi/wicket/htdocs/${pom.artifactId}</siteDirectory>
+  <siteDirectory>/home/groups/w/wi/wicket/htdocs/wicket-quickstart</siteDirectory>
   <repository>
-    <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:${pom.artifactId}</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:${pom.artifactId}</developerConnection>
-    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/${pom.artifactId}</url>
+    <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:wicket-quickstart</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket-quickstart</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-quickstart</url>
   </repository>
   <versions>
     <version>
@@ -56,12 +56,17 @@
       <name>1.0</name>
       <tag>WICKET_R_1_0_0</tag>
     </version>
+    <version>
+      <id>1.1.1</id>
+      <name>1.1.1</name>
+      <tag>WICKET_R_1_1_1</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1</version>
+      <version>1.1.1</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
@@ -135,7 +140,6 @@
 			== Dependencies for using Jetty servlet container                ==
 			===================================================================
 		-->
-
     <dependency>
       <groupId>jetty</groupId>
       <artifactId>org.mortbay.jetty</artifactId>

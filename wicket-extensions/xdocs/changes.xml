@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Wicket-Extensions changes</title>
+    <author email="igor at users.sourceforge.net">Igor Vaynberg</author>
+  </properties>
+  <body>
+    <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development"></release>
+    <release version="1.1.1" date="2006-01-25" description="Wicket 1.1.1">
+      <action type="fix" dev="Igor Vaynberg" issue="1367650" due-to="Arto Arffman">fixed page indexing bug in AbstractPageableDataView</action>
+      <action type="add" dev="Igor Vaynberg">new Select component that gives user total control of markup. see wicket.extensions.markup.html.form.select package.</action>
+      <action type="fix" dev="Igor Vaynberg">Fixed small bug in dataview that caused IDataProvider.size() to be called twice in certain situation on the first request to the page</action>
+    </release>
+  </body>
+</document>

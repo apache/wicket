@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.31 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -65,7 +65,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final List choices)
 	{
-		this(id, new Model((Serializable)choices),new ChoiceRenderer());
+		this(id, new Model((Serializable)choices), new ChoiceRenderer());
 	}
 
 	/**
@@ -79,9 +79,9 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final List choices,final IChoiceRenderer renderer)
+	public AbstractChoice(final String id, final List choices, final IChoiceRenderer renderer)
 	{
-		this(id,new Model((Serializable)choices),renderer);
+		this(id, new Model((Serializable)choices), renderer);
 	}
 
 	/**
@@ -113,7 +113,8 @@ abstract class AbstractChoice extends FormComponent
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
+	public AbstractChoice(final String id, IModel model, final List choices,
+			final IChoiceRenderer renderer)
 	{
 		this(id, model, new Model((Serializable)choices), renderer);
 	}
@@ -129,7 +130,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final IModel choices)
 	{
-		this(id, choices,new ChoiceRenderer());
+		this(id, choices, new ChoiceRenderer());
 	}
 
 	/**
@@ -143,7 +144,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IModel choices,final IChoiceRenderer renderer)
+	public AbstractChoice(final String id, final IModel choices, final IChoiceRenderer renderer)
 	{
 		super(id);
 		this.choices = choices;
@@ -179,14 +180,15 @@ abstract class AbstractChoice extends FormComponent
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final IModel choices, final IChoiceRenderer renderer)
+	public AbstractChoice(final String id, IModel model, final IModel choices,
+			final IChoiceRenderer renderer)
 	{
 		super(id, model);
 		this.choices = choices;
 		this.renderer = renderer;
 	}
 
-	
+
 	/**
 	 * @return The collection of object that this choice has
 	 */
@@ -210,8 +212,9 @@ abstract class AbstractChoice extends FormComponent
 				addStateChange(new Change()
 				{
 					private static final long serialVersionUID = 1L;
-					
+
 					final IModel oldList = AbstractChoice.this.choices;
+
 					public void undo()
 					{
 						AbstractChoice.this.choices = oldList;
@@ -232,21 +235,21 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Set the choice renderer to be used.
-	 *  
+	 * 
 	 * @param renderer
 	 */
 	public final void setChoiceRenderer(IChoiceRenderer renderer)
 	{
-	    this.renderer = renderer;
+		this.renderer = renderer;
 	}
-	
+
 	/**
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
 	{
 		super.detachModel();
-		
+
 		choices.detach();
 	}
 
@@ -284,34 +287,47 @@ abstract class AbstractChoice extends FormComponent
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		List choices = getChoices();
-		final StringBuffer buffer = new StringBuffer( (choices.size()*50)+16);
+		final StringBuffer buffer = new StringBuffer((choices.size() * 50) + 16);
 		final Object selected = getModelObject();
 
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
 
-		for (int index=0;index<choices.size();index++)
+		for (int index = 0; index < choices.size(); index++)
 		{
-			// Get next choice (Can be null is up to the renderer to support this)
 			final Object choice = choices.get(index);
-			final String displayValue = renderer.getDisplayValue(choice);
-			buffer.append("\n<option ");
-			if (isSelected(choice, index))
-			{
-				buffer.append("selected=\"selected\" ");
-			}
-			buffer.append("value=\"");
-			buffer.append(renderer.getIdValue(choice, index));
-			buffer.append("\">");
-			String display = getLocalizer().getString(getId() + "." + displayValue, this,
-					displayValue);
-			String escaped = Strings.escapeMarkup(display, false, true);
-			buffer.append(escaped);
-			buffer.append("</option>");
+			appendOptionHtml(buffer, choice, index);
 		}
 
 		buffer.append("\n");
 		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+	}
+
+	/**
+	 * Generats and appends html for a single choice into the provided buffer
+	 * 
+	 * @param buffer
+	 *            string buffer that will have the generated html appended
+	 * @param choice
+	 *            choice object
+	 * @param index
+	 * 
+	 */
+	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index)
+	{
+		final String displayValue = renderer.getDisplayValue(choice);
+		buffer.append("\n<option ");
+		if (isSelected(choice, index))
+		{
+			buffer.append("selected=\"selected\"");
+		}
+		buffer.append("value=\"");
+		buffer.append(renderer.getIdValue(choice, index));
+		buffer.append("\">");
+		String display = getLocalizer().getString(getId() + "." + displayValue, this, displayValue);
+		String escaped = Strings.escapeMarkup(display, false, true);
+		buffer.append(escaped);
+		buffer.append("</option>");
 	}
 
 	/**

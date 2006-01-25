@@ -11,6 +11,36 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="Januari 25, 2006 - Wicket 1.1.1 Available">
+				<p>
+					After a couple of months without any significant problem the Wicket team has made
+					available the first maintenance release of Wicket 1.1. This release
+					features a backport of a Wicket 1.2 feature: the <code>&lt;wicket:message&gt;</code>
+					tag, which enables you to create internationalized pages without having
+					to resort to adding <code>Label</code> components with
+					<code>StringResourceModel</code>
+					for internationalizing the texts on a page. See the 
+					<a href="apidocs/wicket/WicketMessageResolver.html">WicketMessageResolver</a> JavaDoc
+					for more information.
+				</p>
+				<p>
+					Further enhancements include:
+				</p>
+				<ul>
+					<li>Added check and better exception when servlet's init param is missing</li>
+					<li>Added label tags for generated input tags in CheckBoxMultipleChoice and RadioChoice</li>
+					<li>Fixed autolink NPE problem</li>
+					<li>Fixed bug in button that caused the value attirbute to disappear after form submit</li>
+				</ul>
+				<p>
+					Together with this release, the <a href="/wicket-extensions">Wicket extensions</a> project
+					receives a maintance release.
+				</p>
+				<p>
+					This release is available through the download pages on 
+					<a href="http://sourceforge.net/project/showfiles.php?group_id=119783">SourceForge</a>.
+				</p>
+			</subsection>
 			<subsection name="October 30, 2005 - Wicket 1.1 Available">
 				<p>
 					The Wicket team is proud to announce the availability of Wicket 1.1 for 
