@@ -6,3 +6,4 @@ build.properties
 *.temp
 RECYCLER
 .clover
+.DS_Store
