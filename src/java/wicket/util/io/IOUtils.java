@@ -660,13 +660,13 @@ public class IOUtils
 		}
 	}
 
-	// write StringBuffer
+	// write AppendingStringBuffer
 	// -----------------------------------------------------------------------
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to a <code>Writer</code>.
+	 * Writes chars from a <code>AppendingStringBuffer</code> to a <code>Writer</code>.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null ignored
 	 * @param output
 	 *            the <code>Writer</code> to write to
 	 * @throws NullPointerException
@@ -684,14 +684,14 @@ public class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to bytes on an
+	 * Writes chars from a <code>AppendingStringBuffer</code> to bytes on an
 	 * <code>OutputStream</code> using the default character encoding of the
 	 * platform.
 	 * <p>
 	 * This method uses {@link String#getBytes()}.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null ignored
 	 * @param output
 	 *            the <code>OutputStream</code> to write to
 	 * @throws NullPointerException
@@ -709,7 +709,7 @@ public class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to bytes on an
+	 * Writes chars from a <code>AppendingStringBuffer</code> to bytes on an
 	 * <code>OutputStream</code> using the specified character encoding.
 	 * <p>
 	 * Character encoding names can be found at <a
@@ -718,7 +718,7 @@ public class IOUtils
 	 * This method uses {@link String#getBytes(String)}.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null ignored
 	 * @param output
 	 *            the <code>OutputStream</code> to write to
 	 * @param encoding

@@ -17,7 +17,7 @@
 package wicket;
 
 import wicket.settings.Settings;
-import wicket.util.string.StringBuffer;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A response filter can be added to the
@@ -44,5 +44,5 @@ public interface IResponseFilter
 	 *            The response buffer to be filtered
 	 * @return The changed buffer or the response buffer itself (changed or not)
 	 */
-	StringBuffer filter(StringBuffer responseBuffer);
+	AppendingStringBuffer filter(AppendingStringBuffer responseBuffer);
 }

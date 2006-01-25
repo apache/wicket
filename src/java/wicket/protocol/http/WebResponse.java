@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Time;
 
 /**
@@ -246,16 +247,16 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Writes char array to response output.
+	 * Writes AppendingStringBuffer to response output.
 	 * 
-	 * @param array
-	 *  		  The char array to write
+	 * @param asb
+	 *  		  The AppendingStringBuffer to write to the stream
 	 */
-	public void write(final char[] array)
+	public void write(AppendingStringBuffer asb)
 	{
 		try
 		{
-			httpServletResponse.getWriter().write(array);
+			httpServletResponse.getWriter().write(asb.getValue(),0,asb.length());
 		}
 		catch (IOException e)
 		{

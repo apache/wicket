@@ -29,7 +29,7 @@ import wicket.IResponseFilter;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.model.Model;
-import wicket.util.string.StringBuffer;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * This is a filter that injects javascript code to the top head portion and after the body so that
@@ -49,7 +49,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 	/**
 	 * @see wicket.IResponseFilter#filter(java.lang.StringBuffer)
 	 */
-	public StringBuffer filter(StringBuffer responseBuffer)
+	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int headIndex = responseBuffer.indexOf("<head>");
 		int bodyIndex = responseBuffer.indexOf("</body>");
@@ -60,13 +60,13 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken)/1000 + "s");
 			
-			StringBuffer defaultValue = new StringBuffer(128);
+			AppendingStringBuffer defaultValue = new AppendingStringBuffer(128);
 			defaultValue.append("Server parsetime: ");
 			defaultValue.append(((double)timeTaken)/1000);
 			defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			
 			String txt = Application.get().getResourceSettings().getLocalizer().getString("ServerAndClientTimeFilter.statustext", null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(), defaultValue.toString());
-			StringBuffer endScript = new StringBuffer(150);
+			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
 			endScript.append("\n<script>\nwindow.defaultStatus='");
 			endScript.append(txt);
 			endScript.append("';\n</script>\n");
