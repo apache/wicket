@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.util.io.StringBufferWriter;
-import wicket.util.string.StringBuffer;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * @author jcompagner
@@ -422,7 +422,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public final void filter(Response response)
 	{
 		isOpen();
-		StringBuffer buffer = sbw.getStringBuffer();
+		AppendingStringBuffer buffer = sbw.getStringBuffer();
         if (redirect == null && buffer.length() != 0)
         {
         	buffer = response.filter(buffer);
@@ -453,7 +453,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 *            The output encoding
 	 * @return byte[] The encoded characters converted into bytes
 	 */
-	private static byte[] convertToCharset(final StringBuffer output, final String encoding)
+	private static byte[] convertToCharset(final AppendingStringBuffer output, final String encoding)
 	{
 		if (encoding == null)
 		{
@@ -467,7 +467,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		try
 		{
 			osw = new OutputStreamWriter(baos, encoding);
-			osw.write(output.getValue());
+			osw.write(output.getValue(),0,output.length());
 			osw.close();
 
 			bytes = baos.toByteArray();

@@ -168,7 +168,7 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	{
 		// Allocate buffer of exactly the right length
 		final int length = totalLength() + (separator.length() * (Math.max(0, last - first - 1)));
-		final StringBuffer buf = new StringBuffer(length);
+		final AppendingStringBuffer buf = new AppendingStringBuffer(length);
 
 		// Loop through indexes requested
 		for (int i = first; i < last; i++)

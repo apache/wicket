@@ -32,6 +32,7 @@ import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.watch.ModificationWatcher;
 import wicket.util.watch.Watcher;
 
@@ -185,7 +186,7 @@ public class MarkupCache
 		}
 
 		// Look up markup tag list by class, locale, style and markup type
-		final String key = markupKey(containerInfo, clazz);
+		final AppendingStringBuffer key = markupKey(containerInfo, clazz);
 		Markup markup = (Markup)markupCache.get(key);
 
 		// If no markup in the cache
@@ -237,7 +238,7 @@ public class MarkupCache
 	 * @param markupResourceStream 
 	 *         The resource stream
 	 */
-	private void removeMarkup(final String key, final MarkupResourceStream markupResourceStream)
+	private void removeMarkup(final AppendingStringBuffer key, final MarkupResourceStream markupResourceStream)
 	{
 		markupCache.remove(key);
 		
@@ -255,7 +256,7 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private final Markup loadMarkup(final String key,
+	private final Markup loadMarkup(final AppendingStringBuffer key,
 			final MarkupResourceStream markupResourceStream)
 	{
 		try
@@ -309,7 +310,7 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @return The markup in the stream
 	 */
-	private final Markup loadMarkupAndWatchForChanges(final String key,
+	private final Markup loadMarkupAndWatchForChanges(final AppendingStringBuffer key,
 			final MarkupResourceStream markupResourceStream)
 	{
 		// Watch file in the future
@@ -344,28 +345,36 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final String markupKey(final ContainerInfo containerInfo, final Class clazz)
+	private final wicket.util.string.AppendingStringBuffer markupKey(final ContainerInfo containerInfo, final Class clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = containerInfo.getLocale();
 		final String style = containerInfo.getStyle();
 		final String markupType = containerInfo.getFileExtension();
 
-		final StringBuffer buffer = new StringBuffer(classname.length() + 32);
+		final wicket.util.string.AppendingStringBuffer buffer = new wicket.util.string.AppendingStringBuffer(classname.length() + 32);
 		buffer.append(classname);
 
 		if (locale != null)
 		{
-			buffer.append(locale.toString());
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c||(l&&v)) {
+				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			}
+			if (v&&(l||c)) {
+				buffer.append('_').append(locale.getVariant());
+			}			
 		}
-
 		if (style != null)
 		{
 			buffer.append(style);
 		}
 
 		buffer.append(markupType);
-		return buffer.toString();
+		return buffer;
 	}
 
 	/**
@@ -389,7 +398,7 @@ public class MarkupCache
 	 *            The markup to checked for inheritance
 	 * @return A markup object with the the base markup elements resolved.
 	 */
-	private Markup checkForMarkupInheritance(final String key, final Markup markup)
+	private Markup checkForMarkupInheritance(final AppendingStringBuffer key, final Markup markup)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.

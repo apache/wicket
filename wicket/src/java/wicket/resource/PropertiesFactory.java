@@ -34,6 +34,7 @@ import wicket.Component;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 import wicket.util.watch.ModificationWatcher;
 
@@ -142,7 +143,7 @@ public class PropertiesFactory
 	public final String createResourceKey(final Class componentClass, final Locale locale,
 			final String style)
 	{
-		final StringBuffer buffer = new StringBuffer(80);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(80);
 		if (componentClass != null)
 		{
 			buffer.append(componentClass.getName());
@@ -155,7 +156,16 @@ public class PropertiesFactory
 		if (locale != null)
 		{
 			buffer.append(Component.PATH_SEPARATOR);
-			buffer.append(locale.toString());
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c||(l&&v)) {
+				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			}
+			if (v&&(l||c)) {
+				buffer.append('_').append(locale.getVariant());
+			}			
 		}
 
 		final String id = buffer.toString();

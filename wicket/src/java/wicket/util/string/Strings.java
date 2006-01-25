@@ -272,7 +272,7 @@ public final class Strings
 		else
 		{
 			int len = s.length();
-			final StringBuffer buffer = new StringBuffer((int)(len*1.1));
+			final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len*1.1));
 
 			for (int i = 0; i < len; i++)
 			{
@@ -558,7 +558,7 @@ public final class Strings
 		}
 		else
 		{
-			// Allocate a StringBuffer that will hold one replacement with a
+			// Allocate a AppendingStringBuffer that will hold one replacement with a
 			// little extra room.
 			int size = s.length();
 			final int replaceWithLength = replaceWith.length();
@@ -567,7 +567,7 @@ public final class Strings
 			{
 				size += (replaceWithLength - searchForLength);
 			}
-			final StringBuffer buffer = new StringBuffer(size + 16);
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(size + 16);
 
 			int pos = 0;
 			do
@@ -736,7 +736,7 @@ public final class Strings
 			return null;
 		}
 
-		final StringBuffer buffer = new StringBuffer();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		int newlineCount = 0;
 
 		buffer.append("<p>");
@@ -823,7 +823,7 @@ public final class Strings
 				al.add(cause);
 			}
 
-			StringBuffer sb = new StringBuffer(256);
+			AppendingStringBuffer sb = new AppendingStringBuffer(256);
 			// first print the last cause
 			int length = al.size()-1;
 			cause = (Throwable)al.get(length);
@@ -860,7 +860,7 @@ public final class Strings
 	 * @param sb
 	 * @param stopAtWicketServlet
 	 */
-	private static void outputThrowable(Throwable cause, StringBuffer sb, boolean stopAtWicketServlet)
+	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb, boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");

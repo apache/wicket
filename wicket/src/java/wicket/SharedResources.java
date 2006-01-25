@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.resource.DynamicByteArrayResource;
 import wicket.util.file.Files;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Duration;
 
 /**
@@ -163,9 +164,9 @@ public class SharedResources
 	 */
 	public static String path(final String path, final Locale locale, final String style)
 	{
-		final StringBuffer buffer = new StringBuffer();
 		final String extension = Files.extension(path);
 		final String basePath = Files.basePath(path, extension);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 		// first style because locale can append later on.
 		if (style != null)
@@ -176,7 +177,16 @@ public class SharedResources
 		if (locale != null)
 		{
 			buffer.append('_');
-			buffer.append(locale.toString());
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c||(l&&v)) {
+				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			}
+			if (v&&(l||c)) {
+				buffer.append('_').append(locale.getVariant());
+			}
 		}
 		if (extension != null)
 		{

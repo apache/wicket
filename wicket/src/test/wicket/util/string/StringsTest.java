@@ -467,7 +467,7 @@ public final class StringsTest extends TestCase
 	 */
 	private String stringValue(String[] arrayOfStrings)
 	{
-		StringBuffer sb = new StringBuffer("{");
+		AppendingStringBuffer sb = new AppendingStringBuffer("{");
 		String komma = "";
 		for (int i = 0; i < arrayOfStrings.length; i++)
 		{

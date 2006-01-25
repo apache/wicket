@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
-import wicket.util.string.StringBuffer;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * This filter logs the server time so the time it takes from the start of a request and the end of the response.
@@ -43,13 +43,13 @@ public class ServerTimeFilter implements IResponseFilter
 	/**
 	 * @see wicket.IResponseFilter#filter(java.lang.StringBuffer)
 	 */
-	public StringBuffer filter(StringBuffer responseBuffer)
+	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int index = responseBuffer.indexOf("<head>");
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if(index != -1)
 		{
-			StringBuffer script = new StringBuffer(20);
+			AppendingStringBuffer script = new AppendingStringBuffer(75);
 			script.append("\n<script>\nwindow.defaultStatus='Server time: ");
 			script.append( ((double)timeTaken)/1000);
 			script.append("s';\n</script>\n");

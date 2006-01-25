@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
-import wicket.util.string.StringBuffer;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Time;
 
 /**
@@ -78,7 +78,7 @@ public abstract class Response
 	 *            The response buffer to be filtered
 	 * @return Returns the filtered string buffer.
 	 */
-	public final StringBuffer filter(StringBuffer responseBuffer)
+	public final AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		List responseFilters = Application.get().getRequestCycleSettings().getResponseFilters();
 		if (responseFilters == null)
