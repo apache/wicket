@@ -115,4 +115,14 @@ public class SimplePageTest extends WicketTestCase
 		}
 		assertTrue("Did expect a MarkupNotFoundException", hit);
 	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_7() throws Exception
+	{
+		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
+	}
+
 }
