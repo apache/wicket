@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.47 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,9 +46,9 @@ import wicket.Component;
  * given person object like this:
  * 
  * <pre>
- *                 Person person = getSomePerson();
- *                 ...
- *                 add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *                  Person person = getSomePerson();
+ *                  ...
+ *                  add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
@@ -60,7 +60,7 @@ import wicket.Component;
  * updates the name property of a person like this:
  * 
  * <pre>
- *                 add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *                  add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
  * </pre>
  * 
  * </p>
@@ -92,19 +92,19 @@ public class PropertyModel extends AbstractPropertyModel
 
 	/**
 	 * If this is set, this type is used for conversion instead of the type that
-	 * is figured out by Ognl. This can be especially useful for when you have
-	 * a generic property (like Serializable myProp) that you want to be
-	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
-	 * string being compatible with the target property, and will then bypass
-	 * the converter. Hence, to force myProp being converted to and from an
-	 * integer, propertyType should be set to Integer.
+	 * is figured out by Ognl. This can be especially useful for when you have a
+	 * generic property (like Serializable myProp) that you want to be converted
+	 * to a narrower type (e.g. an Integer). Ognl sees an incomming string being
+	 * compatible with the target property, and will then bypass the converter.
+	 * Hence, to force myProp being converted to and from an integer,
+	 * propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the
-	 * given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped(IModel) object or an unwrapped (non-IModel)
+	 * object and a Ognl expression that works on the given model. Additional
+	 * formatting will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
@@ -117,9 +117,9 @@ public class PropertyModel extends AbstractPropertyModel
 	}
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the
-	 * given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped(IModel) object or an unwrapped (non-IModel)
+	 * object and a Ognl expression that works on the given model. Additional
+	 * formatting will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
