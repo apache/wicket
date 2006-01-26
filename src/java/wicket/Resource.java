@@ -58,6 +58,7 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
+ * @author Igor Vaynberg
  */
 public abstract class Resource implements IResourceListener
 {
@@ -70,8 +71,8 @@ public abstract class Resource implements IResourceListener
 	/** The maximum duration a resource may be idle before it is removed */
 	private Duration idleTimeout = Duration.NONE;
 
-	/** Any parameters associated with the request for this resource */
-	private ValueMap parameters;
+	/** ThreadLocal to keep any parameters associated with the request for this resource */
+	private static ThreadLocal parameters=new ThreadLocal();
 
 	/**
 	 * Constructor
@@ -87,7 +88,7 @@ public abstract class Resource implements IResourceListener
 	 * 
 	 * @return The idle duration timeout
 	 */
-	public Duration getIdleTimeout()
+	public synchronized Duration getIdleTimeout()
 	{
 		return idleTimeout;
 	}
@@ -165,7 +166,7 @@ public abstract class Resource implements IResourceListener
 	 *            The idle duration timeout
 	 * @return this
 	 */
-	public Resource setIdleTimeout(Duration value)
+	public synchronized Resource setIdleTimeout(Duration value)
 	{
 		idleTimeout = value;
 		return this;
@@ -177,9 +178,9 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
-	public void setParameters(final Map parameters)
+	public final void setParameters(final Map parameters)
 	{
-		this.parameters = new ValueMap(parameters);
+		Resource.parameters.set(new ValueMap(parameters));
 	}
 
 	/**
@@ -203,7 +204,7 @@ public abstract class Resource implements IResourceListener
 		{
 			setParameters(RequestCycle.get().getRequest().getParameterMap());
 		}
-		return parameters;
+		return (ValueMap)parameters.get();
 	}
 
 	/**
