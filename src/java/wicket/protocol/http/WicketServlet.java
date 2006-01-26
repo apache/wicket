@@ -378,6 +378,7 @@ public class WicketServlet extends HttpServlet
 				}
 				finally
 				{
+					resource.setParameters(null);
 					Application.set(null);
 				}
 			}
