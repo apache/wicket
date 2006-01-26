@@ -40,6 +40,11 @@ import wicket.util.lang.Objects;
  */
 public final class PageMap implements Serializable
 {
+	/**
+	 * name of default pagemap
+	 */
+	public static final String DEFAULT_PAGEMAP_NAME=null;
+	
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
