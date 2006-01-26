@@ -364,6 +364,16 @@ public class WicketServlet extends HttpServlet
 
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();
+					
+					try
+					{
+						stream.close();
+					}
+					catch (IOException e)
+					{
+						// ignore
+					}
+					
 					return time != null ? time.getMilliseconds() : -1;
 				}
 				finally
