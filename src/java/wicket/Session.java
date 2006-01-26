@@ -511,7 +511,11 @@ public abstract class Session implements Serializable
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
-		currentPageMap.redirectToInterceptPage(page);
+		PageMap map=currentPageMap;
+		if (map==null) {
+			map=getPageMap(PageMap.DEFAULT_PAGEMAP_NAME);
+		}
+		map.redirectToInterceptPage(page);
 	}
 
 	/**
