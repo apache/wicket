@@ -113,36 +113,41 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final void onResourceRequested()
 	{
-		// Get request cycle
-		final RequestCycle cycle = RequestCycle.get();
+		try {
+			// Reset parameters
+			parameters.set(null);
 
-		// Fetch resource from subclass if necessary
-		IResourceStream resourceStream = init();
-
-		// Get servlet response to use when responding with resource
-		final Response response = cycle.getResponse();
-
-		// Configure response with content type of resource
-		response.setContentType(resourceStream.getContentType());
-		response.setContentLength((int)resourceStream.length());
-
-		if (isCacheable())
-		{
-			// Don't set this above setContentLength call above.
-			// The call above could create and set the last modified time.
-			response.setLastModifiedTime(resourceStream.lastModifiedTime());
+			// Get request cycle
+			final RequestCycle cycle = RequestCycle.get();
+	
+			// Fetch resource from subclass if necessary
+			IResourceStream resourceStream = init();
+	
+			// Get servlet response to use when responding with resource
+			final Response response = cycle.getResponse();
+	
+			// Configure response with content type of resource
+			response.setContentType(resourceStream.getContentType());
+			response.setContentLength((int)resourceStream.length());
+	
+			if (isCacheable())
+			{
+				// Don't set this above setContentLength call above.
+				// The call above could create and set the last modified time.
+				response.setLastModifiedTime(resourceStream.lastModifiedTime());
+			}
+			else
+			{
+				response.setLastModifiedTime(Time.valueOf(-1));
+			}
+			configureResponse(response);
+	
+			// Respond with resource
+			respond(resourceStream, response);
+		} finally {
+			// Really really really make sure parameters are cleared to appease Johan
+			parameters.set(null);
 		}
-		else
-		{
-			response.setLastModifiedTime(Time.valueOf(-1));
-		}
-		configureResponse(response);
-
-		// Respond with resource
-		respond(resourceStream, response);
-
-		// Reset parameters
-		parameters.set(null);
 	}
 
 	/**
