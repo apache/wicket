@@ -23,6 +23,7 @@ import java.util.Iterator;
 import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
+import wicket.model.IDetachable;
 
 /**
  * Base class for data views.
@@ -134,6 +135,14 @@ public abstract class DataViewBase extends AbstractPageableView
 	protected final int internalGetItemCount()
 	{
 		return internalGetDataProvider().size();
+	}
+	
+	protected void onEndRequest()
+	{
+		super.onEndRequest();
+		if (dataProvider instanceof IDetachable) {
+			((IDetachable)dataProvider).detach();
+		}
 	}
 
 }
