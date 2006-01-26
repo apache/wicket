@@ -28,6 +28,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -222,5 +223,13 @@ public class WebPage extends Page implements IHeaderRenderer
 			this.remove(header);
 		}
 		super.onEndRequest();
+	}
+
+        protected void configureResponse()
+        {
+	    super.configureResponse();
+	    WebResponse response=getWebRequestCycle().getWebResponse();
+	    response.setHeader("Pragma","no-cache");
+	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
 	}
 }
