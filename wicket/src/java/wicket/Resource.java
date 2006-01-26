@@ -72,7 +72,7 @@ public abstract class Resource implements IResourceListener
 	private Duration idleTimeout = Duration.NONE;
 
 	/** ThreadLocal to keep any parameters associated with the request for this resource */
-	private static ThreadLocal parameters=new ThreadLocal();
+	private static final ThreadLocal parameters=new ThreadLocal();
 
 	/**
 	 * Constructor
@@ -117,7 +117,7 @@ public abstract class Resource implements IResourceListener
 		final RequestCycle cycle = RequestCycle.get();
 
 		// Reset parameters
-		parameters = null;
+		parameters.set(null);
 
 		// Fetch resource from subclass if necessary
 		IResourceStream resourceStream = init();
