@@ -116,9 +116,6 @@ public abstract class Resource implements IResourceListener
 		// Get request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
-		// Reset parameters
-		parameters.set(null);
-
 		// Fetch resource from subclass if necessary
 		IResourceStream resourceStream = init();
 
@@ -143,6 +140,9 @@ public abstract class Resource implements IResourceListener
 
 		// Respond with resource
 		respond(resourceStream, response);
+
+		// Reset parameters
+		parameters.set(null);
 	}
 
 	/**
