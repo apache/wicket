@@ -1,30 +1,27 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.15 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
-import wicket.protocol.http.MockPage;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
@@ -38,8 +35,6 @@ import wicket.util.value.ValueMap;
  */
 public class LocalizerTest extends WicketTestCase
 {
-	private Application application;
-
 	private IResourceSettings settings;
 
 	private Localizer localizer;
@@ -61,7 +56,6 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	protected void setUp() throws Exception
 	{
-		super.setUp();
 		application = new DummyApplication();
 		settings = application.getResourceSettings();
 		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
@@ -73,8 +67,8 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testGetStringValidString()
 	{
-		Assert.assertEquals("Expected string should be returned", "This is a test", 
-		        localizer.getString("test.string", null, null, null, null, "DEFAULT"));
+		Assert.assertEquals("Expected string should be returned", "This is a test", localizer
+				.getString("test.string", null, null, null, null, "DEFAULT"));
 	}
 
 	/**
@@ -83,8 +77,8 @@ public class LocalizerTest extends WicketTestCase
 	public void testGetStringMissingStringReturnDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
-		Assert.assertEquals("Default string should be returned", "DEFAULT", 
-		        localizer.getString("unknown.string", null, null, null, null, "DEFAULT"));
+		Assert.assertEquals("Default string should be returned", "DEFAULT", localizer.getString(
+				"unknown.string", null, null, null, null, "DEFAULT"));
 	}
 
 	/**
@@ -96,8 +90,8 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(false);
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
-				"[Warning: String resource for 'unknown.string' not found]", 
-				localizer.getString("unknown.string", null, null, null, null, null));
+				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+						"unknown.string", null, null, null, null, null));
 	}
 
 	/**
@@ -108,8 +102,8 @@ public class LocalizerTest extends WicketTestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-				"[Warning: String resource for 'unknown.string' not found]", 
-				localizer.getString("unknown.string", null, null, null, null, "DEFAULT"));
+				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+						"unknown.string", null, null, null, null, "DEFAULT"));
 	}
 
 	/**
@@ -138,13 +132,12 @@ public class LocalizerTest extends WicketTestCase
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
 		Model model = new Model(vm);
-		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", 
-		        localizer.getString("test.substitute", null, model, null, null, null));
+		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", localizer
+				.getString("test.substitute", null, model, null, null, null));
 	}
 
 	/**
 	 * 
-	 *
 	 */
 	public void testInComponentConstructor()
 	{
@@ -154,13 +147,18 @@ public class LocalizerTest extends WicketTestCase
 	/**
 	 * Unit test for bug number [1416582] Resource loading caches wrong.
 	 */
-	public void testTwoComponents() {
+	public void testTwoComponents()
+	{
 		MyMockPage page = new MyMockPage();
-		Application.get().getResourceSettings().addStringResourceLoader(new ComponentStringResourceLoader(Application.get()));
+		Application.get().getResourceSettings().addStringResourceLoader(
+				new ComponentStringResourceLoader(Application.get()));
+
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		String drop1 = localizer.getString("null", page.drop1, "");
 		String drop2 = localizer.getString("null", page.drop2, "");
-		assertFalse("drop1 : [" + drop1 + "] drop2 : [" + drop2 + "]", drop1.equals(drop2));
+		
+		assertEquals("value 1", drop1);
+		assertEquals("value 2", drop2);
 	}
 
 	/**
@@ -172,6 +170,7 @@ public class LocalizerTest extends WicketTestCase
 
 		/**
 		 * Construct.
+		 * 
 		 * @param id
 		 */
 		public MyLabel(final String id)
@@ -179,12 +178,13 @@ public class LocalizerTest extends WicketTestCase
 			super(id);
 
 			Localizer localizer = Application.get().getResourceSettings().getLocalizer();
-			
-			// should work properly in a component constructor (without parent) as well
-			Assert.assertEquals("Expected string should be returned", "This is a test", 
-			        localizer.getString("test.string", this, "DEFAULT"));
-			
+
+			// should work properly in a component constructor (without parent)
+			// as well
+			Assert.assertEquals("Expected string should be returned", "This is a test", localizer
+					.getString("test.string", this, "DEFAULT"));
+
 		}
 	}
-	
+
 }

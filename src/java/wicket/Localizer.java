@@ -79,11 +79,10 @@ public class Localizer
 					{
 						// Remove all cached values. Unfortunately I did not yet
 						// find a proper way (which is easy and clean to
-						// implement)
-						// which selectively removes just the cache entries
-						// affected. Hence they all get removed. Actually that
-						// is less worse as it may sound, because type
-						// Properties does cache them as well. We only have
+						// implement) which selectively removes just the cache
+						// entries affected. Hence they all get removed.
+						// Actually that is less worse as it may sound, because
+						// type Properties does cache them as well. We only have
 						// to walk the properties resolution path once again.
 						// And, the feature of reloading the properties file
 						// is usually activated during development only and
@@ -169,12 +168,13 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		// Get resource settings
-		final IResourceSettings resourceSettings = application.getResourceSettings();
-
-		// If value is cached already ...
+		// Create the cache key
 		Class clazz = (component != null ? component.getClass() : null);
 		String id = createCacheId(clazz, locale, style, key);
+		if (component != null)
+		{
+			id += ":" + component.getId();
+		}
 
 		// The cached key value
 		String string = getCachedValue(id);
@@ -196,7 +196,19 @@ public class Localizer
 				path = null;
 			}
 
-			string = getString(key, path, searchStack, locale, style);
+			string = traverseResourceLoaders(key, path, searchStack, locale, style);
+
+			// cache all values, not matter the key has been found or not
+			if (string != null)
+			{
+				this.cachedValues.put(id, string);
+			}
+			else
+			{
+				// ConcurrentReaderHashMap does not allow null values. This is a
+				// substitute
+				this.cachedValues.put(id, NULL);
+			}
 		}
 
 		if (string != null)
@@ -206,6 +218,7 @@ public class Localizer
 
 		// Resource not found, so handle missing resources based on application
 		// configuration
+		final IResourceSettings resourceSettings = application.getResourceSettings();
 		if (resourceSettings.getUseDefaultOnMissingResource() && (defaultValue != null))
 		{
 			return defaultValue;
@@ -269,8 +282,6 @@ public class Localizer
 	}
 
 	/**
-	 * 
-	 * <p>
 	 * Note: This implementation does NOT allow variable substitution
 	 * 
 	 * @param key
