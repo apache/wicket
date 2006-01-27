@@ -20,6 +20,7 @@ package wicket.markup.html.panel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.OpenWebMarkupContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 
 /**
@@ -80,5 +81,16 @@ public class Panel extends OpenWebMarkupContainer
                 "Markup for a panel component has to contain part '<wicket:panel>'");
 
         super.onComponentTagBody(markupStream, openTag);
+    }
+
+    /**
+     * Check the associated markup file for a wicket header tag
+     * 
+     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+     */
+    public void renderHead(HtmlHeaderContainer container)
+    {
+    	this.renderHeadFromAssociatedMarkupFile(container);
+    	super.renderHead(container);
     }
 }

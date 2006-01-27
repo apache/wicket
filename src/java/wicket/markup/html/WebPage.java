@@ -162,7 +162,6 @@ public class WebPage extends Page implements IHeaderRenderer
 	 * status from one request to the next. This is true for all components
 	 * added to the header.
 	 * 
-	 * @see IHeaderContributor
 	 * @param container
 	 *            The header component container
 	 */
@@ -170,9 +169,9 @@ public class WebPage extends Page implements IHeaderRenderer
 	{
 		this.bodyOnLoad = null;
 
-		// Components interested in contributing to the header must
-		// implement IHeaderContributor.
-		visitChildren(IHeaderContributor.class, new IVisitor()
+		// Make sure are Components interested in contributing to the header 
+		// and there attached behaviors are asked.
+		visitChildren(new IVisitor()
 		{
 			/**
 			 * @see wicket.Component.IVisitor#component(wicket.Component)
@@ -181,9 +180,13 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
-					((IHeaderContributor)component).renderHead(container);
+					component.renderHead(container);
+					return IVisitor.CONTINUE_TRAVERSAL;
 				}
-				return IVisitor.CONTINUE_TRAVERSAL;
+				else
+				{
+					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				}
 			}
 		});
 	}

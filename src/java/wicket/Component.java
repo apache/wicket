@@ -37,6 +37,9 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -410,6 +413,12 @@ public abstract class Component implements Serializable
 		 * A generic value to return to stop a traversal.
 		 */
 		public static final Object STOP_TRAVERSAL = new Object();
+
+		/**
+		 * A generic value to return to contiue a traversal, but if the
+		 * component is a container, don't visit its children.
+		 */
+		public static final Object CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER = new Object();
 
 		/**
 		 * Called at each component in a traversal.
@@ -1521,6 +1530,34 @@ public abstract class Component implements Serializable
 				{
 					// Close the manually opened panel tag.
 					getResponse().write(openTag.syntheticCloseTagString());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Print to the web response what ever the component wants to contribute 
+	 * to the head section. Make sure that all attached behaviors are asked
+	 * as well.
+	 * 
+	 * @param container
+	 *            The HtmlHeaderContainer
+	 */
+	public void renderHead(final HtmlHeaderContainer container)
+	{
+		// get head and body contributions in one loop
+		List behaviors = getBehaviors();
+		for (Iterator i = behaviors.iterator(); i.hasNext();)
+		{
+			IBehavior behavior = (IBehavior)i.next();
+			if (behavior instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)behavior).renderHead(container);
+				
+				String stmt = ((IHeaderContributor)behavior).getBodyOnLoad();
+				if (stmt != null)
+				{
+					((WebPage)getPage()).appendToBodyOnLoad(stmt);
 				}
 			}
 		}

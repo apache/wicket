@@ -17,19 +17,14 @@
  */
 package wicket.markup.html;
 
-import java.util.Iterator;
-import java.util.List;
-
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
-import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
@@ -43,7 +38,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainer extends MarkupContainer implements IHeaderContributor
+public class WebMarkupContainer extends MarkupContainer 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -77,12 +72,10 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section.
 	 * 
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
-	 * 
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer container)
+	public void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
 	{
 		// Ask the child component if it has something to contribute
 		WebMarkupContainer headerPart = getHeaderPart();
@@ -117,27 +110,6 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 				finally
 				{
 					getRequestCycle().setResponse(response);
-				}
-			}
-		}
-
-		// get head and body contributions in one loop
-		// NOTE: THIS CODE MUST BE IN SYNC WITH SAME PIECE OF CODE in WEBCOMPONENT
-		List behaviors = getBehaviors();
-		for (Iterator i = behaviors.iterator(); i.hasNext();)
-		{
-			IBehavior behavior = (IBehavior)i.next();
-			if (behavior instanceof IHeaderContributor)
-			{
-				((IHeaderContributor)behavior).renderHead(container);
-			}
-
-			if (behavior instanceof IBodyOnLoadContributor)
-			{
-				String stmt = ((IBodyOnLoadContributor)behavior).getBodyOnLoad();
-				if (stmt != null)
-				{
-					((WebPage)getPage()).appendToBodyOnLoad(stmt);
 				}
 			}
 		}
