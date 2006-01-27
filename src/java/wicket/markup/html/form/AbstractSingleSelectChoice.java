@@ -34,6 +34,8 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
 
+	private static final String NO_SELECTION_VALUE = "-1";
+
 	/** Is the null value a valid value? */
 	private boolean nullValid = false;
 
@@ -128,7 +130,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
-		return "-1";
+		return NO_SELECTION_VALUE;
 	}
 
 	/**
@@ -200,7 +202,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if (selected == null)
+			if (selected == NO_SELECTION_VALUE)
 			{
 				// Force the user to pick a non-null value
 				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
