@@ -24,8 +24,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
+import wicket.protocol.http.MockPage;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.IResourceSettings;
 import wicket.util.value.ValueMap;
 
@@ -34,7 +36,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class LocalizerTest extends TestCase
+public class LocalizerTest extends WicketTestCase
 {
 	private Application application;
 
@@ -150,6 +152,18 @@ public class LocalizerTest extends TestCase
 	}
 
 	/**
+	 * Unit test for bug number [1416582] Resource loading caches wrong.
+	 */
+	public void testTwoComponents() {
+		MyMockPage page = new MyMockPage();
+		Application.get().getResourceSettings().addStringResourceLoader(new ComponentStringResourceLoader(Application.get()));
+		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
+		String drop1 = localizer.getString("null", page.drop1, "");
+		String drop2 = localizer.getString("null", page.drop2, "");
+		assertFalse("drop1 : [" + drop1 + "] drop2 : [" + drop2 + "]", drop1.equals(drop2));
+	}
+
+	/**
 	 * 
 	 */
 	public static class MyLabel extends Label
@@ -172,4 +186,5 @@ public class LocalizerTest extends TestCase
 			
 		}
 	}
+	
 }
