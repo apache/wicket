@@ -40,9 +40,7 @@ import wicket.util.lang.Objects;
  */
 public final class PageMap implements Serializable
 {
-	/**
-	 * name of default pagemap
-	 */
+	/** name of default pagemap */
 	public static final String DEFAULT_PAGEMAP_NAME = null;
 
 	private static final long serialVersionUID = 1L;
@@ -420,7 +418,10 @@ public final class PageMap implements Serializable
 			}
 			else
 			{
-				log.info("Unable to get version " + versionNumber + " of page " + page);
+				if (log.isInfoEnabled())
+				{
+					log.info("Unable to get version " + versionNumber + " of page " + page);
+				}
 				return null;
 			}
 			return page;
@@ -472,9 +473,7 @@ public final class PageMap implements Serializable
 	public final synchronized void removePage(final Page page)
 	{
 		remove(page.getPageMapEntry());
-
 	}
-
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
