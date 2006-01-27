@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.21 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,13 +43,13 @@ public final class PageMap implements Serializable
 	/**
 	 * name of default pagemap
 	 */
-	public static final String DEFAULT_PAGEMAP_NAME=null;
-	
+	public static final String DEFAULT_PAGEMAP_NAME = null;
+
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PageMap.class);
-	
+
 	/** Stack of entry accesses by id */
 	private final Stack/* <Access> */accessStack = new Stack();
 
@@ -464,6 +464,19 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Removes the page from the pagemap
+	 * 
+	 * @param page
+	 *            page to be removed from the pagemap
+	 */
+	public final synchronized void removePage(final Page page)
+	{
+		remove(page.getPageMapEntry());
+
+	}
+
+
+	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's url is saved for future use by method
 	 * continueToOriginalDestination(); Only use this method when you plan to
@@ -558,7 +571,7 @@ public final class PageMap implements Serializable
 						else
 						{
 							// Remove whole page
-							remove(topPage);
+							removePage(topPage);
 						}
 					}
 					else
