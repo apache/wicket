@@ -641,42 +641,46 @@ public abstract class MarkupContainer extends Component
 	 * Traverses all child components of the given class in this container,
 	 * calling the visitor's visit method at each one.
 	 * 
-	 * @param c
+	 * @param clazz
 	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
 	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final Class c, final IVisitor visitor)
+	public final Object visitChildren(final Class clazz, final IVisitor visitor)
 	{
 		// Iterate through children of this container
 		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
 			final Component child = (Component)children_get(i);
-
+			Object value = null;
+			
 			// Is the child of the correct class (or was no class specified)?
-			if (c == null || c.isInstance(child))
+			if (clazz == null || clazz.isInstance(child))
 			{
 				// Call visitor
-				final Object value = visitor.component(child);
+				value = visitor.component(child);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				if ((value != IVisitor.CONTINUE_TRAVERSAL) && 
+						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
 			}
 
 			// If child is a container
-			if (child instanceof MarkupContainer)
+			if ((child instanceof MarkupContainer) && 
+					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
-				final Object value = ((MarkupContainer)child).visitChildren(c, visitor);
+				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				if ((value != IVisitor.CONTINUE_TRAVERSAL) && 
+						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
