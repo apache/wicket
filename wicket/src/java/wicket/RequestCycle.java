@@ -173,65 +173,44 @@ import wicket.util.lang.Classes;
  */
 public abstract class RequestCycle
 {
-	/**
-	 * Checking access after resolving.
-	 */
-	private static final int CHECK_ACCESS = 4;
-
-	/**
-	 * Cleaning up after responding to a request.
-	 */
-	private static final int CLEANUP_REQUEST = 8;
-
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
+	
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
-
-	/**
-	 * Decoding request parameters into a strongly typed
-	 * {@link RequestParameters} object.
-	 */
-	private static final int DECODE_PARAMETERS = 2;
-
-	/**
-	 * Request cycle processing is done.
-	 */
-	private static final int DONE = 9;
-
-	/**
-	 * Responding to an uncaught exception.
-	 */
-	private static final int HANDLE_EXCEPTION = 7;
 
 	/** Map from request interface Class to Method. */
 	private static final Map listenerRequestInterfaceMethods = new HashMap();
 
-	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
-
-	/**
-	 * No processing has been done.
-	 */
+	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;
 
-	/**
-	 * Starting the actual request processing.
-	 */
+	/** Starting the actual request processing. */
 	private static final int PREPARE_REQUEST = 1;
 
-	/**
-	 * Dispatching and handling of events.
-	 */
-	private static final int PROCESS_EVENTS = 5;
+	/** Decoding request parameters into a strongly typed {@link RequestParameters} object. */
+	private static final int DECODE_PARAMETERS = 2;
 
-	/**
-	 * Resolving the {@link RequestParameters} object to a request target.
-	 */
+	/** Resolving the {@link RequestParameters} object to a request target. */
 	private static final int RESOLVE_TARGET = 3;
 
-	/**
-	 * Responding using the currently set {@link IRequestTarget}.
-	 */
+	/** Checking access after resolving. */
+	private static final int CHECK_ACCESS = 4;
+
+	/** Dispatching and handling of events. */
+	private static final int PROCESS_EVENTS = 5;
+
+	/** Responding using the currently set {@link IRequestTarget}. */
 	private static final int RESPOND = 6;
+
+	/** Responding to an uncaught exception. */
+	private static final int HANDLE_EXCEPTION = 7;
+
+	/** Cleaning up after responding to a request. */
+	private static final int CLEANUP_REQUEST = 8;
+
+	/** Request cycle processing is done. */
+	private static final int DONE = 9;
 
 	/** The application object. */
 	protected final Application application;;
@@ -287,19 +266,19 @@ public abstract class RequestCycle
 	 * Adds an interface to the map of interfaces that can be invoked by
 	 * outsiders. The interface must extend IRequestListener
 	 * 
-	 * @param i
+	 * @param clazz
 	 *            The interface class, which must extend IRequestListener.
 	 */
-	public static void registerRequestListenerInterface(final Class i)
+	public static void registerRequestListenerInterface(final Class clazz)
 	{
 		// Ensure that i extends IRequestListener
-		if (!IRequestListener.class.isAssignableFrom(i))
+		if (!IRequestListener.class.isAssignableFrom(clazz))
 		{
-			throw new IllegalArgumentException("Class " + i + " must extend IRequestListener");
+			throw new IllegalArgumentException("Class " + clazz + " must extend IRequestListener");
 		}
 
 		// Get interface methods
-		final Method[] methods = i.getMethods();
+		final Method[] methods = clazz.getMethods();
 
 		// If there is only one method
 		if (methods.length == 1)
@@ -308,17 +287,17 @@ public abstract class RequestCycle
 			if (methods[0].getParameterTypes().length == 0)
 			{
 				// Save this interface method by the non-qualified class name
-				listenerRequestInterfaceMethods.put(Classes.name(i), methods[0]);
+				listenerRequestInterfaceMethods.put(Classes.name(clazz), methods[0]);
 			}
 			else
 			{
-				throw new IllegalArgumentException("Method in interface " + i
+				throw new IllegalArgumentException("Method in interface " + clazz
 						+ " cannot have parameters");
 			}
 		}
 		else
 		{
-			throw new IllegalArgumentException("Interface " + i + " can have only one method");
+			throw new IllegalArgumentException("Interface " + clazz + " can have only one method");
 		}
 	}
 

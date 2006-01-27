@@ -225,10 +225,15 @@ public class WebPage extends Page implements IHeaderRenderer
 		super.onEndRequest();
 	}
 
-        protected void configureResponse()
-        {
+	/**
+	 * 
+	 * @see wicket.Page#configureResponse()
+	 */
+	protected void configureResponse()
+	{
 	    super.configureResponse();
-	    WebResponse response=getWebRequestCycle().getWebResponse();
+	    
+	    WebResponse response = getWebRequestCycle().getWebResponse();
 	    response.setHeader("Pragma","no-cache");
 	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
 	}

@@ -122,7 +122,6 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";
 
@@ -511,11 +510,12 @@ public abstract class Session implements Serializable
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
-		PageMap map=currentPageMap;
-		if (map==null) {
-			map=getPageMap(PageMap.DEFAULT_PAGEMAP_NAME);
+		PageMap pageMap = currentPageMap;
+		if (pageMap == null) 
+		{
+			pageMap = getPageMap(PageMap.DEFAULT_PAGEMAP_NAME);
 		}
-		map.redirectToInterceptPage(page);
+		pageMap.redirectToInterceptPage(page);
 	}
 
 	/**
@@ -795,7 +795,10 @@ public abstract class Session implements Serializable
 	void dirtyPage(final Page page)
 	{
 		if (dirtyObjects == null)
+		{
 			dirtyObjects = new ArrayList(4);
+		}
+		
 		if (!dirtyObjects.contains(page))
 		{
 			dirtyObjects.add(page);
@@ -808,7 +811,10 @@ public abstract class Session implements Serializable
 	void dirtyPageMap(final PageMap map)
 	{
 		if (dirtyObjects == null)
+		{
 			dirtyObjects = new ArrayList(4);
+		}
+		
 		if (!dirtyObjects.contains(map))
 		{
 			dirtyObjects.add(map);
