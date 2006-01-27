@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.59 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -472,7 +472,28 @@ public final class PageMap implements Serializable
 	 */
 	public final synchronized void removePage(final Page page)
 	{
-		remove(page.getPageMapEntry());
+		IPageMapEntry entry = page.getPageMapEntry();
+
+		// remove the pagemap entry from session
+		remove(entry);
+
+		/*
+		 * TODO General we should remove pages that become "unreachable" from
+		 * the stack as well
+		 */
+		// remove page from acccess stack
+		Iterator stack = accessStack.iterator();
+		while (stack.hasNext())
+		{
+			final Access access = (Access)stack.next();
+			if (access.id == entry.getNumericId())
+			{
+				stack.remove();
+			}
+		}
+
+		// let the session know we changed the pagemap
+		session.dirtyPageMap(this);
 	}
 
 	/**
