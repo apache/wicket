@@ -677,7 +677,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @return False if the form had an error
 	 */
-	protected boolean process()
+	public boolean process()
 	{
 		// Execute validation now before anything else
 		validate();
