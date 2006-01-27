@@ -257,6 +257,16 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
         
         setMarkupStream(null);
 	}
+    
+    /**
+     * 
+     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+     */
+    public void renderHead(HtmlHeaderContainer container)
+    {
+    	this.renderHeadFromAssociatedMarkupFile(container);
+    	super.renderHead(container);
+    }
 
 	/**
 	 * "Visit all components of the component hierarchie and ask if they have

@@ -17,14 +17,8 @@
  */
 package wicket.markup.html;
 
-import java.util.Iterator;
-import java.util.List;
-
 import wicket.Component;
-import wicket.behavior.IBehavior;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.ajax.IBodyOnLoadContributor;
-import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 
 /**
@@ -38,7 +32,7 @@ import wicket.model.IModel;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public class WebComponent extends Component implements IHeaderContributor
+public class WebComponent extends Component
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,39 +50,6 @@ public class WebComponent extends Component implements IHeaderContributor
 	public WebComponent(final String id, final IModel model)
 	{
 		super(id, model);
-	}
-
-	/**
-	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT CALL IT YOURSELF Print to
-	 * the web response what ever the component wants to contribute to the head
-	 * section. Does nothing by default.
-	 * 
-	 * @param container
-	 *            The HtmlHeaderContainer
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	public void renderHead(final HtmlHeaderContainer container)
-	{
-		// get head and body contributions in one loop
-		// NOTE: THIS CODE MUST BE IN SYNC WITH SAME PIECE OF CODE in WEBMARKUPCONTAINER
-		List behaviors = getBehaviors();
-		for (Iterator i = behaviors.iterator(); i.hasNext();)
-		{
-			IBehavior behavior = (IBehavior)i.next();
-			if (behavior instanceof IHeaderContributor)
-			{
-				((IHeaderContributor)behavior).renderHead(container);
-			}
-
-			if (behavior instanceof IBodyOnLoadContributor)
-			{
-				String stmt = ((IBodyOnLoadContributor)behavior).getBodyOnLoad();
-				if (stmt != null)
-				{
-					((WebPage)getPage()).appendToBodyOnLoad(stmt);
-				}
-			}
-		}
 	}
 
 	/**

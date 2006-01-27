@@ -26,7 +26,6 @@ import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.ajax.IBodyOnLoadContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.request.target.EmptyRequestTarget;
 import wicket.request.target.ResourceStreamRequestTarget;
@@ -45,8 +44,7 @@ public abstract class AjaxHandler
 		implements
 			IBehavior,
 			IBehaviorListener,
-			IHeaderContributor,
-			IBodyOnLoadContributor
+			IHeaderContributor
 {
 	/** thread local for onload contributions. */
 	private static final ThreadLocal bodyOnloadContribHolder = new ThreadLocal();
@@ -99,7 +97,7 @@ public abstract class AjaxHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.ajax.IBodyOnLoadContributor#getBodyOnLoad()
+	 * @see wicket.markup.html.IHeaderContributor#getBodyOnLoad()
 	 */
 	public final String getBodyOnLoad()
 	{

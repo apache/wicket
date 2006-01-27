@@ -39,4 +39,11 @@ public interface IHeaderContributor
 	 *            The HtmlHeaderContainer
 	 */
 	void renderHead(final HtmlHeaderContainer container);
+	
+	/**
+	 * Gets the onLoad statement(s) for the body tag
+	 * 
+	 * @return the onload statement(s) for the body component
+	 */
+	String getBodyOnLoad();
 }

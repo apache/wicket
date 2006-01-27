@@ -18,7 +18,6 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.Model;
@@ -29,7 +28,7 @@ import wicket.model.Model;
  *
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
+public class HeaderSectionMyLabel2 extends Label
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +43,6 @@ public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
     }
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 * @param container
 	 */
 	public void renderHead(HtmlHeaderContainer container)
