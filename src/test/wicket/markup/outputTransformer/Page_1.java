@@ -92,5 +92,14 @@ public class Page_1 extends WebPage
 	    border2.setRenderBodyOnly(false);
 	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
 	    xsltContainer.add(border2);
+
+	    MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer("test5", null, 
+	    		"wicket/markup/outputTransformer/anyName.xsl");
+	    add(xsltContainer2);
+	    
+	    Border border3 = new SimpleBorder("myBorder3");
+	    border3.setRenderBodyOnly(false);
+	    border3.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+	    xsltContainer2.add(border3);
     }
 }

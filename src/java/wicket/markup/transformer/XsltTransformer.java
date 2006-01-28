@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,11 +42,34 @@ public class XsltTransformer implements ITransformer
 {
 	private final static String extension = "xsl";
 
+	/** an optional XSL file */
+	private final String xslFile;
+
 	/**
 	 * Construct.
 	 */
 	public XsltTransformer()
 	{
+		this.xslFile = null;
+	}
+
+	/**
+	 * Instead of using the default mechanism to determine the associated XSL
+	 * file, it is given by the user.
+	 * 
+	 * @param xslFile
+	 *            XSL input file path
+	 */
+	public XsltTransformer(final String xslFile)
+	{
+		if ((xslFile != null) && xslFile.endsWith(extension))
+		{
+			this.xslFile = xslFile.substring(0, xslFile.length() - extension.length() - 1);
+		}
+		else
+		{
+			this.xslFile = xslFile;
+		}
 	}
 
 	/**
@@ -60,13 +83,7 @@ public class XsltTransformer implements ITransformer
 	 */
 	public CharSequence transform(final Component component, final String output) throws Exception
 	{
-		String filepath = component.findParentWithAssociatedMarkup().getClass().getPackage()
-				.getName().replace('.', '/')
-				+ "/" + component.getId();
-
-		IResourceStream resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-				getClass(), filepath, component.getStyle(), component.getLocale(),
-				XsltTransformer.extension);
+		IResourceStream resourceStream = getResourceStream(component);
 
 		if (resourceStream == null)
 		{
@@ -88,8 +105,8 @@ public class XsltTransformer implements ITransformer
 			// 3. Use the Transformer to transform an XML Source and send the
 			// output to a Result object.
 			StringWriter writer = new StringWriter();
-			transformer.transform(new StreamSource(new StringReader(output)),
-					new StreamResult(writer));
+			transformer.transform(new StreamSource(new StringReader(output)), new StreamResult(
+					writer));
 
 			return writer.getBuffer();
 		}
@@ -97,5 +114,31 @@ public class XsltTransformer implements ITransformer
 		{
 			resourceStream.close();
 		}
+	}
+
+	/**
+	 * Get the XSL resource stream
+	 * 
+	 * @param component
+	 * 
+	 * @return The XSLT file resource stream
+	 */
+	private IResourceStream getResourceStream(final Component component)
+	{
+		final IResourceStream resourceStream;
+
+		String filePath = this.xslFile;
+		if (filePath == null)
+		{
+			filePath = component.findParentWithAssociatedMarkup().getClass()
+				.getPackage().getName().replace('.', '/')
+				+ "/" + component.getId();
+		}
+		
+		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator()
+				.locate(getClass(), filePath, component.getStyle(), component.getLocale(),
+						XsltTransformer.extension);
+		
+		return resourceStream;
 	}
 }
