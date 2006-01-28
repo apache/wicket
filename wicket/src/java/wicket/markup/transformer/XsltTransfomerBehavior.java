@@ -47,11 +47,26 @@ public class XsltTransfomerBehavior extends AbstractTransformerBehavior
 {
 	private static final long serialVersionUID = 1L;
 
+	/** An optional xsl file path */
+	private final String xslFile;
+
 	/**
 	 * Construct.
 	 */
 	public XsltTransfomerBehavior()
 	{
+		this.xslFile = null;
+	}
+
+	/**
+	 * Instead of using the default mechanism to determine the associated XSL
+	 * file, it is given by the user.
+	 * 
+	 * @param xslFilePath XSL file path
+	 */
+	public XsltTransfomerBehavior(final String xslFilePath)
+	{
+		this.xslFile = xslFilePath;
 	}
 
 	/**
@@ -74,6 +89,6 @@ public class XsltTransfomerBehavior extends AbstractTransformerBehavior
 	 */
 	public CharSequence transform(final Component component, final String output) throws Exception
 	{
-		return new XsltTransformer().transform(component, output);
+		return new XsltTransformer(this.xslFile).transform(component, output);
 	}
 }

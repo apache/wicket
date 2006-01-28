@@ -45,16 +45,27 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 {
 	private static final long serialVersionUID = 1L;
 
+	/** An optional xsl file path */
+	private final String xslFile;
+
 	/**
-	 * Construct
+	 * Instead of using the default mechanism to determine the associated XSL
+	 * file, it is given by the user.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(String, IModel)
+	 * 
+	 * @param xslFilePath
+	 *            XSL input file path
 	 */
-	public XsltOutputTransformerContainer(final String id)
+	public XsltOutputTransformerContainer(final String id, final IModel model,
+			final String xslFilePath)
 	{
 		super(id);
 
-		// The containers tag will be transformed as well. Thus we make sure that
+		this.xslFile = xslFilePath;
+
+		// The containers tag will be transformed as well. Thus we make sure
+		// that
 		// the xml provided to the xsl processor is well formed (has a single
 		// root element)
 		setTransformBodyOnly(false);
@@ -71,7 +82,17 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 */
 	public XsltOutputTransformerContainer(final String id, final IModel model)
 	{
-		super(id, model);
+		this(id, model, null);
+	}
+
+	/**
+	 * Construct
+	 * 
+	 * @see wicket.Component#Component(String)
+	 */
+	public XsltOutputTransformerContainer(final String id)
+	{
+		this(id, null, null);
 	}
 
 	/**
@@ -90,6 +111,6 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 */
 	public CharSequence transform(final Component component, final String output) throws Exception
 	{
-		return new XsltTransformer().transform(component, output);
+		return new XsltTransformer(this.xslFile).transform(component, output);
 	}
 }
