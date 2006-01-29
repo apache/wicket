@@ -30,6 +30,7 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.MarkupException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IBookmarkablePageRequestTarget;
@@ -354,6 +355,12 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			}
 
 			return requestTarget;
+		}
+		catch (MarkupException e)
+		{
+			// Markup exception should pass without modification. They show
+			// a nice error page
+			throw e;
 		}
 		catch (WicketRuntimeException e)
 		{
