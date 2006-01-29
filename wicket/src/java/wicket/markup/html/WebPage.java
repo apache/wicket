@@ -50,7 +50,7 @@ import wicket.protocol.http.WebResponse;
  * @author Juergen Donnerstag
  * @author Gwyn Evans
  */
-public class WebPage extends Page implements IHeaderRenderer
+public class WebPage extends Page
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(WebPage.class);
