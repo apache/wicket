@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.59 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -444,8 +444,22 @@ public final class PageMap implements Serializable
 	 */
 	final synchronized void put(final Page page)
 	{
+		/*
+		 * FIXME Pages:Stateless
+		 * 
+		 * ivaynberg: i have disabled the stateless behavior for now. seems
+		 * there is a case we did not think of.
+		 * 
+		 * currently we assume the page is stateless if no backtracking url is
+		 * asked for it using urlFor, and this makes sense. however, what we did
+		 * not think about is how the page is accessed. If the page url is not
+		 * bookmarkable, ie: ?path=4 and the user clicks the refresh button on
+		 * the browser they will get a page expired error since the page was
+		 * never put into the pagemap.
+		 * 
+		 */
 		// Page only goes into session if it is stateless
-		if (!page.isStateless())
+		// if (!page.isStateless())
 		{
 			// Get page map entry from page
 			final IPageMapEntry entry = page.getPageMapEntry();
