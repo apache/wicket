@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
@@ -147,48 +146,6 @@ public class WebPage extends Page
 	public String getMarkupType()
 	{
 		return "html";
-	}
-
-	/**
-	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF.
-	 * <p>
-	 * Invoked by HtmlHeaderContainer it'll ask all child components of the Page
-	 * if they have something to contribute to the &lt;head&gt; section of the
-	 * HTML output. Every component interested must implement
-	 * IHeaderContributor.
-	 * <p>
-	 * Note: HtmlHeaderContainer will be removed from the component hierachie at
-	 * the end of the request (@see #onEndRequest()) and thus can not transport
-	 * status from one request to the next. This is true for all components
-	 * added to the header.
-	 * 
-	 * @param container
-	 *            The header component container
-	 */
-	public final void renderHeaderSections(final HtmlHeaderContainer container)
-	{
-		this.bodyOnLoad = null;
-
-		// Make sure all Components interested in contributing to the header 
-		// and there attached behaviors are asked.
-		visitChildren(new IVisitor()
-		{
-			/**
-			 * @see wicket.Component.IVisitor#component(wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (component.isVisible())
-				{
-					component.renderHead(container);
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-				else
-				{
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-				}
-			}
-		});
 	}
 
 	/**
