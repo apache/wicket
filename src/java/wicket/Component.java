@@ -1545,19 +1545,25 @@ public abstract class Component implements Serializable
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		// get head and body contributions in one loop
-		List behaviors = getBehaviors();
-		for (Iterator i = behaviors.iterator(); i.hasNext();)
+		// Ask all behaviors if they have something to contribute to the
+		// header or body onLoad tag.
+		if (this.behaviors != null)
 		{
-			IBehavior behavior = (IBehavior)i.next();
-			if (behavior instanceof IHeaderContributor)
+			final WebPage webPage = (WebPage) getPage();
+			
+			final Iterator iter = this.behaviors.iterator();
+			while (iter.hasNext())
 			{
-				((IHeaderContributor)behavior).renderHead(container);
-				
-				String stmt = ((IHeaderContributor)behavior).getBodyOnLoad();
-				if (stmt != null)
+				IBehavior behavior = (IBehavior)iter.next();
+				if (behavior instanceof IHeaderContributor)
 				{
-					((WebPage)getPage()).appendToBodyOnLoad(stmt);
+					((IHeaderContributor)behavior).renderHead(container);
+					
+					String stmt = ((IHeaderContributor)behavior).getBodyOnLoad();
+					if (stmt != null)
+					{
+						webPage.appendToBodyOnLoad(stmt);
+					}
 				}
 			}
 		}
