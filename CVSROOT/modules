@@ -30,3 +30,9 @@ wicket-examples    wicket-examples
 wicket-extensions  wicket-extensions
 wicket-sandbox     wicket-sandbox
 wicket-userdocs    wicket-userdocs
+wicket-spring                   wicket-spring
+wicket-spring-annot             wicket-spring-annot
+wicket-spring-annot-examples    wicket-spring-annot-examples
+wicket-spring-cattr             wicket-spring-cattr
+wicket-spring-cattr-examples    wicket-spring-cattr-examples
+wicket-spring-example           wicket-spring-example
