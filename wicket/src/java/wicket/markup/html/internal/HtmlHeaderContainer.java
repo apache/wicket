@@ -32,13 +32,13 @@ import wicket.response.StringResponse;
  * The HtmlHeaderContainer is automatically created and added to the component
  * hierarchie by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
  * handle/render the &gt;head&gt; tag and its body. However depending on the
- * parent component, the behavior must be different. E.g. if parent component
- * is a Page all components of the page's hierarchy must be asked if they have
+ * parent component, the behavior must be different. E.g. if parent component is
+ * a Page all components of the page's hierarchy must be asked if they have
  * something to contribute to the &lt;head&gt; section of the html response. If
  * yes, it must <b>immediately</b> be rendered.
  * <p>
- * &lt;head&gt; regions may contain additional wicket components, which can 
- * be added by means of add(Component) as usual.
+ * &lt;head&gt; regions may contain additional wicket components, which can be
+ * added by means of add(Component) as usual.
  * <p>
  * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.
@@ -56,8 +56,8 @@ import wicket.response.StringResponse;
  * (of Panels, Borders and Pages)</li>
  * <li> components within &lt;wicket:head&gt; must be added by means of add(),
  * like allways with Wicket. No difference.</li>
- * <li> &lt;wicket:head&gt; and it's content is copied to the output.
- * Components contained in &lt;wicket.head&gt; are rendered as usual</li>
+ * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components
+ * contained in &lt;wicket.head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -65,7 +65,7 @@ import wicket.response.StringResponse;
 public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct
 	 * 
@@ -116,15 +116,15 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			MarkupContainer parent = getParent();
 
 			// If bordered page ...
-			while((parent instanceof Border))
+			while ((parent instanceof Border))
 			{
-			    parent = parent.getParent();
+				parent = parent.getParent();
 			}
-			
+
 			// must be a Page
 			if (parent instanceof WebPage)
 			{
-			    ((WebPage)parent).renderHeaderSections(this);
+				renderHeaderSections((WebPage)parent, this);
 			}
 			else
 			{
@@ -174,6 +174,45 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// Restore the original response
 			this.getRequestCycle().setResponse(webResponse);
 		}
+	}
+
+	/**
+	 * Ask all child components of the Page if they have something to contribute
+	 * to the &lt;head&gt; section of the HTML output. Every component
+	 * interested must implement IHeaderContributor.
+	 * <p>
+	 * Note: HtmlHeaderContainer will be removed from the component hierachie at
+	 * the end of the request (@see #onEndRequest()) and thus can not transport
+	 * status from one request to the next. This is true for all components
+	 * added to the header.
+	 * 
+	 * @param page
+	 *            The page object
+	 * @param container
+	 *            The header component container
+	 */
+	private final void renderHeaderSections(final WebPage page, final HtmlHeaderContainer container)
+	{
+		// Make sure all Components interested in contributing to the header
+		// and there attached behaviors are asked.
+		page.visitChildren(new IVisitor()
+		{
+			/**
+			 * @see wicket.Component.IVisitor#component(wicket.Component)
+			 */
+			public Object component(Component component)
+			{
+				if (component.isVisible())
+				{
+					component.renderHead(container);
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+				else
+				{
+					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				}
+			}
+		});
 	}
 
 	/**
