@@ -88,6 +88,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
 	
+	/** Should be true for bordered pages */
+	private boolean transparent = false;
+	
 	/**
      * @see wicket.Component#Component(String)
 	 */
@@ -115,7 +118,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			return true;
 		}
 		
-		return super.isTransparent();
+		return transparent;
+	}
+	
+	/**
+	 * Borders used for bordered pages should set it to "true".
+	 * Default is "false".
+	 * 
+	 * @param transparent
+	 */
+	public final void setTransparent(final boolean transparent)
+	{
+		this.transparent = transparent;
 	}
 	
 	/**
