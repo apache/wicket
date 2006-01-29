@@ -78,7 +78,7 @@ public class WebMarkupContainer extends MarkupContainer
 	public void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
 	{
 		// Ask the child component if it has something to contribute
-		WebMarkupContainer headerPart = getHeaderPart();
+		final HeaderPartContainer headerPart = getHeaderPart();
 
 		// If the child component has something to contribute to
 		// the header and in case the very same Component has not
@@ -99,7 +99,7 @@ public class WebMarkupContainer extends MarkupContainer
 			else
 			{
 				// TODO I haven't found a more efficient solution yet
-				// already added but all the components in this header part must be
+				// Already added but all the components in this header part must be
 				// touched (that they are rendered)
 				Response response = getRequestCycle().getResponse();
 				try
@@ -133,7 +133,7 @@ public class WebMarkupContainer extends MarkupContainer
 		}
 
 		// Remember the current position within markup, where we need to
-		// back to, at the end.
+		// go back to, at the end.
 		int index = associatedMarkupStream.getCurrentIndex();
 
 		try
@@ -177,7 +177,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * @return the header part for this markup container or null if it doesn't
 	 *         contribute anything.
 	 */
-	private final WebMarkupContainer getHeaderPart()
+	private final HeaderPartContainer getHeaderPart()
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -222,8 +222,8 @@ public class WebMarkupContainer extends MarkupContainer
 
 					// Create the header container and associate the markup with
 					// it
-					WebMarkupContainer headerContainer = new HeaderPartContainer(
-							headerId, this);
+					HeaderPartContainer headerContainer = new HeaderPartContainer(
+							headerId, this, wTag.getAttributes().getString("scope"));
 					headerContainer.setMarkupStream(associatedMarkupStream);
 					headerContainer.setRenderBodyOnly(true);
 
@@ -250,16 +250,31 @@ public class WebMarkupContainer extends MarkupContainer
 		/** The panel or bordered page the header part is associated with */
 		private final MarkupContainer container;
 
+		/** <wicket:head scope="...">. A kind of namespace */
+		private final String scope;
+		
 		/**
 		 * @param id The component id
 		 * @param container The Panel (or bordered page) the header part is associated with
+		 * @param scope The scope of the wicket:head tag
 		 */
-		public HeaderPartContainer(final String id, final MarkupContainer container)
+		public HeaderPartContainer(final String id, final MarkupContainer container, final String scope)
 		{
 			super(id);
 			this.container = container;
+			this.scope = scope;
 		}
 
+		/**
+		 * Get the scope of the header part
+		 * 
+		 * @return The scope name
+		 */
+		public final String getScope()
+		{
+			return this.scope;
+		}
+		
 		/**
 		 * 
 		 * @see wicket.MarkupContainer#isTransparent()

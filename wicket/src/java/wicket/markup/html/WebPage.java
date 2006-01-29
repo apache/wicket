@@ -169,7 +169,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	{
 		this.bodyOnLoad = null;
 
-		// Make sure are Components interested in contributing to the header 
+		// Make sure all Components interested in contributing to the header 
 		// and there attached behaviors are asked.
 		visitChildren(new IVisitor()
 		{
