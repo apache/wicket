@@ -23,8 +23,9 @@ import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.border.Border;
 import wicket.response.StringResponse;
 
 /**
@@ -34,9 +35,9 @@ import wicket.response.StringResponse;
  * parent component, the behavior must be different. E.g. if parent component
  * is a Page all components of the page's hierarchy must be asked if they have
  * something to contribute to the &lt;head&gt; section of the html response. If
- * yes, it must <b>immediately </b> be rendered.
+ * yes, it must <b>immediately</b> be rendered.
  * <p>
- * &lt;head&gt; regions may contain additional wicket components, which must 
+ * &lt;head&gt; regions may contain additional wicket components, which can 
  * be added by means of add(Component) as usual.
  * <p>
  * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
@@ -55,8 +56,8 @@ import wicket.response.StringResponse;
  * (of Panels, Borders and Pages)</li>
  * <li> components within &lt;wicket:head&gt; must be added by means of add(),
  * like allways with Wicket. No difference.</li>
- * <li> &lt;wicket:head&gt; and it's content is copied into the output.
- * Component contained in &lt;wicket.head&gt; are rendered as usual</li>
+ * <li> &lt;wicket:head&gt; and it's content is copied to the output.
+ * Components contained in &lt;wicket.head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -114,11 +115,16 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// component hierarchie.
 			MarkupContainer parent = getParent();
 
-			// Usually only Page and Border implement IHeaderRenderer. Border
-			// does in order to support bordered pages.
-			if (parent instanceof IHeaderRenderer)
+			// If bordered page ...
+			while((parent instanceof Border))
 			{
-				((IHeaderRenderer)parent).renderHeaderSections(this);
+			    parent = parent.getParent();
+			}
+			
+			// must be a Page
+			if (parent instanceof WebPage)
+			{
+			    ((WebPage)parent).renderHeaderSections(this);
 			}
 			else
 			{
