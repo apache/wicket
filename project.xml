@@ -202,6 +202,12 @@
       <roles/>
     </developer>
     <developer>
+      <name>Igor Vaynberg</name>
+      <id>ivaynberg</id>
+      <email>ivaynberg@users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
       <name>Ate Douma</name>
       <id>adouma</id>
       <email>adouma at users.sourceforge.net</email>
@@ -284,11 +290,15 @@
       <email>-</email>
     </contributor>
     <contributor>
+      <name>Justin Lee</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
       <name>Anatol Pomozov</name>
       <email>-</email>
     </contributor>
     <contributor>
-      <name>Igor Vaynberg</name>
+      <name>Karthik Gurumurthy</name>
       <email>-</email>
     </contributor>
     <contributor>
