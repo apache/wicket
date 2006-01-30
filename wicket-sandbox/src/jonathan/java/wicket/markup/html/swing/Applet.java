@@ -40,19 +40,19 @@ import wicket.util.io.Streams;
 /**
  * This component integrates Swing tightly with Wicket by automatically
  * generating Swing applets on demand. The applet's JAR file is automatically
- * created from the code statically referenced by the IAppletCode interface.
- * Once the JAR file for a given Applet subclass has been created, it is reused
- * for all future instances of the Applet. The auto-created JAR is referenced by
- * an automatically generated APPLET tag. The result of this is that a Applet
- * creates an applet with virtually no work on the programmer's part beyond
- * populating the JPanel and working with the model, which is automatically
- * proxied to/from the applet.
+ * created from the code statically referenced by the Applet.IInitializer
+ * interface. Once the JAR file for a given Applet subclass has been created, it
+ * is reused for all future instances of the Applet. The auto-created JAR is
+ * referenced by an automatically generated APPLET tag. The result of this is
+ * that an Applet component creates an applet with virtually no work on the
+ * programmer's part beyond populating the JPanel and working with the model,
+ * which is automatically proxied to/from the applet.
  * <p>
- * You can populate a JPanel with any swing components that you want. When a
- * significant action occurs such as a form submit, the panel.updateServer()
- * method can be called and the applet panel automatically updates the server
- * side model by using Ajax to ask the applet to send its model back to the
- * server.
+ * In your IInitializer implementation, you can populate a JPanel with any Swing
+ * components that you want. When a significant action occurs such as a form
+ * submit, the Applet.updateServer() method can be called and the applet
+ * component automatically updates the server side model by using Ajax to ask
+ * the applet to send its model back to the server.
  * 
  * @author Jonathan Locke
  */
