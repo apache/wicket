@@ -26,6 +26,16 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxListen
 		return "wicketAjaxGet('" + url + "');";
 	}
 
+	public void onAjaxRequest()
+	{
+		AjaxRequestTarget target = new AjaxRequestTarget();
+		getRequestCycle().setRequestTarget(target);
+
+		onClick(target);
+	}
+
+	protected abstract void onClick(AjaxRequestTarget target);
+
 	static
 	{
 		RequestCycle.registerRequestListenerInterface(IAjaxListener.class);

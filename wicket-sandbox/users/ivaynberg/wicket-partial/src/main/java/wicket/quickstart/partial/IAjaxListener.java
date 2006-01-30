@@ -4,5 +4,5 @@ import wicket.IRequestListener;
 
 public interface IAjaxListener extends IRequestListener
 {
-	public void onAjax();
+	public void onAjaxRequest();
 }

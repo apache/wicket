@@ -52,18 +52,17 @@ public class Index extends QuickStartPage
 
 		add(new IndicatingAjaxLink("ajax-link")
 		{
-			public void onAjax()
+			public void onClick(AjaxRequestTarget target)
 			{
 				counter++;
 				counter2++;
 
-				AjaxRequestTarget target = new AjaxRequestTarget();
 				target.addComponent(counterLabel);
 				target.addComponent(counterLabel2);
 				target
 						.addJavascript("alert('counters "
 								+ counter + " " + counter2 + "')");
-				getRequestCycle().setRequestTarget(target);
+				
 			}
 		});
 	}
