@@ -27,11 +27,15 @@ import wicket.request.IComponentRequestTarget;
  * Target that denotes a single component instance.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg
  */
 public class ComponentRequestTarget implements IComponentRequestTarget
 {
 	/** the component instance. */
 	private final Component component;
+
+	/** whether or not we should only render the component's body */
+	private final boolean renderBodyOnly;
 
 	/**
 	 * Construct.
@@ -41,13 +45,29 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 */
 	public ComponentRequestTarget(final Component component)
 	{
+		this(component, false);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 *            the component instance
+	 * @param renderBodyOnly
+	 *            should the output only include the body of the component
+	 */
+	public ComponentRequestTarget(final Component component, boolean renderBodyOnly)
+	{
 		if (component == null)
 		{
 			throw new IllegalArgumentException("Argument 'component' must be not null");
 		}
 
 		this.component = component;
+
+		this.renderBodyOnly = renderBodyOnly;
 	}
+
 
 	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
@@ -69,8 +89,13 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 		}
 		else
 		{
+			boolean old = component.getRenderBodyOnly();
+			component.setRenderBodyOnly(renderBodyOnly);
+
 			// Render the component
 			component.doRender();
+
+			component.setRenderBodyOnly(old);
 		}
 
 		if (page != null)
