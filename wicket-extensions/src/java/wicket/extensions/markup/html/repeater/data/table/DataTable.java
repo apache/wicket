@@ -17,19 +17,13 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
-import wicket.extensions.markup.html.repeater.data.grid.AbstractDataGridView;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 
 /**

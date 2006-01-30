@@ -4,7 +4,7 @@ import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
 /**
- * Item that appends class="even" or class="odd" attributes based on its index
+ * Item that sets class="even" or class="odd" attributes based on its index
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
