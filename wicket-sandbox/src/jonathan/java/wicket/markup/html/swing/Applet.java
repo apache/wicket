@@ -18,7 +18,6 @@
 package wicket.markup.html.swing;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -41,6 +40,7 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.swing.ClassClosure;
 import wicket.model.IModel;
 import wicket.resource.ByteArrayResource;
+import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
 
 /**
