@@ -73,4 +73,9 @@ public class AutocompleteTextFieldSupport extends TextField implements IHeaderCo
 	{
 		return getId() + "_autocomplete";
 	}
+
+	public String getBodyOnLoad()
+	{
+		return null;
+	}
 }

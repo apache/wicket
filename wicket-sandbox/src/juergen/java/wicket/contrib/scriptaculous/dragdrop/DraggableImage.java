@@ -62,4 +62,9 @@ public class DraggableImage extends Image implements IHeaderContributor
 	{
 		container.getResponse().write(s);
 	}
+
+	public String getBodyOnLoad()
+	{
+		return null;
+	}
 }

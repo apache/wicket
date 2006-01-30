@@ -86,4 +86,9 @@ public class DraggableTarget extends WebMarkupContainer implements IHeaderContri
 		PackageResourceReference ref = new PackageResourceReference(Application.get(), clazz, name);
 		container.getResponse().write("\t<link rel='stylesheet' type='text/css' href='" + getPage().urlFor(ref.getPath()) + "'/>\n");
 	}
+
+	public String getBodyOnLoad()
+	{
+		return null;
+	}
 }
