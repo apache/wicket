@@ -26,6 +26,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.protocol.http.WebResponse;
 
 /**
  * @author Igor Vaynberg (ivaynberg)
@@ -84,19 +85,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(final RequestCycle requestCycle)
 	{
-		Response response = requestCycle.getResponse();
+		WebResponse response = (WebResponse) requestCycle.getResponse();
 
 		response.setContentType("text/xml");
 
-		/*
-		 * FIXME where do we add headers?
-		 * 
-		 * header( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
-		 * 
-		 * header( "Cache-Control: no-cache, must-revalidate" );
-		 * 
-		 * header( "Pragma: no-cache" );
-		 */
+		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT" );
+		response.setHeader("Cache-Control", "no-cache, must-revalidate" );
+		response.setHeader("Pragma", "no-cache" );
 
 		response.write("<?xml version=\"1.0\"?>");
 
