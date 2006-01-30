@@ -59,10 +59,10 @@ public class Index extends QuickStartPage
 
 				target.addComponent(counterLabel);
 				target.addComponent(counterLabel2);
-				target
-						.addJavascript("alert('counters "
-								+ counter + " " + counter2 + "')");
-				
+
+				String js = "alert('counters " + counter + " " + counter2 + "')";
+				target.addJavascript(js);
+
 			}
 		});
 	}
