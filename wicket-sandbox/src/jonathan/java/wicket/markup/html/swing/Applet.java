@@ -17,22 +17,28 @@
  */
 package wicket.markup.html.swing;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+import javax.swing.JApplet;
 import javax.swing.JPanel;
 
 import wicket.Application;
+import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebComponent;
+import wicket.markup.html.swing.ClassClosure;
 import wicket.model.IModel;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.Streams;
@@ -56,7 +62,7 @@ import wicket.util.io.Streams;
  * 
  * @author Jonathan Locke
  */
-public abstract class Applet extends WebComponent
+public abstract class Applet extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -65,6 +71,20 @@ public abstract class Applet extends WebComponent
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
 	private List/* <Class> */classes;
+
+	/**
+	 * The applet implementation used to host the user's JPanel.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	public static class HostApplet extends JApplet
+	{
+		@Override
+		public void init()
+		{
+
+		}
+	}
 
 	/**
 	 * The Applet.IInitializer interface should be implemented by the class
@@ -136,6 +156,20 @@ public abstract class Applet extends WebComponent
 	}
 
 	/**
+	 * Returns the model for this Applet component as a resource. This enables
+	 * the client side HostApplet container to retrieve the model object.
+	 * 
+	 * @see wicket.IResourceListener#onResourceRequested()
+	 */
+	public void onResourceRequested()
+	{
+		final Object model = getModelObject();
+		final byte[] bytes = objectToByteArray(model);
+		final ByteArrayResource resource = new ByteArrayResource("application/x-wicket-model", bytes);
+		resource.onResourceRequested();
+	}
+
+	/**
 	 * @return Height of applet, or -1 to use default provided in html tag
 	 */
 	protected int getHeight()
@@ -154,23 +188,25 @@ public abstract class Applet extends WebComponent
 	/**
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		maybeCreateJar();
 		checkComponentTag(tag, "applet");
-		tag.put("code", "wicket.markup.html.swing.WicketApplet.class");
+		tag.put("code", HostApplet.class.getName() + ".class");
 		tag.put("archive", SharedResources.path(getApplication(), Applet.class, appletCodeClass
 				.getName(), null, null));
-		int width = getWidth();
+		final int width = getWidth();
 		if (width != -1)
 		{
 			tag.put("width", width);
 		}
-		int height = getHeight();
+		final int height = getHeight();
 		if (height != -1)
 		{
 			tag.put("height", height);
 		}
+		replaceComponentTagBody(findMarkupStream(), tag, "<param name=\"component\" value=\""
+				+ urlFor(IResourceListener.class) + "\"/>");
 		super.onComponentTag(tag);
 	}
 
@@ -186,6 +222,59 @@ public abstract class Applet extends WebComponent
 					"Applet code class for Applet must implement IAppletCode");
 		}
 		this.appletCodeClass = appletCodeClass;
+	}
+
+	/**
+	 * De-serializes an object from a byte array.
+	 * 
+	 * @param data
+	 *            The serialized object
+	 * @return The object
+	 */
+	// FIXME: Belongs in Objects.java 
+	public static Object byteArrayToObject(final byte[] data)
+	{
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			final Object object = new ObjectInputStream(in).readObject();
+			in.close();
+			return object;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;			
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
+	 * @return The serialized object
+	 */
+	// FIXME: Belongs in Objects.java 
+	public static byte[] objectToByteArray(Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			new ObjectOutputStream(out).writeObject(object);
+			out.close();
+			return out.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -232,7 +321,7 @@ public abstract class Applet extends WebComponent
 	private void maybeCreateJar()
 	{
 		// Get shared resources for this application
-		SharedResources resources = Application.get().getSharedResources();
+		final SharedResources resources = Application.get().getSharedResources();
 
 		// See if resource is already registered
 		Resource resource = resources.get(Applet.class, appletCodeClass.getName(), null, null,
