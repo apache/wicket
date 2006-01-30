@@ -32,10 +32,10 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-		add(new Applet("applet", Waplet.class));
+		add(new Applet("applet", Wapplet.class));
 	}
 	
-	public static class Waplet implements Applet.IInitializer
+	public static class Wapplet implements Applet.IInitializer
 	{
 		public void init(JPanel panel, Object model)
 		{

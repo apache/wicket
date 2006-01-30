@@ -69,7 +69,7 @@ public class Applet extends WebComponent implements IResourceListener
 	private Class appletCodeClass;
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
-	private List/* <Class> */classes;
+	private List/* <Class> */classes = new ArrayList(1);
 
 	/**
 	 * The applet implementation used to host the user's JPanel.
@@ -106,6 +106,59 @@ public class Applet extends WebComponent implements IResourceListener
 		 *            The model to update in the applet
 		 */
 		void init(JPanel panel, Object model);
+	}
+
+	/**
+	 * De-serializes an object from a byte array.
+	 * 
+	 * @param data
+	 *            The serialized object
+	 * @return The object
+	 */
+	// FIXME: Belongs in Objects.java
+	public static Object byteArrayToObject(final byte[] data)
+	{
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			final Object object = new ObjectInputStream(in).readObject();
+			in.close();
+			return object;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
+	 * @return The serialized object
+	 */
+	// FIXME: Belongs in Objects.java
+	public static byte[] objectToByteArray(Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			new ObjectOutputStream(out).writeObject(object);
+			out.close();
+			return out.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -147,10 +200,6 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	public void addClass(final Class c)
 	{
-		if (classes == null)
-		{
-			classes = new ArrayList(1);
-		}
 		classes.add(c);
 	}
 
@@ -164,7 +213,8 @@ public class Applet extends WebComponent implements IResourceListener
 	{
 		final Object model = getModelObject();
 		final byte[] bytes = objectToByteArray(model);
-		final ByteArrayResource resource = new ByteArrayResource("application/x-wicket-model", bytes);
+		final ByteArrayResource resource = new ByteArrayResource("application/x-wicket-model",
+				bytes);
 		resource.onResourceRequested();
 	}
 
@@ -215,65 +265,13 @@ public class Applet extends WebComponent implements IResourceListener
 	private void addAppletCodeClass(final Class appletCodeClass)
 	{
 		// Applet code must implement IAppletCode interface
-		if (!appletCodeClass.isAssignableFrom(IInitializer.class))
+		if (!IInitializer.class.isAssignableFrom(appletCodeClass))
 		{
-			throw new IllegalArgumentException(
-					"Applet code class for Applet must implement IAppletCode");
+			throw new IllegalArgumentException("Applet initializer class "
+					+ appletCodeClass.getName() + " must implement " + IInitializer.class.getName());
 		}
 		this.appletCodeClass = appletCodeClass;
-	}
-
-	/**
-	 * De-serializes an object from a byte array.
-	 * 
-	 * @param data
-	 *            The serialized object
-	 * @return The object
-	 */
-	// FIXME: Belongs in Objects.java 
-	public static Object byteArrayToObject(final byte[] data)
-	{
-		try
-		{
-			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			final Object object = new ObjectInputStream(in).readObject();
-			in.close();
-			return object;
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return null;			
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Serializes an object into a byte array.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return The serialized object
-	 */
-	// FIXME: Belongs in Objects.java 
-	public static byte[] objectToByteArray(Object object)
-	{
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			out.close();
-			return out.toByteArray();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		addClass(appletCodeClass);
 	}
 
 	/**
@@ -330,7 +328,7 @@ public class Applet extends WebComponent implements IResourceListener
 		if (resource == null)
 		{
 			// Create JAR resource
-			resource = new ByteArrayResource("jar", jarClasses(classes));
+			resource = new ByteArrayResource("application/x-compressed", jarClasses(classes));
 
 			// Add to application shared resources
 			resources.add(Applet.class, appletCodeClass.getName(), null, null, resource);
