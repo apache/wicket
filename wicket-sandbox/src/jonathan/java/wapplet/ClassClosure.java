@@ -16,7 +16,7 @@
  * Version: $Revision$
  */
 
-package wicket.markup.html.swing;
+package wapplet;
 
 import org.netbeans.modules.classfile.*;
 import java.io.*;

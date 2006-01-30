@@ -32,11 +32,26 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>WappletApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wapplet.WappletApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>WicketSessionServlet</servlet-name>
 		<servlet-class>session.WicketSessionServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>WappletApplication</servlet-name>
+		<url-pattern>/wapplet/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>SessionApplication</servlet-name>
 		<url-pattern>/sessiontest/*</url-pattern>

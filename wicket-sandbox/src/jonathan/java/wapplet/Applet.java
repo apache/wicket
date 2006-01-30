@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.swing;
+package wapplet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,7 +37,6 @@ import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebComponent;
-import wicket.markup.html.swing.ClassClosure;
 import wicket.model.IModel;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
@@ -62,7 +61,7 @@ import wicket.util.io.Streams;
  * 
  * @author Jonathan Locke
  */
-public abstract class Applet extends WebComponent implements IResourceListener
+public class Applet extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
