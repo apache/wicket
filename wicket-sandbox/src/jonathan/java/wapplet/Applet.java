@@ -28,7 +28,6 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JApplet;
-import javax.swing.JPanel;
 
 import wicket.Application;
 import wicket.IResourceListener;
@@ -41,11 +40,12 @@ import wicket.model.IModel;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
+import wicket.util.lang.Bytes;
 
 /**
  * This component integrates Swing tightly with Wicket by automatically
  * generating Swing applets on demand. The applet's JAR file is automatically
- * created from the code statically referenced by the Applet.IInitializer
+ * created from the code statically referenced by the IAppletInitializer
  * interface. Once the JAR file for a given Applet subclass has been created, it
  * is reused for all future instances of the Applet. The auto-created JAR is
  * referenced by an automatically generated APPLET tag. The result of this is
@@ -53,7 +53,7 @@ import wicket.util.io.Streams;
  * programmer's part beyond populating the JPanel and working with the model,
  * which is automatically proxied to/from the applet.
  * <p>
- * In your IInitializer implementation, you can populate a JPanel with any Swing
+ * In your IAppletInitializer implementation, you can populate a JPanel with any Swing
  * components that you want. When a significant action occurs such as a form
  * submit, the Applet.updateServer() method can be called and the applet
  * component automatically updates the server side model by using Ajax to ask
@@ -83,29 +83,6 @@ public class Applet extends WebComponent implements IResourceListener
 		{
 
 		}
-	}
-
-	/**
-	 * The Applet.IInitializer interface should be implemented by the class
-	 * passed to the Applet constructor. This class and every class referenced
-	 * by it will be automatically included in the applet JAR file for this
-	 * applet. When the applet is loaded by the client browser, the init()
-	 * method will be called, passing in a JPanel to populate with components
-	 * and the model object produced by the Applet component's IModel.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static interface IInitializer
-	{
-		/**
-		 * Interface to code that initializes a JPanel using a model.
-		 * 
-		 * @param panel
-		 *            The panel to populate with components
-		 * @param model
-		 *            The model to update in the applet
-		 */
-		void init(JPanel panel, Object model);
 	}
 
 	/**
@@ -265,10 +242,10 @@ public class Applet extends WebComponent implements IResourceListener
 	private void addAppletCodeClass(final Class appletCodeClass)
 	{
 		// Applet code must implement IAppletCode interface
-		if (!IInitializer.class.isAssignableFrom(appletCodeClass))
+		if (!IAppletInitializer.class.isAssignableFrom(appletCodeClass))
 		{
 			throw new IllegalArgumentException("Applet initializer class "
-					+ appletCodeClass.getName() + " must implement " + IInitializer.class.getName());
+					+ appletCodeClass.getName() + " must implement " + IAppletInitializer.class.getName());
 		}
 		this.appletCodeClass = appletCodeClass;
 		addClass(appletCodeClass);
@@ -289,6 +266,7 @@ public class Applet extends WebComponent implements IResourceListener
 			{
 				protected void addClass(final String name, final InputStream is)
 				{
+					System.out.println("JAR: Added " + name);
 					ZipEntry entry = new ZipEntry(name);
 					try
 					{
@@ -302,6 +280,7 @@ public class Applet extends WebComponent implements IResourceListener
 					}
 				}
 			};
+			System.out.println("JAR: Size is " + Bytes.bytes(out.size()));
 			jar.close();
 			out.close();
 		}

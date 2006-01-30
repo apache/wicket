@@ -16,7 +16,6 @@
  */
 package wapplet;
 
-import javax.swing.JPanel;
 
 import wicket.markup.html.WebPage;
 
@@ -33,12 +32,5 @@ public class Home extends WebPage
 	public Home()
 	{
 		add(new Applet("applet", Wapplet.class));
-	}
-	
-	public static class Wapplet implements Applet.IInitializer
-	{
-		public void init(JPanel panel, Object model)
-		{
-		}
 	}
 }
