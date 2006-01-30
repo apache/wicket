@@ -22,7 +22,13 @@ import wicket.extensions.markup.html.repeater.data.sort.SortableDataProvider;
 import wicket.spring.common.ContactDao;
 import wicket.spring.common.web.ContactsDisplayPage;
 
-
+/**
+ * Test page that displays the use of commons attributes for dependency
+ * injection. Note the javadoc tag at the dao field; this is the commons
+ * attribute that denotes it is a spring dependency.
+ *
+ * @author ivaynberg
+ */
 public class CommonsAttributePage extends ContactsDisplayPage {
 
 	/**
@@ -30,10 +36,15 @@ public class CommonsAttributePage extends ContactsDisplayPage {
 	 */
 	private ContactDao dao;
 
+	/**
+	 * Construct.
+	 */
 	public CommonsAttributePage() {
-
 	}
 
+	/**
+	 * @see wicket.spring.common.web.ContactsDisplayPage#getDataProvider()
+	 */
 	protected SortableDataProvider getDataProvider() {
 		return new ProxyDataProvider(dao);
 	}
