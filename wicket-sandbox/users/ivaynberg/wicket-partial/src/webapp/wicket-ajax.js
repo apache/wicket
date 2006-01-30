@@ -1,4 +1,16 @@
-function wicketAjaxGet(url) {
+// MISC FUNCTIONS
+function wicketShow(id) {
+    document.getElementById(id).style.display="";
+}
+
+function wicketHide(id) {
+    document.getElementById(id).style.display="none";
+}
+
+
+ 
+// AJAX FUNCTIONS
+function wicketAjaxGet(url, successHandler) {
 
     var transport=null; 
 
@@ -8,21 +20,21 @@ function wicketAjaxGet(url) {
         transport=new ActiveXObject("Microsoft.XMLHTTP");
     }
     
-    transport.onreadystatechange = function() { wicketAjaxOnStateChange(transport) };
+    transport.onreadystatechange = function() { wicketAjaxOnStateChange(transport, successHandler) };
     transport.open("GET", url+"&random="+Math.random(), true);
     transport.send(null);
     
 }
 
-function wicketAjaxOnStateChange(transport) {
+function wicketAjaxOnStateChange(transport, successHandler) {
     if (transport.readyState==4) {
         if (transport.status==200) {
-            wicketAjaxProcess(transport.responseXML);
+            wicketAjaxProcess(transport.responseXML, successHandler);
         }
     }
 }
 
-function wicketAjaxProcess(envelope) {
+function wicketAjaxProcess(envelope, successHandler) {
     var root=envelope.getElementsByTagName("ajax-response");
     root=root[0];
     
@@ -38,6 +50,10 @@ function wicketAjaxProcess(envelope) {
         } else if (node.tagName=="evaluate") {
             wicketAjaxProcessEvaluation(node);
         }
+    }
+    
+    if (successHandler!=null) {
+        successHandler();
     }
 }
 

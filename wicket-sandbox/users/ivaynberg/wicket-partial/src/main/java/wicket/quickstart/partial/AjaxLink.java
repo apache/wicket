@@ -15,15 +15,20 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxListen
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		String url=getPage().urlFor(this, IAjaxListener.class);
-		
-		tag.put("onclick", "wicketAjaxGet('"+url+"');");
+		String url = getPage().urlFor(this, IAjaxListener.class);
+
+		tag.put("onclick", getOnclickScript(url));
 		tag.put("href", "#");
 	}
-	
+
+	protected String getOnclickScript(String url)
+	{
+		return "wicketAjaxGet('" + url + "');";
+	}
+
 	static
 	{
 		RequestCycle.registerRequestListenerInterface(IAjaxListener.class);
 	}
-	
+
 }

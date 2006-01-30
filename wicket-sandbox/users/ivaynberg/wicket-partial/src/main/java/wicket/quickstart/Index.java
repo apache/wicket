@@ -6,6 +6,7 @@ import wicket.model.PropertyModel;
 import wicket.quickstart.partial.AjaxIdSetter;
 import wicket.quickstart.partial.AjaxLink;
 import wicket.quickstart.partial.AjaxRequestTarget;
+import wicket.quickstart.partial.IndicatingAjaxLink;
 
 /**
  * Basic bookmarkable index page.
@@ -49,17 +50,19 @@ public class Index extends QuickStartPage
 		add(counterLabel);
 		add(counterLabel2);
 
-		add(new AjaxLink("ajax-link")
+		add(new IndicatingAjaxLink("ajax-link")
 		{
 			public void onAjax()
 			{
-				System.out.println("AJAX");
 				counter++;
 				counter2++;
+
 				AjaxRequestTarget target = new AjaxRequestTarget();
 				target.addComponent(counterLabel);
 				target.addComponent(counterLabel2);
-				target.addJavascript("alert('counters " + counter + " " + counter2 + "')");
+				target
+						.addJavascript("alert('counters "
+								+ counter + " " + counter2 + "')");
 				getRequestCycle().setRequestTarget(target);
 			}
 		});
