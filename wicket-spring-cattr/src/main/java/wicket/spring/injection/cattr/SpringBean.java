@@ -1,5 +1,7 @@
-
 /*
+ * $Id$
+ * $Revision$
+ * $Date$
  *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,26 +16,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket.spring.injection.cattr;
 
-
-
 /**
- * Commons Attribute used to tag a field as a placeholder for a spring bean
- *
+ * Commons Attribute used to tag a field as a placeholder for a spring bean.
+ * 
  * @author Karthik Gurumurthy
  */
-
 public class SpringBean {
 
+	/** the name of the bean. */
 	private String name;
 
-	public SpringBean(String name){
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 *            the name of the bean
+	 */
+	public SpringBean(String name) {
 		this.name = name;
 	}
 
-	public String getName(){
+	/**
+	 * Gets the name of the bean.
+	 * 
+	 * @return the name of the bean
+	 */
+	public String getName() {
 		return name;
 	}
 
