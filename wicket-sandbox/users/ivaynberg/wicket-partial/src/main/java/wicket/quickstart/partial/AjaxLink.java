@@ -17,8 +17,9 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxListen
 		super.onComponentTag(tag);
 		String url = getPage().urlFor(this, IAjaxListener.class);
 
-		tag.put("onclick", getOnclickScript(url));
-		tag.put("href", "#");
+		//tag.put("onclick", getOnclickScript(url));
+		//tag.put("href", "#");
+		tag.put("href", "javascript:"+getOnclickScript(url));
 	}
 
 	protected String getOnclickScript(String url)

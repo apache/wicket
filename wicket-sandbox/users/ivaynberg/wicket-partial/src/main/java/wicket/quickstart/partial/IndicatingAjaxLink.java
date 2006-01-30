@@ -17,7 +17,7 @@ public abstract class IndicatingAjaxLink extends AjaxLink
 
 	protected String getOnclickScript(String url)
 	{
-		return "wicketShow('"+getIndicatorId()+"'); wicketAjaxGet('" + url + "', function() { wicketHide('"+getIndicatorId()+"'); });";
+		return "wicketShow('"+getIndicatorId()+"'); wicketAjaxGet('" + url + "', function() { wicketHide('"+getIndicatorId()+"'); }); ";
 	}
 	
 	protected void onRender(MarkupStream markupStream)
