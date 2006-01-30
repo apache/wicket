@@ -105,68 +105,6 @@ public class DataGridView extends AbstractDataGridView
 	}
 
 	/**
-	 * Forwards the post process cell item call to a template method
-	 * 
-	 * @param item
-	 *            Item container representing the cell
-	 * @see Item
-	 */
-	protected final void internalPostProcessCellItem(Item item)
-	{
-		postProcessCellItem(item);
-	}
-
-	/**
-	 * Forwards the post process row item call to a template method
-	 * 
-	 * @param item
-	 *            Item container representing the row
-	 * @see Item
-	 */
-	protected final void internalPostProcessRowItem(Item item)
-	{
-		postProcessRowItem(item);
-	}
-
-	/**
-	 * Hook to post process a row item. Users should override this to modify the
-	 * generated row item.
-	 * 
-	 * This is a good place to add an attribute modifier or behavior if needed.
-	 * 
-	 * @param item
-	 *            Item container representing the row
-	 * 
-	 * @see Item
-	 * @see wicket.behavior.IBehavior
-	 * @see AttributeModifier
-	 * @see SimpleAttributeModifier
-	 */
-	protected void postProcessRowItem(Item item)
-	{
-		// noop
-	}
-
-	/**
-	 * Hook to post process a cell item. Users should override this to modify
-	 * the generated cell item.
-	 * 
-	 * This is a good place to add an attribute modifier or behavior if needed.
-	 * 
-	 * @param item
-	 *            Item container representing the cell
-	 * 
-	 * @see Item
-	 * @see wicket.behavior.IBehavior
-	 * @see AttributeModifier
-	 * @see SimpleAttributeModifier
-	 */
-	protected void postProcessCellItem(Item item)
-	{
-		// noop
-	}
-
-	/**
 	 * Returns the array of cell populators
 	 * 
 	 * @return the array of cell populators

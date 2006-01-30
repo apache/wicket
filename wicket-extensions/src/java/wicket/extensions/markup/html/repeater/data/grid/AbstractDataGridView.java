@@ -125,13 +125,14 @@ public abstract class AbstractDataGridView extends DataViewBase
 							+ "] to the provided [cellItem] argument");
 				}
 
-				internalPostProcessCellItem(item);
+			}
 
+			protected Item newItem(String id, int index, IModel model)
+			{
+				return newCellItem(id, index, model);
 			}
 
 		});
-
-		internalPostProcessRowItem(item);
 	}
 
 	protected final ICellPopulator[] internalGetPopulators()
@@ -139,13 +140,50 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populators;
 	}
 
-	protected void internalPostProcessCellItem(Item item)
+	protected final Item newItem(String id, int index, IModel model)
 	{
-		// noop
+		return newRowItem(id, index, model);
 	}
 
-	protected void internalPostProcessRowItem(Item item)
+
+	/**
+	 * Factory method for Item container that represents a row.
+	 * 
+	 * @see Item
+	 * @see RefreshingView#newItem(String, int, IModel)
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item.
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		// noop
+		return new Item(id, index, model);
 	}
+
+	/**
+	 * Factory method for Item container that represents a cell.
+	 * 
+	 * @see Item
+	 * @see RefreshingView#newItem(String, int, IModel)
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newCellItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
 }

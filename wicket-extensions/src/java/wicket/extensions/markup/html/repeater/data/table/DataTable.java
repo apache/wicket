@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
@@ -22,8 +21,11 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
+import wicket.extensions.markup.html.repeater.data.grid.AbstractDataGridView;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.panel.Panel;
@@ -42,7 +44,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *      &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *        &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -106,22 +108,14 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void postProcessRowItem(final Item item)
+			protected Item newRowItem(String id, int index, IModel model)
 			{
-				final IModel model = new AbstractReadOnlyModel()
-				{
-
-					private static final long serialVersionUID = 1L;
-
-					public Object getObject(Component component)
-					{
-						return (item.getIndex() % 2 == 0) ? "odd" : "even";
-					}
-
-
-				};
-
-				item.add(new AttributeModifier("class", true, model));
+				return DataTable.this.newRowItem(id, index, model);
+			}
+			
+			protected Item newCellItem(String id, int index, IModel model)
+			{
+				return DataTable.this.newCellItem(id, index, model);
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
@@ -247,5 +241,46 @@ public class DataTable extends Panel implements IPageable
 	{
 		return datagrid.getRowsPerPage();
 	}
+
+	/**
+	 * Factory method for Item container that represents a row in the underlying
+	 * DataGridView
+	 * 
+	 * @see Item
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item.
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newRowItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
+	/**
+	 * Factory method for Item container that represents a cell in the
+	 * underlying DataGridView
+	 * 
+	 * @see Item
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newCellItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
 
 }
