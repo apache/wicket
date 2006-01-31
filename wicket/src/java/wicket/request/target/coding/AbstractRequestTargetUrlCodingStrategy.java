@@ -42,7 +42,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	/** log. */
 	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
 
-	
+
 	/** mounted path. */
 	private final String mountPath;
 
@@ -86,10 +86,11 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			urlFragment = urlFragment.substring(1);
 		}
 
-		if (urlFragment.length()==0) {
+		if (urlFragment.length() == 0)
+		{
 			return new PageParameters();
 		}
-		
+
 		// Split into pairs
 		final String[] pairs = urlFragment.split("/");
 
@@ -128,18 +129,31 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				String escapedValue=(String)entry.getValue().toString();
-				try
-				{
-					escapedValue=URLEncoder.encode(escapedValue, Application.get()
-							.getRequestCycleSettings().getResponseRequestEncoding());
-				}
-				catch (UnsupportedEncodingException e)
-				{
-					log.error(e.getMessage(), e);
-				}
+				String escapedValue = urlEncode((String)entry.getValue().toString());
 				url.append("/").append(entry.getKey()).append("/").append(escapedValue);
 			}
 		}
+	}
+
+	/**
+	 * Url encodes a string
+	 * 
+	 * @param string
+	 *            string to be encoded
+	 * @return encoded string
+	 */
+	protected String urlEncode(String string)
+	{
+		try
+		{
+			return URLEncoder.encode(string, Application.get().getRequestCycleSettings()
+					.getResponseRequestEncoding());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			log.error(e.getMessage(), e);
+			return string;
+		}
+
 	}
 }
