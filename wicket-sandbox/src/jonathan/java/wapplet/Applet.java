@@ -78,7 +78,7 @@ public class Applet extends WebComponent implements IResourceListener
 	 *            The serialized object
 	 * @return The object
 	 */
-	// FIXME: Belongs in Objects.java
+	// FIXME General: Belongs in Objects.java
 	public static Object byteArrayToObject(final byte[] data)
 	{
 		try
@@ -107,7 +107,7 @@ public class Applet extends WebComponent implements IResourceListener
 	 *            The object
 	 * @return The serialized object
 	 */
-	// FIXME: Belongs in Objects.java
+	// FIXME General: Belongs in Objects.java
 	public static byte[] objectToByteArray(Object object)
 	{
 		try
