@@ -35,7 +35,9 @@ import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
@@ -53,9 +55,9 @@ import wicket.util.lang.Bytes;
  * programmer's part beyond populating the JPanel and working with the model,
  * which is automatically proxied to/from the applet.
  * <p>
- * In your IAppletInitializer implementation, you can populate a JPanel with any Swing
- * components that you want. When a significant action occurs such as a form
- * submit, the Applet.updateServer() method can be called and the applet
+ * In your IAppletInitializer implementation, you can populate a JPanel with any
+ * Swing components that you want. When a significant action occurs such as a
+ * form submit, the Applet.updateServer() method can be called and the applet
  * component automatically updates the server side model by using Ajax to ask
  * the applet to send its model back to the server.
  * 
@@ -231,9 +233,18 @@ public class Applet extends WebComponent implements IResourceListener
 		{
 			tag.put("height", height);
 		}
-		replaceComponentTagBody(findMarkupStream(), tag, "<param name=\"component\" value=\""
-				+ urlFor(IResourceListener.class) + "\"/>");
+		tag.setType(XmlTag.OPEN);
 		super.onComponentTag(tag);
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		replaceComponentTagBody(markupStream, openTag, "<param name=\"component\" value=\""
+				+ urlFor(IResourceListener.class) + "\"/>");
 	}
 
 	/**
@@ -245,7 +256,8 @@ public class Applet extends WebComponent implements IResourceListener
 		if (!IAppletInitializer.class.isAssignableFrom(appletCodeClass))
 		{
 			throw new IllegalArgumentException("Applet initializer class "
-					+ appletCodeClass.getName() + " must implement " + IAppletInitializer.class.getName());
+					+ appletCodeClass.getName() + " must implement "
+					+ IAppletInitializer.class.getName());
 		}
 		this.appletCodeClass = appletCodeClass;
 		addClass(appletCodeClass);
