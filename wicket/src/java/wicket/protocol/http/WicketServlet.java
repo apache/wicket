@@ -378,8 +378,7 @@ public class WicketServlet extends HttpServlet
 				}
 				finally
 				{
-					//TODO Johan: this was causing NPE. See list: [Wicket-user] NullPointerException when accessing resources in last wicket snapshot
-					//resource.setParameters(null);
+					resource.setParameters(null);
 					Application.set(null);
 				}
 			}
