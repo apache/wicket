@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import javax.swing.JApplet;
 
 import wicket.Application;
 import wicket.IResourceListener;
@@ -71,21 +70,7 @@ public class Applet extends WebComponent implements IResourceListener
 	private Class appletCodeClass;
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
-	private List/* <Class> */classes = new ArrayList(1);
-
-	/**
-	 * The applet implementation used to host the user's JPanel.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static class HostApplet extends JApplet
-	{
-		@Override
-		public void init()
-		{
-
-		}
-	}
+	private List/* <Class> */classes = new ArrayList(2);
 
 	/**
 	 * De-serializes an object from a byte array.
@@ -261,6 +246,7 @@ public class Applet extends WebComponent implements IResourceListener
 		}
 		this.appletCodeClass = appletCodeClass;
 		addClass(appletCodeClass);
+		addClass(HostApplet.class);
 	}
 
 	/**
