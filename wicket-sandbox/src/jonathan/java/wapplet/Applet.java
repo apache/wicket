@@ -210,8 +210,8 @@ public class Applet extends WebComponent implements IResourceListener
 				return new ByteArrayResource("application/x-compressed", jarClasses(classes));
 			}
 		};
-		tag.put("codebase", Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
-		tag.put("archive", jarName);
+//		tag.put("codebase", Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
+		tag.put("archive", jarResourceReference.getPath());
 		final int width = getWidth();
 		if (width != -1)
 		{

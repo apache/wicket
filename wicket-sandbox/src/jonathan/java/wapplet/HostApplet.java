@@ -1,5 +1,6 @@
 package wapplet;
 
+
 import javax.swing.JApplet;
 
 /**
