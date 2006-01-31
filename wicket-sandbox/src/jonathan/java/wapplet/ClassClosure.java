@@ -18,9 +18,19 @@
 
 package wapplet;
 
-import org.netbeans.modules.classfile.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
+
+import org.netbeans.modules.classfile.ClassFile;
+import org.netbeans.modules.classfile.ClassName;
+import org.netbeans.modules.classfile.ConstantPool;
+
+import wicket.WicketRuntimeException;
 
 /**
  * Closure: report all classes which a given class references in one way or
@@ -62,20 +72,7 @@ public class ClassClosure
 			InputStream in = inputStreamForClassName(classname.getType());
 			try
 			{
-				if (in == null)
-				{
-					throw new IllegalStateException("Unable to find class " + classname.getExternalName());
-				}
-
-				ClassFile classfile;
-				try
-				{
-					classfile = new ClassFile(in);
-				}
-				catch (IOException e)
-				{
-					throw new RuntimeException(e);
-				}
+				ClassFile classfile = new ClassFile(in);
 				closure.add(classfile.getName().getExternalName());
 
 				final ConstantPool pool = classfile.getConstantPool();
@@ -90,8 +87,7 @@ public class ClassClosure
 					}
 					else if (!includeJDK
 							&& (name.startsWith("java.") || name.startsWith("javax.")
-									|| name.startsWith("sun.")
-									|| name.startsWith("com.sun.corba")
+									|| name.startsWith("sun.") || name.startsWith("com.sun.corba")
 									|| name.startsWith("com.sun.image")
 									|| name.startsWith("com.sun.java.swing")
 									|| name.startsWith("com.sun.naming") || name
@@ -108,8 +104,21 @@ public class ClassClosure
 						}
 					}
 				}
-
-				addClass(classfile.getName().getExternalName(), in);
+				
+				// Get the input stream a second time to add to JAR
+				final InputStream in2 = inputStreamForClassName(classname.getType());
+				try
+				{
+					addClass(classfile.getName().getExternalName(), in2);
+				}
+				finally
+				{
+					in2.close();
+				}
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
 			}
 			finally
 			{
@@ -146,12 +155,18 @@ public class ClassClosure
 	}
 
 	/**
-	 * @param className
+	 * @param classname
 	 *            The class name
 	 * @return Class contents as a stream
 	 */
-	protected InputStream inputStreamForClassName(String className)
+	protected InputStream inputStreamForClassName(String classname)
 	{
-		return ClassLoader.getSystemClassLoader().getResourceAsStream(className + ".class");
+		InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(
+				classname + ".class");
+		if (in == null)
+		{
+			throw new IllegalStateException("Unable to find class " + classname);
+		}
+		return in;
 	}
 }

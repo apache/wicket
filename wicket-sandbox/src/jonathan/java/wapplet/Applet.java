@@ -27,11 +27,9 @@ import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import wicket.Application;
 import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.ResourceReference;
-import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -42,6 +40,7 @@ import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
 import wicket.util.lang.Bytes;
+import wicket.util.string.Strings;
 
 /**
  * This component integrates Swing tightly with Wicket by automatically
@@ -201,9 +200,9 @@ public class Applet extends WebComponent implements IResourceListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "applet");
-		tag.put("code", HostApplet.class.getName());
-		final ResourceReference jarResourceReference = new ResourceReference(appletCodeClass
-				.getName() + ".jar")
+		tag.put("code", HostApplet.class.getName() + ".class");
+		final String jarName = appletCodeClass.getName() + ".jar";
+		final ResourceReference jarResourceReference = new ResourceReference(jarName)
 		{
 			protected Resource newResource()
 			{
@@ -211,7 +210,8 @@ public class Applet extends WebComponent implements IResourceListener
 				return new ByteArrayResource("application/x-compressed", jarClasses(classes));
 			}
 		};
-		tag.put("archive", jarResourceReference.getPath());
+		tag.put("codebase", Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
+		tag.put("archive", jarName);
 		final int width = getWidth();
 		if (width != -1)
 		{
@@ -269,7 +269,7 @@ public class Applet extends WebComponent implements IResourceListener
 				protected void addClass(final String name, final InputStream is)
 				{
 					System.out.println("JAR: Added " + name);
-					ZipEntry entry = new ZipEntry(name);
+					ZipEntry entry = new ZipEntry(name + ".class");
 					try
 					{
 						jar.putNextEntry(entry);
