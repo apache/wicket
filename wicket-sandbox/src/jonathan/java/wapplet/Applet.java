@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-
 import wicket.Application;
 import wicket.IResourceListener;
 import wicket.Resource;
+import wicket.ResourceReference;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -175,11 +175,8 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	public void onResourceRequested()
 	{
-		final Object model = getModelObject();
-		final byte[] bytes = objectToByteArray(model);
-		final ByteArrayResource resource = new ByteArrayResource("application/x-wicket-model",
-				bytes);
-		resource.onResourceRequested();
+		new ByteArrayResource("application/x-wicket-model", objectToByteArray(getModelObject()))
+				.onResourceRequested();
 	}
 
 	/**
@@ -203,11 +200,18 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		maybeCreateJar();
 		checkComponentTag(tag, "applet");
-		tag.put("code", HostApplet.class.getName() + ".class");
-		tag.put("archive", SharedResources.path(getApplication(), Applet.class, appletCodeClass
-				.getName(), null, null));
+		tag.put("code", HostApplet.class.getName());
+		final ResourceReference jarResourceReference = new ResourceReference(appletCodeClass
+				.getName() + ".jar")
+		{
+			protected Resource newResource()
+			{
+				// Create JAR resource
+				return new ByteArrayResource("application/x-compressed", jarClasses(classes));
+			}
+		};
+		tag.put("archive", jarResourceReference.getPath());
 		final int width = getWidth();
 		if (width != -1)
 		{
@@ -287,28 +291,5 @@ public class Applet extends WebComponent implements IResourceListener
 			throw new WicketRuntimeException(e);
 		}
 		return out.toByteArray();
-	}
-
-	/**
-	 * Possibly create a jar file using the specified root classes
-	 */
-	private void maybeCreateJar()
-	{
-		// Get shared resources for this application
-		final SharedResources resources = Application.get().getSharedResources();
-
-		// See if resource is already registered
-		Resource resource = resources.get(Applet.class, appletCodeClass.getName(), null, null,
-				false);
-
-		// If no JAR resource yet generated
-		if (resource == null)
-		{
-			// Create JAR resource
-			resource = new ByteArrayResource("application/x-compressed", jarClasses(classes));
-
-			// Add to application shared resources
-			resources.add(Applet.class, appletCodeClass.getName(), null, null, resource);
-		}
 	}
 }
