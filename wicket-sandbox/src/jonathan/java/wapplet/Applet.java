@@ -200,7 +200,7 @@ public class Applet extends WebComponent implements IResourceListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "applet");
-		tag.put("code", HostApplet.class.getName() + ".class");
+		tag.put("code", HostApplet.class.getName());
 		final String jarName = appletCodeClass.getName() + ".jar";
 		final ResourceReference jarResourceReference = new ResourceReference(jarName)
 		{
@@ -210,8 +210,8 @@ public class Applet extends WebComponent implements IResourceListener
 				return new ByteArrayResource("application/x-compressed", jarClasses(classes));
 			}
 		};
-//		tag.put("codebase", Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
-		tag.put("archive", jarResourceReference.getPath());
+		tag.put("codebase", "wapplet/" + Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
+		tag.put("archive", jarName);
 		final int width = getWidth();
 		if (width != -1)
 		{
@@ -269,7 +269,7 @@ public class Applet extends WebComponent implements IResourceListener
 				protected void addClass(final String name, final InputStream is)
 				{
 					System.out.println("JAR: Added " + name);
-					ZipEntry entry = new ZipEntry(name + ".class");
+					ZipEntry entry = new ZipEntry(name.replace('.', '/') + ".class");
 					try
 					{
 						jar.putNextEntry(entry);
