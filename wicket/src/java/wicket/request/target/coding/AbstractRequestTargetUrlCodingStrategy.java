@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.PageParameters;
+import wicket.util.string.Strings;
 
 /**
  * Abstract class for mount encoders that uses paths and forward slashes.
@@ -129,8 +130,10 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				String escapedValue = urlEncode((String)entry.getValue().toString());
-				url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+				if(entry.getValue()!=null){
+				    String escapedValue = urlEncode((String)entry.getValue().toString());
+				    url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+				}
 			}
 		}
 	}
