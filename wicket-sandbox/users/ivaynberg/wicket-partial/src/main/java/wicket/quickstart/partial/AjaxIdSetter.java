@@ -17,6 +17,9 @@ public class AjaxIdSetter extends AbstractBehavior
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
 		super.onComponentTag(component, tag);
-		tag.put("id", component.getPageRelativePath());
+		if (!tag.getAttributes().containsKey("id"))
+		{
+			tag.put("id", component.getPageRelativePath());
+		}
 	}
 }

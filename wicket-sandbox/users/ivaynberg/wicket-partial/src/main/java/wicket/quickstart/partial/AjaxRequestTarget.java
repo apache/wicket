@@ -125,7 +125,14 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	private void respondComponent(Response response, Component component)
 	{
-		response.write("<component id=\"" + component.getPageRelativePath() + "\">");
+		String id;
+		if (component.getMarkupAttributes().containsKey("id")) {
+			id=component.getMarkupAttributes().getString("id");
+		} else {
+			id=component.getPageRelativePath();
+		}
+		
+		response.write("<component id=\"" + id + "\">");
 
 		response.write("<![CDATA[");
 
