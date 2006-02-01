@@ -236,17 +236,23 @@ public abstract class MarkupContainer extends Component
 		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		// Get child by id
-		final Component child = children_get(id);
+		Component child = children_get(id);
+		
+		// If the container is transparent, than ask its parent
+		if ((child == null) && isTransparentResolver() && (getParent() != null))
+		{
+			child = getParent().get(path);
+		}
 
 		// Found child?
+		final String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
 		if (child != null)
 		{
 			// Recurse on latter part of path
-			return child.get(Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR));
+			return child.get(path2);
 		}
 
-		// No child with the given id
-		return null;
+		return child;
 	}
 
 	/**
@@ -1269,7 +1275,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @return false. By default a MarkupContainer is not transparent.
 	 */
-	public boolean isTransparent()
+	public boolean isTransparentResolver()
 	{
 		return false;
 	}

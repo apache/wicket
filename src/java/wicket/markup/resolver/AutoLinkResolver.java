@@ -228,7 +228,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					// the component (e.g. a Panel) which contributed it.
 					MarkupContainer relevantContainer = container;
 					while (((relevantContainer instanceof IComponentResolver) || relevantContainer
-							.isTransparent())
+							.isTransparentResolver())
 							&& !(relevantContainer instanceof IComponentResolverMarker))
 					{
 						relevantContainer = relevantContainer.getParent();
@@ -288,9 +288,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see wicket.MarkupContainer#isTransparent()
+		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
-		public boolean isTransparent()
+		public boolean isTransparentResolver()
 		{
 			return true;
 		}
@@ -319,9 +319,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see wicket.MarkupContainer#isTransparent()
+		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
-		public boolean isTransparent()
+		public boolean isTransparentResolver()
 		{
 			return true;
 		}
@@ -373,9 +373,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see wicket.MarkupContainer#isTransparent()
+		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
-		public boolean isTransparent()
+		public boolean isTransparentResolver()
 		{
 			return true;
 		}

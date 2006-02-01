@@ -43,7 +43,7 @@ public class ParentResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		MarkupContainer parent = container;
-		while ((parent != null) && (parent.isTransparent()))
+		while ((parent != null) && (parent.isTransparentResolver()))
 		{
 			// Try to find the component with the parent component.
 			parent = parent.getParent();

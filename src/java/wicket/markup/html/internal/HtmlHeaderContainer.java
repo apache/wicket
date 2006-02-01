@@ -216,9 +216,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isTransparent()
+	 * @see wicket.MarkupContainer#isTransparentResolver()
 	 */
-	public boolean isTransparent()
+	public boolean isTransparentResolver()
 	{
 		return true;
 	}

@@ -89,7 +89,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	private transient ComponentTag openTag;
 	
 	/** Should be true for bordered pages */
-	private boolean transparent = false;
+	private boolean transparentResolver = false;
 	
 	/**
      * @see wicket.Component#Component(String)
@@ -109,27 +109,27 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 	/**
 	 * 
-	 * @see wicket.MarkupContainer#isTransparent()
+	 * @see wicket.MarkupContainer#isTransparentResolver()
 	 */
-	public boolean isTransparent()
+	public boolean isTransparentResolver()
 	{
 		if (getMarkupStream() == null)
 		{
 			return true;
 		}
 		
-		return transparent;
+		return transparentResolver;
 	}
 	
 	/**
 	 * Borders used for bordered pages should set it to "true".
 	 * Default is "false".
 	 * 
-	 * @param transparent
+	 * @param transparentResolver
 	 */
-	public final void setTransparent(final boolean transparent)
+	public final void setTransparentResolver(final boolean transparentResolver)
 	{
-		this.transparent = transparent;
+		this.transparentResolver = transparentResolver;
 	}
 	
 	/**
