@@ -28,6 +28,7 @@ import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
@@ -84,6 +85,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
+	 * 
 	 * @param markupStream
 	 *            The current markupStream
 	 * @param tag
@@ -221,32 +223,25 @@ public final class AutoLinkResolver implements IComponentResolver
 					// this file
 
 					// <wicket:head> components are handled differently. We can
-					// not
-					// use the container, because it is the container the header
-					// has been added to (e.g. the Page). What we need however,
-					// is
-					// the component (e.g. a Panel) which contributed it.
-					MarkupContainer relevantContainer = container;
-					while (((relevantContainer instanceof IComponentResolver) || relevantContainer
-							.isTransparentResolver())
-							&& !(relevantContainer instanceof IComponentResolverMarker))
-					{
-						relevantContainer = relevantContainer.getParent();
-					}
+					// not use the container, because it is the container the
+					// header has been added to (e.g. the Page). What we need
+					// however, is the component (e.g. a Panel) which
+					// contributed it.
+					Class clazz = ((MarkupResourceStream)container.getMarkupStream().getResource())
+							.getMarkupClass();
 
 					try
 					{
 						// Create the component implementing the link
-						return new CssLink(autoId, relevantContainer.getClass(), href);
+						return new CssLink(autoId, clazz, href);
 					}
 					catch (WicketRuntimeException ex)
 					{
 						// Provided the resource does not exist, assume the user
-						// did
-						// deliberately not point it to a page or resource. The
-						// href
-						// might still point to a valid homepage outside of
-						// wicket.
+						// did deliberately not point it to a page or resource.
+						// The href might still point to a valid homepage
+						// outside
+						// of wicket.
 						log.info("Did not find autolink resource: " + href
 								+ "; Assume it is a valid external URL");
 					}

@@ -775,7 +775,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @return Returns the markup stream set on this container.
 	 */
-	protected MarkupStream getMarkupStream()
+	public final MarkupStream getMarkupStream()
 	{
 		return markupStream;
 	}
