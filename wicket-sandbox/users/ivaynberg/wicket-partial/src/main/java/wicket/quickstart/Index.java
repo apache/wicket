@@ -1,12 +1,19 @@
 package wicket.quickstart;
 
+import java.util.Date;
+
+import wicket.Component;
 import wicket.PageParameters;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.PropertyModel;
 import wicket.quickstart.partial.AjaxIdSetter;
 import wicket.quickstart.partial.AjaxLink;
 import wicket.quickstart.partial.AjaxRequestTarget;
 import wicket.quickstart.partial.IndicatingAjaxLink;
+import wicket.quickstart.partial.timer.AjaxSelfUpdatingTimerBehavior;
+import wicket.quickstart.partial.timer.AjaxTimerBehavior;
 
 /**
  * Basic bookmarkable index page.
@@ -65,5 +72,20 @@ public class Index extends QuickStartPage
 
 			}
 		});
+
+		Label label = new Label("clock", new DateModel());
+		label.add(AjaxIdSetter.INSTANCE); // roll this into abstract ajax handler?
+		label.add(new AjaxSelfUpdatingTimerBehavior(1000));
+		add(label);
+	}
+
+	private static final class DateModel extends AbstractReadOnlyModel
+	{
+
+		public Object getObject(Component component)
+		{
+			return new Date().toString();
+		}
+
 	}
 }
