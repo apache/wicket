@@ -17,8 +17,6 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.Component;
-import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
 
@@ -37,43 +35,44 @@ public abstract class AbstractTest14WebPage extends WebPage
 	{
 		// Create border and add it to the page
 		border = new HeaderSectionBorder_2("border");
+		border.setTransparentResolver(true);
 		super.add(border);
 	}
-	
-	/**
-	 * @param child
-	 * @return xxx
-	 */
-	public MarkupContainer add(final Component child)
-	{
-		border.add(child);
-		return this;
-	}
-
-	/**
-	 * 
-	 */
-	public void removeAll()
-	{
-		border.removeAll();
-	}
-
-	/**
-	 * @param child
-	 * @return xxx 
-	 */
-	public MarkupContainer replace(final Component child)
-	{
-		return border.replace(child);
-	}
-
-	/**
-	 * @param component
-	 * @return xxx
-	 */
-	public boolean autoAdd(Component component)
-	{
-		return border.autoAdd(component);
-	}
-
+//	
+//	/**
+//	 * @param child
+//	 * @return xxx
+//	 */
+//	public MarkupContainer add(final Component child)
+//	{
+//		border.add(child);
+//		return this;
+//	}
+//
+//	/**
+//	 * 
+//	 */
+//	public void removeAll()
+//	{
+//		border.removeAll();
+//	}
+//
+//	/**
+//	 * @param child
+//	 * @return xxx 
+//	 */
+//	public MarkupContainer replace(final Component child)
+//	{
+//		return border.replace(child);
+//	}
+//
+//	/**
+//	 * @param component
+//	 * @return xxx
+//	 */
+//	public boolean autoAdd(Component component)
+//	{
+//		return border.autoAdd(component);
+//	}
+//
 }
