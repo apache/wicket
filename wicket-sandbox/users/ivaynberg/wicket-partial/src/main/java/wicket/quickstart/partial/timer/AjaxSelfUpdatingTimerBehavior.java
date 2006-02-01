@@ -15,4 +15,5 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 		target.addComponent(getComponent());
 	}
 
+	
 }
