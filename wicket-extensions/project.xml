@@ -123,7 +123,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.12</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>

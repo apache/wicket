@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.2-20060127-0105</currentVersion>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -212,7 +212,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.12</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>

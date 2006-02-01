@@ -5,7 +5,7 @@
   <groupId>wicket</groupId>
   <id>wicket-quickstart</id>
   <name>QuickStart</name>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <organization>
     <name>Wicket</name>
     <url>http://wicket.sourceforge.net</url>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
@@ -89,22 +89,11 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.12</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>
         <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>ognl</groupId>
-      <artifactId>ognl</artifactId>
-      <version>2.6.7</version>
-      <url>http://www.ognl.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description>Used for introspection.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
