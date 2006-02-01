@@ -128,7 +128,7 @@ public abstract class MarkupContainer extends Component
 	 *             operation.
 	 * @return This
 	 */
-	public MarkupContainer add(final Component child)
+	public final MarkupContainer add(final Component child)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -164,7 +164,7 @@ public abstract class MarkupContainer extends Component
 	 *            The component to add
 	 * @return True, if component has been added
 	 */
-	public boolean autoAdd(final Component component)
+	public final boolean autoAdd(final Component component)
 	{
 		/* Replace strategy */
 		if (get(component.getId()) != null)
@@ -416,7 +416,7 @@ public abstract class MarkupContainer extends Component
 	 * @param id
 	 *            The id of the component to remove
 	 */
-	public void remove(final String id)
+	public final void remove(final String id)
 	{
 		final Component component = get(id);
 		if (component != null)
@@ -436,7 +436,7 @@ public abstract class MarkupContainer extends Component
 	 * Note: implementation does not call
 	 * {@link MarkupContainer#remove(Component) } for each component.
 	 */
-	public void removeAll()
+	public final void removeAll()
 	{
 		if (children != null)
 		{
@@ -528,7 +528,7 @@ public abstract class MarkupContainer extends Component
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public MarkupContainer replace(final Component child)
+	public final MarkupContainer replace(final Component child)
 	{
 		if (log.isDebugEnabled())
 		{
