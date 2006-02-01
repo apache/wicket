@@ -73,7 +73,7 @@ import wicket.markup.html.panel.Panel;
  * are not in the same hierarchy-line nothing changes. A comp with the same id
  * hides the one of the parent-container with the same id.
  * 
- * @see wicket.MarkupContainer#isTransparent()
+ * @see wicket.MarkupContainer#isTransparentResolver()
  * @see wicket.markup.resolver.ParentResolver
  * 
  * @author Christian Essl

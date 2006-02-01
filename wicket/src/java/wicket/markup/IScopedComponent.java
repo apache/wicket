@@ -27,7 +27,7 @@ package wicket.markup;
  * implement transparent containers.
  * 
  * @see wicket.markup.resolver.ScopedComponentResolver
- * @see wicket.MarkupContainer#isTransparent()
+ * @see wicket.MarkupContainer#isTransparentResolver()
  * @see wicket.markup.resolver.ParentResolver
  * 
  * @author Christian Essl
