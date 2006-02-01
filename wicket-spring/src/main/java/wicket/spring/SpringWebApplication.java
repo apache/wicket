@@ -18,9 +18,12 @@
  */
 package wicket.spring;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
 import wicket.protocol.http.WebApplication;
@@ -51,6 +54,23 @@ public abstract class SpringWebApplication extends WebApplication implements
 			return ((SpringWebApplication) app).internalGetApplicationContext();
 		}
 	};
+
+	protected void internalInit()
+	{
+		super.internalInit();
+
+		if (applicationContext == null)
+		{
+			// this application was not created as a spring bean so we
+			// locate the app context from servlet context
+
+			ServletContext sc = getWicketServlet().getServletContext();
+			applicationContext = WebApplicationContextUtils
+					.getRequiredWebApplicationContext(sc);
+
+		}
+
+	}
 
 	/**
 	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
