@@ -29,7 +29,7 @@ import wicket.model.AbstractReadOnlyModel;
 /**
  * page that demonstrates a simple repeater view.
  * 
- * @see wicket.extensions.markup.html.repeater.OrderedRepeatingView
+ * @see wicket.extensions.markup.html.repeater.RepeatingView
  * 
  * @author igor
  * 
