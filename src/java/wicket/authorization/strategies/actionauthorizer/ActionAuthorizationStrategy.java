@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ActionAuthorizationStrategy.java,v 1.2 2006/01/12 23:57:32 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,10 +34,12 @@ import wicket.authorization.IAuthorizationStrategy;
  */
 public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 {
-	/** Map from Action keys to IActionAuthorizer implementations */
+	/** Map from Action keys to IActionAuthorizer implementations. */
 	private final Map actionAuthorizerForAction = new HashMap();
-	
+
 	/**
+	 * Adds an action authorizer.
+	 * 
 	 * @param authorizer
 	 *            The action authorizer to add
 	 */
@@ -55,7 +57,8 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component, wicket.authorization.Action)
+	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 *      wicket.authorization.Action)
 	 */
 	public boolean authorizeAction(Component component, Action action)
 	{

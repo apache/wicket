@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,11 +31,15 @@ import wicket.authorization.Action;
 public interface IActionAuthorizer extends Serializable
 {
 	/**
+	 * Gets the action that this authorizer authorizes.
+	 * 
 	 * @return The action that this authorizer authorizes
 	 */
 	Action getAction();
-	
+
 	/**
+	 * Gets whether this action is authorized.
+	 * 
 	 * @param component
 	 *            The component to authorize this action on
 	 * @return True if this action is authorized
