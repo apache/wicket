@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CompoundAuthorizationStrategy.java,v 1.6 2006/01/14 22:45:04
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,7 +27,7 @@ import wicket.Component;
  * 
  * @author ivaynberg
  */
-public final class CompoundAuthorizationStrategy implements IAuthorizationStrategy
+public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
 	private ArrayList strategies = new ArrayList();
