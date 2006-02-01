@@ -210,10 +210,16 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						+ ", a component must be provided");
 			}
 			Component component = page.get(componentPart);
+			if (component == null)
+			{
+				throw new WicketRuntimeException(
+					"Calling listener methods on non-existing component: " + componentPath);
+			}
 			if (!component.isVisible())
 			{
 				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed");
+						"Calling listener methods on components that are not visible is not allowed: " 
+						+ componentPath);
 			}
 			if (interfaceName.equals("IResourceListener"))
 			{
