@@ -74,7 +74,7 @@ public class TreeTest extends WicketTestCase
 
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString("?path=0:border:tree:tree:3:node:junctionLink&interface=ILinkListener");
+		application.getServletRequest().setRequestToRedirectString("?path=0:tree:tree:3:node:junctionLink&interface=ILinkListener");
 		application.processRequestCycle();
 		String document = application.getServletResponse().getDocument();
 
