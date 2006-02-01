@@ -279,6 +279,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * </p>
 	 * 
 	 * @return true if access is allowed, false otherwise
+	 * 
+	 * @deprecated this method is to be removed in future version in favor of
+	 * instances of {@link wicket.authorization.IAuthorizationStrategy}.
+	 * TODO come up with a default that is (almost) as easy to use as this
+	 * method and that uses the authorization strategy. Also document the
+	 * deprecation warning more when that is in place
 	 */
 	public boolean checkAccess()
 	{
