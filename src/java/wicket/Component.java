@@ -1309,7 +1309,7 @@ public abstract class Component implements Serializable
 		Component component = this;
 		while (component != null)
 		{
-			if (renderAllowed && component.isVisible())
+			if (component.renderAllowed && component.isVisible())
 			{
 				component = component.getParent();
 			}
