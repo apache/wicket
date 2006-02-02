@@ -122,15 +122,7 @@ public class TabbedPanel extends Panel
 				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
 				final int selected = getSelectedTab();
 
-				final Link titleLink = new Link("link")
-				{
-					private static final long serialVersionUID = 1L;
-
-					public void onClick()
-					{
-						setSelectedTab(index);
-					}
-				};
+				final Link titleLink = newLink("link", index);
 
 				titleLink.add(new Label("title", tab.getTitle()));
 				item.add(titleLink);
@@ -152,6 +144,19 @@ public class TabbedPanel extends Panel
 		// select the first tab by default
 		setSelectedTab(0);
 
+	}
+
+	protected Link newLink(String linkId, final int index)
+	{
+		return new Link(linkId)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				setSelectedTab(index);
+			}
+		};
 	}
 
 	/**
