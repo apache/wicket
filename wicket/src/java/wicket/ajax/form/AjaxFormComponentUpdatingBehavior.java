@@ -1,3 +1,20 @@
+/*
+ * $Id$
+ * $Revision$ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.ajax.form;
 
 import wicket.WicketRuntimeException;
@@ -6,14 +23,25 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.AppendingStringBuffer;
 
-
+/**
+ * 
+ */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
-	public AjaxFormComponentUpdatingBehavior(String event)
+	/**
+	 * Construct.
+	 * 
+	 * @param event
+	 */
+	public AjaxFormComponentUpdatingBehavior(final String event)
 	{
 		super(event);
 	}
 
+	/**
+	 * 
+	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
+	 */
 	protected void onBind()
 	{
 		if (!(getComponent() instanceof FormComponent))
@@ -23,16 +51,28 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		}
 	}
 
-	protected void onCheckEvent(String event)
+	/**
+	 * 
+	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
+	 */
+	protected void onCheckEvent(final String event)
 	{
-		//TODO check event
+		// TODO check event
 	}
-	
+
+	/**
+	 * 
+	 * @return FormComponent
+	 */
 	protected FormComponent getFormComponent()
 	{
 		return (FormComponent)getComponent();
 	}
 
+	/**
+	 * 
+	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
+	 */
 	protected String getEventHandler()
 	{
 		FormComponent fc = getFormComponent();
@@ -49,7 +89,11 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		return buildAjaxCallRaw(buff.toString());
 	}
 
-	protected final void onEvent(AjaxRequestTarget target)
+	/**
+	 * 
+	 * @see wicket.ajax.AjaxEventBehavior#onEvent(wicket.ajax.AjaxRequestTarget)
+	 */
+	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		FormComponent fc = getFormComponent();
 		fc.registerNewUserInput();
@@ -68,5 +112,5 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		onUpdate(target);
 	}
 
-	protected abstract void onUpdate(AjaxRequestTarget target);
+	protected abstract void onUpdate(final AjaxRequestTarget target);
 }

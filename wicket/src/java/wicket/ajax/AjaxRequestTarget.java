@@ -29,6 +29,7 @@ import wicket.Response;
 import wicket.protocol.http.WebResponse;
 
 /**
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class AjaxRequestTarget implements IRequestTarget
@@ -85,13 +86,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(final RequestCycle requestCycle)
 	{
-		WebResponse response = (WebResponse) requestCycle.getResponse();
+		WebResponse response = (WebResponse)requestCycle.getResponse();
 
 		response.setContentType("text/xml");
 
-		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT" );
-		response.setHeader("Cache-Control", "no-cache, must-revalidate" );
-		response.setHeader("Pragma", "no-cache" );
+		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
 
 		response.write("<?xml version=\"1.0\"?>");
 
@@ -100,38 +101,49 @@ public class AjaxRequestTarget implements IRequestTarget
 		Iterator it = components.iterator();
 		while (it.hasNext())
 		{
-			Component c = (Component) it.next();
+			Component c = (Component)it.next();
 			respondComponent(response, c);
 		}
 
 		it = javascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = (String) it.next();
+			String js = (String)it.next();
 			respondInvocation(response, js);
 		}
 		response.write("</ajax-response>");
 	}
 
-	private void respondInvocation(Response response, String js)
+	/**
+	 * @param response
+	 * @param js
+	 */
+	private void respondInvocation(final Response response, final String js)
 	{
 		response.write("<evaluate>");
 		response.write("<![CDATA[");
 		response.write(js);
 		response.write("]]>");
 		response.write("</evaluate>");
-
 	}
 
-	private void respondComponent(Response response, Component component)
+	/**
+	 * 
+	 * @param response
+	 * @param component
+	 */
+	private void respondComponent(final Response response, final Component component)
 	{
 		String id;
-		if (component.getMarkupAttributes().containsKey("id")) {
-			id=component.getMarkupAttributes().getString("id");
-		} else {
-			id=component.getPageRelativePath();
+		if (component.getMarkupAttributes().containsKey("id"))
+		{
+			id = component.getMarkupAttributes().getString("id");
 		}
-		
+		else
+		{
+			id = component.getPageRelativePath();
+		}
+
 		response.write("<component id=\"" + id + "\">");
 
 		response.write("<![CDATA[");
@@ -183,9 +195,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		if (obj instanceof AjaxRequestTarget)
 		{
-			AjaxRequestTarget that = (AjaxRequestTarget) obj;
-			return components.equals(that.components)
-					&& javascripts.equals(that.javascripts);
+			AjaxRequestTarget that = (AjaxRequestTarget)obj;
+			return components.equals(that.components) && javascripts.equals(that.javascripts);
 		}
 		return false;
 	}
@@ -206,8 +217,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "AjaxRequestTarget@"
-				+ hashCode() + " components {" + components + "} javascripts {"
+		return "AjaxRequestTarget@" + hashCode() + " components {" + components + "} javascripts {"
 				+ javascripts + "}";
 	}
 }
