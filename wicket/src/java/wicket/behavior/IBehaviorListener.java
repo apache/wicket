@@ -23,7 +23,7 @@ import wicket.IRequestListener;
  * Listens for requests to behaviors. When {@link wicket.behavior.IBehavior}s are
  * 'enriched' with this interface, they can receive requests themselves. You can
  * use this for example to implement AJAX behavior, though you'll probably want
- * to extend from {@link wicket.behavior.AjaxHandler} directly instead in that case.
+ * to extend from {@link wicket.behavior.AbstractAjaxBehavior} directly instead in that case.
  * 
  * @author Eelco Hillenius
  */

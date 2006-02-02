@@ -628,7 +628,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Used by Form to tell the FormComponent that a new user input is available
 	 */
-	final void registerNewUserInput()
+	public final void registerNewUserInput()
 	{
 		if (isVisibleInHierarchy())
 		{

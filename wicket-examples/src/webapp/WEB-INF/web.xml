@@ -43,6 +43,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>AjaxApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -255,6 +265,12 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
+	<servlet-mapping>
+		<servlet-name>AjaxApplication</servlet-name>
+		<url-pattern>/ajax/*</url-pattern>
+	</servlet-mapping>
+	
+
 	<servlet-mapping>
 		<servlet-name>AjaxPrototypeApplication</servlet-name>
 		<url-pattern>/prototype/*</url-pattern>

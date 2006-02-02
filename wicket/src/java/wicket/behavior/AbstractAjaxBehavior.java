@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,26 +21,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 import wicket.Component;
-import wicket.IRequestTarget;
-import wicket.RequestCycle;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.request.target.EmptyRequestTarget;
-import wicket.request.target.ResourceStreamRequestTarget;
-import wicket.util.resource.IResourceStream;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
  * javascript specific implementations, like ones based on Dojo or
- * Scriptaculous.
+ * Scriptaculous, or Wicket's default.
  * 
  * @author Eelco Hillenius
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AjaxHandler
+public abstract class AbstractAjaxBehavior
 		implements
 			IBehavior,
 			IBehaviorListener,
@@ -58,7 +54,7 @@ public abstract class AjaxHandler
 	/**
 	 * Construct.
 	 */
-	public AjaxHandler()
+	public AbstractAjaxBehavior()
 	{
 	}
 
@@ -176,30 +172,24 @@ public abstract class AjaxHandler
 	 * @param tag
 	 *            the tag that is rendered
 	 */
-	public void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(ComponentTag tag)
 	{
-	}
-
-	/**
-	 * Called when an Ajax request is to be handled.
-	 */
-	public final void onRequest()
-	{
-		respond();
 	}
 
 	/**
 	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
-	public void rendered(Component hostComponent)
+	public final void rendered(Component hostComponent)
 	{
+		bodyOnloadContribHolder.set(null);
+		headContribHolder.set(null);
 		onComponentRendered();
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 	 */
-	public final void renderHead(HtmlHeaderContainer container)
+	public final void renderHead(Response response)
 	{
 		Set contributors = (Set)headContribHolder.get();
 
@@ -217,27 +207,27 @@ public abstract class AjaxHandler
 		// was a contribution for this specific implementation done yet?
 		if (!contributors.contains(implementationId))
 		{
-			renderHeadInitContribution(container);
+			onRenderHeadInitContribution(response);
 			contributors.add(implementationId);
 		}
 
-		renderHeadContribution(container);
+		onRenderHeadContribution(response);
 	}
 
 	/**
 	 * Convenience method to add a javascript reference.
 	 * 
-	 * @param container
-	 *            the header container
+	 * @param response
+	 * 
 	 * @param ref
 	 *            reference to add
 	 */
-	protected void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
+	protected void writeJsReference(Response response, PackageResourceReference ref)
 	{
-		String url = container.getPage().urlFor(ref.getPath());
-		String s = "\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"" + url
-				+ "\"></script>\n";
-		write(container, s);
+		String url = getComponent().getPage().urlFor(ref.getPath());
+		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"");
+		response.write(url);
+		response.write("\"></script>\n");
 	}
 
 	/**
@@ -284,30 +274,6 @@ public abstract class AjaxHandler
 	protected abstract String getImplementationId();
 
 	/**
-	 * Gets the response to render to the requester. This is used by AjaxHandler
-	 * default request target implementation,
-	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If you
-	 * override {@link #respond()} and provide another kind of target, this
-	 * method will not be used.
-	 * 
-	 * @return the response to render to the requester
-	 */
-	protected IResourceStream getResponse()
-	{
-		return null;
-	}
-
-	/**
-	 * Gets the response type mime, e.g. 'text/html' or 'text/javascript'.
-	 * 
-	 * @return the response type mime
-	 */
-	protected String getResponseType()
-	{
-		return "text/html";
-	}
-
-	/**
 	 * Called when the component was bound to it's host component. You can get
 	 * the bound host component by calling getComponent.
 	 */
@@ -322,18 +288,16 @@ public abstract class AjaxHandler
 	 */
 	protected void onComponentRendered()
 	{
-		bodyOnloadContribHolder.set(null);
-		headContribHolder.set(null);
 	}
 
 	/**
 	 * Let this handler print out the needed header contributions. This
 	 * implementation does nothing.
 	 * 
-	 * @param container
+	 * @param response
 	 *            head container
 	 */
-	protected void renderHeadContribution(HtmlHeaderContainer container)
+	protected void onRenderHeadContribution(Response response)
 	{
 	}
 
@@ -342,37 +306,13 @@ public abstract class AjaxHandler
 	 * ajax variant implementations (e.g. Dojo, Scriptaculous). This
 	 * implementation does nothing.
 	 * 
-	 * @param container
+	 * @param response
 	 *            head container
 	 */
-	protected void renderHeadInitContribution(HtmlHeaderContainer container)
+	protected void onRenderHeadInitContribution(Response response)
 	{
 	}
 
-	/**
-	 * Respond to this request. If you override this method, make sure you set a
-	 * proper request target (call
-	 * {@link RequestCycle#setRequestTarget(IRequestTarget)}. If
-	 * {@link #getResponse()} returns a non-null resource stream, this
-	 * implementation will set the target to
-	 * {@link wicket.request.target.ResourceStreamRequestTarget}. If
-	 * {@link #getResponse()} returns null, the target will be set to an
-	 * instance of {@link EmptyRequestTarget}.
-	 */
-	protected void respond()
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		IResourceStream resourceStream = getResponse();
-		if (resourceStream != null)
-		{
-			requestCycle.setRequestTarget(new ResourceStreamRequestTarget(resourceStream,
-					getResponseType()));
-		}
-		else
-		{
-			requestCycle.setRequestTarget(EmptyRequestTarget.getInstance());
-		}
-	}
 
 	/**
 	 * Writes the given string to the header container.

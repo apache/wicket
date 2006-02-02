@@ -28,13 +28,16 @@ import wicket.examples.WicketExamplePage;
  */
 public class Page1 extends WicketExamplePage
 {
-    /**
+ 
+	/**
      * Constructor
      * @param parameters
      */
     public Page1(PageParameters parameters)
     {
+    	boolean a=true;
     }
+    
 }
 
 

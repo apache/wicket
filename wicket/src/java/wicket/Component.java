@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.286 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -222,11 +222,12 @@ import wicket.version.undo.Change;
  * @author Eelco Hillenius
  * @author Johan Compagner
  * @author Juergen Donnerstag
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class Component implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * is allowed to be enabled.
@@ -250,7 +251,7 @@ public abstract class Component implements Serializable
 	 * will catch all normal framework-directed use though.
 	 */
 	public static final Action ENABLE = new Action("ENABLE");
-	
+
 	/** Separator for component paths */
 	public static final char PATH_SEPARATOR = ':';
 
@@ -642,25 +643,26 @@ public abstract class Component implements Serializable
 		String componentPath = parent.getPageRelativePath();
 		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
 		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-		
+
 		int index = markupStream.findComponentIndex(relativePath, getId());
 		if (index == -1)
 		{
-			throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
+			throw new WicketRuntimeException("Unable to determine markup for component: "
+					+ this.toString());
 		}
 		markupStream.setCurrentIndex(index);
 		return markupStream;
 	}
 
 	/**
-	 * Get a copy of the markup's attributes which are associated with the 
+	 * Get a copy of the markup's attributes which are associated with the
 	 * component.
 	 * <p>
-	 * Modifications to the map returned don't change the tags attributes. 
-     * It is just a copy.
+	 * Modifications to the map returned don't change the tags attributes. It is
+	 * just a copy.
 	 * <p>
-	 * Note: The component must have been added (directly or indirectly)
-	 * to a container with an associated markup file (Page, Panel or Border).   
+	 * Note: The component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border).
 	 * 
 	 * @return markup attributes
 	 */
@@ -668,15 +670,40 @@ public abstract class Component implements Serializable
 	{
 		return new ValueMap(initializeMarkupStream().getTag().getAttributes());
 	}
-	
+
+
+	/**
+	 * Retrieves id by which this component is represented within the markup.
+	 * <p>
+	 * The point of this function is to generate a unique id to make it easy to
+	 * locate this component in the generated markup for post-wicket processing
+	 * such as javascript or an xslt transform.
+	 * <p>
+	 * If the id attribute is present in the markup attributes of this component
+	 * it will be used, otherwise the page-relative path of this component will
+	 * be used.
+	 * 
+	 * @return markup id of this component
+	 */
+	public final String getMarkupId()
+	{
+		String id = getMarkupAttributes().getString("id");
+		if (id == null)
+		{
+			id = getPageRelativePath();
+		}
+		return id;
+	}
+
+
 	/**
 	 * Page.doRender() is used to render a whole page. With AJAX however it must
-	 * be possible to render any one component contained in a page. That is
-	 * what Component.doRender() is for. 
+	 * be possible to render any one component contained in a page. That is what
+	 * Component.doRender() is for.
 	 * <p>
-	 * Note: it is not necessary that the page has previously been rendered.
-     * But the component must have been added (directly or indirectly)
-	 * to a container with an associated markup file (Page, Panel or Border).   
+	 * Note: it is not necessary that the page has previously been rendered. But
+	 * the component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border).
 	 */
 	public void doRender()
 	{
@@ -1112,8 +1139,8 @@ public abstract class Component implements Serializable
 		try
 		{
 			size = Objects.sizeof(this);
-		} 
-		catch(Exception e)
+		}
+		catch (Exception e)
 		{
 			log.error("Exception getting size for component " + this, e);
 		}
@@ -1410,20 +1437,20 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * The markup stream will be assigned to the component at the beginning
-	 * of the component render phase. It is temporary working variable only.
+	 * The markup stream will be assigned to the component at the beginning of
+	 * the component render phase. It is temporary working variable only.
 	 * 
 	 * @see #findMarkupStream()
 	 * @see MarkupContainer#getMarkupStream()
 	 * 
-	 * @param markupStream 
-	 *           The current markup stream which should be applied
-	 *           by the component to render itself
+	 * @param markupStream
+	 *            The current markup stream which should be applied by the
+	 *            component to render itself
 	 */
 	protected void setMarkupStream(final MarkupStream markupStream)
 	{
 	}
-	
+
 	/**
 	 * Performs a render of this component as part of a Page level render
 	 * process.
@@ -1448,10 +1475,10 @@ public abstract class Component implements Serializable
 			{
 				log.debug("Begin render " + this);
 			}
-			
+
 			// Call implementation to render component
 			onRender(markupStream);
-			
+
 			// Component has been rendered
 			rendered();
 
@@ -1536,9 +1563,9 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Print to the web response what ever the component wants to contribute 
-	 * to the head section. Make sure that all attached behaviors are asked
-	 * as well.
+	 * Print to the web response what ever the component wants to contribute to
+	 * the head section. Make sure that all attached behaviors are asked as
+	 * well.
 	 * 
 	 * @param container
 	 *            The HtmlHeaderContainer
@@ -1549,16 +1576,16 @@ public abstract class Component implements Serializable
 		// header or body onLoad tag.
 		if (this.behaviors != null)
 		{
-			final WebPage webPage = (WebPage) getPage();
-			
+			final WebPage webPage = (WebPage)getPage();
+
 			final Iterator iter = this.behaviors.iterator();
 			while (iter.hasNext())
 			{
 				IBehavior behavior = (IBehavior)iter.next();
 				if (behavior instanceof IHeaderContributor)
 				{
-					((IHeaderContributor)behavior).renderHead(container);
-					
+					((IHeaderContributor)behavior).renderHead(container.getResponse());
+
 					String stmt = ((IHeaderContributor)behavior).getBodyOnLoad();
 					if (stmt != null)
 					{
@@ -1642,7 +1669,8 @@ public abstract class Component implements Serializable
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-			// FIXME General: We can't record any state change as Link.onComponentTag
+			// FIXME General: We can't record any state change as
+			// Link.onComponentTag
 			// potentially sets this property we probably don't need to support
 			// this, but I'll keep this commented so that we can think about it
 			// I (johan) changed the way Link.onComponentTag works. It will
@@ -2345,7 +2373,7 @@ public abstract class Component implements Serializable
 				for (Iterator i = behaviors.iterator(); i.hasNext();)
 				{
 					IBehavior behavior = (IBehavior)i.next();
-					
+
 					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
 					{

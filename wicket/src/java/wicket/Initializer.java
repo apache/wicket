@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import wicket.ajax.AjaxInitializer;
 import wicket.markup.html.tree.TreeComponentInitializer;
 
 /**
@@ -33,5 +34,8 @@ public class Initializer implements IInitializer
 	{
 		// initialize the tree component
 		new TreeComponentInitializer().init(application);
+		
+		// initialize ajax components
+		new AjaxInitializer().init(application);
 	}
 }

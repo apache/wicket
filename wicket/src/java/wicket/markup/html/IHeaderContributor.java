@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.Response;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 
 /**
@@ -35,11 +36,12 @@ public interface IHeaderContributor
 	 * Note: This method is kind of dangerous as users are able to write to the
 	 * output whatever they like.
 	 * 
-	 * @param container
-	 *            The HtmlHeaderContainer
+	 * @param response
+	 *            Response object
+	 * 
 	 */
-	void renderHead(final HtmlHeaderContainer container);
-	
+	void renderHead(final Response response);
+
 	/**
 	 * Gets the onLoad statement(s) for the body tag
 	 * 
