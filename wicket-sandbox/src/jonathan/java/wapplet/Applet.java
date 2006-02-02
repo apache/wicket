@@ -28,19 +28,24 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import wicket.IResourceListener;
+import wicket.Request;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
+import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
+import wicket.protocol.http.MultipartWebRequest;
+import wicket.protocol.http.WebResponse;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
+import wicket.util.upload.FileItem;
 
 /**
  * This component integrates Swing tightly with Wicket by automatically
@@ -61,7 +66,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class Applet extends WebComponent implements IResourceListener
+public class Applet extends WebComponent implements IResourceListener, IFormSubmitListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -167,6 +172,35 @@ public class Applet extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * Called when model data is posted back from the client
+	 */
+	public void onFormSubmitted()
+	{
+		// Get request
+		final Request request = getRequest();
+
+		// If we successfully installed a multipart request
+		if (request instanceof MultipartWebRequest)
+		{
+			// Get the item for the path
+			final FileItem item = ((MultipartWebRequest)request).getFile("model");
+			try
+			{
+				final Object model = new ObjectInputStream(item.getInputStream()).readObject();
+				setModelObject(model);
+			}
+			catch (ClassNotFoundException e)
+			{
+				((WebResponse)getResponse()).setHeader("STATUS", "417");
+			}
+			catch (IOException e)
+			{
+				((WebResponse)getResponse()).setHeader("STATUS", "417");
+			}
+		}
+	}
+
+	/**
 	 * Returns the model for this Applet component as a resource. This enables
 	 * the client side HostApplet container to retrieve the model object.
 	 * 
@@ -199,6 +233,11 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		final String form = "<form method=\"post\" action=\""
+				+ Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;")
+				+ "enctype=\"multipart/form-data\"><input type=\"file\" name=\"model\"/></form>";
+		getResponse().write(form);
+
 		checkComponentTag(tag, "applet");
 		tag.put("code", HostApplet.class.getName());
 		final String jarName = appletClass.getName() + ".jar";
@@ -234,9 +273,11 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"modelUrl\" value=\""
+		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"getModelUrl\" value=\""
 				+ urlFor(IResourceListener.class) + "\"/>"
-				+ "\n<param name=\"appletClassName\" value=\"" + appletClass.getName() + "\"/>\n");
+				+ "\n<param name=\"setModelUrl\" value=\"" + urlFor(IFormSubmitListener.class)
+				+ "\"/>" + "\n<param name=\"appletClassName\" value=\"" + appletClass.getName()
+				+ "\"/>\n");
 	}
 
 	/**
