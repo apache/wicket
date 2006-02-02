@@ -17,11 +17,20 @@
  */
 package wapplet;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
 
 public class Wapplet implements IAppletInitializer
 {
-	public void init(JPanel panel, Object model)
+	public void init(Container container, Object model)
 	{
+	    container.setBackground(Color.white);
+	    container.setLayout(new FlowLayout()); 
+	    container.add(new JButton("Button 1"));
+	    container.add(new JButton("Button 2"));
+	    container.add(new JButton("Button 3"));		
 	}
 }

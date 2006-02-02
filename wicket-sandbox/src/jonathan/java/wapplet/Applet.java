@@ -66,7 +66,7 @@ public class Applet extends WebComponent implements IResourceListener
 	private static final long serialVersionUID = 1L;
 
 	/** Root class for applet JAR */
-	private Class appletCodeClass;
+	private Class appletInitializerClass;
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
 	private List/* <Class> */classes = new ArrayList(2);
@@ -129,13 +129,13 @@ public class Applet extends WebComponent implements IResourceListener
 	 * 
 	 * @param id
 	 *            The component id
-	 * @param appletCodeClass
+	 * @param appletInitializerClass
 	 *            The class that implement's this applet
 	 */
-	public Applet(final String id, final Class appletCodeClass)
+	public Applet(final String id, final Class appletInitializerClass)
 	{
 		super(id);
-		addAppletCodeClass(appletCodeClass);
+		addAppletIntitializerClass(appletInitializerClass);
 	}
 
 	/**
@@ -145,13 +145,13 @@ public class Applet extends WebComponent implements IResourceListener
 	 *            The component id
 	 * @param model
 	 *            The wicket model
-	 * @param appletCodeClass
-	 *            The class that implement's this applet
+	 * @param appletInitializerClass
+	 *            The class that implements this applet's initialization
 	 */
-	public Applet(final String id, final IModel model, final Class appletCodeClass)
+	public Applet(final String id, final IModel model, final Class appletInitializerClass)
 	{
 		super(id, model);
-		addAppletCodeClass(appletCodeClass);
+		addAppletIntitializerClass(appletInitializerClass);
 	}
 
 	/**
@@ -201,16 +201,18 @@ public class Applet extends WebComponent implements IResourceListener
 	{
 		checkComponentTag(tag, "applet");
 		tag.put("code", HostApplet.class.getName());
-		final String jarName = appletCodeClass.getName() + ".jar";
+		final String jarName = appletInitializerClass.getName() + ".jar";
 		final ResourceReference jarResourceReference = new ResourceReference(jarName)
 		{
 			protected Resource newResource()
 			{
 				// Create JAR resource
-				return new ByteArrayResource("application/x-compressed", jarClasses(classes));
+				return new ByteArrayResource("application/x-compressed", jarClasses(classes))
+						.setCacheable(false);
 			}
 		};
-		tag.put("codebase", "wapplet/" + Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
+		tag.put("codebase", "wapplet/"
+				+ Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
 		tag.put("archive", jarName);
 		final int width = getWidth();
 		if (width != -1)
@@ -232,24 +234,27 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, "<param name=\"component\" value=\""
-				+ urlFor(IResourceListener.class) + "\"/>");
+		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"component\" value=\""
+				+ urlFor(IResourceListener.class) + "\"/>"
+				+ "\n<param name=\"appletInitializerClassName\" value=\""
+				+ appletInitializerClass.getName() + "\"/>\n");
 	}
 
 	/**
-	 * @param appletCodeClass
+	 * @param appletInitializerClass
+	 *            The class to add
 	 */
-	private void addAppletCodeClass(final Class appletCodeClass)
+	private void addAppletIntitializerClass(final Class appletInitializerClass)
 	{
 		// Applet code must implement IAppletCode interface
-		if (!IAppletInitializer.class.isAssignableFrom(appletCodeClass))
+		if (!IAppletInitializer.class.isAssignableFrom(appletInitializerClass))
 		{
 			throw new IllegalArgumentException("Applet initializer class "
-					+ appletCodeClass.getName() + " must implement "
+					+ appletInitializerClass.getName() + " must implement "
 					+ IAppletInitializer.class.getName());
 		}
-		this.appletCodeClass = appletCodeClass;
-		addClass(appletCodeClass);
+		this.appletInitializerClass = appletInitializerClass;
+		addClass(appletInitializerClass);
 		addClass(HostApplet.class);
 	}
 
