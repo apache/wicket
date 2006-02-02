@@ -61,7 +61,7 @@ public abstract class AjaxFallbackLink extends Link
 			
 			protected String getEventHandler()
 			{
-				return super.getEventHandler()+"return false;";
+				return "var ret="+super.getEventHandler()+"return !ret;";
 			}
 		});
 	}
