@@ -49,7 +49,7 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	 */
 	protected final String getJsTimeoutCall(final long millis)
 	{
-		return "setTimeout(function() { " + buildAjaxCall() + " }, " + millis + ");";
+		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, " + millis + ");";
 	}
 
 	/**

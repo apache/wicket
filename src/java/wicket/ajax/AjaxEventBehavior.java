@@ -58,7 +58,10 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 
 		if (event.equalsIgnoreCase("href"))
 		{
-			handler = "javascript:" + handler;
+			// if we are using the href attr we need to prefix with
+			// 'javascript:' and also make sure we catch any return value
+			// otherwise the browser will display it
+			handler = "javascript:var wicket=" + handler;
 		}
 
 		tag.put(event, handler);
@@ -70,7 +73,7 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 	 */
 	protected String getEventHandler()
 	{
-		return buildAjaxCall();
+		return "wicketAjaxGet('" + getCallbackUrl() + "');";
 	}
 
 	/**

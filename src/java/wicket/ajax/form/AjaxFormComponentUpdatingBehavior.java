@@ -78,15 +78,15 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		FormComponent fc = getFormComponent();
 
 		String url = getCallbackUrl();
-		AppendingStringBuffer buff = new AppendingStringBuffer(url.length() + 64);
-		buff.append("'");
+		AppendingStringBuffer buff = new AppendingStringBuffer(url.length() + 128);
+		buff.append("wicketAjaxGet('");
 		buff.append(url);
 		buff.append("&");
 		buff.append(fc.getInputName());
 		buff.append("='+");
-		buff.append("wicketGetValue(this)");
+		buff.append("wicketGetValue(this));");
 
-		return buildAjaxCallRaw(buff.toString());
+		return buff.toString();
 	}
 
 	/**
