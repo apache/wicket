@@ -49,7 +49,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	{
 		super(id, model);
 
-		add(new AjaxFormComponentUpdatingBehavior("oncheck")
+		add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{
 			private static final long serialVersionUID = 1L;
 
