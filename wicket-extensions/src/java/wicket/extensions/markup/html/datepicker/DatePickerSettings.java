@@ -212,7 +212,7 @@ public class DatePickerSettings implements Serializable
 
 		if (getTimeFormat() != null)
 		{
-			b.append("\n\ttimeFormat : ").append(getTimeFormat()).append(",");
+			b.append("\n\timeFormat : ").append(getTimeFormat()).append(",");
 		}
 
 		if (!isElectric())
@@ -439,7 +439,7 @@ public class DatePickerSettings implements Serializable
 
 		// else, get it from our map - might be null, but our calling
 		// function can handle that
-		return dateformats.getProperty(locale.getLanguage());
+		return dateformats.getProperty(locale.toString());
 	}
 
 	/**

@@ -45,6 +45,7 @@ public class DatePickerComponentInitializer implements IInitializer
 	private static String LANGUAGE_DE = "lang/calendar-de.js";
 	private static String LANGUAGE_EL = "lang/calendar-el.js";
 	private static String LANGUAGE_EN = "lang/calendar-en.js";
+	private static String LANGUAGE_EN_ZA = "lang/calendar-en_ZA.js";
 	private static String LANGUAGE_ES = "lang/calendar-es.js";
 	private static String LANGUAGE_EU = "lang/calendar-eu.js";
 	private static String LANGUAGE_FI = "lang/calendar-fi.js";
@@ -76,37 +77,38 @@ public class DatePickerComponentInitializer implements IInitializer
 	{
 		// fill our default map. Note that new Locale("en", "", "").getLanguage() is to avoid
 		// future breaks because of the instable standard (read about this in Locale.getLanguage()
-		localeToLanguageReference.put(new Locale("af", "", "").getLanguage(), LANGUAGE_AF);
-		localeToLanguageReference.put(new Locale("al", "", "").getLanguage(), LANGUAGE_AL);
-		localeToLanguageReference.put(new Locale("br", "", "").getLanguage(), LANGUAGE_BR);
-		localeToLanguageReference.put(new Locale("cs", "", "").getLanguage(), LANGUAGE_CS);
-		localeToLanguageReference.put(new Locale("da", "", "").getLanguage(), LANGUAGE_DA);
-		localeToLanguageReference.put(new Locale("de", "", "").getLanguage(), LANGUAGE_DE);
-		localeToLanguageReference.put(new Locale("el", "", "").getLanguage(), LANGUAGE_EL);
-		localeToLanguageReference.put(new Locale("en", "", "").getLanguage(), LANGUAGE_EN);
-		localeToLanguageReference.put(new Locale("es", "", "").getLanguage(), LANGUAGE_ES);
-		localeToLanguageReference.put(new Locale("eu", "", "").getLanguage(), LANGUAGE_EU);
-		localeToLanguageReference.put(new Locale("fi", "", "").getLanguage(), LANGUAGE_FI);
-		localeToLanguageReference.put(new Locale("fr", "", "").getLanguage(), LANGUAGE_FR);
-		localeToLanguageReference.put(new Locale("he", "", "").getLanguage(), LANGUAGE_HE);
-		localeToLanguageReference.put(new Locale("hr", "", "").getLanguage(), LANGUAGE_HR);
-		localeToLanguageReference.put(new Locale("hu", "", "").getLanguage(), LANGUAGE_HU);
-		localeToLanguageReference.put(new Locale("it", "", "").getLanguage(), LANGUAGE_IT);
-		localeToLanguageReference.put(new Locale("ko", "", "").getLanguage(), LANGUAGE_KO);
-		localeToLanguageReference.put(new Locale("lt", "", "").getLanguage(), LANGUAGE_LT);
-		localeToLanguageReference.put(new Locale("lv", "", "").getLanguage(), LANGUAGE_LV);
-		localeToLanguageReference.put(new Locale("nl", "", "").getLanguage(), LANGUAGE_NL);
-		localeToLanguageReference.put(new Locale("no", "", "").getLanguage(), LANGUAGE_NO);
-		localeToLanguageReference.put(new Locale("pl", "", "").getLanguage(), LANGUAGE_PL);
-		localeToLanguageReference.put(new Locale("pt", "", "").getLanguage(), LANGUAGE_PT);
-		localeToLanguageReference.put(new Locale("ro", "", "").getLanguage(), LANGUAGE_RO);
-		localeToLanguageReference.put(new Locale("ru", "", "").getLanguage(), LANGUAGE_RU);
-		localeToLanguageReference.put(new Locale("si", "", "").getLanguage(), LANGUAGE_SI);
-		localeToLanguageReference.put(new Locale("sk", "", "").getLanguage(), LANGUAGE_SK);
-		localeToLanguageReference.put(new Locale("sr", "", "").getLanguage(), LANGUAGE_SR);
-		localeToLanguageReference.put(new Locale("sv", "", "").getLanguage(), LANGUAGE_SV);
-		localeToLanguageReference.put(new Locale("tr", "", "").getLanguage(), LANGUAGE_TR);
-		localeToLanguageReference.put(new Locale("zh", "", "").getLanguage(), LANGUAGE_ZH);
+		localeToLanguageReference.put(new Locale("af", "", "").toString(), LANGUAGE_AF);
+		localeToLanguageReference.put(new Locale("al", "", "").toString(), LANGUAGE_AL);
+		localeToLanguageReference.put(new Locale("br", "", "").toString(), LANGUAGE_BR);
+		localeToLanguageReference.put(new Locale("cs", "", "").toString(), LANGUAGE_CS);
+		localeToLanguageReference.put(new Locale("da", "", "").toString(), LANGUAGE_DA);
+		localeToLanguageReference.put(new Locale("de", "", "").toString(), LANGUAGE_DE);
+		localeToLanguageReference.put(new Locale("el", "", "").toString(), LANGUAGE_EL);
+		localeToLanguageReference.put(new Locale("en", "", "").toString(), LANGUAGE_EN);
+		localeToLanguageReference.put(new Locale("en", "ZA", "").toString(), LANGUAGE_EN_ZA);
+		localeToLanguageReference.put(new Locale("es", "", "").toString(), LANGUAGE_ES);
+		localeToLanguageReference.put(new Locale("eu", "", "").toString(), LANGUAGE_EU);
+		localeToLanguageReference.put(new Locale("fi", "", "").toString(), LANGUAGE_FI);
+		localeToLanguageReference.put(new Locale("fr", "", "").toString(), LANGUAGE_FR);
+		localeToLanguageReference.put(new Locale("he", "", "").toString(), LANGUAGE_HE);
+		localeToLanguageReference.put(new Locale("hr", "", "").toString(), LANGUAGE_HR);
+		localeToLanguageReference.put(new Locale("hu", "", "").toString(), LANGUAGE_HU);
+		localeToLanguageReference.put(new Locale("it", "", "").toString(), LANGUAGE_IT);
+		localeToLanguageReference.put(new Locale("ko", "", "").toString(), LANGUAGE_KO);
+		localeToLanguageReference.put(new Locale("lt", "", "").toString(), LANGUAGE_LT);
+		localeToLanguageReference.put(new Locale("lv", "", "").toString(), LANGUAGE_LV);
+		localeToLanguageReference.put(new Locale("nl", "", "").toString(), LANGUAGE_NL);
+		localeToLanguageReference.put(new Locale("no", "", "").toString(), LANGUAGE_NO);
+		localeToLanguageReference.put(new Locale("pl", "", "").toString(), LANGUAGE_PL);
+		localeToLanguageReference.put(new Locale("pt", "", "").toString(), LANGUAGE_PT);
+		localeToLanguageReference.put(new Locale("ro", "", "").toString(), LANGUAGE_RO);
+		localeToLanguageReference.put(new Locale("ru", "", "").toString(), LANGUAGE_RU);
+		localeToLanguageReference.put(new Locale("si", "", "").toString(), LANGUAGE_SI);
+		localeToLanguageReference.put(new Locale("sk", "", "").toString(), LANGUAGE_SK);
+		localeToLanguageReference.put(new Locale("sr", "", "").toString(), LANGUAGE_SR);
+		localeToLanguageReference.put(new Locale("sv", "", "").toString(), LANGUAGE_SV);
+		localeToLanguageReference.put(new Locale("tr", "", "").toString(), LANGUAGE_TR);
+		localeToLanguageReference.put(new Locale("zh", "", "").toString(), LANGUAGE_ZH);
 	}
 	
 	/**
@@ -117,7 +119,14 @@ public class DatePickerComponentInitializer implements IInitializer
 	public static ResourceReference getLanguage(Locale currentLocale)
 	{
 		// try to get the reference from our default mapping
-		String ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
+		// first try the language and country
+		String ref = (String)localeToLanguageReference.get(currentLocale.toString());
+		if (ref != null)
+		{
+			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
+		}
+		// now try only the language
+		ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
 		if (ref != null)
 		{
 			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
@@ -173,5 +182,4 @@ public class DatePickerComponentInitializer implements IInitializer
 			PackageResource.bind(application, DatePickerSettings.class, path);
 		}
 	}
-
 }
