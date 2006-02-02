@@ -62,8 +62,7 @@ public class RepeaterTest extends WicketWebTestCase
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("RefreshingView Example - basic view that recreates its items every request");
+		this.clickLinkWithText("RefreshingView Example - basic view that recreates its items every request");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
@@ -75,36 +74,31 @@ public class RepeaterTest extends WicketWebTestCase
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("Paging DataView Example - builds on previous to demonstrate paging and page navigation");
+		this.clickLinkWithText("Paging DataView Example - builds on previous to demonstrate paging and page navigation");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("Sorting DataView Example - builds on previous to demonstrate sorting");
+		this.clickLinkWithText("Sorting DataView Example - builds on previous to demonstrate sorting");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataView and optimized item removal - demonstrates a dataview with a different IItemReuseStrategy implementation");
+		this.clickLinkWithText("DataView and optimized item removal - demonstrates a dataview with a different IItemReuseStrategy implementation");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataGridView Example - a view that generates grids where rows are representing by items of the data provider and columns are represented by an array of ICellPopulators objects");
+		this.clickLinkWithText("DataGridView Example - a view that generates grids where rows are representing by items of the data provider and columns are represented by an array of ICellPopulators objects");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
 
 		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataTable Example - demonstrates data table component that wraps dataview to offer easy paging and sorting");
+		this.clickLinkWithText("DataTable Example - demonstrates data table component that wraps dataview to offer easy paging and sorting");
 		assertTitleEquals("Wicket Examples - repeater views");
 		assertTextPresent("Selected Contact: ");
 		assertTextPresent("No Contact Selected");
