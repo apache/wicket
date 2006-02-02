@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.MultipartWebRequest;
+import wicket.protocol.http.IMultipartWebRequest;
 import wicket.util.lang.Bytes;
 import wicket.util.upload.DiskFileItemFactory;
 import wicket.util.upload.FileItem;
@@ -40,7 +40,7 @@ import wicket.util.value.ValueMap;
  * @author Cameron Braid
  * @author Ate Douma
  */
-public class MultipartServletWebRequest extends ServletWebRequest implements MultipartWebRequest
+public class MultipartServletWebRequest extends ServletWebRequest implements IMultipartWebRequest
 {
 	/** Map of file items. */
 	private final ValueMap files = new ValueMap();

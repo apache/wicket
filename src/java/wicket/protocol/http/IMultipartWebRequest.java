@@ -25,7 +25,7 @@ import wicket.util.upload.FileItem;
  * 
  * @author Ate Douma
  */
-public interface MultipartWebRequest
+public interface IMultipartWebRequest
 {
 	/**
 	 * @return Returns the files.
