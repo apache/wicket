@@ -38,7 +38,7 @@ import wicket.util.watch.Watcher;
 
 /**
  * Load markup and cache it for fast retrieval. If markup file changes, it'll be
- * automatically reloaded.
+ * removed and subsequently reloaded when needed.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -301,8 +301,8 @@ public class MarkupCache
 
 	/**
 	 * Load markup from an IResourceStream and add an {@link IChangeListener}to
-	 * the {@link ModificationWatcher}so that if the resource changes, we can
-	 * reload it automatically.
+	 * the {@link ModificationWatcher} so that if the resource changes, we can
+	 * remove it from the cache automatically and subsequently reload when needed.
 	 * 
 	 * @param key
 	 *            The key for the resource
@@ -321,7 +321,7 @@ public class MarkupCache
 			{
 				public void onChange()
 				{
-					log.info("Reloading markup from " + markupResourceStream);
+					log.info("Remove markup from cache: " + markupResourceStream);
 
 					// Remove the markup from the cache. It will be reloaded
 					// next time it the markup is requested.
@@ -422,13 +422,13 @@ public class MarkupCache
 		}
 
 		// register an after-load listener for base markup. The listener
-		// implementation will reload the derived markup which must be merged
+		// implementation will remove the derived markup which must be merged
 		// with the base markup
 		afterLoadListeners.add(baseMarkup.getResource(), new IChangeListener()
 		{
 			public void onChange()
 			{
-				log.info("Reloading derived markup from " + markup.getResource());
+				log.info("Remove derived markup from cache: " + markup.getResource());
 				removeMarkup(key, markup.getResource());
 			}
 
