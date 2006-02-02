@@ -58,11 +58,11 @@ import wicket.util.upload.FileItem;
  * beyond populating the JPanel and working with the model, which is
  * automatically proxied to/from the applet.
  * <p>
- * In your IApplet implementation, you can populate a JPanel with any Swing
+ * In your IApplet implementation, you can populate a Container with any Swing
  * components that you want. When a significant action occurs such as a form
- * submit, the IAppletServer.setModel() method can be called and the applet
- * component automatically updates the server side model by posting the modified
- * model to the server.
+ * submit, the IAppletServer.setModel() method will be called automatically,
+ * updating the server side model by posting the modified model back to the
+ * server (before the form that contains the applet posts its data).
  * 
  * @author Jonathan Locke
  */
