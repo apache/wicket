@@ -45,17 +45,17 @@ import wicket.util.string.Strings;
 /**
  * This component integrates Swing tightly with Wicket by automatically
  * generating Swing applets on demand. The applet's JAR file is automatically
- * created from the code statically referenced by the IAppletInitializer
- * interface. Once the JAR file for a given Applet subclass has been created, it
- * is reused for all future instances of the Applet. The auto-created JAR is
- * referenced by an automatically generated APPLET tag. The result of this is
- * that an Applet component creates an applet with virtually no work on the
- * programmer's part beyond populating the JPanel and working with the model,
- * which is automatically proxied to/from the applet.
+ * created from the code statically referenced by the IApplet interface. Once
+ * the JAR file for a given Applet subclass has been created, it is reused for
+ * all future instances of the Applet. The auto-created JAR is referenced by an
+ * automatically generated APPLET tag. The result of this is that an Applet
+ * component creates an applet with virtually no work on the programmer's part
+ * beyond populating the JPanel and working with the model, which is
+ * automatically proxied to/from the applet.
  * <p>
- * In your IAppletInitializer implementation, you can populate a JPanel with any
- * Swing components that you want. When a significant action occurs such as a
- * form submit, the Applet.updateServer() method can be called and the applet
+ * In your IApplet implementation, you can populate a JPanel with any Swing
+ * components that you want. When a significant action occurs such as a form
+ * submit, the Applet.updateServer() method can be called and the applet
  * component automatically updates the server side model by using Ajax to ask
  * the applet to send its model back to the server.
  * 
@@ -66,7 +66,7 @@ public class Applet extends WebComponent implements IResourceListener
 	private static final long serialVersionUID = 1L;
 
 	/** Root class for applet JAR */
-	private Class appletInitializerClass;
+	private Class appletClass;
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
 	private List/* <Class> */classes = new ArrayList(2);
@@ -129,13 +129,13 @@ public class Applet extends WebComponent implements IResourceListener
 	 * 
 	 * @param id
 	 *            The component id
-	 * @param appletInitializerClass
+	 * @param appletClass
 	 *            The class that implement's this applet
 	 */
-	public Applet(final String id, final Class appletInitializerClass)
+	public Applet(final String id, final Class appletClass)
 	{
 		super(id);
-		addAppletIntitializerClass(appletInitializerClass);
+		addAppletClass(appletClass);
 	}
 
 	/**
@@ -145,13 +145,13 @@ public class Applet extends WebComponent implements IResourceListener
 	 *            The component id
 	 * @param model
 	 *            The wicket model
-	 * @param appletInitializerClass
+	 * @param appletClass
 	 *            The class that implements this applet's initialization
 	 */
-	public Applet(final String id, final IModel model, final Class appletInitializerClass)
+	public Applet(final String id, final IModel model, final Class appletClass)
 	{
 		super(id, model);
-		addAppletIntitializerClass(appletInitializerClass);
+		addAppletClass(appletClass);
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Applet extends WebComponent implements IResourceListener
 	{
 		checkComponentTag(tag, "applet");
 		tag.put("code", HostApplet.class.getName());
-		final String jarName = appletInitializerClass.getName() + ".jar";
+		final String jarName = appletClass.getName() + ".jar";
 		final ResourceReference jarResourceReference = new ResourceReference(jarName)
 		{
 			protected Resource newResource()
@@ -236,25 +236,23 @@ public class Applet extends WebComponent implements IResourceListener
 	{
 		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"modelUrl\" value=\""
 				+ urlFor(IResourceListener.class) + "\"/>"
-				+ "\n<param name=\"appletInitializerClassName\" value=\""
-				+ appletInitializerClass.getName() + "\"/>\n");
+				+ "\n<param name=\"appletClassName\" value=\"" + appletClass.getName() + "\"/>\n");
 	}
 
 	/**
-	 * @param appletInitializerClass
+	 * @param appletClass
 	 *            The class to add
 	 */
-	private void addAppletIntitializerClass(final Class appletInitializerClass)
+	private void addAppletClass(final Class appletClass)
 	{
 		// Applet code must implement IAppletCode interface
-		if (!IAppletInitializer.class.isAssignableFrom(appletInitializerClass))
+		if (!IApplet.class.isAssignableFrom(appletClass))
 		{
-			throw new IllegalArgumentException("Applet initializer class "
-					+ appletInitializerClass.getName() + " must implement "
-					+ IAppletInitializer.class.getName());
+			throw new IllegalArgumentException("Applet class " + appletClass.getName()
+					+ " must implement " + IApplet.class.getName());
 		}
-		this.appletInitializerClass = appletInitializerClass;
-		addClass(appletInitializerClass);
+		this.appletClass = appletClass;
+		addClass(appletClass);
 		addClass(HostApplet.class);
 	}
 

@@ -17,25 +17,9 @@
  */
 package wapplet;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-
-public class Wapplet implements IApplet
+public interface IAppletServer
 {
-	public void init(Container container, IAppletServer server, Object model)
-	{
-	    container.setBackground(Color.white);
-	    container.setLayout(new FlowLayout()); 
-	    container.add(new JButton(model.toString()));
-	    container.add(new JButton("Button 2"));
-	    container.add(new JButton("Button 3"));		
-	}
-	
-	public Object getModel()
-	{
-		return null;
-	}
+	void set(Object model);
+	Object get();
 }
+

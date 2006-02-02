@@ -13,7 +13,7 @@ import javax.swing.JApplet;
  * 
  * @author Jonathan Locke
  */
-public class HostApplet extends JApplet
+public class HostApplet extends JApplet implements IAppletServer
 {
 	public void init()
 	{
@@ -24,17 +24,9 @@ public class HostApplet extends JApplet
 		    Class c = Class.forName(initializerClassName);
 		    if (c != null)
 		    {
-		    	final IAppletInitializer initializer = (IAppletInitializer)c.newInstance();
-				final String modelUrl = getDocumentBase() + getParameter("modelUrl");
-				InputStream in = new URL(modelUrl).openStream();
-				Object model = new ObjectInputStream(in).readObject();
-		    	initializer.init(container, model);
+		    	final IApplet applet = (IApplet)c.newInstance();
+		    	applet.init(container, this, get());
 		    }
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e);
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -50,6 +42,30 @@ public class HostApplet extends JApplet
 		{
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		}
+	}
+
+	public void set(Object model)
+	{
+	}
+
+	public Object get()
+	{
+		try
+		{
+			final String modelUrl = getDocumentBase() + getParameter("modelUrl");
+			InputStream in = new URL(modelUrl).openStream();
+			return new ObjectInputStream(in).readObject();
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);			
 		}
 	}
 }
