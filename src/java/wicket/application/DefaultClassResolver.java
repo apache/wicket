@@ -32,7 +32,7 @@ public final class DefaultClassResolver implements IClassResolver
 	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public final Class resolveClass(String classname)
+	public final Class resolveClass(final String classname)
 	{
 		try
 		{
