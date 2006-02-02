@@ -8,8 +8,8 @@ import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.link.Link;
 
 /**
- * Ajaxified version of the tabbed panel. Users AjaxFallbackLink instead of
- * regular wicket links.
+ * Ajaxified version of the tabbed panel. Uses AjaxFallbackLink instead of
+ * regular wicket links so it can update itself inplace.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
