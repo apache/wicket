@@ -45,35 +45,6 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * 
-	 * @return ajax call
-	 */
-	protected final String buildAjaxCall()
-	{
-		return ("wicketAjaxGet('" + getCallbackUrl() + "');");
-	}
-
-	/**
-	 * 
-	 * @param url
-	 * @return ajax call
-	 */
-	protected final String buildAjaxCall(String url)
-	{
-		return buildAjaxCallRaw("'"+url+"'");
-	}
-
-	/**
-	 * 
-	 * @param javascript
-	 * @return ajax call
-	 */
-	protected final String buildAjaxCallRaw(String javascript)
-	{
-		return ("wicketAjaxGet(" + javascript + ");");
-	}
-
-	/**
-	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadInitContribution(wicket.Response)
 	 */
 	protected void onRenderHeadInitContribution(final Response response)

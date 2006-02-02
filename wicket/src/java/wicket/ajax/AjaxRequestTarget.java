@@ -28,9 +28,21 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.WebResponse;
-import wicket.settings.IDebugSettings;
 
 /**
+ * A request target that produces ajax response envelopes that are used on the
+ * client side to update component markup as well as evaluate arbitrary
+ * javascript.
+ * <p>
+ * A component whose markup needs to be updated should be added to this target
+ * via AjaxRequestTarget#addComponent(Component) method. Its body will be
+ * rendered and added to the envelop when the target is processed.
+ * <p>
+ * Any javascript that needs to be evaluater on the client side can be added
+ * using AjaxRequestTarget#addJavascript(String). For example, this feature can
+ * be useful when it is desirable to link component update with some javascript
+ * fx.
+ * 
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -88,13 +100,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(final RequestCycle requestCycle)
 	{
-		Application app=Application.get();
-		
+		Application app = Application.get();
+
 		// disable component use check since we want to ignore header contribs
-		final boolean oldUseCheck=app.getDebugSettings().getComponentUseCheck();
+		final boolean oldUseCheck = app.getDebugSettings().getComponentUseCheck();
 		app.getDebugSettings().setComponentUseCheck(false);
 
-		
+
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
 		response.setContentType("text/xml");
@@ -121,7 +133,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			respondInvocation(response, js);
 		}
 		response.write("</ajax-response>");
-		
+
 		// restore component use check
 		app.getDebugSettings().setComponentUseCheck(oldUseCheck);
 	}
