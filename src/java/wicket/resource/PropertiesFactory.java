@@ -102,8 +102,9 @@ public class PropertiesFactory
 		Properties props = (Properties)propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
-			final IResourceStream resource = application.getResourceSettings().getResourceStreamLocator().locate(clazz,
-					clazz.getName().replace('.', '/'), style, locale, "properties");
+			final IResourceStream resource = application.getResourceSettings()
+					.getResourceStreamLocator().locate(clazz, clazz.getName().replace('.', '/'),
+							style, locale, "properties");
 
 			if (resource != null)
 			{
@@ -160,12 +161,15 @@ public class PropertiesFactory
 			boolean c = locale.getCountry().length() != 0;
 			boolean v = locale.getVariant().length() != 0;
 			buffer.append(locale.getLanguage());
-			if (c||(l&&v)) {
-				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			if (c || (l && v))
+			{
+				buffer.append('_').append(locale.getCountry()); // This may just
+																// append '_'
 			}
-			if (v&&(l||c)) {
+			if (v && (l || c))
+			{
 				buffer.append('_').append(locale.getVariant());
-			}			
+			}
 		}
 
 		final String id = buffer.toString();
@@ -261,15 +265,22 @@ public class PropertiesFactory
 			final Locale locale)
 	{
 		// Watch file in the future
-		final ModificationWatcher watcher = Application.get().getResourceSettings().getResourceWatcher();
+		final ModificationWatcher watcher = Application.get().getResourceSettings()
+				.getResourceWatcher();
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()
 			{
 				public void onChange()
 				{
-					log.info("Reloading properties files from " + resourceStream);
-					loadPropertiesFile(key, resourceStream, componentClass, style, locale);
+					log.info("A properties files has changed. Remove all entries from the cache. Resource: "
+									+ resourceStream);
+
+					// Clear the whole cache as associated localized files may
+					// be
+					// affected and may need reloading as well. We make it easy.
+					// Usually the watcher is activ in dev mode only anyway.
+					clearCache();
 
 					// Inform all listeners
 					for (Iterator iter = afterReloadListeners.iterator(); iter.hasNext();)
