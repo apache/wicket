@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,7 +32,6 @@ import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
 import wicket.util.convert.IConverter;
-import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 
@@ -707,28 +704,6 @@ public abstract class Session implements Serializable
 
 		// Set the actual attribute
 		getSessionStore().setAttribute(name, value);
-
-		// Do some extra profiling/ debugging. This can be a great help
-		// just for testing whether your webbapp will behave when using
-		// session replication
-		if (log.isDebugEnabled())
-		{
-			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			int size;
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(value);
-				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
-						+ Bytes.bytes(out.size()));
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException(
-						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-								+ valueTypeName, e);
-			}
-		}
 	}
 
 	/**
