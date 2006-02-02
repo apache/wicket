@@ -1,6 +1,10 @@
 package wapplet;
 
 import java.awt.Container;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.net.URL;
 
 import javax.swing.JApplet;
 
@@ -21,8 +25,16 @@ public class HostApplet extends JApplet
 		    if (c != null)
 		    {
 		    	final IAppletInitializer initializer = (IAppletInitializer)c.newInstance();
-		    	initializer.init(container, initializer);
+				final String modelUrl = getDocumentBase() + getParameter("modelUrl");
+				InputStream in = new URL(modelUrl).openStream();
+				Object model = new ObjectInputStream(in).readObject();
+		    	initializer.init(container, model);
 		    }
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		catch (ClassNotFoundException e)
 		{

@@ -29,7 +29,7 @@ public class Wapplet implements IAppletInitializer
 	{
 	    container.setBackground(Color.white);
 	    container.setLayout(new FlowLayout()); 
-	    container.add(new JButton("Button 1"));
+	    container.add(new JButton(model.toString()));
 	    container.add(new JButton("Button 2"));
 	    container.add(new JButton("Button 3"));		
 	}

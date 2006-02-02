@@ -234,7 +234,7 @@ public class Applet extends WebComponent implements IResourceListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"component\" value=\""
+		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"modelUrl\" value=\""
 				+ urlFor(IResourceListener.class) + "\"/>"
 				+ "\n<param name=\"appletInitializerClassName\" value=\""
 				+ appletInitializerClass.getName() + "\"/>\n");

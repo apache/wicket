@@ -18,6 +18,7 @@ package wapplet;
 
 
 import wicket.markup.html.WebPage;
+import wicket.model.Model;
 
 /**
  * Home page of the wapplet example.
@@ -31,6 +32,6 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-		add(new Applet("applet", Wapplet.class));
+		add(new Applet("applet", new Model("foo"), Wapplet.class));
 	}
 }
