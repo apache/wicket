@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.resolver.AutoComponentResolver;
-import wicket.markup.resolver.BodyOnLoadResolver;
 import wicket.markup.resolver.HtmlHeaderResolver;
 import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
@@ -170,7 +169,6 @@ public abstract class Application
 		getPageSettings().addComponentResolver(new AutoComponentResolver());
 		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
 		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
-		getPageSettings().addComponentResolver(new BodyOnLoadResolver());
 		getPageSettings().addComponentResolver(new WicketLinkResolver());
 		getPageSettings().addComponentResolver(new WicketMessageResolver());
 

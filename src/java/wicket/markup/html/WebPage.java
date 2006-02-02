@@ -23,7 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
@@ -52,20 +55,17 @@ import wicket.protocol.http.WebResponse;
 public class WebPage extends Page
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(WebPage.class);
+	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
-
-	/** Components contribution to <body onload="..." */
-	private String bodyOnLoad;
-
+	
 	/**
 	 * Constructor. Having this constructor public means that you page is
 	 * 'bookmarkable' and hence can be called/ created from anywhere.
 	 */
 	protected WebPage()
 	{
-		super();
+		this((IModel)null);
 	}
 
 	/**
@@ -74,6 +74,22 @@ public class WebPage extends Page
 	protected WebPage(final IModel model)
 	{
 		super(model);
+		
+		// Add a Body container if the associated markup contains a <body> tag
+		HtmlBodyContainer body = new HtmlBodyContainer();
+		final MarkupStream markupStream = body.getAssociatedMarkupStream(this);
+		if (markupStream != null)
+		{
+			// The default <body> container. It can be accessed, replaced 
+			// and attribute modifiers can be attached. <body> tags without
+			// wicket:id get automatically a wicket:id="body" assigned.
+			add(body);
+		}
+		
+		// TODO If the concept proofs valuable we could add the header container
+		// the same way instead of using a resolver. The advantages would be that
+		// the header container be available at build time already and not only
+		// at render time.
 	}
 
 	/**
@@ -91,44 +107,30 @@ public class WebPage extends Page
 	 */
 	protected WebPage(final PageParameters parameters)
 	{
-		this();
+		this((IModel)null);
 	}
-
+	
 	/**
-	 * THIS IS NOT PART OF THE PUBLIC API.
 	 * 
-	 * Append string to body onload attribute
-	 * 
-	 * @param onLoad
-	 *            Attribute value to be appended
+	 * @see wicket.Page#configureResponse()
 	 */
-	public final void appendToBodyOnLoad(final String onLoad)
+	protected void configureResponse()
 	{
-		if (onLoad != null)
-		{
-			// Tell the page to change the Page's
-			// body tags.
-			if (this.bodyOnLoad == null)
-			{
-				this.bodyOnLoad = onLoad;
-			}
-			else
-			{
-				this.bodyOnLoad = this.bodyOnLoad + onLoad;
-			}
-		}
+	    super.configureResponse();
+	    
+	    WebResponse response = getWebRequestCycle().getWebResponse();
+	    response.setHeader("Pragma","no-cache");
+	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
 	}
-
+	
 	/**
-	 * THIS IS NOT PART OF THE PUBLIC API.
+	 * Get the container attached to &lt;body&gt;
 	 * 
-	 * Get what will be appended to the page markup's body onload attribute
-	 * 
-	 * @return The onload attribute
+	 * @return The body container
 	 */
-	public String getBodyOnLoad()
+	public HtmlBodyContainer getBodyContainer()
 	{
-		return this.bodyOnLoad;
+		return (HtmlBodyContainer)get(BodyOnLoadHandler.BODY_ID);
 	}
 
 	/**
@@ -177,24 +179,13 @@ public class WebPage extends Page
 	 */
 	protected void onEndRequest()
 	{
+		// TODO What again was the reason why this is necessary?
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{
 			this.remove(header);
 		}
+		
 		super.onEndRequest();
-	}
-
-	/**
-	 * 
-	 * @see wicket.Page#configureResponse()
-	 */
-	protected void configureResponse()
-	{
-	    super.configureResponse();
-	    
-	    WebResponse response = getWebRequestCycle().getWebResponse();
-	    response.setHeader("Pragma","no-cache");
-	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
 	}
 }

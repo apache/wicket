@@ -17,6 +17,8 @@
  */
 package wicket.markup;
 
+import java.util.Iterator;
+
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
@@ -52,21 +54,21 @@ public final class MarkupStream
 
 	/** The markup element list */
 	private final Markup markup;
-	
+
 	/**
-	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN
-	 * THE NEAR FUTURE.
+	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN THE NEAR
+	 * FUTURE.
 	 */
 	protected MarkupStream()
 	{
-	    markup = null;
+		markup = null;
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param markup
-	 *			  List of markup elements
+	 *            List of markup elements
 	 */
 	public MarkupStream(final Markup markup)
 	{
@@ -96,9 +98,9 @@ public final class MarkupStream
 
 	/**
 	 * @param componentId
-	 *			  Required component name attribute
+	 *            Required component name attribute
 	 * @return True if the current markup element is an openclose tag with the
-	 *		   given component name
+	 *         given component name
 	 */
 	public boolean atOpenCloseTag(final String componentId)
 	{
@@ -115,9 +117,9 @@ public final class MarkupStream
 
 	/**
 	 * @param componentId
-	 *			  Required component name attribute
+	 *            Required component name attribute
 	 * @return True if the current markup element is an open tag with the given
-	 *		   component name
+	 *         component name
 	 */
 	public boolean atOpenTag(final String componentId)
 	{
@@ -194,7 +196,7 @@ public final class MarkupStream
 
 	/**
 	 * @param currentIndex
-	 *			  New current index in the stream
+	 *            New current index in the stream
 	 */
 	public void setCurrentIndex(final int currentIndex)
 	{
@@ -245,20 +247,24 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Skips any markup at the current position until the wicket tag name is found.
-	 * @param wicketTagName wicket tag name to seek
+	 * Skips any markup at the current position until the wicket tag name is
+	 * found.
+	 * 
+	 * @param wicketTagName
+	 *            wicket tag name to seek
 	 */
 	public void skipUntil(final String wicketTagName)
 	{
 		while (true)
 		{
-			if ((current instanceof WicketTag) && ((WicketTag)current).getName().equals(wicketTagName))
+			if ((current instanceof WicketTag)
+					&& ((WicketTag)current).getName().equals(wicketTagName))
 			{
 				return;
 			}
 
 			// go on until we reach the end
-			if (next() == null )
+			if (next() == null)
 			{
 				return;
 			}
@@ -269,7 +275,7 @@ public final class MarkupStream
 	 * Throws a new markup exception
 	 * 
 	 * @param message
-	 *			  The exception message
+	 *            The exception message
 	 * @throws MarkupException
 	 */
 	public void throwMarkupException(final String message)
@@ -279,7 +285,7 @@ public final class MarkupStream
 
 	/**
 	 * @return An HTML string highlighting the current position in the markup
-	 *		   stream
+	 *         stream
 	 */
 	public String toHtmlDebugString()
 	{
@@ -316,7 +322,7 @@ public final class MarkupStream
 
 	/**
 	 * @param index
-	 *			  The index of a markup element
+	 *            The index of a markup element
 	 * @return The MarkupElement element
 	 */
 	private MarkupElement get(final int index)
@@ -328,7 +334,7 @@ public final class MarkupStream
 	 * Renders markup until a closing tag for openTag is reached.
 	 * 
 	 * @param openTag
-	 *			  The open tag
+	 *            The open tag
 	 */
 	private void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
@@ -348,8 +354,7 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the
-	 * markup.
+	 * Return the XML declaration string, in case if found in the markup.
 	 * 
 	 * @return Null, if not found.
 	 */
@@ -359,39 +364,39 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Gets the markup encoding.  A markup encoding may be specified in
-	 * a markup file with an XML encoding specifier of the form
-	 * &lt;?xml ... encoding="..." ?&gt;.
-	 *
+	 * Gets the markup encoding. A markup encoding may be specified in a markup
+	 * file with an XML encoding specifier of the form &lt;?xml ...
+	 * encoding="..." ?&gt;.
+	 * 
 	 * @return The encoding, or null if not found
 	 */
 	public String getEncoding()
 	{
 		return markup.getEncoding();
 	}
-	
+
 	/**
-	 * Get the component/container's Class which is directly associated with 
-	 * the stream.
+	 * Get the component/container's Class which is directly associated with the
+	 * stream.
 	 * 
 	 * @return The component's class
 	 */
 	public Class getContainerClass()
 	{
-	    return markup.getResource().getMarkupClass();
+		return markup.getResource().getMarkupClass();
 	}
-	
+
 	/**
-	 * Get the current index pointing to the start element of the 
-	 * header section.
+	 * Get the current index pointing to the start element of the header
+	 * section.
 	 * 
 	 * @return index
 	 */
 	public final int getHeaderIndex()
 	{
-	    return markup.getHeaderIndex();
+		return markup.getHeaderIndex();
 	}
-	
+
 	/**
 	 * Get the wicket namespace valid for this specific markup
 	 * 
@@ -399,14 +404,15 @@ public final class MarkupStream
 	 */
 	public String getWicketNamespace()
 	{
-	    return this.markup.getWicketNamespace();
+		return this.markup.getWicketNamespace();
 	}
 
 	/**
-	 * True, if associate markup is the same. It will change e.g. if the
-	 * markup file has been re-loaded or the locale has been changed.
+	 * True, if associate markup is the same. It will change e.g. if the markup
+	 * file has been re-loaded or the locale has been changed.
 	 * 
-	 * @param markupStream The markup stream to compare with.
+	 * @param markupStream
+	 *            The markup stream to compare with.
 	 * @return true, if markup has not changed
 	 */
 	public boolean equalMarkup(final MarkupStream markupStream)
@@ -417,16 +423,31 @@ public final class MarkupStream
 		}
 		return this.markup == markupStream.markup;
 	}
-	
+
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 
-	 * @param path The component path expression
-	 * @param id The component's id to search for
+	 * @param path
+	 *            The component path expression
+	 * @param id
+	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
 	public int findComponentIndex(final String path, final String id)
 	{
 		return this.markup.findComponentIndex(path, id);
+	}
+
+	/**
+	 * Create an iterator for the component tags in the stream.
+	 * <p>
+	 * Note: it will not modify the current index of the underlying markup
+	 * stream
+	 * 
+	 * @return ComponentTagIterator
+	 */
+	public Iterator componentTagIterator()
+	{
+		return markup.componentTagIterator(0, ComponentTag.class);
 	}
 }

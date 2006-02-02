@@ -1585,12 +1585,6 @@ public abstract class Component implements Serializable
 				if (behavior instanceof IHeaderContributor)
 				{
 					((IHeaderContributor)behavior).renderHead(container.getResponse());
-
-					String stmt = ((IHeaderContributor)behavior).getBodyOnLoad();
-					if (stmt != null)
-					{
-						webPage.appendToBodyOnLoad(stmt);
-					}
 				}
 			}
 		}

@@ -25,6 +25,8 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 
 /**
@@ -42,9 +44,6 @@ public abstract class AbstractAjaxBehavior
 			IBehaviorListener,
 			IHeaderContributor
 {
-	/** thread local for onload contributions. */
-	private static final ThreadLocal bodyOnloadContribHolder = new ThreadLocal();
-
 	/** thread local for head contributions. */
 	private static final ThreadLocal headContribHolder = new ThreadLocal();
 
@@ -59,12 +58,29 @@ public abstract class AbstractAjaxBehavior
 	}
 
 	/**
+	 * Get the Container attached to the &lt;body&gt; tag e.g. to add an
+	 * AttributeModifier.
+	 * 
+	 * @param component If null, call getComponent()
+	 * 
+	 * @return Null, if no body container is available
+	 */
+	protected HtmlBodyContainer getBodyContainer(Component component)
+	{
+		if (component == null)
+		{
+			component = getComponent();
+		}
+		return ((WebPage)component.getPage()).getBodyContainer();
+	}
+
+	/**
 	 * Bind this handler to the given component.
 	 * 
 	 * @param hostComponent
 	 *            the component to bind to
 	 */
-	public final void bind(Component hostComponent)
+	public final void bind(final Component hostComponent)
 	{
 		if (hostComponent == null)
 		{
@@ -90,40 +106,6 @@ public abstract class AbstractAjaxBehavior
 	 */
 	public void detachModel()
 	{
-	}
-
-	/**
-	 * @see wicket.markup.html.IHeaderContributor#getBodyOnLoad()
-	 */
-	public final String getBodyOnLoad()
-	{
-		String staticContrib = null;
-		Set contributors = (Set)bodyOnloadContribHolder.get();
-
-		// were any contributors set?
-		if (contributors == null)
-		{
-			contributors = new HashSet(1);
-			bodyOnloadContribHolder.set(contributors);
-		}
-
-		// get the id of the implementation; we need this trick to be
-		// able to support multiple implementations
-		String implementationId = getImplementationId();
-
-		// was a contribution for this specific implementation done yet?
-		if (!contributors.contains(implementationId))
-		{
-			staticContrib = getBodyOnloadInitContribution();
-			contributors.add(implementationId);
-		}
-
-		String contrib = getBodyOnloadContribution();
-		if (staticContrib != null)
-		{
-			return (contrib != null) ? staticContrib + contrib : staticContrib;
-		}
-		return contrib;
 	}
 
 	/**
@@ -159,7 +141,7 @@ public abstract class AbstractAjaxBehavior
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
-	public final void onComponentTag(Component component, ComponentTag tag)
+	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		onComponentTag(tag);
 	}
@@ -172,16 +154,15 @@ public abstract class AbstractAjaxBehavior
 	 * @param tag
 	 *            the tag that is rendered
 	 */
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 	}
 
 	/**
 	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
-	public final void rendered(Component hostComponent)
+	public final void rendered(final Component hostComponent)
 	{
-		bodyOnloadContribHolder.set(null);
 		headContribHolder.set(null);
 		onComponentRendered();
 	}
@@ -189,7 +170,7 @@ public abstract class AbstractAjaxBehavior
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 	 */
-	public final void renderHead(Response response)
+	public final void renderHead(final Response response)
 	{
 		Set contributors = (Set)headContribHolder.get();
 
@@ -222,34 +203,12 @@ public abstract class AbstractAjaxBehavior
 	 * @param ref
 	 *            reference to add
 	 */
-	protected void writeJsReference(Response response, PackageResourceReference ref)
+	protected void writeJsReference(final Response response, final PackageResourceReference ref)
 	{
 		String url = getComponent().getPage().urlFor(ref.getPath());
 		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"");
 		response.write(url);
 		response.write("\"></script>\n");
-	}
-
-	/**
-	 * Gets the onload statement(s) for the body component. Override this method
-	 * to provide custom contributions.
-	 * 
-	 * @return the onload statement(s) for the body component
-	 */
-	protected String getBodyOnloadContribution()
-	{
-		return null;
-	}
-
-	/**
-	 * One time (per page) body onload contribution that is the same for all
-	 * ajax variant implementations (e.g. Dojo, Rico, Qooxdoo).
-	 * 
-	 * @return the onload statement(s) for the body component
-	 */
-	protected String getBodyOnloadInitContribution()
-	{
-		return null;
 	}
 
 	/**
@@ -297,7 +256,7 @@ public abstract class AbstractAjaxBehavior
 	 * @param response
 	 *            head container
 	 */
-	protected void onRenderHeadContribution(Response response)
+	protected void onRenderHeadContribution(final Response response)
 	{
 	}
 
@@ -309,21 +268,20 @@ public abstract class AbstractAjaxBehavior
 	 * @param response
 	 *            head container
 	 */
-	protected void onRenderHeadInitContribution(Response response)
+	protected void onRenderHeadInitContribution(final Response response)
 	{
 	}
-
 
 	/**
 	 * Writes the given string to the header container.
 	 * 
 	 * @param container
 	 *            the header container
-	 * @param s
+	 * @param str
 	 *            the string to write
 	 */
-	private final void write(HtmlHeaderContainer container, String s)
+	private final void write(final HtmlHeaderContainer container, final String str)
 	{
-		container.getResponse().write(s);
+		container.getResponse().write(str);
 	}
 }
