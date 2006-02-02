@@ -38,6 +38,8 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 	 */
 	public AjaxHandlerBodyOnLoadPage() 
 	{
+		getBodyContainer().addOnLoadModifier("function1();");
+		
 	    MarkupContainer panel = new WebMarkupContainer("panel");
 	    panel.add(new AbstractAjaxBehavior()
 		{
@@ -51,7 +53,7 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 			protected void onRenderHeadInitContribution(Response response)
 			{
 				super.onRenderHeadInitContribution(response);
-				getBodyContainer(null).addOnLoadModifier("myFunction()");
+				getBodyContainer(null).addOnLoadModifier("myFunction();");
 			}
 
 			public void onRequest()
