@@ -20,8 +20,8 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
+    <connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
+    <developerConnection>scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
     <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
   </scm>
 
