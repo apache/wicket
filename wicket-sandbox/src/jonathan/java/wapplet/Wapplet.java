@@ -26,7 +26,7 @@ import javax.swing.JButton;
 
 public class Wapplet implements IApplet
 {
-	public void init(Container container, final IAppletServer server, Object model)
+	public void init(final IAppletServer server, final Container container, final Object model)
 	{
 		container.setBackground(Color.white);
 		container.setLayout(new FlowLayout());

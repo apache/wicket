@@ -24,7 +24,7 @@ public interface IApplet
 	 * @param model
 	 *            The model to update in the applet
 	 */
-	void init(Container container, IAppletServer server, Object model);
+	void init(IAppletServer server, Container container, Object model);
 
 	/**
 	 * @return The model edited by this applet
