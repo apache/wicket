@@ -15,6 +15,8 @@ import javax.swing.JApplet;
  */
 public class HostApplet extends JApplet implements IAppletServer
 {
+	IApplet applet;
+	
 	public void init()
 	{
 		try
@@ -24,7 +26,7 @@ public class HostApplet extends JApplet implements IAppletServer
 		    Class c = Class.forName(initializerClassName);
 		    if (c != null)
 		    {
-		    	final IApplet applet = (IApplet)c.newInstance();
+		    	applet = (IApplet)c.newInstance();
 		    	applet.init(container, this, get());
 		    }
 		}
@@ -43,6 +45,11 @@ public class HostApplet extends JApplet implements IAppletServer
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public void set()
+	{
+		set(applet.getModel());
 	}
 
 	public void set(Object model)

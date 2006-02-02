@@ -19,7 +19,18 @@ package wapplet;
 
 public interface IAppletServer
 {
+	/**
+	 * Sets the model on the server
+	 * 
+	 * @param model
+	 *            The model to send back to the server
+	 */
 	void set(Object model);
+
+	/**
+	 * Gets model from server
+	 * 
+	 * @return The model from the server
+	 */
 	Object get();
 }
-
