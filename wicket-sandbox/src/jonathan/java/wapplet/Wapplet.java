@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.4 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,20 +20,27 @@ package wapplet;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
 public class Wapplet implements IApplet
 {
-	public void init(Container container, IAppletServer server, Object model)
+	public void init(Container container, final IAppletServer server, Object model)
 	{
-	    container.setBackground(Color.white);
-	    container.setLayout(new FlowLayout()); 
-	    container.add(new JButton(model.toString()));
-	    container.add(new JButton("Button 2"));
-	    container.add(new JButton("Button 3"));		
+		container.setBackground(Color.white);
+		container.setLayout(new FlowLayout());
+		JButton button = new JButton(model.toString());
+		button.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent e)
+			{
+				server.setModel("bar");
+			};
+		});
+		container.add(button);
 	}
-	
+
 	public Object getModel()
 	{
 		return null;

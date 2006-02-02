@@ -110,7 +110,7 @@ public class ClassClosure
 				final InputStream in2 = inputStreamForClassName(classname.getType());
 				try
 				{
-					addClass(classfile.getName().getExternalName(), in2);
+					addClass(classfile.getName().getInternalName(), in2);
 				}
 				finally
 				{

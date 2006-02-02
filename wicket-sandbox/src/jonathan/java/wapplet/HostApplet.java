@@ -26,9 +26,9 @@ public class HostApplet extends JApplet implements IAppletServer
 	{
 		try
 		{
-			final String initializerClassName = getParameter("appletInitializerClassName");
+			final String appletClassName = getParameter("appletClassName");
 			Container container = getContentPane();
-			Class c = Class.forName(initializerClassName);
+			Class c = Class.forName(appletClassName);
 			if (c != null)
 			{
 				applet = (IApplet)c.newInstance();

@@ -28,7 +28,6 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import wicket.IResourceListener;
-import wicket.Request;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
@@ -38,7 +37,8 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
-import wicket.protocol.http.MultipartWebRequest;
+import wicket.protocol.http.IMultipartWebRequest;
+import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
@@ -177,26 +177,24 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	public void onFormSubmitted()
 	{
 		// Get request
-		final Request request = getRequest();
+		final WebRequest webRequest = ((WebRequest)getRequest()).newMultipartWebRequest(Bytes.MAX);
+		getRequestCycle().setRequest(webRequest);
 
-		// If we successfully installed a multipart request
-		if (request instanceof MultipartWebRequest)
+		// Get the item for the path
+		final FileItem item = ((IMultipartWebRequest)webRequest).getFile("model");
+		try
 		{
-			// Get the item for the path
-			final FileItem item = ((MultipartWebRequest)request).getFile("model");
-			try
-			{
-				final Object model = new ObjectInputStream(item.getInputStream()).readObject();
-				setModelObject(model);
-			}
-			catch (ClassNotFoundException e)
-			{
-				((WebResponse)getResponse()).setHeader("STATUS", "417");
-			}
-			catch (IOException e)
-			{
-				((WebResponse)getResponse()).setHeader("STATUS", "417");
-			}
+			final Object model = new ObjectInputStream(item.getInputStream()).readObject();
+			System.out.println("Setting model to " + model);
+			setModelObject(model);
+		}
+		catch (ClassNotFoundException e)
+		{
+			((WebResponse)getResponse()).setHeader("STATUS", "417");
+		}
+		catch (IOException e)
+		{
+			((WebResponse)getResponse()).setHeader("STATUS", "417");
 		}
 	}
 
@@ -233,11 +231,6 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		final String form = "<form method=\"post\" action=\""
-				+ Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;")
-				+ "enctype=\"multipart/form-data\"><input type=\"file\" name=\"model\"/></form>";
-		getResponse().write(form);
-
 		checkComponentTag(tag, "applet");
 		tag.put("code", HostApplet.class.getName());
 		final String jarName = appletClass.getName() + ".jar";
