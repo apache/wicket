@@ -25,9 +25,7 @@ import wicket.markup.html.WebPage;
 
 
 /**
- * Mock page for testing.
- *
- * @author Chris Turner
+ * Test for body onload.
  */
 public class AjaxHandlerBodyOnLoadPage extends WebPage 
 {

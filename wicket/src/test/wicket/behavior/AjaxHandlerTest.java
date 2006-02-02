@@ -20,7 +20,8 @@ package wicket.behavior;
 import wicket.WicketTestCase;
 
 /**
- * 
+ * Test for ajax handler.
+ *
  * @author Juergen Donnerstag
  */
 public class AjaxHandlerTest extends WicketTestCase
