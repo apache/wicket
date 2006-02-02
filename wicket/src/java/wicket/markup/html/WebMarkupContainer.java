@@ -17,6 +17,8 @@
  */
 package wicket.markup.html;
 
+import java.util.Iterator;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
@@ -38,7 +40,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainer extends MarkupContainer 
+public class WebMarkupContainer extends MarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,38 +71,53 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * Print to the web response what ever the component wants to contribute to
-	 * the head section.
+	 * A convinience method to return the WebPage. Same as getPage().
+	 * 
+	 * @return WebPage
+	 */
+	public final WebPage getWebPage()
+	{
+		return (WebPage)getPage();
+	}
+
+	/**
+	 * Called by components like Panel and Border which have associated Markup
+	 * and which may have a &lt;wicket:head&gt; tag.
+	 * <p>
+	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
+	 * parameter has been added to the Page as a container for all headers any
+	 * of its components might wish to contribute.
+	 * <p>
+	 * The headers contributed are rendered in the standard way.
 	 * 
 	 * @param container
-	 *            The HtmlHeaderContainer
+	 *            The HtmlHeaderContainer added to the Page
 	 */
 	public void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
 	{
-		// Ask the child component if it has something to contribute
+		// Ask the Panel/Border if it has something to contribute to the header
 		final HeaderPartContainer headerPart = getHeaderPart();
 
-		// If the child component has something to contribute to
-		// the header and in case the very same Component has not
-		// contributed to the page, than ...
-		// A component's header section must only be added once,
-		// no matter how often the same Component has been added
-		// to the page or any other container in the hierachy.
+		// If the panel/border component has something to contribute to
+		// the header ...
 		if (headerPart != null)
 		{
+			// A component's header section must only be added once,
+			// no matter how often the same Component has been added
+			// to the page or any other container in the hierachy.
 			if (container.get(headerPart.getId()) == null)
 			{
 				container.autoAdd(headerPart);
-	
-				// Check if the component requires some <body onload="..">
+
+				// Check if the Panel/Border requires some <body onload="..">
 				// attribute to be copied to the page's body tag.
 				checkBodyOnLoad();
 			}
 			else
 			{
 				// TODO I haven't found a more efficient solution yet
-				// Already added but all the components in this header part must be
-				// touched (that they are rendered)
+				// Already added but all the components in this header part must
+				// be touched (that they are rendered)
 				Response response = getRequestCycle().getResponse();
 				try
 				{
@@ -116,7 +133,7 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * Check if the component requires some <body onload=".."> attribute to be
+	 * Check if the Panel/Border requires some <body onload=".."> attribute to be
 	 * copied to the page's body tag.
 	 */
 	private void checkBodyOnLoad()
@@ -138,30 +155,25 @@ public class WebMarkupContainer extends MarkupContainer
 
 		try
 		{
-			// Start at the beginning
-			associatedMarkupStream.setCurrentIndex(0);
-
-			// Iterate the markup and find <body onload="...">
-			do
+			final Iterator iter = associatedMarkupStream.componentTagIterator();
+			while (iter.hasNext())
 			{
-				final MarkupElement element = associatedMarkupStream.get();
-				if (element instanceof ComponentTag)
+				final ComponentTag tag = (ComponentTag)iter.next();
+				if ("body".equalsIgnoreCase(tag.getName()))
 				{
-					final ComponentTag tag = (ComponentTag)element;
-					if ("body".equalsIgnoreCase(tag.getName()))
+					final String onLoad = tag.getAttributes().getString("onload");
+					if (onLoad != null)
 					{
-						final String onLoad = tag.getAttributes().getString("onload");
-						if (onLoad != null)
-						{
-							((WebPage)getPage()).appendToBodyOnLoad(onLoad);
-						}
-
-						// There can only be one body tag
-						break;
+						// Attach an AttributeModifier to the body container
+						// which appends the new value to the onLoad
+						// attribute
+						getWebPage().getBodyContainer().addOnLoadModifier(onLoad);
 					}
+
+					// There can only be one body tag
+					break;
 				}
 			}
-			while (associatedMarkupStream.next() != null);
 		}
 		finally
 		{
@@ -171,11 +183,11 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * Gets the header part for the markup container. Returns null if it doesn't
-	 * contribute to a header.
+	 * Gets the header part of the Panel/Border. Returns null if it doesn't
+	 * have a header tag.
 	 * 
-	 * @return the header part for this markup container or null if it doesn't
-	 *         contribute anything.
+	 * @return the header part for this panel/border or null if it doesn't
+	 *         have a wicket:head tag.
 	 */
 	private final HeaderPartContainer getHeaderPart()
 	{
@@ -222,8 +234,8 @@ public class WebMarkupContainer extends MarkupContainer
 
 					// Create the header container and associate the markup with
 					// it
-					HeaderPartContainer headerContainer = new HeaderPartContainer(
-							headerId, this, wTag.getAttributes().getString("scope"));
+					HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, this,
+							wTag.getAttributes().getString("scope"));
 					headerContainer.setMarkupStream(associatedMarkupStream);
 					headerContainer.setRenderBodyOnly(true);
 
@@ -239,11 +251,12 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * For each wicket:head tag a HeaderPartContainer is created and 
-	 * added to the HtmlHeaderContainer which has been added to the Page.
+	 * For each wicket:head tag a HeaderPartContainer is created and added to
+	 * the HtmlHeaderContainer which has been added to the Page.
 	 */
 	private static final class HeaderPartContainer extends WebMarkupContainer
-			implements IComponentResolver
+			implements
+				IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -252,13 +265,18 @@ public class WebMarkupContainer extends MarkupContainer
 
 		/** <wicket:head scope="...">. A kind of namespace */
 		private final String scope;
-		
+
 		/**
-		 * @param id The component id
-		 * @param container The Panel (or bordered page) the header part is associated with
-		 * @param scope The scope of the wicket:head tag
+		 * @param id
+		 *            The component id
+		 * @param container
+		 *            The Panel (or bordered page) the header part is associated
+		 *            with
+		 * @param scope
+		 *            The scope of the wicket:head tag
 		 */
-		public HeaderPartContainer(final String id, final MarkupContainer container, final String scope)
+		public HeaderPartContainer(final String id, final MarkupContainer container,
+				final String scope)
 		{
 			super(id);
 			this.container = container;
@@ -274,7 +292,7 @@ public class WebMarkupContainer extends MarkupContainer
 		{
 			return this.scope;
 		}
-		
+
 		/**
 		 * 
 		 * @see wicket.MarkupContainer#isTransparentResolver()
@@ -283,14 +301,16 @@ public class WebMarkupContainer extends MarkupContainer
 		{
 			return true;
 		}
-		
+
 		/**
-		 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
+		 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream,
+		 *      ComponentTag)
 		 */
 		public final boolean resolve(final MarkupContainer container,
 				final MarkupStream markupStream, final ComponentTag tag)
 		{
-			// The tag must be resolved against the panel and not against the page
+			// The tag must be resolved against the panel and not against the
+			// page
 			Component component = this.container.get(tag.getId());
 			if (component != null)
 			{

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,28 +15,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html;
+package wicket.behavior;
 
-import wicket.Response;
+import wicket.WicketTestCase;
 
 /**
- * An interface to be implemented by components which are able to render the
- * header section associated with the markup. Default implementations are with
- * WebComponent and WebMarkupContainer.
  * 
  * @author Juergen Donnerstag
  */
-public interface IHeaderContributor
+public class AjaxHandlerTest extends WicketTestCase
 {
 	/**
-	 * Render to the web response whatever the component wants to contribute to
-	 * the head section.
-	 * <p>
-	 * Note: This method is kind of dangerous as users are able to write to the
-	 * output whatever they like.
-	 * 
-	 * @param response
-	 *            Response object
+	 * Construct.
+	 * @param name
 	 */
-	void renderHead(final Response response);
+	public AjaxHandlerTest(String name)
+	{
+		super(name);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_1() throws Exception
+	{
+	    executeTest(AjaxHandlerBodyOnLoadPage.class, "AjaxHandlerBodyOnLoadPageExpectedResult.html");
+	}
 }

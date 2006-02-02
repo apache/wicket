@@ -1,6 +1,5 @@
 package wicket.ajax;
 
-import wicket.markup.ComponentTag;
 
 
 public abstract class AjaxTimerBehavior extends AjaxBehavior
@@ -22,7 +21,6 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 		return "setTimeout(function() { " + buildAjaxCall() + " }, " + millis + ");";
 	}
 
-
 	protected void respond(AjaxRequestTarget target)
 	{
 		onTimer(target);
@@ -30,5 +28,4 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	}
 
 	protected abstract void onTimer(AjaxRequestTarget target);
-
 }

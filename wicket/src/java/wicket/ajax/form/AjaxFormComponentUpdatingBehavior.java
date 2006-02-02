@@ -1,13 +1,10 @@
 package wicket.ajax.form;
 
 import wicket.WicketRuntimeException;
-import wicket.ajax.AjaxBehavior;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.string.Strings;
 
 
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
@@ -72,6 +69,4 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	}
 
 	protected abstract void onUpdate(AjaxRequestTarget target);
-
-
 }

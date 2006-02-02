@@ -19,6 +19,7 @@ package wicket.markup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -253,8 +254,7 @@ public final class Markup
 					}
 
 					// If open tag, put the path of the current element onto the
-					// stack
-					// and adjust the path (walk into the subdirectory)
+					// stack and adjust the path (walk into the subdirectory)
 					if (tag.isOpen())
 					{
 						markupElements.push(elementsPath);
@@ -369,5 +369,45 @@ public final class Markup
 		this.xmlDeclaration = null;
 		this.encoding = null;
 		this.headerIndex = NO_HEADER_FOUND;
+	}
+
+	/**
+	 * Create an iterator for the component tags in the markup.
+	 * 
+	 * @param startIndex
+	 *            The index to start with
+	 * @param matchClass
+	 *            Iterate over elements matching the class
+	 * @return ComponentTagIterator
+	 */
+	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
+	{
+		return new Iterator()
+		{
+			int index = startIndex - 1;
+
+			public boolean hasNext()
+			{
+				while (++index < size())
+				{
+					MarkupElement element = get(index);
+					if (matchClass.isInstance(element))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
+			public Object next()
+			{
+				return get(index);
+			}
+
+			public void remove()
+			{
+				throw new IllegalArgumentException("remove() is not supported");
+			}
+		};
 	}
 }
