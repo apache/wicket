@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -50,6 +50,9 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to
+	 * automatically replace the expected output file.
+	 * 
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
