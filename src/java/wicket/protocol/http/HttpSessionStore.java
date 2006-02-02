@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,16 +17,23 @@
  */
 package wicket.protocol.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.session.ISessionStore;
+import wicket.util.lang.Bytes;
 
 /**
  * Default web implementation of {@link wicket.session.ISessionStore} that uses
@@ -36,6 +43,9 @@ import wicket.session.ISessionStore;
  */
 public class HttpSessionStore implements ISessionStore
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(HttpSessionStore.class);
+
 	/**
 	 * the prefix for storing variables in the actual session.
 	 */
@@ -96,6 +106,28 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public void setAttribute(String name, Object value)
 	{
+		// Do some extra profiling/ debugging. This can be a great help
+		// just for testing whether your webbapp will behave when using
+		// session replication
+		if (log.isDebugEnabled())
+		{
+			String valueTypeName = (value != null ? value.getClass().getName() : "null");
+			int size;
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(value);
+				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
+						+ Bytes.bytes(out.size()));
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException(
+						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
+								+ valueTypeName, e);
+			}
+		}
+
 		HttpSession httpSession = getHttpSession();
 		if (httpSession != null)
 		{
