@@ -27,10 +27,15 @@ function wicketAjaxGet(url, successHandler) {
         transport=new ActiveXObject("Microsoft.XMLHTTP");
     }
     
+    if (transport==null) {
+        return false;
+    }
+    
     transport.onreadystatechange = function() { wicketAjaxOnStateChange(transport, successHandler) };
     transport.open("GET", url+"&random="+Math.random(), true);
     transport.send(null);
     
+    return true;
 }
 
 function wicketAjaxOnStateChange(transport, successHandler) {
