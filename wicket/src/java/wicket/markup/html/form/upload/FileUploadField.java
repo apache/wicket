@@ -23,7 +23,7 @@ import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
-import wicket.protocol.http.MultipartWebRequest;
+import wicket.protocol.http.IMultipartWebRequest;
 import wicket.util.upload.FileItem;
 
 /**
@@ -71,10 +71,10 @@ public class FileUploadField extends FormComponent
 		final Request request = getRequest();
 		
 		// If we successfully installed a multipart request
-		if (request instanceof MultipartWebRequest)
+		if (request instanceof IMultipartWebRequest)
 		{
 			// Get the item for the path
-			final FileItem item = ((MultipartWebRequest)request).getFile(getInputName());
+			final FileItem item = ((IMultipartWebRequest)request).getFile(getInputName());
 
 			// Only update the model when there is a file (larger than zero
 			// bytes)
