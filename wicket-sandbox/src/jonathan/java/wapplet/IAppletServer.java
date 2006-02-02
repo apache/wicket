@@ -17,6 +17,11 @@
  */
 package wapplet;
 
+/**
+ * Interface to server that served up an applet.
+ * 
+ * @author Jonathan Locke
+ */
 public interface IAppletServer
 {
 	/**
@@ -25,12 +30,12 @@ public interface IAppletServer
 	 * @param model
 	 *            The model to send back to the server
 	 */
-	void set(Object model);
+	void setModel(Object model);
 
 	/**
 	 * Gets model from server
 	 * 
 	 * @return The model from the server
 	 */
-	Object get();
+	Object getModel();
 }

@@ -27,7 +27,7 @@ public class HostApplet extends JApplet implements IAppletServer
 		    if (c != null)
 		    {
 		    	applet = (IApplet)c.newInstance();
-		    	applet.init(container, this, get());
+		    	applet.init(container, this, getModel());
 		    }
 		}
 		catch (ClassNotFoundException e)
@@ -47,16 +47,16 @@ public class HostApplet extends JApplet implements IAppletServer
 		}
 	}
 	
-	public void set()
+	public void setModel()
 	{
-		set(applet.getModel());
+		setModel(applet.getModel());
 	}
 
-	public void set(Object model)
+	public void setModel(Object model)
 	{
 	}
 
-	public Object get()
+	public Object getModel()
 	{
 		try
 		{
