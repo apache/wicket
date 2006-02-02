@@ -21,12 +21,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.WebResponse;
+import wicket.settings.IDebugSettings;
 
 /**
  * 
@@ -86,6 +88,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(final RequestCycle requestCycle)
 	{
+		Application app=Application.get();
+		
+		// disable component use check since we want to ignore header contribs
+		final boolean oldUseCheck=app.getDebugSettings().getComponentUseCheck();
+		app.getDebugSettings().setComponentUseCheck(false);
+
+		
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
 		response.setContentType("text/xml");
@@ -112,6 +121,9 @@ public class AjaxRequestTarget implements IRequestTarget
 			respondInvocation(response, js);
 		}
 		response.write("</ajax-response>");
+		
+		// restore component use check
+		app.getDebugSettings().setComponentUseCheck(oldUseCheck);
 	}
 
 	/**
