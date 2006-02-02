@@ -50,19 +50,27 @@ import wicket.util.upload.FileItem;
 /**
  * This component integrates Swing tightly with Wicket by automatically
  * generating Swing applets on demand. The applet's JAR file is automatically
- * created from the code statically referenced by the IApplet interface. Once
- * the JAR file for a given Applet subclass has been created, it is reused for
- * all future instances of the Applet. The auto-created JAR is referenced by an
- * automatically generated APPLET tag. The result of this is that an Applet
- * component creates an applet with virtually no work on the programmer's part
- * beyond populating the JPanel and working with the model, which is
- * automatically proxied to/from the applet.
+ * created from the closure of class files statically referenced by the IApplet-
+ * interface-implementing class passed to the Applet constructor.
  * <p>
- * In your IApplet implementation, you can populate a Container with any Swing
- * components that you want. When a significant action occurs such as a form
- * submit, the IAppletServer.setModel() method will be called automatically,
- * updating the server side model by posting the modified model back to the
- * server (before the form that contains the applet posts its data).
+ * Once the JAR file for a given Applet subclass has been created, it is reused
+ * for all future instances of the Applet. The auto-created JAR is referenced by
+ * an automatically modified APPLET tag, resulting in an automatically generated
+ * applet.
+ * <p>
+ * To add behavior to the applet, the user's implementation of IApplet in the
+ * class passed to the Applet constructor should populate the Container passed
+ * to the IApplet.init() method with Swing components. Those components should
+ * edit the model passed into the same init() method. The model can be pushed
+ * back to the server at any time (via an internally executed form POST over
+ * HTTP) by manually calling the setModel(Object) method on the IAppletServer
+ * interface passed to the init() method. Such a manual update is not necessary
+ * if the Applet component is contained in a Form. For Applets nested within
+ * Forms, the form submit will result in an automatic call via JavaScript to the
+ * IAppletServer.setModel() method before the Form itself posts. Therefore, the
+ * Applet's model will be updated by the time Form.onSubmit() is called. This
+ * allows users to augment HTML forms with Applet based Swing components in a
+ * modular and reusable fashion.
  * 
  * @author Jonathan Locke
  */
