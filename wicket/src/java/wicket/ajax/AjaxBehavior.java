@@ -38,7 +38,7 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
 	 */
-	protected String getImplementationId()
+	protected final String getImplementationId()
 	{
 		return "wicket-default";
 	}
@@ -47,7 +47,7 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @return ajax call
 	 */
-	protected String buildAjaxCall()
+	protected final String buildAjaxCall()
 	{
 		return ("wicketAjaxGet('" + getCallbackUrl() + "');");
 	}
@@ -57,7 +57,7 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	 * @param url
 	 * @return ajax call
 	 */
-	protected String buildAjaxCall(String url)
+	protected final String buildAjaxCall(String url)
 	{
 		return buildAjaxCallRaw("'"+url+"'");
 	}
@@ -67,7 +67,7 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	 * @param javascript
 	 * @return ajax call
 	 */
-	protected String buildAjaxCallRaw(String javascript)
+	protected final String buildAjaxCallRaw(String javascript)
 	{
 		return ("wicketAjaxGet(" + javascript + ");");
 	}
@@ -84,7 +84,7 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @see wicket.behavior.IBehaviorListener#onRequest()
 	 */
-	public void onRequest()
+	public final void onRequest()
 	{
 		AjaxRequestTarget target = new AjaxRequestTarget();
 		RequestCycle.get().setRequestTarget(target);
