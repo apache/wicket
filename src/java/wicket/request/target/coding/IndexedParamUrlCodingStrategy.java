@@ -1,16 +1,17 @@
 package wicket.request.target.coding;
 
+import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 
 /**
- * Url coding strategy for bookmarkable pages that incodes index based
+ * Url coding strategy for bookmarkable pages that encodes index based
  * parameters.
  * 
  * Strategy looks for parameters whose name is an integer in an incremented
  * order starting with zero. Found parameters will be appended to the url in the
- * form /mount-paty/paramvalue0/paramvalue1/paramvalue2
+ * form /mount-path/paramvalue0/paramvalue1/paramvalue2
  * 
  * When decoded these parameters will once again be available under their index (
  * PageParameters.getString("0"); )
@@ -19,6 +20,19 @@ import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrate
  */
 public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
 {
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 *            mount path
+	 * @param bookmarkablePageClass
+	 *            class of mounted page
+	 */
+	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass)
+	{
+		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_PAGEMAP_NAME);
+	}
 
 	/**
 	 * Construct.
