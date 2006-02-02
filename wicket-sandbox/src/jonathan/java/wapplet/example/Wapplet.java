@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet;
+package wapplet.example;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -23,6 +23,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+
+import wapplet.IApplet;
+import wapplet.IAppletServer;
 
 public class Wapplet implements IApplet
 {

@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -14,24 +15,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet;
+package wapplet.example;
 
-
-import wicket.markup.html.WebPage;
-import wicket.model.Model;
+import wicket.protocol.http.WebApplication;
 
 /**
- * Home page of the wapplet example.
+ * Wicket Applet (Wapplet) application. 
  * 
  * @author Jonathan Locke
  */
-public class Home extends WebPage
+public class WappletApplication extends WebApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public Home()
+	public WappletApplication()
 	{
-		add(new Applet("applet", new Model("foo"), Wapplet.class));
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }
