@@ -24,9 +24,7 @@ import wicket.IRequestCycleFactory;
 import wicket.Session;
 
 /**
- * Session subclass for HTTP protocol which holds an HttpSession object and
- * provides access to that object via getHttpSession(). A method which abstracts
- * session invalidation is also provided via invalidate().
+ * A session subclass for the HTTP protocol. 
  * 
  * @author Jonathan Locke
  */
