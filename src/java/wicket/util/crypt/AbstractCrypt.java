@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -88,14 +88,14 @@ public abstract class AbstractCrypt implements ICrypt
 		{
 			byte[] cipherText = encryptStringToByteArray(plainText);
 			String text = new BASE64Encoder().encode(cipherText);
-			
-			// A standard compliant base64 encoder will insert a newline 
+
+			// A standard compliant base64 encoder will insert a newline
 			// after 76 chars. Remove it. Hopefully the decoder is flexible
 			// enough to cope with the missing new line.
 			if ((text.indexOf("\n") != -1) || (text.indexOf("\r") != -1))
 			{
 				StringBuffer buf = new StringBuffer(text.length());
-				for (int i=0; i < text.length(); i++)
+				for (int i = 0; i < text.length(); i++)
 				{
 					char ch = text.charAt(i);
 					if ((ch != '\n') && (ch != '\r'))
@@ -105,7 +105,7 @@ public abstract class AbstractCrypt implements ICrypt
 				}
 				text = buf.toString();
 			}
-			
+
 			return text;
 		}
 		catch (GeneralSecurityException e)
@@ -170,8 +170,7 @@ public abstract class AbstractCrypt implements ICrypt
 		}
 		catch (GeneralSecurityException e)
 		{
-			log.error("Unable to decrypt text '" + encrypted + "'", e);
-			return null;
+			throw new WicketRuntimeException("Unable to decrypt the text '" + encrypted + "'", e);
 		}
 	}
 
