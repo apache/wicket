@@ -19,7 +19,7 @@ package applet.sprockets.slider;
 
 import java.io.Serializable;
 
-public class AppletModel implements Serializable
+class AppletModel implements Serializable
 {
 	int min;
 	int max;

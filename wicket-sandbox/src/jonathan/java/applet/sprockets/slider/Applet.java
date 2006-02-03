@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,11 +25,16 @@ import javax.swing.JSlider;
 import applet.IApplet;
 import applet.IAppletServer;
 
+/**
+ * This class is a private implementation detail of the Slider sprocket.
+ * 
+ * @author Jonathan Locke
+ */
 public class Applet implements IApplet
 {
 	JSlider slider;
 	AppletModel model;
-	
+
 	public void init(IAppletServer server, Container container, Object modelObject)
 	{
 		this.model = (AppletModel)modelObject;
