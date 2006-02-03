@@ -1,5 +1,5 @@
 
-package wapplet;
+package sprockets;
 
 import java.io.*;
 import java.net.*;

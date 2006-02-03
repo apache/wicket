@@ -1,4 +1,4 @@
-package wapplet;
+package sprockets;
 
 import java.awt.Container;
 

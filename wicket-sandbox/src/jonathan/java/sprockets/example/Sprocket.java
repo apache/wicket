@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet.example;
+package sprockets.example;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -24,10 +24,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import wapplet.IApplet;
-import wapplet.IAppletServer;
+import sprockets.IApplet;
+import sprockets.IAppletServer;
 
-public class Wapplet implements IApplet
+
+public class Sprocket implements IApplet
 {
 	public void init(final IAppletServer server, final Container container, final Object model)
 	{

@@ -14,15 +14,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet.example;
+package sprockets.example;
 
 
-import wapplet.Applet;
+import sprockets.Applet;
 import wicket.markup.html.WebPage;
 import wicket.model.Model;
 
 /**
- * Home page of the wapplet example.
+ * Home page of the sprockets example.
  * 
  * @author Jonathan Locke
  */
@@ -33,6 +33,6 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-		add(new Applet("applet", new Model("foo"), Wapplet.class));
+		add(new Applet("sprocket", new Model("foo"), Sprocket.class));
 	}
 }

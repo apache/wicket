@@ -32,11 +32,11 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>WappletApplication</servlet-name>
+		<servlet-name>SprocketApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wapplet.example.WappletApplication</param-value>
+			<param-value>sprockets.example.SprocketApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -48,8 +48,8 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>WappletApplication</servlet-name>
-		<url-pattern>/wapplet/*</url-pattern>
+		<servlet-name>SprocketApplication</servlet-name>
+		<url-pattern>/sprockets/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

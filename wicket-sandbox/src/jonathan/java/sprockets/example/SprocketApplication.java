@@ -15,21 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet.example;
+package sprockets.example;
 
 import wicket.protocol.http.WebApplication;
 
 /**
- * Wicket Applet (Wapplet) application. 
+ * Wicket Applet (Sprocket) application. 
  * 
  * @author Jonathan Locke
  */
-public class WappletApplication extends WebApplication
+public class SprocketApplication extends WebApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public WappletApplication()
+	public SprocketApplication()
 	{
 	}
 

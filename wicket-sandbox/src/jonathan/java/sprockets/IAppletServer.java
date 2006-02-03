@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet;
+package sprockets;
 
 /**
  * Interface to server that served up an applet.

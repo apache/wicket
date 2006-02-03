@@ -16,7 +16,7 @@
  * Version: $Revision$
  */
 
-package wapplet;
+package sprockets;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wapplet;
+package sprockets;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -256,7 +256,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 						.setCacheable(false);
 			}
 		};
-		tag.put("codebase", "wapplet/"
+		tag.put("codebase", "sprockets/"
 				+ Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
 		tag.put("archive", jarName);
 		final int width = getWidth();
