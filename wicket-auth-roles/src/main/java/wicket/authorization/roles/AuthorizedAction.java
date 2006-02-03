@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +18,8 @@
 package wicket.authorization.roles;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import wicket.authorization.Action;
 
@@ -25,7 +28,7 @@ import wicket.authorization.Action;
  * 
  * @author Eelco Hillenius
  */
-final class ActionRoles implements Serializable
+public class AuthorizedAction implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,7 +36,7 @@ final class ActionRoles implements Serializable
 	private final Action action;
 
 	/** the roles for this action. */
-	private final String[] roles;
+	private Set<String> roles = new HashSet<String>();
 
 	/**
 	 * Construct.
@@ -43,10 +46,43 @@ final class ActionRoles implements Serializable
 	 * @param roles
 	 *            the roles
 	 */
-	public ActionRoles(Action action, String[] roles)
+	public AuthorizedAction(String action, String[] roles)
 	{
+		this(new Action(action), roles);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param action
+	 *            the auth action
+	 * @param roles
+	 *            the roles
+	 */
+	public AuthorizedAction(Action action, String[] roles)
+	{
+		if (action == null)
+		{
+			throw new IllegalArgumentException("argument action must be not null");
+		}
+		if (roles == null)
+		{
+			throw new IllegalArgumentException("argument roles must be not null");
+		}
+
 		this.action = action;
-		this.roles = roles;
+		addToSet(roles);
+	}
+
+	/**
+	 * Add roles to this authorized action.
+	 * 
+	 * @param roles
+	 *            the roles to add
+	 */
+	public final void add(String[] roles)
+	{
+		addToSet(roles);
 	}
 
 	/**
@@ -54,7 +90,7 @@ final class ActionRoles implements Serializable
 	 * 
 	 * @return action
 	 */
-	public Action getAction()
+	public final Action getAction()
 	{
 		return action;
 	}
@@ -64,9 +100,21 @@ final class ActionRoles implements Serializable
 	 * 
 	 * @return roles
 	 */
-	public String[] getRoles()
+	public final String[] getRoles()
 	{
-		return roles;
+		return roles.toArray(new String[roles.size()]);
 	}
 
+	private final void addToSet(String[] roles)
+	{
+		if (roles == null)
+		{
+			throw new IllegalArgumentException("argument null must be not null");
+		}
+
+		for (String role : roles)
+		{
+			this.roles.add(role);
+		}
+	}
 }

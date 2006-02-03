@@ -53,10 +53,15 @@ public class RolesBinder
 	 */
 	public static final void bind(Component c, Action action, String[] roles)
 	{
-		ActionRoles actionRoles = (ActionRoles)c.getMetaData(ROLES_METADATA_KEY);
+		AuthorizedAction actionRoles = (AuthorizedAction)c.getMetaData(ROLES_METADATA_KEY);
 		if (actionRoles == null)
 		{
-			actionRoles = new ActionRoles(action, roles);
+			actionRoles = new AuthorizedAction(action, roles);
+			c.setMetaData(ROLES_METADATA_KEY, actionRoles);
+		}
+		else
+		{
+			
 		}
 	}
 }
