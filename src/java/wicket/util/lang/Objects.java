@@ -608,7 +608,6 @@ public abstract class Objects implements NumericTypes
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
 			return -1;
 		}
 	}
