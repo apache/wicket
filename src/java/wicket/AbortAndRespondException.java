@@ -1,6 +1,12 @@
 package wicket;
 
-class AbortAndRespondException extends RuntimeException
+/**
+ * An exception that causes the request cycle to immediately switch to respond
+ * stage.
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ */
+public class AbortAndRespondException extends RuntimeException
 {
 	/**
 	 * 
