@@ -40,6 +40,7 @@ import wicket.model.IModel;
 import wicket.protocol.http.IMultipartWebRequest;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.resource.ByteArrayResource;
 import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
@@ -275,10 +276,10 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 						.setCacheable(false);
 			}
 		};
-		
-		// FIXME: find application name!
-		tag.put("codebase", "slider/" + Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/')
-				+ "/");
+
+		String servletPath = ((ServletWebRequest)getRequest()).getServletPath();
+		tag.put("codebase", servletPath + '/'
+				+ Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
 		tag.put("archive", jarName);
 		final int width = getWidth();
 		if (width != -1)

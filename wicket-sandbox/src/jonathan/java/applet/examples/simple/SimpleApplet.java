@@ -27,9 +27,7 @@ import javax.swing.JButton;
 import applet.IApplet;
 import applet.IAppletServer;
 
-
-
-public class Sprocket implements IApplet
+public class SimpleApplet implements IApplet
 {
 	public void init(final IAppletServer server, final Container container, final Object model)
 	{

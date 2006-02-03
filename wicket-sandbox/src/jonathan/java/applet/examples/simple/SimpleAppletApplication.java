@@ -20,16 +20,16 @@ package applet.examples.simple;
 import wicket.protocol.http.WebApplication;
 
 /**
- * Wicket Applet (Sprocket) application. 
+ * Simple applet application.
  * 
  * @author Jonathan Locke
  */
-public class SprocketApplication extends WebApplication
+public class SimpleAppletApplication extends WebApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public SprocketApplication()
+	public SimpleAppletApplication()
 	{
 	}
 

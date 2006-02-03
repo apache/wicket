@@ -35,6 +35,7 @@ public class Applet implements IApplet
 		this.model = (AppletModel)modelObject;
 		container.setBackground(Color.white);
 		container.add(slider = new JSlider(model.min, model.max, model.value));
+		slider.setBackground(Color.white);
 	}
 
 	public Object getModel()
