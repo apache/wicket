@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxFormComponentUpdatingBehavior.java,v 1.4 2006/02/02 18:49:46
+ * ivaynberg Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,7 +24,8 @@ import wicket.markup.html.form.FormComponent;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
- * 
+ * A behavior that updates the hosting FormComponent via ajax when an event it
+ * is attached to is triggered.
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
@@ -32,6 +33,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * Construct.
 	 * 
 	 * @param event
+	 *            event to trigger this behavior
 	 */
 	public AjaxFormComponentUpdatingBehavior(final String event)
 	{
@@ -51,20 +53,12 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		}
 	}
 
-	/**
-	 * 
-	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
-	 */
-	protected void onCheckEvent(final String event)
-	{
-		// TODO check event
-	}
 
 	/**
 	 * 
 	 * @return FormComponent
 	 */
-	protected FormComponent getFormComponent()
+	protected final FormComponent getFormComponent()
 	{
 		return (FormComponent)getComponent();
 	}
@@ -73,7 +67,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
 	 */
-	protected String getEventHandler()
+	protected final String getEventHandler()
 	{
 		FormComponent fc = getFormComponent();
 
@@ -106,11 +100,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			fc.valid();
 			fc.updateModel();
-			// TODO Ajax: do we need to persist values for persistent components
+			// XXX Ajax: do we need to persist values for persistent components
 		}
 
 		onUpdate(target);
 	}
 
+	/**
+	 * Listener invoked on the ajax request. This listener is invoked after the
+	 * component's model has been updated.
+	 * 
+	 * @param target
+	 */
 	protected abstract void onUpdate(final AjaxRequestTarget target);
 }

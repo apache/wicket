@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -61,16 +61,10 @@ public abstract class AbstractAjaxBehavior
 	 * Get the Container attached to the &lt;body&gt; tag e.g. to add an
 	 * AttributeModifier.
 	 * 
-	 * @param component If null, call getComponent()
-	 * 
 	 * @return Null, if no body container is available
 	 */
-	protected HtmlBodyContainer getBodyContainer(Component component)
+	protected HtmlBodyContainer getBodyContainer()
 	{
-		if (component == null)
-		{
-			component = getComponent();
-		}
 		return ((WebPage)component.getPage()).getBodyContainer();
 	}
 

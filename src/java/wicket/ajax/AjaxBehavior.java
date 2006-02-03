@@ -23,7 +23,7 @@ import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 
 /**
- * The base class of Wicket's defaults ajax implementation.
+ * The base class for Wicket's defaults ajax implementation.
  * @author Igor Vaynberg
  */
 public abstract class AjaxBehavior extends AbstractAjaxBehavior

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: AjaxSelfUpdatingTimerBehavior.java,v 1.2 2006/02/02 11:40:46 jdonnerstag
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,8 @@ package wicket.ajax;
 import wicket.markup.ComponentTag;
 
 /**
- * 
+ * Automatically rerenders the component it is attached to via ajax every x
+ * milliseconds
  */
 public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 {
@@ -52,11 +53,23 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 	}
 
 	/**
-	 * 
 	 * @see wicket.ajax.AjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
 	 */
 	protected final void onTimer(final AjaxRequestTarget target)
 	{
 		target.addComponent(getComponent());
+	}
+
+	/**
+	 * Give the subclass a chance to add something to the target, like a
+	 * javascript effect call. Called after the hosting component has been added
+	 * to the target.
+	 * 
+	 * @param target
+	 *            ajax target
+	 */
+	protected void onPostProcessTarget(final AjaxRequestTarget target)
+	{
+
 	}
 }

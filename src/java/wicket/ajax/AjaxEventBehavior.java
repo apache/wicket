@@ -21,8 +21,23 @@ import wicket.markup.ComponentTag;
 import wicket.util.string.Strings;
 
 /**
+ * An ajax behavior that is attached to a certain client-side (usually
+ * javascript) event, such as onClick, onChange, onKeyDown, etc.
+ * <p>
+ * Example:
  * 
+ * <pre>
+ *        DropDownChoice choice=new DropDownChoice(...);
+ *        choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *           protected onEvent(AjaxRequestTarget target) {
+ *              System.out.println(&quot;ajax here!&quot;);
+ *           }
+ *        }
+ * </pre>
  * 
+ * This behavior will be linked to the onChange javascript event of the select
+ * box this DropDownChoice represents, and so anytime a new option is selected
+ * we will get the System.out message
  */
 public abstract class AjaxEventBehavior extends AjaxBehavior
 {
@@ -34,6 +49,7 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 	 * Construct.
 	 * 
 	 * @param event
+	 *            event this behavior will be attached to
 	 */
 	public AjaxEventBehavior(final String event)
 	{
@@ -104,6 +120,7 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 	}
 
 	/**
+	 * Listener method for the ajax event
 	 * 
 	 * @param target
 	 */

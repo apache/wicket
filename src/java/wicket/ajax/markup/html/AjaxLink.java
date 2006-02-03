@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +23,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
 /**
- * 
+ * A component that allows a trigger request to be triggered via html anchor tag
  */
 public abstract class AjaxLink extends WebMarkupContainer
 {
@@ -60,5 +60,11 @@ public abstract class AjaxLink extends WebMarkupContainer
 		});
 	}
 
+	/**
+	 * Listener method invoked on the ajax request generated when the user
+	 * clicks the link
+	 * 
+	 * @param target
+	 */
 	protected abstract void onClick(final AjaxRequestTarget target);
 }
