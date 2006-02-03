@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.3 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +23,7 @@ import wicket.markup.html.form.CheckBox;
 import wicket.model.IModel;
 
 /**
- * 
+ * A CheckBox which is updated via ajax when the user changes its value
  */
 public abstract class AjaxCheckBox extends CheckBox
 {
@@ -60,5 +60,10 @@ public abstract class AjaxCheckBox extends CheckBox
 		});
 	}
 
+	/**
+	 * Listener method invoked on an ajax update call
+	 * 
+	 * @param target
+	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 }

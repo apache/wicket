@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +23,8 @@ import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 
 /**
- * 
+ * An ajax link that will degrade to a normal request if ajax is not available
+ * or javascript is disabled
  */
 public abstract class AjaxFallbackLink extends Link
 {
@@ -44,11 +45,11 @@ public abstract class AjaxFallbackLink extends Link
 	 * Construct.
 	 * 
 	 * @param id
-	 * @param object
+	 * @param model
 	 */
-	public AjaxFallbackLink(final String id, final IModel object)
+	public AjaxFallbackLink(final String id, final IModel model)
 	{
-		super(id, object);
+		super(id, model);
 
 		add(new AjaxEventBehavior("onclick")
 		{
@@ -58,10 +59,10 @@ public abstract class AjaxFallbackLink extends Link
 			{
 				onClick(target);
 			}
-			
+
 			protected String getEventHandler()
 			{
-				return "return !"+super.getEventHandler();
+				return "return !" + super.getEventHandler();
 			}
 		});
 	}
@@ -74,6 +75,14 @@ public abstract class AjaxFallbackLink extends Link
 	{
 		onClick(null);
 	}
-	
+
+	/**
+	 * Callback for the onClick event. If ajax failed and this event was
+	 * generated via a normal link the target argument will be null
+	 * 
+	 * @param target
+	 *            ajax target if this linked was invoked using ajax, null
+	 *            otherwise
+	 */
 	protected abstract void onClick(final AjaxRequestTarget target);
 }

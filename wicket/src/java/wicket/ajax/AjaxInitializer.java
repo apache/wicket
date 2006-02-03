@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,7 +22,9 @@ import wicket.IInitializer;
 import wicket.markup.html.PackageResource;
 
 /**
- * Initialized for the wicket.ajax package
+ * Initializer for the wicket.ajax package
+ * 
+ * @see IInitializer
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -33,6 +35,6 @@ public class AjaxInitializer implements IInitializer
 	 */
 	public void init(Application application)
 	{
-		PackageResource.bind(application, AjaxBehavior.class, "wicket-ajax.js");	
+		PackageResource.bind(application, AjaxBehavior.class, "wicket-ajax.js");
 	}
 }

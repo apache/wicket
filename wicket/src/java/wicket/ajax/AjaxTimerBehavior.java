@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,7 @@ package wicket.ajax;
 import wicket.Response;
 
 /**
- * 
+ * A behavior that generates an ajax callback every x number of milliseconds
  */
 public abstract class AjaxTimerBehavior extends AjaxBehavior
 {
@@ -39,30 +39,32 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	protected void onRenderHeadInitContribution(Response response)
 	{
 		super.onRenderHeadInitContribution(response);
-		getBodyContainer(null).addOnLoadModifier(getJsTimeoutCall(millis));
+		getBodyContainer().addOnLoadModifier(getJsTimeoutCall(millis));
 	}
 
 	/**
 	 * @param millis
 	 * 
-	 * @return JS script 
+	 * @return JS script
 	 */
 	protected final String getJsTimeoutCall(final long millis)
 	{
-		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, " + millis + ");";
+		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, " + millis
+				+ ");";
 	}
 
 	/**
 	 * 
 	 * @see wicket.ajax.AjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
 	 */
-	protected void respond(final AjaxRequestTarget target)
+	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
 		target.addJavascript(getJsTimeoutCall(millis));
 	}
 
 	/**
+	 * Listener method for the ajax timer event
 	 * 
 	 * @param target
 	 */

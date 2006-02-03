@@ -30,24 +30,31 @@ import wicket.Response;
 import wicket.protocol.http.WebResponse;
 
 /**
- * A request target that produces ajax response envelopes that are used on the
- * client side to update component markup as well as evaluate arbitrary
- * javascript.
+ * A request target that produces ajax response envelopes used on the client
+ * side to update component markup as well as evaluate arbitrary javascript.
  * <p>
  * A component whose markup needs to be updated should be added to this target
  * via AjaxRequestTarget#addComponent(Component) method. Its body will be
- * rendered and added to the envelop when the target is processed.
+ * rendered and added to the envelope when the target is processed, and
+ * refreshed on the client side when the ajax response is received.
+ * <p>
+ * It is important that the component whose markup needs to be updated contains
+ * an id attribute in the generated markup that is equal to the value retrieved
+ * from Component#getMarkupId(). This can be accomplished by either setting the
+ * id attribute in the html template, or using an attribute modifier that will
+ * add the attribute with value Component#getMarkupId() to the tag ( such as
+ * MarkupIdSetter )
  * <p>
  * Any javascript that needs to be evaluater on the client side can be added
  * using AjaxRequestTarget#addJavascript(String). For example, this feature can
  * be useful when it is desirable to link component update with some javascript
- * fx.
+ * effects.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	/** The component instances that will be rendered */
+	/** the component instances that will be rendered */
 	private final List/* <Component> */components = new ArrayList();
 
 	private final List/* <String> */javascripts = new ArrayList();
@@ -65,7 +72,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public void addComponent(Component component)
+	public final void addComponent(Component component)
 	{
 		if (component == null)
 		{
@@ -84,7 +91,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @param javascript
 	 */
-	public void addJavascript(String javascript)
+	public final void addJavascript(String javascript)
 	{
 		if (javascript == null)
 		{
@@ -97,7 +104,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
-	public void respond(final RequestCycle requestCycle)
+	public final void respond(final RequestCycle requestCycle)
 	{
 		final Application app = Application.get();
 
@@ -146,9 +153,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondInvocation(final Response response, final String js)
 	{
-		response.write("<evaluate><![CDATA[");
+		response.write("<evaluate>");
+		response.write("<![CDATA[");
 		response.write(js);
-		response.write("]]></evaluate>");
+		response.write("]]>");
+		response.write("</evaluate>");
 	}
 
 	/**
@@ -158,7 +167,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondComponent(final Response response, final Component component)
 	{
-		final String id;
+		String id;
 		if (component.getMarkupAttributes().containsKey("id"))
 		{
 			id = component.getMarkupAttributes().getString("id");
@@ -169,6 +178,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		response.write("<component id=\"" + id + "\">");
+
 		response.write("<![CDATA[");
 
 		// Initialize temporary variables
@@ -192,6 +202,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		response.write("]]>");
+
 		response.write("</component>");
 	}
 
