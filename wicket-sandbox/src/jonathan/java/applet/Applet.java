@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package sprockets;
+package applet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -199,7 +199,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 		{
 			final Object model = new ObjectInputStream(item.getInputStream()).readObject();
 			System.out.println("Setting model to " + model);
-			setModelObject(model);
+			setAppletModel(model);
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -212,6 +212,25 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	}
 
 	/**
+	 * Sets the model object into this applet
+	 * 
+	 * @param model
+	 *            The model
+	 */
+	public void setAppletModel(Object model)
+	{
+		setModelObject(model);
+	}
+
+	/**
+	 * @return The model for this applet
+	 */
+	public Object getAppletModel()
+	{
+		return getModelObject();
+	}
+
+	/**
 	 * Returns the model for this Applet component as a resource. This enables
 	 * the client side HostApplet container to retrieve the model object.
 	 * 
@@ -219,7 +238,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 */
 	public void onResourceRequested()
 	{
-		new ByteArrayResource("application/x-wicket-model", objectToByteArray(getModelObject()))
+		new ByteArrayResource("application/x-wicket-model", objectToByteArray(getAppletModel()))
 				.onResourceRequested();
 	}
 
@@ -256,8 +275,10 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 						.setCacheable(false);
 			}
 		};
-		tag.put("codebase", "sprockets/"
-				+ Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/') + "/");
+		
+		// FIXME: find application name!
+		tag.put("codebase", "slider/" + Strings.beforeLastPathComponent(jarResourceReference.getPath(), '/')
+				+ "/");
 		tag.put("archive", jarName);
 		final int width = getWidth();
 		if (width != -1)

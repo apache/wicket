@@ -16,7 +16,7 @@
  * Version: $Revision$
  */
 
-package sprockets;
+package applet;
 
 import java.io.IOException;
 import java.io.InputStream;

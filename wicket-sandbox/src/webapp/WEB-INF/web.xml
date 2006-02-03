@@ -36,7 +36,17 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>sprockets.example.SprocketApplication</param-value>
+			<param-value>applet.examples.simple.SprocketApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>SliderApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>applet.examples.slider.SliderApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -50,6 +60,11 @@
 	<servlet-mapping>
 		<servlet-name>SprocketApplication</servlet-name>
 		<url-pattern>/sprockets/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SliderApplication</servlet-name>
+		<url-pattern>/slider/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

@@ -15,27 +15,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package sprockets;
+package applet;
+
+import wicket.model.IModel;
 
 /**
- * Interface to server that served up an applet.
+ * A sprocket is an applet component.
  * 
  * @author Jonathan Locke
  */
-public interface IAppletServer
+public class Sprocket extends Applet
 {
-	/**
-	 * Sets the model on the server
-	 * 
-	 * @param model
-	 *            The model to send back to the server
-	 */
-	void setModel(Object model);
+	public Sprocket(String id, Class appletClass)
+	{
+		super(id, appletClass);
+	}
 
-	/**
-	 * Gets model from server
-	 * 
-	 * @return The model from the server
-	 */
-	Object getModel();
+	public Sprocket(String id, IModel model, Class appletClass)
+	{
+		super(id, model, appletClass);
+	}
 }

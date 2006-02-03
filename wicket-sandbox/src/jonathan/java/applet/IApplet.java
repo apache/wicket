@@ -1,4 +1,4 @@
-package sprockets;
+package applet;
 
 import java.awt.Container;
 

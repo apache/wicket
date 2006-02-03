@@ -15,21 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package sprockets.example;
+package applet.examples.slider;
 
 import wicket.protocol.http.WebApplication;
 
 /**
- * Wicket Applet (Sprocket) application. 
+ * Sprocket web application demonstrating slider integration.
  * 
  * @author Jonathan Locke
  */
-public class SprocketApplication extends WebApplication
+public class SliderApplication extends WebApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public SprocketApplication()
+	public SliderApplication()
 	{
 	}
 

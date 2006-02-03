@@ -14,25 +14,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package sprockets.example;
+package applet.examples.slider;
 
-
-import sprockets.Applet;
 import wicket.markup.html.WebPage;
-import wicket.model.Model;
+import wicket.model.PropertyModel;
+import applet.sprockets.slider.Slider;
 
 /**
- * Home page of the sprockets example.
+ * Home page of the applet example.
  * 
  * @author Jonathan Locke
  */
 public class Home extends WebPage
 {
+	private int value;
+	
 	/**
 	 * Constructor.
 	 */
 	public Home()
 	{
-		add(new Applet("sprocket", new Model("foo"), Sprocket.class));
+		add(new Slider("slider", new PropertyModel(this, "value"), 0, 100));
+	}
+	
+	public void setValue(int value)
+	{
+		this.value = value;
+	}
+	
+	public int getValue()
+	{
+		return value;
 	}
 }
