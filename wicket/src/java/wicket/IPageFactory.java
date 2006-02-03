@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.16 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,10 @@ import wicket.settings.Settings;
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
  * without a PageParameters argument to pass to the Page's constructor.
+ * <p>
+ * IMPORTANT NOTE: Implementations must let subclasses of
+ * AbortAndRespondException thrown from the constructing page' constructor
+ * bubble up.
  * 
  * @see Settings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()

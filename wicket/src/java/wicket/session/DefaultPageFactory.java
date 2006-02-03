@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import wicket.AbortAndRespondException;
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
@@ -29,7 +30,7 @@ import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * A factory that constructs Pages.
- *
+ * 
  * @see wicket.settings.Settings#setPageFactory(IPageFactory)
  * @see IPageFactory
  * 
@@ -48,24 +49,24 @@ public final class DefaultPageFactory implements IPageFactory
 	{
 		try
 		{
-		    // throw an exception in case default constructor is missing 
-		    // => improved error message
-		    pageClass.getConstructor((Class[])null);
-		    
+			// throw an exception in case default constructor is missing
+			// => improved error message
+			pageClass.getConstructor((Class[])null);
+
 			return (Page)pageClass.newInstance();
 		}
 		catch (NoSuchMethodException e)
 		{
-			// a bit of a hack here.. 
+			// a bit of a hack here..
 			Constructor constructor = constructor(pageClass, PageParameters.class);
-			if(constructor != null)
+			if (constructor != null)
 			{
 				return newPage(constructor, new PageParameters());
 			}
 			else
 			{
-				throw new WicketRuntimeException("Unable to create page from " 
-	                + pageClass + ". Class does not have a default contructor", e);
+				throw new WicketRuntimeException("Unable to create page from " + pageClass
+						+ ". Class does not have a default contructor", e);
 			}
 		}
 		catch (InstantiationException e)
@@ -99,7 +100,7 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Looks up a one-arg Page constructor by class and argument type.
-	 *
+	 * 
 	 * @param pageClass
 	 *            The class of page
 	 * @param argumentType
@@ -134,7 +135,7 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Creates a new Page using the given constructor and argument.
-	 *
+	 * 
 	 * @param constructor
 	 *            The constructor to invoke
 	 * @param argument
@@ -162,6 +163,11 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 		catch (InvocationTargetException e)
 		{
+			// honor redirect exception contract defined in IPageFactory
+			if (e.getTargetException() instanceof AbortAndRespondException)
+			{
+				throw (RuntimeException)e.getTargetException();
+			}
 			throw new WicketRuntimeException("Can't instantiate page using constructor "
 					+ constructor + " and argument " + argument, e);
 		}
