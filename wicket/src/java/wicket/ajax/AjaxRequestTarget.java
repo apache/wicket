@@ -43,12 +43,11 @@ import wicket.protocol.http.WebResponse;
  * be useful when it is desirable to link component update with some javascript
  * fx.
  * 
- * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	/** the component instances that will be rendered */
+	/** The component instances that will be rendered */
 	private final List/* <Component> */components = new ArrayList();
 
 	private final List/* <String> */javascripts = new ArrayList();
@@ -100,23 +99,26 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(final RequestCycle requestCycle)
 	{
-		Application app = Application.get();
+		final Application app = Application.get();
 
 		// disable component use check since we want to ignore header contribs
 		final boolean oldUseCheck = app.getDebugSettings().getComponentUseCheck();
 		app.getDebugSettings().setComponentUseCheck(false);
 
+		// Determine encoding
+		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
+		// Set content type based on markup type for page
 		WebResponse response = (WebResponse)requestCycle.getResponse();
+		response.setCharacterEncoding(encoding);
+		response.setContentType("text/xml; charset=" + encoding);
 
-		response.setContentType("text/xml");
-
+		// Make sure it is not cached by a
 		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 		response.setHeader("Cache-Control", "no-cache, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 
-		response.write("<?xml version=\"1.0\"?>");
-
+		response.write("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
 		response.write("<ajax-response>");
 
 		Iterator it = components.iterator();
@@ -144,11 +146,9 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondInvocation(final Response response, final String js)
 	{
-		response.write("<evaluate>");
-		response.write("<![CDATA[");
+		response.write("<evaluate><![CDATA[");
 		response.write(js);
-		response.write("]]>");
-		response.write("</evaluate>");
+		response.write("]]></evaluate>");
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondComponent(final Response response, final Component component)
 	{
-		String id;
+		final String id;
 		if (component.getMarkupAttributes().containsKey("id"))
 		{
 			id = component.getMarkupAttributes().getString("id");
@@ -169,7 +169,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		response.write("<component id=\"" + id + "\">");
-
 		response.write("<![CDATA[");
 
 		// Initialize temporary variables
@@ -193,7 +192,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		response.write("]]>");
-
 		response.write("</component>");
 	}
 
