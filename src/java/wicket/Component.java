@@ -2625,8 +2625,6 @@ public abstract class Component implements Serializable
 	 */
 	private final void authorizeInstantiation()
 	{
-		// TODO This error reporting is not very useful. Ultimately, we'd like to
-		// know which strategy decided why.
 		if (!getSession().getAuthorizationStrategy().authorizeInstantiation(getClass()))
 		{
 			throw new UnauthorizedInstantiationException(getClass());
