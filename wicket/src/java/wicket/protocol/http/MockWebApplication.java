@@ -31,7 +31,6 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.IBookmarkablePageRequestTarget;
@@ -290,8 +289,7 @@ public class MockWebApplication extends WebApplication
 
 		if (getLastRenderedPage() instanceof ExceptionErrorPage)
 		{
-			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
-					.getThrowable());
+			throw (RuntimeException)((ExceptionErrorPage)getLastRenderedPage()).getThrowable();
 		}
 	}
 

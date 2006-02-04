@@ -21,7 +21,6 @@ package wicket.markup.html.panel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 
@@ -56,17 +55,13 @@ public class PanelTest extends WicketTestCase
 		{
 			executeTest(PanelPage_1.class, "Dummy.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException mex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-				
-				MarkupException mex = (MarkupException)ex.getCause();
-				assertNotNull(mex.getMarkupStream());
-				assertTrue(mex.getMessage().indexOf("did not have a close tag") != -1);
-				assertTrue(mex.getMessage().indexOf("SimplePanel_1.html") != -1);
-			}
+			hit = true;
+			
+			assertNotNull(mex.getMarkupStream());
+			assertTrue(mex.getMessage().indexOf("did not have a close tag") != -1);
+			assertTrue(mex.getMessage().indexOf("SimplePanel_1.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -81,17 +76,13 @@ public class PanelTest extends WicketTestCase
 		{
 			executeTest(PanelPage_2.class, "Dummy.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException mex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-				
-				MarkupException mex = (MarkupException)ex.getCause();
-				assertNotNull(mex.getMarkupStream());
-				assertTrue(mex.getMessage().indexOf("has to contain part '<wicket:panel>'") != -1);
-				assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
-			}
+			hit = true;
+			
+			assertNotNull(mex.getMarkupStream());
+			assertTrue(mex.getMessage().indexOf("has to contain part '<wicket:panel>'") != -1);
+			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
