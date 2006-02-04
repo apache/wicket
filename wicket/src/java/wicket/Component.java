@@ -2395,11 +2395,25 @@ public abstract class Component implements Serializable
 	protected final void replaceComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag tag, final String body)
 	{
-		// If tag has body
+		// The tag might have been changed from open-close to open. Hence
+		// we'll need what was in the markup itself
+		ComponentTag markupOpenTag = null;
+		
+		// If tag has a body
 		if (tag.isOpen())
 		{
-			// skip any raw markup in the body
-			markupStream.skipRawMarkup();
+			// Get what tag was in the markup; not what the user it might
+			// have changed it to.
+			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
+			markupOpenTag = markupStream.getTag();
+			markupStream.next();
+			
+			// If it was an open tag in the markup as well, than ...
+			if (markupOpenTag.isOpen())
+			{
+				// skip any raw markup in the body
+				markupStream.skipRawMarkup();
+			}
 		}
 
 		// Write the new body
@@ -2409,8 +2423,9 @@ public abstract class Component implements Serializable
 		// close tag, we're good
 		if (tag.isOpen())
 		{
-			// Open tag must have close tag
-			if (!markupStream.atCloseTag())
+			// If it was an open tag in the markup, than there must be 
+			// a close tag as well.
+			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
 				// There must be a component in this discarded body
 				markupStream
