@@ -7,7 +7,13 @@
 	</head>
 	<body>
 		<div>
-			The currently selected user is <strong><span wicket:id="currentUser">[user]</span></strong><br />
+			The currently selected user is
+			<strong>
+				<span wicket:id="currentUser">
+					[user]
+				</span>
+			</strong>
+			<br />
 			Change user:
 			<ul>
 				<li wicket:id="users">
@@ -22,10 +28,16 @@
 		<div>
 			<a href="#" wicket:id="adminBookmarkableLink">
 				go to bookmarkable admin page
-			</a><br />
+			</a>
+			<br />
 			<a href="#" wicket:id="adminInternalLink">
 				go to internal admin page
-			</a><br />
+			</a>
+			<br />
+			<a href="#" wicket:id="panelsPageLink">
+				go to panels page
+			</a>
+			<br />
 		</div>
 	</body>
 </html>

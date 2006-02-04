@@ -18,8 +18,9 @@
 package wicket.authorization.roles.example;
 
 import wicket.Session;
-import wicket.authorization.roles.example.pages.AdminBookmarkable;
-import wicket.authorization.roles.example.pages.AdminInternal;
+import wicket.authorization.roles.example.pages.AdminBookmarkablePage;
+import wicket.authorization.roles.example.pages.AdminInternalPage;
+import wicket.authorization.roles.example.pages.PanelsPage;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -60,14 +61,15 @@ public class Index extends WebPage
 			}
 		});
 
-		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkable.class));
+		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
 		add(new Link("adminInternalLink")
 		{
 			@Override
 			public void onClick()
 			{
-				setResponsePage(new AdminInternal("foo"));
+				setResponsePage(new AdminInternalPage("foo"));
 			}
 		});
+		add(new BookmarkablePageLink("panelsPageLink", PanelsPage.class));
 	}
 }

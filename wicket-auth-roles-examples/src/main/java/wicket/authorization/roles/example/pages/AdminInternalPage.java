@@ -20,17 +20,21 @@ import wicket.authorization.roles.annot.AuthorizedRoles;
 import wicket.markup.html.WebPage;
 
 /**
- * Bookmarkable page that may only be accessed by users that have role ADMIN.
+ * Non-bookmarkable page that may only be accessed by users that have role
+ * ADMIN.
  * 
  * @author Eelco Hillenius
  */
 @AuthorizedRoles("ADMIN")
-public class AdminBookmarkable extends WebPage
+public class AdminInternalPage extends WebPage
 {
 	/**
 	 * Construct.
+	 * 
+	 * @param dummy
+	 *            just a parameter to make this page non-bookmarkable
 	 */
-	public AdminBookmarkable()
+	public AdminInternalPage(String dummy)
 	{
 	}
 }
