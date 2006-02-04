@@ -136,4 +136,13 @@ public final class Roles implements Serializable
 		}
 		return new String[] {};
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return roles.toString();
+	}
 }

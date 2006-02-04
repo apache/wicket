@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,8 +17,12 @@
  */
 package wicket.authorization.roles.example;
 
+import java.util.Arrays;
+import java.util.List;
+
 import wicket.ISessionFactory;
 import wicket.Session;
+import wicket.authorization.roles.RolesAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -28,12 +33,20 @@ import wicket.protocol.http.WebApplication;
 public class RolesAuthApplication extends WebApplication implements ISessionFactory
 {
 	/**
+	 * User DB.
+	 */
+	public static List<User> USERS = Arrays.asList(new User[] { new User("jon", "ADMIN"),
+			new User("pam", ""), new User("kay", "USER") });
+
+	/**
 	 * Construct.
 	 */
 	public RolesAuthApplication()
 	{
 		super();
 		setSessionFactory(this);
+		getSecuritySettings().setAuthorizationStrategy(
+				new RolesAuthorizationStrategy(new UserRolesAuthorizer()));
 	}
 
 	/**
@@ -42,7 +55,7 @@ public class RolesAuthApplication extends WebApplication implements ISessionFact
 	@Override
 	public Class getHomePage()
 	{
-		return null;
+		return Index.class;
 	}
 
 	/**

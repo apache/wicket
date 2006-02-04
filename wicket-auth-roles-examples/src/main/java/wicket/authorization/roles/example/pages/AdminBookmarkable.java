@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,50 +14,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.roles.example;
+package wicket.authorization.roles.example.pages;
 
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebSession;
+import wicket.authorization.roles.annot.AuthorizedRoles;
+import wicket.markup.html.WebPage;
 
 /**
- * Web Session for this example.
+ * Bookmarkable page that may only be accessed by users that have role ADMIN.
  * 
  * @author Eelco Hillenius
  */
-public class RolesAuthSession extends WebSession
+@AuthorizedRoles("ADMIN")
+public class AdminBookmarkable extends WebPage
 {
-	/** the current user. */
-	private User user = RolesAuthApplication.USERS.get(0);
-
 	/**
 	 * Construct.
-	 * 
-	 * @param application
 	 */
-	public RolesAuthSession(WebApplication application)
+	public AdminBookmarkable()
 	{
-		super(application);
 	}
-
-	/**
-	 * Gets user.
-	 * 
-	 * @return user
-	 */
-	public User getUser()
-	{
-		return user;
-	}
-
-	/**
-	 * Sets user.
-	 * 
-	 * @param user
-	 *            user
-	 */
-	public void setUser(User user)
-	{
-		this.user = user;
-	}
-
 }

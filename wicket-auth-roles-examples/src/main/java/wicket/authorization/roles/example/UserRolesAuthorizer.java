@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,48 +16,33 @@
  */
 package wicket.authorization.roles.example;
 
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebSession;
+import wicket.Session;
+import wicket.authorization.roles.IRolesAuthorizer;
 
 /**
- * Web Session for this example.
+ * The authorizer we need to provide to the authorization strategy
+ * implementation
+ * {@link wicket.authorization.roles.annot.RolesAnnotAuthorizationStrategy}.
  * 
  * @author Eelco Hillenius
  */
-public class RolesAuthSession extends WebSession
+public class UserRolesAuthorizer implements IRolesAuthorizer
 {
-	/** the current user. */
-	private User user = RolesAuthApplication.USERS.get(0);
 
 	/**
 	 * Construct.
-	 * 
-	 * @param application
 	 */
-	public RolesAuthSession(WebApplication application)
+	public UserRolesAuthorizer()
 	{
-		super(application);
 	}
 
 	/**
-	 * Gets user.
-	 * 
-	 * @return user
+	 * @see wicket.authorization.roles.IRolesAuthorizer#any(java.lang.String[])
 	 */
-	public User getUser()
+	public boolean any(String[] roles)
 	{
-		return user;
-	}
-
-	/**
-	 * Sets user.
-	 * 
-	 * @param user
-	 *            user
-	 */
-	public void setUser(User user)
-	{
-		this.user = user;
+		RolesAuthSession authSession = (RolesAuthSession)Session.get();
+		return authSession.getUser().hasAnyRole(roles);
 	}
 
 }

@@ -6,5 +6,26 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
+		<div>
+			The currently selected user is <strong><span wicket:id="currentUser">[user]</span></strong><br />
+			Change user:
+			<ul>
+				<li wicket:id="users">
+					<a href="#" wicket:id="selectUserLink">
+						<span wicket:id="userId">
+							[user id]
+						</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<a href="#" wicket:id="adminBookmarkableLink">
+				go to bookmarkable admin page
+			</a><br />
+			<a href="#" wicket:id="adminInternalLink">
+				go to internal admin page
+			</a><br />
+		</div>
 	</body>
 </html>

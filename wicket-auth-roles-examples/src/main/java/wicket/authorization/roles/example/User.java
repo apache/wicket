@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -73,5 +74,24 @@ public class User implements Serializable
 	public boolean hasAnyRole(String[] roles)
 	{
 		return this.roles.hasAnyRole(roles);
+	}
+
+	/**
+	 * Gets the uid.
+	 * 
+	 * @return the uid
+	 */
+	public String getUid()
+	{
+		return uid;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return uid + " " + roles;
 	}
 }

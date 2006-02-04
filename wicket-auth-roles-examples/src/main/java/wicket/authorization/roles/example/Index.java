@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,14 +17,17 @@
  */
 package wicket.authorization.roles.example;
 
-import java.util.Arrays;
-import java.util.List;
-
 import wicket.Session;
+import wicket.authorization.roles.example.pages.AdminBookmarkable;
+import wicket.authorization.roles.example.pages.AdminInternal;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 /**
  * Home page for the roles example.
@@ -37,15 +41,14 @@ public class Index extends WebPage
 	 */
 	public Index()
 	{
-		List users = Arrays.asList(new User[] { new User("jon", "ADMIN,USER"),
-				new User("pam", "USER"), new User("kay", "ADMIN") });
-		add(new ListView("users", users)
+		add(new Label("currentUser", new PropertyModel(this, "session.user")));
+		add(new ListView("users", RolesAuthApplication.USERS)
 		{
 			@Override
 			protected void populateItem(ListItem item)
 			{
 				final User user = (User)item.getModelObject();
-				item.add(new Link("link")
+				item.add(new Link("selectUserLink")
 				{
 					@Override
 					public void onClick()
@@ -53,7 +56,17 @@ public class Index extends WebPage
 						RolesAuthSession session = (RolesAuthSession)Session.get();
 						session.setUser(user);
 					}
-				});
+				}.add(new Label("userId", new Model(user))));
+			}
+		});
+
+		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkable.class));
+		add(new Link("adminInternalLink")
+		{
+			@Override
+			public void onClick()
+			{
+				setResponsePage(new AdminInternal("foo"));
 			}
 		});
 	}
