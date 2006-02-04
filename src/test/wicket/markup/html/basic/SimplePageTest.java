@@ -279,17 +279,13 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_4.class, "SimplePageExpectedResult_4.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException mex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-				
-				MarkupException mex = (MarkupException)ex.getCause();
-				assertNotNull(mex.getMarkupStream());
-				assertTrue(mex.getMessage().indexOf("<span>") != -1);
-				assertTrue(mex.getMessage().indexOf("SimplePage_4.html") != -1);
-			}
+			hit = true;
+			
+			assertNotNull(mex.getMarkupStream());
+			assertTrue(mex.getMessage().indexOf("<span>") != -1);
+			assertTrue(mex.getMessage().indexOf("SimplePage_4.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -324,12 +320,9 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException ex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-			}
+			hit = true;
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -352,12 +345,9 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_8.class, "SimplePageExpectedResult_8.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException ex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-			}
+			hit = true;
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
