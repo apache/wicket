@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,6 +18,7 @@
 package applet.examples.slider;
 
 import wicket.markup.html.WebPage;
+import wicket.markup.html.form.Form;
 import wicket.model.PropertyModel;
 import applet.sprockets.slider.Slider;
 
@@ -28,20 +30,28 @@ import applet.sprockets.slider.Slider;
 public class Home extends WebPage
 {
 	private int value;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public Home()
 	{
-		add(new Slider("slider", new PropertyModel(this, "value"), 0, 100));
+		Form form = new Form("form")
+		{
+			protected void onSubmit()
+			{
+				System.out.println("Submitted value: " + getValue());
+			}
+		};
+		form.add(new Slider("slider", new PropertyModel(Home.this, "value"), 0, 100));
+		add(form);
 	}
-	
+
 	public void setValue(int value)
 	{
 		this.value = value;
 	}
-	
+
 	public int getValue()
 	{
 		return value;
