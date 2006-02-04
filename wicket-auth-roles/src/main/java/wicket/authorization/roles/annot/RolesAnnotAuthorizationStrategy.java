@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: RolesAnnotAuthorizationStrategy.java,v 1.1 2006/02/02 08:12:42 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -54,10 +55,10 @@ public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
 	public boolean authorizeInstantiation(Class componentClass)
 	{
 		boolean authorized = true;
-		Package pkg = componentClass.getPackage();
-		if (pkg != null)
+		Package annotPackage = componentClass.getPackage();
+		if (annotPackage != null)
 		{
-			AuthorizedRoles packageRolesAllowed = (AuthorizedRoles)pkg
+			AuthorizedRoles packageRolesAllowed = (AuthorizedRoles)annotPackage
 					.getAnnotation(AuthorizedRoles.class);
 			if (packageRolesAllowed != null)
 			{
@@ -80,10 +81,25 @@ public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
 	 */
 	public boolean authorizeAction(Component component, Action action)
 	{
-		AuthorizedActions actions = component.getClass().getAnnotation(AuthorizedActions.class);
-		if (actions != null)
+		// check for a single action
+		AuthorizedAction annotAction = component.getClass().getAnnotation(AuthorizedAction.class);
+		if (annotAction != null)
 		{
-			for (AuthorizedAction a : actions.actions())
+			if (annotAction.action().equals(action.toString()))
+			{
+				if (!any(annotAction.roles()))
+				{
+					return false;
+				}
+			}
+		}
+
+		// check for multiple actions
+		AuthorizedActions annotActions = component.getClass()
+				.getAnnotation(AuthorizedActions.class);
+		if (annotActions != null)
+		{
+			for (AuthorizedAction a : annotActions.actions())
 			{
 				if (a.action().equals(action.toString()))
 				{
@@ -94,6 +110,7 @@ public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
 				}
 			}
 		}
+
 		return true;
 	}
 
