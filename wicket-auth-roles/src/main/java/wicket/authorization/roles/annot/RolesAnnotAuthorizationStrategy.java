@@ -19,7 +19,7 @@ package wicket.authorization.roles.annot;
 
 import wicket.Component;
 import wicket.authorization.Action;
-import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.roles.AbstractRolesAuthorizationStrategy;
 import wicket.authorization.roles.IRolesAuthorizer;
 
 /**
@@ -28,11 +28,8 @@ import wicket.authorization.roles.IRolesAuthorizer;
  * 
  * @author Eelco Hillenius
  */
-public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
+public class RolesAnnotAuthorizationStrategy extends AbstractRolesAuthorizationStrategy
 {
-	/** the authorizer delegate. */
-	private final IRolesAuthorizer rolesAuthorizer;
-
 	/**
 	 * Construct.
 	 * 
@@ -41,11 +38,7 @@ public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
 	 */
 	public RolesAnnotAuthorizationStrategy(IRolesAuthorizer rolesAuthorizer)
 	{
-		if (rolesAuthorizer == null)
-		{
-			throw new IllegalArgumentException("rolesAuthorizer must be not null");
-		}
-		this.rolesAuthorizer = rolesAuthorizer;
+		super(rolesAuthorizer);
 	}
 
 	/**
@@ -112,28 +105,5 @@ public class RolesAnnotAuthorizationStrategy implements IAuthorizationStrategy
 		}
 
 		return true;
-	}
-
-	private final boolean any(String[] roles)
-	{
-		boolean authorized;
-		if (!isDefault(roles))
-		{
-			authorized = rolesAuthorizer.any(roles);
-		}
-		else
-		{
-			authorized = true;
-		}
-		return authorized;
-	}
-
-	private final boolean isDefault(String[] value)
-	{
-		if (value == null || (value.length == 1 && value[0].equals("")))
-		{
-			return true;
-		}
-		return false;
 	}
 }

@@ -18,8 +18,11 @@
 package wicket.authorization.roles.example;
 
 import wicket.Session;
+import wicket.authorization.roles.example.pages.AdminAnnotBookmarkablePage;
+import wicket.authorization.roles.example.pages.AdminAnnotInternalPage;
 import wicket.authorization.roles.example.pages.AdminBookmarkablePage;
 import wicket.authorization.roles.example.pages.AdminInternalPage;
+import wicket.authorization.roles.example.pages.AnnotPanelsPage;
 import wicket.authorization.roles.example.pages.PanelsPage;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -61,6 +64,7 @@ public class Index extends WebPage
 			}
 		});
 
+		// pages that are proteced using wicket meta data
 		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
 		add(new Link("adminInternalLink")
 		{
@@ -71,5 +75,17 @@ public class Index extends WebPage
 			}
 		});
 		add(new BookmarkablePageLink("panelsPageLink", PanelsPage.class));
+
+		// pages that are protected using annotations
+		add(new BookmarkablePageLink("adminAnnotBookmarkableLink", AdminAnnotBookmarkablePage.class));
+		add(new Link("adminAnnotInternalLink")
+		{
+			@Override
+			public void onClick()
+			{
+				setResponsePage(new AdminAnnotInternalPage("bar"));
+			}
+		});
+		add(new BookmarkablePageLink("panelsAnnotPageLink", AnnotPanelsPage.class));
 	}
 }

@@ -35,5 +35,6 @@ public class RolesAuthorizationStrategy extends CompoundAuthorizationStrategy
 	public RolesAuthorizationStrategy(IRolesAuthorizer rolesAuthorizer)
 	{
 		add(new RolesAnnotAuthorizationStrategy(rolesAuthorizer));
+		add(new RolesMetaDataAuthorizationStrategy(rolesAuthorizer));
 	}
 }

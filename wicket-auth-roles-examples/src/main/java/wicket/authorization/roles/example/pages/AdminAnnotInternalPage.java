@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +16,7 @@
  */
 package wicket.authorization.roles.example.pages;
 
-import wicket.authorization.roles.RolesBinder;
+import wicket.authorization.roles.annot.AuthorizedRoles;
 import wicket.markup.html.WebPage;
 
 /**
@@ -26,25 +25,16 @@ import wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-public class AdminInternalPage extends WebPage
+@AuthorizedRoles("ADMIN")
+public class AdminAnnotInternalPage extends WebPage
 {
-	/*
-	 * We do it as a static call here, which is mainly for the purpose of the
-	 * example. Typically, you probably do this somewhere central, like in
-	 * {@link Application#init)
-	 */
-	static
-	{
-		RolesBinder.authorize(AdminInternalPage.class, "ADMIN");
-	}
-
 	/**
 	 * Construct.
 	 * 
 	 * @param dummy
 	 *            just a parameter to make this page non-bookmarkable
 	 */
-	public AdminInternalPage(String dummy)
+	public AdminAnnotInternalPage(String dummy)
 	{
 	}
 }
