@@ -85,7 +85,7 @@ import java.io.UnsupportedEncodingException;
  * 
  * @version $Id$
  */
-public class MultipartStream
+public class MultipartFormInputStream
 {
 
 	// ----------------------------------------------------- Manifest constants
@@ -212,7 +212,7 @@ public class MultipartStream
 	 * @see #MultipartStream(InputStream, byte[])
 	 * 
 	 */
-	public MultipartStream()
+	public MultipartFormInputStream()
 	{
 	}
 
@@ -239,7 +239,7 @@ public class MultipartStream
 	 * @see #MultipartStream(InputStream, byte[])
 	 * 
 	 */
-	public MultipartStream(InputStream input, byte[] boundary, int bufSize)
+	public MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize)
 	{
 		this.input = input;
 		this.bufSize = bufSize;
@@ -275,7 +275,7 @@ public class MultipartStream
 	 * @see #MultipartStream(InputStream, byte[], int)
 	 * 
 	 */
-	public MultipartStream(InputStream input, byte[] boundary)
+	public MultipartFormInputStream(InputStream input, byte[] boundary)
 	{
 		this(input, boundary, DEFAULT_BUFSIZE);
 	}

@@ -267,7 +267,7 @@ public abstract class FileUploadBase {
 
             InputStream input = ctx.getInputStream();
 
-            MultipartStream multi = new MultipartStream(input, boundary);
+            MultipartFormInputStream multi = new MultipartFormInputStream(input, boundary);
             multi.setHeaderEncoding(headerEncoding);
 
             boolean nextPart = multi.skipPreamble();
