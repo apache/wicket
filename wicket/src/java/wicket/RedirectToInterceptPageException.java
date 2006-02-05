@@ -11,6 +11,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+//FIXME General: Why have this exception at all?  Instead you could do the redirect yourself and then throw a more generic AbortAndRespondException.
 public class RedirectToInterceptPageException extends AbortAndRespondException
 {
 	/**
