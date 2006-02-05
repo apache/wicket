@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.105 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,7 @@ package wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -122,6 +123,20 @@ public abstract class Application
 
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
+
+	/**
+	 * Application level meta data.
+	 */
+	private MetaDataEntry[] metaData;
+
+	/**
+	 * Class used for holding meta data entries.
+	 */
+	class MetaDataEntry
+	{
+		MetaDataKey key;
+		Serializable object;
+	}
 
 	/**
 	 * Get Application for current thread.
@@ -405,6 +420,79 @@ public abstract class Application
 	public final SharedResources getSharedResources()
 	{
 		return sharedResources;
+	}
+
+	/**
+	 * Gets metadata for this application using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (key.equals(m.key))
+				{
+					return m.object;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the metadata for this application using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		key.checkType(object);
+		boolean set = false;
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (key.equals(m.key))
+				{
+					m.object = object;
+					set = true;
+				}
+			}
+		}
+		if (!set)
+		{
+			MetaDataEntry m = new MetaDataEntry();
+			m.key = key;
+			m.object = object;
+			if (metaData == null)
+			{
+				metaData = new MetaDataEntry[1];
+				metaData[0] = m;
+			}
+			else
+			{
+				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
+				newMetaData[metaData.length] = m;
+				metaData = newMetaData;
+			}
+		}
 	}
 
 	/**
