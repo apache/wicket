@@ -40,6 +40,7 @@ public class SimplePage_11 extends WebPage
 	/**
 	 * 
 	 * @see wicket.Page#checkAccess()
+	 * @deprecated
 	 */
 	public boolean checkAccess()
 	{

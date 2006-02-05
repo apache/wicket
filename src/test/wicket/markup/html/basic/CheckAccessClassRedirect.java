@@ -36,6 +36,7 @@ public class CheckAccessClassRedirect extends WebPage
 	
 	/**
 	 * @see wicket.Page#checkAccess()
+	 * @deprecated
 	 */
 	public boolean checkAccess()
 	{
