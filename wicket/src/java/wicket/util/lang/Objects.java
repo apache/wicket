@@ -20,13 +20,16 @@ package wicket.util.lang;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import wicket.Component;
 import wicket.util.io.ByteCountingOutputStream;
 
 /**
@@ -36,6 +39,51 @@ import wicket.util.io.ByteCountingOutputStream;
  */
 public abstract class Objects implements NumericTypes
 {
+	private static final class ReplaceObjectInputStream extends ObjectInputStream
+	{
+		private HashMap replacedComponents;
+		
+		private ReplaceObjectInputStream(InputStream in,HashMap replacedComponents) throws IOException
+		{
+			super(in);
+			this.replacedComponents = replacedComponents;
+			enableResolveObject(true);
+		}
+
+		protected Object resolveObject(Object obj) throws IOException
+		{
+			Object replaced = replacedComponents.get(obj);
+			if(replaced != null)
+			{
+				return replaced;
+			}
+			return super.resolveObject(obj);
+		}
+	}
+
+	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
+	{
+		private HashMap replacedComponents;
+		
+		private ReplaceObjectOutputStream(OutputStream out,HashMap replacedComponents) throws IOException
+		{
+			super(out);
+			this.replacedComponents = replacedComponents;
+			enableReplaceObject(true);
+		}
+
+		protected Object replaceObject(Object obj) throws IOException
+		{
+			if(obj instanceof Component)
+			{
+				String name = ((Component)obj).getPath();
+				replacedComponents.put(name, obj);
+				return name;
+			}
+			return super.replaceObject(obj);
+		}
+	}
+
 	static HashMap primitiveDefaults = new HashMap();
 
 	/**
@@ -136,9 +184,11 @@ public abstract class Objects implements NumericTypes
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				new ObjectOutputStream(out).writeObject(object);
-				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
-						.readObject();
+				final HashMap replacedObjects = new HashMap();
+				ObjectOutputStream oos = new ReplaceObjectOutputStream(out,replacedObjects);
+				oos.writeObject(object);
+				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out.toByteArray()),replacedObjects);
+				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
