@@ -208,8 +208,8 @@ public class MultipartFormInputStream
 	/**
 	 * Default constructor.
 	 * 
-	 * @see #MultipartStream(InputStream, byte[], int)
-	 * @see #MultipartStream(InputStream, byte[])
+	 * @see #MultipartFormInputStream(InputStream, byte[], int)
+	 * @see #MultipartFormInputStream(InputStream, byte[])
 	 * 
 	 */
 	public MultipartFormInputStream()
@@ -235,8 +235,8 @@ public class MultipartFormInputStream
 	 *            The size of the buffer to be used, in bytes.
 	 * 
 	 * 
-	 * @see #MultipartStream()
-	 * @see #MultipartStream(InputStream, byte[])
+	 * @see #MultipartFormInputStream()
+	 * @see #MultipartFormInputStream(InputStream, byte[])
 	 * 
 	 */
 	public MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize)
@@ -271,8 +271,8 @@ public class MultipartFormInputStream
 	 *            The token used for dividing the stream into
 	 *            <code>encapsulations</code>.
 	 * 
-	 * @see #MultipartStream()
-	 * @see #MultipartStream(InputStream, byte[], int)
+	 * @see #MultipartFormInputStream()
+	 * @see #MultipartFormInputStream(InputStream, byte[], int)
 	 * 
 	 */
 	public MultipartFormInputStream(InputStream input, byte[] boundary)
@@ -507,7 +507,7 @@ public class MultipartFormInputStream
 	 * <p>
 	 * Arbitrary large amounts of data can be processed by this method using a
 	 * constant size buffer. (see {@link
-	 * #MultipartStream(InputStream,byte[],int) constructor}).
+	 * #MultipartFormInputStream(InputStream,byte[],int) constructor}).
 	 * 
 	 * @param output
 	 *            The <code>Stream</code> to write data into.
