@@ -124,6 +124,9 @@ public abstract class Session implements Serializable
 
 	private static final long serialVersionUID = 1L;
 
+	/** A store for dirty objects for one request */
+	private static final ThreadLocal dirtyObjects  = new ThreadLocal();
+
 	/** Application that this is a session of. */
 	private transient Application application;
 
@@ -142,8 +145,6 @@ public abstract class Session implements Serializable
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** A store for dirty objects for one request */
-	private transient List dirtyObjects;
 
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
@@ -734,6 +735,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Go through all dirty entries, replicating any dirty objects
+		List dirtyObjects = (List)Session.dirtyObjects.get();
 		if (dirtyObjects != null)
 		{
 			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
@@ -760,19 +762,29 @@ public abstract class Session implements Serializable
 					setAttribute(attribute, object);
 				}
 			}
-			dirtyObjects = null;
+			Session.dirtyObjects.set(null);
 		}
 	}
 
+	/**
+	 * @return The current thread dirty objects list
+	 */
+	private List getDirtyObjectsList()
+	{
+		List lst = (List)dirtyObjects.get();
+		if(lst == null)
+		{
+			lst = new ArrayList(4);
+			dirtyObjects.set(lst);
+		}
+		return lst;
+	}
 	/**
 	 * @param page
 	 */
 	void dirtyPage(final Page page)
 	{
-		if (dirtyObjects == null)
-		{
-			dirtyObjects = new ArrayList(4);
-		}
+		List dirtyObjects = getDirtyObjectsList();
 		
 		if (!dirtyObjects.contains(page))
 		{
@@ -785,10 +797,7 @@ public abstract class Session implements Serializable
 	 */
 	void dirtyPageMap(final PageMap map)
 	{
-		if (dirtyObjects == null)
-		{
-			dirtyObjects = new ArrayList(4);
-		}
+		List dirtyObjects = getDirtyObjectsList();
 		
 		if (!dirtyObjects.contains(map))
 		{
