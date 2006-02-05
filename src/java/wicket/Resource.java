@@ -62,6 +62,8 @@ import wicket.util.value.ValueMap;
  */
 public abstract class Resource implements IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Logger */
 	private static Log log = LogFactory.getLog(Resource.class);
 
