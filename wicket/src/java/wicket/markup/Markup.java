@@ -134,11 +134,15 @@ public final class Markup
 	}
 
 	/**
+	 * For Wicket it would be sufficient for this method to be 
+	 * package protected. However to allow wicket-bench easy access
+	 * to the information ...
+	 * 
 	 * @param index
 	 *            Index into markup list
 	 * @return Markup element
 	 */
-	MarkupElement get(final int index)
+	public MarkupElement get(final int index)
 	{
 		return (MarkupElement)markup.get(index);
 	}
@@ -154,9 +158,13 @@ public final class Markup
 	}
 
 	/**
+	 * For Wicket it would be sufficient for this method to be 
+	 * package protected. However to allow wicket-bench easy access
+	 * to the information ...
+	 * 
 	 * @return Number of markup elements
 	 */
-	int size()
+	public int size()
 	{
 		return markup.size();
 	}

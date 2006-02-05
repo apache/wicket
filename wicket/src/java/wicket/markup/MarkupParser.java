@@ -196,8 +196,12 @@ public class MarkupParser
 	 * @throws ParseException
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
+     *
+	 * For Wicket it would be sufficient for this method to be 
+	 * package protected. However to allow wicket-bench easy access
+	 * to the information ...
 	 */
-	final Markup parse(final String string) throws ParseException, IOException,
+	public final Markup parse(final String string) throws ParseException, IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
