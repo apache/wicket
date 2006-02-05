@@ -99,6 +99,7 @@ public class PageRequestTarget
 
 	/**
 	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
+	 * @deprecated
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{

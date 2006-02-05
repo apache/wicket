@@ -93,6 +93,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget, IAc
 
 	/**
 	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
+	 * @deprecated
 	 */
 	public boolean checkAccess(RequestCycle requestCycle)
 	{
