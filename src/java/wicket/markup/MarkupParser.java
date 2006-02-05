@@ -161,12 +161,11 @@ public class MarkupParser
 	 * @param resource
 	 *            The file
 	 * @return The markup
-	 * @throws ParseException
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final Markup readAndParse(final MarkupResourceStream resource) throws ParseException,
-			IOException, ResourceStreamNotFoundException
+	final Markup readAndParse(final MarkupResourceStream resource) throws IOException, 
+			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
 		this.markup.reset();
@@ -193,15 +192,10 @@ public class MarkupParser
 	 * @param string
 	 *            The markup
 	 * @return The markup
-	 * @throws ParseException
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
-     *
-	 * For Wicket it would be sufficient for this method to be 
-	 * package protected. However to allow wicket-bench easy access
-	 * to the information ...
 	 */
-	public final Markup parse(final String string) throws ParseException, IOException,
+	public final Markup parse(final String string) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -223,10 +217,8 @@ public class MarkupParser
 	/**
 	 * Scans the given markup string and extracts balancing tags.
 	 * 
-	 * @throws ParseException
-	 *             Thrown if markup is malformed or tags don't balance
 	 */
-	private void parseMarkup() throws ParseException
+	private void parseMarkup()
 	{
 		final List autoAddList = new ArrayList();
 
@@ -338,7 +330,7 @@ public class MarkupParser
 
 			MarkupStream markupStream = new MarkupStream(markup);
 			markupStream.setCurrentIndex(this.markup.size() - 1);
-			throw new MarkupException(markupStream, ex.getMessage());
+			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
 		// Add tail?

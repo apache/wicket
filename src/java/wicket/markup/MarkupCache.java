@@ -18,7 +18,6 @@
 package wicket.markup;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -276,10 +275,6 @@ public class MarkupCache
 			afterLoadListeners.notifyListeners(markupResourceStream);
 
 			return markup;
-		}
-		catch (ParseException e)
-		{
-			log.error("Unable to parse markup from " + markupResourceStream, e);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{

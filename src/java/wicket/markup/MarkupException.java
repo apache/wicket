@@ -83,6 +83,20 @@ public final class MarkupException extends WicketRuntimeException
 	}
 
 	/**
+	 * @param markupStream
+	 *            The markup stream where this exception occurred
+	 * @param message
+	 *            The message
+	 * @param cause
+	 *            The causing exception
+	 */
+	public MarkupException(final MarkupStream markupStream, final String message, final Throwable cause)
+	{
+		super(message + "\n" + markupStream.toString(), cause);
+		this.markupStream = markupStream;
+	}
+
+	/**
 	 * @return Returns the MarkupStream.
 	 */
 	public MarkupStream getMarkupStream()
