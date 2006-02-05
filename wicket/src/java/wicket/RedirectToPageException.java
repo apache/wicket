@@ -9,8 +9,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-// TODO General: do we need a better name for this exception since there is no
-// redirect?
+// FIXME General: Why have this exception at all?  Instead you could do the setResponsePage yourself and then throw a more generic AbortAndRespondException.
 public class RedirectToPageException extends AbortAndRespondException
 {
 	/**
