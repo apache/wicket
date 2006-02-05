@@ -1,4 +1,4 @@
-package applet;
+package wicket.markup.html.applet;
 
 import java.awt.Container;
 import java.io.BufferedReader;
@@ -13,8 +13,19 @@ import java.net.URLConnection;
 
 import javax.swing.JApplet;
 
+import wicket.util.upload.MultiPartFormOutputStream;
+
 /**
- * The applet implementation used to host the user's content.
+ * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
+ * 
+ * The applet implementation used to host the user's content via the IApplet
+ * interface. Implements model updating for the IAppletServer interface and
+ * instantiates the user's applet object via the appletClassName property as
+ * determined by the Applet component. Also provides a publicly accessible
+ * method setModel() which takes no parameters and can be called from JavaScript
+ * to push the applet's model back to the server side. This is useful, for
+ * example, when a form is about to be submitted and the models of sprockets
+ * need to be pushed back to the server side ahead of the form submit.
  * 
  * @author Jonathan Locke
  */

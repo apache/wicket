@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,29 +14,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet.examples.slider;
+package examples.applet.simple;
 
-import wicket.protocol.http.WebApplication;
+
+import wicket.markup.html.WebPage;
+import wicket.markup.html.applet.Applet;
+import wicket.model.Model;
 
 /**
- * Sprocket web application demonstrating slider integration.
+ * Home page of the applet example.
  * 
  * @author Jonathan Locke
  */
-public class SliderApplication extends WebApplication
+public class Home extends WebPage
 {
 	/**
 	 * Constructor.
 	 */
-	public SliderApplication()
+	public Home()
 	{
-	}
-
-	/**
-	 * @see wicket.Application#getHomePage()
-	 */
-	public Class getHomePage()
-	{
-		return Home.class;
+		add(new Applet("sprocket", new Model("foo"), SimpleApplet.class));
 	}
 }

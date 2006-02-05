@@ -15,34 +15,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet.sprockets.slider;
+package wicket.markup.html.applet.sprockets.slider;
 
 import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.JSlider;
 
-import applet.IApplet;
-import applet.IAppletServer;
+import wicket.markup.html.applet.IApplet;
+import wicket.markup.html.applet.IAppletServer;
 
 /**
- * This class is a private implementation detail of the Slider sprocket.
+ * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
  * 
+ * Private implementation of Slider Sprocket.
+ *
  * @author Jonathan Locke
  */
-public class Applet implements IApplet
+public class SliderApplet implements IApplet
 {
-	JSlider slider;
-	AppletModel model;
+	/** The Swing slider */
+	private JSlider slider;
+	
+	/** The model for this slider applet */
+	private SliderAppletModel model;
 
+	/**
+	 * @see wicket.markup.html.applet.IApplet#init(wicket.markup.html.applet.IAppletServer, java.awt.Container, java.lang.Object)
+	 */
 	public void init(IAppletServer server, Container container, Object modelObject)
 	{
-		this.model = (AppletModel)modelObject;
+		this.model = (SliderAppletModel)modelObject;
 		container.setBackground(Color.white);
 		container.add(slider = new JSlider(model.min, model.max, model.value));
 		slider.setBackground(Color.white);
 	}
-
+	
+	/**
+	 * @see wicket.markup.html.applet.IApplet#getModel()
+	 */
 	public Object getModel()
 	{
 		model.value = slider.getValue();

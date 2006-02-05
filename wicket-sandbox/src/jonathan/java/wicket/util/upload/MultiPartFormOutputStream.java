@@ -1,5 +1,5 @@
 
-package applet;
+package wicket.util.upload;
 
 import java.io.*;
 import java.net.*;

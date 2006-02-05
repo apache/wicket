@@ -16,7 +16,7 @@
  * Version: $Revision$
  */
 
-package applet;
+package wicket.util.lang;
 
 import java.io.IOException;
 import java.io.InputStream;

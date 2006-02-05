@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,20 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.jonathan.stylesheet;
+package wicket.markup.html.applet.sprockets.slider;
+
+import java.io.Serializable;
 
 /**
- * Allows components which implement this interface an opportunity to edit a
- * list of stylesheet links. Normally, this will amount to just adding a link to
- * the component's stylesheet resource, but the editor can do anythign it wants.
+ * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
+ * 
+ * Model for SliderApplet.
  * 
  * @author Jonathan Locke
  */
-public interface IStylesheetLinkEditor
+class SliderAppletModel implements Serializable
 {
-	/**
-	 * @param links
-	 *            The links to edit
-	 */
-	public void edit(StylesheetLinks links);
+	int min;
+	int max;
+	int value;
 }

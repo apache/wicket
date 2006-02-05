@@ -36,7 +36,7 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>applet.examples.simple.SimpleAppletApplication</param-value>
+			<param-value>examples.applet.simple.SimpleAppletApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -46,7 +46,7 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>applet.examples.slider.SliderApplication</param-value>
+			<param-value>examples.applet.slider.SliderApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -14,25 +15,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet.examples.simple;
+package examples.applet.simple;
 
-
-import applet.Applet;
-import wicket.markup.html.WebPage;
-import wicket.model.Model;
+import wicket.protocol.http.WebApplication;
 
 /**
- * Home page of the applet example.
+ * Simple applet application.
  * 
  * @author Jonathan Locke
  */
-public class Home extends WebPage
+public class SimpleAppletApplication extends WebApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public Home()
+	public SimpleAppletApplication()
 	{
-		add(new Applet("sprocket", new Model("foo"), SimpleApplet.class));
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }

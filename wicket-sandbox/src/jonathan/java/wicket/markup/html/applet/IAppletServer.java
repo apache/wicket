@@ -15,13 +15,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet.sprockets.slider;
+package wicket.markup.html.applet;
 
-import java.io.Serializable;
-
-class AppletModel implements Serializable
+/**
+ * Interface to the originating server that served up an applet. The setModel()
+ * and getModel() methods push and pull models to/from the server side Applet
+ * component that created a given applet.
+ * 
+ * @see wicket.markup.html.applet.IApplet
+ * 
+ * @author Jonathan Locke
+ */
+public interface IAppletServer
 {
-	int min;
-	int max;
-	int value;
+	/**
+	 * Sets the model on the server
+	 * 
+	 * @param model
+	 *            The model to send back to the server
+	 */
+	void setModel(Object model);
+
+	/**
+	 * Gets model from server
+	 * 
+	 * @return The model from the server
+	 */
+	Object getModel();
 }

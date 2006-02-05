@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet.examples.simple;
+package examples.applet.simple;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -24,8 +24,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import applet.IApplet;
-import applet.IAppletServer;
+import wicket.markup.html.applet.IApplet;
+import wicket.markup.html.applet.IAppletServer;
+
 
 public class SimpleApplet implements IApplet
 {

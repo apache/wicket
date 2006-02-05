@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,12 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet;
+package wicket.markup.html.applet;
 
 import wicket.model.IModel;
 
 /**
- * A sprocket is an applet component.
+ * A Sprocket is essentially an Applet, but an applet whose intention is to
+ * permit fancy Swing-based model visualization or editing. This class is also
+ * here to permit interesting functionality to be layered in in the future for
+ * Sprockets that are not simply applets.
  * 
  * @author Jonathan Locke
  */

@@ -15,22 +15,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package applet;
+package wicket.markup.html.applet;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarOutputStream;
-import java.util.zip.ZipEntry;
 
 import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.ResourceReference;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -42,41 +36,47 @@ import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.resource.ByteArrayResource;
-import wicket.util.io.ByteArrayOutputStream;
-import wicket.util.io.Streams;
+import wicket.resource.JarResourceFactory;
 import wicket.util.lang.Bytes;
+import wicket.util.lang.Objects2;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileItem;
 
 /**
  * This component integrates Swing tightly with Wicket by automatically
- * generating Swing applets on demand. The applet's JAR file is automatically
- * created from the closure of class files statically referenced by the IApplet-
- * interface-implementing class passed to the Applet constructor. If any classes
- * are dynamically loaded by an applet, they can be added to the Applet JAR by
- * calling Applet.addClass(Class). The IApplet-implementing-class passed to the
- * Applet constructor will only be (automatically) instantiated in the client
- * browser's VM by the host applet container implementation.
+ * generating Swing applets on demand. An Applet is initialized on the client
+ * side by the class passed to the Applet constructor. This class must implement
+ * the IApplet interface.
+ * <p>
+ * The JAR file for a given Applet is automatically created by finding the
+ * closure of class files statically referenced by the IApplet class. If any
+ * classes are dynamically loaded by an Applet, they can be added to the JAR by
+ * calling Applet.addClass(Class). The IApplet class will only be
+ * (automatically) instantiated in the client browser's VM by the host applet
+ * container implementation HostApplet. The structure and implementation of
+ * HostApplet, however, is an internal implementation detail to Wicket and might
+ * be changed in the future.
  * <p>
  * Once the JAR file for a given Applet subclass has been created, it is reused
- * for all future instances of the Applet. The auto-created JAR is referenced by
- * an automatically modified APPLET tag, resulting in an automatically generated
- * applet. Attributes you set on the APPLET tag in your HTML such as width and
- * height will be left unchanged.
+ * for all future instances of that Applet class. The auto-created JAR is
+ * referenced by each instance of the Applet by automatically modifying the
+ * APPLET tag that the Applet is attached to. The result is a fully automatic
+ * applet. Any additional attributes you set on the APPLET tag in your HTML such
+ * as width and height will be left unchanged.
  * <p>
- * To add Swing behavior to an Applet, the user's implementation of IApplet in
- * the class passed to the Applet constructor should populate the Container
- * passed to the IApplet.init() method with Swing components. Those components
- * should edit the model passed into the same init() method. The model can be
- * pushed back to the server at any time (via an internally executed form POST
- * over HTTP) by manually calling the setModel(Object) method on the
- * IAppletServer interface passed to the IApplet.init() method. Such a manual
- * update is not necessary if the Applet component is contained in a Form. For
- * Applets nested within Forms, the form submit will result in an automatic call
- * via JavaScript to the IAppletServer.setModel() method before the Form itself
- * posts. Therefore, the Applet's model will be updated by the time
- * Form.onSubmit() is called. This allows users to augment HTML forms with
- * Applet based Swing components in a modular and reusable fashion.
+ * To add Swing behavior to an Applet, the user's implementation of IApplet
+ * should populate the Container passed to the IApplet.init() method with Swing
+ * components. Those components should edit the model passed into the same
+ * init() method. The model can be pushed back to the server at any time (via an
+ * internally executed form POST over HTTP) by manually calling the
+ * setModel(Object) method on the IAppletServer interface passed to the
+ * IApplet.init() method. Such a manual update is not necessary if the Applet
+ * component is contained in a Form. For Applets nested within Forms, the form
+ * submit will result in an automatic call via JavaScript to the
+ * IAppletServer.setModel() method before the Form itself POSTs. Therefore, the
+ * Applet's model will be updated by the time Form.onSubmit() is called. This
+ * allows users to augment HTML forms with Applet based Swing components in a
+ * modular and reusable fashion.
  * 
  * @author Jonathan Locke
  */
@@ -89,59 +89,6 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
 	private List/* <Class> */classes = new ArrayList(2);
-
-	/**
-	 * De-serializes an object from a byte array.
-	 * 
-	 * @param data
-	 *            The serialized object
-	 * @return The object
-	 */
-	// FIXME General: Belongs in Objects.java
-	public static Object byteArrayToObject(final byte[] data)
-	{
-		try
-		{
-			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			final Object object = new ObjectInputStream(in).readObject();
-			in.close();
-			return object;
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Serializes an object into a byte array.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return The serialized object
-	 */
-	// FIXME General: Belongs in Objects.java
-	public static byte[] objectToByteArray(Object object)
-	{
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			out.close();
-			return out.toByteArray();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	/**
 	 * Construct.
@@ -186,7 +133,23 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	}
 
 	/**
-	 * Called when model data is posted back from the client
+	 * By default, an Applet's model is the Wicket model. In the case of some
+	 * Sprockets, the model may be something entirely different that depends on
+	 * the communication needs of the individual component.
+	 * 
+	 * @return The model for this applet
+	 */
+	public Object getAppletModel()
+	{
+		return getModelObject();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Called when model data is posted back from the client applet. This method
+	 * reads the posted object from the form data and calls setAppletModel()
+	 * with that object.
 	 */
 	public void onFormSubmitted()
 	{
@@ -213,34 +176,33 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	}
 
 	/**
-	 * Sets the model object into this applet
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param model
-	 *            The model
-	 */
-	public void setAppletModel(Object model)
-	{
-		setModelObject(model);
-	}
-
-	/**
-	 * @return The model for this applet
-	 */
-	public Object getAppletModel()
-	{
-		return getModelObject();
-	}
-
-	/**
-	 * Returns the model for this Applet component as a resource. This enables
-	 * the client side HostApplet container to retrieve the model object.
+	 * Called when model data is retrieved by the client applet. This method
+	 * writes the model retrieved by getAppletModel() to the client as an
+	 * application/x-wicket-model binary resource. The HostApplet implementation
+	 * on the client then reads the object and updates the sprocket's model
+	 * appropriately.
 	 * 
 	 * @see wicket.IResourceListener#onResourceRequested()
 	 */
 	public void onResourceRequested()
 	{
-		new ByteArrayResource("application/x-wicket-model", objectToByteArray(getAppletModel()))
-				.onResourceRequested();
+		new ByteArrayResource("application/x-wicket-model", Objects2
+				.objectToByteArray(getAppletModel())).onResourceRequested();
+	}
+
+	/**
+	 * By default, an Applet's model is the Wicket model. In the case of some
+	 * Sprockets, the model may be something entirely different that depends on
+	 * the communication needs of the individual component.
+	 * 
+	 * @param model
+	 *            The model to set
+	 */
+	public void setAppletModel(Object model)
+	{
+		setModelObject(model);
 	}
 
 	/**
@@ -272,8 +234,9 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 			protected Resource newResource()
 			{
 				// Create JAR resource
-				return new ByteArrayResource("application/x-compressed", jarClasses(classes))
-						.setCacheable(false);
+				final JarResourceFactory factory = new JarResourceFactory();
+				factory.addClassClosures(classes);
+				return factory.getResource();
 			}
 		};
 
@@ -324,45 +287,5 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 		this.appletClass = appletClass;
 		addClass(appletClass);
 		addClass(HostApplet.class);
-	}
-
-	/**
-	 * @param classes
-	 *            Classes to jar the closures of
-	 * @return Jarred classes as a byte[]
-	 */
-	private byte[] jarClasses(final List classes)
-	{
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try
-		{
-			final JarOutputStream jar = new JarOutputStream(out);
-			new ClassClosure(classes, false)
-			{
-				protected void addClass(final String name, final InputStream is)
-				{
-					System.out.println("JAR: Added " + name);
-					ZipEntry entry = new ZipEntry(name.replace('.', '/') + ".class");
-					try
-					{
-						jar.putNextEntry(entry);
-						Streams.copy(is, jar);
-						jar.closeEntry();
-					}
-					catch (IOException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-				}
-			};
-			System.out.println("JAR: Size is " + Bytes.bytes(out.size()));
-			jar.close();
-			out.close();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		return out.toByteArray();
 	}
 }
