@@ -22,12 +22,9 @@ package wicket;
  * stage.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Jonathan Locke
  */
 public abstract class AbstractRestartResponseException extends RuntimeException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 }
