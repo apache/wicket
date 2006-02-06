@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,45 +15,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package examples.applet.slider;
+package examples.applet.sprockets;
 
-import wicket.markup.html.WebPage;
-import wicket.markup.html.applet.sprockets.slider.Slider;
-import wicket.markup.html.form.Form;
-import wicket.model.PropertyModel;
+import wicket.protocol.http.WebApplication;
 
 /**
- * Home page of the applet example.
+ * Sprocket web application demonstrating Swing integration with Wicket.
  * 
  * @author Jonathan Locke
  */
-public class Home extends WebPage
+public class SprocketsApplication extends WebApplication
 {
-	private int value;
-
 	/**
 	 * Constructor.
 	 */
-	public Home()
+	public SprocketsApplication()
 	{
-		Form form = new Form("form")
-		{
-			protected void onSubmit()
-			{
-				System.out.println("Submitted value: " + getValue());
-			}
-		};
-		form.add(new Slider("slider", new PropertyModel(Home.this, "value"), 0, 100));
-		add(form);
 	}
 
-	public void setValue(int value)
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
 	{
-		this.value = value;
-	}
-
-	public int getValue()
-	{
-		return value;
+		return Home.class;
 	}
 }
