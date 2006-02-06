@@ -18,16 +18,15 @@
 package wicket;
 
 /**
- * Causes wicket to interrupt current request processing and immediately respond
- * with the login page
+ * Causes Wicket to interrupt current request processing and immediately respond
+ * with the sign-in page. When sign-in has occurred, the user will be directed
+ * to the original request.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Jonathan Locke
  */
 public class RestartResponseAtSignInPageException extends RestartResponseAtInterceptPageException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

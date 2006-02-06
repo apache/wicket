@@ -30,11 +30,7 @@ package wicket;
  */
 public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * Redirects to the specified intercept page

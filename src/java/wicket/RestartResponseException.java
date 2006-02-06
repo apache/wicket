@@ -25,11 +25,7 @@ package wicket;
  */
 public class RestartResponseException extends AbstractRestartResponseException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * Redirects to the specified bookmarkable page
@@ -66,6 +62,4 @@ public class RestartResponseException extends AbstractRestartResponseException
 	{
 		RequestCycle.get().setResponsePage(page);
 	}
-
-
 }
