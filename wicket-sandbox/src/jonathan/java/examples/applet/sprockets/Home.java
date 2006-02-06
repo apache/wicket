@@ -30,7 +30,8 @@ import wicket.model.PropertyModel;
  */
 public class Home extends WebPage
 {
-	private int value;
+	private int sliderValue;
+	private int spinnerValue;
 
 	/**
 	 * Constructor.
@@ -41,22 +42,33 @@ public class Home extends WebPage
 		{
 			protected void onSubmit()
 			{
-				System.out.println("Submitted value: " + getValue());
+				System.out.println("Slider value: " + getSliderValue());
+				System.out.println("Spinner value: " + getSpinnerValue());
 			}
 		};
-		form.add(new Slider("slider", new PropertyModel(Home.this, "value"), 0, 100));
-		form.add(new NumberSpinner("spinner", new PropertyModel(Home.this, "value"),
+		form.add(new Slider("slider", new PropertyModel(Home.this, "sliderValue"), 0, 100));
+		form.add(new NumberSpinner("spinner", new PropertyModel(Home.this, "spinnerValue"),
 				new Integer(0), new Integer(100), new Integer(10)));
 		add(form);
 	}
 
-	public void setValue(int value)
+	public void setSliderValue(int value)
 	{
-		this.value = value;
+		this.sliderValue = value;
 	}
 
-	public int getValue()
+	public int getSliderValue()
 	{
-		return value;
+		return sliderValue;
+	}
+
+	public void setSpinnerValue(int value)
+	{
+		this.spinnerValue = value;
+	}
+
+	public int getSpinnerValue()
+	{
+		return spinnerValue;
 	}
 }

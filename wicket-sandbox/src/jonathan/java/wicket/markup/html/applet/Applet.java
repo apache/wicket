@@ -18,6 +18,7 @@
 package wicket.markup.html.applet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,9 +162,17 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 		final FileItem item = ((IMultipartWebRequest)webRequest).getFile("model");
 		try
 		{
-			final Object model = new ObjectInputStream(item.getInputStream()).readObject();
-			System.out.println("Setting model to " + model);
-			setAppletModel(model);
+			final InputStream in = item.getInputStream();
+			try
+			{
+				final Object model = new ObjectInputStream(in).readObject();
+				System.out.println("Setting model to " + model);
+				setAppletModel(model);
+			}
+			finally
+			{
+				in.close();				
+			}
 		}
 		catch (ClassNotFoundException e)
 		{

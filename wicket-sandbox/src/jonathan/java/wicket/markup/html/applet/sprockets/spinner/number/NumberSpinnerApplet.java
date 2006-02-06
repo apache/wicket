@@ -57,7 +57,7 @@ public class NumberSpinnerApplet implements IApplet
 	 */
 	public Object getModel()
 	{
-		model.setValue(spinner.getValue());
-		return model;
+		model = (SpinnerNumberModel)spinner.getModel();
+		return spinner.getValue();
 	}
 }

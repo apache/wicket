@@ -65,7 +65,6 @@ public class HostApplet extends JApplet implements IAppletServer
 
 	public void setModel()
 	{
-		System.out.println("In here");
 		setModel(applet.getModel());
 	}
 
