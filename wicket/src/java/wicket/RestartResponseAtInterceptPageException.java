@@ -27,6 +27,7 @@ package wicket;
  * @see wicket.Session#redirectToInterceptPage(Page)
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Jonathan Locke
  */
 public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException
 {
