@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RestartResponseAtSignInPageException.java,v 1.1 2006/02/06 08:27:03
+ * ivaynberg Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +23,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class RestartResponseAtSignInPageException extends AbstractRestartResponseException
+public class RestartResponseAtSignInPageException extends RestartResponseAtInterceptPageException
 {
 	/**
 	 * 
@@ -35,14 +35,6 @@ public class RestartResponseAtSignInPageException extends AbstractRestartRespons
 	 */
 	public RestartResponseAtSignInPageException()
 	{
-		Application app = Application.get();
-		Class signIn = app.getApplicationSettings().getSignInPage();
-		if (signIn == null)
-		{
-			throw new IllegalStateException(
-					"RestartResponseAtSignInPageException cannot be thrown if SignInPage setting is null in application settings");
-		}
-		RequestCycle.get().setResponsePage(signIn);
+		super(Application.get().getApplicationSettings().getSignInPage());
 	}
-
 }

@@ -47,5 +47,14 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		Session.get().redirectToInterceptPage(interceptPage);
 	}
 
-
+	/**
+	 * Redirects to the specified intercept page
+	 * 
+	 * @param pageClass
+	 *            Class of page to instantiate
+	 */
+	public RestartResponseAtInterceptPageException(Class pageClass)
+	{
+		Session.get().redirectToInterceptPage(Session.get().getPageFactory().newPage(pageClass));
+	}
 }
