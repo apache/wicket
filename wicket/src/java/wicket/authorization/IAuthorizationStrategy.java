@@ -70,6 +70,8 @@ public interface IAuthorizationStrategy
 	 * @param componentClass
 	 *            The component class to check
 	 * @return Whether the given component may be created
+	 * 
+	 * @see wicket.RestartResponseAtSignInPageException
 	 */
 	boolean authorizeInstantiation(Class componentClass);
 
