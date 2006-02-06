@@ -73,7 +73,7 @@ public class NumberSpinner extends Sprocket
 	{
 		super(id, NumberSpinnerApplet.class);
 		appletModel = new SpinnerNumberModel();
-		appletModel.setValue((Comparable)getModelObject());
+		appletModel.setValue(getModelObject());
 		appletModel.setMaximum((Comparable)maximum);
 		appletModel.setMinimum((Comparable)minimum);
 		appletModel.setStepSize(stepSize);

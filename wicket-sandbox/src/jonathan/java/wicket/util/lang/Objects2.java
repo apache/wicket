@@ -43,9 +43,14 @@ public class Objects2
 		try
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			final Object object = new ObjectInputStream(in).readObject();
-			in.close();
-			return object;
+			try
+			{
+				return new ObjectInputStream(in).readObject();				
+			}
+			finally
+			{
+				in.close();
+			}
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -72,8 +77,14 @@ public class Objects2
 		try
 		{
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			out.close();
+			try
+			{
+				new ObjectOutputStream(out).writeObject(object);
+			}
+			finally
+			{
+				out.close();
+			}
 			return out.toByteArray();
 		}
 		catch (IOException e)
