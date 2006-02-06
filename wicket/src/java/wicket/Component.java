@@ -682,6 +682,9 @@ public abstract class Component implements Serializable
 	 * If the id attribute is present in the markup attributes of this component
 	 * it will be used, otherwise the page-relative path of this component will
 	 * be used.
+	 * <p>
+	 * Note: The component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border).
 	 * 
 	 * @return markup id of this component
 	 */
@@ -2398,7 +2401,7 @@ public abstract class Component implements Serializable
 		// The tag might have been changed from open-close to open. Hence
 		// we'll need what was in the markup itself
 		ComponentTag markupOpenTag = null;
-		
+
 		// If tag has a body
 		if (tag.isOpen())
 		{
@@ -2407,7 +2410,7 @@ public abstract class Component implements Serializable
 			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
 			markupOpenTag = markupStream.getTag();
 			markupStream.next();
-			
+
 			// If it was an open tag in the markup as well, than ...
 			if (markupOpenTag.isOpen())
 			{
@@ -2423,7 +2426,7 @@ public abstract class Component implements Serializable
 		// close tag, we're good
 		if (tag.isOpen())
 		{
-			// If it was an open tag in the markup, than there must be 
+			// If it was an open tag in the markup, than there must be
 			// a close tag as well.
 			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
