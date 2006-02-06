@@ -6,8 +6,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-// FIXME General: Consider a new name.  Abort WHAT?
-public class AbortAndRespondException extends RuntimeException
+public abstract class AbstractRestartResponseException extends RuntimeException
 {
 	/**
 	 * 

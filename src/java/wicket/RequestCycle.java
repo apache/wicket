@@ -996,7 +996,7 @@ public abstract class RequestCycle
 				}
 			}
 		}
-		catch (AbortAndRespondException e) {
+		catch (AbstractRestartResponseException e) {
 			throw e;
 		}
 		catch (RuntimeException e)
@@ -1035,7 +1035,7 @@ public abstract class RequestCycle
 					step(processor);
 					currentStep++;
 				}
-				catch (AbortAndRespondException e)
+				catch (AbstractRestartResponseException e)
 				{
 					// if a redirect exception has been issued we abort what we
 					// were doing and begin responding to the top target on the

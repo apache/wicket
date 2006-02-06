@@ -1,6 +1,6 @@
 package wicket.session;
 
-import wicket.AbortAndRespondException;
+import wicket.AbstractRestartResponseException;
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
@@ -25,7 +25,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage1()
 		{
-			throw new AbortAndRespondException();
+			throw new AbstractRestartResponseException() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				
+			};
 		}
 	}
 
@@ -43,7 +50,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage2(PageParameters params)
 		{
-			throw new AbortAndRespondException();
+			throw new AbstractRestartResponseException() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				
+			};
 		}
 
 	}
@@ -60,7 +74,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3()
 		{
-			throw new AbortAndRespondException();
+			throw new AbstractRestartResponseException() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				
+			};
 		}
 
 		/**
@@ -70,7 +91,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3(PageParameters params)
 		{
-			throw new AbortAndRespondException();
+			throw new AbstractRestartResponseException() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				
+			};
 		}
 
 	}
@@ -97,7 +125,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage1.class);
 			fail();
 		}
-		catch (AbortAndRespondException e)
+		catch (AbstractRestartResponseException e)
 		{
 			// noop
 		}
@@ -107,7 +135,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage2.class);
 			fail();
 		}
-		catch (AbortAndRespondException e)
+		catch (AbstractRestartResponseException e)
 		{
 			// noop
 		}
@@ -117,7 +145,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage2.class, new PageParameters());
 			fail();
 		}
-		catch (AbortAndRespondException e)
+		catch (AbstractRestartResponseException e)
 		{
 			// noop
 		}
@@ -127,7 +155,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage3.class);
 			fail();
 		}
-		catch (AbortAndRespondException e)
+		catch (AbstractRestartResponseException e)
 		{
 			// noop
 		}
@@ -137,7 +165,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage3.class, new PageParameters());
 			fail();
 		}
-		catch (AbortAndRespondException e)
+		catch (AbstractRestartResponseException e)
 		{
 			// noop
 		}
