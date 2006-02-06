@@ -9,8 +9,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-// FIXME General: Why have this exception at all?  Instead you could do the setResponsePage yourself and then throw a more generic AbortAndRespondException.
-public class RedirectToPageException extends AbortAndRespondException
+public class RestartResponseException extends AbstractRestartResponseException
 {
 	/**
 	 * 
@@ -24,7 +23,7 @@ public class RedirectToPageException extends AbortAndRespondException
 	 * @param pageClass
 	 *            class of bookmarkable page
 	 */
-	public RedirectToPageException(Class pageClass)
+	public RestartResponseException(Class pageClass)
 	{
 		RequestCycle.get().setResponsePage(pageClass);
 	}
@@ -38,7 +37,7 @@ public class RedirectToPageException extends AbortAndRespondException
 	 * @param params
 	 *            bookmarkable page parameters
 	 */
-	public RedirectToPageException(Class pageClass, PageParameters params)
+	public RestartResponseException(Class pageClass, PageParameters params)
 	{
 		RequestCycle.get().setResponsePage(pageClass, params);
 	}
@@ -49,7 +48,7 @@ public class RedirectToPageException extends AbortAndRespondException
 	 * @param page
 	 *            redirect page
 	 */
-	public RedirectToPageException(Page page)
+	public RestartResponseException(Page page)
 	{
 		RequestCycle.get().setResponsePage(page);
 	}

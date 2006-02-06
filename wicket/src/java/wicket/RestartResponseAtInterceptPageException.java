@@ -11,8 +11,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-// FIXME General: Why have this exception at all?  Instead you could do the redirect yourself and then throw a more generic AbortAndRespondException.
-public class RedirectToInterceptPageException extends AbortAndRespondException
+public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException
 {
 	/**
 	 * 
@@ -26,7 +25,7 @@ public class RedirectToInterceptPageException extends AbortAndRespondException
 	 * @param interceptPage
 	 *            redirect page
 	 */
-	public RedirectToInterceptPageException(Page interceptPage)
+	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
 		Session.get().redirectToInterceptPage(interceptPage);
 	}
