@@ -36,9 +36,9 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 		this.millis = millis;
 	}
 
-	protected void onRenderHeadInitContribution(Response response)
+	protected void onRenderHeadContribution(Response response)
 	{
-		super.onRenderHeadInitContribution(response);
+		super.onRenderHeadContribution(response);
 		getBodyContainer().addOnLoadModifier(getJsTimeoutCall(millis));
 	}
 
