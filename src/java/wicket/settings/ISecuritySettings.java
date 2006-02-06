@@ -36,6 +36,14 @@ public interface ISecuritySettings
 	ICryptFactory getCryptFactory();
 
 	/**
+	 * Gets the sign in page class.
+	 * 
+	 * @return Page class for sign-in.
+	 */
+	Class getSignInPage();
+
+
+	/**
 	 * Sets the authorization strategy.
 	 * 
 	 * @param strategy
@@ -57,4 +65,13 @@ public interface ISecuritySettings
 	 * @param cryptFactory
 	 */
 	void setCryptFactory(ICryptFactory cryptFactory);
+
+	/**
+	 * Sets the sign in page class.
+	 * 
+	 * @param signInPage
+	 *            Page class for sign-in.
+	 */
+	void setSignInPage(Class signInPage);
+
 }
