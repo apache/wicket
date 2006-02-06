@@ -996,16 +996,11 @@ public abstract class RequestCycle
 				}
 			}
 		}
+		catch (AbortAndRespondException e) {
+			throw e;
+		}
 		catch (RuntimeException e)
 		{
-			// this exception is handled higher in the stack. we let it bubble
-			// up to unroll the stack as far as possible
-			if (e instanceof AbortAndRespondException)
-			{
-				throw e;
-			}
-
-
 			// set step manually to handle exception
 			currentStep = HANDLE_EXCEPTION;
 
