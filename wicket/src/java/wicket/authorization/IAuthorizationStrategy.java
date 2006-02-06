@@ -64,8 +64,8 @@ public interface IAuthorizationStrategy
 	 * <p>
 	 * If you wish to implement a strategy that authenticates users which cannot
 	 * access a given Page (or other Component), you can simply throw a
-	 * RestartResponseAtSignInPageException in your implementation of this
-	 * method.
+	 * {@link RestartResponseAtSignInPageException} in your implementation of
+	 * this method.
 	 * 
 	 * @param componentClass
 	 *            The component class to check
