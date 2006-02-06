@@ -640,6 +640,10 @@ public final class Settings
 	 */
 	public Class getSignInPage()
 	{
+		if (signInPage == null)
+		{
+			throw new IllegalStateException("Sign-in page cannot be null");
+		}
 		return signInPage;
 	}
 
