@@ -20,7 +20,7 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -45,13 +45,13 @@ import wicket.version.undo.Change;
  * item objects.
  * </p>
  * 
- * @see OrderedRepeatingView
+ * @see RepeatingView
  * @see ModelIteratorAdapter
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class RefreshingView extends OrderedRepeatingView
+public abstract class RefreshingView extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 

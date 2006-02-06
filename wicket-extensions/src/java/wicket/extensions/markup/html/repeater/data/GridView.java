@@ -20,7 +20,7 @@ package wicket.extensions.markup.html.repeater.data;
 import java.util.Iterator;
 
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.version.undo.Change;
 
@@ -209,7 +209,7 @@ public abstract class GridView extends DataViewBase
 			{
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
-				OrderedRepeatingView rowView = new OrderedRepeatingView("cols");
+				RepeatingView rowView = new RepeatingView("cols");
 				rowItem.add(rowView);
 				add(rowItem);
 

@@ -17,7 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebMarkupContainer;
@@ -48,7 +48,7 @@ public class HeadersToolbar extends AbstractToolbar
 	{
 		super(table);
 
-		OrderedRepeatingView headers = new OrderedRepeatingView("headers");
+		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
 		IColumn[] cols = table.getColumns();
 

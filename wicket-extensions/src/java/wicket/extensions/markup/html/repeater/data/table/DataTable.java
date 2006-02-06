@@ -17,7 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -77,8 +77,8 @@ public class DataTable extends Panel implements IPageable
 
 	private IColumn[] columns;
 
-	private final OrderedRepeatingView topToolbars;
-	private final OrderedRepeatingView bottomToolbars;
+	private final RepeatingView topToolbars;
+	private final RepeatingView bottomToolbars;
 
 	/**
 	 * Constructor
@@ -115,7 +115,7 @@ public class DataTable extends Panel implements IPageable
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new OrderedRepeatingView("topToolbars")
+		topToolbars = new RepeatingView("topToolbars")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -126,7 +126,7 @@ public class DataTable extends Panel implements IPageable
 
 		};
 
-		bottomToolbars = new OrderedRepeatingView("bottomToolbars")
+		bottomToolbars = new RepeatingView("bottomToolbars")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -175,7 +175,7 @@ public class DataTable extends Panel implements IPageable
 		addToolbar(toolbar, bottomToolbars);
 	}
 
-	private void addToolbar(AbstractToolbar toolbar, OrderedRepeatingView container)
+	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
 	{
 		if (toolbar == null)
 		{

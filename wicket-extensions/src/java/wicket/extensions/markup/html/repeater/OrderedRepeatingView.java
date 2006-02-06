@@ -25,8 +25,9 @@ import wicket.model.IModel;
 
 /**
  * This view has been deprecated. It is no longer needed since wicket will now
- * guarantee the order in which MarkupContainer.iterator() returns child
- * components. Use {@link RepeatingView} instead.
+ * guarantee that the order in which MarkupContainer.iterator() returns child
+ * components is the order in which they were added. Use {@link RepeatingView}
+ * instead.
  * 
  * 
  * A repeater view that renders all of its children, using its body markup, in

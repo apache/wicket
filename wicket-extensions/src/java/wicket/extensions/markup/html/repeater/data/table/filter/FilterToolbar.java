@@ -19,7 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -91,7 +91,7 @@ public class FilterToolbar extends AbstractToolbar
 
 		// populate the toolbar with components provided by filtered columns
 
-		OrderedRepeatingView filters = new OrderedRepeatingView("filters");
+		RepeatingView filters = new RepeatingView("filters");
 		form.add(filters);
 
 		IColumn[] cols = table.getColumns();
