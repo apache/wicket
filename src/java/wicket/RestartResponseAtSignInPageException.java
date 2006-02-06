@@ -18,16 +18,31 @@
 package wicket;
 
 /**
- * An exception that causes the request cycle to immediately switch to respond
- * stage.
+ * Causes wicket to interrupt current request processing and immediately respond
+ * with the login page
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AbstractRestartResponseException extends RuntimeException
+public class RestartResponseAtSignInPageException extends AbstractRestartResponseException
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
+	public RestartResponseAtSignInPageException()
+	{
+		Application app = Application.get();
+		Class signIn = app.getApplicationSettings().getSignInPage();
+		if (signIn == null)
+		{
+			throw new IllegalStateException(
+					"RestartResponseAtSignInPageException cannot be thrown if SignInPage setting is null in application settings");
+		}
+		RequestCycle.get().setResponsePage(signIn);
+	}
 
 }
