@@ -666,20 +666,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Called if the user needs to be authenticated as the result of an attempt
-	 * to instantiate an unauthorized Page.
-	 */
-	protected void onUnauthorizedPageAccess()
-	{
-		final Class signInPageClass = getApplication().getApplicationSettings().getSignInPage();
-		if (signInPageClass != null)
-		{
-			final Page signInPage = getPageFactory().newPage(signInPageClass);
-			redirectToInterceptPage(signInPage);
-		}
-	}
-
-	/**
 	 * Removes the attribute with the given name.
 	 * 
 	 * @param name
