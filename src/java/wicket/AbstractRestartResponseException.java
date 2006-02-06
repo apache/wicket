@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractRestartResponseException.java,v 1.3 2006/02/06 08:37:58
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,5 +26,4 @@ package wicket;
  */
 public abstract class AbstractRestartResponseException extends RuntimeException
 {
-	private static final long serialVersionUID = 1L;
 }
