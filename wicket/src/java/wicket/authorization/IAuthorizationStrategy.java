@@ -58,8 +58,14 @@ public interface IAuthorizationStrategy
 
 	/**
 	 * Checks whether an instance of the given component class may be created.
-	 * If this method returns false, a {@link AuthorizationException} is thrown
-	 * during construction.
+	 * If this method returns false, an
+	 * {@link UnauthorizedInstantiationException} will be thrown by the
+	 * framework.
+	 * <p>
+	 * If you wish to implement a strategy that authenticates users which cannot
+	 * access a given Page (or other Component), you can simply throw a
+	 * RestartResponseAtSignInPageException in your implementation of this
+	 * method.
 	 * 
 	 * @param componentClass
 	 *            The component class to check
@@ -80,7 +86,7 @@ public interface IAuthorizationStrategy
 	 *            The action to authorize on the component
 	 * @return Whether the given action may be taken on the given component
 	 * @throws AuthorizationException
-	 *            Can be thrown by implementation if action is unauthorized
+	 *             Can be thrown by implementation if action is unauthorized
 	 * @see Component#ENABLE
 	 * @see Component#RENDER
 	 */
