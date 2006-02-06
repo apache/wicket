@@ -2,7 +2,7 @@ package wicket;
 
 /**
  * Causes wicket to interrupt current request processing and immediately respond
- * to the specified page.
+ * with the specified page.
  * <p>
  * Notice that throwing this exception <strong>does not</strong> cause an http
  * redirect to be issued.
