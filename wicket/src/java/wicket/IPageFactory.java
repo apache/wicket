@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.18 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,8 +24,8 @@ import wicket.settings.Settings;
  * without a PageParameters argument to pass to the Page's constructor.
  * <p>
  * IMPORTANT NOTE: Implementations must let subclasses of
- * AbortAndRespondException thrown from the constructing page' constructor
- * bubble up.
+ * {@link wicket.AbstractRestartResponseException} thrown from the constructing
+ * page' constructor bubble up.
  * 
  * @see Settings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()
