@@ -18,11 +18,11 @@
 package wicket;
 
 /**
- * Causes wicket to interrupt current request processing and immediately
+ * Causes Wicket to interrupt current request processing and immediately
  * redirect to an intercept page.
  * <p>
  * Similar to calling session.redirectToInteceptPage(Page) with the difference
- * that this exception will interrupt processing of the current request
+ * that this exception will interrupt processing of the current request.
  * 
  * @see wicket.Session#redirectToInterceptPage(Page)
  * 
