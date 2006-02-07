@@ -176,7 +176,7 @@ public final class Settings
 			5);
 
 	/** The factory to be used for the property files */
-	private PropertiesFactory propertiesFactory;
+	private wicket.resource.IPropertiesFactory propertiesFactory;
 
 	/**
 	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property
@@ -533,7 +533,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getPropertiesFactory()
 	 */
-	public PropertiesFactory getPropertiesFactory()
+	public wicket.resource.IPropertiesFactory getPropertiesFactory()
 	{
 		if (propertiesFactory == null)
 		{
@@ -932,7 +932,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setPropertiesFactory(wicket.resource.PropertiesFactory)
 	 */
-	public void setPropertiesFactory(PropertiesFactory factory)
+	public void setPropertiesFactory(wicket.resource.IPropertiesFactory factory)
 	{
 		this.propertiesFactory = factory;
 	}

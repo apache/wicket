@@ -50,7 +50,7 @@ import wicket.util.watch.ModificationWatcher;
  * 
  * @author Juergen Donnerstag
  */
-public class PropertiesFactory
+public class PropertiesFactory implements IPropertiesFactory
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
@@ -69,9 +69,7 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Add a listener
-	 * 
-	 * @param listener
+	 * @see wicket.resource.IPropertiesFactory#addListener(wicket.resource.IPropertiesReloadListener)
 	 */
 	public void addListener(final IPropertiesReloadListener listener)
 	{
@@ -83,17 +81,7 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Get the properties for ...
-	 * 
-	 * @param application
-	 *            The application object
-	 * @param clazz
-	 *            The class that resources are bring loaded for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
-	 * @return The properties
+	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application, java.lang.Class, java.lang.String, java.util.Locale)
 	 */
 	public final Properties get(final Application application, final Class clazz,
 			final String style, final Locale locale)
@@ -122,8 +110,7 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Remove all cached properties
-	 * 
+	 * @see wicket.resource.IPropertiesFactory#clearCache()
 	 */
 	public final void clearCache()
 	{
@@ -163,8 +150,8 @@ public class PropertiesFactory
 			buffer.append(locale.getLanguage());
 			if (c || (l && v))
 			{
-				buffer.append('_').append(locale.getCountry()); // This may just
-																// append '_'
+				// This may just append '_' 
+				buffer.append('_').append(locale.getCountry());
 			}
 			if (v && (l || c))
 			{
@@ -264,7 +251,7 @@ public class PropertiesFactory
 			final IResourceStream resourceStream, final Class componentClass, final String style,
 			final Locale locale)
 	{
-		// Watch file in the future
+		// Watch file modifications
 		final ModificationWatcher watcher = Application.get().getResourceSettings()
 				.getResourceWatcher();
 		if (watcher != null)
@@ -277,9 +264,8 @@ public class PropertiesFactory
 									+ resourceStream);
 
 					// Clear the whole cache as associated localized files may
-					// be
-					// affected and may need reloading as well. We make it easy.
-					// Usually the watcher is activ in dev mode only anyway.
+					// be affected and may need reloading as well. We make it 
+					// easy. Usually the watcher is activ in dev mode only anyway.
 					clearCache();
 
 					// Inform all listeners
