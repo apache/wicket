@@ -83,7 +83,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	/**
 	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application, java.lang.Class, java.lang.String, java.util.Locale)
 	 */
-	public final Properties get(final Application application, final Class clazz,
+	public Properties get(final Application application, final Class clazz,
 			final String style, final Locale locale)
 	{
 		final String key = createResourceKey(clazz, locale, style);
@@ -109,6 +109,16 @@ public class PropertiesFactory implements IPropertiesFactory
 		return props;
 	}
 
+	/**
+	 * For subclasses to get access to the cache
+	 * 
+	 * @return Map
+	 */
+	protected final Map getCache()
+	{
+		return this.propertiesCache;
+	}
+	
 	/**
 	 * @see wicket.resource.IPropertiesFactory#clearCache()
 	 */
