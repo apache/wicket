@@ -32,6 +32,7 @@ import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.settings.IResourceSettings;
 import wicket.util.concurrent.ConcurrentReaderHashMap;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
@@ -356,9 +357,37 @@ public class Localizer
 	private String createCacheId(final Class clazz, final Locale locale, final String style,
 			final String key)
 	{
-		String id = application.getResourceSettings().getPropertiesFactory().createResourceKey(
-				clazz, locale, style)
-				+ '.' + key;
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(80);
+		if (clazz != null)
+		{
+			buffer.append(clazz.getName());
+		}
+		if (style != null)
+		{
+			buffer.append(Component.PATH_SEPARATOR);
+			buffer.append(style);
+		}
+		if (locale != null)
+		{
+			buffer.append(Component.PATH_SEPARATOR);
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c || (l && v))
+			{
+				// This may just append '_' 
+				buffer.append('_').append(locale.getCountry());
+			}
+			if (v && (l || c))
+			{
+				buffer.append('_').append(locale.getVariant());
+			}
+		}
+		buffer.append('.');
+		buffer.append(key);
+		
+		final String id = buffer.toString();
 		return id;
 	}
 

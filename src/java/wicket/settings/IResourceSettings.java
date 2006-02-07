@@ -7,7 +7,7 @@ import wicket.IResourceFactory;
 import wicket.Localizer;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.model.IModel;
-import wicket.resource.PropertiesFactory;
+import wicket.resource.IPropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
 import wicket.util.resource.locator.IResourceStreamLocator;
@@ -114,7 +114,7 @@ public interface IResourceSettings
 	 * 
 	 * @return PropertiesFactory
 	 */
-	PropertiesFactory getPropertiesFactory();
+	IPropertiesFactory getPropertiesFactory();
 	
 	/**
 	 * @param name
@@ -182,7 +182,7 @@ public interface IResourceSettings
 	 * 
 	 * @param factory
 	 */
-	void setPropertiesFactory(PropertiesFactory factory);
+	void setPropertiesFactory(IPropertiesFactory factory);
 
 	/**
 	 * Sets the finder to use when searching for resources. By default, the
