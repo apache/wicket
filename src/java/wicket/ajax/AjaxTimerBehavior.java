@@ -18,6 +18,7 @@
 package wicket.ajax;
 
 import wicket.Response;
+import wicket.util.time.Duration;
 
 /**
  * A behavior that generates an ajax callback every x number of milliseconds
@@ -34,6 +35,17 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	public AjaxTimerBehavior(long millis)
 	{
 		this.millis = millis;
+	}
+
+	/**
+	 * Constructor that works with the convinience {@link Duration} class that
+	 * leads to cleaner, more readible code.
+	 * 
+	 * @param duration
+	 */
+	public AjaxTimerBehavior(Duration duration)
+	{
+		this(duration.getMilliseconds());
 	}
 
 	protected void onRenderHeadContribution(Response response)
