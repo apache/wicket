@@ -42,7 +42,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 */
 	public final boolean authorizeInstantiation(Class/* <Component> */componentClass)
 	{
-		if (componentClass.isAssignableFrom(Page.class))
+		if (Page.class.isAssignableFrom(componentClass))
 		{
 			if (!isAuthorized(componentClass))
 			{
