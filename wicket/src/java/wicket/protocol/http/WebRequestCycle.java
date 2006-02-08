@@ -182,7 +182,6 @@ public class WebRequestCycle extends RequestCycle
 		else
 		{
 			redirectUrl = page.urlFor(page, IRedirectListener.class);
-			session.touch(page);
 			// redirect page can touch its models already (via for example the
 			// constructors)
 			page.internalEndRequest();
@@ -192,6 +191,8 @@ public class WebRequestCycle extends RequestCycle
 		{
 			redirectUrl = page.urlFor(page, IRedirectListener.class);
 		}
+		// always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
+		session.touch(page);
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
