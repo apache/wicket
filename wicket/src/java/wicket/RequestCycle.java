@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.133 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -174,7 +174,7 @@ public abstract class RequestCycle
 {
 	/** Log */
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
-	
+
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
@@ -187,7 +187,10 @@ public abstract class RequestCycle
 	/** Starting the actual request processing. */
 	private static final int PREPARE_REQUEST = 1;
 
-	/** Decoding request parameters into a strongly typed {@link RequestParameters} object. */
+	/**
+	 * Decoding request parameters into a strongly typed
+	 * {@link RequestParameters} object.
+	 */
 	private static final int DECODE_PARAMETERS = 2;
 
 	/** Resolving the {@link RequestParameters} object to a request target. */
@@ -986,7 +989,8 @@ public abstract class RequestCycle
 				}
 			}
 		}
-		catch (AbstractRestartResponseException e) {
+		catch (AbstractRestartResponseException e)
+		{
 			throw e;
 		}
 		catch (RuntimeException e)
@@ -1017,9 +1021,23 @@ public abstract class RequestCycle
 			// get the processor
 			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
-			// FIXME Robustness: Catch infinite loops
-			while (currentStep < DONE)
+			// Arbitrary maximum number of steps
+			final int maxSteps = Short.MAX_VALUE;
+
+			// Loop through steps
+			for (int totalSteps = 0; currentStep < DONE; totalSteps++)
 			{
+				// There is no way to catch infinite loops since the response
+				// step can always throw an AbstractRestartResponseException and
+				// start the process over at the RESPOND step. So we do a sanity
+				// check here and limit the total number of steps to an
+				// arbitrary maximum that we consider unreasonable for working
+				// code.
+				if (totalSteps >= maxSteps)
+				{
+					throw new IllegalStateException("Request processing executed " + maxSteps
+							+ " steps, which means it is probably in an infinite loop.");
+				}
 				try
 				{
 					step(processor);
@@ -1032,7 +1050,6 @@ public abstract class RequestCycle
 					// stack
 					currentStep = RESPOND;
 				}
-
 			}
 		}
 		finally
