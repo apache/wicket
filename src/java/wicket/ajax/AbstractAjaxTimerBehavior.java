@@ -23,7 +23,7 @@ import wicket.util.time.Duration;
 /**
  * A behavior that generates an AJAX update callback at a regular interval.
  */
-public abstract class AjaxTimerBehavior extends AjaxBehavior
+public abstract class AbstractAjaxTimerBehavior extends AjaxBehavior
 {
 	/** The update interval */
 	private final Duration updateInterval;
@@ -34,7 +34,7 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	 * @param updateInterval
 	 *            Duration between AJAX callbacks
 	 */
-	public AjaxTimerBehavior(final Duration updateInterval)
+	public AbstractAjaxTimerBehavior(final Duration updateInterval)
 	{
 		this.updateInterval = updateInterval;
 	}

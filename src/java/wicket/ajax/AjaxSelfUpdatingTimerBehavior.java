@@ -24,7 +24,7 @@ import wicket.util.time.Duration;
  * Automatically re-renders the component it is attached to via AJAX at a regular
  * interval.
  */
-public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
+public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 	}
 
 	/**
-	 * @see wicket.ajax.AjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
+	 * @see wicket.ajax.AbstractAjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
 	 */
 	protected final void onTimer(final AjaxRequestTarget target)
 	{
