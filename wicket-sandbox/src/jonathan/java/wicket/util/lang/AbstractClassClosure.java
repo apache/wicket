@@ -39,11 +39,11 @@ import wicket.WicketRuntimeException;
  * @author Thomas Ball
  * @author Jonathan Locke
  */
-// FIXME General: Add this to wicket.util.lang 
-public class ClassClosure
+// FIXME General: Add this to wicket.util.lang
+public abstract class AbstractClassClosure
 {
 	/** Closure of classes referenced by the class passed to the constructor */
-	Set/* <String> */closure = new HashSet();
+	final Set/* <String> */closure = new HashSet();
 
 	/**
 	 * Construct.
@@ -53,7 +53,7 @@ public class ClassClosure
 	 * @param includeJDK
 	 *            True to include JDK classes
 	 */
-	public ClassClosure(final List/* <Class> */classes, final boolean includeJDK)
+	public AbstractClassClosure(final List/* <Class> */classes, final boolean includeJDK)
 	{
 		final Set visited = new HashSet();
 		final Stack stack = new Stack();
@@ -69,11 +69,11 @@ public class ClassClosure
 		while (!stack.empty())
 		{
 			// Add class to closure.
-			ClassName classname = (ClassName)stack.pop();
-			InputStream in = inputStreamForClassName(classname.getType());
+			final ClassName classname = (ClassName)stack.pop();
+			final InputStream in = inputStreamForClassName(classname.getType());
 			try
 			{
-				ClassFile classfile = new ClassFile(in);
+				final ClassFile classfile = new ClassFile(in);
 				closure.add(classfile.getName().getExternalName());
 
 				final ConstantPool pool = classfile.getConstantPool();
@@ -105,7 +105,7 @@ public class ClassClosure
 						}
 					}
 				}
-				
+
 				// Get the input stream a second time to add to JAR
 				final InputStream in2 = inputStreamForClassName(classname.getType());
 				try

@@ -22,11 +22,11 @@ import wicket.markup.html.applet.Applet;
 import wicket.model.Model;
 
 /**
- * Home page of the applet example.
+ * Home page of the simple applet example.
  * 
  * @author Jonathan Locke
  */
-public class Home extends WebPage
+public final class Home extends WebPage
 {
 	/**
 	 * Constructor.

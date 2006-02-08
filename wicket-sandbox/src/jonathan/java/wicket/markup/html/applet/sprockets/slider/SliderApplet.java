@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,28 +29,29 @@ import wicket.markup.html.applet.IAppletServer;
  * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
  * 
  * Private implementation of Slider Sprocket.
- *
+ * 
  * @author Jonathan Locke
  */
 public class SliderApplet implements IApplet
 {
 	/** The Swing slider */
 	private JSlider slider;
-	
+
 	/** The model for this slider applet */
 	private SliderAppletModel model;
 
 	/**
-	 * @see wicket.markup.html.applet.IApplet#init(wicket.markup.html.applet.IAppletServer, java.awt.Container, java.lang.Object)
+	 * @see wicket.markup.html.applet.IApplet#init(wicket.markup.html.applet.IAppletServer,
+	 *      java.awt.Container, java.lang.Object)
 	 */
-	public void init(IAppletServer server, Container container, Object modelObject)
+	public void init(final IAppletServer server, final Container container, final Object modelObject)
 	{
 		this.model = (SliderAppletModel)modelObject;
 		container.setBackground(Color.white);
 		container.add(slider = new JSlider(model.min, model.max, model.value));
 		slider.setBackground(Color.white);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.applet.IApplet#getModel()
 	 */

@@ -24,7 +24,7 @@ import wicket.protocol.http.WebApplication;
  * 
  * @author Jonathan Locke
  */
-public class SimpleAppletApplication extends WebApplication
+public final class SimpleAppletApplication extends WebApplication
 {
 	/**
 	 * Constructor.

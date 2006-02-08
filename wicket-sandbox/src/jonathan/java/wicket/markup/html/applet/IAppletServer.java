@@ -19,8 +19,8 @@ package wicket.markup.html.applet;
 
 /**
  * Interface to the originating server that served up an applet. The setModel()
- * and getModel() methods push and pull models to/from the server side Applet
- * component that created a given applet.
+ * and getModel() methods push and pull models to/from the server side Wicket
+ * Applet component.
  * 
  * @see wicket.markup.html.applet.IApplet
  * 

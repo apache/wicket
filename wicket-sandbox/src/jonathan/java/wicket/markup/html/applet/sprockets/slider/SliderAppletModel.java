@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
  * 
- * Model for SliderApplet.
+ * Model for Slider Sprocket's applet.
  * 
  * @author Jonathan Locke
  */

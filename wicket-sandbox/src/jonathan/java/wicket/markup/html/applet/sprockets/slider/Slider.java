@@ -42,7 +42,7 @@ public class Slider extends Sprocket
 	 * @param max
 	 *            The maximum value for this slider
 	 */
-	public Slider(String id, IModel model, int min, int max)
+	public Slider(final String id, final IModel model, final int min, final int max)
 	{
 		super(id, model, SliderApplet.class);
 		appletModel = new SliderAppletModel();
@@ -62,7 +62,7 @@ public class Slider extends Sprocket
 	 * @param max
 	 *            The maximum value for this slider
 	 */
-	public Slider(String id, int min, int max)
+	public Slider(final String id, final int min, final int max)
 	{
 		super(id, SliderApplet.class);
 		appletModel = new SliderAppletModel();
@@ -80,7 +80,7 @@ public class Slider extends Sprocket
 	 * 
 	 * @see wicket.markup.html.applet.Applet#setAppletModel(java.lang.Object)
 	 */
-	public void setAppletModel(Object object)
+	public void setAppletModel(final Object object)
 	{
 		appletModel = (SliderAppletModel)object;
 		setModelObject(new Integer(appletModel.value));

@@ -27,7 +27,7 @@ import wicket.WicketRuntimeException;
 import wicket.util.io.ByteArrayOutputStream;
 import wicket.util.io.Streams;
 import wicket.util.lang.Bytes;
-import wicket.util.lang.ClassClosure;
+import wicket.util.lang.AbstractClassClosure;
 
 /**
  * A factory object that constructs JAR resources. You can add data via
@@ -80,7 +80,7 @@ public class JarResourceFactory
 		checkWritable();
 		try
 		{
-			ZipEntry entry = new ZipEntry(path + ".class");
+			final ZipEntry entry = new ZipEntry(path + ".class");
 			jar.putNextEntry(entry);
 			Streams.copy(in, jar);
 			jar.closeEntry();
@@ -103,7 +103,7 @@ public class JarResourceFactory
 	public void addClassClosures(final List classes)
 	{
 		checkWritable();
-		new ClassClosure(classes, false)
+		new AbstractClassClosure(classes, false)
 		{
 
 			protected void addClass(final String name, final InputStream is)

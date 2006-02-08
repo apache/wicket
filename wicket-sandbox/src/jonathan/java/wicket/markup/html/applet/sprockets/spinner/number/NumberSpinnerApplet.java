@@ -44,7 +44,7 @@ public class NumberSpinnerApplet implements IApplet
 	/**
 	 * @see wicket.markup.html.applet.IApplet#init(wicket.markup.html.applet.IAppletServer, java.awt.Container, java.lang.Object)
 	 */
-	public void init(IAppletServer server, Container container, Object modelObject)
+	public void init(final IAppletServer server, final Container container, final Object modelObject)
 	{
 		this.model = (SpinnerNumberModel)modelObject;
 		container.setBackground(Color.white);

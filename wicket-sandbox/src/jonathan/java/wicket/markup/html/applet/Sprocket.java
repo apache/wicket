@@ -29,12 +29,12 @@ import wicket.model.IModel;
  */
 public class Sprocket extends Applet
 {
-	public Sprocket(String id, Class appletClass)
+	public Sprocket(final String id, final Class appletClass)
 	{
 		super(id, appletClass);
 	}
 
-	public Sprocket(String id, IModel model, Class appletClass)
+	public Sprocket(final String id, final IModel model, final Class appletClass)
 	{
 		super(id, model, appletClass);
 	}

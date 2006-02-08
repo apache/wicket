@@ -72,7 +72,7 @@ public class Objects2
 	 * @return The serialized object
 	 */
 	// FIXME General: Belongs in Objects.java
-	public static byte[] objectToByteArray(Object object)
+	public static byte[] objectToByteArray(final Object object)
 	{
 		try
 		{

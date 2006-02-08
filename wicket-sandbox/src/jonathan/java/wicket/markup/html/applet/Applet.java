@@ -209,7 +209,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 * @param model
 	 *            The model to set
 	 */
-	public void setAppletModel(Object model)
+	public void setAppletModel(final Object model)
 	{
 		setModelObject(model);
 	}

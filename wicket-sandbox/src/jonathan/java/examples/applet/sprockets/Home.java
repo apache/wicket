@@ -28,7 +28,7 @@ import wicket.model.PropertyModel;
  * 
  * @author Jonathan Locke
  */
-public class Home extends WebPage
+public final class Home extends WebPage
 {
 	private int sliderValue;
 	private int spinnerValue;
@@ -38,7 +38,7 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-		Form form = new Form("form")
+		final Form form = new Form("form")
 		{
 			protected void onSubmit()
 			{
@@ -52,7 +52,7 @@ public class Home extends WebPage
 		add(form);
 	}
 
-	public void setSliderValue(int value)
+	public void setSliderValue(final int value)
 	{
 		this.sliderValue = value;
 	}
@@ -62,7 +62,7 @@ public class Home extends WebPage
 		return sliderValue;
 	}
 
-	public void setSpinnerValue(int value)
+	public void setSpinnerValue(final int value)
 	{
 		this.spinnerValue = value;
 	}

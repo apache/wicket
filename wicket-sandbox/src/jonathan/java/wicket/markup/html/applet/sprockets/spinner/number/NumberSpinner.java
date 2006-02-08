@@ -46,7 +46,7 @@ public class NumberSpinner extends Sprocket
 	 * @param stepSize
 	 *            The step size for this spinner
 	 */
-	public NumberSpinner(String id, IModel model, Number minimum, Number maximum, Number stepSize)
+	public NumberSpinner(final String id, final IModel model, final Number minimum, final Number maximum, final Number stepSize)
 	{
 		super(id, model, NumberSpinnerApplet.class);
 		appletModel = new SpinnerNumberModel();
@@ -69,7 +69,7 @@ public class NumberSpinner extends Sprocket
 	 * @param stepSize
 	 *            The step size for this spinner
 	 */
-	public NumberSpinner(String id, Number minimum, Number maximum, Number stepSize)
+	public NumberSpinner(final String id, final Number minimum, final Number maximum, final Number stepSize)
 	{
 		super(id, NumberSpinnerApplet.class);
 		appletModel = new SpinnerNumberModel();
@@ -87,7 +87,7 @@ public class NumberSpinner extends Sprocket
 	 * 
 	 * @see wicket.markup.html.applet.Applet#setAppletModel(java.lang.Object)
 	 */
-	public void setAppletModel(Object object)
+	public void setAppletModel(final Object object)
 	{
 		appletModel = (SpinnerNumberModel)object;
 		setModelObject(appletModel.getValue());
