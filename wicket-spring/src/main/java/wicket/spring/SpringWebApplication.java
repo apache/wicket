@@ -117,14 +117,30 @@ public abstract class SpringWebApplication extends WebApplication implements
 		return contextLocator;
 	}
 
-	// TODO docme!
+	/**
+	 * Creates a proxy for a spring bean that is safe to put into session and
+	 * serialize
+	 * 
+	 * @param clazz
+	 *            class of spring bean
+	 * @param beanName
+	 *            name of spring bean
+	 * @return proxy representing the spring bean
+	 */
 	protected Object createSpringBeanProxy(Class clazz, String beanName)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName,
 				clazz, getSpringContextLocator()));
 	}
 
-	// TODO docme!
+	/**
+	 * Creates a proxy for a spring bean that is safe to put into session and
+	 * serialize
+	 * 
+	 * @param clazz
+	 *            class of spring bean
+	 * @return proxy representing the spring bean
+	 */
 	protected Object createSpringBeanProxy(Class clazz)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(clazz,
