@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
-import wicket.injection.ComponentInjector;
 import wicket.protocol.http.WebApplication;
 import wicket.proxy.LazyInitProxyFactory;
 
@@ -80,8 +79,6 @@ public abstract class SpringWebApplication extends WebApplication implements
 					.getRequiredWebApplicationContext(sc);
 
 		}
-
-		add(new ComponentInjector());
 	}
 
 	/**
