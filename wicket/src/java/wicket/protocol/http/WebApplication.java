@@ -54,22 +54,23 @@ import wicket.util.string.Strings;
  * application.
  * <p>
  * Application settings are given defaults by the WebApplication() constructor
- * and internalInit method, such as error page classes appropriate for HTML. 
- * WebApplication subclasses can override these values and/or modify other 
- * application settings by overriding the init() method and then by calling getXXXSettings() 
- * to retrieve an interface to a mutable Settings object.
- * Do not do this in the constructor itself because the defaults will then override youre settings. 
+ * and internalInit method, such as error page classes appropriate for HTML.
+ * WebApplication subclasses can override these values and/or modify other
+ * application settings by overriding the init() method and then by calling
+ * getXXXSettings() to retrieve an interface to a mutable Settings object. Do
+ * not do this in the constructor itself because the defaults will then override
+ * youre settings.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
  * init() method. For example:
  * 
  * <pre>
- *       public void init()
- *       {
- *           String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *           URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *           ...
+ *        public void init()
+ *        {
+ *            String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *            URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *            ...
  * </pre>
  * 
  * @see WicketServlet
@@ -113,9 +114,9 @@ public abstract class WebApplication extends Application
 	private WicketServlet wicketServlet;
 
 	/**
-	 * Constructor.
-	 * Do not override this constructor to configure youre application in it.
-	 * Use the init method for that so that the default behaviour is initialized first.
+	 * Constructor. Do not override this constructor to configure youre
+	 * application in it. Use the init method for that so that the default
+	 * behaviour is initialized first.
 	 */
 	public WebApplication()
 	{
@@ -185,28 +186,6 @@ public abstract class WebApplication extends Application
 		}
 
 		getRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
-	}
-
-	/**
-	 * Mounts all bookmarkable pages in a given package.
-	 * 
-	 * @param path
-	 *            The path to mount at
-	 * @param p
-	 *            The package for which all bookmarkable pages or
-	 *            sharedresources should be mounted
-	 */
-	public final void mount(String path, Package p)
-	{
-		if (p == null)
-		{
-			throw new IllegalArgumentException("Null Package argument not allowed.  "
-					+ "If you called Class.getPackage() and it returned null, "
-					+ "there may be no Package object for the given class!  "
-					+ "You can instead call mount(path, PackageName), passing "
-					+ "in wicket.util.lang.PackageName.forClass(c)");
-		}
-		mount(path, PackageName.forPackage(p));
 	}
 
 	/**
@@ -345,9 +324,9 @@ public abstract class WebApplication extends Application
 		}
 		return requestCycleProcessor;
 	}
-	
+
 	/**
-	 * May be replaced by subclasses which whishes to uses there own 
+	 * May be replaced by subclasses which whishes to uses there own
 	 * implementation of IRequestCycleProcessor
 	 * 
 	 * @return IRequestCycleProcessor
@@ -387,16 +366,16 @@ public abstract class WebApplication extends Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * Internal intialization. First determine the deployment mode. First 
-	 * check the system property -Dwicket.configuration. If it does not exist
-	 * check the servlet init parameter (
-	 * <code>&lt;init-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). 
+	 * Internal intialization. First determine the deployment mode. First check
+	 * the system property -Dwicket.configuration. If it does not exist check
+	 * the servlet init parameter (
+	 * <code>&lt;init-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>).
 	 * If not found check the servlet context init paramert
-	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). 
-	 * If the parameter is "development", settings appropriate for development are
-	 * set. If it's "deployment" (which is default), deployment settings are used. 
-	 * If development is specified and a "sourceFolder" init parameter is also
-	 * set, then resources in that folder will be polled for changes.
+	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>).
+	 * If the parameter is "development", settings appropriate for development
+	 * are set. If it's "deployment" (which is default), deployment settings are
+	 * used. If development is specified and a "sourceFolder" init parameter is
+	 * also set, then resources in that folder will be polled for changes.
 	 */
 	protected void internalInit()
 	{
@@ -410,16 +389,18 @@ public abstract class WebApplication extends Application
 		String configuration = System.getProperty("wicket." + Application.CONFIGURATION);
 
 		// If no system parameter check servlet specific <init-param>
-		if (configuration == null) 
+		if (configuration == null)
 		{
 			configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
 		}
-		// If no system parameter and not <init-param>, than check <context-param>
-		if (configuration == null) 
+		// If no system parameter and not <init-param>, than check
+		// <context-param>
+		if (configuration == null)
 		{
-			configuration = wicketServlet.getServletContext().getInitParameter(Application.CONFIGURATION);
+			configuration = wicketServlet.getServletContext().getInitParameter(
+					Application.CONFIGURATION);
 		}
-		
+
 		// Development mode is default if not settings have been found
 		if (configuration != null)
 		{
@@ -596,7 +577,7 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("mounting path has to start with '/'");
 		}
 	}
-	
+
 	/**
 	 * @param wicketServletName
 	 *            wicket servlet name
@@ -611,5 +592,5 @@ public abstract class WebApplication extends Application
 		}
 		return "wicket:" + wicketServletName;
 	}
-	
+
 }
