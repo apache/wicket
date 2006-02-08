@@ -60,7 +60,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 	 */
 	public SpringWebApplication()
 	{
-		add(new ComponentInjector());
+
 	}
 
 	/**
@@ -81,6 +81,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 
 		}
 
+		add(new ComponentInjector());
 	}
 
 	/**
