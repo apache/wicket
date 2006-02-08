@@ -905,6 +905,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void onRender(final MarkupStream markupStream)
 	{
+		// first try to check if the page can be rendered:
+		boolean renderAllowed = authorize(RENDER);
+		if(!renderAllowed)
+		{
+			// TODO do we need to do something with this boolean?
+			// throw a redirect to access denied page?
+			log.debug("Page not allowed to render: " + this );
+		}
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
