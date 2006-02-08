@@ -35,6 +35,24 @@ import wicket.util.tester.WicketTester;
 public class AnnotationsRoleTest extends TestCase
 {
 	/**
+	 * Construct.
+	 */
+	public AnnotationsRoleTest()
+	{
+		super();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 */
+	public AnnotationsRoleTest(String arg0)
+	{
+		super(arg0);
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	public void testAuthorized() throws Exception

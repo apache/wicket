@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,8 +17,6 @@
  */
 package wicket.authorization.strategies.role;
 
-import wicket.authorization.strategies.role.AuthorizedAction;
-import wicket.authorization.strategies.role.AuthorizedActions;
 import junit.framework.TestCase;
 
 /**
@@ -27,17 +26,16 @@ import junit.framework.TestCase;
  */
 public class AuthorizedActionTest extends TestCase
 {
-
 	/**
 	 * Construct.
 	 */
 	public AuthorizedActionTest()
 	{
+		super();
 	}
 
 	/**
 	 * Construct.
-	 * 
 	 * @param arg0
 	 */
 	public AuthorizedActionTest(String arg0)
@@ -47,8 +45,10 @@ public class AuthorizedActionTest extends TestCase
 
 	/**
 	 * Test adding roles.
+	 * 
+	 * @throws Exception
 	 */
-	public void testAdd1()
+	public void testAdd1() throws Exception
 	{
 		AuthorizedActions actions = new AuthorizedActions();
 		actions.add(new AuthorizedAction("TEST", new String[] { "FOO", "BAR" }));
@@ -60,8 +60,10 @@ public class AuthorizedActionTest extends TestCase
 
 	/**
 	 * Test adding roles.
+	 * 
+	 * @throws Exception
 	 */
-	public void testAdd2()
+	public void testAdd2() throws Exception
 	{
 		AuthorizedActions actions = new AuthorizedActions();
 		actions.add(new AuthorizedAction("TEST", new String[] { "FOO", "BAR" }));
@@ -73,8 +75,10 @@ public class AuthorizedActionTest extends TestCase
 
 	/**
 	 * Test adding roles.
+	 * 
+	 * @throws Exception
 	 */
-	public void testAdd3()
+	public void testAdd3() throws Exception
 	{
 		AuthorizedActions actions = new AuthorizedActions();
 		actions.add(new AuthorizedAction("TEST1", new String[] { "FOO", "BAR" }));
