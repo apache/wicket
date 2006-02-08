@@ -868,7 +868,7 @@ public final class Strings
 		for (int i=0; i < trace.length; i++)
 		{
 			String traceString = trace[i].toString();
-			if(!traceString.startsWith("sun.reflect.") && i > 1)
+			if(!(traceString.startsWith("sun.reflect.") && i > 1))
 			{
 				sb.append("     at ");
 				sb.append(traceString);
