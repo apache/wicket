@@ -115,6 +115,14 @@ public final class PageMap implements Serializable
 		{
 			return id + (version << 16);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "Access{id=" + id + ",version=" + version + "}";
+		}
 	}
 
 	/**
@@ -309,6 +317,14 @@ public final class PageMap implements Serializable
 		// Remove entry from session
 		session.removeAttribute(attributeForId(entry.getNumericId()));
 		return entry;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "PageMap{name=" + name + ",access=" + accessStack + "}";
 	}
 
 	/**
