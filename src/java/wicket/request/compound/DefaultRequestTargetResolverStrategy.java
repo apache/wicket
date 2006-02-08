@@ -123,7 +123,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			final RequestParameters requestParameters)
 	{
 		String resourceKey = requestParameters.getResourceKey();
-		return new SharedResourceRequestTarget(resourceKey);
+		return new SharedResourceRequestTarget(resourceKey, requestParameters);
 	}
 
 	/**

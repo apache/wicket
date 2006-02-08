@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SharedResourceRequestTarget.java,v 1.3 2005/12/30 20:20:17 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,7 @@ import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.request.ISharedResourceRequestTarget;
+import wicket.request.RequestParameters;
 
 /**
  * Default implementation of {@link ISharedResourceRequestTarget}. Target that
@@ -34,6 +35,9 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/** the key of the resource. */
 	private final String resourceKey;
 
+	private final RequestParameters requestParameters;
+
+
 	/**
 	 * Construct.
 	 * 
@@ -42,12 +46,26 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public SharedResourceRequestTarget(String resourceKey)
 	{
+		this(resourceKey, null);
+	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param resourceKey
+	 *            the key of the resource
+	 * @param requestParameters
+	 */
+	public SharedResourceRequestTarget(String resourceKey, RequestParameters requestParameters)
+	{
 		if (resourceKey == null)
 		{
 			throw new IllegalArgumentException("Argument resourceKey must be not-null");
 		}
 
 		this.resourceKey = resourceKey;
+		this.requestParameters = requestParameters;
 	}
 
 	/**
@@ -65,6 +83,12 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
 		}
 		sharedResources.onResourceRequested(resourceKey);
+
+		if (requestParameters != null)
+		{
+			resource.setParameters(requestParameters.getParameters());
+		}
+
 		resource.onResourceRequested();
 	}
 
