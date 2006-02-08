@@ -20,5 +20,6 @@
 	<classpathentry kind="var" path="M2_REPO/easymock/easymock/1.1/easymock-1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/jetty/4.2.9/jetty-4.2.9.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/jasper-compiler/4.2.20RC0/jasper-compiler-4.2.20RC0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container/wicket-spring-examples"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
