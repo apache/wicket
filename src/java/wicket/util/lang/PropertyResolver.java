@@ -355,7 +355,7 @@ public class PropertyResolver
 		}
 		catch (Exception e)
 		{
-			log.warn("Cannot find field " + clz + "." + expression, e);
+			log.debug("Cannot find field " + clz + "." + expression, e);
 		}
 		return field;
 	}
@@ -384,7 +384,7 @@ public class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot find getter " + clz + "." + expression, e);
+				log.debug("Cannot find getter " + clz + "." + expression, e);
 			}
 		}
 		return method;
@@ -403,7 +403,7 @@ public class PropertyResolver
 		}
 		catch (Exception e)
 		{
-			log.warn("Cannot find method " + clz + "." + expression, e);
+			log.debug("Cannot find method " + clz + "." + expression, e);
 		}
 		return method;
 	}
@@ -669,7 +669,7 @@ public class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot find setter method corresponding to " + getMethod, e);
+				log.debug("Cannot find setter method corresponding to " + getMethod, e);
 			}
 			return null;
 		}
@@ -865,7 +865,7 @@ public class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot find setter corresponding to " + getMethod, e);
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			return null;
 		}
