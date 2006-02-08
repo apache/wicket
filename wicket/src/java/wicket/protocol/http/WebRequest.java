@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,19 +28,14 @@ import wicket.util.lang.Bytes;
 
 /**
  * Subclass of Request for HTTP protocol requests which holds an underlying
- * HttpServletRequest object. A NULL request object implementing all methods as
- * NOPs is available via WebRequest#NULL. A variety of convenience methods are
- * available that operate on the HttpServletRequest object. These methods do
- * things such as providing access to parameters, cookies, URLs and path
- * information.
+ * HttpServletRequest object. A variety of convenience methods are available
+ * that operate on the HttpServletRequest object. These methods do things such
+ * as providing access to parameters, cookies, URLs and path information.
  * 
  * @author Jonathan Locke
  */
 public abstract class WebRequest extends Request
 {
-	/** Null WebRequest object that does nothing */
-	public static final WebRequest NULL = new NullWebRequest();
-
 	/**
 	 * Gets the application context path.
 	 * 
@@ -57,7 +52,7 @@ public abstract class WebRequest extends Request
 	{
 		return getHttpServletRequest().getCookies();
 	}
-	
+
 	/**
 	 * Gets the servlet path.
 	 * 
