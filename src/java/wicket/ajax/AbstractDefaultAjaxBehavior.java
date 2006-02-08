@@ -58,9 +58,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		AjaxRequestTarget target = new AjaxRequestTarget();
-		RequestCycle.get().setRequestTarget(target);
-		respond(target);
+		boolean isPageVersioned = true;
+		try
+		{
+			isPageVersioned = getComponent().getPage().isVersioned();
+			getComponent().getPage().setVersioned(false);
+
+			AjaxRequestTarget target = new AjaxRequestTarget();
+			RequestCycle.get().setRequestTarget(target);
+			respond(target);
+		} finally {
+			getComponent().getPage().setVersioned(isPageVersioned);
+		}
 	}
 
 	/**
