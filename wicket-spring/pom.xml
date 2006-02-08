@@ -5,7 +5,7 @@
     <groupId>wicket</groupId>
     <artifactId>wicket-spring</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <name>Wicket Spring Integration</name>
     <developers>
         <developer>
