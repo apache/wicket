@@ -100,7 +100,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			fc.valid();
 			fc.updateModel();
-			// XXX Ajax: do we need to persist values for persistent components
+			// TODO Ajax: Do we need to persist values for persistent components
 		}
 
 		onUpdate(target);

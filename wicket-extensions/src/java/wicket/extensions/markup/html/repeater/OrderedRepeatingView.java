@@ -41,7 +41,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
- * FIXME Deprecation(1.2) remove in post 1.2 release
+ * FIXME Post 1.2: Remove this class
  * 
  */
 public class OrderedRepeatingView extends RepeatingView
