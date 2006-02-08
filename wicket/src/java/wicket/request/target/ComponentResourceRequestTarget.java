@@ -31,7 +31,7 @@ import wicket.WicketRuntimeException;
  * 
  * @author jcompagner
  */
-public final class ComponentResourceRequestTarget implements IRequestTarget, IAccessCheck
+public final class ComponentResourceRequestTarget implements IRequestTarget
 {
 
 	private final Page page;
@@ -89,15 +89,6 @@ public final class ComponentResourceRequestTarget implements IRequestTarget, IAc
 	public Object getLock(RequestCycle requestCycle)
 	{
 		return requestCycle.getSession();
-	}
-
-	/**
-	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
-	 * @deprecated
-	 */
-	public boolean checkAccess(RequestCycle requestCycle)
-	{
-		return page.checkAccess();
 	}
 
 	/**
