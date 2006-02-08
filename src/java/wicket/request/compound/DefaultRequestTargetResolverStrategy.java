@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.IPageFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -33,8 +32,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.MarkupException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.BehaviorRequestTarget;
@@ -261,37 +258,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 		try
 		{
-			Page newPage = null;
-
-			IPageFactory pageFactory = session.getPageFactory();
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			// FIXME Robustness: Need to take a second look on synchronizing in
-			// the resolve/render phase at this time, the session isn't accessed
-			// in a atomic, isolated manner during the request.
-			synchronized (session)
-			{
-				if (params.size() == 0)
-				{
-					newPage = pageFactory.newPage(pageClass);
-				}
-				else
-				{
-					newPage = pageFactory.newPage(pageClass, params);
-				}
-
-			}
-			// the response might have been set in the constructor of
-			// the bookmarkable page
-			IRequestTarget requestTarget = requestCycle.getRequestTarget();
-
-			// is it possible that there is already another request target at
-			// this point then the 2 below?
-			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
-			{
-				requestTarget = new PageRequestTarget(newPage);
-			}
-
-			return requestTarget;
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),pageClass,params);
 		}
 		catch (RuntimeException e)
 		{
@@ -319,48 +287,25 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// Get the home page class
 			Class homePageClass = application.getHomePage();
 
+			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			// and create a dummy target for looking up whether the home page is
 			// mounted
-			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(
-					homePageClass);
+			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
+					homePageClass, parameters);
 			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 					.getRequestCodingStrategy();
-			String path = requestCodingStrategy.pathForTarget(pokeTarget);
+			String path = requestCodingStrategy.pathForTarget(homepageTarget);
 
 			if (path != null)
 			{
 				// The home page was mounted at the given path.
 				// Issue a redirect to that path
 				requestCycle.setRedirect(true);
-				
-				// our poke target is good enough
-				return pokeTarget;
 			}
 
 			// else the home page was not mounted; render it now so
 			// that we will keep a clean path
-			PageParameters parameters = new PageParameters(requestParameters.getParameters());
-			Page newPage = null;
-			if (parameters.size() == 0)
-			{
-				newPage = session.getPageFactory().newPage(homePageClass);
-			}
-			else
-			{
-				newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			}
-
-			// The response might have been set in the home page constructor
-			IRequestTarget requestTarget = requestCycle.getRequestTarget();
-
-			// Is it possible that there is already another request target at
-			// this point then the 2 below?
-			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
-			{
-				requestTarget = new PageRequestTarget(newPage);
-			}
-
-			return requestTarget;
+			return homepageTarget;
 		}
 		catch (MarkupException e)
 		{
