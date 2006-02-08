@@ -1,9 +1,10 @@
 <wicket:extend>
 <b>Annotations and Bean Proxy Approach</b><br/>
-This approach allows users to quickly and easily inject any page, panel, or component with bean proxies. Any page or panel that wishes to be injected has to extend either InjectableWebPage or InjectablePanel. Any component that wishes to be injected can do so by calling InjectorHolder.getInjector().inject(this) from its constructor.
+This approach allows users to quickly and easily inject any component with bean proxies. Components simply have to annotate any fields they wish injected with @SpringBean annotation.
 Interesting classes:<br/>
 <ul>
-	<li>AnnotApplication - serves as a link between wicket and spring ApplicationContext, also sets up an injector object that will be used to inject annotated components</li>
+	<li>ComponentInjector - an implementation of IComponentInstantiationListener that performs the injection</li>
+	<li>AnnotApplication - serves as a link between wicket and spring ApplicationContext, also sets up an injector object and ComponentInjector that will be used to inject annotated components</li>
 	<li>BasePage - extends InjectableWebPage instead of WebPage to allow subclasses to be injected automatically</li>
 	<li>AnnotPage - contains an annotated field whose value will be initialized with a proxy by the injector</li>
 </ul>

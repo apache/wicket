@@ -1,5 +1,6 @@
 package wicket.spring.injection.annot;
 
+import wicket.injection.ComponentInjector;
 import wicket.injection.web.InjectorHolder;
 import wicket.spring.SpringWebApplication;
 
@@ -18,6 +19,7 @@ public abstract class AnnotSpringWebApplication extends SpringWebApplication
 	{
 		super.internalInit();
 		InjectorHolder.setInjector(new AnnotSpringInjector(getSpringContextLocator()));
+		add(new ComponentInjector());
 	}
 	
 
