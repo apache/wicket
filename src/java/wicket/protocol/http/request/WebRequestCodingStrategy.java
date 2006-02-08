@@ -168,6 +168,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
 		}
+		else if (requestTarget instanceof IPageRequestTarget)
+		{
+			return encode(requestCycle, (IPageRequestTarget)requestTarget);
+		}
 
 		// fallthough for non-default request targets
 		String url = doEncode(requestCycle, requestTarget);
@@ -473,6 +477,39 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
+	 * Encode a page target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected final String encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
+	{
+		final StringBuffer url = new StringBuffer(64);
+		url.append(urlPrefix(requestCycle));
+		url.append("?path=");
+		Page page = requestTarget.getPage();
+		url.append(page.getPath());
+		final PageMap pageMap = page.getPageMap();
+		if (!pageMap.isDefault())
+		{
+			url.append("&pagemap=");
+			url.append(pageMap.getName());
+		}
+		int versionNumber = page.getPage().getCurrentVersionNumber();
+		if (versionNumber > 0)
+		{
+			url.append("&version=");
+			url.append(versionNumber);
+		}
+
+		return requestCycle.getResponse().encodeURL(url.toString());
+
+	}
+
+	/**
 	 * Encode a shared resource target.
 	 * 
 	 * @param requestCycle
@@ -510,7 +547,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		// TODO Performance: Optimize algoritm if possible and/ or cache lookup results
+		// TODO Performance: Optimize algoritm if possible and/ or cache lookup
+		// results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
 			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
