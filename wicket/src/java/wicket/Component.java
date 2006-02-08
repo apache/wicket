@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedActionException;
-import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
@@ -529,8 +528,8 @@ public abstract class Component implements Serializable
 	 */
 	public Component(final String id)
 	{
-		authorizeInstantiation();
 		setId(id);
+		getApplication().notifyComponentInstantiationListeners(this);
 	}
 
 	/**
@@ -547,8 +546,8 @@ public abstract class Component implements Serializable
 	 */
 	public Component(final String id, final IModel model)
 	{
-		authorizeInstantiation();
 		setId(id);
+		getApplication().notifyComponentInstantiationListeners(this);
 		setModel(model);
 	}
 
@@ -2635,18 +2634,6 @@ public abstract class Component implements Serializable
 	final void setRenderAllowed(boolean renderAllowed)
 	{
 		this.renderAllowed = renderAllowed;
-	}
-
-	/**
-	 * Check whether this component may be created at all. Throws a
-	 * {@link AuthorizationException} when it may not be created
-	 */
-	private final void authorizeInstantiation()
-	{
-		if (!getSession().getAuthorizationStrategy().authorizeInstantiation(getClass()))
-		{
-			throw new UnauthorizedInstantiationException(getClass());
-		}
 	}
 
 	/**

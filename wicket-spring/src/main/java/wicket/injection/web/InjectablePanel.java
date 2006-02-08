@@ -25,13 +25,18 @@ import wicket.model.IModel;
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @deprecated with the introduction of
+ *             {@link wicket.injection.ComponentInjector} you don't need to
+ *             override from this class anymore, but can instead just override
+ *             {@link wicket.markup.html.panel.Panel}.
  */
 public class InjectablePanel extends Panel
 {
 	/**
 	 * Constructor
-	 * @param id component id
+	 * 
+	 * @param id
+	 *            component id
 	 */
 	public InjectablePanel(String id)
 	{
@@ -41,6 +46,7 @@ public class InjectablePanel extends Panel
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 */
@@ -50,9 +56,11 @@ public class InjectablePanel extends Panel
 		getInjector().inject(this);
 	}
 
-	private ConfigurableInjector getInjector() {
-		ConfigurableInjector injector=InjectorHolder.getInjector();
-		if (injector==null) {
+	private ConfigurableInjector getInjector()
+	{
+		ConfigurableInjector injector = InjectorHolder.getInjector();
+		if (injector == null)
+		{
 			throw new RuntimeException("injector not set in InjectorHolder");
 		}
 		return injector;

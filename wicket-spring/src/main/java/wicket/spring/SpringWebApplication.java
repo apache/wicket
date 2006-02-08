@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
+import wicket.injection.ComponentInjector;
 import wicket.protocol.http.WebApplication;
 import wicket.proxy.LazyInitProxyFactory;
 
@@ -35,7 +36,6 @@ import wicket.proxy.LazyInitProxyFactory;
  * an implementation of {@link ISpringContextLocator}.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class SpringWebApplication extends WebApplication implements
 		ApplicationContextAware
@@ -55,6 +55,17 @@ public abstract class SpringWebApplication extends WebApplication implements
 		}
 	};
 
+	/**
+	 * Construct.
+	 */
+	public SpringWebApplication()
+	{
+		add(new ComponentInjector());
+	}
+
+	/**
+	 * @see wicket.Application#internalInit()
+	 */
 	protected void internalInit()
 	{
 		super.internalInit();
@@ -106,12 +117,14 @@ public abstract class SpringWebApplication extends WebApplication implements
 		return contextLocator;
 	}
 
+	// TODO docme!
 	protected Object createSpringBeanProxy(Class clazz, String beanName)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName,
 				clazz, getSpringContextLocator()));
 	}
 
+	// TODO docme!
 	protected Object createSpringBeanProxy(Class clazz)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(clazz,

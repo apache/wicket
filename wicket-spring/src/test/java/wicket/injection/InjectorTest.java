@@ -21,8 +21,6 @@ package wicket.injection;
 import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
-import wicket.injection.IFieldValueFactory;
-import wicket.injection.Injector;
 import wicket.injection.util.InternalTestObject;
 import wicket.injection.util.MockDependency;
 import wicket.injection.util.TestObject;

@@ -44,7 +44,10 @@ import wicket.model.IModel;
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @deprecated with the introduction of
+ *             {@link wicket.injection.ComponentInjector} you don't need to
+ *             override from this class anymore, but can instead just override
+ *             {@link wicket.markup.html.panel.Panel}.
  */
 public class InjectableWebPage extends WebPage
 {

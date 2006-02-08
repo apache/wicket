@@ -21,9 +21,6 @@ package wicket.proxy;
 import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
-import wicket.proxy.ILazyInitProxy;
-import wicket.proxy.IProxyTargetLocator;
-import wicket.proxy.LazyInitProxyFactory;
 import wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import wicket.proxy.util.ConcreteObject;
 import wicket.proxy.util.IInterface;

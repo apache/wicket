@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.114 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.ComponentInstantiationAuthorizer;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.resolver.AutoComponentResolver;
@@ -124,6 +127,9 @@ public abstract class Application
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
 
+	/** list of {@link IComponentInstantiationListener}s. */
+	private IComponentInstantiationListener[] componentInstantiationListeners;
+
 	/**
 	 * Application level meta data.
 	 */
@@ -190,6 +196,9 @@ public abstract class Application
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
+
+		// install default component instantiation listener
+		this.componentInstantiationListeners = new IComponentInstantiationListener[] { new ComponentInstantiationAuthorizer() };
 	}
 
 	/**
@@ -415,6 +424,8 @@ public abstract class Application
 	}
 
 	/**
+	 * Gets the shared resources.
+	 * 
 	 * @return The SharedResources for this application.
 	 */
 	public final SharedResources getSharedResources()
@@ -496,6 +507,62 @@ public abstract class Application
 	}
 
 	/**
+	 * Adds a component instantiation listener. This method should typicaly only
+	 * be called during application startup; it is not thread safe.
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 */
+	public final void add(IComponentInstantiationListener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("argument listener may not be null");
+		}
+		IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
+		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
+				componentInstantiationListeners.length);
+		newListeners[componentInstantiationListeners.length] = listener;
+		componentInstantiationListeners = newListeners;
+	}
+
+	/**
+	 * Removes a component instantiation listener. This method should typicaly
+	 * only be called during application startup; it is not thread safe.
+	 * 
+	 * @param listener
+	 *            the listener to remove
+	 */
+	public final void remove(IComponentInstantiationListener listener)
+	{
+		if (listener != null)
+		{
+			List newListeners = Arrays.asList(componentInstantiationListeners);
+			newListeners.remove(listener);
+			componentInstantiationListeners = (IComponentInstantiationListener[])newListeners
+					.toArray(new IComponentInstantiationListener[newListeners.size()]);
+		}
+	}
+
+	/**
+	 * Notifies the registered component instantiation listeners of the
+	 * construction of the provided component
+	 * 
+	 * @param component
+	 *            the component that is being instantiated
+	 */
+	final void notifyComponentInstantiationListeners(Component component)
+	{
+		int len = componentInstantiationListeners.length;
+		for (int i = 0; i < len; i++)
+		{
+			componentInstantiationListeners[i].onInstantiation(component);
+		}
+	}
+
+	/**
+	 * Gets the factory for creating session instances.
+	 * 
 	 * @return Factory for creating session instances
 	 */
 	protected abstract ISessionFactory getSessionFactory();
@@ -523,7 +590,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Instantiate initializer with the given class name
+	 * Instantiate initializer with the given class name.
 	 * 
 	 * @param className
 	 *            The name of the initializer class
@@ -557,7 +624,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Initializes wicket components
+	 * Initializes wicket components.
 	 */
 	private final void initializeComponents()
 	{
