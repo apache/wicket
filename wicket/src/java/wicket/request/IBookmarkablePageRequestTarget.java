@@ -19,6 +19,7 @@ package wicket.request;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
+import wicket.request.target.IEventProcessor;
 
 /**
  * Target that denotes a page that is to be created from the provided page
@@ -26,7 +27,7 @@ import wicket.PageParameters;
  * 
  * @author Eelco Hillenius
  */
-public interface IBookmarkablePageRequestTarget extends IRequestTarget
+public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventProcessor
 {
 	/**
 	 * Gets the page class.
