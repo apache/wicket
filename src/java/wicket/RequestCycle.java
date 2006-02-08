@@ -35,7 +35,6 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
-import wicket.request.target.IAccessCheck;
 import wicket.request.target.PageRequestTarget;
 import wicket.util.lang.Classes;
 
@@ -196,23 +195,20 @@ public abstract class RequestCycle
 	/** Resolving the {@link RequestParameters} object to a request target. */
 	private static final int RESOLVE_TARGET = 3;
 
-	/** Checking access after resolving. */
-	private static final int CHECK_ACCESS = 4;
-
 	/** Dispatching and handling of events. */
-	private static final int PROCESS_EVENTS = 5;
+	private static final int PROCESS_EVENTS = 4;
 
 	/** Responding using the currently set {@link IRequestTarget}. */
-	private static final int RESPOND = 6;
+	private static final int RESPOND = 5;
 
 	/** Responding to an uncaught exception. */
-	private static final int HANDLE_EXCEPTION = 7;
+	private static final int HANDLE_EXCEPTION = 6;
 
 	/** Cleaning up after responding to a request. */
-	private static final int CLEANUP_REQUEST = 8;
+	private static final int CLEANUP_REQUEST = 7;
 
 	/** Request cycle processing is done. */
-	private static final int DONE = 9;
+	private static final int DONE = 8;
 
 	/** The application object. */
 	protected final Application application;;
@@ -430,9 +426,13 @@ public abstract class RequestCycle
 	public final Page getResponsePage()
 	{
 		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof PageRequestTarget))
+		if (target instanceof PageRequestTarget)
 		{
 			return ((IPageRequestTarget)target).getPage();
+		}
+		else if(target instanceof BookmarkablePageRequestTarget)
+		{
+			return ((BookmarkablePageRequestTarget)target).getPage();
 		}
 		return null;
 	}
@@ -930,38 +930,6 @@ public abstract class RequestCycle
 								"the processor did not resolve to any request target");
 					}
 					requestTargets.push(target);
-					break;
-				}
-				case CHECK_ACCESS : {
-					// manually set step to check access
-					IRequestTarget target = getRequestTarget();
-
-					boolean access = true;
-					if (target instanceof IAccessCheck)
-					{
-						access = ((IAccessCheck)target).checkAccess(this);
-					}
-
-					// check access or earlier (like in a component constructor)
-					// might have called setRequestTarget. If that is the case,
-					// put that one on top; otherwise put our resolved target
-					// on top
-					IRequestTarget otherTarget = getRequestTarget();
-					if (otherTarget != target)
-					{
-						// The new target has to be checked again set the
-						// current step back one.
-						currentStep = CHECK_ACCESS - 1;
-						// swap targets
-						requestTargets.pop();
-						requestTargets.push(target);
-						requestTargets.push(otherTarget);
-					}
-					else if (!access)
-					{
-						setResponsePage(getApplication().getApplicationSettings()
-								.getAccessDeniedPage());
-					}
 					break;
 				}
 				case PROCESS_EVENTS : {
