@@ -32,7 +32,7 @@ import wicket.request.IRequestCycleProcessor;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget, IAccessCheck
+public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget
 {
 	/** the page that was created in response for cleanup */
 	private Page page;
@@ -113,25 +113,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
-	 * @deprecated
-	 */
-	public boolean checkAccess(RequestCycle requestCycle)
-	{
-		Page page = getPage(requestCycle);
-		if (page != null)
-		{
-			return page.checkAccess();
-		}
-		return true;
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
 	 */
 	public void cleanUp(RequestCycle requestCycle)
 	{
-		page = null;
+		if(page != null)
+		{
+			page.internalEndRequest();
+		}
 	}
 
 	/**
@@ -160,6 +149,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			}
 		}
 		return equal;
+	}
+	
+	/**
+	 * @return The page that was created, null if the response did not happen yet
+	 */
+	public final Page getPage()
+	{
+		return page;
 	}
 
 	/**
@@ -198,6 +195,18 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
+	 * @see wicket.request.target.IEventProcessor#processEvents(wicket.RequestCycle)
+	 */
+	public void processEvents(RequestCycle requestCycle)
+	{
+		if (!requestCycle.getRedirect())
+		{
+			requestCycle.setUpdateSession(true);
+			page = getPage(requestCycle);
+		}
+	}
+	
+	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -207,18 +216,13 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (requestCycle.getRedirect())
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
-				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle,
-						new BookmarkablePageRequestTarget(pageClass, pageParameters));
+				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle,this);
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
 			{
-				requestCycle.setUpdateSession(true);
-
-				page = getPage(requestCycle);
-
 				// let the page render itself
-				page.doRender();
+				getPage(requestCycle).doRender();
 			}
 		}
 	}
@@ -291,4 +295,5 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 		return page;
 	}
+
 }
