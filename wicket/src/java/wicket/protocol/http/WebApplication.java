@@ -53,11 +53,12 @@ import wicket.util.string.Strings;
  * is intended to be subclassed by framework clients to define a web
  * application.
  * <p>
- * Application settings are given defaults by the WebApplication() constructor,
- * such as error page classes appropriate for HTML. WebApplication subclasses
- * can override these values and/or modify other application settings in their
- * respective constructors by calling getXXXSettings() to retrieve an interface
- * to a mutable Settings object.
+ * Application settings are given defaults by the WebApplication() constructor
+ * and internalInit method, such as error page classes appropriate for HTML. 
+ * WebApplication subclasses can override these values and/or modify other 
+ * application settings by overriding the init() method and then by calling getXXXSettings() 
+ * to retrieve an interface to a mutable Settings object.
+ * Do not do this in the constructor itself because the defaults will then override youre settings. 
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
@@ -113,6 +114,8 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Constructor.
+	 * Do not override this constructor to configure youre application in it.
+	 * Use the init method for that so that the default behaviour is initialized first.
 	 */
 	public WebApplication()
 	{
