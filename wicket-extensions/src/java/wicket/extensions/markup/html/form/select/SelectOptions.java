@@ -75,8 +75,7 @@ public class SelectOptions extends RepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					// FIXME Unknown: Unknown
-					throw new WicketRuntimeException("Model not a collection");
+					throw new WicketRuntimeException("Model object " + modelObject + " not a collection");
 				}
 
 				// iterator over model objects for SelectOption components
