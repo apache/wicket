@@ -17,8 +17,10 @@
  */
 package wicket.request.target;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import wicket.AbstractRestartResponseException;
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
@@ -223,6 +225,17 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		{
 			// Invoke the interface method on the component
 			method.invoke(component, new Object[] {});
+		}
+		catch (InvocationTargetException e)
+		{
+			// honor redirect exception contract defined in IPageFactory
+			if (e.getTargetException() instanceof AbstractRestartResponseException)
+			{
+				throw (RuntimeException)e.getTargetException();
+			}
+			throw new WicketRuntimeException("method " + method.getName() + " of "
+					+ method.getDeclaringClass() + " targetted at component " + component
+					+ " threw an exception", e);
 		}
 		catch (Exception e)
 		{
