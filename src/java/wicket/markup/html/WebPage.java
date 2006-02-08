@@ -86,10 +86,10 @@ public class WebPage extends Page
 			add(body);
 		}
 		
-		// TODO If the concept proofs valuable we could add the header container
-		// the same way instead of using a resolver. The advantages would be that
-		// the header container be available at build time already and not only
-		// at render time.
+		// TODO General: If the concept proofs valuable we could add the header 
+		// container the same way instead of using a resolver. The advantages 
+		// would be that the header container be available at build time already 
+		// and not only at render time.
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class WebPage extends Page
 	 */
 	protected void onEndRequest()
 	{
-		// TODO What again was the reason why this is necessary?
+		// TODO General: What again was the reason why this is necessary?
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{

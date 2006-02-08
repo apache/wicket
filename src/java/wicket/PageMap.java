@@ -445,7 +445,7 @@ public final class PageMap implements Serializable
 	final synchronized void put(final Page page)
 	{
 		/*
-		 * FIXME Pages:Stateless
+		 * FIXME General: Unknown.  Comment was "Pages:Stateless"
 		 * 
 		 * ivaynberg: i have disabled the stateless behavior for now. seems
 		 * there is a case we did not think of.
@@ -492,7 +492,7 @@ public final class PageMap implements Serializable
 		remove(entry);
 
 		/*
-		 * TODO General we should remove pages that become "unreachable" from
+		 * TODO General: We should remove pages that become "unreachable" from
 		 * the stack as well
 		 */
 		// remove page from acccess stack

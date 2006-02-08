@@ -281,10 +281,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @return true if access is allowed, false otherwise
 	 * 
 	 * @deprecated this method is to be removed in future version in favor of
-	 * instances of {@link wicket.authorization.IAuthorizationStrategy}.
-	 * TODO come up with a default that is (almost) as easy to use as this
-	 * method and that uses the authorization strategy. Also document the
-	 * deprecation warning more when that is in place
+	 * instances of {@link wicket.authorization.IAuthorizationStrategy} such
+	 * as {@link wicket.authorization.AbstractPageAuthorizationStrategy}.
 	 */
 	public boolean checkAccess()
 	{
@@ -907,12 +905,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// first try to check if the page can be rendered:
 		boolean renderAllowed = authorize(RENDER);
-		if(!renderAllowed)
+		if (!renderAllowed)
 		{
-			// TODO do we need to do something with this boolean?
+			// TODO General: Do we need to do something with this boolean?
 			// throw a redirect to access denied page?
+			// FIXME General: How is it that this authorize check keeps the page from rendering.  It's not apparent and should be documented.
 			log.debug("Page not allowed to render: " + this );
 		}
+		
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a

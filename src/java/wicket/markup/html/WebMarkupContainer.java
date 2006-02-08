@@ -115,7 +115,7 @@ public class WebMarkupContainer extends MarkupContainer
 			}
 			else
 			{
-				// TODO I haven't found a more efficient solution yet
+				// TODO Performance: I haven't found a more efficient solution yet
 				// Already added but all the components in this header part must
 				// be touched (that they are rendered)
 				Response response = getRequestCycle().getResponse();

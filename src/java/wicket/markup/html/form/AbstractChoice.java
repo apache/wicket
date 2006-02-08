@@ -274,7 +274,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The object to check
 	 * @param index
 	 *            The index in the choices collection this object is in.
-	 * @param selected TODO
+	 * @param selected TODO Documentation: Document this parameter
 	 * @return Whether the given value represents the current selection
 	 */
 	protected abstract boolean isSelected(final Object object, int index, String selected);
@@ -315,7 +315,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @param choice
 	 *            choice object
 	 * @param index
-	 * @param selected TODO
+	 * @param selected TODO Documentation: Document this parameter
 	 * 
 	 */
 	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index, String selected)
