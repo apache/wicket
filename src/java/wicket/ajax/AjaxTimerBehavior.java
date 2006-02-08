@@ -21,48 +21,42 @@ import wicket.Response;
 import wicket.util.time.Duration;
 
 /**
- * A behavior that generates an ajax callback every x number of milliseconds
+ * A behavior that generates an AJAX update callback at a regular interval.
  */
 public abstract class AjaxTimerBehavior extends AjaxBehavior
 {
-	private long millis;
+	/** The update interval */
+	private final Duration updateInterval;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param millis
+	 * @param updateInterval
+	 *            Duration between AJAX callbacks
 	 */
-	public AjaxTimerBehavior(long millis)
+	public AjaxTimerBehavior(final Duration updateInterval)
 	{
-		this.millis = millis;
+		this.updateInterval = updateInterval;
 	}
 
 	/**
-	 * Constructor that works with the convinience {@link Duration} class that
-	 * leads to cleaner, more readible code.
-	 * 
-	 * @param duration
+	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadContribution(wicket.Response)
 	 */
-	public AjaxTimerBehavior(Duration duration)
-	{
-		this(duration.getMilliseconds());
-	}
-
-	protected void onRenderHeadContribution(Response response)
+	protected void onRenderHeadContribution(final Response response)
 	{
 		super.onRenderHeadContribution(response);
-		getBodyContainer().addOnLoadModifier(getJsTimeoutCall(millis));
+		getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
 	}
 
 	/**
-	 * @param millis
-	 * 
+	 * @param updateInterval
+	 *            Duration between AJAX callbacks
 	 * @return JS script
 	 */
-	protected final String getJsTimeoutCall(final long millis)
+	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, " + millis
-				+ ");";
+		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, "
+				+ updateInterval.getMilliseconds() + ");";
 	}
 
 	/**
@@ -72,13 +66,14 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
-		target.addJavascript(getJsTimeoutCall(millis));
+		target.addJavascript(getJsTimeoutCall(updateInterval));
 	}
 
 	/**
-	 * Listener method for the ajax timer event
+	 * Listener method for the AJAX timer event.
 	 * 
 	 * @param target
+	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
 }

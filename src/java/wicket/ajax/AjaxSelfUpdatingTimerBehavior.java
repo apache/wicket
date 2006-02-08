@@ -18,10 +18,11 @@
 package wicket.ajax;
 
 import wicket.markup.ComponentTag;
+import wicket.util.time.Duration;
 
 /**
- * Automatically rerenders the component it is attached to via ajax every x
- * milliseconds
+ * Automatically re-renders the component it is attached to via AJAX at a regular
+ * interval.
  */
 public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 {
@@ -30,11 +31,12 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 	/**
 	 * Construct.
 	 * 
-	 * @param millis
+	 * @param updateInterval
+	 *            Duration between AJAX callbacks
 	 */
-	public AjaxSelfUpdatingTimerBehavior(final long millis)
+	public AjaxSelfUpdatingTimerBehavior(final Duration updateInterval)
 	{
-		super(millis);
+		super(updateInterval);
 	}
 
 	/**
@@ -43,7 +45,7 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// make sure this component is render with an id so its markup can be
+		// make sure this component is rendered with an id so its markup can be
 		// found and replaced
 		super.onComponentTag(tag);
 		if (!tag.getAttributes().containsKey("id"))
@@ -66,10 +68,9 @@ public class AjaxSelfUpdatingTimerBehavior extends AjaxTimerBehavior
 	 * to the target.
 	 * 
 	 * @param target
-	 *            ajax target
+	 *            The AJAX target
 	 */
 	protected void onPostProcessTarget(final AjaxRequestTarget target)
 	{
-
 	}
 }
