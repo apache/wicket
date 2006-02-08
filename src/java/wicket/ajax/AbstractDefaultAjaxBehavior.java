@@ -23,16 +23,17 @@ import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 
 /**
- * The base class for Wicket's defaults ajax implementation.
+ * The base class for Wicket's default AJAX implementation.
+ * 
  * @author Igor Vaynberg
  */
-public abstract class AjaxBehavior extends AbstractAjaxBehavior
+public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the default ajax support javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
-			AjaxBehavior.class, "wicket-ajax.js");
+			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
 	/**
 	 * 
@@ -63,8 +64,8 @@ public abstract class AjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * 
 	 * @param target
+	 *            The AJAX target
 	 */
 	protected abstract void respond(AjaxRequestTarget target);
 }

@@ -39,7 +39,7 @@ import wicket.util.string.Strings;
  * box this DropDownChoice represents, and so anytime a new option is selected
  * we will get the System.out message
  */
-public abstract class AjaxEventBehavior extends AjaxBehavior
+public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -112,7 +112,7 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 
 	/**
 	 * 
-	 * @see wicket.ajax.AjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
+	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
 	 */
 	protected final void respond(final AjaxRequestTarget target)
 	{
