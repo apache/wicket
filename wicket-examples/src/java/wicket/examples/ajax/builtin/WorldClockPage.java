@@ -2,9 +2,10 @@ package wicket.examples.ajax.builtin;
 
 import java.util.TimeZone;
 
+import wicket.ajax.AbstractAjaxTimerBehavior;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.AjaxTimerBehavior;
 import wicket.behavior.MarkupIdSetter;
+import wicket.util.time.Duration;
 
 /**
  * A world clock example page. Demonstrates timer behavior as well as multiple
@@ -39,7 +40,7 @@ public class WorldClockPage extends BasePage
 
 		// add the timer behavior to the la component and make it update all
 		// other components as well
-		la.add(new AjaxTimerBehavior(5000)
+		la.add(new AbstractAjaxTimerBehavior(Duration.seconds(5))
 		{
 
 			protected void onTimer(AjaxRequestTarget target)

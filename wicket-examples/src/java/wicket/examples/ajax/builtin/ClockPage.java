@@ -3,6 +3,7 @@ package wicket.examples.ajax.builtin;
 import java.util.TimeZone;
 
 import wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import wicket.util.time.Duration;
 
 /**
  * A simple clock example page
@@ -23,7 +24,7 @@ public class ClockPage extends BasePage
 
 		// add the ajax behavior which will keep updating the component every 5
 		// seconds
-		clock.add(new AjaxSelfUpdatingTimerBehavior(5000));
+		clock.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
 
 
 	}

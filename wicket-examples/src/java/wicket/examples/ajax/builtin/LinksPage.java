@@ -5,7 +5,9 @@ import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
+import wicket.version.undo.Change;
 
 public class LinksPage extends BasePage
 {
@@ -51,6 +53,15 @@ public class LinksPage extends BasePage
 			protected void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
+				addStateChange(new Change() {
+
+					public void undo()
+					{
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
 				target.addComponent(c1);
 			}
 
@@ -68,6 +79,16 @@ public class LinksPage extends BasePage
 				}
 			}
 
+		});
+		
+		add(new Link("c3-link") {
+
+			public void onClick()
+			{
+				System.out.println("hello");
+				
+			}
+			
 		});
 
 	}
