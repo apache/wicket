@@ -19,6 +19,8 @@ package wicket.util.string;
 
 import java.io.UnsupportedEncodingException;
 
+import wicket.WicketRuntimeException;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -439,6 +441,17 @@ public final class StringsTest extends TestCase
 			String before = Strings.beforeFirst(toString, '\n').trim();
 			assertEquals("Root cause:", before);
 		}
+	}
+	
+	/**
+	 * Test the toString(throwable)
+	 */
+	public void testToStringThrowable()
+	{
+		NullPointerException np = new NullPointerException("null test");
+		WicketRuntimeException wre = new WicketRuntimeException("null test", np);
+		String exptionString = Strings.toString(wre);
+		// TODO how to test that string ? because the stacktrace is always different.. 
 	}
 
 	/**
