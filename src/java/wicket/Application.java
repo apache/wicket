@@ -73,8 +73,10 @@ import wicket.util.time.Duration;
  * configure framework settings for your application: getApplicationSettings(),
  * getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
  * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and
- * getSessionSettings(). If you want good default settings for DEVELOPMENT or
- * DEPLOYMENT, you can first call one of the configure() methods.
+ * getSessionSettings(). These settings are configured by default through 
+ * the constructor or internalInit methods. Default the application is configured
+ * for DEVELOPMENT. You can configure this globally to DEPLOYMENT or override 
+ * specific settings by implementing the init() method.
  * 
  * <li><b>Shared Resources </b>- Resources added to an Application's
  * SharedResources have application-wide scope and can be referenced using a
@@ -172,7 +174,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Constructor
+	 * Constructor, do not override this constructor for configuring youre application. 
+	 * Use the init() method for that.
 	 */
 	public Application()
 	{
