@@ -49,52 +49,6 @@ public class AuthenticatedWebPage extends WicketExamplePage
     	
     }
     
-//    /**
-//     * Adding children to instances of this class causes those children to
-//     * be added to the border child instead.
-//     * @see wicket.MarkupContainer#add(wicket.Component)
-//     */
-//    public MarkupContainer add(final Component child)
-//    {
-//        // Add children of the page to the page's border component
-//        if (border == null)
-//        {
-//            // Create border and add it to the page
-//            border = new LibraryApplicationBorder("border");
-//            super.add(border);   
-//        }
-//        border.add(child);
-//        return this;
-//    }
-//
-//    /**
-//	 * @see wicket.MarkupContainer#autoAdd(wicket.Component)
-//	 */
-//	public boolean autoAdd(Component component)
-//	{
-//		return border.autoAdd(component);
-//	}
-//	
-//    /**
-//     * Removing children from instances of this class causes those children to
-//     * be removed from the border child instead.
-//     * @see wicket.MarkupContainer#removeAll()
-//     */
-//    public void removeAll()
-//    {
-//        border.removeAll();
-//    }
-//
-//    /**
-//     * Replacing children on instances of this class causes those children
-//     * to be replaced on the border child instead.
-//     * @see wicket.MarkupContainer#replace(wicket.Component)
-//     */
-//    public MarkupContainer replace(Component child)
-//    {
-//        return border.replace(child);
-//    }
-    
     /**
      * Get downcast session object
      * 
@@ -103,23 +57,6 @@ public class AuthenticatedWebPage extends WicketExamplePage
     public LibrarySession getLibrarySession()
     {
         return (LibrarySession)getSession();
-    }
-
-    /**
-     * @see wicket.Page#checkAccess()
-     */
-    public boolean checkAccess()
-    {
-        // Is user signed in?
-        if (getLibrarySession().isSignedIn())
-        {
-            // okay to proceed
-            return true;
-        }
-        
-        // Force sign in
-        redirectToInterceptPage(newPage(SignIn.class));
-        return false;
     }
 }
 

@@ -18,8 +18,12 @@
  */
 package wicket.examples.library;
 
+import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
+import wicket.authorization.Action;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
 import wicket.settings.Settings;
 
@@ -43,6 +47,30 @@ public final class LibraryApplication extends WicketExampleApplication
 	{
         getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
+		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+		{
+			public boolean authorizeAction(Component component, Action action)
+			{
+				return true;
+			}
+		
+			public boolean authorizeInstantiation(Class componentClass)
+			{
+				if(AuthenticatedWebPage.class.isAssignableFrom(componentClass))
+				{
+			        // Is user signed in?
+			        if (((LibrarySession)Session.get()).isSignedIn())
+			        {
+			            // okay to proceed
+			            return true;
+			        }
+			        
+			        // Force sign in
+			        throw new RestartResponseAtInterceptPageException(SignIn.class);
+				}
+				return true;
+			}
+		});
 	}
     
     

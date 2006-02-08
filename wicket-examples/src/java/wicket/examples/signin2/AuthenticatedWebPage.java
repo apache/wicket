@@ -28,34 +28,6 @@ import wicket.examples.WicketExamplePage;
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {
-    /**
-     * Get downcast session object
-     * 
-     * @return The session
-     */
-    public SignIn2Session getSignIn2Session()
-    {
-        return (SignIn2Session)getSession();
-    }
-    
-    /**
-     * @see wicket.Page#checkAccess()
-     */
-    public boolean checkAccess()
-    {
-        // Is a user signed into this cycle's session?
-        boolean signedIn = getSignIn2Session().isSignedIn();
-
-        // If nobody is signed in
-        if (!signedIn)
-        {
-            // Redirect request to SignIn page
-            redirectToInterceptPage(newPage(SignIn2.class));
-        }
-
-        // Return true if someone is signed in and access is okay
-        return signedIn;
-    }
 }
 
 
