@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -73,9 +71,9 @@ import wicket.util.time.Duration;
  * configure framework settings for your application: getApplicationSettings(),
  * getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
  * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and
- * getSessionSettings(). These settings are configured by default through 
- * the constructor or internalInit methods. Default the application is configured
- * for DEVELOPMENT. You can configure this globally to DEPLOYMENT or override 
+ * getSessionSettings(). These settings are configured by default through the
+ * constructor or internalInit methods. Default the application is configured
+ * for DEVELOPMENT. You can configure this globally to DEPLOYMENT or override
  * specific settings by implementing the init() method.
  * 
  * <li><b>Shared Resources </b>- Resources added to an Application's
@@ -174,8 +172,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Constructor, do not override this constructor for configuring youre application. 
-	 * Use the init() method for that.
+	 * Constructor, do not override this constructor for configuring youre
+	 * application. Use the init() method for that.
 	 */
 	public Application()
 	{
@@ -512,6 +510,8 @@ public abstract class Application
 	/**
 	 * Adds a component instantiation listener. This method should typicaly only
 	 * be called during application startup; it is not thread safe.
+	 * <p>
+	 * Note: wicket does not guarantee the execution order of added listeners
 	 * 
 	 * @param listener
 	 *            the listener to add
@@ -522,6 +522,16 @@ public abstract class Application
 		{
 			throw new IllegalArgumentException("argument listener may not be null");
 		}
+
+		// if an instance of this listener is already present ignore this call
+		for (int i = 0; i < componentInstantiationListeners.length; i++)
+		{
+			if (listener == componentInstantiationListeners[i])
+			{
+				return;
+			}
+		}
+
 		IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
 		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
 				componentInstantiationListeners.length);
@@ -538,12 +548,29 @@ public abstract class Application
 	 */
 	public final void remove(IComponentInstantiationListener listener)
 	{
-		if (listener != null)
+		IComponentInstantiationListener[] listeners = componentInstantiationListeners;
+		int len = listeners.length;
+
+		if (listener != null && len > 0)
 		{
-			List newListeners = Arrays.asList(componentInstantiationListeners);
-			newListeners.remove(listener);
-			componentInstantiationListeners = (IComponentInstantiationListener[])newListeners
-					.toArray(new IComponentInstantiationListener[newListeners.size()]);
+			int pos = 0;
+
+			for (pos = 0; pos < len; pos++)
+			{
+				if (listener == listeners[pos])
+				{
+					break;
+				}
+			}
+
+			if (pos < len)
+			{
+				listeners[pos] = listeners[len - 1];
+				IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
+				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
+
+				componentInstantiationListeners = newListeners;
+			}
 		}
 	}
 
