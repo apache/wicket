@@ -20,7 +20,6 @@ package wicket.spring.common.web;
 
 import wicket.spring.SpringWebApplication;
 import wicket.spring.common.ContactDao;
-import wicket.util.time.Duration;
 
 /**
  * Application class for our examples
@@ -42,19 +41,6 @@ public class ExampleApplication extends SpringWebApplication {
 	 * with it, so BE CAREFUL when using this.
 	 */
 	private ContactDao contactDao;
-
-	/**
-	 * Custom initialisation. This method is called right after this application
-	 * class is constructed, and the wicket servlet is set.
-	 */
-	protected void init() {
-		super.init();
-
-		getPages().setHomePage(HomePage.class);
-
-		getSettings().addResourceFolder("src/main/java")
-				.setResourcePollFrequency(Duration.seconds(1));
-	}
 
 	/**
 	 * Retrieves contact dao bean. This bean should not be serialized so BE
@@ -90,6 +76,10 @@ public class ExampleApplication extends SpringWebApplication {
 			}
 		}
 		return contactDaoProxy;
+	}
+
+	public Class getHomePage() {
+		return HomePage.class;
 	}
 
 }

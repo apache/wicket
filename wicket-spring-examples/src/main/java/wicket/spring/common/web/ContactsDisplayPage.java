@@ -20,10 +20,10 @@ package wicket.spring.common.web;
 
 import java.util.Arrays;
 
-import wicket.extensions.markup.html.repeater.data.sort.SortableDataProvider;
-import wicket.extensions.markup.html.repeater.data.table.DataTable;
+import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import wicket.model.Model;
 
 /**
@@ -42,7 +42,7 @@ public abstract class ContactsDisplayPage extends BasePage {
 		cols[2] = new PropertyColumn(new Model("home phone"), "homePhone");
 		cols[3] = new PropertyColumn(new Model("cell phone"), "cellPhone");
 
-		add(new DataTable("contacts", Arrays.asList(cols), getDataProvider(), 5));
+		add(new DefaultDataTable("contacts", Arrays.asList(cols), getDataProvider(), 5));
 	}
 
 	protected abstract SortableDataProvider getDataProvider();
