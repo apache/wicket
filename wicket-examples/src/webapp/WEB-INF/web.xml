@@ -264,12 +264,21 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>FramesApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.frames.FramesApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>AjaxApplication</servlet-name>
 		<url-pattern>/ajax/*</url-pattern>
 	</servlet-mapping>
-	
 
 	<servlet-mapping>
 		<servlet-name>AjaxPrototypeApplication</servlet-name>
@@ -379,6 +388,11 @@
 	<servlet-mapping>
 		<servlet-name>ComponentReferenceApplication</servlet-name>
 		<url-pattern>/compref/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FramesApplication</servlet-name>
+		<url-pattern>/frames/*</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>
