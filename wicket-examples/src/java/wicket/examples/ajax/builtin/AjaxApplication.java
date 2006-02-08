@@ -13,10 +13,16 @@ public class AjaxApplication extends WicketExampleApplication
 	 */
 	public AjaxApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
-
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */

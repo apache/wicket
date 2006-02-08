@@ -42,8 +42,16 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 	public FormInputApplication()
 	{
+	}
+	
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+		getMarkupSettings().setStripWicketTags(true);
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u4E4B\u5916"));
 		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,

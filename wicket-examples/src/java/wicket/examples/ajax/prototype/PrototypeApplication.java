@@ -13,6 +13,13 @@ public class PrototypeApplication extends WicketExampleApplication
 	 */
 	public PrototypeApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}

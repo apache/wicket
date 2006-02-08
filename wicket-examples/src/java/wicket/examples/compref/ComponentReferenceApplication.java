@@ -51,6 +51,13 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	 */
 	public ComponentReferenceApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 	}
 

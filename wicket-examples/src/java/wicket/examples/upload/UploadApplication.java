@@ -31,8 +31,16 @@ public class UploadApplication extends WicketExampleApplication
      */
     public UploadApplication()
     {
-        getExceptionSettings().setThrowExceptionOnMissingResource(false);
     }
+    
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
+        getExceptionSettings().setThrowExceptionOnMissingResource(false);
+	}
+    
     
 	/**
 	 * @see wicket.Application#getHomePage()

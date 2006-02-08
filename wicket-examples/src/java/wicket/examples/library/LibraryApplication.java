@@ -34,9 +34,17 @@ public final class LibraryApplication extends WicketExampleApplication
      */
     public LibraryApplication()
     {
+    }
+    
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
         getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
-    }
+	}
+    
     
     /**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
