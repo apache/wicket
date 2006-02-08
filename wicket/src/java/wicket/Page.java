@@ -142,12 +142,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** Access allowed flag (value == true). */
-	protected static final boolean ACCESS_ALLOWED = true;
-
-	/** Access denied flag (value == false). */
-	protected static final boolean ACCESS_DENIED = false;
-
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
 
@@ -263,30 +257,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * <p>
-	 * Whether access is allowed to this page. If the page is not allowed you
-	 * must redirect to a another page, else you will get a blank page.
-	 * Redirecting to another page can be done in a few ways:
-	 * <li>Use redirectToInterceptPage(Page page), You will be redirected to
-	 * that page when it is done you will be returned to this one</li>
-	 * <li>Use redirectTo(Page page), You will be redirected to that page when
-	 * it is done you will have to specify where you will go next</li>
-	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
-	 * directly, no redirect will happen</li>
-	 * </p>
-	 * <p>
-	 * NOTE: this method is not meant to be called by framework clients.
-	 * </p>
-	 * 
-	 * @return true if access is allowed, false otherwise
+	 * @return fixed true;
 	 * 
 	 * @deprecated this method is to be removed in future version in favor of
 	 * instances of {@link wicket.authorization.IAuthorizationStrategy} such
 	 * as {@link wicket.authorization.AbstractPageAuthorizationStrategy}.
+	 * It isn't called anymore and made final so that people see what must be changed.
 	 */
-	public boolean checkAccess()
+	public final boolean checkAccess()
 	{
-		return ACCESS_ALLOWED;
+		return true;
 	}
 
 	/**
@@ -332,6 +312,34 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void doRender()
 	{
+		// first try to check if the page can be rendered:
+		if (!authorize(RENDER))
+		{
+			if(log.isDebugEnabled())
+			{
+				log.debug("Page not allowed to render: " + this);
+			}
+			throw new RestartResponseException(getApplication().getApplicationSettings().getAccessDeniedPage());
+		}
+		
+		// Visit all this page's children to reset markup streams and check
+		// rendering authorization, as appropriate. We set any result; positive
+		// or negative as a temporary boolean in the components, and when a
+		// authorization exception is thrown it will block the rendering of this
+		// page
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Find out if this component can be rendered
+				final boolean renderAllowed = component.authorize(RENDER);
+
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
 		// Make sure it is really empty
 		renderedComponents = null;
 
@@ -724,11 +732,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
-		// The page is not stateless if it is not an IRedirectListener
-		// if (!IRedirectListener.class.isAssignableFrom(listenerInterface))
-		{
-			stateless = false;
-		}
+		stateless = false;
 
 		String interfaceName = Classes.name(listenerInterface);
 		RequestCycle requestCycle = getRequestCycle();
@@ -903,34 +907,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void onRender(final MarkupStream markupStream)
 	{
-		// first try to check if the page can be rendered:
-		boolean renderAllowed = authorize(RENDER);
-		if (!renderAllowed)
-		{
-			// TODO General: Do we need to do something with this boolean?
-			// throw a redirect to access denied page?  Or maybe just don't render? (add else clause)
-			// FIXME General: How is it that this authorize check keeps the page from rendering.  It's not apparent and should be documented.
-			log.debug("Page not allowed to render: " + this);
-		}
-		
-		// Visit all this page's children to reset markup streams and check
-		// rendering authorization, as appropriate. We set any result; positive
-		// or negative as a temporary boolean in the components, and when a
-		// authorization exception is thrown it will block the rendering of this
-		// page
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Find out if this component can be rendered
-				final boolean renderAllowed = component.authorize(RENDER);
-
-				// Authorize rendering
-				component.setRenderAllowed(renderAllowed);
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
 		// Set page's associated markup stream
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
 		setMarkupStream(associatedMarkupStream);
