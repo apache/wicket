@@ -27,10 +27,8 @@ import wicket.request.IPageRequestTarget;
  * 
  * @author Eelco Hillenius
  */
-public class PageRequestTarget
-		implements
-			IPageRequestTarget,
-			IAccessCheck
+public class PageRequestTarget implements IPageRequestTarget
+			
 {
 	/** the page instance. */
 	private final Page page;
@@ -95,15 +93,6 @@ public class PageRequestTarget
 		// we need to lock when we are not redirecting, i.e. we are
 		// actually rendering the page
 		return !requestCycle.getRedirect() ? requestCycle.getSession() : null;
-	}
-
-	/**
-	 * @see wicket.request.target.IAccessCheck#checkAccess(RequestCycle)
-	 * @deprecated
-	 */
-	public boolean checkAccess(RequestCycle requestCycle)
-	{
-		return page.checkAccess();
 	}
 
 	/**
