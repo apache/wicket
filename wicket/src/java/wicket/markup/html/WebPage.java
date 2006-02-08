@@ -179,7 +179,7 @@ public class WebPage extends Page
 	 */
 	protected void onEndRequest()
 	{
-		// TODO General: What again was the reason why this is necessary?
+		// TODO Documentation: What again was the reason why this is necessary?
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{
