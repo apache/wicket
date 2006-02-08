@@ -908,9 +908,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (!renderAllowed)
 		{
 			// TODO General: Do we need to do something with this boolean?
-			// throw a redirect to access denied page?
+			// throw a redirect to access denied page?  Or maybe just don't render? (add else clause)
 			// FIXME General: How is it that this authorize check keeps the page from rendering.  It's not apparent and should be documented.
-			log.debug("Page not allowed to render: " + this );
+			log.debug("Page not allowed to render: " + this);
 		}
 		
 		// Visit all this page's children to reset markup streams and check
