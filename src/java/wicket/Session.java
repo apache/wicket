@@ -758,7 +758,7 @@ public abstract class Session implements Serializable
 	private List getDirtyObjectsList()
 	{
 		List lst = (List)dirtyObjects.get();
-		if(lst == null)
+		if (lst == null)
 		{
 			lst = new ArrayList(4);
 			dirtyObjects.set(lst);
@@ -772,6 +772,9 @@ public abstract class Session implements Serializable
 	{
 		List dirtyObjects = getDirtyObjectsList();
 		
+		// FIXME General: Doesn't this mean that dirtyObjects is really a Set?
+		// Since it is threadlocal and can be cleared at end of request, there's
+		// no reason to worry about memory here.
 		if (!dirtyObjects.contains(page))
 		{
 			dirtyObjects.add(page);
