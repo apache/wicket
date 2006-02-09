@@ -35,6 +35,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
@@ -1248,8 +1249,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private final void init()
 	{
 		// Set the pagemap
-		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
-				"pagemap") : null);
+		RequestCycle cycle = getRequestCycle();
+		if (cycle != null)
+		{
+			RequestParameters parameters = cycle.getProcessor().getRequestCodingStrategy().decode(
+					cycle.getRequest());
+			String pagemapName = parameters.getPageMapName();
+			if (pagemapName != null)
+			{
+				setPageMap(pagemapName);
+			}
+		}
 
 		// Set the numeric id on this page
 		setNumericId(getPageMap().nextId());
