@@ -31,12 +31,14 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
@@ -487,26 +489,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected final String encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
-		final StringBuffer url = new StringBuffer(64);
-		url.append(urlPrefix(requestCycle));
-		url.append("?path=");
+		// Get the page we want a url from:
 		Page page = requestTarget.getPage();
-		url.append(page.getPath());
-		final PageMap pageMap = page.getPageMap();
-		if (!pageMap.isDefault())
-		{
-			url.append("&pagemap=");
-			url.append(pageMap.getName());
-		}
-		int versionNumber = page.getPage().getCurrentVersionNumber();
-		if (versionNumber > 0)
-		{
-			url.append("&version=");
-			url.append(versionNumber);
-		}
-
-		return requestCycle.getResponse().encodeURL(url.toString());
-
+		// A url to a page is the IRedirectListener interface: 
+		String urlRedirect = page.urlFor(IRedirectListener.class);
+		// Touch the page once because it could be that it did go from stateless to statefull
+		// or it was a internally made page where just a url must be made for (frames)
+		Session.get().touch(page);
+		return urlRedirect;
 	}
 
 	/**
