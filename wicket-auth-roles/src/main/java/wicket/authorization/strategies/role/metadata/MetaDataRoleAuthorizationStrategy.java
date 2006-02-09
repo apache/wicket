@@ -17,10 +17,6 @@
  */
 package wicket.authorization.strategies.role.metadata;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import wicket.Application;
@@ -31,11 +27,11 @@ import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.IRoleAuthorizer;
 
 /**
- * Strategy that uses the Wicket meta data facility to check authorization. The
+ * Strategy that uses the Wicket metadata facility to check authorization. The
  * static <code>authorize</code> methods are for authorizing component actions
- * and component instantiation for roles. This class is is the main entry point
- * for users wanting to use the roles based authorization of the
- * wicket-auth-roles package based on wicket meta data.
+ * and component instantiation by role. This class is is the main entry point
+ * for users wanting to use the roles-based authorization of the
+ * wicket-auth-roles package based on wicket metadata.
  * 
  * For instance, use like:
  * 
@@ -54,158 +50,195 @@ import wicket.authorization.strategies.role.IRoleAuthorizer;
  * @see wicket.MetaDataKey
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorizationStrategy
 {
-	/**
-	 * Application meta data key for ations/ roles information. Typically, you
-	 * do not need to use this meta data key directly, but instead use one of
-	 * the bind methods of this class.
-	 */
-	private static final MetaDataKey MD_ROLES_FOR_INSTANTIATION = new MetaDataKey(
-			ComponentCreationAuthBindings.class)
-	{
-	};
-
 	/**
 	 * Component meta data key for ations/ roles information. Typically, you do
 	 * not need to use this meta data key directly, but instead use one of the
 	 * bind methods of this class.
 	 */
-	public static final MetaDataKey MD_ACTION_ROLES = new MetaDataKey(AuthorizedAction.class)
+	public static final MetaDataKey ACTION_PERMISSIONS = new MetaDataKey(ActionPermissions.class)
 	{
 	};
 
 	/**
-	 * Structure for authorized roles for creation of components.
+	 * Application meta data key for ations/ roles information. Typically, you
+	 * do not need to use this meta data key directly, but instead use one of
+	 * the bind methods of this class.
 	 */
-	private static final class ComponentCreationAuthBindings implements Serializable
+	private static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
+			InstantiationPermissions.class)
 	{
-		private static final long serialVersionUID = 1L;
+	};
 
-		private Map<Class, AuthorizedComponentCreationRoles> rolesForCreation = new HashMap<Class, AuthorizedComponentCreationRoles>();
+	/** Special role string for denying access to all */
+	public static final String NO_ROLE = "wicket:NO_ROLE";
 
-		/**
-		 * Add the provided roles to any existing binding or create a new one.
-		 * 
-		 * @param componentClass
-		 *            the component class
-		 * @param roles
-		 *            the roles to bding
-		 */
-		public final void add(Class componentClass, String[] roles)
+	/**
+	 * Authorizes the given role to create component instances of type
+	 * componentClass. This authorization is added to any previously authorized
+	 * roles.
+	 * 
+	 * @param componentClass
+	 *            The component type that is subject for the authorization
+	 * @param role
+	 *            The role that is authorized to create component instances of
+	 *            type componentClass
+	 */
+	public static final void authorize(final Class<Component> componentClass, final String role)
+	{
+		final Application application = Application.get();
+		InstantiationPermissions permissions = (InstantiationPermissions)application
+				.getMetaData(INSTANTIATION_PERMISSIONS);
+		if (permissions == null)
 		{
-			AuthorizedComponentCreationRoles binding = rolesForCreation.get(componentClass);
-			if (binding == null)
-			{
-				binding = new AuthorizedComponentCreationRoles(componentClass, roles);
-				rolesForCreation.put(componentClass, binding);
-			}
-			else
-			{
-				binding.add(binding.rolesToArray());
-			}
+			permissions = new InstantiationPermissions();
+			application.setMetaData(INSTANTIATION_PERMISSIONS, permissions);
 		}
+		permissions.authorize(componentClass, role);
+	}
 
-		/**
-		 * Remove all roles for the given component class.
-		 * 
-		 * @param componentClass
-		 */
-		public final void remove(Class componentClass)
+	/**
+	 * Authorizes the given role to perform the given action on the given
+	 * component.
+	 * 
+	 * @param component
+	 *            The component that is subject to the authorization
+	 * @param action
+	 *            The action to authorize
+	 * @param role
+	 *            The role to authorize
+	 */
+	public static final void authorize(final Component component, final Action action,
+			final String role)
+	{
+		ActionPermissions permissions = (ActionPermissions)component
+				.getMetaData(ACTION_PERMISSIONS);
+		if (permissions == null)
 		{
-			rolesForCreation.remove(componentClass);
+			permissions = new ActionPermissions();
+			component.setMetaData(ACTION_PERMISSIONS, permissions);
 		}
+		permissions.authorize(action, role);
+	}
 
-		/**
-		 * Gets the roles that have a binding with the given component class.
-		 * 
-		 * @param componentClass
-		 *            the component class
-		 * @return the roles that have a binding with the given component class,
-		 *         or null if no entries are found
-		 */
-		public final String[] rolesFor(Class componentClass)
+	/**
+	 * Grants permission to all roles to create instances of the given component
+	 * class.
+	 * 
+	 * @param componentClass
+	 *            The component class
+	 */
+	public static final void authorizeAll(Class<Component> componentClass)
+	{
+		Application application = Application.get();
+		InstantiationPermissions authorizedRoles = (InstantiationPermissions)application
+				.getMetaData(INSTANTIATION_PERMISSIONS);
+		if (authorizedRoles != null)
 		{
-			AuthorizedComponentCreationRoles binding = rolesForCreation.get(componentClass);
-			if (binding != null)
-			{
-				return binding.rolesToArray();
-			}
-			return null;
+			authorizedRoles.authorizeAll(componentClass);
 		}
 	}
 
 	/**
-	 * Structure for holding roles that are auhorized to create a component of a
-	 * certain class.
+	 * Grants permission to all roles to perform the given action on the given
+	 * component.
 	 * 
-	 * @author Eelco Hillenius
+	 * @param component
+	 *            The component that is subject to the authorization
+	 * @param action
+	 *            The action to authorize
 	 */
-	private static final class AuthorizedComponentCreationRoles implements Serializable
+	public static final void authorizeAll(final Component component, final Action action)
 	{
-		private static final long serialVersionUID = 1L;
-
-		/** allowed roles. */
-		private Set<String> roles = new HashSet<String>();
-
-		/** the component class. */
-		private final Class componentClass;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param componentClass
-		 *            the component class
-		 * 
-		 * @param roles
-		 *            the roles
-		 */
-		public AuthorizedComponentCreationRoles(Class componentClass, String[] roles)
+		ActionPermissions permissions = (ActionPermissions)component
+				.getMetaData(ACTION_PERMISSIONS);
+		if (permissions != null)
 		{
-			if (componentClass == null)
-			{
-				throw new IllegalArgumentException("argument componentClass must be not null");
-			}
-			if (!Component.class.isAssignableFrom(componentClass))
-			{
-				throw new IllegalArgumentException(
-						"argument componentClass must be "
-								+ "of type wicket.Component or one of it's subclasses. Instead it is of type "
-								+ componentClass.getName());
-			}
-			this.componentClass = componentClass;
-			add(roles);
+			permissions.authorizeAll(action);
 		}
+	}
 
-		/**
-		 * Add the provided roles to the current.
-		 * 
-		 * @param roles
-		 *            roles to add
-		 */
-		public final void add(String[] roles)
+	/**
+	 * Removes permission for the given role to create instances of the given
+	 * component class. There is no danger in removing authorization by calling
+	 * this method. If the last authorization grant is removed for a given
+	 * componentClass, the internal role NO_ROLE will automatically be added,
+	 * effectively denying access to all roles (if this was not done, all roles
+	 * would suddenly have access since no authorization is equivalent to full
+	 * access).
+	 * 
+	 * @param componentClass
+	 *            The component type
+	 * @param role
+	 *            The role that is no longer to be authorized to create
+	 *            instances of type componentClass
+	 */
+	public static final void unauthorize(final Class<Component> componentClass, final String role)
+	{
+		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
+				.getMetaData(INSTANTIATION_PERMISSIONS);
+		if (permissions != null)
 		{
-			if (roles == null)
-			{
-				throw new IllegalArgumentException("argument roles has to be not null");
-			}
-
-			for (String role : roles)
-			{
-				this.roles.add(role);
-			}
+			permissions.unauthorize(componentClass, role);
 		}
+	}
 
-		/**
-		 * Gives roles as an array.
-		 * 
-		 * @return the roles as an array
-		 */
-		public final String[] rolesToArray()
+	/**
+	 * Removes permission for the given role to perform the given action on the
+	 * given component. There is no danger in removing authorization by calling
+	 * this method. If the last authorization grant is removed for a given
+	 * action, the internal role NO_ROLE will automatically be added,
+	 * effectively denying access to all roles (if this was not done, all roles
+	 * would suddenly have access since no authorization is equivalent to full
+	 * access).
+	 * 
+	 * @param component
+	 *            The component
+	 * @param action
+	 *            The action
+	 * @param role
+	 *            The role that is no longer allowed to perform the given action
+	 */
+	public static final void unauthorize(final Component component, final Action action,
+			final String role)
+	{
+		final ActionPermissions permissions = (ActionPermissions)component
+				.getMetaData(ACTION_PERMISSIONS);
+		if (permissions != null)
 		{
-			return roles.toArray(new String[roles.size()]);
+			permissions.unauthorize(action, role);
 		}
+	}
+
+	/**
+	 * Grants authorization to instantiate the given class to just the role
+	 * NO_ROLE, effectively denying all other roles.
+	 * 
+	 * @param componentClass
+	 *            The component class
+	 */
+	public static final void unauthorizeAll(Class<Component> componentClass)
+	{
+		authorizeAll(componentClass);
+		authorize(componentClass, NO_ROLE);
+	}
+
+	/**
+	 * Grants authorization to perform the given action to just the role
+	 * NO_ROLE, effectively denying all other roles.
+	 * 
+	 * @param component
+	 *            the component that is subject to the authorization
+	 * @param action
+	 *            the action to authorize
+	 */
+	public static final void unauthorizeAll(final Component component, final Action action)
+	{
+		authorizeAll(component, action);
+		authorize(component, action, NO_ROLE);
 	}
 
 	/**
@@ -214,26 +247,9 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param rolesAuthorizer
 	 *            the authorizer object
 	 */
-	public MetaDataRoleAuthorizationStrategy(IRoleAuthorizer rolesAuthorizer)
+	public MetaDataRoleAuthorizationStrategy(final IRoleAuthorizer rolesAuthorizer)
 	{
 		super(rolesAuthorizer);
-	}
-
-	/**
-	 * Uses application level meta data to match roles for component
-	 * instantiation.
-	 * 
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
-	 */
-	public boolean authorizeInstantiation(Class componentClass)
-	{
-		if (componentClass == null)
-		{
-			throw new IllegalArgumentException("argument componentClass has to be not null");
-		}
-
-		String[] roles = rolesForInstantiation(componentClass);
-		return hasAny(roles);
 	}
 
 	/**
@@ -243,7 +259,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean authorizeAction(Component component, Action action)
+	public boolean authorizeAction(final Component component, final Action action)
 	{
 		if (component == null)
 		{
@@ -254,126 +270,24 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 			throw new IllegalArgumentException("argument action has to be not null");
 		}
 
-		String[] roles = rolesForAction(component, action);
-		return hasAny(roles);
-	}
-
-
-	/**
-	 * Authorizes the given role to create component instances of type
-	 * componentClass. This authorization is added to any previously authorized
-	 * roles.
-	 * 
-	 * @param componentClass
-	 *            the component type that is subject for the authorization
-	 * @param role
-	 *            the role that is authorized to create component instances of
-	 *            type componentClass
-	 */
-	public static final void authorize(Class componentClass, String role)
-	{
-		authorize(componentClass, new String[] { role });
+		return hasAny((String[])rolesAuthorizedToPerformAction(component, action).toArray());
 	}
 
 	/**
-	 * Authorizes the given roles to create component instances of type
-	 * componentClass. This authorization is added to any previously authorized
-	 * roles.
+	 * Uses application level meta data to match roles for component
+	 * instantiation.
 	 * 
-	 * @param componentClass
-	 *            the component type that is subject for the authorization
-	 * @param roles
-	 *            the roles that are authorized to create component instances of
-	 *            type componentClass
+	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 	 */
-	public static final void authorize(Class componentClass, String[] roles)
+	public boolean authorizeInstantiation(final Class componentClass)
 	{
-		Application application = Application.get();
-		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
-		if (authorizedRoles == null)
+		if (componentClass == null)
 		{
-			authorizedRoles = new ComponentCreationAuthBindings();
-			application.setMetaData(MD_ROLES_FOR_INSTANTIATION, authorizedRoles);
-		}
-		authorizedRoles.add(componentClass, roles);
-	}
-
-	/**
-	 * Resets all authorizations for creation of components of type
-	 * componentClass. This has the effect that everyone is allowed to create
-	 * instances of the component again.
-	 * 
-	 * @param componentClass
-	 */
-	public static final void clear(Class componentClass)
-	{
-		Application application = Application.get();
-		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
-		if (authorizedRoles != null)
-		{
-			authorizedRoles.remove(componentClass);
-		}
-	}
-
-	/**
-	 * Authorizes the given role to do perform the given action with component.
-	 * 
-	 * @param component
-	 *            the component that is subject to the authorization
-	 * @param action
-	 *            the action to authorize
-	 * @param role
-	 *            the role to authorize
-	 */
-	public static final void authorize(Component component, Action action, String role)
-	{
-		authorize(component, action, new String[] { role });
-	}
-
-	/**
-	 * Authorizes the given roles to do perform the given action with component.
-	 * 
-	 * @param component
-	 *            the component that is subject to the authorization
-	 * @param action
-	 *            the action to authorize
-	 * @param roles
-	 *            the roles to authorize
-	 */
-	public static final void authorize(Component component, Action action, String[] roles)
-	{
-		AuthorizedAction actionRoles = (AuthorizedAction)component.getMetaData(MD_ACTION_ROLES);
-		if (actionRoles == null)
-		{
-			actionRoles = new AuthorizedAction(action, roles);
-			component.setMetaData(MD_ACTION_ROLES, actionRoles);
-		}
-		else
-		{
-			actionRoles.add(roles);
-		}
-	}
-
-	/**
-	 * Gets the roles for the given action/ component combination.
-	 * 
-	 * @param component
-	 *            the component
-	 * @param action
-	 *            the action
-	 * @return the roles for the action as defined with the given component
-	 */
-	private static String[] rolesForAction(Component component, Action action)
-	{
-		AuthorizedAction actionRoles = (AuthorizedAction)component.getMetaData(MD_ACTION_ROLES);
-		if (actionRoles != null)
-		{
-			return actionRoles.getRoles();
+			throw new IllegalArgumentException("argument componentClass cannot be null");
 		}
 
-		return null;
+		// TODO General: Is there an annotations way to make the compiler not report this warning?
+		return hasAny((String[])rolesAuthorizedToInstantiate(componentClass).toArray());
 	}
 
 	/**
@@ -385,16 +299,35 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @return the roles that are authorized for creation of the componentClass,
 	 *         or null if no specific authorization was configured
 	 */
-	private static String[] rolesForInstantiation(Class componentClass)
+	private static Set<String> rolesAuthorizedToInstantiate(final Class<Component> componentClass)
 	{
-		Application application = Application.get();
-		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
-		if (authorizedRoles != null)
+		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
+				.getMetaData(INSTANTIATION_PERMISSIONS);
+		if (permissions != null)
 		{
-			return authorizedRoles.rolesFor(componentClass);
+			return permissions.authorizedRoles(componentClass);
 		}
+		return null;
+	}
 
+	/**
+	 * Gets the roles for the given action/ component combination.
+	 * 
+	 * @param component
+	 *            the component
+	 * @param action
+	 *            the action
+	 * @return the roles for the action as defined with the given component
+	 */
+	private static Set<String> rolesAuthorizedToPerformAction(final Component component,
+			final Action action)
+	{
+		final ActionPermissions permissions = (ActionPermissions)component
+				.getMetaData(ACTION_PERMISSIONS);
+		if (permissions != null)
+		{
+			return permissions.rolesFor(action);
+		}
 		return null;
 	}
 }
