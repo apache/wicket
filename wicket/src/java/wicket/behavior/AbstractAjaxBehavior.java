@@ -21,12 +21,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import wicket.Component;
+import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 
 /**
@@ -55,17 +54,6 @@ public abstract class AbstractAjaxBehavior
 	 */
 	public AbstractAjaxBehavior()
 	{
-	}
-
-	/**
-	 * Get the Container attached to the &lt;body&gt; tag e.g. to add an
-	 * AttributeModifier.
-	 * 
-	 * @return Null, if no body container is available
-	 */
-	protected HtmlBodyContainer getBodyContainer()
-	{
-		return ((WebPage)component.getPage()).getBodyContainer();
 	}
 
 	/**
@@ -199,7 +187,7 @@ public abstract class AbstractAjaxBehavior
 	 */
 	protected void writeJsReference(final Response response, final PackageResourceReference ref)
 	{
-		String url = getComponent().getPage().urlFor(ref.getPath());
+		String url = RequestCycle.get().urlFor(ref);
 		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"");
 		response.write(url);
 		response.write("\"></script>\n");

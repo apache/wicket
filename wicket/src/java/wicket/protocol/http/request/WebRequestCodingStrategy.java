@@ -38,6 +38,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
@@ -46,7 +47,6 @@ import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
-import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.util.lang.Classes;
@@ -166,10 +166,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
 		}
-		else if (requestTarget instanceof ISharedResourceRequestTarget)
-		{
-			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
-		}
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
 			return encode(requestCycle, (IPageRequestTarget)requestTarget);
@@ -186,6 +182,35 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		throw new WicketRuntimeException("unable to encode " + requestTarget);
 	}
 
+	/**
+	 * Encode a shared resource target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param resourceReference
+	 *            the resource reference to encode
+	 * @return the encoded url
+	 */
+	public final String encode(RequestCycle requestCycle, ResourceReference resourceReference)
+	{
+		String prefix = urlPrefix(requestCycle);
+		String relativePath = resourceReference.getRelativeUrl();
+		if ((relativePath == null) || (relativePath.trim().length() == 0))
+		{
+			return prefix;
+		}
+		else
+		{
+			if (prefix.endsWith("/") || relativePath.startsWith("/"))
+			{
+				return prefix + relativePath;
+			}
+
+			return prefix + "/" + relativePath;
+		}
+	}
+
+	
 	/**
 	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
@@ -499,35 +524,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		// (frames)
 		Session.get().touch(page);
 		return urlRedirect;
-	}
-
-	/**
-	 * Encode a shared resource target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * @param requestTarget
-	 *            the target to encode
-	 * @return the encoded url
-	 */
-	protected final String encode(RequestCycle requestCycle,
-			ISharedResourceRequestTarget requestTarget)
-	{
-		String prefix = urlPrefix(requestCycle);
-		String resourceKey = requestTarget.getResourceKey();
-		if ((resourceKey == null) || (resourceKey.trim().length() == 0))
-		{
-			return prefix;
-		}
-		else
-		{
-			if (prefix.endsWith("/") || resourceKey.startsWith("/"))
-			{
-				return prefix + resourceKey;
-			}
-
-			return prefix + "/" + resourceKey;
-		}
 	}
 
 	/**

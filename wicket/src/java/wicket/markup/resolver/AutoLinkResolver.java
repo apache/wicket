@@ -361,7 +361,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			super.onComponentTag(tag);
 
 			// Set href to link to this link's linkClicked method
-			String url = getPage().urlFor(resourceReference.getPath());
+			String url = getRequestCycle().urlFor(resourceReference);
 
 			// generate the href attribute
 			tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
