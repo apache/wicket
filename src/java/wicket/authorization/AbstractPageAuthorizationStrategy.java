@@ -17,14 +17,20 @@
  */
 package wicket.authorization;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.Page;
 import wicket.RestartResponseAtSignInPageException;
 
 /**
- * An abstract base class for implementing simple authorization of Pages.
+ * An abstract base class for implementing simple authorization of Pages. Users
+ * should override {@link #isAuthorized(Class)}, which gets called for Page
+ * classes when they are being constructed. Either return true to permit page
+ * construction, or false to deny it and redirect to the signin page which comes
+ * from {@link wicket.settings.IApplicationSettings#getSignInPage()}.
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public abstract class AbstractPageAuthorizationStrategy implements IAuthorizationStrategy
 {
@@ -44,7 +50,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	{
 		if (Page.class.isAssignableFrom(componentClass))
 		{
-			if (!isAuthorized(componentClass))
+			if (!isSigninPage(componentClass) && !isAuthorized(componentClass))
 			{
 				throw new RestartResponseAtSignInPageException();
 			}
@@ -53,12 +59,27 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	}
 
 	/**
+	 * Whether to page may be created. Returns true by default.
+	 * 
 	 * @param componentClass
 	 *            The Page class
-	 * @return True if the user must authenticate
+	 * @return True if to page may be created
 	 */
 	protected boolean isAuthorized(Class/* <Page> */componentClass)
 	{
-		return false;
+		return true;
+	}
+
+	/**
+	 * Checks whether the provided class equals the singin page class of the
+	 * current application.
+	 * 
+	 * @param componentClass
+	 *            The Page class
+	 * @return True if the page class equals the signin page class
+	 */
+	private final boolean isSigninPage(Class/* <Page> */componentClass)
+	{
+		return componentClass == Application.get().getApplicationSettings().getSignInPage();
 	}
 }
