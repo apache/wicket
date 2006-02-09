@@ -17,78 +17,81 @@
  */
 package wicket.authorization.strategies.page;
 
-
-
 /**
- * Very simple authorization strategy that takes a base class or tagging interface class argument and
- * to decide whether an authorization check should be performed.
- * 
- * Use like:
+ * A very simple authorization strategy that takes a supertype (a base class or
+ * tagging interface) and performs a simple authorization check by calling the
+ * abstract method isAuthorized() whenever a Page class that extends or
+ * implements the supertype is about to be instantiated. If that method returns
+ * true, page instantiation proceeds normally. If it returns false, the user is
+ * automatically directed to the application's sign-in page for authentication,
+ * which will presumably allow authorization to succeed once they have signed
+ * in.
+ * <p>
+ * In your Application.init() method do something like the following:
  * 
  * <pre>
- * //... (in your Application class), method init()) ...
- * // create a simple authorization strategy
- * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy()
+ * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
+ * 		MySecureWebPage.class)
  * {
  * 	protected boolean isAuthorized()
  * 	{
- * 		// check whether the user is logged on
- * 		return (((LibrarySession)Session.get()).isSignedIn());
+ * 		// Authorize access based on user authentication in the session
+ * 		return (((MySession)Session.get()).isSignedIn());
  * 	}
  * };
- * // all pages of type AuthenticatedWebPage must be checked for
- * // authorization
- * authorizationStrategy.add(AuthenticatedWebPage.class);
  * 
- * // set the strategy
  * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
  * </pre>
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthorizationStrategy
 {
 	/**
-	 * Base class or interface of classes that need authentication.
+	 * The supertype (class or interface) of Pages that require authorization to
+	 * be instantiated.
 	 */
-	private final Class needsAuthorization;
+	private final Class securePageSuperType;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param needsAuthorization
-	 *            the class
+	 * @param securePageSuperType
+	 *            The class or interface supertype that indicates that a given
+	 *            Page requires authorization
 	 */
-	public SimplePageAuthorizationStrategy(Class needsAuthorization)
+	public SimplePageAuthorizationStrategy(final Class securePageSuperType)
 	{
-		if (needsAuthorization == null)
+		if (securePageSuperType == null)
 		{
-			throw new IllegalArgumentException("argument clazz must be not null");
+			throw new IllegalArgumentException("Secure page super type must not be null");
 		}
 
-		this.needsAuthorization = needsAuthorization;
+		this.securePageSuperType = securePageSuperType;
 	}
 
 	/**
 	 * @see wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isAuthorized(java.lang.Class)
 	 */
-	protected boolean isAuthorized(Class componentClass)
+	protected boolean isAuthorized(final Class pageClass)
 	{
-		if (needsAuthorization.isAssignableFrom(componentClass))
+		if (instanceOf(pageClass, securePageSuperType))
 		{
 			return isAuthorized();
 		}
 
-		// allow construction by default
+		// Allow construction by default
 		return true;
 	}
 
 	/**
-	 * Gets whether the current 'user' (or whatever context object is choosen)
-	 * is sufficiently authenticated.
+	 * Gets whether the current user/session is authorized to instantiate a page
+	 * class which extends or implements the supertype (base class or tagging
+	 * interface) passed to the constructor.
 	 * 
-	 * @return true if the user is authorization, false if he/ she should be
-	 *         redirected to the application's login page
+	 * @return True if the instantiation should be allowed to proceed. False, if
+	 *         the user should be directed to the application's sign-in page.
 	 */
 	protected abstract boolean isAuthorized();
 }

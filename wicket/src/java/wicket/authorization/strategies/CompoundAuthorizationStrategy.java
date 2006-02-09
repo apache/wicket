@@ -15,11 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization;
+package wicket.authorization.strategies;
 
 import java.util.ArrayList;
 
 import wicket.Component;
+import wicket.authorization.Action;
+import wicket.authorization.IAuthorizationStrategy;
 
 /**
  * Compound implementation of the IAuthorizationStrategy that lets you chain two

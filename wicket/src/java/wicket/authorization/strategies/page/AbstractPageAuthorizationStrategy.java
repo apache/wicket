@@ -40,7 +40,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public final boolean authorizeAction(Component component, Action action)
+	public final boolean authorizeAction(final Component component, final Action action)
 	{
 		return true;
 	}
@@ -48,11 +48,11 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	/**
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 	 */
-	public final boolean authorizeInstantiation(Class/* <Component> */componentClass)
+	public final boolean authorizeInstantiation(final Class/* <Component> */componentClass)
 	{
-		if (Page.class.isAssignableFrom(componentClass))
+		if (isPageClass(componentClass))
 		{
-			if (!isSigninPage(componentClass) && !isAuthorized(componentClass))
+			if (!isSignInPage(componentClass) && !isAuthorized(componentClass))
 			{
 				throw new RestartResponseAtSignInPageException();
 			}
@@ -61,15 +61,41 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	}
 
 	/**
+	 * Works like instanceof operator where instanceOf(a, b) is the runtime
+	 * equivalent of (a instanceof b).
+	 * 
+	 * @param type
+	 *            The type to check
+	 * @param superType
+	 *            The interface or superclass that the type needs to implement
+	 *            or extend
+	 * @return True if the type is an instance of the superType
+	 */
+	protected boolean instanceOf(final Class type, final Class superType)
+	{
+		return superType.isAssignableFrom(type);
+	}
+
+	/**
 	 * Whether to page may be created. Returns true by default.
 	 * 
-	 * @param componentClass
+	 * @param pageClass
 	 *            The Page class
 	 * @return True if to page may be created
 	 */
-	protected boolean isAuthorized(Class/* <Page> */componentClass)
+	protected boolean isAuthorized(Class/* <Page> */pageClass)
 	{
 		return true;
+	}
+
+	/**
+	 * @param c
+	 *            The class to check
+	 * @return True if the class is derived from Page.
+	 */
+	protected boolean isPageClass(final Class c)
+	{
+		return instanceOf(c, Page.class);
 	}
 
 	/**
@@ -80,7 +106,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The Page class
 	 * @return True if the page class equals the signin page class
 	 */
-	private final boolean isSigninPage(Class/* <Page> */componentClass)
+	private final boolean isSignInPage(Class/* <Page> */componentClass)
 	{
 		return componentClass == Application.get().getApplicationSettings().getSignInPage();
 	}
