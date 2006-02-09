@@ -19,7 +19,7 @@ public abstract class AnnotSpringWebApplication extends SpringWebApplication
 	{
 		super.internalInit();
 		InjectorHolder.setInjector(new AnnotSpringInjector(getSpringContextLocator()));
-		add(new ComponentInjector());
+		addComponentInstantiationListener(new ComponentInjector());
 	}
 	
 
