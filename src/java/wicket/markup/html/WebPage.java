@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -58,6 +60,9 @@ public class WebPage extends Page
 	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
+
+	/** The body container*/
+	private BodyContainer bodyContainer;
 	
 	/**
 	 * Constructor. Having this constructor public means that you page is
@@ -76,14 +81,33 @@ public class WebPage extends Page
 		super(model);
 		
 		// Add a Body container if the associated markup contains a <body> tag
-		HtmlBodyContainer body = new HtmlBodyContainer();
-		final MarkupStream markupStream = body.getAssociatedMarkupStream(this);
+		// get markup stream gracefully
+		MarkupStream markupStream = getApplication().getMarkupCache().getMarkupStream(this, false);
 		if (markupStream != null)
 		{
 			// The default <body> container. It can be accessed, replaced 
 			// and attribute modifiers can be attached. <body> tags without
 			// wicket:id get automatically a wicket:id="body" assigned.
-			add(body);
+//			 find the body tag
+			while (markupStream.hasMore())
+			{
+				final MarkupElement element = (MarkupElement)markupStream.next();
+				if (element instanceof ComponentTag)
+				{
+					final ComponentTag tag = (ComponentTag)element;
+					if (tag.isOpen() && "body".equals(tag.getName()) && (tag.getNamespace() == null))
+					{
+						// Add a default container if the tag has the default _body name
+						if(BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+						{
+							add(new HtmlBodyContainer());
+						}
+						// remember the id of the tag
+						bodyContainer = new BodyContainer(this,tag.getId());
+						break;
+					}
+				}
+			}
 		}
 		
 		// TODO General: If the concept proofs valuable we could add the header 
@@ -123,16 +147,17 @@ public class WebPage extends Page
 	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
 	}
 	
+	
 	/**
-	 * Get the container attached to &lt;body&gt;
+	 * Get the body container for adding onLoad javascript to the body tag.
 	 * 
 	 * @return The body container
 	 */
-	public HtmlBodyContainer getBodyContainer()
+	public BodyContainer getBodyContainer()
 	{
-		return (HtmlBodyContainer)get(BodyOnLoadHandler.BODY_ID);
+		return bodyContainer;
 	}
-
+	
 	/**
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
