@@ -35,7 +35,9 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
 import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
+import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.PageRequestTarget;
+import wicket.request.target.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
 
 /**
@@ -1080,5 +1082,85 @@ public abstract class RequestCycle
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
 		current.set(null);
+	}
+	
+	/**
+	 * Returns a URL that references a given interface on a component. When the
+	 * URL is requested from the server at a later time, the interface will be
+	 * called. A URL returned by this method will not be stable across sessions
+	 * and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param listenerInterface
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public final String urlFor(final Component component, final Class listenerInterface)
+	{
+		final Page page=component.getPage();
+		
+		page.setStateless(false);
+		
+		String interfaceName = Classes.name(listenerInterface);
+		IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, getRequestInterfaceMethod(interfaceName));
+		IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
+	}
+	
+	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * @return a URL that references the given request target
+	 */
+	public final String urlFor(final IRequestTarget requestTarget)
+	{
+		IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, requestTarget);
+	}
+	
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource key.
+	 * 
+	 * @param resourceKey
+	 *            The application global key of the shared resource
+	 * @return The url for the shared resource
+	 */
+	public final String urlFor(final String resourceKey)
+	{
+		String url = getProcessor().getRequestCodingStrategy().encode(this,
+				new SharedResourceRequestTarget(resourceKey));
+		return url;
+	}
+
+	
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageMapName
+	 *            Name of pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public final String urlFor(final String pageMapName, final Class pageClass,
+			final PageParameters parameters)
+	{
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
+				parameters);
+		
+		IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.170 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,10 +35,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ListenerInterfaceRequestTarget;
-import wicket.request.target.SharedResourceRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
@@ -141,7 +137,7 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
 
@@ -260,9 +256,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @return fixed true;
 	 * 
 	 * @deprecated this method is to be removed in future version in favor of
-	 * instances of {@link wicket.authorization.IAuthorizationStrategy} such
-	 * as {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
-	 * It isn't called anymore and made final so that people see what must be changed.
+	 *             instances of
+	 *             {@link wicket.authorization.IAuthorizationStrategy} such as
+	 *             {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
+	 *             It isn't called anymore and made final so that people see
+	 *             what must be changed.
 	 */
 	public final boolean checkAccess()
 	{
@@ -315,13 +313,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// first try to check if the page can be rendered:
 		if (!authorize(RENDER))
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("Page not allowed to render: " + this);
 			}
-			throw new RestartResponseException(getApplication().getApplicationSettings().getAccessDeniedPage());
+			throw new RestartResponseException(getApplication().getApplicationSettings()
+					.getAccessDeniedPage());
 		}
-		
+
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -406,7 +405,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			renderedComponents = null;
 		}
 	}
-	
+
 	/**
 	 * Expire the oldest version of this page
 	 */
@@ -440,7 +439,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return versionManager == null ? 0 : versionManager.getCurrentVersionNumber();
 	}
-	
+
 	/**
 	 * @return Returns the feedbackMessages.
 	 */
@@ -724,6 +723,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * called. A URL returned by this method will not be stable across sessions
 	 * and cannot be bookmarked by a user.
 	 * 
+	 * @see RequestCycle#urlFor(Component, Class)
+	 * 
 	 * @param component
 	 *            The component to reference
 	 * @param listenerInterface
@@ -732,30 +733,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
-		stateless = false;
-
-		String interfaceName = Classes.name(listenerInterface);
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
-				.getRequestInterfaceMethod(interfaceName));
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, target);
+		return getRequestCycle().urlFor(component, listenerInterface);
 	}
 
 	/**
 	 * Returns a URL that references the given request target.
 	 * 
+	 * @see RequestCycle#urlFor(IRequestTarget)
+	 * 
 	 * @param requestTarget
 	 *            the request target to reference
+	 * 
 	 * @return a URL that references the given request target
 	 */
 	public final String urlFor(final IRequestTarget requestTarget)
 	{
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, requestTarget);
+		return getRequestCycle().urlFor(requestTarget);
 	}
 
 
@@ -763,16 +756,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * Returns a URL that references a shared resource through the provided
 	 * resource key.
 	 * 
+	 * @see RequestCycle#urlFor(String)
+	 * 
 	 * @param resourceKey
 	 *            The application global key of the shared resource
 	 * @return The url for the shared resource
 	 */
 	public final String urlFor(final String resourceKey)
 	{
-		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getProcessor().getRequestCodingStrategy().encode(requestCycle,
-				new SharedResourceRequestTarget(resourceKey));
-		return url;
+		return getRequestCycle().urlFor(resourceKey);
 	}
 
 	/**
@@ -781,23 +773,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * all information necessary to instantiate and render the page, it can be
 	 * stored in a user's browser as a stable bookmark.
 	 * 
+	 * @see RequestCycle#urlFor(String, Class, PageParameters)
+	 * 
 	 * @param pageMapName
 	 *            Name of pagemap to use
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
+	 * 
+	 * 
 	 * @return Bookmarkable URL to page
 	 */
 	public final String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
-				parameters);
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, target);
+		return getRequestCycle().urlFor(pageMapName, pageClass, parameters);
 	}
 
 	/**
@@ -1048,6 +1039,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final boolean isStateless()
 	{
 		return stateless;
+	}
+
+	final void setStateless(boolean stateless)
+	{
+		this.stateless = stateless;
 	}
 
 	/**
