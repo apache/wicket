@@ -19,7 +19,7 @@ package wicket.examples.library;
 
 import wicket.ISessionFactory;
 import wicket.Session;
-import wicket.authorization.strategies.simple.SimplePageAuthorizationStrategy;
+import wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
 import wicket.settings.Settings;
 
