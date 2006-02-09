@@ -18,8 +18,8 @@
 package wicket.authorization;
 
 import wicket.Component;
-import wicket.IComponentInstantiationListener;
 import wicket.Session;
+import wicket.application.IComponentInstantiationListener;
 
 /**
  * Calls the application's (or session's)
@@ -39,7 +39,7 @@ public class ComponentInstantiationAuthorizer implements IComponentInstantiation
 	}
 
 	/**
-	 * @see wicket.IComponentInstantiationListener#onInstantiation(wicket.Component)
+	 * @see wicket.application.IComponentInstantiationListener#onInstantiation(wicket.Component)
 	 */
 	public void onInstantiation(Component component)
 	{
