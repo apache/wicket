@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -57,7 +57,8 @@ public class BodyFrame extends WebPage
 			{
 				WebRequest webRequest = (WebRequest)getRequest();
 				String pathTo = webRequest.getContextPath() + webRequest.getServletPath();
-				String url = pathTo + "?bookmarkablePage=" + frameTarget.getFrameClass();
+				String url = pathTo + "?bookmarkablePage=" + frameTarget.getFrameClass()
+						+ "&pagemap=rightFrame";
 				return url;
 			}
 		};
