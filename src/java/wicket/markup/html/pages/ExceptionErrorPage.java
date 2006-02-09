@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.pages;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.Page;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -94,6 +96,15 @@ public class ExceptionErrorPage extends WebPage
 		{
 		    add(new Label("componentTree", ""));
 		}
+	}
+	
+	/**
+	 * @see wicket.markup.html.WebPage#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	
 	}
 	
 	/**
