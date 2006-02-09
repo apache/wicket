@@ -129,7 +129,7 @@ public abstract class Application
 	private final SharedResources sharedResources;
 
 	/** list of {@link IComponentInstantiationListener}s. */
-	private IComponentInstantiationListener[] componentInstantiationListeners;
+	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
 	/**
 	 * Application level meta data.
@@ -200,7 +200,7 @@ public abstract class Application
 				new DefaultButtonImageResourceFactory());
 
 		// install default component instantiation listener
-		this.componentInstantiationListeners = new IComponentInstantiationListener[] { new ComponentInstantiationAuthorizer() };
+		add(new ComponentInstantiationAuthorizer());
 	}
 
 	/**
@@ -517,7 +517,7 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to add
 	 */
-	public final void add(IComponentInstantiationListener listener)
+	public final void add(final IComponentInstantiationListener listener)
 	{
 		if (listener == null)
 		{
@@ -533,7 +533,7 @@ public abstract class Application
 			}
 		}
 
-		IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
+		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
 		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
 				componentInstantiationListeners.length);
 		newListeners[componentInstantiationListeners.length] = listener;
@@ -547,10 +547,10 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to remove
 	 */
-	public final void remove(IComponentInstantiationListener listener)
+	public final void remove(final IComponentInstantiationListener listener)
 	{
-		IComponentInstantiationListener[] listeners = componentInstantiationListeners;
-		int len = listeners.length;
+		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
+		final int len = listeners.length;
 
 		if (listener != null && len > 0)
 		{
@@ -567,7 +567,7 @@ public abstract class Application
 			if (pos < len)
 			{
 				listeners[pos] = listeners[len - 1];
-				IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
+				final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
 				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
 
 				componentInstantiationListeners = newListeners;
@@ -582,9 +582,9 @@ public abstract class Application
 	 * @param component
 	 *            the component that is being instantiated
 	 */
-	final void notifyComponentInstantiationListeners(Component component)
+	final void notifyComponentInstantiationListeners(final Component component)
 	{
-		int len = componentInstantiationListeners.length;
+		final int len = componentInstantiationListeners.length;
 		for (int i = 0; i < len; i++)
 		{
 			componentInstantiationListeners[i].onInstantiation(component);
