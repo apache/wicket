@@ -17,7 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
-import wicket.authorization.strategies.role.metadata.RoleBinder;
+import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.markup.html.WebPage;
 
 /**
@@ -35,7 +35,7 @@ public class AdminInternalPage extends WebPage
 	 */
 	static
 	{
-		RoleBinder.authorize(AdminInternalPage.class, "ADMIN");
+		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	}
 
 	/**

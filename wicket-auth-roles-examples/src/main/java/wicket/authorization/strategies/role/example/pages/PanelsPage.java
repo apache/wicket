@@ -17,7 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
-import wicket.authorization.strategies.role.metadata.RoleBinder;
+import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.panel.Panel;
 
@@ -41,13 +41,14 @@ public class PanelsPage extends WebPage
 		add(forAdminsAndUsers);
 		// authorise roles admin and user (and thus deny everyone else) for the
 		// Component.RENDER action
-		RoleBinder.authorize(forAdminsAndUsers, RENDER, new String[] { "ADMIN", "USER" });
+		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, new String[] {
+				"ADMIN", "USER" });
 
 		ForAdmins forAdmins = new ForAdmins("forAdminsPanel");
 		add(forAdmins);
 		// authorise role admin (and thus deny everyone else) for the
 		// Component.RENDER action
-		RoleBinder.authorize(forAdmins, RENDER, "ADMIN");
+		MetaDataRoleAuthorizationStrategy.authorize(forAdmins, RENDER, "ADMIN");
 
 		// NOTE: adding meta data to components will only work AFTER you added
 		// the components to the page. This issue will be solved with the
