@@ -25,6 +25,7 @@ import wicket.Component;
 import wicket.IResourceFactory;
 import wicket.IResourceListener;
 import wicket.MarkupContainer;
+import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
@@ -267,7 +268,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (this.resourceReference != null)
 		{
 			// Create URL to shared resource
-			url = component.getPage().urlFor(resourceReference.getPath());
+			url = RequestCycle.get().urlFor(resourceReference);
 		}
 		else
 		{

@@ -95,7 +95,7 @@ public class ResourceLink extends Link implements IResourceListener
 			resourceReference.setLocale(getLocale());
 			resourceReference.setStyle(getStyle());
 			resourceReference.bind(getApplication());
-			return getPage().urlFor(resourceReference.getPath());
+			return getRequestCycle().urlFor(resourceReference);
 		}
 		return urlFor(IResourceListener.class);
 	}

@@ -755,17 +755,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/**
 	 * Returns a URL that references a shared resource through the provided
-	 * resource key.
+	 * resource reference.
 	 * 
-	 * @see RequestCycle#urlFor(String)
+	 * @see RequestCycle#urlFor(ResourceReference)
 	 * 
-	 * @param resourceKey
-	 *            The application global key of the shared resource
+	 * @param resourceReference
+	 *            The resource reference
 	 * @return The url for the shared resource
 	 */
-	public final String urlFor(final String resourceKey)
+	public final String urlFor(final ResourceReference resourceReference)
 	{
-		return getRequestCycle().urlFor(resourceKey);
+		return getRequestCycle().urlFor(resourceReference);
 	}
 
 	/**

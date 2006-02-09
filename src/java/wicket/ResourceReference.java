@@ -155,7 +155,7 @@ public class ResourceReference implements Serializable
 	/**
 	 * @return Path for this resource reference.
 	 */
-	public final String getPath()
+	public final String getRelativeUrl()
 	{
 		Application application = Application.get();
 		bind(application);
