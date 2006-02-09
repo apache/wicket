@@ -299,7 +299,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * Adds page related parameters (path and optionally pagemap, version and
+	 * Adds page related parameters (path and pagemap and optionally version and
 	 * interface).
 	 * 
 	 * @param request
@@ -309,11 +309,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected void addPageParameters(Request request, RequestParameters parameters)
 	{
+		parameters.setPageMapName(request.getParameter("pagemap"));
 		String componentPath = request.getParameter("path");
 		if (componentPath != null)
 		{
 			parameters.setComponentPath(componentPath);
-			parameters.setPageMapName(request.getParameter("pagemap"));
 			final String versionNumberString = request.getParameter("version");
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
 					.parseInt(versionNumberString);
@@ -491,10 +491,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		// Get the page we want a url from:
 		Page page = requestTarget.getPage();
-		// A url to a page is the IRedirectListener interface: 
+		// A url to a page is the IRedirectListener interface:
 		String urlRedirect = page.urlFor(IRedirectListener.class);
-		// Touch the page once because it could be that it did go from stateless to statefull
-		// or it was a internally made page where just a url must be made for (frames)
+		// Touch the page once because it could be that it did go from stateless
+		// to statefull
+		// or it was a internally made page where just a url must be made for
+		// (frames)
 		Session.get().touch(page);
 		return urlRedirect;
 	}
