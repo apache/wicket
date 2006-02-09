@@ -17,12 +17,14 @@
  */
 package wicket.examples.frames;
 
+import java.io.Serializable;
+
 /**
  * Simple struct for holding the class name of the right frame.
  * 
  * @author Eelco Hillenius
  */
-public final class FrameTarget
+public final class FrameTarget implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
