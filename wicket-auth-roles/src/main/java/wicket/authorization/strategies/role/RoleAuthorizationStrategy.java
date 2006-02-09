@@ -18,7 +18,6 @@ package wicket.authorization.strategies.role;
 
 import wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
 import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 
 /**

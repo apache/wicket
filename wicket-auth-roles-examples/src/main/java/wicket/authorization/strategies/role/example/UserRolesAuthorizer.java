@@ -17,7 +17,7 @@
 package wicket.authorization.strategies.role.example;
 
 import wicket.Session;
-import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
+import wicket.authorization.strategies.role.IRoleAuthorizer;
 
 /**
  * The authorizer we need to provide to the authorization strategy
@@ -37,7 +37,7 @@ public class UserRolesAuthorizer implements IRoleAuthorizer
 	}
 
 	/**
-	 * @see wicket.authorization.strategies.role.metadata.IRoleAuthorizer#hasAny(java.lang.String[])
+	 * @see wicket.authorization.strategies.role.IRoleAuthorizer#hasAny(java.lang.String[])
 	 */
 	public boolean hasAny(String[] roles)
 	{

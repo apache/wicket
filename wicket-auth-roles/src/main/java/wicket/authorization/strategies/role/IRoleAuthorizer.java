@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.strategies.role.metadata;
+package wicket.authorization.strategies.role;
 
 /**
  * Authorizer strategy for delegating the actual role checking.

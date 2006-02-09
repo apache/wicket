@@ -18,11 +18,10 @@
 package wicket.authorization.strategies.role;
 
 import wicket.authorization.IAuthorizationStrategy;
-import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
 
 /**
  * Base strategy that uses an instance of
- * {@link wicket.authorization.strategies.role.metadata.IRoleAuthorizer}.
+ * {@link wicket.authorization.strategies.role.IRoleAuthorizer}.
  * 
  * @author Eelco Hillenius
  */
@@ -53,7 +52,7 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 	 *            the roles
 	 * @return whether any of the given roles applies to the authorizer
 	 */
-	protected final boolean any(String[] roles)
+	protected final boolean hasAny(String[] roles)
 	{
 		boolean authorized;
 		if (!isDefault(roles))

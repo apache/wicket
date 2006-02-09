@@ -19,6 +19,7 @@ package wicket.authorization.strategies.role.metadata;
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
+import wicket.authorization.strategies.role.IRoleAuthorizer;
 
 /**
  * Strategy that uses the Wicket meta data facility to check authorization.
@@ -54,8 +55,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 			throw new IllegalArgumentException("argument componentClass has to be not null");
 		}
 
-		String[] roles = RoleBinder.rolesForCreation(componentClass);
-		return any(roles);
+		String[] roles = RoleBinder.rolesForInstantiation(componentClass);
+		return hasAny(roles);
 	}
 
 	/**
@@ -77,6 +78,6 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 		}
 
 		String[] roles = RoleBinder.rolesForAction(component, action);
-		return any(roles);
+		return hasAny(roles);
 	}
 }

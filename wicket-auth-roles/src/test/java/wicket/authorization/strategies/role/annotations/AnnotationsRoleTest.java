@@ -21,8 +21,8 @@ import java.io.Serializable;
 
 import junit.framework.TestCase;
 import wicket.Page;
+import wicket.authorization.strategies.role.IRoleAuthorizer;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
 import wicket.authorization.strategies.role.util.Roles;
 import wicket.util.tester.ITestPageSource;
 import wicket.util.tester.WicketTester;
@@ -114,7 +114,7 @@ public class AnnotationsRoleTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.strategies.role.metadata.IRoleAuthorizer#hasAny(java.lang.String[])
+		 * @see wicket.authorization.strategies.role.IRoleAuthorizer#hasAny(java.lang.String[])
 		 */
 		public boolean hasAny(String[] roles)
 		{

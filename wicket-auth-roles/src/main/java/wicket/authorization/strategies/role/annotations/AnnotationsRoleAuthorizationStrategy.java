@@ -20,7 +20,7 @@ package wicket.authorization.strategies.role.annotations;
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
+import wicket.authorization.strategies.role.IRoleAuthorizer;
 
 /**
  * Strategy that checks the
@@ -55,7 +55,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 					.getAnnotation(AuthorizedRoles.class);
 			if (packageRolesAllowed != null)
 			{
-				authorized = any(packageRolesAllowed.value());
+				authorized = hasAny(packageRolesAllowed.value());
 			}
 		}
 		AuthorizedRoles classRolesAllowed = (AuthorizedRoles)componentClass
@@ -63,7 +63,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		if (classRolesAllowed != null)
 		{
 			// if roles are defined for the class, that overrides the package
-			authorized = any(classRolesAllowed.value());
+			authorized = hasAny(classRolesAllowed.value());
 		}
 		return authorized;
 	}
@@ -80,7 +80,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		{
 			if (annotAction.action().equals(action.toString()))
 			{
-				if (!any(annotAction.roles()))
+				if (!hasAny(annotAction.roles()))
 				{
 					return false;
 				}
@@ -96,7 +96,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			{
 				if (a.action().equals(action.toString()))
 				{
-					if (!any(a.roles()))
+					if (!hasAny(a.roles()))
 					{
 						return false;
 					}

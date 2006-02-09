@@ -42,7 +42,7 @@ public final class RoleBinder
 	 * do not need to use this meta data key directly, but instead use one of
 	 * the bind methods of this class.
 	 */
-	private static final MetaDataKey MD_ROLES_FOR_CREATION = new MetaDataKey(
+	private static final MetaDataKey MD_ROLES_FOR_INSTANTIATION = new MetaDataKey(
 			ComponentCreationAuthBindings.class)
 	{
 	};
@@ -228,11 +228,11 @@ public final class RoleBinder
 	{
 		Application application = Application.get();
 		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_CREATION);
+				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
 		if (authorizedRoles == null)
 		{
 			authorizedRoles = new ComponentCreationAuthBindings();
-			application.setMetaData(MD_ROLES_FOR_CREATION, authorizedRoles);
+			application.setMetaData(MD_ROLES_FOR_INSTANTIATION, authorizedRoles);
 		}
 		authorizedRoles.add(componentClass, roles);
 	}
@@ -248,7 +248,7 @@ public final class RoleBinder
 	{
 		Application application = Application.get();
 		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_CREATION);
+				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
 		if (authorizedRoles != null)
 		{
 			authorizedRoles.remove(componentClass);
@@ -325,11 +325,11 @@ public final class RoleBinder
 	 * @return the roles that are authorized for creation of the componentClass,
 	 *         or null if no specific authorization was configured
 	 */
-	static String[] rolesForCreation(Class componentClass)
+	static String[] rolesForInstantiation(Class componentClass)
 	{
 		Application application = Application.get();
 		ComponentCreationAuthBindings authorizedRoles = (ComponentCreationAuthBindings)application
-				.getMetaData(MD_ROLES_FOR_CREATION);
+				.getMetaData(MD_ROLES_FOR_INSTANTIATION);
 		if (authorizedRoles != null)
 		{
 			return authorizedRoles.rolesFor(componentClass);
