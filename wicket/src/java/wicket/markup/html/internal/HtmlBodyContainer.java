@@ -19,10 +19,6 @@ package wicket.markup.html.internal;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupElement;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.model.IModel;
@@ -60,42 +56,6 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	public HtmlBodyContainer()
 	{
 		super(BodyOnLoadHandler.BODY_ID);
-	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
-	 * 
-	 * @param parent
-	 *            The container hosting the body component
-	 * @return A stream of MarkupElement elements
-	 */
-	public final MarkupStream getAssociatedMarkupStream(final MarkupContainer parent)
-	{
-		// Gracefully getAssociateMarkupStream. Throws no exception in case
-		// markup is not found
-		MarkupStream markupStream = getApplication().getMarkupCache()
-				.getMarkupStream(parent, false);
-
-		if (markupStream != null)
-		{
-			// find the body tag
-			while (markupStream.hasMore())
-			{
-				final MarkupElement element = (MarkupElement)markupStream.next();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && "body".equals(tag.getName())
-							&& (tag.getNamespace() == null))
-					{
-						return markupStream;
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**

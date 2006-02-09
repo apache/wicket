@@ -18,6 +18,7 @@
 package wicket.ajax;
 
 import wicket.Response;
+import wicket.markup.html.WebPage;
 import wicket.util.time.Duration;
 
 /**
@@ -45,7 +46,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected void onRenderHeadContribution(final Response response)
 	{
 		super.onRenderHeadContribution(response);
-		getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
+		((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
 	}
 
 	/**
