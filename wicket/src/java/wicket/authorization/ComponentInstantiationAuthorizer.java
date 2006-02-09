@@ -30,7 +30,6 @@ import wicket.application.IComponentInstantiationListener;
  */
 public class ComponentInstantiationAuthorizer implements IComponentInstantiationListener
 {
-
 	/**
 	 * Construct.
 	 */
@@ -48,5 +47,4 @@ public class ComponentInstantiationAuthorizer implements IComponentInstantiation
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
 	}
-
 }
