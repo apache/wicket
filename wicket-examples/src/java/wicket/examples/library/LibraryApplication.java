@@ -19,7 +19,7 @@ package wicket.examples.library;
 
 import wicket.ISessionFactory;
 import wicket.Session;
-import wicket.authorization.SimplePageAuthorizationStrategy;
+import wicket.authorization.strategies.simple.SimplePageAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
 import wicket.settings.Settings;
 
@@ -48,8 +48,10 @@ public final class LibraryApplication extends WicketExampleApplication
 		// set the sign in page
 		getApplicationSettings().setSignInPage(SignIn.class);
 
-		// create a simple authorization strategy
-		SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy()
+		// create a simple authorization strategy, that checks all pages of type
+		// Authenticated web page.
+		SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
+				AuthenticatedWebPage.class)
 		{
 			protected boolean isAuthorized()
 			{
@@ -57,9 +59,6 @@ public final class LibraryApplication extends WicketExampleApplication
 				return (((LibrarySession)Session.get()).isSignedIn());
 			}
 		};
-		// all pages of type AuthenticatedWebPage must be checked for
-		// authorization
-		authorizationStrategy.add(AuthenticatedWebPage.class);
 
 		// set the strategy
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
