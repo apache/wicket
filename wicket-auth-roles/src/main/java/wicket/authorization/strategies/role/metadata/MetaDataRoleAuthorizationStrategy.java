@@ -14,15 +14,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.strategies.role;
+package wicket.authorization.strategies.role.metadata;
 
 import wicket.Component;
 import wicket.authorization.Action;
+import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
 
 /**
  * Strategy that uses the Wicket meta data facility to check authorization.
  * 
- * @see wicket.authorization.strategies.role.RoleBinder
+ * @see wicket.authorization.strategies.role.metadata.RoleBinder
  * @see wicket.MetaDataKey
  * 
  * @author Eelco Hillenius

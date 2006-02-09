@@ -17,7 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
-import wicket.authorization.strategies.role.RoleBinder;
+import wicket.authorization.strategies.role.metadata.RoleBinder;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.panel.Panel;
 

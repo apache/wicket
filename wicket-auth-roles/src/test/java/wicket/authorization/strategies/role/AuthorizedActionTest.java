@@ -17,10 +17,12 @@
  */
 package wicket.authorization.strategies.role;
 
+import wicket.authorization.strategies.role.metadata.AuthorizedAction;
+import wicket.authorization.strategies.role.metadata.AuthorizedActions;
 import junit.framework.TestCase;
 
 /**
- * Test case for {@link wicket.authorization.strategies.role.AuthorizedAction}.
+ * Test case for {@link wicket.authorization.strategies.role.metadata.AuthorizedAction}.
  * 
  * @author Eelco Hillenius
  */

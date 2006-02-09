@@ -20,7 +20,7 @@ package wicket.authorization.strategies.role.annotations;
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.IRoleAuthorizer;
+import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
 
 /**
  * Strategy that checks the

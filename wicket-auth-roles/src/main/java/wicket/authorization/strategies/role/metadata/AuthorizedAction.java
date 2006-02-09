@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.strategies.role;
+package wicket.authorization.strategies.role.metadata;
 
 import java.io.Serializable;
 import java.util.HashSet;

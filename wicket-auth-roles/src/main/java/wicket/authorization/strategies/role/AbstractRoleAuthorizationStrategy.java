@@ -18,10 +18,11 @@
 package wicket.authorization.strategies.role;
 
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.strategies.role.metadata.IRoleAuthorizer;
 
 /**
  * Base strategy that uses an instance of
- * {@link wicket.authorization.strategies.role.IRoleAuthorizer}.
+ * {@link wicket.authorization.strategies.role.metadata.IRoleAuthorizer}.
  * 
  * @author Eelco Hillenius
  */
