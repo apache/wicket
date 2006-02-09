@@ -15,7 +15,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.application;
+
+import wicket.Component;
 
 /**
  * Listener interface that receives messages when components are constructed.

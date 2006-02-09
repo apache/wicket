@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.application.IComponentInstantiationListener;
 import wicket.authorization.ComponentInstantiationAuthorizer;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
