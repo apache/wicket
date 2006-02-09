@@ -880,6 +880,30 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Call the event processing and and respond methods on the request
+	 * processor and apply synchronization if needed.
+	 * 
+	 * @param processor
+	 *            the request processor
+	 */
+	private final void respond(IRequestCycleProcessor processor)
+	{
+		// Use any synchronization lock provided by the target
+		Object lock = getRequestTarget().getLock(this);
+		if (lock != null)
+		{
+			synchronized (lock)
+			{
+				processor.respond(this);
+			}
+		}
+		else
+		{
+			processor.respond(this);
+		}
+	}
+	
+	/**
 	 * Safe version of {@link #getProcessor()} that throws an exception when the
 	 * processor is null.
 	 * 
@@ -943,13 +967,15 @@ public abstract class RequestCycle
 				}
 				case RESPOND : {
 					// generate a response
-					// NOTE: we reach this block when during event processing
-					// and response generation the request target was changed,
-					// causing the request processing to go BACK to RESPOND.
-					// Note that we could still be in a session-synchronized
-					// block here, so be very careful not to do other
-					// synchronization (possibly introducing a deadlock)
-					processor.respond(this);
+					// NOTE: We have to do sync here because the processEventsAndRespond 
+					// step will be unrolled by a RestartXX Exception.
+					// And if this is not the case then still it is not a problem 
+					// to have 2 locks on the same session this will not cause a deadlock.
+					// So only if the request targets are different and the getLock() 
+					// doesn't return 2 times the same object a deadlock could maybe occur.
+					// But we use the session as the lock at all times maybe use a variable 
+					// inside RequestCycle to know that a lock is still in place?
+					respond(processor);
 					break;
 				}
 				default : {
