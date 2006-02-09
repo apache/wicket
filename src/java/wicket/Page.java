@@ -208,6 +208,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param model
 	 *            See Component
 	 * @see Component#Component(String, IModel)
@@ -218,6 +220,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// added to a PageMap in the Session.
 		super(null, model);
 		init();
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param pageMapName
+	 *            the name of the page map to put this page in
+	 */
+	protected Page(final String pageMapName)
+	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null);
+		init(pageMapName);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param pageMapName
+	 *            the name of the page map to put this page in
+	 * @param model
+	 *            See Component
+	 * @see Component#Component(String, IModel)
+	 */
+	protected Page(final String pageMapName, final IModel model)
+	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null, model);
+		init(pageMapName);
 	}
 
 	/**
@@ -1248,17 +1281,29 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init()
 	{
-		// Set the pagemap
 		RequestCycle cycle = getRequestCycle();
+		String pagemapName = null;
 		if (cycle != null)
 		{
 			RequestParameters parameters = cycle.getProcessor().getRequestCodingStrategy().decode(
 					cycle.getRequest());
-			String pagemapName = parameters.getPageMapName();
-			if (pagemapName != null)
-			{
-				setPageMap(pagemapName);
-			}
+			pagemapName = parameters.getPageMapName();
+		}
+		init(pagemapName);
+	}
+
+	/**
+	 * Initializes Page by adding it to the Session and initializing it.
+	 * 
+	 * @param pageMapName
+	 *            the name of the page map to put in.
+	 */
+	private final void init(String pageMapName)
+	{
+		// Set the pagemap
+		if (pageMapName != null)
+		{
+			setPageMap(pageMapName);
 		}
 
 		// Set the numeric id on this page
@@ -1269,7 +1314,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// All Pages are born dirty so they get clustered right away
 		dirty();
-
 	}
 
 	/**
