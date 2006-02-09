@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimplePageAuthorizationStrategy.java,v 1.1 2006/02/09 01:04:49 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +31,28 @@ import wicket.util.lang.PackageName;
  * set of classes/ pages, creation is allowed and no authorization check will be
  * performed. If the class does match, method {@link #isAuthorized()} is called.
  * If that method call returns false, the application's sign in page ({@link wicket.settings.IApplicationSettings#getSignInPage()})
- * is show. If it returns true, nothing happens
+ * is show. If it returns true, nothing happens.
+ * 
+ * Use like:
+ * 
+ * <pre>
+ * //... (in your Application class), method init()) ...
+ * // create a simple authorization strategy
+ * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy()
+ * {
+ * 	protected boolean isAuthorized()
+ * 	{
+ * 		// check whether the user is logged on
+ * 		return (((LibrarySession)Session.get()).isSignedIn());
+ * 	}
+ * };
+ * // all pages of type AuthenticatedWebPage must be checked for
+ * // authorization
+ * authorizationStrategy.add(AuthenticatedWebPage.class);
+ * 
+ * // set the strategy
+ * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
+ * </pre>
  * 
  * @author Eelco Hillenius
  */
