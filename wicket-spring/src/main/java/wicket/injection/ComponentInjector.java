@@ -18,20 +18,21 @@
 package wicket.injection;
 
 import wicket.Component;
-import wicket.IComponentInstantiationListener;
+import wicket.application.IComponentInstantiationListener;
 import wicket.injection.web.InjectorHolder;
 
 /**
  * Enables your application to do Spring dependency injection. To use, register
- * the injector as a {@link wicket.IComponentInstantiationListener} like this:
+ * the injector as a {@link wicket.application.IComponentInstantiationListener}
+ * like this:
  * 
  * <pre>
- *    ... (in your application's constructor or init method)
- *    add(new ComponentInjector());
- *    ...
+ *      ... (in your application's constructor or init method)
+ *      add(new ComponentInjector());
+ *      ...
  * </pre>
  * 
- * @see wicket.IComponentInstantiationListener
+ * @see wicket.application.IComponentInstantiationListener
  * @see wicket.Application#add(IComponentInstantiationListener)
  * @author Eelco Hillenius
  */
@@ -46,7 +47,7 @@ public class ComponentInjector implements IComponentInstantiationListener
 	}
 
 	/**
-	 * @see wicket.IComponentInstantiationListener#onInstantiation(wicket.Component)
+	 * @see wicket.application.IComponentInstantiationListener#onInstantiation(wicket.Component)
 	 */
 	public void onInstantiation(Component component)
 	{
