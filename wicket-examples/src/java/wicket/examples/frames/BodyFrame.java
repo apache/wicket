@@ -19,13 +19,12 @@ package wicket.examples.frames;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebPage;
-import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.protocol.http.WebRequest;
+import wicket.request.IRequestCodingStrategy;
+import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.PageRequestTarget;
 
 /**
@@ -35,51 +34,50 @@ import wicket.request.target.PageRequestTarget;
  */
 public class BodyFrame extends WebPage
 {
-	private final FrameTarget frameTarget = new FrameTarget(Page1.class.getName());
+	private final FrameTarget frameTarget = new FrameTarget(Page1.class);
+
+	/**
+	 * Model that returns the url to the bookmarkable page that is set in the
+	 * current frame target.
+	 */
+	private final class FrameModel extends Model
+	{
+		/**
+		 * @see wicket.model.Model#getObject(wicket.Component)
+		 */
+		public Object getObject(Component component)
+		{
+			RequestCycle cycle = getRequestCycle();
+			IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
+			return encoder.encode(cycle, new BookmarkablePageRequestTarget("rightFrame",
+					frameTarget.getFrameClass()));
+		}
+	}
 
 	/**
 	 * Constructor
 	 */
 	public BodyFrame()
 	{
+		RequestCycle cycle = getRequestCycle();
+
+		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
-
-		String leftFrameSrc = urlForNotYetRenderedPage(leftFrame);
-
+		// get the url to that page
+		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
+		String leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
+		// and create a simple component that modifies it's src attribute to
+		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent("leftFrame");
 		leftFrameTag.add(new AttributeModifier("src", new Model(leftFrameSrc)));
 		add(leftFrameTag);
 
+		// make a simple component for the right frame tag
 		WebComponent rightFrameTag = new WebComponent("rightFrame");
-		IModel rightFrameModel = new Model()
-		{
-			public Object getObject(Component component)
-			{
-				WebRequest webRequest = (WebRequest)getRequest();
-				String pathTo = webRequest.getContextPath() + webRequest.getServletPath();
-				String url = pathTo + "?bookmarkablePage=" + frameTarget.getFrameClass()
-						+ "&pagemap=rightFrame";
-				return url;
-			}
-		};
-		rightFrameTag.add(new AttributeModifier("src", rightFrameModel));
+		// and this time, set a model which retrieves the url to the currently
+		// set frame class in the frame target
+		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));
 		add(rightFrameTag);
-	}
-
-	/**
-	 * This is a trick to get the URL for the given page without having the need
-	 * to render that page first. NOT RECOMMENDED FOR NORMAL USE, AS
-	 * {@link wicket.Session#touch(Page)} IS A INTERNAL METHOD.
-	 * 
-	 * @param page
-	 *            the page to get the url to
-	 * @return the url to the page
-	 */
-	private String urlForNotYetRenderedPage(Page page)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		return requestCycle.getProcessor().getRequestCodingStrategy().encode(requestCycle,
-				new PageRequestTarget(page));
 	}
 
 	/**

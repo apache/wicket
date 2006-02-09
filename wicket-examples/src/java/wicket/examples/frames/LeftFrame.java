@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -31,25 +31,33 @@ import wicket.markup.html.link.Link;
  */
 public class LeftFrame extends WebPage
 {
+	/**
+	 * Link that, when clicked, changes the frame target's frame class (and as
+	 * that is a shared model which is also being used by the 'master page'
+	 * {@link BodyFrame}, changes are immediately reflected) and set the
+	 * response page to the top level page {@link BodyFrame}. Tags that use
+	 * this link should have a <code>target="_parent"</code> attribute, so
+	 * that the top frame will be refreshed.
+	 */
 	private static final class ChangeFramePageLink extends Link
 	{
 		/** parent frame class. */
-		private final BodyFrame index;
+		private final BodyFrame bodyFrame;
 
 		/** this link's target. */
-		private final String pageClass;
+		private final Class pageClass;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param id
-		 * @param index
+		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(String id, BodyFrame index, String pageClass)
+		public ChangeFramePageLink(String id, BodyFrame bodyFrame, Class pageClass)
 		{
 			super(id);
-			this.index = index;
+			this.bodyFrame = bodyFrame;
 			this.pageClass = pageClass;
 		}
 
@@ -59,10 +67,10 @@ public class LeftFrame extends WebPage
 		public void onClick()
 		{
 			// change frame class
-			index.getFrameTarget().setFrameClass(pageClass);
+			bodyFrame.getFrameTarget().setFrameClass(pageClass);
 
 			// trigger re-rendering of the page
-			setResponsePage(index);
+			setResponsePage(bodyFrame);
 		}
 	}
 
@@ -74,11 +82,13 @@ public class LeftFrame extends WebPage
 	 */
 	public LeftFrame(BodyFrame index)
 	{
-		add(new ChangeFramePageLink("linkToPage1", index, Page1.class.getName()));
-		add(new ChangeFramePageLink("linkToPage2", index, Page2.class.getName()));
+		add(new ChangeFramePageLink("linkToPage1", index, Page1.class));
+		add(new ChangeFramePageLink("linkToPage2", index, Page2.class));
 	}
 
 	/**
+	 * No need for versioning this frame.
+	 * 
 	 * @see wicket.Component#isVersioned()
 	 */
 	public boolean isVersioned()

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,15 +20,16 @@ package wicket.examples.frames;
 import java.io.Serializable;
 
 /**
- * Simple struct for holding the class name of the right frame.
+ * Simple struct for holding the class of the right frame.
  * 
  * @author Eelco Hillenius
  */
 public final class FrameTarget implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
-	private String frameClass;
+
+	/** the class of the bookmarkable page. */
+	private Class frameClass;
 
 	/**
 	 * Construct.
@@ -42,7 +43,7 @@ public final class FrameTarget implements Serializable
 	 * 
 	 * @param frameClass
 	 */
-	public FrameTarget(String frameClass)
+	public FrameTarget(Class frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -52,7 +53,7 @@ public final class FrameTarget implements Serializable
 	 * 
 	 * @return lefFrameClass
 	 */
-	public String getFrameClass()
+	public Class getFrameClass()
 	{
 		return frameClass;
 	}
@@ -63,7 +64,7 @@ public final class FrameTarget implements Serializable
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public void setFrameClass(String frameClass)
+	public void setFrameClass(Class frameClass)
 	{
 		this.frameClass = frameClass;
 	}
