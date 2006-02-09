@@ -50,7 +50,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	{
 		if (Page.class.isAssignableFrom(componentClass))
 		{
-			if (!isSigninPage(componentClass) && !isAuthorized(componentClass))
+			if (!isSignInPage(componentClass) && !isAuthorized(componentClass))
 			{
 				throw new RestartResponseAtSignInPageException();
 			}
@@ -78,7 +78,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The Page class
 	 * @return True if the page class equals the signin page class
 	 */
-	private final boolean isSigninPage(Class/* <Page> */componentClass)
+	private final boolean isSignInPage(Class/* <Page> */componentClass)
 	{
 		return componentClass == Application.get().getApplicationSettings().getSignInPage();
 	}
