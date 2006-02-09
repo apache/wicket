@@ -199,8 +199,8 @@ public abstract class Application
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
 
-		// install default component instantiation listener
-		add(new ComponentInstantiationAuthorizer());
+		// Install default component instantiation listener
+		addComponentInstantiationListener(new ComponentInstantiationAuthorizer());
 	}
 
 	/**
@@ -517,7 +517,7 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to add
 	 */
-	public final void add(final IComponentInstantiationListener listener)
+	public final void addComponentInstantiationListener(final IComponentInstantiationListener listener)
 	{
 		if (listener == null)
 		{
@@ -547,7 +547,7 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to remove
 	 */
-	public final void remove(final IComponentInstantiationListener listener)
+	public final void removeComponentInstantiationListener(final IComponentInstantiationListener listener)
 	{
 		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
 		final int len = listeners.length;
