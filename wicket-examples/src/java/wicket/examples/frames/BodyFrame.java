@@ -77,9 +77,6 @@ public class BodyFrame extends WebPage
 	 */
 	private String urlForNotYetRenderedPage(Page page)
 	{
-		// add the page to the session so that it will be available for
-		// rendering
-		getSession().touch(page);
 		RequestCycle requestCycle = getRequestCycle();
 		return requestCycle.getProcessor().getRequestCodingStrategy().encode(requestCycle,
 				new PageRequestTarget(page));
