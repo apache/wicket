@@ -15,9 +15,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.strategies.simple;
+package wicket.authorization.strategies.page;
 
-import wicket.authorization.AbstractPageAuthorizationStrategy;
 
 
 /**
@@ -71,7 +70,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	}
 
 	/**
-	 * @see wicket.authorization.AbstractPageAuthorizationStrategy#isAuthorized(java.lang.Class)
+	 * @see wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isAuthorized(java.lang.Class)
 	 */
 	protected boolean isAuthorized(Class componentClass)
 	{

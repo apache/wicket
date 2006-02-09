@@ -261,7 +261,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @deprecated this method is to be removed in future version in favor of
 	 * instances of {@link wicket.authorization.IAuthorizationStrategy} such
-	 * as {@link wicket.authorization.AbstractPageAuthorizationStrategy}.
+	 * as {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
 	 * It isn't called anymore and made final so that people see what must be changed.
 	 */
 	public final boolean checkAccess()

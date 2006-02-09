@@ -15,12 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization;
+package wicket.authorization.strategies.page;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
 import wicket.RestartResponseAtSignInPageException;
+import wicket.authorization.Action;
+import wicket.authorization.IAuthorizationStrategy;
 
 /**
  * An abstract base class for implementing simple authorization of Pages. Users
@@ -50,7 +52,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	{
 		if (Page.class.isAssignableFrom(componentClass))
 		{
-			if (!isSignInPage(componentClass) && !isAuthorized(componentClass))
+			if (!isSigninPage(componentClass) && !isAuthorized(componentClass))
 			{
 				throw new RestartResponseAtSignInPageException();
 			}
@@ -78,7 +80,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The Page class
 	 * @return True if the page class equals the signin page class
 	 */
-	private final boolean isSignInPage(Class/* <Page> */componentClass)
+	private final boolean isSigninPage(Class/* <Page> */componentClass)
 	{
 		return componentClass == Application.get().getApplicationSettings().getSignInPage();
 	}
