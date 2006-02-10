@@ -61,6 +61,6 @@ public class ActionPermissionsTest extends TestCase
 		permissions.unauthorize(mambo, "maurice");
 		assertEquals(3, permissions.rolesFor(mambo).size());
 		permissions.authorizeAll(mambo);
-		assertEquals(0, permissions.rolesFor(mambo));
+		assertEquals(null, permissions.rolesFor(mambo));
 	}
 }
