@@ -222,7 +222,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param componentClass
 	 *            The component class
 	 */
-	public static final void unauthorizeAll(Class<Component> componentClass)
+	public static final void unauthorizeAll(Class<? extends Component> componentClass)
 	{
 		authorizeAll(componentClass);
 		authorize(componentClass, NO_ROLE);
