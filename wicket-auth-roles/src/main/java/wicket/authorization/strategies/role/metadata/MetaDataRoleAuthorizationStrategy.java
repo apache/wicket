@@ -272,7 +272,12 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 			throw new IllegalArgumentException("argument action has to be not null");
 		}
 
-		return hasAny((String[])rolesAuthorizedToPerformAction(component, action).toArray());
+		Set<String> roles = rolesAuthorizedToPerformAction(component, action);
+		if (roles != null)
+		{
+			return hasAny(roles.toArray(new String[roles.size()]));
+		}
+		return true;
 	}
 
 	/**
@@ -297,7 +302,11 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 		}
 
 		Set<String> roles = rolesAuthorizedToInstantiate(componentClass);
-		return hasAny(roles.toArray(new String[roles.size()]));
+		if (roles != null)
+		{
+			return hasAny(roles.toArray(new String[roles.size()]));
+		}
+		return true;
 	}
 
 	/**
