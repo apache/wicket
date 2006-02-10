@@ -41,18 +41,14 @@ public class PanelsPage extends WebPage
 		add(forAdminsAndUsers);
 		// authorise roles admin and user (and thus deny everyone else) for the
 		// Component.RENDER action
-		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, new String[] {
-				"ADMIN", "USER" });
+		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "ADMIN");
+		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "USER");
 
 		ForAdmins forAdmins = new ForAdmins("forAdminsPanel");
-		add(forAdmins);
 		// authorise role admin (and thus deny everyone else) for the
 		// Component.RENDER action
 		MetaDataRoleAuthorizationStrategy.authorize(forAdmins, RENDER, "ADMIN");
-
-		// NOTE: adding meta data to components will only work AFTER you added
-		// the components to the page. This issue will be solved with the
-		// proposed parent - constructor change of Wicket 2.0
+		add(forAdmins);
 	}
 
 	/**

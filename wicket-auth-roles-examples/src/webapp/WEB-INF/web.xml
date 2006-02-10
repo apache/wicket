@@ -26,7 +26,7 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.authorization.roles.example.RolesAuthApplication</param-value>
+			<param-value>wicket.authorization.strategies.role.example.RolesApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
