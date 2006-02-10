@@ -924,12 +924,17 @@ public abstract class Component implements Serializable
 	 * 
 	 * @param key
 	 *            The key for the data
-	 * @return The metadata
+	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return getPage().getMetaData(this, key);
+		Page page = findPage();
+		if (page != null)
+		{
+			page.getMetaData(this, key);
+		}
+		return null;
 	}
 
 	/**
