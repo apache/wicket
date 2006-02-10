@@ -265,7 +265,7 @@ public class ListMultipleChoice extends AbstractChoice
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put("multiple", true);
+		tag.put("multiple", "multiple");
 		tag.put("size", Math.min(maxRows, getChoices().size()));
 	}
 
