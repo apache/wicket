@@ -3,16 +3,14 @@ package wicket.examples.ajax.builtin;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.AttributeModifier;
-import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.tabs.AbstractTab;
 import wicket.extensions.markup.html.tabs.AjaxTabbedPanel;
-import wicket.extensions.markup.html.tabs.TabbedPanel;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
-import wicket.model.PropertyModel;
 
+/**
+ * Tabbed panel demo
+ */
 public class TabbedPanelPage extends BasePage
 {
 	/**

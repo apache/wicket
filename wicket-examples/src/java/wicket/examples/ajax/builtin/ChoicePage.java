@@ -33,13 +33,17 @@ public class ChoicePage extends BasePage
 
 	private Map modelsMap = new HashMap(); // map:company->model
 
-
+	/**
+	 * @return Currently selected make
+	 */
 	public String getSelectedMake()
 	{
 		return selectedMake;
 	}
 
-
+	/**
+	 * @param selectedMake The make that is currently selected
+	 */
 	public void setSelectedMake(String selectedMake)
 	{
 		this.selectedMake = selectedMake;

@@ -20,7 +20,8 @@ public class Clock extends Label
 	/**
 	 * Constructor
 	 * 
-	 * @param id
+	 * @param id Component id
+	 * @param tz Timezone
 	 */
 	public Clock(String id, TimeZone tz)
 	{

@@ -21,7 +21,6 @@ import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.parser.filter.PrependContextPathHandler;
-import wicket.settings.Settings;
 import wicket.util.lang.PackageName;
 
 /**

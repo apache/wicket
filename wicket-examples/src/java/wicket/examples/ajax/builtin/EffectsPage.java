@@ -7,35 +7,49 @@ import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
 
+/**
+ * Demonstrates ajax effects
+ */
 public class EffectsPage extends BasePage
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
 
-
+	/**
+	 * @return Value of counter1
+	 */
 	public int getCounter1()
 	{
 		return counter1;
 	}
 
-
+	/**
+	 * @param counter1 New value for counter1
+	 */
 	public void setCounter1(int counter1)
 	{
 		this.counter1 = counter1;
 	}
 
-
+	/**
+	 * @return Value for counter2
+	 */
 	public int getCounter2()
 	{
 		return counter2;
 	}
 
-
+	/**
+	 * @param counter2 New value for counter2
+	 */
 	public void setCounter2(int counter2)
 	{
 		this.counter2 = counter2;
 	}
 
+	/**
+	 * Constructor
+	 */
 	public EffectsPage()
 	{
 
