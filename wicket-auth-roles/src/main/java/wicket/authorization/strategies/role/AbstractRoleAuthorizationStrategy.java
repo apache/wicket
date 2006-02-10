@@ -28,21 +28,21 @@ import wicket.authorization.IAuthorizationStrategy;
 public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** the authorizer delegate. */
-	private final IRoleAuthorizer rolesAuthorizer;
+	private final IRoleAuthorizer roleAuthorizer;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param rolesAuthorizer
+	 * @param roleAuthorizer
 	 *            the authorizer delegate
 	 */
-	public AbstractRoleAuthorizationStrategy(IRoleAuthorizer rolesAuthorizer)
+	public AbstractRoleAuthorizationStrategy(IRoleAuthorizer roleAuthorizer)
 	{
-		if (rolesAuthorizer == null)
+		if (roleAuthorizer == null)
 		{
-			throw new IllegalArgumentException("rolesAuthorizer must be not null");
+			throw new IllegalArgumentException("roleAuthorizer must be not null");
 		}
-		this.rolesAuthorizer = rolesAuthorizer;
+		this.roleAuthorizer = roleAuthorizer;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 		boolean authorized;
 		if (!isDefault(roles))
 		{
-			authorized = rolesAuthorizer.hasAny(roles);
+			authorized = roleAuthorizer.hasAny(roles);
 		}
 		else
 		{

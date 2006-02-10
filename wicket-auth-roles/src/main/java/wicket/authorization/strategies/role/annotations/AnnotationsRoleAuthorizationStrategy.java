@@ -33,12 +33,12 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * Construct.
 	 * 
-	 * @param rolesAuthorizer
+	 * @param roleAuthorizer
 	 *            the authorizer delegate
 	 */
-	public AnnotationsRoleAuthorizationStrategy(IRoleAuthorizer rolesAuthorizer)
+	public AnnotationsRoleAuthorizationStrategy(IRoleAuthorizer roleAuthorizer)
 	{
-		super(rolesAuthorizer);
+		super(roleAuthorizer);
 	}
 
 	/**

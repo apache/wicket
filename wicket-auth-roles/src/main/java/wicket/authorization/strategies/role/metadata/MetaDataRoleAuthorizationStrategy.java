@@ -246,12 +246,12 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	/**
 	 * Construct.
 	 * 
-	 * @param rolesAuthorizer
+	 * @param roleAuthorizer
 	 *            the authorizer object
 	 */
-	public MetaDataRoleAuthorizationStrategy(final IRoleAuthorizer rolesAuthorizer)
+	public MetaDataRoleAuthorizationStrategy(final IRoleAuthorizer roleAuthorizer)
 	{
-		super(rolesAuthorizer);
+		super(roleAuthorizer);
 	}
 
 	/**

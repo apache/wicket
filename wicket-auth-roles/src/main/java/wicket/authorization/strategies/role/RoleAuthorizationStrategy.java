@@ -30,12 +30,12 @@ public class RoleAuthorizationStrategy extends CompoundAuthorizationStrategy
 	/**
 	 * Construct.
 	 * 
-	 * @param rolesAuthorizer
+	 * @param roleAuthorizer
 	 *            the authorizer object
 	 */
-	public RoleAuthorizationStrategy(IRoleAuthorizer rolesAuthorizer)
+	public RoleAuthorizationStrategy(IRoleAuthorizer roleAuthorizer)
 	{
-		add(new AnnotationsRoleAuthorizationStrategy(rolesAuthorizer));
-		add(new MetaDataRoleAuthorizationStrategy(rolesAuthorizer));
+		add(new AnnotationsRoleAuthorizationStrategy(roleAuthorizer));
+		add(new MetaDataRoleAuthorizationStrategy(roleAuthorizer));
 	}
 }
