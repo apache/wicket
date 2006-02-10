@@ -105,7 +105,7 @@ function wicketSerializeInput(input) {
 	var type = input.type.toLowerCase();			
 	if ((type == "checkbox" || type == "radio") && input.checked)
 		return wicketEncode(input.name) + "=" + wicketEncode(input.value) + "&";
-	else if (type == "text" || type == "password" || type=="hidden")
+	else if (type == "text" || type == "password" || type=="hidden" || type=="textarea")
 		return wicketEncode(input.name) + "=" + wicketEncode(input.value) + "&" ;
 	else return "";
 }
