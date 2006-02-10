@@ -362,6 +362,11 @@ public abstract class Component implements Serializable
 	private transient boolean renderAllowed = true;
 
 	/**
+	 * MetaDataEntry array.
+	 */
+	private MetaDataEntry[] metaData;
+
+	/**
 	 * Change record of a model.
 	 */
 	public class ComponentModelChange extends Change
@@ -929,10 +934,16 @@ public abstract class Component implements Serializable
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		Page page = findPage();
-		if (page != null)
+		if (metaData != null)
 		{
-			page.getMetaData(this, key);
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (key.equals(m.key))
+				{
+					return m.object;
+				}
+			}
 		}
 		return null;
 	}
@@ -1719,7 +1730,38 @@ public abstract class Component implements Serializable
 	 */
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		getPage().setMetaData(this, key, object);
+		key.checkType(object);
+		boolean set = false;
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (key.equals(m.key))
+				{
+					m.object = object;
+					set = true;
+				}
+			}
+		}
+		if (!set)
+		{
+			MetaDataEntry m = new MetaDataEntry();
+			m.key = key;
+			m.object = object;
+			if (metaData == null)
+			{
+				metaData = new MetaDataEntry[1];
+				metaData[0] = m;
+			}
+			else
+			{
+				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
+				newMetaData[metaData.length] = m;
+				metaData = newMetaData;
+			}
+		}
 	}
 
 	/**
