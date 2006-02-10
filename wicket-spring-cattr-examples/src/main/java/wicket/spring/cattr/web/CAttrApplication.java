@@ -22,13 +22,15 @@ import wicket.spring.injection.cattr.CommonsAttributeSpringWebApplication;
 
 /**
  * Application class for our examples
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
- *
+ * 
  */
 public class CAttrApplication extends CommonsAttributeSpringWebApplication {
 
-	protected void init() {
-		getPages().setHomePage(CommonsAttributePage.class);
+	@Override
+	public Class getHomePage() {
+		return CommonsAttributePage.class;
 	}
+
 }

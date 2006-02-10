@@ -6,9 +6,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.11.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.7.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-1.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-extensions-1.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-spring-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/org.springframework/jars/spring-1.2.6.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty-4.2.9.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jasper-runtime-4.2.20RC0.jar"/>
@@ -19,5 +16,8 @@
 	<classpathentry kind="var" path="MAVEN_REPO/commons-attributes/jars/commons-attributes-api-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-attributes/jars/commons-attributes-compiler-2.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring-cattr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

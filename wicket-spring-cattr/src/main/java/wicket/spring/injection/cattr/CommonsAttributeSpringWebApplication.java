@@ -28,7 +28,7 @@ import wicket.spring.SpringWebApplication;
  *
  * @author Karthik Gurumurthy
  */
-public class CommonsAttributeSpringWebApplication extends SpringWebApplication
+public abstract class CommonsAttributeSpringWebApplication extends SpringWebApplication
 {
 	/**
 	 * @see wicket.Application#internalInit()
