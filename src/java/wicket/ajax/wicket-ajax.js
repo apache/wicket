@@ -8,7 +8,8 @@ function wicketHide(id) {
 }
  
 function wicketGetValue(comp) {
-    if (comp.type=="checkbox") {
+    var type=comp.type;
+    if (type=="checkbox"||type=="radio") {
         return comp.checked;
     } else {
         return comp.value;
@@ -17,8 +18,7 @@ function wicketGetValue(comp) {
 
  
 // AJAX FUNCTIONS
-function wicketAjaxGet(url, successHandler) {
-
+function wicketAjaxGetTransport() {
     var transport=null; 
 
     if (window.XMLHttpRequest) {
@@ -27,6 +27,13 @@ function wicketAjaxGet(url, successHandler) {
         transport=new ActiveXObject("Microsoft.XMLHTTP");
     }
     
+    return transport;
+}
+
+function wicketAjaxGet(url, successHandler) {
+
+    var transport=wicketAjaxGetTransport(); 
+
     if (transport==null) {
         return false;
     }
@@ -36,6 +43,34 @@ function wicketAjaxGet(url, successHandler) {
     transport.send(null);
     
     return true;
+}
+
+function wicketAjaxPost(url, body, successHandler) {
+    var transport=wicketAjaxGetTransport(); 
+
+    if (transport==null) {
+        return false;
+    }
+
+    transport.onreadystatechange = function() { wicketAjaxOnStateChange(transport, successHandler) };		    
+    transport.open("POST", url +"&random="+Math.random(), true);
+	transport.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    transport.send(body);		    
+    
+    return true;
+}
+
+
+function wicketSubmitForm(form, url, submitButton, successHandler) {
+	var body = wicketSerializeForm(form);
+	if (submitButton != null)
+		body += wicketEncode(submitButton) + "=1";
+	return wicketAjaxPost(url, body, successHandler);
+}
+
+function wicketSubmitFormById(formId, url, submitButton, successHandler) {
+	var form = document.getElementById(formId);
+	return wicketSubmitForm(form, url, submitButton, successHandler);
 }
 
 function wicketAjaxOnStateChange(transport, successHandler) {
