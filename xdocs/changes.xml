@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Martijn Dashorst">Added the ability to reset the user input on all form components.</action>
       <action type="add" dev="Juergen Donnerstag">Added component level output transformer (container and behavior)</action>
       <action type="fix" dev="Janne Hietamaki">Add Pragma: no-cache and Cache: no-store headers on WebPage by default to prevent problems with proxies</action>
       <action type="add" dev="Igor Vaynberg">added RedirectToPageException and RedirectToInterceptPageException that allows an immediate redirects</action>

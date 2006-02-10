@@ -736,6 +736,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * Clears the input from the form's nested children of type {@link FormComponent}. 
+	 * This method is typically called when a form needs to be reset.
+	 */
+	protected void clearInput()
+	{
+		// Visit all the (visible) form components and clear the input on each.
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					// Clear input from form component
+					formComponent.clearInput();
+				}
+			}
+		});
+	}
+
+	/**
 	 * Validates the form's nested children of type {@link FormComponent}. This
 	 * method is typically called before updating any models.
 	 */
