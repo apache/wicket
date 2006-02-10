@@ -254,6 +254,8 @@ public class FormInput extends WicketExamplePage
 		public LinesListView(String id)
 		{
 			super(id);
+			// always do this in forms!
+			setOptimizeItemRemoval(true);
 		}
 
 		protected void populateItem(ListItem item)
