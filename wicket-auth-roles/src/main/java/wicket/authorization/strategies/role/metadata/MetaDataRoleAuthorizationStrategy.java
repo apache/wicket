@@ -87,7 +87,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The role that is authorized to create component instances of
 	 *            type componentClass
 	 */
-	public static final void authorize(final Class<Component> componentClass, final String role)
+	public static final void authorize(final Class< ? extends Component> componentClass,
+			final String role)
 	{
 		final Application application = Application.get();
 		InstantiationPermissions permissions = (InstantiationPermissions)application
@@ -131,7 +132,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param componentClass
 	 *            The component class
 	 */
-	public static final void authorizeAll(Class<Component> componentClass)
+	public static final void authorizeAll(final Class< ? extends Component> componentClass)
 	{
 		Application application = Application.get();
 		InstantiationPermissions authorizedRoles = (InstantiationPermissions)application
@@ -176,7 +177,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The role that is no longer to be authorized to create
 	 *            instances of type componentClass
 	 */
-	public static final void unauthorize(final Class<Component> componentClass, final String role)
+	public static final void unauthorize(final Class< ? extends Component> componentClass,
+			final String role)
 	{
 		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
 				.getMetaData(INSTANTIATION_PERMISSIONS);
@@ -279,6 +281,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * 
 	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean authorizeInstantiation(final Class componentClass)
 	{
 		if (componentClass == null)
@@ -286,8 +289,15 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 			throw new IllegalArgumentException("argument componentClass cannot be null");
 		}
 
-		// TODO General: Is there an annotations way to make the compiler not report this warning?
-		return hasAny((String[])rolesAuthorizedToInstantiate(componentClass).toArray());
+		// as long as the interface does not use generics, we should check this
+		if (!Component.class.isAssignableFrom(componentClass))
+		{
+			throw new IllegalArgumentException("argument componentClass must be of type "
+					+ Component.class.getName());
+		}
+
+		Set<String> roles = rolesAuthorizedToInstantiate(componentClass);
+		return hasAny(roles.toArray(new String[roles.size()]));
 	}
 
 	/**
@@ -299,7 +309,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @return the roles that are authorized for creation of the componentClass,
 	 *         or null if no specific authorization was configured
 	 */
-	private static Set<String> rolesAuthorizedToInstantiate(final Class<Component> componentClass)
+	private static Set<String> rolesAuthorizedToInstantiate(
+			final Class< ? extends Component> componentClass)
 	{
 		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
 				.getMetaData(INSTANTIATION_PERMISSIONS);

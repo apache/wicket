@@ -23,7 +23,7 @@ final class InstantiationPermissions implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Holds roles object for a given component class */
-	private final Map<Class<Component>, Set<String>> rolesForComponentClass = new HashMap<Class<Component>, Set<String>>();
+	private final Map<Class< ? extends Component>, Set<String>> rolesForComponentClass = new HashMap<Class< ? extends Component>, Set<String>>();
 
 	/**
 	 * Gives the given role permission to instantiate the given class.
@@ -33,18 +33,18 @@ final class InstantiationPermissions implements Serializable
 	 * @param role
 	 *            The role to add
 	 */
-	public final void authorize(final Class<Component> componentClass, final String role)
+	public final void authorize(final Class< ? extends Component> componentClass, final String role)
 	{
 		if (componentClass == null)
 		{
 			throw new IllegalArgumentException("Argument componentClass cannot be null");
 		}
-		
+
 		if (role == null)
 		{
 			throw new IllegalArgumentException("Argument role cannot be null");
 		}
-		
+
 		Set<String> roles = rolesForComponentClass.get(componentClass);
 		if (roles == null)
 		{
@@ -60,7 +60,7 @@ final class InstantiationPermissions implements Serializable
 	 * @param componentClass
 	 *            The component class
 	 */
-	public final void authorizeAll(final Class<Component> componentClass)
+	public final void authorizeAll(final Class< ? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{
@@ -78,7 +78,8 @@ final class InstantiationPermissions implements Serializable
 	 * @param role
 	 *            The role to deny
 	 */
-	public final void unauthorize(final Class<Component> componentClass, final String role)
+	public final void unauthorize(final Class< ? extends Component> componentClass,
+			final String role)
 	{
 		if (componentClass == null)
 		{
@@ -113,13 +114,13 @@ final class InstantiationPermissions implements Serializable
 	 * @return the roles that have a binding with the given component class, or
 	 *         null if no entries are found
 	 */
-	public final Set<String> authorizedRoles(final Class<Component> componentClass)
+	public final Set<String> authorizedRoles(final Class< ? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{
 			throw new IllegalArgumentException("Argument componentClass cannot be null");
 		}
-		
+
 		return rolesForComponentClass.get(componentClass);
 	}
 }

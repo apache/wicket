@@ -34,16 +34,20 @@ final class ActionPermissions implements Serializable
 	 */
 	public final void authorize(final Action action, final String role)
 	{
+		rolesForAction.put(new Action("")
+		{
+			private static final long serialVersionUID = 1L;
+		}, null);
 		if (action == null)
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
-		
+
 		if (role == null)
 		{
 			throw new IllegalArgumentException("Argument role cannot be null");
 		}
-		
+
 		Set<String> roles = rolesForAction.get(action);
 		if (roles == null)
 		{
@@ -65,7 +69,7 @@ final class ActionPermissions implements Serializable
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
-		
+
 		rolesForAction.remove(action);
 	}
 
@@ -83,12 +87,12 @@ final class ActionPermissions implements Serializable
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
-		
+
 		if (role == null)
 		{
 			throw new IllegalArgumentException("Argument role cannot be null");
 		}
-		
+
 		Set<String> roles = rolesForAction.get(action);
 		if (roles != null)
 		{
@@ -117,7 +121,7 @@ final class ActionPermissions implements Serializable
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
-		
+
 		return rolesForAction.get(action);
 	}
 }
