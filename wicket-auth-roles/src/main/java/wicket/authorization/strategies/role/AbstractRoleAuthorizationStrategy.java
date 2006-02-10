@@ -23,28 +23,28 @@ import wicket.authorization.IAuthorizationStrategy;
 
 /**
  * Base strategy that uses an instance of
- * {@link wicket.authorization.strategies.role.IRoleAuthorizer}.
+ * {@link wicket.authorization.strategies.role.IRoleCheckingStrategy}.
  * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizationStrategy
 {
-	/** the authorizer delegate. */
-	private final IRoleAuthorizer roleAuthorizer;
+	/** Role checking strategy. */
+	private final IRoleCheckingStrategy roleCheckingStrategy;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param roleAuthorizer
+	 * @param roleCheckingStrategy
 	 *            the authorizer delegate
 	 */
-	public AbstractRoleAuthorizationStrategy(IRoleAuthorizer roleAuthorizer)
+	public AbstractRoleAuthorizationStrategy(IRoleCheckingStrategy roleCheckingStrategy)
 	{
-		if (roleAuthorizer == null)
+		if (roleCheckingStrategy == null)
 		{
-			throw new IllegalArgumentException("roleAuthorizer must be not null");
+			throw new IllegalArgumentException("roleCheckingStrategy must be not null");
 		}
-		this.roleAuthorizer = roleAuthorizer;
+		this.roleCheckingStrategy = roleCheckingStrategy;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 		}
 		else
 		{
-			return roleAuthorizer.hasAny(roles);
+			return roleCheckingStrategy.hasAnyRole(roles);
 		}
 	}
 }

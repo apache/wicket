@@ -24,7 +24,7 @@ import wicket.Component;
 import wicket.MetaDataKey;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.IRoleAuthorizer;
+import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 
 /**
  * Strategy that uses the Wicket metadata facility to check authorization. The
@@ -246,12 +246,12 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	/**
 	 * Construct.
 	 * 
-	 * @param roleAuthorizer
+	 * @param roleCheckingStrategy
 	 *            the authorizer object
 	 */
-	public MetaDataRoleAuthorizationStrategy(final IRoleAuthorizer roleAuthorizer)
+	public MetaDataRoleAuthorizationStrategy(final IRoleCheckingStrategy roleCheckingStrategy)
 	{
-		super(roleAuthorizer);
+		super(roleCheckingStrategy);
 	}
 
 	/**

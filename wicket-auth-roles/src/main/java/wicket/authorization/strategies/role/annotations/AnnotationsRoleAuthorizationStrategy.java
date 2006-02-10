@@ -24,7 +24,7 @@ import java.util.Set;
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.IRoleAuthorizer;
+import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 
 /**
  * Strategy that checks the
@@ -37,12 +37,12 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * Construct.
 	 * 
-	 * @param roleAuthorizer
+	 * @param roleCheckingStrategy
 	 *            the authorizer delegate
 	 */
-	public AnnotationsRoleAuthorizationStrategy(IRoleAuthorizer roleAuthorizer)
+	public AnnotationsRoleAuthorizationStrategy(IRoleCheckingStrategy roleCheckingStrategy)
 	{
-		super(roleAuthorizer);
+		super(roleCheckingStrategy);
 	}
 
 	/**

@@ -22,7 +22,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 import wicket.Page;
-import wicket.authorization.strategies.role.IRoleAuthorizer;
+import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.util.Roles;
 import wicket.util.tester.ITestPageSource;
@@ -98,7 +98,7 @@ public class AnnotationsRoleTest extends TestCase
 	/**
 	 * Authorizer class that uses the TS user and it's defined string[] roles.
 	 */
-	private static final class UserRolesAuthorizer implements IRoleAuthorizer, Serializable
+	private static final class UserRolesAuthorizer implements IRoleCheckingStrategy, Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -115,9 +115,9 @@ public class AnnotationsRoleTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.strategies.role.IRoleAuthorizer#hasAny(Set)
+		 * @see wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Set)
 		 */
-		public boolean hasAny(Set<String> roles)
+		public boolean hasAnyRole(Set<String> roles)
 		{
 			return this.roles.hasAnyRole(roles);
 		}
