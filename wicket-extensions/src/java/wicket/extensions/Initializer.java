@@ -19,6 +19,7 @@ package wicket.extensions;
 import wicket.Application;
 import wicket.IInitializer;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
+import wicket.extensions.markup.html.form.palette.PaletteInitializer;
 
 /**
  * Initializer for the extensions package.
@@ -33,5 +34,6 @@ public class Initializer implements IInitializer
 	public void init(Application application)
 	{
 		new DatePickerComponentInitializer().init(application);
+		new PaletteInitializer().init(application);
 	}
 }
