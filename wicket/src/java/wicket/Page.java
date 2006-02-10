@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -157,12 +156,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
 
-	/**
-	 * MetaDataEntry array for efficient representation of metadata associated
-	 * with child components
-	 */
-	private MetaDataEntry[] metaData;
-
 	/** Numeric version of this page's id */
 	private short numericId;
 
@@ -183,18 +176,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
-
-	/**
-	 * Class used for holding meta data entries for components on this Page.
-	 * Since most Components are not expected to have metadata, this saves space
-	 * over having each component hold its own metadata list
-	 */
-	private static class MetaDataEntry
-	{
-		Component component;
-		MetaDataKey key;
-		Serializable object;
-	}
 
 	/**
 	 * Constructor.
@@ -1042,31 +1023,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Gets metadata for key on the given component
-	 * 
-	 * @param component
-	 *            The component
-	 * @param key
-	 *            The key
-	 * @return The object
-	 */
-	Serializable getMetaData(final Component component, final MetaDataKey key)
-	{
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					return m.object;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * @return Return true from this method if you want to keep a page out of
 	 *         the session.
 	 */
@@ -1096,55 +1052,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Sets metadata on a given component using a given key
-	 * 
-	 * @param component
-	 *            The component
-	 * @param key
-	 *            The key
-	 * @param object
-	 *            The object
-	 * @throws IllegalArgumentException
-	 *             Thrown if the object is not of the correct type for the key
-	 */
-	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
-	{
-		key.checkType(object);
-		boolean set = false;
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					m.object = object;
-					set = true;
-				}
-			}
-		}
-		if (!set)
-		{
-			MetaDataEntry m = new MetaDataEntry();
-			m.component = component;
-			m.key = key;
-			m.object = object;
-			if (metaData == null)
-			{
-				metaData = new MetaDataEntry[1];
-				metaData[0] = m;
-			}
-			else
-			{
-				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
-				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
-				newMetaData[metaData.length] = m;
-				metaData = newMetaData;
-			}
-		}
 	}
 
 	/**

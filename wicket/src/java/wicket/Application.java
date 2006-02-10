@@ -137,15 +137,6 @@ public abstract class Application
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * Class used for holding meta data entries.
-	 */
-	class MetaDataEntry
-	{
-		MetaDataKey key;
-		Serializable object;
-	}
-
-	/**
 	 * Get Application for current thread.
 	 * 
 	 * @return The current thread's Application
