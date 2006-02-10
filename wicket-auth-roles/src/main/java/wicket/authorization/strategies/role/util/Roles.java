@@ -18,6 +18,7 @@ package wicket.authorization.strategies.role.util;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class for working with roles. The string argument is a comma
@@ -31,35 +32,42 @@ public final class Roles implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** roles as a string. */
-	private final String wrapped;
+	private final String roles;
 
 	/** roles put in set as seperate strings. */
-	private final HashSet<String> roles = new HashSet<String>();
+	private final HashSet<String> roleSet = new HashSet<String>();
 
 	/**
 	 * Construct.
 	 * 
 	 * @param roles
-	 *            roles as a comma seperated list, like ADMIN,USER
+	 *            roles as a comma separated list, like "ADMIN,USER"
 	 */
-	public Roles(String roles)
+	public Roles(final String roles)
 	{
-		this.wrapped = roles;
-		String[] r = getWrapped();
-		for (String role : r)
+		this.roles = roles;
+		for (String role : roles.split(","))
 		{
-			this.roles.add(role);
+			this.roleSet.add(role);
 		}
 	}
 
 	/**
-	 * Returns the original, now wrapped, string.
+	 * Returns the original role string
 	 * 
 	 * @return the roles as a comma seperated list
 	 */
-	public String getRolesAsString()
+	public String getRoles()
 	{
-		return wrapped;
+		return roles;
+	}
+	
+	/**
+	 * @return The set of roles
+	 */
+	public Set<String> getRoleSet()
+	{
+		return roleSet;
 	}
 
 	/**
@@ -69,11 +77,11 @@ public final class Roles implements Serializable
 	 *            the role to check
 	 * @return true if it contains the role, false otherwise
 	 */
-	public boolean hasRole(String role)
+	public boolean hasRole(final String role)
 	{
 		if (role != null)
 		{
-			return roles.contains(role);
+			return roleSet.contains(role);
 		}
 		return false;
 	}
@@ -85,7 +93,7 @@ public final class Roles implements Serializable
 	 *            the roles to check
 	 * @return true if it contains any of the roles, false otherwise
 	 */
-	public boolean hasAnyRole(String[] roles)
+	public boolean hasAnyRole(Set<String> roles)
 	{
 		if (roles != null)
 		{
@@ -108,7 +116,7 @@ public final class Roles implements Serializable
 	 * @return true if it contains all the roles or the provided roles object is
 	 *         null, false otherwise
 	 */
-	public boolean hasAllRoles(String[] roles)
+	public boolean hasAllRoles(Set<String> roles)
 	{
 		if (roles != null)
 		{
@@ -124,25 +132,11 @@ public final class Roles implements Serializable
 	}
 
 	/**
-	 * Returns the roles as an array.
-	 * 
-	 * @return the roles as an array
-	 */
-	public String[] getWrapped()
-	{
-		if (wrapped != null)
-		{
-			return wrapped.split(",");
-		}
-		return new String[] {};
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return roles.toString();
+		return roleSet.toString();
 	}
 }

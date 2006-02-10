@@ -18,6 +18,7 @@
 package wicket.authorization.strategies.role.example;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import wicket.authorization.strategies.role.util.Roles;
 
@@ -29,7 +30,6 @@ import wicket.authorization.strategies.role.util.Roles;
 public class User implements Serializable
 {
 	private final String uid;
-
 	private final Roles roles;
 
 	/**
@@ -68,10 +68,10 @@ public class User implements Serializable
 	/**
 	 * Whether this user has any of the given roles.
 	 * 
-	 * @param roles
+	 * @param roles set of roles
 	 * @return whether this user has any of the given roles
 	 */
-	public boolean hasAnyRole(String[] roles)
+	public boolean hasAnyRole(Set<String> roles)
 	{
 		return this.roles.hasAnyRole(roles);
 	}

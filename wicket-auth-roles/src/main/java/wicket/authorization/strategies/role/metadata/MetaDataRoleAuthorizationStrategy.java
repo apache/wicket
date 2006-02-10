@@ -275,7 +275,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 		Set<String> roles = rolesAuthorizedToPerformAction(component, action);
 		if (roles != null)
 		{
-			return hasAny(roles.toArray(new String[roles.size()]));
+			return hasAny(roles);
 		}
 		return true;
 	}
@@ -304,7 +304,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 		Set<String> roles = rolesAuthorizedToInstantiate(componentClass);
 		if (roles != null)
 		{
-			return hasAny(roles.toArray(new String[roles.size()]));
+			return hasAny(roles);
 		}
 		return true;
 	}

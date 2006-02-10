@@ -17,6 +17,8 @@
  */
 package wicket.authorization.strategies.role;
 
+import java.util.Set;
+
 import wicket.authorization.IAuthorizationStrategy;
 
 /**
@@ -52,34 +54,15 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 	 *            the roles
 	 * @return whether any of the given roles applies to the authorizer
 	 */
-	protected final boolean hasAny(String[] roles)
+	protected final boolean hasAny(Set<String> roles)
 	{
-		boolean authorized;
-		if (!isDefault(roles))
+		if (roles.isEmpty())
 		{
-			authorized = roleAuthorizer.hasAny(roles);
+			return true;		
 		}
 		else
 		{
-			authorized = true;
+			return roleAuthorizer.hasAny(roles);
 		}
-		return authorized;
-	}
-
-	/**
-	 * Gets whether the provided value is a 'default' value (meaning an empty
-	 * string).
-	 * 
-	 * @param value
-	 *            the value
-	 * @return whether the provided value is a 'default' value
-	 */
-	protected final boolean isDefault(String[] value)
-	{
-		if (value == null || (value.length == 1 && value[0].equals("")))
-		{
-			return true;
-		}
-		return false;
 	}
 }

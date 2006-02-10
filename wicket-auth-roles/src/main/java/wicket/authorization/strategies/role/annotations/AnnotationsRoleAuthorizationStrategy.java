@@ -17,6 +17,10 @@
  */
 package wicket.authorization.strategies.role.annotations;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
@@ -55,7 +59,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 					.getAnnotation(AuthorizedRoles.class);
 			if (packageRolesAllowed != null)
 			{
-				authorized = hasAny(packageRolesAllowed.value());
+				authorized = hasAny(toSet(packageRolesAllowed.value()));
 			}
 		}
 		AuthorizedRoles classRolesAllowed = (AuthorizedRoles)componentClass
@@ -63,7 +67,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		if (classRolesAllowed != null)
 		{
 			// if roles are defined for the class, that overrides the package
-			authorized = hasAny(classRolesAllowed.value());
+			authorized = hasAny(toSet(classRolesAllowed.value()));
 		}
 		return authorized;
 	}
@@ -75,12 +79,12 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	public boolean authorizeAction(Component component, Action action)
 	{
 		// check for a single action
-		AuthorizedAction annotAction = component.getClass().getAnnotation(AuthorizedAction.class);
-		if (annotAction != null)
+		final AuthorizedAction authorizedAction = component.getClass().getAnnotation(AuthorizedAction.class);
+		if (authorizedAction != null)
 		{
-			if (annotAction.action().equals(action.toString()))
+			if (authorizedAction.action().equals(action.toString()))
 			{
-				if (!hasAny(annotAction.roles()))
+				if (!hasAny(toSet(authorizedAction.roles())))
 				{
 					return false;
 				}
@@ -88,15 +92,15 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// check for multiple actions
-		AuthorizedActions annotActions = component.getClass()
+		AuthorizedActions authorizedActions = component.getClass()
 				.getAnnotation(AuthorizedActions.class);
-		if (annotActions != null)
+		if (authorizedActions != null)
 		{
-			for (AuthorizedAction a : annotActions.actions())
+			for (AuthorizedAction a : authorizedActions.actions())
 			{
 				if (a.action().equals(action.toString()))
 				{
-					if (!hasAny(a.roles()))
+					if (!hasAny(toSet(a.roles())))
 					{
 						return false;
 					}
@@ -105,5 +109,14 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		return true;
+	}
+	
+	/**
+	 * @param strings Array of Strings
+	 * @return Set containing the same strings
+	 */
+	private Set<String> toSet(String[] strings)
+	{
+		return new HashSet<String>(Arrays.asList(strings));
 	}
 }

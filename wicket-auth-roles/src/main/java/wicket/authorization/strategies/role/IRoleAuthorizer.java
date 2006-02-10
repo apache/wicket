@@ -18,10 +18,13 @@
  */
 package wicket.authorization.strategies.role;
 
+import java.util.Set;
+
 /**
- * Authorizer strategy for delegating the actual role checking.
+ * Strategy for delegating the actual role checking.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public interface IRoleAuthorizer
 {
@@ -33,5 +36,5 @@ public interface IRoleAuthorizer
 	 * @return true if a user or whatever subject this implementation wants to work with
 	 * has at least on of the provided roles
 	 */
-	boolean hasAny(String[] roles);
+	boolean hasAny(Set<String> roles);
 }
