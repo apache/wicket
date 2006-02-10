@@ -401,13 +401,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	public abstract void updateModel();
 
 	/**
-	 * Called to indicate that
+	 * Called to indicate that the user input is valid.
 	 */
 	public final void valid()
 	{
-		rawInput = NO_RAW_INPUT;
+		clearInput();
 
 		onValid();
+	}
+
+	/**
+	 * Clears the user input. 
+	 */
+	final void clearInput()
+	{
+		rawInput = NO_RAW_INPUT;
 	}
 
 	/**
