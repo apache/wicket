@@ -211,7 +211,7 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final Application application, final Class scope, final String path,
+	public static String resourceKey(final Application application, final Class scope, final String path,
 			final Locale locale, final String style)
 	{
 		String alias = (String)application.getSharedResources().classAliasMap.get(scope);
@@ -248,19 +248,19 @@ public class SharedResources
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String key = path(application, scope, name, locale, style);
+		final String resourceKey = resourceKey(application, scope, name, locale, style);
 		ResourceState resourceState;
 		synchronized (resourceMap)
 		{
-			resourceState = (ResourceState)resourceMap.get(key);
+			resourceState = (ResourceState)resourceMap.get(resourceKey);
 		}
 		if (resourceState == null)
 		{
-			resourceState = new ResourceState(key, resource);
+			resourceState = new ResourceState(resourceKey, resource);
 		}
 		synchronized (resourceMap)
 		{
-			resourceMap.put(key, resourceState);
+			resourceMap.put(resourceKey, resourceState);
 		}
 
 		// shared resources CAN'T be cacheable by default.
@@ -315,8 +315,8 @@ public class SharedResources
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String key = path(application, scope, name, locale, style);
-			final Resource resource = get(key);
+			final String resourceKey = resourceKey(application, scope, name, locale, style);
+			final Resource resource = get(resourceKey);
 			if (resource != null)
 			{
 				return resource;
@@ -330,7 +330,7 @@ public class SharedResources
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = path(application, scope, name, locale, null);
+			final String key = resourceKey(application, scope, name, locale, null);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
@@ -345,7 +345,7 @@ public class SharedResources
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = path(application, scope, name, null, style);
+			final String key = resourceKey(application, scope, name, null, style);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
@@ -358,7 +358,7 @@ public class SharedResources
 		}
 
 		// 4. Look for base name with no locale or style
-		final String key = path(application, scope, name, null, null);
+		final String key = resourceKey(application, scope, name, null, null);
 		return get(key);
 	}
 
