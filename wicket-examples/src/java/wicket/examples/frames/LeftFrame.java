@@ -31,6 +31,8 @@ import wicket.markup.html.link.Link;
  */
 public class LeftFrame extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as
 	 * that is a shared model which is also being used by the 'master page'
@@ -41,6 +43,8 @@ public class LeftFrame extends WebPage
 	 */
 	private static final class ChangeFramePageLink extends Link
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** parent frame class. */
 		private final BodyFrame bodyFrame;
 
