@@ -175,6 +175,6 @@ public class BookmarkablePageLink extends Link
 			pageMapName = "popup" + popupNumber;
 			popupNumber++;
 		}
-		return getPage().urlFor(getSession().getPageMap(pageMapName), pageClass, parameters);
+		return getPage().urlFor(PageMap.forName(pageMapName), pageClass, parameters);
 	}
 }

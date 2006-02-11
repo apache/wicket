@@ -500,7 +500,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (pageMap == null)
 		{
 			// Look the page map up in the session
-			pageMap = getSession().getPageMap(pageMapName);
+			pageMap = PageMap.forName(pageMapName);
 		}
 		return pageMap;
 	}
@@ -1193,7 +1193,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					cycle.getRequest());
 			pageMapName = parameters.getPageMapName();
 		}
-		final PageMap pageMap = getSession().getPageMap(pageMapName);
+		final PageMap pageMap = PageMap.forName(pageMapName);
 		init(pageMap);
 	}
 
