@@ -17,8 +17,6 @@
  */
 package wicket.authorization.strategies.role;
 
-import java.util.Set;
-
 import wicket.authorization.IAuthorizationStrategy;
 
 /**
@@ -54,7 +52,7 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 	 *            the roles
 	 * @return whether any of the given roles applies to the authorizer
 	 */
-	protected final boolean hasAny(Set<String> roles)
+	protected final boolean hasAny(Roles roles)
 	{
 		if (roles.isEmpty())
 		{

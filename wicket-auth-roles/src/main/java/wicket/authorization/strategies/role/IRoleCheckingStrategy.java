@@ -17,8 +17,6 @@
  */
 package wicket.authorization.strategies.role;
 
-import java.util.Set;
-
 /**
  * Strategy for doing role checking. Normally, an implementation of this
  * strategy interface would look in the current session for credentials that
@@ -41,5 +39,5 @@ public interface IRoleCheckingStrategy
 	 * @return true if a user or whatever subject this implementation wants to
 	 *         work with has at least on of the provided roles
 	 */
-	boolean hasAnyRole(Set<String> roles);
+	boolean hasAnyRole(Roles roles);
 }

@@ -19,6 +19,7 @@ package wicket.authorization.strategies.role.metadata;
 
 import junit.framework.TestCase;
 import wicket.authorization.Action;
+import wicket.authorization.strategies.role.Roles;
 
 /**
  * Test case for {@link wicket.authorization.strategies.role.metadata.ActionPermissions}.
@@ -53,12 +54,12 @@ public class ActionPermissionsTest extends TestCase
 	{
 		ActionPermissions permissions = new ActionPermissions();
 		Action mambo = new Action("mambo");
-		permissions.authorize(mambo, "jonathan");
-		permissions.authorize(mambo, "johan");
-		permissions.authorize(mambo, "maurice");
-		permissions.authorize(mambo, "eelco");
+		permissions.authorize(mambo, new Roles("jonathan"));
+		permissions.authorize(mambo, new Roles("johan"));
+		permissions.authorize(mambo, new Roles("maurice"));
+		permissions.authorize(mambo, new Roles("eelco"));
 		assertEquals(4, permissions.rolesFor(mambo).size());
-		permissions.unauthorize(mambo, "maurice");
+		permissions.unauthorize(mambo, new Roles("maurice"));
 		assertEquals(3, permissions.rolesFor(mambo).size());
 		permissions.authorizeAll(mambo);
 		assertEquals(null, permissions.rolesFor(mambo));

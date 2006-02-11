@@ -17,14 +17,11 @@
  */
 package wicket.authorization.strategies.role.annotations;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import wicket.Component;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
+import wicket.authorization.strategies.role.Roles;
 
 /**
  * Strategy that checks the
@@ -59,7 +56,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 					.getAnnotation(AuthorizedRoles.class);
 			if (packageRolesAllowed != null)
 			{
-				authorized = hasAny(toSet(packageRolesAllowed.value()));
+				authorized = hasAny(new Roles(packageRolesAllowed.value()));
 			}
 		}
 		AuthorizedRoles classRolesAllowed = (AuthorizedRoles)componentClass
@@ -67,7 +64,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		if (classRolesAllowed != null)
 		{
 			// if roles are defined for the class, that overrides the package
-			authorized = hasAny(toSet(classRolesAllowed.value()));
+			authorized = hasAny(new Roles(classRolesAllowed.value()));
 		}
 		return authorized;
 	}
@@ -84,7 +81,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		{
 			if (authorizedAction.action().equals(action.toString()))
 			{
-				if (!hasAny(toSet(authorizedAction.roles())))
+				if (!hasAny(new Roles(authorizedAction.roles())))
 				{
 					return false;
 				}
@@ -100,7 +97,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			{
 				if (a.action().equals(action.toString()))
 				{
-					if (!hasAny(toSet(a.roles())))
+					if (!hasAny(new Roles(a.roles())))
 					{
 						return false;
 					}
@@ -109,14 +106,5 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		return true;
-	}
-	
-	/**
-	 * @param strings Array of Strings
-	 * @return Set containing the same strings
-	 */
-	private Set<String> toSet(String[] strings)
-	{
-		return new HashSet<String>(Arrays.asList(strings));
 	}
 }

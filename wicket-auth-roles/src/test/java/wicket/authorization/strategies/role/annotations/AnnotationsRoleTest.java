@@ -18,13 +18,12 @@
 package wicket.authorization.strategies.role.annotations;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import junit.framework.TestCase;
 import wicket.Page;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
-import wicket.authorization.strategies.role.util.Roles;
+import wicket.authorization.strategies.role.Roles;
 import wicket.util.tester.ITestPageSource;
 import wicket.util.tester.WicketTester;
 
@@ -115,9 +114,9 @@ public class AnnotationsRoleTest extends TestCase
 		}
 
 		/**
-		 * @see wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Set)
+		 * @see wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
 		 */
-		public boolean hasAnyRole(Set<String> roles)
+		public boolean hasAnyRole(Roles roles)
 		{
 			return this.roles.hasAnyRole(roles);
 		}

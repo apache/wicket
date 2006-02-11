@@ -18,9 +18,8 @@
 package wicket.authorization.strategies.role.example;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import wicket.authorization.strategies.role.util.Roles;
+import wicket.authorization.strategies.role.Roles;
 
 /**
  * Simple user object.
@@ -71,7 +70,7 @@ public class User implements Serializable
 	 * @param roles set of roles
 	 * @return whether this user has any of the given roles
 	 */
-	public boolean hasAnyRole(Set<String> roles)
+	public boolean hasAnyRole(Roles roles)
 	{
 		return this.roles.hasAnyRole(roles);
 	}

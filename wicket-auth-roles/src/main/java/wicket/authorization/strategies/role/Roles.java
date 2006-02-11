@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,60 +15,56 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authorization.strategies.role.util;
+package wicket.authorization.strategies.role;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
+
+import wicket.util.string.StringList;
 
 /**
- * Utility class for working with roles. The string argument is a comma
- * seperated list, like ADMIN,USER. This is then returned by this wrapper is an
- * array.
+ * Utility class for working with roles.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class Roles implements Serializable
+public final class Roles extends HashSet<String> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** roles as a string. */
-	private final String roles;
-
-	/** roles put in set as seperate strings. */
-	private final HashSet<String> roleSet = new HashSet<String>();
+	/**
+	 * Construct.
+	 */
+	public Roles()
+	{
+	}
 
 	/**
 	 * Construct.
 	 * 
 	 * @param roles
-	 *            roles as a comma separated list, like "ADMIN,USER"
+	 *            Roles as a comma separated list, like "ADMIN, USER"
 	 */
 	public Roles(final String roles)
 	{
-		this.roles = roles;
-		for (String role : roles.split(","))
+		for (final String role : roles.split("\\s*,\\s*"))
 		{
-			this.roleSet.add(role);
+			add(role);
 		}
 	}
 
 	/**
-	 * Returns the original role string
+	 * Construct.
 	 * 
-	 * @return the roles as a comma seperated list
+	 * @param roles
+	 *            Roles
 	 */
-	public String getRoles()
+	public Roles(final String[] roles)
 	{
-		return roles;
-	}
-	
-	/**
-	 * @return The set of roles
-	 */
-	public Set<String> getRoleSet()
-	{
-		return roleSet;
+		for (final String role : roles)
+		{
+			add(role);
+		}
 	}
 
 	/**
@@ -81,7 +78,7 @@ public final class Roles implements Serializable
 	{
 		if (role != null)
 		{
-			return roleSet.contains(role);
+			return contains(role);
 		}
 		return false;
 	}
@@ -93,7 +90,7 @@ public final class Roles implements Serializable
 	 *            the roles to check
 	 * @return true if it contains any of the roles, false otherwise
 	 */
-	public boolean hasAnyRole(Set<String> roles)
+	public boolean hasAnyRole(Roles roles)
 	{
 		if (roles != null)
 		{
@@ -116,7 +113,7 @@ public final class Roles implements Serializable
 	 * @return true if it contains all the roles or the provided roles object is
 	 *         null, false otherwise
 	 */
-	public boolean hasAllRoles(Set<String> roles)
+	public boolean hasAllRoles(Roles roles)
 	{
 		if (roles != null)
 		{
@@ -137,6 +134,6 @@ public final class Roles implements Serializable
 	@Override
 	public String toString()
 	{
-		return roleSet.toString();
+		return StringList.valueOf(this).join();
 	}
 }

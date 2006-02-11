@@ -2,11 +2,10 @@ package wicket.authorization.strategies.role.metadata;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import wicket.authorization.Action;
+import wicket.authorization.strategies.role.Roles;
 
 /**
  * For each Action, holds a set of roles that can perform that action. Roles can
@@ -22,39 +21,41 @@ final class ActionPermissions implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Map from an action to a set of role strings */
-	private final Map<Action, Set<String>> rolesForAction = new HashMap<Action, Set<String>>();
+	private final Map<Action, Roles> rolesForAction = new HashMap<Action, Roles>();
 
 	/**
-	 * Gives permission for the given role to perform the given action
+	 * Gives permission for the given roles to perform the given action
 	 * 
 	 * @param action
 	 *            The action
-	 * @param role
-	 *            The role
+	 * @param rolesToAdd
+	 *            The roles
 	 */
-	public final void authorize(final Action action, final String role)
+	public final void authorize(final Action action, final Roles rolesToAdd)
 	{
+		// FIXME Documentation: What is this magic looking code here for?
 		rolesForAction.put(new Action("")
 		{
 			private static final long serialVersionUID = 1L;
 		}, null);
+		
 		if (action == null)
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
 
-		if (role == null)
+		if (rolesToAdd == null)
 		{
-			throw new IllegalArgumentException("Argument role cannot be null");
+			throw new IllegalArgumentException("Argument rolesToAdd cannot be null");
 		}
 
-		Set<String> roles = rolesForAction.get(action);
+		Roles roles = rolesForAction.get(action);
 		if (roles == null)
 		{
-			roles = new HashSet<String>();
+			roles = new Roles();
 			rolesForAction.put(action, roles);
 		}
-		roles.add(role);
+		roles.addAll(rolesToAdd);
 	}
 
 	/**
@@ -74,29 +75,46 @@ final class ActionPermissions implements Serializable
 	}
 
 	/**
-	 * Remove the given authorized role from an action.
+	 * Gets the roles that have a binding for the given action.
 	 * 
 	 * @param action
 	 *            The action
-	 * @param role
-	 *            The role to remove
+	 * @return The roles authorized for the given action
 	 */
-	public final void unauthorize(final Action action, final String role)
+	public final Roles rolesFor(final Action action)
 	{
 		if (action == null)
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
 		}
 
-		if (role == null)
+		return rolesForAction.get(action);
+	}
+
+	/**
+	 * Remove the given authorized role from an action.
+	 * 
+	 * @param action
+	 *            The action
+	 * @param rolesToRemove
+	 *            The comma separated list of roles to remove
+	 */
+	public final void unauthorize(final Action action, final Roles rolesToRemove)
+	{
+		if (action == null)
 		{
-			throw new IllegalArgumentException("Argument role cannot be null");
+			throw new IllegalArgumentException("Argument action cannot be null");
 		}
 
-		Set<String> roles = rolesForAction.get(action);
+		if (rolesToRemove == null)
+		{
+			throw new IllegalArgumentException("Argument rolesToRemove cannot be null");
+		}
+
+		Roles roles = rolesForAction.get(action);
 		if (roles != null)
 		{
-			roles.remove(role);
+			roles.removeAll(rolesToRemove);
 		}
 
 		// If we removed the last authorized role, we authorize the empty role
@@ -106,22 +124,5 @@ final class ActionPermissions implements Serializable
 		{
 			roles.add(MetaDataRoleAuthorizationStrategy.NO_ROLE);
 		}
-	}
-
-	/**
-	 * Gets the roles that have a binding for the given action.
-	 * 
-	 * @param action
-	 *            The action
-	 * @return The roles authorized for the given action
-	 */
-	public final Set<String> rolesFor(final Action action)
-	{
-		if (action == null)
-		{
-			throw new IllegalArgumentException("Argument action cannot be null");
-		}
-
-		return rolesForAction.get(action);
 	}
 }
