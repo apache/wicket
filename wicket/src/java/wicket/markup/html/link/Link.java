@@ -66,7 +66,7 @@ import wicket.util.string.Strings;
  *          public void onClick() 
  *          {
  *              MyObject obj = (MyObject)getModelObject();
- *              setResponse(new MyPage(obj.getId(), ... ));
+ *              setResponsePage(new MyPage(obj.getId(), ... ));
  *          }
  * </pre>
  * 
