@@ -77,7 +77,7 @@ public class CreateBook extends WebPage
 			}
 			finally
 			{
-				getPage().getPageMap().remove(getPage());
+				getPage().getPageMap().removePage(getPage());
 			}
 		}
 	}
