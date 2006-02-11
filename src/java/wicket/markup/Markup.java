@@ -231,6 +231,11 @@ public final class Markup
 		// The path of the current tag
 		String elementsPath = "";
 
+		if (path == null)
+		{
+			path = "";
+		}
+		
 		// The return value
 		int position = -1;
 
