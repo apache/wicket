@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
+import wicket.markup.resolver.InlinePanelResolver;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -85,5 +86,23 @@ public class PanelTest extends WicketTestCase
 			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testInlinePanel() throws Exception
+	{
+		application.getPageSettings().addComponentResolver(new InlinePanelResolver());
+		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testInlinePanel_2() throws Exception
+	{
+		application.getPageSettings().addComponentResolver(new InlinePanelResolver());
+		executeTest(InlinePanelPage_2.class, "InlinePanelPageExpectedResult_2.html");
 	}
 }
