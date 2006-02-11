@@ -95,7 +95,6 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester();
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
-
 			public boolean isInstantiationAuthorized(Class c)
 			{
 				return false;
