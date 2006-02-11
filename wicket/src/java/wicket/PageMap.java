@@ -296,12 +296,13 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * Removes this PageMap from the Session.
 	 */
 	public final void remove()
 	{
+		// First clear all pages from the session for this pagemap
+		clear();
+		// then remove the pagemap itself
 		session.removePageMap(this);
 	}
 
