@@ -46,7 +46,7 @@ public class Action implements Serializable
 	 * @param name
 	 *            The name of this action for debug purposes
 	 */
-	public Action(String name)
+	public Action(final String name)
 	{
 		if (name == null)
 		{
@@ -55,6 +55,19 @@ public class Action implements Serializable
 
 		this.name = name;
 	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(final Object obj)
+	{
+		if (obj instanceof Action)
+		{
+			final Action that = (Action)obj;
+			return name.equals(that.name);
+		}
+		return false;
+	}
 	
 	/**
 	 * @return The name of this action
@@ -62,19 +75,6 @@ public class Action implements Serializable
 	public String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof Action)
-		{
-			Action that = (Action)obj;
-			return name.equals(that.name);
-		}
-		return false;
 	}
 
 	/**
