@@ -162,7 +162,7 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final String path, final Locale locale, final String style)
+	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
 		final String extension = Files.extension(path);
 		final String basePath = Files.basePath(path, extension);
@@ -216,7 +216,7 @@ public class SharedResources
 	{
 		String alias = (String)application.getSharedResources().classAliasMap.get(scope);
 		if(alias == null) alias = scope.getName();
-		return alias + '/' + path(path, locale, style);
+		return alias + '/' + resourceKey(path, locale, style);
 	}
 
 	
