@@ -96,7 +96,7 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 
-			public boolean authorizeInstantiation(Class c)
+			public boolean isInstantiationAuthorized(Class c)
 			{
 				return false;
 			}
@@ -139,10 +139,10 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
-			 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 			 *      wicket.authorization.Action)
 			 */
-			public boolean authorizeAction(Component component, Action action)
+			public boolean isActionAuthorized(Component component, Action action)
 			{
 				if (action == Component.RENDER && component instanceof Label)
 				{
@@ -189,9 +189,9 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
-			 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component, wicket.authorization.Action)
+			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component, wicket.authorization.Action)
 			 */
-			public boolean authorizeAction(Component c, Action action)
+			public boolean isActionAuthorized(Component c, Action action)
 			{
 				if (action == Component.ENABLE && c instanceof TextField
 						&& c.getId().equals("stringInput"))
@@ -223,18 +223,18 @@ public class AuthorizationTest extends TestCase
 	private static class DummyAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean authorizeInstantiation(Class c)
+		public boolean isInstantiationAuthorized(Class c)
 		{
 			return true;
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(
+		 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(
 		 *      wicket.Component, wicket.authorization.Action)
 		 */
-		public boolean authorizeAction(Component c, Action action)
+		public boolean isActionAuthorized(Component c, Action action)
 		{
 			return true;
 		}

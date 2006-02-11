@@ -42,7 +42,7 @@ public class ComponentInstantiationAuthorizer implements IComponentInstantiation
 	 */
 	public void onInstantiation(Component component)
 	{
-		if (!Session.get().getAuthorizationStrategy().authorizeInstantiation(component.getClass()))
+		if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(component.getClass()))
 		{
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}

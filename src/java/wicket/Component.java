@@ -593,9 +593,9 @@ public abstract class Component implements Serializable
 	 * @throws AuthorizationException
 	 *             Can be thrown by implementation if action is unauthorized
 	 */
-	public final boolean authorize(Action action)
+	public final boolean isActionAuthorized(Action action)
 	{
-		return getSession().getAuthorizationStrategy().authorizeAction(this, action);
+		return getSession().getAuthorizationStrategy().isActionAuthorized(this, action);
 	}
 
 	/**
@@ -1823,7 +1823,7 @@ public abstract class Component implements Serializable
 		}
 
 		// Check authorization
-		if (!authorize(ENABLE))
+		if (!isActionAuthorized(ENABLE))
 		{
 			throw new UnauthorizedActionException(this, ENABLE);
 		}

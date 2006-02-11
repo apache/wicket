@@ -50,14 +50,14 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean authorizeInstantiation(Class componentClass)
+	public final boolean isInstantiationAuthorized(Class componentClass)
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
 			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
-			if (!strategy.authorizeInstantiation(componentClass))
+			if (!strategy.isInstantiationAuthorized(componentClass))
 			{
 				return false;
 			}
@@ -66,15 +66,15 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public final boolean authorizeAction(Component component, Action action)
+	public final boolean isActionAuthorized(Component component, Action action)
 	{
 		for (int i = 0; i < strategies.size(); i++)
 		{
 			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
-			if (!strategy.authorizeAction(component, action))
+			if (!strategy.isActionAuthorized(component, action))
 			{
 				return false;
 			}

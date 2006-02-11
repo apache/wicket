@@ -49,18 +49,18 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public boolean authorizeInstantiation(Class componentClass)
+	public boolean isInstantiationAuthorized(Class componentClass)
 	{
 		return true;
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean authorizeAction(Component component, Action action)
+	public boolean isActionAuthorized(Component component, Action action)
 	{
 		IActionAuthorizer authorizer = (IActionAuthorizer)actionAuthorizerForAction.get(action);
 		if (authorizer != null)
