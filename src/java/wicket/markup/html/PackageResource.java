@@ -141,14 +141,14 @@ public class PackageResource extends WebResource
 	public static PackageResource get(final Class scope, final String path,
 			final Locale locale, final String style)
 	{
-		final String key = scope.getPackage().getName() + '/' + SharedResources.path(path, locale, style);
+		final String packageResourceKey = scope.getPackage().getName() + '/' + SharedResources.resourceKey(path, locale, style);
 		synchronized (resourceMap)
 		{
-			PackageResource resource = (PackageResource)resourceMap.get(key);
+			PackageResource resource = (PackageResource)resourceMap.get(packageResourceKey);
 			if (resource == null)
 			{
 				resource = new PackageResource(scope, path, locale, style);
-				resourceMap.put(key, resource);
+				resourceMap.put(packageResourceKey, resource);
 			}
 			return resource;
 		}
