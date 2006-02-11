@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,12 +17,9 @@
  */
 package wicket.markup.html;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import wicket.Application;
-import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Packages;
@@ -33,12 +29,14 @@ import wicket.util.resource.IResourceStream;
  * Represents a localizable static resource.
  * <p>
  * Use like eg:
+ * 
  * <pre>
- * private static final PackageResource IMG_UNKNOWN =
- * 		PackageResource.get(EditPage.class, "questionmark.gif");
+ * private static final PackageResource IMG_UNKNOWN = PackageResource.get(EditPage.class,
+ * 		&quot;questionmark.gif&quot;);
  * </pre>
- * where the static resource references image 'questionmark.gif' from the
- * the package that EditPage is in. 
+ * 
+ * where the static resource references image 'questionmark.gif' from the the
+ * package that EditPage is in.
  * </p>
  * 
  * @author Jonathan Locke
@@ -46,9 +44,6 @@ import wicket.util.resource.IResourceStream;
 public class PackageResource extends WebResource
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Map from key to resource */
-	private static Map resourceMap = new HashMap();
 
 	/** The path to the resource */
 	public final String absolutePath;
@@ -63,56 +58,53 @@ public class PackageResource extends WebResource
 	final Class scope;
 
 	/**
-	 * Binds a the resource to the given application object
-	 * Will create the resource if not already in the shared resources of the application object.
+	 * Binds a the resource to the given application object. Will create the
+	 * resource if not already in the shared resources of the application
+	 * object.
 	 * 
 	 * @param application
-	 * 			The application to bind to.
+	 *            The application to bind to.
 	 * @param scope
-	 * 			The scope of the resource.
+	 *            The scope of the resource.
 	 * @param name
-	 * 			The name of the resource.
+	 *            The name of the resource.
 	 * @param locale
-	 * 			The locale of the resource.
+	 *            The locale of the resource.
 	 * @param style
-	 * 			The style of the resource.
+	 *            The style of the resource.
 	 */
-	public static void bind(Application application, Class scope, String name, Locale locale, String style)
+	public static void bind(Application application, Class scope, String name, Locale locale,
+			String style)
 	{
-		Resource resource = application.getSharedResources().get(scope, name, locale, style, true);
-		// Not available yet?
-		if (resource == null)
-		{
-			// Share through application
-			resource = get(scope, name, locale, style);
-			application.getSharedResources().add(scope, name, ((PackageResource)resource).locale, style, resource);
-		}
+		get(scope, name, locale, style);
 	}
 
 	/**
-	 * Binds a the resource to the given application object
-	 * Will create the resource if not already in the shared resources of the application object.
+	 * Binds a the resource to the given application object Will create the
+	 * resource if not already in the shared resources of the application
+	 * object.
 	 * 
 	 * @param application
-	 * 			The application to bind to.
+	 *            The application to bind to.
 	 * @param scope
-	 * 			The scope of the resource.
+	 *            The scope of the resource.
 	 * @param name
-	 * 			The name of the resource.
+	 *            The name of the resource.
 	 */
 	public static void bind(Application application, Class scope, String name)
 	{
 		bind(application, scope, name, null, null);
 	}
-	
+
 	/**
-	 * Gets a non-localized resource for a given set of criteria. Only one resource
-	 * will be loaded for the same criteria.
+	 * Gets a non-localized resource for a given set of criteria. Only one
+	 * resource will be loaded for the same criteria.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading the
-	 *            package resource, and to determine what package it is in. Typically
-	 *            this is the calling class/ the class in which you call this method
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
 	 * @param path
 	 *            The path to the resource
 	 * @return The resource
@@ -127,9 +119,9 @@ public class PackageResource extends WebResource
 	 * loaded for the same criteria.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading the
-	 *            package resource, and to determine what package it is in. Typically
-	 *            this is the calling class/ the class in which you call this method
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the class in which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -138,28 +130,26 @@ public class PackageResource extends WebResource
 	 *            The style of the resource (see {@link wicket.Session})
 	 * @return The resource
 	 */
-	public static PackageResource get(final Class scope, final String path,
-			final Locale locale, final String style)
+	public static PackageResource get(final Class scope, final String path, final Locale locale,
+			final String style)
 	{
-		final String packageResourceKey = scope.getPackage().getName() + '/' + SharedResources.resourceKey(path, locale, style);
-		synchronized (resourceMap)
+		final SharedResources sharedResources = Application.get().getSharedResources();
+		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
+				true);
+		if (resource == null)
 		{
-			PackageResource resource = (PackageResource)resourceMap.get(packageResourceKey);
-			if (resource == null)
-			{
-				resource = new PackageResource(scope, path, locale, style);
-				resourceMap.put(packageResourceKey, resource);
-			}
-			return resource;
+			resource = new PackageResource(scope, path, locale, style);
+			sharedResources.add(scope, path, locale, style, resource);
 		}
+		return resource;
 	}
 
 	/**
 	 * Hidden constructor.
-	 *
+	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading the
-	 *            package resource, and to determine what package it is in
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -170,17 +160,19 @@ public class PackageResource extends WebResource
 	private PackageResource(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
-		this.scope = scope;
 		// Convert resource path to absolute path relative to base package
 		this.absolutePath = Packages.absolutePath(scope, path);
+		this.scope = scope;
 		this.locale = locale;
 		this.style = style;
-		
+
 		if (locale != null)
 		{
-			// get the resource stream so that the real locale that could be resolved is set.
+			// Get the resource stream so that the real locale that could be
+			// resolved is set.
 			getResourceStream();
-			// invalidate it again so that it won't hold up resources
+
+			// Invalidate it again so that it won't hold up resources
 			invalidate();
 		}
 	}
@@ -191,8 +183,8 @@ public class PackageResource extends WebResource
 	public IResourceStream getResourceStream()
 	{
 		// Locate resource
-		IResourceStream resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-				scope, absolutePath, style, locale, null);
+		IResourceStream resourceStream = Application.get().getResourceSettings()
+				.getResourceStreamLocator().locate(scope, absolutePath, style, locale, null);
 
 		// Check that resource was found
 		if (resourceStream == null)
@@ -205,13 +197,13 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * @return The Locale of this package resource 
+	 * @return The Locale of this package resource
 	 */
 	public Locale getLocale()
 	{
 		return locale;
 	}
-	
+
 	/**
 	 * Get the absolute path of the resource
 	 * 

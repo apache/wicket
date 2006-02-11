@@ -65,6 +65,14 @@ public class SharedResources
 		 */
 		private TimerTask cacheTask;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param key
+		 *            The resource key
+		 * @param resource
+		 *            The resource
+		 */
 		ResourceState(String key, Resource resource)
 		{
 			this.resource = resource;
@@ -137,6 +145,7 @@ public class SharedResources
 		}
 	}
 
+	/** Map of Class to alias String */
 	private final Map classAliasMap = new HashMap();
 
 	/** Map of shared resources states */
@@ -145,8 +154,15 @@ public class SharedResources
 	/** Executes tasks when resources become idle */
 	private final Timer idleTimer = new Timer(true);
 
+	/** The application that holds these shared resources */
 	private final Application application;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param application
+	 *            The application
+	 */
 	SharedResources(Application application)
 	{
 		this.application = application;
@@ -272,13 +288,6 @@ public class SharedResources
 		{
 			resourceMap.put(resourceKey, resourceState);
 		}
-
-		// shared resources CAN'T be cacheable by default.
-		// The resource itself should take care of this.. (so package resource
-		// can be cacheable by default but dynamic once not)
-		// this is up to the user
-		// Application shared resources are cacheable.
-		// resource.setCacheable(true);
 	}
 
 	/**
@@ -315,7 +324,7 @@ public class SharedResources
 	 * @param style
 	 *            The resource style (see {@link wicket.Session})
 	 * @param exact
-	 *            If true then only return the resource that is registerd for
+	 *            If true then only return the resource that is registered for
 	 *            the given locale and style.
 	 * 
 	 * @return The logical resource
