@@ -67,7 +67,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onComponentTag(wicket.markup.ComponentTag)
 	 */
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		String handler = getEventHandler();
@@ -98,7 +98,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	protected void onCheckEvent(final String event)
 	{
-
 	}
 
 	/**
