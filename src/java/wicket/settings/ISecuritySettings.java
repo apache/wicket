@@ -1,6 +1,7 @@
 package wicket.settings;
 
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.util.crypt.ICryptFactory;
 
@@ -44,6 +45,12 @@ public interface ISecuritySettings
 
 
 	/**
+	 * @return The listener
+	 * @see IUnauthorizedComponentInstantiationListener
+	 */
+	IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener();
+
+	/**
 	 * Sets the authorization strategy.
 	 * 
 	 * @param strategy
@@ -74,4 +81,11 @@ public interface ISecuritySettings
 	 */
 	void setSignInPage(Class signInPage);
 
+	/**
+	 * @param unauthorizedComponentInstantiationListener
+	 *            The listener to set
+	 * @see IUnauthorizedComponentInstantiationListener
+	 */
+	void setUnauthorizedComponentInstantiationListener(
+			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
 }
