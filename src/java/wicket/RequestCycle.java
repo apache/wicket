@@ -1136,7 +1136,6 @@ public abstract class RequestCycle
 		String url = getProcessor().getRequestCodingStrategy().encode(this,new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
 		return url;
 	}
-
 	
 	/**
 	 * Returns a bookmarkable URL that references a given page class using a

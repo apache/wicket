@@ -157,7 +157,7 @@ public class ResourceReference implements Serializable
 	{
 		Application application = Application.get();
 		bind(application);
-		return SharedResources.path(application, scope, name, locale, style);
+		return SharedResources.resourceKey(application, scope, name, locale, style);
 	}
 
 	/**
