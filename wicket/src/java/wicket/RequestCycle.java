@@ -37,6 +37,7 @@ import wicket.request.target.BookmarkablePageRequestTarget;
 import wicket.request.target.ComponentRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.PageRequestTarget;
+import wicket.request.target.SharedResourceRequestTarget;
 import wicket.util.lang.Classes;
 
 /**
@@ -1132,7 +1133,7 @@ public abstract class RequestCycle
 	 */
 	public final String urlFor(final ResourceReference resourceReference)
 	{
-		String url = getProcessor().getRequestCodingStrategy().encode(this,resourceReference);
+		String url = getProcessor().getRequestCodingStrategy().encode(this,new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
 		return url;
 	}
 

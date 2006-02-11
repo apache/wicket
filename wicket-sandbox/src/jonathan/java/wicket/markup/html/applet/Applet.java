@@ -251,7 +251,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 
 		String servletPath = ((ServletWebRequest)getRequest()).getServletPath();
 		tag.put("codebase", servletPath + '/'
-				+ Strings.beforeLastPathComponent(jarResourceReference.getRelativeUrl(), '/') + "/");
+				+ Strings.beforeLastPathComponent(jarResourceReference.getSharedResourceKey(), '/') + "/");
 		tag.put("archive", jarName);
 		tag.put("name", getPageRelativePath().replace(':', '_'));
 		final int width = getWidth();

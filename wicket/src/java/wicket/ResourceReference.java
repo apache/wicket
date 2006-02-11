@@ -20,8 +20,6 @@ package wicket;
 import java.io.Serializable;
 import java.util.Locale;
 
-import wicket.util.string.AppendingStringBuffer;
-
 /**
  * ResourceReference is essentially a reference to an actual resource which is
  * shared through the Application. A ResourceReference has a name and a scope
@@ -153,17 +151,13 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * @return Path for this resource reference.
+	 * @return the shared resource key for this resource reference.
 	 */
-	public final String getRelativeUrl()
+	public final String getSharedResourceKey()
 	{
 		Application application = Application.get();
 		bind(application);
-		String path = SharedResources.path(application, scope, name, locale, style);
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(path.length() + 11);
-		buffer.append("resources/");
-		buffer.append(path);
-		return buffer.toString();
+		return SharedResources.path(application, scope, name, locale, style);
 	}
 
 	/**
