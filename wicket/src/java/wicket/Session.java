@@ -221,6 +221,9 @@ public abstract class Session implements Serializable
 
 		// Set locale to default locale
 		setLocale(application.getApplicationSettings().getDefaultLocale());
+
+		// Create default page map
+		newPageMap(PageMap.DEFAULT_NAME);		
 	}
 
 	/**
@@ -457,9 +460,6 @@ public abstract class Session implements Serializable
 	 */
 	public final void init()
 	{
-		// Create default page map
-		newPageMap(PageMap.DEFAULT_NAME);
-		
 		// Set session on each page map
 		visitPageMaps(new IPageMapVisitor()
 		{
