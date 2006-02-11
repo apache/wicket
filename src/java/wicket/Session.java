@@ -457,6 +457,10 @@ public abstract class Session implements Serializable
 	 */
 	public final void init()
 	{
+		// Create default page map
+		newPageMap(PageMap.DEFAULT_NAME);
+		
+		// Set session on each page map
 		visitPageMaps(new IPageMapVisitor()
 		{
 			public void pageMap(PageMap pageMap)

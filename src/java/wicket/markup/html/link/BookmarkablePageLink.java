@@ -37,6 +37,9 @@ public class BookmarkablePageLink extends Link
 	/** The page class that this link links to. */
 	private final Class pageClass;
 
+	/** Any page map for this link */
+	private String pageMapName = null;
+
 	/** The parameters to pass to the class constructor when instantiated. */
 	private final PageParameters parameters;
 
@@ -92,6 +95,14 @@ public class BookmarkablePageLink extends Link
 	}
 
 	/**
+	 * @return Page map for this link
+	 */
+	public final PageMap getPageMap()
+	{
+		return PageMap.forName(pageMapName);
+	}
+
+	/**
 	 * Whether this link refers to the given page.
 	 * 
 	 * @param page
@@ -114,6 +125,15 @@ public class BookmarkablePageLink extends Link
 	{
 		// Bookmarkable links do not have a click handler.
 		// Instead they are dispatched by the request handling servlet.
+	}
+
+	/**
+	 * @param pageMap
+	 *            The pagemap for this link's destination
+	 */
+	public final void setPageMap(final PageMap pageMap)
+	{
+		this.pageMapName = pageMap.getName();
 	}
 
 	/**
@@ -169,12 +189,22 @@ public class BookmarkablePageLink extends Link
 	 */
 	protected String getURL()
 	{
-		String pageMapName = PageMap.DEFAULT_NAME;
+		PageMap pageMap = getPageMap();
 		if (getPopupSettings() != null)
 		{
-			pageMapName = "popup" + popupNumber;
+			if (pageMap != null)
+			{
+				throw new IllegalStateException(
+						"You cannot set the page map for a link that also has popup settings");
+			}
+			final String popupPageMapName = "popup" + popupNumber;
 			popupNumber++;
+			pageMap = PageMap.forName(popupPageMapName);
+			if (pageMap == null)
+			{
+				pageMap = getSession().newPageMap(popupPageMapName);
+			}
 		}
-		return getPage().urlFor(PageMap.forName(pageMapName), pageClass, parameters);
+		return getPage().urlFor(pageMap, pageClass, parameters);
 	}
 }
