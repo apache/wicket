@@ -22,9 +22,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import wicket.util.string.Strings;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and a list
@@ -221,7 +225,7 @@ public final class Markup
 	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
-	public int findComponentIndex(String path, final String id)
+	public int findComponentIndex(String path, String id)
 	{
 		final String wicketId = ComponentTag.DEFAULT_WICKET_NAMESPACE + ":id";
 
@@ -231,9 +235,47 @@ public final class Markup
 		// The path of the current tag
 		String elementsPath = "";
 
+		// TODO General: a component path e.g. "panel:label" does not match 1:1
+		// with the markup in case of ListView, where the path contains a number
+		// for each list item. E.g. list:0:label. What we currently do is simply
+		// remove the number from the path and hope that no user uses an integer
+		// for a component id. This is a hack only. A much better solution would
+		// delegate to the various components recursivly to search within there
+		// realm only for the components markup. ListItem could than simply
+		// do nothing and delegate to there parents.
 		if (path == null)
 		{
 			path = "";
+		}
+		else if (path.indexOf(":") != -1)
+		{
+			// s/:\d+//g
+			Pattern re = Pattern.compile(":\\d+");
+			Matcher matcher = re.matcher(path);
+			path = matcher.replaceAll("");
+		}
+		else if (id != null)
+		{
+			// In case of "list:0" where the list item shall be rendered
+			// the number will be removed as well.
+			try
+			{
+				Integer.parseInt(id);
+				id = Strings.afterLast(path, ':');
+				if (id.length() == 0)
+				{
+					id = path;
+					path = "";
+				}
+				else
+				{
+					path = Strings.beforeLast(path, ':');
+				}
+			}
+			catch (NumberFormatException ex)
+			{
+				// No need to do anything
+			}
 		}
 		
 		// The return value
