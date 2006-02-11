@@ -20,7 +20,6 @@ package wicket.request;
 import wicket.IRequestTarget;
 import wicket.Request;
 import wicket.RequestCycle;
-import wicket.ResourceReference;
 
 /**
  * Implementations of this interface are responsible for digesting the incoming
@@ -59,15 +58,4 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 */
 	String encode(RequestCycle requestCycle, IRequestTarget requestTarget);
 	
-	
-	/**
-	 * <p>
-	 * Gets the url that will point to the provided resource reference.
-	 * </p>
-	 *  
-	 * @param requestCycle
-	 * @param resourceReference
-	 * @return the url to the shared resource the ResourceReference points to
-	 */
-	String encode(RequestCycle requestCycle, ResourceReference resourceReference);
 }
