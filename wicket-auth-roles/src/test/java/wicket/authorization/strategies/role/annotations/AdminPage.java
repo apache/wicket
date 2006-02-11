@@ -23,7 +23,7 @@ import wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-@AuthorizedRoles("ADMIN")
+@AuthorizeInstantiation("ADMIN")
 public class AdminPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;

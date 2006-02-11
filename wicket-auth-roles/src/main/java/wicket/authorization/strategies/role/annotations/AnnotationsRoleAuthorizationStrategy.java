@@ -25,7 +25,7 @@ import wicket.authorization.strategies.role.Roles;
 
 /**
  * Strategy that checks the
- * {@link wicket.authorization.strategies.role.annotations.AuthorizedRoles} annotation.
+ * {@link wicket.authorization.strategies.role.annotations.AuthorizeInstantiation} annotation.
  * 
  * @author Eelco Hillenius
  */
@@ -52,15 +52,15 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		Package annotPackage = componentClass.getPackage();
 		if (annotPackage != null)
 		{
-			AuthorizedRoles packageRolesAllowed = (AuthorizedRoles)annotPackage
-					.getAnnotation(AuthorizedRoles.class);
+			AuthorizeInstantiation packageRolesAllowed = (AuthorizeInstantiation)annotPackage
+					.getAnnotation(AuthorizeInstantiation.class);
 			if (packageRolesAllowed != null)
 			{
 				authorized = hasAny(new Roles(packageRolesAllowed.value()));
 			}
 		}
-		AuthorizedRoles classRolesAllowed = (AuthorizedRoles)componentClass
-				.getAnnotation(AuthorizedRoles.class);
+		AuthorizeInstantiation classRolesAllowed = (AuthorizeInstantiation)componentClass
+				.getAnnotation(AuthorizeInstantiation.class);
 		if (classRolesAllowed != null)
 		{
 			// if roles are defined for the class, that overrides the package
@@ -76,7 +76,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	public boolean isActionAuthorized(Component component, Action action)
 	{
 		// check for a single action
-		final AuthorizedAction authorizedAction = component.getClass().getAnnotation(AuthorizedAction.class);
+		final AuthorizeAction authorizedAction = component.getClass().getAnnotation(AuthorizeAction.class);
 		if (authorizedAction != null)
 		{
 			if (authorizedAction.action().equals(action.toString()))
@@ -89,11 +89,11 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// check for multiple actions
-		AuthorizedActions authorizedActions = component.getClass()
-				.getAnnotation(AuthorizedActions.class);
+		AuthorizeActions authorizedActions = component.getClass()
+				.getAnnotation(AuthorizeActions.class);
 		if (authorizedActions != null)
 		{
-			for (AuthorizedAction a : authorizedActions.actions())
+			for (AuthorizeAction a : authorizedActions.actions())
 			{
 				if (a.action().equals(action.toString()))
 				{

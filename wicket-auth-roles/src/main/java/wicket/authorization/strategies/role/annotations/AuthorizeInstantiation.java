@@ -25,13 +25,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for configuring what roles are allowed for an
- * {@link wicket.authorization.Action} and {@link wicket.Component} combination.
+ * Annotation for configuring what roles are allowed for instantiation the
+ * annotated component or package. This annotation can be used for classes and
+ * packages, and can be used like this:
+ * 
+ * <pre>
+ *  // only users with role ADMIN are allowed to create instances of this page, whether it is
+ *  // either bookmarkable or not
+ *  &#64;AuthorizeInstantiation(&quot;ADMIN&quot;)
+ *  public class AdminAnnotationsBookmarkablePage extends WebPage
+ * </pre>
  * 
  * @see wicket.authorization.IAuthorizationStrategy
  * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see wicket.authorization.strategies.role.annotations.AuthorizedActions
- * @see wicket.authorization.strategies.role.annotations.AuthorizedAction
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeActions
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeAction
  * 
  * @author Eelco hillenius
  */
@@ -39,7 +47,7 @@ import java.lang.annotation.Target;
 @Target( { ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 @Inherited
-public @interface AuthorizedRoles {
+public @interface AuthorizeInstantiation {
 
 	/**
 	 * Gets the roles that are allowed to take the action.

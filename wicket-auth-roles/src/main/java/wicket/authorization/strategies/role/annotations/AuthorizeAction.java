@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,26 +25,41 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Groups a set (technically a list) of actions for authorization.
+ * A mapping of 1..n roles to an action. This annotions must be embedded in the
+ * {@link wicket.authorization.strategies.role.annotations.AuthorizeActions}
+ * annotation.
  * 
- * TODO expand docs and give an example
- *
  * @see wicket.authorization.IAuthorizationStrategy
  * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see wicket.authorization.strategies.role.annotations.AuthorizedAction
- * @see wicket.authorization.strategies.role.annotations.AuthorizedRoles
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeActions
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeInstantiation
+ * 
  * @author Eelco Hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE })
+@Target( { ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 @Inherited
-public @interface AuthorizedActions {
+public @interface AuthorizeAction {
 
 	/**
-	 * The actions that are allowed.
+	 * The action that is allowed. The default actions that are supported by
+	 * Wicket are <code>RENDER</code> and
+	 * <code>ENABLE<code> as defined as constants
+	 * of {@link wicket.Component}.
 	 * 
-	 * @return the allowed actions
+	 * @see wicket.Component#RENDER
+	 * @see wicket.Component#ENABLE
+	 * 
+	 * @return the action that is allowed
 	 */
-	AuthorizedAction[] actions();
+	String action();
+
+	/**
+	 * The roles for this action.
+	 * 
+	 * @return the roles for this action. The default is an empty string
+	 *         (annotations do not allow null default values)
+	 */
+	String[] roles() default "";
 }

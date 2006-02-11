@@ -16,7 +16,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
-import wicket.authorization.strategies.role.annotations.AuthorizedRoles;
+import wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import wicket.markup.html.WebPage;
 
 /**
@@ -25,7 +25,7 @@ import wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-@AuthorizedRoles("ADMIN")
+@AuthorizeInstantiation("ADMIN")
 public class AdminAnnotationsInternalPage extends WebPage
 {
 	/**

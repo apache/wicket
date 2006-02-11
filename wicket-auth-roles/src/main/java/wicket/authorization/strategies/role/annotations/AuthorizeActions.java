@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,41 +25,38 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A mapping of 1..n roles to an action. This annotions must be embedded in the
- * {@link wicket.authorization.strategies.role.annotations.AuthorizedActions}
- * annotation.
+ * Groups a set (technically an array) of {@link AuthorizeAction}s for
+ * authorization. This annotation works on a class level, and can be used like
+ * this:
+ * 
+ * <pre>
+ * // A panel that is only visible for users with role ADMIN
+ * &#64;AuthorizeAction(action = &quot;RENDER&quot;, roles = { &quot;ADMIN&quot;, &quot;USER&quot; })
+ * public class ForAdminsAndUsers extends Panel
+ * {
+ * 	public ForAdminsAndUsers(String id)
+ * 	{
+ * 		super(id);
+ * 	}
+ * }
+ * </pre>
  * 
  * @see wicket.authorization.IAuthorizationStrategy
  * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see wicket.authorization.strategies.role.annotations.AuthorizedActions
- * @see wicket.authorization.strategies.role.annotations.AuthorizedRoles
- * 
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeAction
+ * @see wicket.authorization.strategies.role.annotations.AuthorizeInstantiation
  * @author Eelco Hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.PACKAGE, ElementType.TYPE })
+@Target( { ElementType.TYPE })
 @Documented
 @Inherited
-public @interface AuthorizedAction {
+public @interface AuthorizeActions {
 
 	/**
-	 * The action that is allowed. The default actions that are supported by
-	 * Wicket are <code>RENDER</code> and
-	 * <code>ENABLE<code> as defined as constants
-	 * of {@link wicket.Component}.
+	 * The actions that are allowed.
 	 * 
-	 * @see wicket.Component#RENDER
-	 * @see wicket.Component#ENABLE
-	 * 
-	 * @return the action that is allowed
+	 * @return the allowed actions
 	 */
-	String action();
-
-	/**
-	 * The roles for this action.
-	 * 
-	 * @return the roles for this action. The default is an empty string
-	 *         (annotations do not allow null default values)
-	 */
-	String[] roles() default "";
+	AuthorizeAction[] actions();
 }
