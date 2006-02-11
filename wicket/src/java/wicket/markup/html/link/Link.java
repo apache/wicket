@@ -36,38 +36,39 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *      add(new Link(&quot;myLink&quot;)
- *      {
- *          public void onClick(RequestCycle cycle)
- *          {
- *              // do something here...  
- *          }
- *      );
+ *        add(new Link(&quot;myLink&quot;)
+ *        {
+ *            public void onClick(RequestCycle cycle)
+ *            {
+ *                // do something here...  
+ *            }
+ *        );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *      &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *      &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
- * The following snippet shows how to pass a parameter from the Page creating the 
- * Page to the Page responded by the Link.
+ * The following snippet shows how to pass a parameter from the Page creating
+ * the Page to the Page responded by the Link.
+ * 
  * <pre>
- *      add(new Link("link", listItem.getModel()) 
- *      {
- *          public void onClick() 
- *          {
- *              MyObject obj = (MyObject)getModelObject();
- *              setResponsePage(new MyPage(obj.getId(), ... ));
- *          }
+ *        add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *        {
+ *            public void onClick() 
+ *            {
+ *                MyObject obj = (MyObject)getModelObject();
+ *                setResponsePage(new MyPage(obj.getId(), ... ));
+ *            }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -159,6 +160,20 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	public final PopupSettings getPopupSettings()
 	{
 		return popupSettings;
+	}
+
+	/**
+	 * @see wicket.Component#isEnabled()
+	 */
+	public boolean isEnabled()
+	{
+		// If we're auto-enabling
+		if (getAutoEnable())
+		{
+			// the link is enabled if this link doesn't link to the current page
+			return !linksTo(getPage());
+		}
+		return super.isEnabled();
 	}
 
 	/**
@@ -267,6 +282,20 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
+	 * @see wicket.Component#internalOnBeginRequest()
+	 */
+	protected void internalOnBeginRequest()
+	{
+		// Set default for before/after link text
+		if (beforeDisabledLink == null)
+		{
+			final Application app = getApplication();
+			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
+			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
+		}
+	}
+
+	/**
 	 * Whether this link refers to the given page.
 	 * 
 	 * @param page
@@ -276,20 +305,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	protected boolean linksTo(final Page page)
 	{
 		return false;
-	}
-	
-	/**
-	 * @see wicket.Component#isEnabled()
-	 */
-	public boolean isEnabled()
-	{
-		// If we're auto-enabling
-		if(getAutoEnable())
-		{
-			// the link is enabled if this link doesn't link to the current page
-			return !linksTo(getPage());
-		}
-		return super.isEnabled();
 	}
 
 	/**
@@ -370,20 +385,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		if (onClickJavaScript != null)
 		{
 			tag.put("onclick", onClickJavaScript);
-		}
-	}
-
-	/**
-	 * @see wicket.Component#internalOnBeginRequest()
-	 */
-	protected void internalOnBeginRequest()
-	{
-		// Set default for before/after link text
-		if (beforeDisabledLink == null)
-		{
-			final Application app=getApplication();
-			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
 		}
 	}
 
