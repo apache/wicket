@@ -258,10 +258,10 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * Uses component level meta data to match roles for component action
 	 * execution.
 	 * 
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean authorizeAction(final Component component, final Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		if (component == null)
 		{
@@ -284,10 +284,10 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * Uses application level meta data to match roles for component
 	 * instantiation.
 	 * 
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean authorizeInstantiation(final Class componentClass)
+	public boolean isInstantiationAuthorized(final Class componentClass)
 	{
 		if (componentClass == null)
 		{

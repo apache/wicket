@@ -326,7 +326,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final void doRender()
 	{
 		// first try to check if the page can be rendered:
-		if (!authorize(RENDER))
+		if (!isActionAuthorized(RENDER))
 		{
 			if (log.isDebugEnabled())
 			{
@@ -346,7 +346,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(final Component component)
 			{
 				// Find out if this component can be rendered
-				final boolean renderAllowed = component.authorize(RENDER);
+				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 
 				// Authorize rendering
 				component.setRenderAllowed(renderAllowed);

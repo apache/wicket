@@ -78,7 +78,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public Object getObject(Component component)
 		{
-			return (FormComponent.this.authorize(ENABLE) && FormComponent.this.isEnabled())
+			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
 					? null
 					: "disabled";
 		}

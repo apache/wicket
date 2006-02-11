@@ -37,18 +37,18 @@ import wicket.authorization.IAuthorizationStrategy;
 public abstract class AbstractPageAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public final boolean authorizeAction(final Component component, final Action action)
+	public final boolean isActionAuthorized(final Component component, final Action action)
 	{
 		return true;
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean authorizeInstantiation(final Class/* <Component> */componentClass)
+	public final boolean isInstantiationAuthorized(final Class/* <Component> */componentClass)
 	{
 		if (isPageClass(componentClass))
 		{

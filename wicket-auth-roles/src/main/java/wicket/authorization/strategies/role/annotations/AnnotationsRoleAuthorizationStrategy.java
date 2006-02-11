@@ -43,10 +43,10 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean authorizeInstantiation(Class componentClass)
+	public boolean isInstantiationAuthorized(Class componentClass)
 	{
 		boolean authorized = true;
 		Package annotPackage = componentClass.getPackage();
@@ -70,10 +70,10 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean authorizeAction(Component component, Action action)
+	public boolean isActionAuthorized(Component component, Action action)
 	{
 		// check for a single action
 		final AuthorizedAction authorizedAction = component.getClass().getAnnotation(AuthorizedAction.class);

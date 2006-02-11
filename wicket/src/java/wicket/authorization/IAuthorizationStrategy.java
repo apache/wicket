@@ -39,18 +39,18 @@ public interface IAuthorizationStrategy
 	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean authorizeInstantiation(final Class c)
+		public boolean isInstantiationAuthorized(final Class c)
 		{
 			return true;
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+		 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 		 *      wicket.authorization.Action)
 		 */
-		public boolean authorizeAction(Component c, Action action)
+		public boolean isActionAuthorized(Component c, Action action)
 		{
 			return true;
 		}
@@ -73,7 +73,7 @@ public interface IAuthorizationStrategy
 	 * 
 	 * @see wicket.RestartResponseAtSignInPageException
 	 */
-	boolean authorizeInstantiation(Class componentClass);
+	boolean isInstantiationAuthorized(Class componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should
@@ -92,5 +92,5 @@ public interface IAuthorizationStrategy
 	 * @see Component#ENABLE
 	 * @see Component#RENDER
 	 */
-	boolean authorizeAction(Component component, Action action);
+	boolean isActionAuthorized(Component component, Action action);
 }
