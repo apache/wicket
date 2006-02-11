@@ -55,6 +55,14 @@ public class Action implements Serializable
 
 		this.name = name;
 	}
+	
+	/**
+	 * @return The name of this action
+	 */
+	public String getName()
+	{
+		return name;
+	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
