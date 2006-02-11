@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,7 +44,7 @@ public class SharedResources
 {
 	/** Logger */
 	private static Log log = LogFactory.getLog(SharedResources.class);
-	
+
 	/**
 	 * The state associated with each shared resource.
 	 */
@@ -56,15 +56,15 @@ public class SharedResources
 		private Resource resource;
 
 		/**
-		 * The idle Task for this resource (if any) 
+		 * The idle Task for this resource (if any)
 		 */
 		private TimerTask idleTask;
-		
+
 		/**
-		 * The cacheTimout Task for this resource (if any) 
+		 * The cacheTimout Task for this resource (if any)
 		 */
 		private TimerTask cacheTask;
-		
+
 		ResourceState(String key, Resource resource)
 		{
 			this.resource = resource;
@@ -78,10 +78,11 @@ public class SharedResources
 			{
 				DynamicByteArrayResource dynamicResource = (DynamicByteArrayResource)resource;
 				Duration cacheTimeout = dynamicResource.getCacheTimeout();
-				long  milliseconds = cacheTimeout.getMilliseconds();
+				long milliseconds = cacheTimeout.getMilliseconds();
 				if (milliseconds != 0)
 				{
-					this.cacheTask = getDynamicImageFlushTask(key, (DynamicByteArrayResource)resource);
+					this.cacheTask = getDynamicImageFlushTask(key,
+							(DynamicByteArrayResource)resource);
 					idleTimer.schedule(cacheTask, milliseconds);
 				}
 			}
@@ -99,7 +100,7 @@ public class SharedResources
 		}
 
 		/**
-		 * Cancel all timer task (if any) 
+		 * Cancel all timer task (if any)
 		 */
 		void cancel()
 		{
@@ -114,10 +115,12 @@ public class SharedResources
 				cacheTask = null;
 			}
 		}
-		
+
 		/**
 		 * Touch this resource, update timer task (if any)
-		 * @param key They key of the resource
+		 * 
+		 * @param key
+		 *            They key of the resource
 		 */
 		void touch(String key)
 		{
@@ -135,10 +138,10 @@ public class SharedResources
 	}
 
 	private final Map classAliasMap = new HashMap();
-	
+
 	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
-	
+
 	/** Executes tasks when resources become idle */
 	private final Timer idleTimer = new Timer(true);
 
@@ -168,7 +171,8 @@ public class SharedResources
 		final String basePath = Files.basePath(path, extension);
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
-		// first style because locale can append later on.
+
+		// First style because locale can append later on.
 		if (style != null)
 		{
 			buffer.append('_');
@@ -181,10 +185,13 @@ public class SharedResources
 			boolean c = locale.getCountry().length() != 0;
 			boolean v = locale.getVariant().length() != 0;
 			buffer.append(locale.getLanguage());
-			if (c||(l&&v)) {
-				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			if (c || (l && v))
+			{
+				buffer.append('_').append(locale.getCountry()); // This may just
+				// append '_'
 			}
-			if (v&&(l||c)) {
+			if (v && (l || c))
+			{
 				buffer.append('_').append(locale.getVariant());
 			}
 		}
@@ -199,8 +206,6 @@ public class SharedResources
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param application
-	 *            The application object
 	 * @param scope
 	 *            The scope of the resource
 	 * @param path
@@ -211,27 +216,32 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String resourceKey(final Application application, final Class scope, final String path,
-			final Locale locale, final String style)
+	public String resourceKey(final Class scope, final String path, final Locale locale,
+			final String style)
 	{
-		String alias = (String)application.getSharedResources().classAliasMap.get(scope);
-		if(alias == null) alias = scope.getName();
+		String alias = (String)classAliasMap.get(scope);
+		if (alias == null)
+		{
+			alias = scope.getName();
+		}
 		return alias + '/' + resourceKey(path, locale, style);
 	}
 
-	
 	/**
 	 * Sets an alias for a class so that a resource url can look like:
-	 * resources/images/Image.jpg instead of resources/wicket.resources.ResourceClass/Image.jpg
-	 *  
-	 * @param clz The class that has to be aliased.
-	 * @param alias The alias string. 
+	 * resources/images/Image.jpg instead of
+	 * resources/wicket.resources.ResourceClass/Image.jpg
+	 * 
+	 * @param clz
+	 *            The class that has to be aliased.
+	 * @param alias
+	 *            The alias string.
 	 */
 	public final void putClassAlias(Class clz, String alias)
 	{
 		classAliasMap.put(clz, alias);
 	}
-	
+
 	/**
 	 * @param scope
 	 *            Scope of resource
@@ -248,7 +258,7 @@ public class SharedResources
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String resourceKey = resourceKey(application, scope, name, locale, style);
+		final String resourceKey = resourceKey(scope, name, locale, style);
 		ResourceState resourceState;
 		synchronized (resourceMap)
 		{
@@ -305,8 +315,9 @@ public class SharedResources
 	 * @param style
 	 *            The resource style (see {@link wicket.Session})
 	 * @param exact
-	 *			  If true then only return the resource that is registerd for the given locale and style.
-	 *  
+	 *            If true then only return the resource that is registerd for
+	 *            the given locale and style.
+	 * 
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
@@ -315,7 +326,7 @@ public class SharedResources
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String resourceKey = resourceKey(application, scope, name, locale, style);
+			final String resourceKey = resourceKey(scope, name, locale, style);
 			final Resource resource = get(resourceKey);
 			if (resource != null)
 			{
@@ -330,13 +341,13 @@ public class SharedResources
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = resourceKey(application, scope, name, locale, null);
+			final String key = resourceKey(scope, name, locale, null);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
 			}
-			if (exact) 
+			if (exact)
 			{
 				return null;
 			}
@@ -345,20 +356,20 @@ public class SharedResources
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = resourceKey(application, scope, name, null, style);
+			final String key = resourceKey(scope, name, null, style);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
 			}
-			if (exact) 
+			if (exact)
 			{
 				return null;
 			}
 		}
 
 		// 4. Look for base name with no locale or style
-		final String key = resourceKey(application, scope, name, null, null);
+		final String key = resourceKey(scope, name, null, null);
 		return get(key);
 	}
 
@@ -434,7 +445,9 @@ public class SharedResources
 
 	/**
 	 * Returns a task which removes idle resources.
-	 * @param key The key for which a TimerTaks must be made
+	 * 
+	 * @param key
+	 *            The key for which a TimerTaks must be made
 	 * @return The TimerTask for the given key
 	 */
 	private TimerTask getResourceTimeoutTask(final String key)
@@ -455,12 +468,14 @@ public class SharedResources
 	/**
 	 * Returns a task which flushes a DynamicImageResource.
 	 * 
-	 * @param key The key of the resource
+	 * @param key
+	 *            The key of the resource
 	 * @param resource
 	 *            The DynamicImageResource where a TimerTaks must be made for.
 	 * @return The TimerTaks for that Dymamic Image
 	 */
-	private TimerTask getDynamicImageFlushTask(final String key, final DynamicByteArrayResource resource)
+	private TimerTask getDynamicImageFlushTask(final String key,
+			final DynamicByteArrayResource resource)
 	{
 		return new TimerTask()
 		{
