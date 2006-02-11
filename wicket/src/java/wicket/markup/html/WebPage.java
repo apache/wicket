@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -56,21 +57,21 @@ import wicket.protocol.http.WebResponse;
  */
 public class WebPage extends Page
 {
-	/** log. */
+	/** Log. */
 	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
 
-	/** The body container*/
+	/** The body container */
 	private BodyContainer bodyContainer;
-	
+
 	/**
 	 * Constructor. Having this constructor public means that you page is
 	 * 'bookmarkable' and hence can be called/ created from anywhere.
 	 */
 	protected WebPage()
 	{
-		this((IModel)null);
+		commonInit();
 	}
 
 	/**
@@ -79,41 +80,25 @@ public class WebPage extends Page
 	protected WebPage(final IModel model)
 	{
 		super(model);
-		
-		// Add a Body container if the associated markup contains a <body> tag
-		// get markup stream gracefully
-		MarkupStream markupStream = getApplication().getMarkupCache().getMarkupStream(this, false);
-		if (markupStream != null)
-		{
-			// The default <body> container. It can be accessed, replaced 
-			// and attribute modifiers can be attached. <body> tags without
-			// wicket:id get automatically a wicket:id="body" assigned.
-//			 find the body tag
-			while (markupStream.hasMore())
-			{
-				final MarkupElement element = (MarkupElement)markupStream.next();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && "body".equals(tag.getName()) && (tag.getNamespace() == null))
-					{
-						// Add a default container if the tag has the default _body name
-						if(BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
-						{
-							add(new HtmlBodyContainer());
-						}
-						// remember the id of the tag
-						bodyContainer = new BodyContainer(this,tag.getId());
-						break;
-					}
-				}
-			}
-		}
-		
-		// TODO General: If the concept proofs valuable we could add the header 
-		// container the same way instead of using a resolver. The advantages 
-		// would be that the header container be available at build time already 
-		// and not only at render time.
+		commonInit();
+	}
+
+	/**
+	 * @see Page#Page(PageMap)
+	 */
+	protected WebPage(final PageMap pageMap)
+	{
+		super(pageMap);
+		commonInit();
+	}
+
+	/**
+	 * @see Page#Page(PageMap, IModel)
+	 */
+	protected WebPage(final PageMap pageMap, final IModel model)
+	{
+		super(pageMap, model);
+		commonInit();
 	}
 
 	/**
@@ -133,21 +118,7 @@ public class WebPage extends Page
 	{
 		this((IModel)null);
 	}
-	
-	/**
-	 * 
-	 * @see wicket.Page#configureResponse()
-	 */
-	protected void configureResponse()
-	{
-	    super.configureResponse();
-	    
-	    WebResponse response = getWebRequestCycle().getWebResponse();
-	    response.setHeader("Pragma","no-cache");
-	    response.setHeader("Cache-Control","no-store, no-cache, max-age=0, must-revalidate");
-	}
-	
-	
+
 	/**
 	 * Get the body container for adding onLoad javascript to the body tag.
 	 * 
@@ -157,7 +128,7 @@ public class WebPage extends Page
 	{
 		return bodyContainer;
 	}
-	
+
 	/**
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
@@ -173,6 +144,18 @@ public class WebPage extends Page
 	public String getMarkupType()
 	{
 		return "html";
+	}
+
+	/**
+	 * @see wicket.Page#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+
+		final WebResponse response = getWebRequestCycle().getWebResponse();
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
 	}
 
 	/**
@@ -210,7 +193,50 @@ public class WebPage extends Page
 		{
 			this.remove(header);
 		}
-		
+
 		super.onEndRequest();
+	}
+
+	/**
+	 * Common code executed by constructors
+	 */
+	private void commonInit()
+	{
+		// Add a Body container if the associated markup contains a <body> tag
+		// get markup stream gracefully
+		MarkupStream markupStream = getApplication().getMarkupCache().getMarkupStream(this, false);
+		if (markupStream != null)
+		{
+			// The default <body> container. It can be accessed, replaced
+			// and attribute modifiers can be attached. <body> tags without
+			// wicket:id get automatically a wicket:id="body" assigned.
+			// find the body tag
+			while (markupStream.hasMore())
+			{
+				final MarkupElement element = (MarkupElement)markupStream.next();
+				if (element instanceof ComponentTag)
+				{
+					final ComponentTag tag = (ComponentTag)element;
+					if (tag.isOpen() && "body".equals(tag.getName())
+							&& (tag.getNamespace() == null))
+					{
+						// Add a default container if the tag has the default
+						// _body name
+						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+						{
+							add(new HtmlBodyContainer());
+						}
+						// remember the id of the tag
+						bodyContainer = new BodyContainer(this, tag.getId());
+						break;
+					}
+				}
+			}
+		}
+
+		// TODO General: If the concept proofs valuable we could add the header
+		// container the same way instead of using a resolver. The advantages
+		// would be that the header container be available at build time already
+		// and not only at render time.
 	}
 }
