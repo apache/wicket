@@ -28,7 +28,9 @@ import wicket.spring.injection.cattr.CommonsAttributeSpringWebApplication;
  */
 public class CAttrApplication extends CommonsAttributeSpringWebApplication {
 
-	@Override
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
 	public Class getHomePage() {
 		return CommonsAttributePage.class;
 	}
