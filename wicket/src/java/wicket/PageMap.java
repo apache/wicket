@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.67 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,7 +32,20 @@ import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
 /**
- * A container for pages held in the session.
+ * A container for pages held in the session. PageMap is a parameter to several
+ * methods in the Wicket API. You can get a PageMap by name from a Session with
+ * Session.getPageMap(String pageMapName) or more conveniently with
+ * PageMap.forName(String pageMapName). But you should not hold onto a reference
+ * to the pagemap (just as you should not hold onto a reference to your Session
+ * but should get it each time you need it instead). Instead, create a strongly
+ * typed accessor method like this:
+ * 
+ * <pre>
+ * public PageMap getMyPageMap()
+ * {
+ * 	return PageMap.forName(&quot;myPageMapName&quot;);
+ * }
+ * </pre>
  * 
  * @author Jonathan Locke
  */
@@ -135,6 +148,16 @@ public final class PageMap implements Serializable
 		 *            The page map entry
 		 */
 		public void entry(final IPageMapEntry entry);
+	}
+
+	/**
+	 * @param pageMapName
+	 *            The name of the page map to get
+	 * @return The PageMap with the given name from the current session
+	 */
+	public static PageMap forName(final String pageMapName)
+	{
+		return Session.get().getPageMap(pageMapName);
 	}
 
 	/**
@@ -296,21 +319,9 @@ public final class PageMap implements Serializable
 	{
 		// First clear all pages from the session for this pagemap
 		clear();
-		
+
 		// Then remove the pagemap itself
 		session.removePageMap(this);
-	}
-
-	/**
-	 * @param entry
-	 *            The entry to remove
-	 * @return The removed entry
-	 */
-	public final IPageMapEntry removeEntry(final IPageMapEntry entry)
-	{
-		// Remove entry from session
-		session.removeAttribute(attributeForId(entry.getNumericId()));
-		return entry;
 	}
 
 	/**
@@ -339,6 +350,18 @@ public final class PageMap implements Serializable
 
 		// Let the session know we changed the pagemap
 		session.dirtyPageMap(this);
+	}
+
+	/**
+	 * @param entry
+	 *            The entry to remove
+	 * @return The removed entry
+	 */
+	public final IPageMapEntry removeEntry(final IPageMapEntry entry)
+	{
+		// Remove entry from session
+		session.removeAttribute(attributeForId(entry.getNumericId()));
+		return entry;
 	}
 
 	/**
@@ -435,13 +458,16 @@ public final class PageMap implements Serializable
 			Page page = entry.getPage();
 
 			// TODO Performance: Is this really the case is a page always dirty
-			// even if we just render it again?  POSSIBLE ANSWER: The page could
+			// even if we just render it again? POSSIBLE ANSWER: The page could
 			// mark itself as clean to prevent replication, but the reverse is
 			// probably not desirable (pages marking themselves dirty manually)
-			// We ought to think about this a bit and consider whether this could
-			// be tied in with version management.  It's only when a page's version
-			// changes that it should be considered dirty, because then some kind
-			// of state changed.  Right? - Jonathan
+			// We ought to think about this a bit and consider whether this
+			// could
+			// be tied in with version management. It's only when a page's
+			// version
+			// changes that it should be considered dirty, because then some
+			// kind
+			// of state changed. Right? - Jonathan
 			page.dirty();
 
 			// Get the version of the page requested from the page

@@ -307,7 +307,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The default page map
 	 */
-	public PageMap getDefaultPageMap()
+	public final PageMap getDefaultPageMap()
 	{
 		return getPageMap(PageMap.DEFAULT_NAME);
 	}
