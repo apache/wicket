@@ -18,6 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 
 /**
@@ -28,6 +29,9 @@ import wicket.PageParameters;
  */
 public class BookmarkablePageLink extends Link
 {
+	/** Just a unique identifier for popup windows within a session. */
+	private static int popupNumber = 0;
+
 	private static final long serialVersionUID = 1L;
 
 	/** The page class that this link links to. */
@@ -35,9 +39,6 @@ public class BookmarkablePageLink extends Link
 
 	/** The parameters to pass to the class constructor when instantiated. */
 	private final PageParameters parameters;
-
-	/** Just a unique identifier for popup windows within a session. */
-	private static int popupNumber = 0;
 
 	/**
 	 * Constructor.
@@ -78,6 +79,16 @@ public class BookmarkablePageLink extends Link
 		}
 		this.pageClass = pageClass;
 		this.parameters = parameters;
+	}
+
+	/**
+	 * Get tge page class registered with the link
+	 * 
+	 * @return Page class
+	 */
+	public final Class getPageClass()
+	{
+		return this.pageClass;
 	}
 
 	/**
@@ -158,22 +169,12 @@ public class BookmarkablePageLink extends Link
 	 */
 	protected String getURL()
 	{
-		String pageMapName = null;
+		String pageMapName = PageMap.DEFAULT_NAME;
 		if (getPopupSettings() != null)
 		{
 			pageMapName = "popup" + popupNumber;
 			popupNumber++;
 		}
-		return getPage().urlFor(pageMapName, pageClass, parameters);
-	}
-
-	/**
-	 * Get tge page class registered with the link
-	 * 
-	 * @return Page class
-	 */
-	public final Class getPageClass()
-	{
-		return this.pageClass;
+		return getPage().urlFor(getSession().getPageMap(pageMapName), pageClass, parameters);
 	}
 }

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
+import wicket.PageMap;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -66,11 +67,11 @@ import wicket.util.string.Strings;
  * init() method. For example:
  * 
  * <pre>
- *        public void init()
- *        {
- *            String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *            URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *            ...
+ *         public void init()
+ *         {
+ *             String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *             URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *             ...
  * </pre>
  * 
  * @see WicketServlet
@@ -197,7 +198,7 @@ public abstract class WebApplication extends Application
 	 *            the name of the package for which all bookmarkable pages or
 	 *            sharedresources should be mounted
 	 */
-	public final void mount(String path, PackageName packageName)
+	public final void mount(final String path, final PackageName packageName)
 	{
 		checkMountPath(path);
 		if (packageName == null)
@@ -215,7 +216,7 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass)
+	public final void mountBookmarkablePage(final String path, final Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
@@ -227,17 +228,17 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
+	 * @param pageMap
+	 *            pagemap this mount is for
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
-	 * @param pageMapName
-	 *            pagemap name this mount is for
 	 */
-	public final void mountBookmarkablePage(String path, Class bookmarkablePageClass,
-			String pageMapName)
+	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
+			final Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				pageMapName));
+				pageMap.getName()));
 	}
 
 	/**
