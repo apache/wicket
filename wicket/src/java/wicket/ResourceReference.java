@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,8 +35,7 @@ import java.util.Locale;
  * have to worry about it).
  * <p>
  * Resources may be added to the Application when the Application is constructed
- * using
- * {@link Application#getSharedResources()} followed by 
+ * using {@link Application#getSharedResources()} followed by
  * {@link SharedResources#add(Class, String, Locale, String, Resource)},
  * {@link SharedResources#add(String, Locale, Resource)}or
  * {@link SharedResources#add(String, Resource)}.
@@ -46,13 +45,13 @@ import java.util.Locale;
  * resource by overriding the {@link ResourceReference#newResource()}method. In
  * this method, the component should supply logic that creates the shared
  * resource.
- *
+ * 
  * @author Jonathan Locke
  */
 public class ResourceReference implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The locale of the resource */
 	protected Locale locale;
 
@@ -99,7 +98,7 @@ public class ResourceReference implements Serializable
 
 	/**
 	 * Binds this shared resource to the given application.
-	 *
+	 * 
 	 * @param application
 	 *            The application which holds the shared resource
 	 */
@@ -120,7 +119,8 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, locale, style, false);
+					resource = application.getSharedResources().get(scope, name, locale, style,
+							false);
 					if (resource == null)
 					{
 						throw new WicketRuntimeException("Unable to resolve shared resource "
@@ -157,14 +157,14 @@ public class ResourceReference implements Serializable
 	{
 		Application application = Application.get();
 		bind(application);
-		return SharedResources.resourceKey(application, scope, name, locale, style);
+		return application.getSharedResources().resourceKey(scope, name, locale, style);
 	}
 
 	/**
 	 * Gets the resource for this resource reference. If the ResourceReference
 	 * has not yet been bound to the application via
 	 * {@link ResourceReference#bind(Application)}this method may return null.
-	 *
+	 * 
 	 * @return The resource, or null if the ResourceReference has not yet been
 	 *         bound.
 	 */
@@ -229,7 +229,7 @@ public class ResourceReference implements Serializable
 
 	/**
 	 * Factory method for lazy initialization of shared resources.
-	 *
+	 * 
 	 * @return The resource
 	 */
 	protected Resource newResource()
