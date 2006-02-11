@@ -32,21 +32,19 @@ import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
 /**
- * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
- * 
  * A container for pages held in the session.
  * 
  * @author Jonathan Locke
  */
 public final class PageMap implements Serializable
 {
-	/** name of default pagemap */
-	public static final String DEFAULT_PAGEMAP_NAME = null;
-
-	private static final long serialVersionUID = 1L;
+	/** Name of default pagemap */
+	public static final String DEFAULT_NAME = null;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PageMap.class);
+
+	private static final long serialVersionUID = 1L;
 
 	/** Stack of entry accesses by id */
 	private final Stack/* <Access> */accessStack = new Stack();
@@ -147,7 +145,7 @@ public final class PageMap implements Serializable
 	 * @param session
 	 *            The session holding this page map
 	 */
-	public PageMap(final String name, final Session session)
+	PageMap(final String name, final Session session)
 	{
 		this.name = name;
 		this.session = session;
@@ -163,7 +161,7 @@ public final class PageMap implements Serializable
 		{
 			public void entry(IPageMapEntry entry)
 			{
-				remove(entry);
+				removeEntry(entry);
 			}
 		});
 
@@ -221,8 +219,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @return Returns the name.
 	 */
 	public final String getName()
@@ -269,13 +265,11 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @return True if this is the default page map
 	 */
 	public final boolean isDefault()
 	{
-		return name == null;
+		return name == PageMap.DEFAULT_NAME;
 	}
 
 	/**
@@ -290,7 +284,7 @@ public final class PageMap implements Serializable
 	 * 
 	 * @return Previous pagemap entry in terms of access
 	 */
-	public final IPageMapEntry lastAccessed()
+	public final IPageMapEntry lastAccessedEntry()
 	{
 		return getEntry(peekAccess().getId());
 	}
@@ -302,22 +296,49 @@ public final class PageMap implements Serializable
 	{
 		// First clear all pages from the session for this pagemap
 		clear();
-		// then remove the pagemap itself
+		
+		// Then remove the pagemap itself
 		session.removePageMap(this);
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @param entry
 	 *            The entry to remove
 	 * @return The removed entry
 	 */
-	public final IPageMapEntry remove(final IPageMapEntry entry)
+	public final IPageMapEntry removeEntry(final IPageMapEntry entry)
 	{
 		// Remove entry from session
 		session.removeAttribute(attributeForId(entry.getNumericId()));
 		return entry;
+	}
+
+	/**
+	 * Removes the page from the pagemap
+	 * 
+	 * @param page
+	 *            page to be removed from the pagemap
+	 */
+	public final synchronized void remove(final Page page)
+	{
+		final IPageMapEntry entry = page.getPageMapEntry();
+
+		// Remove the pagemap entry from session
+		removeEntry(entry);
+
+		// Remove page from acccess stack
+		final Iterator stack = accessStack.iterator();
+		while (stack.hasNext())
+		{
+			final Access access = (Access)stack.next();
+			if (access.id == entry.getNumericId())
+			{
+				stack.remove();
+			}
+		}
+
+		// Let the session know we changed the pagemap
+		session.dirtyPageMap(this);
 	}
 
 	/**
@@ -488,38 +509,6 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * Removes the page from the pagemap
-	 * 
-	 * @param page
-	 *            page to be removed from the pagemap
-	 */
-	public final synchronized void removePage(final Page page)
-	{
-		IPageMapEntry entry = page.getPageMapEntry();
-
-		// remove the pagemap entry from session
-		remove(entry);
-
-		/*
-		 * TODO General: We should remove pages that become "unreachable" from
-		 * the stack as well
-		 */
-		// remove page from acccess stack
-		Iterator stack = accessStack.iterator();
-		while (stack.hasNext())
-		{
-			final Access access = (Access)stack.next();
-			if (access.id == entry.getNumericId())
-			{
-				stack.remove();
-			}
-		}
-
-		// let the session know we changed the pagemap
-		session.dirtyPageMap(this);
-	}
-
-	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's url is saved for future use by method
 	 * continueToOriginalDestination(); Only use this method when you plan to
@@ -614,13 +603,13 @@ public final class PageMap implements Serializable
 						else
 						{
 							// Remove whole page
-							removePage(topPage);
+							remove(topPage);
 						}
 					}
 					else
 					{
 						// Remove entry
-						remove(top);
+						removeEntry(top);
 					}
 				}
 			}

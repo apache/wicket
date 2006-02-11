@@ -74,13 +74,13 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 				else
 				{
 					// expire whole page
-					pageMap.remove(page);
+					pageMap.removeEntry(page);
 				}
 			}
 			else if(oldestEntry != null) // TODO is this not a hack around another problem? Access Stack and pages not in sync?
 			{
 				// Remove the entry
-				pageMap.remove(oldestEntry);
+				pageMap.removeEntry(oldestEntry);
 			}
 		}
 	}

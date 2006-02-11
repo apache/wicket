@@ -116,6 +116,9 @@ public abstract class Session implements Serializable
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
 
+	/** A store for dirty objects for one request */
+	private static final ThreadLocal dirtyObjects  = new ThreadLocal();
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
@@ -123,9 +126,6 @@ public abstract class Session implements Serializable
 	private static final String pageMapAttributePrefix = "m:";
 
 	private static final long serialVersionUID = 1L;
-
-	/** A store for dirty objects for one request */
-	private static final ThreadLocal dirtyObjects  = new ThreadLocal();
 
 	/** Application that this is a session of. */
 	private transient Application application;
@@ -294,6 +294,22 @@ public abstract class Session implements Serializable
 			this.clientInfo = getRequestCycle().newClientInfo();
 		}
 		return clientInfo;
+	}
+	
+	/**
+	 * @return The current pagemap
+	 */
+	public PageMap getCurrentPageMap()
+	{
+		return currentPageMap == null ? getDefaultPageMap() : currentPageMap;
+	}
+	
+	/**
+	 * @return The default page map
+	 */
+	public PageMap getDefaultPageMap()
+	{
+		return getPageMap(PageMap.DEFAULT_NAME);
 	}
 
 	/**
@@ -511,9 +527,18 @@ public abstract class Session implements Serializable
 		PageMap pageMap = currentPageMap;
 		if (pageMap == null) 
 		{
-			pageMap = getPageMap(PageMap.DEFAULT_PAGEMAP_NAME);
+			pageMap = getPageMap(PageMap.DEFAULT_NAME);
 		}
 		pageMap.redirectToInterceptPage(page);
+	}
+
+	/**
+	 * @param pageMap
+	 *            Page map to remove
+	 */
+	public final void removePageMap(final PageMap pageMap)
+	{
+		removeAttribute(attributeForPageMapName(pageMap.getName()));
 	}
 
 	/**
@@ -751,20 +776,6 @@ public abstract class Session implements Serializable
 			Session.dirtyObjects.set(null);
 		}
 	}
-
-	/**
-	 * @return The current thread dirty objects list
-	 */
-	private List getDirtyObjectsList()
-	{
-		List lst = (List)dirtyObjects.get();
-		if (lst == null)
-		{
-			lst = new ArrayList(4);
-			dirtyObjects.set(lst);
-		}
-		return lst;
-	}
 	/**
 	 * @param page
 	 */
@@ -811,15 +822,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * @param pageMap
-	 *            Page map to remove
-	 */
-	final void removePageMap(final PageMap pageMap)
-	{
-		removeAttribute(attributeForPageMapName(pageMap.getName()));
-	}
-
-	/**
 	 * @param pageMapName
 	 *            Name of page map
 	 * @return Session attribute holding page map
@@ -827,5 +829,19 @@ public abstract class Session implements Serializable
 	private final String attributeForPageMapName(final String pageMapName)
 	{
 		return pageMapAttributePrefix + pageMapName;
+	}
+
+	/**
+	 * @return The current thread dirty objects list
+	 */
+	private List getDirtyObjectsList()
+	{
+		List lst = (List)dirtyObjects.get();
+		if (lst == null)
+		{
+			lst = new ArrayList(4);
+			dirtyObjects.set(lst);
+		}
+		return lst;
 	}
 }

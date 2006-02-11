@@ -31,7 +31,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 */
 	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass)
 	{
-		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_PAGEMAP_NAME);
+		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 	}
 
 	/**

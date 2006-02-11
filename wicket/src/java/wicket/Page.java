@@ -206,32 +206,32 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * Constructor.
 	 * 
-	 * @param pageMapName
-	 *            the name of the page map to put this page in
+	 * @param pageMap
+	 *            The page map to put this page in
 	 */
-	protected Page(final String pageMapName)
+	protected Page(final PageMap pageMap)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
 		super(null);
-		init(pageMapName);
+		init(pageMap);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param pageMapName
+	 * @param pageMap
 	 *            the name of the page map to put this page in
 	 * @param model
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final String pageMapName, final IModel model)
+	protected Page(final PageMap pageMap, final IModel model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
 		super(null, model);
-		init(pageMapName);
+		init(pageMap);
 	}
 
 	/**
@@ -496,9 +496,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final PageMap getPageMap()
 	{
+		// If the transient needs to be restored
 		if (pageMap == null)
 		{
-			setPageMap(pageMapName);
+			// Look the page map up in the session
+			pageMap = getSession().getPageMap(pageMapName);
 		}
 		return pageMap;
 	}
@@ -788,10 +790,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * all information necessary to instantiate and render the page, it can be
 	 * stored in a user's browser as a stable bookmark.
 	 * 
-	 * @see RequestCycle#urlFor(String, Class, PageParameters)
+	 * @see RequestCycle#urlFor(PageMap, Class, PageParameters)
 	 * 
-	 * @param pageMapName
-	 *            Name of pagemap to use
+	 * @param pageMap
+	 *            Page map to use
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -800,10 +802,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(final String pageMapName, final Class pageClass,
+	public final String urlFor(final PageMap pageMap, final Class pageClass,
 			final PageParameters parameters)
 	{
-		return getRequestCycle().urlFor(pageMapName, pageClass, parameters);
+		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
 
 	/**
@@ -1055,22 +1057,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @param pageMapName
+	 * @param pageMap
 	 *            Sets this page into the page map with the given name. If the
 	 *            page map does not yet exist, it is automatically created.
 	 */
-	final void setPageMap(final String pageMapName)
+	final void setPageMap(final PageMap pageMap)
 	{
-		// Save name for restoring transient
-		this.pageMapName = pageMapName;
+		// Save transient reference to pagemap
+		this.pageMap = pageMap;
 
-		// Get or create page map
-		final Session session = getSession();
-		this.pageMap = session.getPageMap(pageMapName);
-		if (this.pageMap == null)
-		{
-			this.pageMap = session.newPageMap(pageMapName);
-		}
+		// Save name for restoring transient
+		this.pageMapName = pageMap.getName();
 	}
 
 	/**
@@ -1188,29 +1185,30 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init()
 	{
-		RequestCycle cycle = getRequestCycle();
-		String pagemapName = null;
+		final RequestCycle cycle = getRequestCycle();
+		String pageMapName = null;
 		if (cycle != null)
 		{
 			RequestParameters parameters = cycle.getProcessor().getRequestCodingStrategy().decode(
 					cycle.getRequest());
-			pagemapName = parameters.getPageMapName();
+			pageMapName = parameters.getPageMapName();
 		}
-		init(pagemapName);
+		final PageMap pageMap = getSession().getPageMap(pageMapName);
+		init(pageMap);
 	}
 
 	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 * 
-	 * @param pageMapName
-	 *            the name of the page map to put in.
+	 * @param pageMap
+	 *            The page map to put this page in.
 	 */
-	private final void init(String pageMapName)
+	private final void init(final PageMap pageMap)
 	{
-		// Set the pagemap
-		if (pageMapName != null)
+		// Set the page map
+		if (pageMap != null)
 		{
-			setPageMap(pageMapName);
+			setPageMap(pageMap);
 		}
 
 		// Set the numeric id on this page
