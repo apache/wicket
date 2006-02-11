@@ -1,6 +1,11 @@
 /*
+<<<<<<< Applet.java
+ * $Id$ $Revision$
+ * $Date$
+=======
  * $Id$ $Revision:
  * 1.71 $ $Date$
+>>>>>>> 1.5
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +40,6 @@ import wicket.model.IModel;
 import wicket.protocol.http.IMultipartWebRequest;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.resource.ByteArrayResource;
 import wicket.resource.JarResourceFactory;
 import wicket.util.lang.Bytes;
@@ -171,7 +175,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 			}
 			finally
 			{
-				in.close();				
+				in.close();
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -249,9 +253,9 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 			}
 		};
 
-		String servletPath = ((ServletWebRequest)getRequest()).getServletPath();
-		tag.put("codebase", servletPath + '/'
-				+ Strings.beforeLastPathComponent(jarResourceReference.getSharedResourceKey(), '/') + "/");
+		final String jarResourceUrl = getRequestCycle().urlFor(jarResourceReference);
+		final String codebase = Strings.beforeLastPathComponent(jarResourceUrl, '/') + '/';
+		tag.put("codebase", codebase);
 		tag.put("archive", jarName);
 		tag.put("name", getPageRelativePath().replace(':', '_'));
 		final int width = getWidth();
