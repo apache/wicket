@@ -581,7 +581,6 @@ public abstract class Component implements Serializable
 		// Give handler the opportunity to bind this component
 		behavior.bind(this);
 		return this;
-
 	}
 
 	/**
