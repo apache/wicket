@@ -25,16 +25,18 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.IPageFactory;
 import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
-import wicket.authorization.DefaultUnauthorizedComponentInstantiationListener;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
@@ -248,7 +250,36 @@ public final class Settings
 	private boolean throwExceptionOnMissingResource = true;
 
 	/** Authorizer for component instantiations */
-	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new DefaultUnauthorizedComponentInstantiationListener();
+	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
+	{
+		/**
+		 * Called when an unauthorized component instantiation is about to take
+		 * place (but before it happens).
+		 * 
+		 * @param component
+		 *            The partially constructed component (only the id is
+		 *            guaranteed to be valid).
+		 */
+		public void onUnauthorizedInstantiation(final Component component)
+		{
+			// Get sign-in page class
+			final Class signInPageClass = Application.get().getSecuritySettings().getSignInPage();
+
+			// If there is a sign in page class declared, and the unauthorized
+			// component is a page, but it's not the sign in page
+			if (signInPageClass != null && component instanceof Page
+					&& signInPageClass != component.getClass())
+			{
+				// Redirect to intercept page to let the user sign in
+				throw new RestartResponseAtInterceptPageException(signInPageClass);
+			}
+			else
+			{
+				// The component was not a page, so throw an exception
+				throw new UnauthorizedInstantiationException(component.getClass());
+			}
+		}
+	};
 
 	/** Type of handling for unexpected exceptions */
 	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
