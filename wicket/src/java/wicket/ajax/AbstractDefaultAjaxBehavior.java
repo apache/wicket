@@ -67,7 +67,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			AjaxRequestTarget target = new AjaxRequestTarget();
 			RequestCycle.get().setRequestTarget(target);
 			respond(target);
-		} finally {
+		} 
+		finally 
+		{
 			getComponent().getPage().setVersioned(isPageVersioned);
 		}
 	}

@@ -674,7 +674,6 @@ public abstract class Component implements Serializable
 		return new ValueMap(initializeMarkupStream().getTag().getAttributes());
 	}
 
-
 	/**
 	 * Retrieves id by which this component is represented within the markup.
 	 * <p>
@@ -700,7 +699,6 @@ public abstract class Component implements Serializable
 		}
 		return id;
 	}
-
 
 	/**
 	 * Page.doRender() is used to render a whole page. With AJAX however it must
