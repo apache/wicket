@@ -28,7 +28,7 @@ import wicket.markup.html.basic.Label;
 /**
  * Dummy page used for resource testing.
  */
-public class SimpleTablePage extends WebPage
+public class SimpleTablePage_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,7 @@ public class SimpleTablePage extends WebPage
 	 * Construct.
 	 *  page parameters.
 	 */
-	public SimpleTablePage()
+	public SimpleTablePage_2()
 	{
 		super();
 		List list = new ArrayList();
