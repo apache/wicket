@@ -1204,11 +1204,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            The page map to put this page in.
 	 */
 	private final void init(final PageMap pageMap)
-	{
+	{		
 		// Set the page map
 		if (pageMap != null)
 		{
 			setPageMap(pageMap);
+		}
+		else
+		{
+			throw new IllegalStateException("PageMap cannot be null");
 		}
 
 		// Set the numeric id on this page
