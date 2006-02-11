@@ -126,10 +126,12 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	 * Default is "false".
 	 * 
 	 * @param transparentResolver
+	 * @return this for chaining
 	 */
-	public final void setTransparentResolver(final boolean transparentResolver)
+	public final Border setTransparentResolver(final boolean transparentResolver)
 	{
 		this.transparentResolver = transparentResolver;
+		return this;
 	}
 	
 	/**
