@@ -39,19 +39,27 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPage
 	 *            redirect page
 	 */
-	public RestartResponseAtInterceptPageException(Page interceptPage)
+	public RestartResponseAtInterceptPageException(final Page interceptPage)
 	{
+		if (interceptPage == null)
+		{
+			throw new IllegalStateException("Argument interceptPage cannot be null");
+		}
 		Session.get().redirectToInterceptPage(interceptPage);
 	}
 
 	/**
 	 * Redirects to the specified intercept page
 	 * 
-	 * @param pageClass
-	 *            Class of page to instantiate
+	 * @param interceptPageClass
+	 *            Class of intercept page to instantiate
 	 */
-	public RestartResponseAtInterceptPageException(Class pageClass)
+	public RestartResponseAtInterceptPageException(final Class interceptPageClass)
 	{
-		Session.get().redirectToInterceptPage(Session.get().getPageFactory().newPage(pageClass));
+		if (interceptPageClass == null)
+		{
+			throw new IllegalStateException("Argument pageClass cannot be null");
+		}
+		Session.get().redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
 	}
 }
