@@ -58,6 +58,42 @@ public class PackageResource extends WebResource
 	final Class scope;
 
 	/**
+	 * Binds a the resource to the given application object Will create the
+	 * resource if not already in the shared resources of the application
+	 * object.
+	 * 
+	 * @param application
+	 *            The application to bind to.
+	 * @param scope
+	 *            The scope of the resource.
+	 * @param name
+	 *            The name of the resource.
+	 */
+	public static void bind(Application application, Class scope, String name)
+	{
+		bind(application, scope, name, null, null);
+	}
+	
+	/**
+	 * Binds a the resource to the given application object. Will create the
+	 * resource if not already in the shared resources of the application
+	 * object.
+	 * 
+	 * @param application
+	 *            The application to bind to.
+	 * @param scope
+	 *            The scope of the resource.
+	 * @param name
+	 *            The name of the resource.
+	 * @param locale
+	 *            The locale of the resource.
+	 */
+	public static void bind(Application application, Class scope, String name, Locale locale)
+	{
+		get(scope, name, locale, null);
+	}
+
+	/**
 	 * Binds a the resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
 	 * object.
@@ -77,23 +113,6 @@ public class PackageResource extends WebResource
 			String style)
 	{
 		get(scope, name, locale, style);
-	}
-
-	/**
-	 * Binds a the resource to the given application object Will create the
-	 * resource if not already in the shared resources of the application
-	 * object.
-	 * 
-	 * @param application
-	 *            The application to bind to.
-	 * @param scope
-	 *            The scope of the resource.
-	 * @param name
-	 *            The name of the resource.
-	 */
-	public static void bind(Application application, Class scope, String name)
-	{
-		bind(application, scope, name, null, null);
 	}
 
 	/**
