@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +28,11 @@ import java.lang.annotation.Target;
  * Annotation for configuring what roles are allowed for an
  * {@link wicket.authorization.Action} and {@link wicket.Component} combination.
  * 
+ * @see wicket.authorization.IAuthorizationStrategy
+ * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
+ * @see wicket.authorization.strategies.role.annotations.AuthorizedActions
+ * @see wicket.authorization.strategies.role.annotations.AuthorizedAction
+ * 
  * @author Eelco hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -38,7 +44,8 @@ public @interface AuthorizedRoles {
 	/**
 	 * Gets the roles that are allowed to take the action.
 	 * 
-	 * @return the roles that are allowed
+	 * @return the roles that are allowed. Returns a zero length array by
+	 *         default
 	 */
-	String[] value() default { "" };
+	String[] value() default {};
 }

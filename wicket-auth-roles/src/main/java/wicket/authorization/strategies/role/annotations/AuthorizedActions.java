@@ -27,7 +27,11 @@ import java.lang.annotation.Target;
  * Groups a set (technically a list) of actions for authorization.
  * 
  * TODO expand docs and give an example
- * 
+ *
+ * @see wicket.authorization.IAuthorizationStrategy
+ * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
+ * @see wicket.authorization.strategies.role.annotations.AuthorizedAction
+ * @see wicket.authorization.strategies.role.annotations.AuthorizedRoles
  * @author Eelco Hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
