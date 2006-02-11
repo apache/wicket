@@ -221,9 +221,6 @@ public abstract class Session implements Serializable
 
 		// Set locale to default locale
 		setLocale(application.getApplicationSettings().getDefaultLocale());
-
-		// Create default page map
-		newPageMap(PageMap.DEFAULT_NAME);		
 	}
 
 	/**
@@ -401,7 +398,12 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap getPageMap(String pageMapName)
 	{
-		return (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		if (pageMap == null && pageMapName == PageMap.DEFAULT_NAME)
+		{
+			pageMap = newPageMap(pageMapName);
+		}
+		return pageMap;
 	}
 
 	/**
