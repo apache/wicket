@@ -202,6 +202,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
 		}
 
+		if(changeListStack.isEmpty())
+		{
+		    return false;
+		}
+
 		// Pop off top change list
 		final ChangeList changeList = (ChangeList)changeListStack.pop();
 		if (changeList == null)
