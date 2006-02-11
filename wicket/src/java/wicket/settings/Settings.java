@@ -32,7 +32,9 @@ import wicket.Localizer;
 import wicket.Page;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
+import wicket.authorization.DefaultUnauthorizedComponentInstantiationListener;
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
@@ -85,13 +87,18 @@ public final class Settings
 			ISessionSettings
 {
 	/**
-	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
-	 * removed from output
+	 * Enumerated type for different ways of handling the render part of
+	 * requests.
 	 */
-	boolean stripWicketTags = false;
+	public static class RenderStrategy extends EnumeratedType
+	{
+		private static final long serialVersionUID = 1L;
 
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	boolean stripXmlDeclarationFromOutput;
+		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
 
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
@@ -99,7 +106,7 @@ public final class Settings
 	/** The application */
 	private Application application;
 
-	/** the authorization strategy. */
+	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** Application default for automatically resolving hrefs */
@@ -228,8 +235,20 @@ public final class Settings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
+	/**
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * removed from output
+	 */
+	boolean stripWicketTags = false;
+
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	boolean stripXmlDeclarationFromOutput;
+
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
+
+	/** Authorizer for component instantiations */
+	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new DefaultUnauthorizedComponentInstantiationListener();
 
 	/** Type of handling for unexpected exceptions */
 	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
@@ -242,20 +261,6 @@ public final class Settings
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
-
-	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
-	 */
-	public static class RenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-
-		RenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
 
 
 	/**
@@ -333,6 +338,27 @@ public final class Settings
 			overriddenStringResourceLoaders = true;
 		}
 		stringResourceLoaders.add(loader);
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass
+	 * of Page.
+	 * 
+	 * @param pageClass
+	 *            the page class to check
+	 */
+	private void checkPageClass(final Class pageClass)
+	{
+		// NOTE: we can't really check on whether it is a bookmarkable page
+		// here, as - though the default is that a bookmarkable page must
+		// either have a default constructor and/or a constructor with a
+		// PageParameters object, this could be different for another
+		// IPageFactory implementation
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("argument " + pageClass
+					+ " must be a subclass of Page");
+		}
 	}
 
 	/**
@@ -688,6 +714,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
+	 */
+	public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener()
+	{
+		return unauthorizedComponentInstantiationListener;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
 	 */
 	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
@@ -703,6 +737,7 @@ public final class Settings
 		return useDefaultOnMissingResource;
 	}
 
+
 	/**
 	 * @see wicket.settings.IResourceSettings#getValidatorResourceKeyFactory()
 	 */
@@ -711,6 +746,7 @@ public final class Settings
 		return validatorResourceKeyFactory;
 	}
 
+
 	/**
 	 * @see wicket.settings.IPageSettings#getVersionPagesByDefault()
 	 */
@@ -718,7 +754,6 @@ public final class Settings
 	{
 		return versionPagesByDefault;
 	}
-
 
 	/**
 	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
@@ -733,7 +768,6 @@ public final class Settings
 
 		this.accessDeniedPage = accessDeniedPage;
 	}
-
 
 	/**
 	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
@@ -1029,6 +1063,15 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#setUnauthorizedComponentInstantiationListener(wicket.authorization.IUnauthorizedComponentInstantiationListener)
+	 */
+	public void setUnauthorizedComponentInstantiationListener(
+			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
+	{
+		this.unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListener;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
 	 */
 	public void setUnexpectedExceptionDisplay(
@@ -1063,26 +1106,5 @@ public final class Settings
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
-	}
-
-	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
-	 * 
-	 * @param pageClass
-	 *            the page class to check
-	 */
-	private void checkPageClass(final Class pageClass)
-	{
-		// NOTE: we can't really check on whether it is a bookmarkable page
-		// here, as - though the default is that a bookmarkable page must
-		// either have a default constructor and/or a constructor with a
-		// PageParameters object, this could be different for another
-		// IPageFactory implementation
-		if (!Page.class.isAssignableFrom(pageClass))
-		{
-			throw new IllegalArgumentException("argument " + pageClass
-					+ " must be a subclass of Page");
-		}
 	}
 }

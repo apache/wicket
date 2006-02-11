@@ -17,19 +17,15 @@
  */
 package wicket.authorization.strategies.page;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.Page;
-import wicket.RestartResponseAtSignInPageException;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 
 /**
  * An abstract base class for implementing simple authorization of Pages. Users
- * should override {@link #isAuthorized(Class)}, which gets called for Page
- * classes when they are being constructed. Either return true to permit page
- * construction, or false to deny it and redirect to the signin page which comes
- * from {@link wicket.settings.IApplicationSettings#getSignInPage()}.
+ * should override {@link #isPageAuthorized(Class)}, which gets called for Page
+ * classes when they are being constructed.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -40,7 +36,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public final boolean isActionAuthorized(final Component component, final Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		return true;
 	}
@@ -50,12 +46,9 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 */
 	public final boolean isInstantiationAuthorized(final Class/* <Component> */componentClass)
 	{
-		if (isPageClass(componentClass))
+		if (instanceOf(componentClass, Page.class))
 		{
-			if (!isSignInPage(componentClass) && !isAuthorized(componentClass))
-			{
-				throw new RestartResponseAtSignInPageException();
-			}
+			return isPageAuthorized(componentClass);
 		}
 		return true;
 	}
@@ -83,31 +76,8 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The Page class
 	 * @return True if to page may be created
 	 */
-	protected boolean isAuthorized(Class/* <Page> */pageClass)
+	protected boolean isPageAuthorized(Class/* <Page> */pageClass)
 	{
 		return true;
-	}
-
-	/**
-	 * @param c
-	 *            The class to check
-	 * @return True if the class is derived from Page.
-	 */
-	protected boolean isPageClass(final Class c)
-	{
-		return instanceOf(c, Page.class);
-	}
-
-	/**
-	 * Checks whether the provided class equals the singin page class of the
-	 * current application.
-	 * 
-	 * @param componentClass
-	 *            The Page class
-	 * @return True if the page class equals the signin page class
-	 */
-	private final boolean isSignInPage(Class/* <Page> */componentClass)
-	{
-		return componentClass == Application.get().getApplicationSettings().getSignInPage();
 	}
 }

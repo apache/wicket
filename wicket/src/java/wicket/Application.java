@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.application.IComponentInstantiationListener;
-import wicket.authorization.ComponentInstantiationAuthorizer;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.resolver.AutoComponentResolver;
@@ -190,8 +189,25 @@ public abstract class Application
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
 
-		// Install default component instantiation listener
-		addComponentInstantiationListener(new ComponentInstantiationAuthorizer());
+		// Install default component instantiation listener that uses
+		// authorization strategy to check component instantiations.
+		addComponentInstantiationListener(new IComponentInstantiationListener()
+		{
+			/**
+			 * @see wicket.application.IComponentInstantiationListener#onInstantiation(wicket.Component)
+			 */
+			public void onInstantiation(final Component component)
+			{
+				// If component instantiation is not authorized
+				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
+						component.getClass()))
+				{
+					// then call any unauthorized component instantiation listener
+					getSecuritySettings().getUnauthorizedComponentInstantiationListener()
+							.onUnauthorizedInstantiation(component);
+				}
+			}
+		});
 	}
 
 	/**
@@ -508,7 +524,8 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to add
 	 */
-	public final void addComponentInstantiationListener(final IComponentInstantiationListener listener)
+	public final void addComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
 	{
 		if (listener == null)
 		{
@@ -538,7 +555,8 @@ public abstract class Application
 	 * @param listener
 	 *            the listener to remove
 	 */
-	public final void removeComponentInstantiationListener(final IComponentInstantiationListener listener)
+	public final void removeComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
 	{
 		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
 		final int len = listeners.length;
