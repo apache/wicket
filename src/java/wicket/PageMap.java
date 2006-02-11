@@ -47,6 +47,9 @@ import wicket.util.lang.Objects;
  * }
  * </pre>
  * 
+ * If the page map with the given name is not found, one will be automatically
+ * created.
+ * 
  * @author Jonathan Locke
  */
 public final class PageMap implements Serializable
@@ -151,13 +154,17 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Gets a page map for a page map name, automatically creating the page map
+	 * if it does not exist. If you do not want the pagemap to be automatically
+	 * created, you can call Session.pageMapForName(pageMapName, false).
+	 * 
 	 * @param pageMapName
 	 *            The name of the page map to get
 	 * @return The PageMap with the given name from the current session
 	 */
 	public static PageMap forName(final String pageMapName)
 	{
-		return Session.get().getPageMap(pageMapName);
+		return Session.get().pageMapForName(pageMapName, true);
 	}
 
 	/**

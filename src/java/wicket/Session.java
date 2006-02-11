@@ -117,7 +117,7 @@ public abstract class Session implements Serializable
 	private static final ThreadLocal current = new ThreadLocal();
 
 	/** A store for dirty objects for one request */
-	private static final ThreadLocal dirtyObjects  = new ThreadLocal();
+	private static final ThreadLocal dirtyObjects = new ThreadLocal();
 
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
@@ -295,7 +295,7 @@ public abstract class Session implements Serializable
 		}
 		return clientInfo;
 	}
-	
+
 	/**
 	 * @return The current pagemap
 	 */
@@ -303,13 +303,13 @@ public abstract class Session implements Serializable
 	{
 		return currentPageMap == null ? getDefaultPageMap() : currentPageMap;
 	}
-	
+
 	/**
 	 * @return The default page map
 	 */
 	public final PageMap getDefaultPageMap()
 	{
-		return getPageMap(PageMap.DEFAULT_NAME);
+		return pageMapForName(PageMap.DEFAULT_NAME, true);
 	}
 
 	/**
@@ -353,8 +353,8 @@ public abstract class Session implements Serializable
 			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
 		}
 
-		// Get page map by name
-		currentPageMap = getPageMap(pageMapName);
+		// Get page map by name, creating the default page map automatically
+		currentPageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (currentPageMap != null)
 		{
 			// Get page entry for id and version
@@ -392,14 +392,19 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Gets a page map for the given name, automatically creating it if need be.
+	 * 
 	 * @param pageMapName
 	 *            Name of page map, or null for default page map
+	 * @param autoCreate
+	 *            True if the page map should be automatically created if it
+	 *            does not exist
 	 * @return PageMap for name
 	 */
-	public final PageMap getPageMap(String pageMapName)
+	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
 		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
-		if (pageMap == null && pageMapName == PageMap.DEFAULT_NAME)
+		if (pageMap == null && autoCreate)
 		{
 			pageMap = newPageMap(pageMapName);
 		}
@@ -500,7 +505,7 @@ public abstract class Session implements Serializable
 			throw new IllegalStateException("Session cannot contain more than " + maxPageMaps
 					+ " page maps");
 		}
-		
+
 		// Create new page map
 		final PageMap pageMap = new PageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
@@ -523,19 +528,14 @@ public abstract class Session implements Serializable
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
-	
+
 	/**
 	 * @param page
 	 *            The page to redirect to
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
-		PageMap pageMap = currentPageMap;
-		if (pageMap == null) 
-		{
-			pageMap = getPageMap(PageMap.DEFAULT_NAME);
-		}
-		pageMap.redirectToInterceptPage(page);
+		getCurrentPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -769,7 +769,7 @@ public abstract class Session implements Serializable
 				{
 					attribute = attributeForPageMapName(((PageMap)object).getName());
 				}
-	
+
 				// only replicate if the object was really already in the map.
 				// for example stateless pages will not be in the map so they
 				// shouldn't be added
@@ -782,13 +782,14 @@ public abstract class Session implements Serializable
 			Session.dirtyObjects.set(null);
 		}
 	}
+
 	/**
 	 * @param page
 	 */
 	void dirtyPage(final Page page)
 	{
 		List dirtyObjects = getDirtyObjectsList();
-		
+
 		// FIXME General: Doesn't this mean that dirtyObjects is really a Set?
 		// Since it is threadlocal and can be cleared at end of request, there's
 		// no reason to worry about memory here.
@@ -804,7 +805,7 @@ public abstract class Session implements Serializable
 	void dirtyPageMap(final PageMap map)
 	{
 		List dirtyObjects = getDirtyObjectsList();
-		
+
 		if (!dirtyObjects.contains(map))
 		{
 			dirtyObjects.add(map);
