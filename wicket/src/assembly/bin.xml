@@ -12,6 +12,7 @@
                 <include>LICENSE*</include>
                 <include>NOTICE*</include>
                 <include>pom.xml</include>
+                <include>project.xml</include>
                 <include>build.xml</include>
             </includes>
         </fileSet>
@@ -48,7 +49,7 @@
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <unpack>false</unpack>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependencySet>
     </dependencySets>
-</assembly>
+  </assembly>
