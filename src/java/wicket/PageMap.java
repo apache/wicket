@@ -404,7 +404,7 @@ public final class PageMap implements Serializable
 	final boolean continueToOriginalDestination()
 	{
 		// Get request cycle
-		final RequestCycle cycle = session.getRequestCycle();
+		final RequestCycle cycle = RequestCycle.get();
 
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
@@ -550,7 +550,7 @@ public final class PageMap implements Serializable
 	 */
 	final void redirectToInterceptPage(final Page page)
 	{
-		final RequestCycle cycle = session.getRequestCycle();
+		final RequestCycle cycle = RequestCycle.get();
 		IRequestCycleProcessor processor = cycle.getProcessor();
 		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 
