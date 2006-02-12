@@ -99,7 +99,14 @@ public class BookmarkablePageLink extends Link
 	 */
 	public final PageMap getPageMap()
 	{
-		return PageMap.forName(pageMapName);
+		if (pageMapName != null)
+		{
+			return PageMap.forName(pageMapName);
+		}
+		else
+		{
+			return getPage().getPageMap();
+		}
 	}
 
 	/**
@@ -189,22 +196,18 @@ public class BookmarkablePageLink extends Link
 	 */
 	protected String getURL()
 	{
-		PageMap pageMap = getPageMap();
+		if (pageMapName != null && getPopupSettings() != null)
+		{
+			throw new IllegalStateException("You cannot specify popup settings and a page map");
+		}
+
 		if (getPopupSettings() != null)
 		{
-			if (pageMap != null)
-			{
-				throw new IllegalStateException(
-						"You cannot set the page map for a link that also has popup settings");
-			}
-			final String popupPageMapName = "popup" + popupNumber;
-			popupNumber++;
-			pageMap = PageMap.forName(popupPageMapName);
-			if (pageMap == null)
-			{
-				pageMap = getSession().newPageMap(popupPageMapName);
-			}
+			return urlFor(PageMap.forName("popup" + (popupNumber++)), pageClass, parameters);
 		}
-		return getPage().urlFor(pageMap, pageClass, parameters);
+		else
+		{
+			return urlFor(getPageMap(), pageClass, parameters);
+		}
 	}
 }
