@@ -5,14 +5,11 @@
     <src>http://wicket.sourceforge.net/images/logo.png</src>
     <href>http://wicket.sourceforge.net/</href>
   </bannerLeft>
-  <bannerRight>
-    <src>http://maven.apache.org/images/maven-small.gif</src>
-  </bannerRight>
   <body>
     <links>
-      <item name="Apache" href="http://www.apache.org/" />
-      <item name="Maven 1.0" href="http://maven.apache.org/"/>
-      <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
+      <item name="1.0" href="/wicket-1.0/index.html" />
+      <item name="1.1" href="/wicket-1.1/index.html"/>
+      <item name="1.2" href="/wicket-1.2/index.html"/>
     </links>
 
 		<menu name="Wicket">
