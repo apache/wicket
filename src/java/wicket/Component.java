@@ -634,36 +634,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Get the ComponentTag from the Markup which is associated with the
-	 * component.
-	 * 
-	 * @return An unmutable map with the attributes of the components tag
-	 */
-	private final MarkupStream initializeMarkupStream()
-	{
-		// Save the parent's markup stream to re-assign it at the end
-		MarkupContainer parent = getParent();
-
-		// Get the parent's associated markup stream.
-		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
-		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
-
-		// Make sure the markup stream is positioned at the correct element
-		String componentPath = parent.getPageRelativePath();
-		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
-		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-
-		int index = markupStream.findComponentIndex(relativePath, getId());
-		if (index == -1)
-		{
-			throw new WicketRuntimeException("Unable to determine markup for component: "
-					+ this.toString());
-		}
-		markupStream.setCurrentIndex(index);
-		return markupStream;
-	}
-
-	/**
 	 * Get a copy of the markup's attributes which are associated with the
 	 * component.
 	 * <p>
@@ -858,6 +828,23 @@ public abstract class Component implements Serializable
 		return getApplication().getSettings();
 	}
 
+	/**
+	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
+	 * Returns an empty list rather than null if there are no behaviors coupled
+	 * to this component.
+	 * 
+	 * @return The currently coupled behaviors as a unmodifiable list
+	 */
+	public final List/* <IBehavior> */getBehaviors()
+	{
+		if (behaviors == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		return Collections.unmodifiableList(behaviors);
+	}
+	
 	/**
 	 * @return A path of the form [page-class-name].[page-relative-path]
 	 * @see Component#getPageRelativePath()
@@ -1455,21 +1442,6 @@ public abstract class Component implements Serializable
 		}
 
 		render(markupStream);
-	}
-
-	/**
-	 * The markup stream will be assigned to the component at the beginning of
-	 * the component render phase. It is temporary working variable only.
-	 * 
-	 * @see #findMarkupStream()
-	 * @see MarkupContainer#getMarkupStream()
-	 * 
-	 * @param markupStream
-	 *            The current markup stream which should be applied by the
-	 *            component to render itself
-	 */
-	protected void setMarkupStream(final MarkupStream markupStream)
-	{
 	}
 
 	/**
@@ -2197,23 +2169,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
-	 * Returns an empty list rather than null if there are no behaviors coupled
-	 * to this component.
-	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
-	 */
-	public final List/* <IBehavior> */getBehaviors()
-	{
-		if (behaviors == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		return Collections.unmodifiableList(behaviors);
-	}
-
-	/**
 	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
 	 * the provided type as a unmodifiable list or null if there are no
 	 * behaviors attached. Returns an empty list rather than null if there are
@@ -2561,6 +2516,21 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * The markup stream will be assigned to the component at the beginning of
+	 * the component render phase. It is temporary working variable only.
+	 * 
+	 * @see #findMarkupStream()
+	 * @see MarkupContainer#getMarkupStream()
+	 * 
+	 * @param markupStream
+	 *            The current markup stream which should be applied by the
+	 *            component to render itself
+	 */
+	protected void setMarkupStream(final MarkupStream markupStream)
+	{
+	}
+
+	/**
 	 * If true, all attribute modifiers will be ignored
 	 * 
 	 * @param ignore
@@ -2764,5 +2734,35 @@ public abstract class Component implements Serializable
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
+	}
+
+	/**
+	 * Get the ComponentTag from the Markup which is associated with the
+	 * component.
+	 * 
+	 * @return An unmutable map with the attributes of the components tag
+	 */
+	private final MarkupStream initializeMarkupStream()
+	{
+		// Save the parent's markup stream to re-assign it at the end
+		MarkupContainer parent = getParent();
+
+		// Get the parent's associated markup stream.
+		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
+		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
+
+		// Make sure the markup stream is positioned at the correct element
+		String componentPath = parent.getPageRelativePath();
+		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+
+		int index = markupStream.findComponentIndex(relativePath, getId());
+		if (index == -1)
+		{
+			throw new WicketRuntimeException("Unable to determine markup for component: "
+					+ this.toString());
+		}
+		markupStream.setCurrentIndex(index);
+		return markupStream;
 	}
 }
