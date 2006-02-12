@@ -1997,13 +1997,66 @@ public abstract class Component implements Serializable
 	 * @param listenerInterface
 	 *            The listener interface that the URL should call
 	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
 	 */
 	public final String urlFor(final Class listenerInterface)
 	{
-		return getPage().urlFor(this, listenerInterface);
+		return getRequestCycle().urlFor(this, listenerInterface);
 	}
 
+	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @see RequestCycle#urlFor(IRequestTarget)
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * 
+	 * @return a URL that references the given request target
+	 */
+	public final String urlFor(final IRequestTarget requestTarget)
+	{
+		return getRequestCycle().urlFor(requestTarget);
+	}
+
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource reference.
+	 * 
+	 * @see RequestCycle#urlFor(ResourceReference)
+	 * 
+	 * @param resourceReference
+	 *            The resource reference
+	 * @return The url for the shared resource
+	 */
+	public final String urlFor(final ResourceReference resourceReference)
+	{
+		return getRequestCycle().urlFor(resourceReference);
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @see RequestCycle#urlFor(PageMap, Class, PageParameters)
+	 * 
+	 * @param pageMap
+	 *            Page map to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * 
+	 * 
+	 * @return Bookmarkable URL to page
+	 */
+	public final String urlFor(final PageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
+	{
+		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
+	}
+	
 	/**
 	 * Registers a warning feedback message for this component.
 	 * 
