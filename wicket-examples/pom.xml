@@ -4,12 +4,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wicket</groupId>
-	<artifactId>wicket-extensions</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>wicket-examples</artifactId>
+	<packaging>war</packaging>
 	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Extensions</name>
 	<description></description>
-	<url>http://wicket.sourceforge.net/wicket-extensions</url>
+	<url>http://wicket.sourceforge.net/</url>
 	<inceptionYear>2004</inceptionYear>
 
 	<organization>
@@ -30,9 +30,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</connection>
-		<developerConnection>	scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-extensions</url>
+		<connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-examples</connection>
+		<developerConnection>	scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-examples</developerConnection>
+		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples</url>
 	</scm>
 
 
@@ -73,11 +73,102 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>1.2-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>2.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1-beta-8</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>httpunit</groupId>
+			<artifactId>httpunit</artifactId>
+			<version>1.6</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jwebunit</groupId>
+			<artifactId>jwebunit</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>org.mortbay.jetty</artifactId>
+			<version>4.2.24</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>0.9.5</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>rhino</groupId>
+			<artifactId>js</artifactId>
+			<version>1.6R1</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>tomcat</groupId>
+			<artifactId>jasper-compiler</artifactId>
+			<version>4.1.30</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>tomcat</groupId>
+			<artifactId>jasper-runtime</artifactId>
+			<version>4.1.30</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.6.2</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.0.b2</version>
+			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -120,6 +211,13 @@
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>src/webapp</warSourceDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
