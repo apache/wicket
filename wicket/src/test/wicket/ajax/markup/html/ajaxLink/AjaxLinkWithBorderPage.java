@@ -48,7 +48,6 @@ public class AjaxLinkWithBorderPage extends WebPage
 
 			protected void onClick(AjaxRequestTarget target)
 			{
-				// TODO Auto-generated method stub
 				labelText = "Updated!";
 				// target.addComponent(label);
 			}
