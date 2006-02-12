@@ -450,8 +450,9 @@ public final class StringsTest extends TestCase
 	{
 		NullPointerException np = new NullPointerException("null test");
 		WicketRuntimeException wre = new WicketRuntimeException("null test", np);
-		String exptionString = Strings.toString(wre);
-		// TODO how to test that string ? because the stacktrace is always different.. 
+		String exceptionString = Strings.toString(wre);
+		assertTrue(exceptionString.length() > 1);
+		assertTrue(exceptionString.contains("WicketRuntimeException"));
 	}
 
 	/**
