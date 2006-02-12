@@ -337,12 +337,20 @@ public final class PageMap implements Serializable
 	 * @param page
 	 *            page to be removed from the pagemap
 	 */
-	public final synchronized void remove(final Page page)
+	public final void remove(final Page page)
 	{
-		final IPageMapEntry entry = page.getPageMapEntry();
-
 		// Remove the pagemap entry from session
-		removeEntry(entry);
+		removeEntry(page.getPageMapEntry());
+	}
+
+	/**
+	 * @param entry
+	 *            The entry to remove
+	 */
+	public final void removeEntry(final IPageMapEntry entry)
+	{
+		// Remove entry from session
+		session.removeAttribute(attributeForId(entry.getNumericId()));
 
 		// Remove page from acccess stack
 		final Iterator stack = accessStack.iterator();
@@ -357,18 +365,6 @@ public final class PageMap implements Serializable
 
 		// Let the session know we changed the pagemap
 		session.dirtyPageMap(this);
-	}
-
-	/**
-	 * @param entry
-	 *            The entry to remove
-	 * @return The removed entry
-	 */
-	public final IPageMapEntry removeEntry(final IPageMapEntry entry)
-	{
-		// Remove entry from session
-		session.removeAttribute(attributeForId(entry.getNumericId()));
-		return entry;
 	}
 
 	/**
@@ -519,7 +515,7 @@ public final class PageMap implements Serializable
 	 * @param page
 	 *            The page to put into this map
 	 */
-	final synchronized void put(final Page page)
+	final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isStateless())
