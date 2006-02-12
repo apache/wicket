@@ -88,6 +88,20 @@ public abstract class Objects implements NumericTypes
 
 	static HashMap primitiveDefaults = new HashMap();
 
+	static
+	{
+		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
+		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
+		primitiveDefaults.put(Short.TYPE, new Short((short)0));
+		primitiveDefaults.put(Character.TYPE, new Character((char)0));
+		primitiveDefaults.put(Integer.TYPE, new Integer(0));
+		primitiveDefaults.put(Long.TYPE, new Long(0L));
+		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
+		primitiveDefaults.put(Double.TYPE, new Double(0.0));
+		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
+		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
+	}
+
 	/**
 	 * Evaluates the given object as a BigDecimal.
 	 * 
@@ -165,6 +179,39 @@ public abstract class Objects implements NumericTypes
 		if (value instanceof Number)
 			return ((Number)value).doubleValue() != 0;
 		return true; // non-null
+	}
+
+	/**
+	 * De-serializes an object from a byte array.
+	 * 
+	 * @param data
+	 *            The serialized object
+	 * @return The object
+	 */
+	public static Object byteArrayToObject(final byte[] data)
+	{
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			try
+			{
+				return new ObjectInputStream(in).readObject();
+			}
+			finally
+			{
+				in.close();
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -503,6 +550,7 @@ public abstract class Objects implements NumericTypes
 		return getNumericType(v1, v2, false);
 	}
 
+
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
@@ -570,7 +618,6 @@ public abstract class Objects implements NumericTypes
 		}
 		return result;
 	}
-
 
 	/**
 	 * Evaluates the given object as a long integer.
@@ -644,6 +691,35 @@ public abstract class Objects implements NumericTypes
 	}
 
 	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
+	 * @return The serialized object
+	 */
+	public static byte[] objectToByteArray(final Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try
+			{
+				new ObjectOutputStream(out).writeObject(object);
+			}
+			finally
+			{
+				out.close();
+			}
+			return out.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
 	 * Computes the size of an object by serializing it to a byte array.
 	 * 
 	 * @param object
@@ -709,85 +785,9 @@ public abstract class Objects implements NumericTypes
 	}
 
 	/**
-	 * De-serializes an object from a byte array.
-	 * 
-	 * @param data
-	 *            The serialized object
-	 * @return The object
-	 */
-	public static Object byteArrayToObject(final byte[] data)
-	{
-		try
-		{
-			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			try
-			{
-				return new ObjectInputStream(in).readObject();
-			}
-			finally
-			{
-				in.close();
-			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Serializes an object into a byte array.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return The serialized object
-	 */
-	public static byte[] objectToByteArray(final Object object)
-	{
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			try
-			{
-				new ObjectOutputStream(out).writeObject(object);
-			}
-			finally
-			{
-				out.close();
-			}
-			return out.toByteArray();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
 	 * Instantiation not allowed
 	 */
 	private Objects()
 	{
-	}
-
-	static
-	{
-		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
-		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
-		primitiveDefaults.put(Short.TYPE, new Short((short)0));
-		primitiveDefaults.put(Character.TYPE, new Character((char)0));
-		primitiveDefaults.put(Integer.TYPE, new Integer(0));
-		primitiveDefaults.put(Long.TYPE, new Long(0L));
-		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
-		primitiveDefaults.put(Double.TYPE, new Double(0.0));
-		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
-		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
 	}
 }
