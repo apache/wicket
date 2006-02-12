@@ -43,7 +43,7 @@ import wicket.protocol.http.WebResponse;
 import wicket.resource.ByteArrayResource;
 import wicket.resource.JarResourceFactory;
 import wicket.util.lang.Bytes;
-import wicket.util.lang.Objects2;
+import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileItem;
 
@@ -201,7 +201,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 */
 	public void onResourceRequested()
 	{
-		new ByteArrayResource("application/x-wicket-model", Objects2
+		new ByteArrayResource("application/x-wicket-model", Objects
 				.objectToByteArray(getAppletModel())).onResourceRequested();
 	}
 

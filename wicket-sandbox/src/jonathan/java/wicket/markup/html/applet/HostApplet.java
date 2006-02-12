@@ -11,7 +11,7 @@ import java.net.URLConnection;
 
 import javax.swing.JApplet;
 
-import wicket.util.lang.Objects2;
+import wicket.util.lang.Objects;
 import wicket.util.upload.MultiPartFormOutputStream;
 
 /**
@@ -89,7 +89,7 @@ public class HostApplet extends JApplet implements IAppletServer
 					.getOutputStream(), boundary);
 			try
 			{
-				out.writeFile("model", "application/x-wicket-model", "model", Objects2
+				out.writeFile("model", "application/x-wicket-model", "model", Objects
 						.objectToByteArray(model));
 			}
 			finally

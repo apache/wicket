@@ -42,8 +42,9 @@ public abstract class Objects implements NumericTypes
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private HashMap replacedComponents;
-		
-		private ReplaceObjectInputStream(InputStream in,HashMap replacedComponents) throws IOException
+
+		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents)
+				throws IOException
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
@@ -53,7 +54,7 @@ public abstract class Objects implements NumericTypes
 		protected Object resolveObject(Object obj) throws IOException
 		{
 			Object replaced = replacedComponents.get(obj);
-			if(replaced != null)
+			if (replaced != null)
 			{
 				return replaced;
 			}
@@ -64,8 +65,9 @@ public abstract class Objects implements NumericTypes
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
 	{
 		private HashMap replacedComponents;
-		
-		private ReplaceObjectOutputStream(OutputStream out,HashMap replacedComponents) throws IOException
+
+		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
+				throws IOException
 		{
 			super(out);
 			this.replacedComponents = replacedComponents;
@@ -74,7 +76,7 @@ public abstract class Objects implements NumericTypes
 
 		protected Object replaceObject(Object obj) throws IOException
 		{
-			if(obj instanceof Component)
+			if (obj instanceof Component)
 			{
 				String name = ((Component)obj).getPath();
 				replacedComponents.put(name, obj);
@@ -185,9 +187,10 @@ public abstract class Objects implements NumericTypes
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
 				final HashMap replacedObjects = new HashMap();
-				ObjectOutputStream oos = new ReplaceObjectOutputStream(out,replacedObjects);
+				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
-				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out.toByteArray()),replacedObjects);
+				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
+						.toByteArray()), replacedObjects);
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -703,6 +706,68 @@ public abstract class Objects implements NumericTypes
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * De-serializes an object from a byte array.
+	 * 
+	 * @param data
+	 *            The serialized object
+	 * @return The object
+	 */
+	public static Object byteArrayToObject(final byte[] data)
+	{
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			try
+			{
+				return new ObjectInputStream(in).readObject();
+			}
+			finally
+			{
+				in.close();
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
+	 * @return The serialized object
+	 */
+	public static byte[] objectToByteArray(final Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try
+			{
+				new ObjectOutputStream(out).writeObject(object);
+			}
+			finally
+			{
+				out.close();
+			}
+			return out.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
