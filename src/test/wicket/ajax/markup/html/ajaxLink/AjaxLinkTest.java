@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,8 +40,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-		// FIXME this test is failing, not sure why
-		// executeTest(AjaxLinkPage.class, "AjaxLinkPageExpectedResult.html");
+		executeTest(AjaxLinkPage.class, "AjaxLinkPageExpectedResult.html");
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-		// executeTest(AjaxLinkWithBorderPage.class,
-		// "AjaxLinkWithBorderPageExpectedResult.html");
+		// TODO Bordered pages are not yet working properly with ajax
+//		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
 	}
 }
