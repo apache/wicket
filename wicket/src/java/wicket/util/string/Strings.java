@@ -437,6 +437,29 @@ public final class Strings
 	{
 		return string == null || string.trim().equals("");
 	}
+	
+	/**
+	 * Checks whether two strings are equals taken care of 'null' values
+	 * and treating 'null' same as trim(string).equals("")
+	 * 
+	 * @param string1
+	 * @param string2
+	 * @return true, if both strings are equal
+	 */
+	public static boolean isEqual(final String string1, final String string2)
+	{
+		if ((string1 == null) && (string2 == null))
+		{
+			return true;
+		}
+		
+		if (isEmpty(string1) && isEmpty(string2))
+		{
+			return true;
+		}
+		
+		return string1.equals(string2);
+	}
 
 	/**
 	 * Converts the text in <code>s</code> to a corresponding boolean. On,

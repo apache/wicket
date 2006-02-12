@@ -62,6 +62,9 @@ public class ComponentTag extends MarkupElement
 	/** The component's id identified by wicket:id="xxx" */
 	private String id;
 	
+	/** The component's path in the markup */
+	private String path;
+	
 	/** Additional attributes map. Attributes contributed by <wicket:param> */
 	private AttributeMap additionalAttributes;
 
@@ -597,5 +600,25 @@ public class ComponentTag extends MarkupElement
 	public final boolean isModified()
 	{
 		return this.modified;
+	}
+
+	/**
+	 * Gets the component path of wicket elements
+	 * 
+	 * @return path
+	 */
+	public String getPath()
+	{
+		return path;
+	}
+
+	/**
+	 * Sets the component path of wicket elements
+	 * 
+	 * @param path path
+	 */
+	void setPath(final String path)
+	{
+		this.path = path;
 	}
 }

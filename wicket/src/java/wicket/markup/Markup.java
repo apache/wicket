@@ -19,16 +19,15 @@ package wicket.markup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import wicket.util.string.Strings;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and a list
@@ -37,11 +36,13 @@ import wicket.util.string.Strings;
  * @see MarkupElement
  * @see ComponentTag
  * @see wicket.markup.RawMarkup
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public final class Markup
 {
-	private final static Log log = LogFactory.getLog(Markup.class);
+	private static final Log log = LogFactory.getLog(Markup.class);
 
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
@@ -61,6 +62,9 @@ public final class Markup
 	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
 	private String wicketNamespace;
 
+	/** == wicketNamespace + ":id" */
+	private String wicketId;
+
 	/** Markup has been searched for the header, but it doesn't contain any */
 	public final static int NO_HEADER_FOUND = -1;
 
@@ -69,6 +73,18 @@ public final class Markup
 	 * MarkupElement.
 	 */
 	private int headerIndex = NO_HEADER_FOUND;
+
+	/**
+	 * Used at markup load time to maintain the current component path (not id)
+	 * while adding markup elements to this Markup instance
+	 */
+	private StringBuffer currentPath;
+
+	/**
+	 * A cache which maps (componentPath + id) to the componentTags index in the
+	 * markup
+	 */
+	private Map componentMap;
 
 	/**
 	 * Kind of copy constructor, though new markup elements are attached
@@ -84,7 +100,7 @@ public final class Markup
 		this.markup = markupElements;
 		this.xmlDeclaration = markup.xmlDeclaration;
 		this.encoding = markup.encoding;
-		this.wicketNamespace = markup.wicketNamespace;
+		setWicketNamespace(markup.wicketNamespace);
 
 		initialize();
 	}
@@ -95,7 +111,7 @@ public final class Markup
 	Markup()
 	{
 		this.markup = new ArrayList();
-		this.wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
+		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	}
 
 	/**
@@ -120,6 +136,10 @@ public final class Markup
 				}
 			}
 		}
+
+		// The variable is only needed while adding markup elements.
+		// initialize() is invoked after all elements have been added.
+		this.currentPath = null;
 	}
 
 	/**
@@ -138,9 +158,9 @@ public final class Markup
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be 
-	 * package protected. However to allow wicket-bench easy access
-	 * to the information ...
+	 * For Wicket it would be sufficient for this method to be package
+	 * protected. However to allow wicket-bench easy access to the information
+	 * ...
 	 * 
 	 * @param index
 	 *            Index into markup list
@@ -162,9 +182,9 @@ public final class Markup
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be 
-	 * package protected. However to allow wicket-bench easy access
-	 * to the information ...
+	 * For Wicket it would be sufficient for this method to be package
+	 * protected. However to allow wicket-bench easy access to the information
+	 * ...
 	 * 
 	 * @return Number of markup elements
 	 */
@@ -225,15 +245,12 @@ public final class Markup
 	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
-	public int findComponentIndex(String path, String id)
+	public int findComponentIndex(final String path, final String id)
 	{
-		final String wicketId = ComponentTag.DEFAULT_WICKET_NAMESPACE + ":id";
-
-		// Find the tag. Rebuild the tree structure
-		Stack markupElements = new Stack();
-
-		// The path of the current tag
-		String elementsPath = "";
+		if ((id == null) || (id.length() == 0))
+		{
+			throw new IllegalArgumentException("Parameter 'id' must not be null");
+		}
 
 		// TODO General: a component path e.g. "panel:label" does not match 1:1
 		// with the markup in case of ListView, where the path contains a number
@@ -243,95 +260,23 @@ public final class Markup
 		// delegate to the various components recursivly to search within there
 		// realm only for the components markup. ListItem could than simply
 		// do nothing and delegate to there parents.
-		if (path == null)
-		{
-			path = "";
-		}
-		else if (path.indexOf(":") != -1)
-		{
-			// s/:\d+//g
-			Pattern re = Pattern.compile(":\\d+");
-			Matcher matcher = re.matcher(path);
-			path = matcher.replaceAll("");
-		}
-		else if (id != null)
-		{
-			// In case of "list:0" where the list item shall be rendered
-			// the number will be removed as well.
-			try
-			{
-				Integer.parseInt(id);
-				id = Strings.afterLast(path, ':');
-				if (id.length() == 0)
-				{
-					id = path;
-					path = "";
-				}
-				else
-				{
-					path = Strings.beforeLast(path, ':');
-				}
-			}
-			catch (NumberFormatException ex)
-			{
-				// No need to do anything
-			}
-		}
-		
-		// The return value
-		int position = -1;
+		String completePath = (path == null || path.length() == 0 ? id : path + ":" + id);
 
-		// Iterate through all markup elements
-		for (int pos = 0; pos < markup.size(); pos++)
-		{
-			// Only ComponentTags are of interest
-			MarkupElement element = (MarkupElement)markup.get(pos);
-			if (element instanceof ComponentTag)
-			{
-				ComponentTag tag = (ComponentTag)element;
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					// If has wicket:id ..
-					boolean hasWicketId = tag.getAttributes().containsKey(wicketId);
-					if (hasWicketId)
-					{
-						// .. and wicket:id is equals to what I'm looking for
-						if (tag.getId().equals(id))
-						{
-							// .. and the path is right as well
-							if (elementsPath.equals(path))
-							{
-								// .. than we found it.
-								position = pos;
-								break;
-							}
-						}
-					}
+		// s/:\d+//g
+		Pattern re = Pattern.compile(":\\d+");
+		Matcher matcher = re.matcher(completePath);
+		completePath = matcher.replaceAll("");
 
-					// If open tag, put the path of the current element onto the
-					// stack and adjust the path (walk into the subdirectory)
-					if (tag.isOpen())
-					{
-						markupElements.push(elementsPath);
-						if (hasWicketId)
-						{
-							if (elementsPath.length() > 0)
-							{
-								elementsPath += ":";
-							}
-							elementsPath += tag.getId();
-						}
-					}
-				}
-				else if (tag.isClose())
-				{
-					// return to the parent "directory"
-					elementsPath = (String)markupElements.pop();
-				}
-			}
+		// All component tags are registered with the cache
+		final Integer value = (Integer)this.componentMap.get(completePath);
+		if (value == null)
+		{
+			// not found
+			return -1;
 		}
 
-		return position;
+		// return the components position in the markup stream
+		return value.intValue();
 	}
 
 	/**
@@ -354,6 +299,7 @@ public final class Markup
 	final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
+		this.wicketId = wicketNamespace + ":id";
 
 		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{
@@ -395,6 +341,83 @@ public final class Markup
 	}
 
 	/**
+	 * Add a ComponentTag
+	 * 
+	 * @param tag
+	 */
+	final void addMarkupElement(final ComponentTag tag)
+	{
+		this.markup.add(tag);
+
+		// Set the tags components path and add it to the local cache
+		setComponentPath(tag);
+	}
+
+	/**
+	 * Set the components path within the markup and add the component tag to
+	 * the local cache
+	 * 
+	 * @param tag
+	 */
+	private void setComponentPath(final ComponentTag tag)
+	{
+		// Only if the tag has wicket:id="xx" and open or open-close
+		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
+		{
+			// With open-close the path does not change. It can/will not have
+			// children
+			if (tag.isOpenClose())
+			{
+				// Set the components path.
+				if ((this.currentPath != null) && (this.currentPath.length() > 0))
+				{
+					tag.setPath(this.currentPath.toString());
+				}
+			}
+			else
+			{
+				// Set the components path.
+				if (this.currentPath == null)
+				{
+					this.currentPath = new StringBuffer(100);
+				}
+				else if (this.currentPath.length() > 0)
+				{
+					tag.setPath(this.currentPath.toString());
+					this.currentPath.append(':');
+				}
+
+				// .. and append the tags id to the component path for the
+				// children to come
+				this.currentPath.append(tag.getId());
+			}
+
+			// Add the tag to the cache
+			if (this.componentMap == null)
+			{
+				this.componentMap = new HashMap();
+			}
+
+			final String key = (tag.getPath() != null ? tag.getPath() + ":" + tag.getId() : tag
+					.getId());
+			this.componentMap.put(key, new Integer(this.markup.size() - 1));
+		}
+		else if (tag.isClose() && (this.currentPath != null))
+		{
+			// Remove the last element from the component path
+			int index = this.currentPath.lastIndexOf(":");
+			if (index != -1)
+			{
+				this.currentPath.setLength(index);
+			}
+			else
+			{
+				this.currentPath.setLength(0);
+			}
+		}
+	}
+
+	/**
 	 * Make all tags immutable and the list of elements unmodifable
 	 */
 	final void makeImmutable()
@@ -424,6 +447,7 @@ public final class Markup
 		this.xmlDeclaration = null;
 		this.encoding = null;
 		this.headerIndex = NO_HEADER_FOUND;
+		this.currentPath = null;
 	}
 
 	/**
