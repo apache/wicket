@@ -700,6 +700,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
 	 * Set the id for this Page. This method is called by PageMap when a Page is
 	 * added because the id, which is assigned by PageMap, is not known until
 	 * this time.
