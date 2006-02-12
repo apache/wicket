@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.6 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -39,8 +39,8 @@ public final class TimeTest extends TestCase
 	{
 		final Time start = Time.now();
 
-		// TODO Bug: Eelco mentioned this test fails on his computer from
-		// time to time.
+		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
+		// from time to time.
 		Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
 
 		final Time birthday = Time.parseDate("1966.06.01");
