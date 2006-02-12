@@ -192,6 +192,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
+		if (path != null && path.equals("/"))
+		{
+			// make sure path / is always the home page even if a package or a
+			// page was mounted
+			// FIXME Request Processing: maybe we should disallow mounting of a
+			// page onto a / path
+			return null;
+		}
+
 		if (path == null)
 		{
 			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
@@ -457,9 +466,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 		else
 		{
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey.length() + prefix.length() + 11);
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
+					.length()
+					+ prefix.length() + 11);
 			buffer.append(prefix);
-			if(prefix.endsWith("/"))
+			if (prefix.endsWith("/"))
 			{
 				buffer.append("resources/");
 			}
@@ -472,8 +483,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 	}
 
-	
-	
+
 	/**
 	 * Encode a listener interface target.
 	 * 
