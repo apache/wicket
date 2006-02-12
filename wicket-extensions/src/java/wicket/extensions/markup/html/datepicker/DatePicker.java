@@ -123,7 +123,7 @@ public class DatePicker extends Panel
 
 				public Object getObject(Component component)
 				{
-					String url = getPage().urlFor(resourceReference);
+					String url = urlFor(resourceReference);
 					return url;
 				};
 			};

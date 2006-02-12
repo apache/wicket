@@ -43,7 +43,7 @@ public class CustomLayoutAjaxAutocompleteTextField extends AutocompleteTextField
 
 		PageParameters parameters = new PageParameters();
 		parameters.put("fieldName", this.getId());
-		String url = this.getPage().urlFor(null, page, parameters);
+		String url = this.urlFor(null, page, parameters);
 
 		write(container, "<script type='text/javascript'>\n");
 		write(container, "var myrules = { \n");

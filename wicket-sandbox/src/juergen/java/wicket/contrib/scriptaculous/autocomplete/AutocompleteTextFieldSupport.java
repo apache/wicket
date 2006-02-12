@@ -42,7 +42,7 @@ public class AutocompleteTextFieldSupport extends TextField implements IHeaderCo
 	private void addCssReference(final HtmlHeaderContainer container, final Class clazz, final String name)
 	{
 		PackageResourceReference ref = new PackageResourceReference(Application.get(), clazz, name);
-		write(container, "\t<link rel='stylesheet' type='text/css' href='" + getPage().urlFor(ref.getPath()) + "'/>\n");
+		write(container, "\t<link rel='stylesheet' type='text/css' href='" + urlFor(ref.getPath()) + "'/>\n");
 	}
 	
 	/**

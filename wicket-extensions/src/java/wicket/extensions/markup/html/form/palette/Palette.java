@@ -160,7 +160,7 @@ public class Palette extends Panel
 
 			public Object getObject(Component component)
 			{
-				String url = getPage().urlFor(javascript);
+				String url = urlFor(javascript);
 				return url;
 			};
 		};

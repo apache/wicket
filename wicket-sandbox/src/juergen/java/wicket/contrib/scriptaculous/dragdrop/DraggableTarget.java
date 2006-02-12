@@ -38,7 +38,7 @@ public class DraggableTarget extends WebMarkupContainer implements IHeaderContri
 	{
 		super.onRender(markupStream);
 
-		String url = this.getPage().urlFor(null, pageContribution, new PageParameters());
+		String url = urlFor(null, pageContribution, new PageParameters());
 
 		getResponse().write("\n<script type='text/javascript'>new Ajax.Updater('");
 		getResponse().write(getId());
@@ -84,7 +84,7 @@ public class DraggableTarget extends WebMarkupContainer implements IHeaderContri
 	private void addCssReference(final HtmlHeaderContainer container, final Class clazz, final String name)
 	{
 		PackageResourceReference ref = new PackageResourceReference(Application.get(), clazz, name);
-		container.getResponse().write("\t<link rel='stylesheet' type='text/css' href='" + getPage().urlFor(ref.getPath()) + "'/>\n");
+		container.getResponse().write("\t<link rel='stylesheet' type='text/css' href='" + urlFor(ref.getPath()) + "'/>\n");
 	}
 
 	public String getBodyOnLoad()

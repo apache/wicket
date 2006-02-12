@@ -67,7 +67,7 @@ public class Scriptaculous
 
 	private void addJavascriptReference(final HtmlHeaderContainer container, final PackageResourceReference ref)
 	{
-		write(container, "\t<script language='JavaScript' type='text/javascript' " + "src='" + container.getPage().urlFor(ref.getPath()) + "'></script>\n");
+		write(container, "\t<script language='JavaScript' type='text/javascript' " + "src='" + container.urlFor(ref.getPath()) + "'></script>\n");
 	}
 	
 	/**
