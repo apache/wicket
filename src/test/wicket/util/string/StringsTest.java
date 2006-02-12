@@ -452,7 +452,7 @@ public final class StringsTest extends TestCase
 		WicketRuntimeException wre = new WicketRuntimeException("null test", np);
 		String exceptionString = Strings.toString(wre);
 		assertTrue(exceptionString.length() > 1);
-		assertTrue(exceptionString.contains("WicketRuntimeException"));
+		assertTrue(exceptionString.indexOf("WicketRuntimeException") != -1);
 	}
 
 	/**
