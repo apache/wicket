@@ -351,6 +351,32 @@ public final class Markup
 
 		// Set the tags components path and add it to the local cache
 		setComponentPath(tag);
+		
+		// Add to the local cache to be found fast if required
+		addToCache(tag);
+	}
+
+	/**
+	 * Add the tag to the local cache if open or open-close and if wicket:id is
+	 * present
+	 * 
+	 * @param tag
+	 */
+	private void addToCache(final ComponentTag tag)
+	{
+		// Only if the tag has wicket:id="xx" and open or open-close
+		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
+		{
+			// Add the tag to the cache
+			if (this.componentMap == null)
+			{
+				this.componentMap = new HashMap();
+			}
+
+			final String key = (tag.getPath() != null ? tag.getPath() + ":" + tag.getId() : tag
+					.getId());
+			this.componentMap.put(key, new Integer(this.markup.size() - 1));
+		}
 	}
 
 	/**
@@ -391,16 +417,6 @@ public final class Markup
 				// children to come
 				this.currentPath.append(tag.getId());
 			}
-
-			// Add the tag to the cache
-			if (this.componentMap == null)
-			{
-				this.componentMap = new HashMap();
-			}
-
-			final String key = (tag.getPath() != null ? tag.getPath() + ":" + tag.getId() : tag
-					.getId());
-			this.componentMap.put(key, new Integer(this.markup.size() - 1));
 		}
 		else if (tag.isClose() && (this.currentPath != null))
 		{
