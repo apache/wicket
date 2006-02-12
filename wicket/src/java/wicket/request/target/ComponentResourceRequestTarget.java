@@ -1,15 +1,14 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,9 +24,11 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.authorization.UnauthorizedActionException;
 
 /**
- * An implemenation of IRequestTarget that is used for the IResourceListener event request.
+ * An implemenation of IRequestTarget that is used for the IResourceListener
+ * event request.
  * 
  * @author jcompagner
  */
@@ -40,6 +41,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 
 	/**
 	 * Construct.
+	 * 
 	 * @param page
 	 * @param component
 	 * @param listenerMethod
@@ -56,6 +58,12 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
+		// Check authorization
+		if (!component.isActionAuthorized(Component.ENABLE))
+		{
+			throw new UnauthorizedActionException(component, Component.ENABLE);
+		}
+
 		page.beforeCallComponent(component, listenerMethod);
 
 		try
@@ -72,7 +80,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 		finally
 		{
 			page.afterCallComponent(component, listenerMethod);
-		}		
+		}
 	}
 
 	/**
@@ -120,9 +128,8 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@")
-			.append(hashCode()).append(page).append("->").append(component.getId())
-			.append("->IResourceListener");
+		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
+				.append(page).append("->").append(component.getId()).append("->IResourceListener");
 		return b.toString();
 	}
 }

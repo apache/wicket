@@ -26,6 +26,7 @@ import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.authorization.UnauthorizedActionException;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.settings.Settings;
@@ -219,6 +220,12 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	protected final void invokeInterface(final Component component, final Method method,
 			final Page page)
 	{
+		// Check authorization
+		if (!component.isActionAuthorized(Component.ENABLE))
+		{
+			throw new UnauthorizedActionException(component, Component.ENABLE);
+		}
+
 		page.beforeCallComponent(component, method);
 
 		try
