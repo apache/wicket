@@ -724,10 +724,11 @@ public abstract class RequestCycle
 	 */
 	public final String urlFor(final Component component, final Class listenerInterface)
 	{
-		final Page page=component.getPage();
-		
+		// Get Page holding component and mark it as stateful.
+		final Page page = component.getPage();
 		page.setStateless(false);
-		
+
+		// Get the listener interface name
 		String interfaceName = Classes.name(listenerInterface);
 		IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, getRequestInterfaceMethod(interfaceName));
 		IRequestCodingStrategy requestCodingStrategy = getProcessor()
