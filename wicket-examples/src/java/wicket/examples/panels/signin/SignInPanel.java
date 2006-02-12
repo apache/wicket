@@ -103,7 +103,7 @@ public abstract class SignInPanel extends Panel
 				// If login has been called because the user was not yet
 				// logged in, than continue to the original destination,
 				// otherwise to the Home page
-				if (!getPage().continueToOriginalDestination())
+				if (!continueToOriginalDestination())
 				{
 					setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
 							getApplication().getHomePage(), (PageParameters)null));

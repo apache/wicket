@@ -118,7 +118,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
  * the page. Besides returning true or false, an implementation of checkAccess()
  * may also choose to send the user to another page with
- * Component.setResponsePage() or Page.redirectToInterceptPage(). This can be
+ * Component.setResponsePage() or Component.redirectToInterceptPage(). This can be
  * used to allow a user to authenticate themselves if they were denied access.
  * 
  * @see wicket.markup.html.WebPage
@@ -280,18 +280,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final boolean checkAccess()
 	{
 		return true;
-	}
-
-	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
-	 * 
-	 * @return True if an original destination was redirected to
-	 * @see Page#redirectToInterceptPage(Page)
-	 */
-	public final boolean continueToOriginalDestination()
-	{
-		return getPageMap().continueToOriginalDestination();
 	}
 
 	/**
@@ -634,22 +622,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void onRedirect()
 	{
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's url is saved for future use by method
-	 * continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
-	 * 
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		getPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
