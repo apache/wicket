@@ -727,7 +727,6 @@ public final class Strings
 	 * @return String with all single occurrences of newline replaced with
 	 *         &lt;br /&gt; and all multiple occurrences of newline replaced
 	 *         with &lt;p&gt;.
-	 * TODO General: Make paragraphs xhtml compliant.
 	 */
 	public static String toMultilineMarkup(final String s)
 	{
@@ -756,7 +755,7 @@ public final class Strings
 				default :
 					if (newlineCount == 1)
 					{
-						buffer.append("<br />");
+						buffer.append("<br/>");
 					}
 					else if (newlineCount > 1)
 					{
@@ -770,7 +769,7 @@ public final class Strings
 		}
 		if (newlineCount == 1)
 		{
-			buffer.append("<br />");
+			buffer.append("<br/>");
 		}
 		else if (newlineCount > 1)
 		{
