@@ -25,7 +25,6 @@ import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
-import wicket.version.undo.Change;
 
 /**
  * Ajax links demo.
@@ -88,16 +87,6 @@ public class LinksPage extends BasePage
 			protected void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
-				addStateChange(new Change()
-				{
-
-					public void undo()
-					{
-						// TODO Auto-generated method stub
-
-					}
-
-				});
 				target.addComponent(c1);
 			}
 
@@ -125,7 +114,6 @@ public class LinksPage extends BasePage
 				System.out.println("hello");
 
 			}
-
 		});
 	}
 }
