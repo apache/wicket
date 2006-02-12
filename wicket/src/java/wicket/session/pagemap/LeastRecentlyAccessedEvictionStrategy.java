@@ -77,10 +77,15 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 					pageMap.removeEntry(page);
 				}
 			}
-			else if(oldestEntry != null) // TODO is this not a hack around another problem? Access Stack and pages not in sync?
+			else
 			{
-				// Remove the entry
-				pageMap.removeEntry(oldestEntry);
+				// If oldestEntry is not an instance of Page, then it is some
+				// custom, user-defined IPageMapEntry class and cannot contain
+				// versioning information, so we just remove the entry.
+				if (oldestEntry != null)
+				{
+					pageMap.removeEntry(oldestEntry);
+				}
 			}
 		}
 	}
