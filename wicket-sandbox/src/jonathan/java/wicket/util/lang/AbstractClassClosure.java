@@ -39,7 +39,7 @@ import wicket.WicketRuntimeException;
  * @author Thomas Ball
  * @author Jonathan Locke
  */
-// FIXME General: Add this to wicket.util.lang
+// TODO Post 1.2: Add this to wicket.util.lang
 public abstract class AbstractClassClosure
 {
 	/** Closure of classes referenced by the class passed to the constructor */
