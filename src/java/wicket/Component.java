@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
@@ -594,7 +595,12 @@ public abstract class Component implements Serializable
 	 */
 	public final boolean isActionAuthorized(Action action)
 	{
-		return getSession().getAuthorizationStrategy().isActionAuthorized(this, action);
+		IAuthorizationStrategy authorizationStrategy = getSession().getAuthorizationStrategy();
+		if (authorizationStrategy != null)
+		{
+			return authorizationStrategy.isActionAuthorized(this, action);
+		}
+		return true;
 	}
 
 	/**
