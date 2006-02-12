@@ -585,24 +585,17 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Authorizes an action for a component.
+	 * Redirects to any intercept page previously specified by a call to
+	 * redirectToInterceptPage.
 	 * 
-	 * @param action
-	 *            The action to authorize
-	 * @return True if the action is allowed
-	 * @throws AuthorizationException
-	 *             Can be thrown by implementation if action is unauthorized
+	 * @return True if an original destination was redirected to
+	 * @see Component#redirectToInterceptPage(Page)
 	 */
-	public final boolean isActionAuthorized(Action action)
+	public final boolean continueToOriginalDestination()
 	{
-		IAuthorizationStrategy authorizationStrategy = getSession().getAuthorizationStrategy();
-		if (authorizationStrategy != null)
-		{
-			return authorizationStrategy.isActionAuthorized(this, action);
-		}
-		return true;
+		return getPage().getPageMap().continueToOriginalDestination();
 	}
-
+	
 	/**
 	 * Registers a debug feedback message for this component
 	 * 
@@ -1262,6 +1255,25 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Authorizes an action for a component.
+	 * 
+	 * @param action
+	 *            The action to authorize
+	 * @return True if the action is allowed
+	 * @throws AuthorizationException
+	 *             Can be thrown by implementation if action is unauthorized
+	 */
+	public final boolean isActionAuthorized(Action action)
+	{
+		IAuthorizationStrategy authorizationStrategy = getSession().getAuthorizationStrategy();
+		if (authorizationStrategy != null)
+		{
+			return authorizationStrategy.isActionAuthorized(this, action);
+		}
+		return true;
+	}
+
+	/**
 	 * Returns true if this component is an ancestor of the given component
 	 * 
 	 * @param component
@@ -1410,6 +1422,24 @@ public abstract class Component implements Serializable
 		return getPageFactory().newPage(c, parameters);
 	}
 
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's url is saved for future use by method
+	 * continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current url at some later time; otherwise just use
+	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
+	 * 
+	 * @param page
+	 *            The sign in page
+	 *            
+	 * @see Component#continueToOriginalDestination()
+	 */
+	public final void redirectToInterceptPage(final Page page)
+	{
+		getPage().getPageMap().redirectToInterceptPage(page);
+	}
+	
 	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.

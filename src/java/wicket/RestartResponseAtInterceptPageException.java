@@ -21,10 +21,11 @@ package wicket;
  * Causes Wicket to interrupt current request processing and immediately
  * redirect to an intercept page.
  * <p>
- * Similar to calling session.redirectToInteceptPage(Page) with the difference
+ * Similar to calling redirectToInteceptPage(Page) with the difference
  * that this exception will interrupt processing of the current request.
  * 
  * @see wicket.Session#redirectToInterceptPage(Page)
+ * @see wicket.Component#redirectToInterceptPage(Page)
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke
