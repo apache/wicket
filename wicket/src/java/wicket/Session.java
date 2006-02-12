@@ -291,7 +291,7 @@ public abstract class Session implements Serializable
 	{
 		if (clientInfo == null)
 		{
-			this.clientInfo = getRequestCycle().newClientInfo();
+			this.clientInfo = RequestCycle.get().newClientInfo();
 		}
 		return clientInfo;
 	}
@@ -426,16 +426,6 @@ public abstract class Session implements Serializable
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @return The currently active request cycle for this session
-	 */
-	public final RequestCycle getRequestCycle()
-	{
-		return RequestCycle.get();
 	}
 
 	/**
