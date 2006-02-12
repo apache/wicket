@@ -24,7 +24,7 @@ package wicket;
  * Similar to calling redirectToInteceptPage(Page) with the difference
  * that this exception will interrupt processing of the current request.
  * 
- * @see wicket.Session#redirectToInterceptPage(Page)
+ * @see wicket.PageMap#redirectToInterceptPage(Page)
  * @see wicket.Component#redirectToInterceptPage(Page)
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -46,7 +46,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		{
 			throw new IllegalStateException("Argument interceptPage cannot be null");
 		}
-		Session.get().redirectToInterceptPage(interceptPage);
+		PageMap.get().redirectToInterceptPage(interceptPage);
 	}
 
 	/**
@@ -61,6 +61,6 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		{
 			throw new IllegalStateException("Argument pageClass cannot be null");
 		}
-		Session.get().redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
+		PageMap.get().redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
 	}
 }

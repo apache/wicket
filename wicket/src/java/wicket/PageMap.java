@@ -164,6 +164,14 @@ public final class PageMap implements Serializable
 	{
 		return Session.get().pageMapForName(pageMapName, true);
 	}
+	
+	/**
+	 * @return The current page map for the current session
+	 */
+	public static PageMap get()
+	{
+		return Session.get().getCurrentPageMap();		
+	}
 
 	/**
 	 * Constructor
