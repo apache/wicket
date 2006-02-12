@@ -692,6 +692,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Mark this page as dirty in the session
 	 */
 	public final void dirty()
 	{
