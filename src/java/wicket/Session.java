@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.104 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -775,14 +775,11 @@ public abstract class Session implements Serializable
 
 	/**
 	 * @param page
+	 *            The page to add to dirty objects list
 	 */
 	void dirtyPage(final Page page)
 	{
 		List dirtyObjects = getDirtyObjectsList();
-
-		// FIXME General: Doesn't this mean that dirtyObjects is really a Set?
-		// Since it is threadlocal and can be cleared at end of request, there's
-		// no reason to worry about memory here.
 		if (!dirtyObjects.contains(page))
 		{
 			dirtyObjects.add(page);
@@ -791,11 +788,11 @@ public abstract class Session implements Serializable
 
 	/**
 	 * @param map
+	 *            The page map to add to dirty objects list
 	 */
 	void dirtyPageMap(final PageMap map)
 	{
 		List dirtyObjects = getDirtyObjectsList();
-
 		if (!dirtyObjects.contains(map))
 		{
 			dirtyObjects.add(map);
@@ -833,12 +830,12 @@ public abstract class Session implements Serializable
 	 */
 	private List getDirtyObjectsList()
 	{
-		List lst = (List)dirtyObjects.get();
-		if (lst == null)
+		List list = (List)dirtyObjects.get();
+		if (list == null)
 		{
-			lst = new ArrayList(4);
-			dirtyObjects.set(lst);
+			list = new ArrayList(4);
+			dirtyObjects.set(list);
 		}
-		return lst;
+		return list;
 	}
 }
