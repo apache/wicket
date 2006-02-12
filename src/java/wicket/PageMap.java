@@ -463,12 +463,9 @@ public final class PageMap implements Serializable
 			// mark itself as clean to prevent replication, but the reverse is
 			// probably not desirable (pages marking themselves dirty manually)
 			// We ought to think about this a bit and consider whether this
-			// could
-			// be tied in with version management. It's only when a page's
-			// version
-			// changes that it should be considered dirty, because then some
-			// kind
-			// of state changed. Right? - Jonathan
+			// could be tied in with version management. It's only when a page's
+			// version changes that it should be considered dirty, because then
+			// some kind of state changed. Right? - Jonathan
 			page.dirty();
 
 			// Get the version of the page requested from the page
