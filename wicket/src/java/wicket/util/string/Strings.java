@@ -719,13 +719,13 @@ public final class Strings
 
 	/**
 	 * Converts a String to multiline HTML markup by replacing newlines with
-	 * line break entities (&lt;br /&gt;) and multiple occurrences of newline
+	 * line break entities (&lt;br/&gt;) and multiple occurrences of newline
 	 * with paragraph break entities (&lt;p&gt;).
 	 * 
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br /&gt; and all multiple occurrences of newline replaced
+	 *         &lt;br/&gt; and all multiple occurrences of newline replaced
 	 *         with &lt;p&gt;.
 	 */
 	public static String toMultilineMarkup(final String s)
