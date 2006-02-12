@@ -1,3 +1,21 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.ajax.builtin;
 
 import wicket.ajax.AjaxRequestTarget;
@@ -10,7 +28,9 @@ import wicket.model.PropertyModel;
 import wicket.version.undo.Change;
 
 /**
- * Ajax links demo
+ * Ajax links demo.
+ * 
+ * @author ivaynberg
  */
 public class LinksPage extends BasePage
 {
@@ -26,7 +46,8 @@ public class LinksPage extends BasePage
 	}
 
 	/**
-	 * @param counter1 New value for counter1
+	 * @param counter1
+	 *            New value for counter1
 	 */
 	public void setCounter1(int counter1)
 	{
@@ -42,7 +63,8 @@ public class LinksPage extends BasePage
 	}
 
 	/**
-	 * @param counter2 New value for counter2
+	 * @param counter2
+	 *            New value for counter2
 	 */
 	public void setCounter2(int counter2)
 	{
@@ -54,7 +76,6 @@ public class LinksPage extends BasePage
 	 */
 	public LinksPage()
 	{
-
 		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
 		add(c1.add(MarkupIdSetter.INSTANCE));
 
@@ -67,14 +88,15 @@ public class LinksPage extends BasePage
 			protected void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
-				addStateChange(new Change() {
+				addStateChange(new Change()
+				{
 
 					public void undo()
 					{
 						// TODO Auto-generated method stub
-						
+
 					}
-					
+
 				});
 				target.addComponent(c1);
 			}
@@ -94,17 +116,16 @@ public class LinksPage extends BasePage
 			}
 
 		});
-		
-		add(new Link("c3-link") {
+
+		add(new Link("c3-link")
+		{
 
 			public void onClick()
 			{
 				System.out.println("hello");
-				
+
 			}
-			
+
 		});
-
 	}
-
 }

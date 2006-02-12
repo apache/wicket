@@ -1,3 +1,21 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.ajax.builtin;
 
 import wicket.ajax.AjaxRequestTarget;
@@ -24,7 +42,8 @@ public class EffectsPage extends BasePage
 	}
 
 	/**
-	 * @param counter1 New value for counter1
+	 * @param counter1
+	 *            New value for counter1
 	 */
 	public void setCounter1(int counter1)
 	{
@@ -40,7 +59,8 @@ public class EffectsPage extends BasePage
 	}
 
 	/**
-	 * @param counter2 New value for counter2
+	 * @param counter2
+	 *            New value for counter2
 	 */
 	public void setCounter2(int counter2)
 	{
@@ -52,7 +72,6 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
-
 		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
 		add(c1.add(MarkupIdSetter.INSTANCE));
 
@@ -66,7 +85,7 @@ public class EffectsPage extends BasePage
 			{
 				counter1++;
 				target.addComponent(c1);
-				target.addJavascript("new Effect.Shake($('"+c1.getMarkupId()+"'));");
+				target.addJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
 			}
 
 		});
@@ -80,12 +99,10 @@ public class EffectsPage extends BasePage
 				if (target != null)
 				{
 					target.addComponent(c2);
-					target.addJavascript("new Effect.Highlight($('"+c2.getMarkupId()+"'));");
+					target.addJavascript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
 				}
 			}
 
 		});
-
 	}
-
 }

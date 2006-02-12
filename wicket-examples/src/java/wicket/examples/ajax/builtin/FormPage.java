@@ -1,3 +1,21 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.ajax.builtin;
 
 import wicket.ajax.form.AjaxFormValidatingBehavior;
@@ -15,11 +33,9 @@ import wicket.model.CompoundPropertyModel;
  * onblur javascript event handler in every form input.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class FormPage extends BasePage
 {
-
 	private Bean bean = new Bean();
 
 	/**
@@ -58,30 +74,51 @@ public class FormPage extends BasePage
 
 	}
 
+	/** simple java bean. */
 	public static class Bean
 	{
 		private String name, email;
 
+		/**
+		 * Gets email.
+		 * 
+		 * @return email
+		 */
 		public String getEmail()
 		{
 			return email;
 		}
 
+		/**
+		 * Sets email.
+		 * 
+		 * @param email
+		 *            email
+		 */
 		public void setEmail(String email)
 		{
 			this.email = email;
 		}
 
+		/**
+		 * Gets name.
+		 * 
+		 * @return name
+		 */
 		public String getName()
 		{
 			return name;
 		}
 
+		/**
+		 * Sets name.
+		 * 
+		 * @param name
+		 *            name
+		 */
 		public void setName(String name)
 		{
 			this.name = name;
 		}
 	}
-
-
 }
