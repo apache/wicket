@@ -309,6 +309,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Mark this page as dirty in the session
+	 */
+	public final void dirty()
+	{
+		Session.get().dirtyPage(this);
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
 	public final void doRender()
@@ -661,14 +669,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Mark this page as dirty in the session
-	 */
-	public final void dirty()
-	{
-		Session.get().dirtyPage(this);
 	}
 
 	/**
