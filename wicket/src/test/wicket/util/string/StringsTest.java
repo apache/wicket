@@ -404,12 +404,12 @@ public final class StringsTest extends TestCase
 		assertNull(Strings.toMultilineMarkup(null));
 		assertEquals("<p></p>", Strings.toMultilineMarkup(""));
 		assertEquals("<p></p><p></p>", Strings.toMultilineMarkup("\n\n"));
-		assertEquals("<p><br /></p>", Strings.toMultilineMarkup("\n"));
+		assertEquals("<p><br/></p>", Strings.toMultilineMarkup("\n"));
 		assertEquals("<p>abc</p>", Strings.toMultilineMarkup("abc"));
-		assertEquals("<p>abc<br /></p>", Strings.toMultilineMarkup("abc\n"));
-		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\ndef"));
-		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\r\ndef"));
-		assertEquals("<p>abc<br />def<br />ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi"));
+		assertEquals("<p>abc<br/></p>", Strings.toMultilineMarkup("abc\n"));
+		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\ndef"));
+		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef"));
+		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi"));
 
 		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
 				.toMultilineMarkup("abc\n\ndef\n\nghi"));
