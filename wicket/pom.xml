@@ -14,6 +14,14 @@
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
   </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   
   <issueManagement>
     <url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
@@ -250,9 +258,9 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.12</version>
       <type>jar</type>
-      <scope>runtime</scope>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
@@ -291,7 +299,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-            <descriptor>src/main/assembly/bin.xml</descriptor>
+            <descriptor>src/assembly/bin.xml</descriptor>
             <finalName>${artifactId}-${version}</finalName>
             <outputDirectory>target/distributions</outputDirectory>
             <workDirectory>target/assembly/work</workDirectory>
@@ -327,6 +335,15 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>surefire-report-maven-plugin</artifactId>
       </plugin>
+      <!-- plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changes-maven-plugin</artifactId>
+        <version>2.0-beta-1</version>
+        <configuration>
+          <xmlPath>xdocs</xmlPath>
+          <link_template>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</link_template>
+        </configuration>
+      </plugin -->
     </plugins>
   </build>
   <reporting>
@@ -334,6 +351,19 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependencies</report>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+              <!-- report>cim</report -->
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -343,7 +373,23 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>surefire-report-maven-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!-- plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changes-maven-plugin</artifactId>
+        <version>2.0-beta-1</version>
+        <configuration>
+          <xmlPath>xdocs/changes.xml</xmlPath>
+          <link_template>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</link_template>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin -->
+      <!--  plugin>
       	<groupId>org.apache.maven.plugins</groupId>
       	<artifactId>maven-clover-plugin</artifactId>
       	<configuration>
@@ -351,7 +397,7 @@
       	  <cloverDatabase>${project.build.directory}/clover/clover.db</cloverDatabase>
       	  <licenseFile>lib/clover.license</licenseFile>
       	</configuration>
-      </plugin>
+      </plugin -->
     </plugins>
   </reporting>
 </project>
