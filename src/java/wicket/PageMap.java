@@ -26,8 +26,6 @@ import java.util.Stack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.IRequestCycleProcessor;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
@@ -539,25 +537,27 @@ public final class PageMap implements Serializable
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's url is saved for future use by method
-	 * continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
+	 * current request's URL is saved exactly as it was requested for future use
+	 * by continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current URL at some later time; otherwise just use
+	 * setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
 	 * @param page
-	 *            The sign in page
+	 *            The page to temporarily redirect to
 	 */
 	final void redirectToInterceptPage(final Page page)
 	{
+		// Get the request cycle
 		final RequestCycle cycle = RequestCycle.get();
-		IRequestCycleProcessor processor = cycle.getProcessor();
-		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 
-		// FIXME General: This conflicts with the use of IRequestCodingStrategy.
-		// We should get rid of encodeURL in favor of IRequestCodingStrategy
-		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
+		// The intercept continuation URL should be saved exactly as the
+		// original request specified.
+		interceptContinuationURL = cycle.getRequest().getURL();
+
+		// Page map is dirty
 		session.dirtyPageMap(this);
+
+		// Redirect to the page
 		cycle.setRedirect(true);
 		cycle.setResponsePage(page);
 	}
