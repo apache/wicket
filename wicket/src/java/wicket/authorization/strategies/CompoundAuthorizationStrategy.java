@@ -54,7 +54,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 */
 	public final boolean isInstantiationAuthorized(Class componentClass)
 	{
-		for (int i = 0; i < strategies.size(); i++)
+		int size = strategies.size();
+		for (int i = 0; i < size; i++)
 		{
 			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
 			if (!strategy.isInstantiationAuthorized(componentClass))
@@ -71,7 +72,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 */
 	public final boolean isActionAuthorized(Component component, Action action)
 	{
-		for (int i = 0; i < strategies.size(); i++)
+		int size = strategies.size();
+		for (int i = 0; i < size; i++)
 		{
 			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
 			if (!strategy.isActionAuthorized(component, action))
