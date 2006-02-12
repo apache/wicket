@@ -176,7 +176,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				}
 
 				ResourceReference ref = (ResourceReference)o;
-				String url = getPage().urlFor(ref);
+				String url = urlFor(ref);
 				return url;
 			}
 		};
