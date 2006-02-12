@@ -71,10 +71,10 @@ import wicket.util.value.ValueMap;
 public class AttributeModifier extends AbstractBehavior implements Serializable
 {
 	/** Marker value to have an attribute without a value added. */
-	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
+	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";
 
 	/** Marker value to have an attribute without a value removed. */
-	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
+	public static final String VALUELESS_ATTRIBUTE_REMOVE = "VA_REMOVE";
 	
 	private static final long serialVersionUID = 1L;
 
