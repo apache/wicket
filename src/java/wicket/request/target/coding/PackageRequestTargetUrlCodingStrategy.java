@@ -67,7 +67,13 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(1, ix);
+		
+		if (remainder.startsWith("/")) {
+			remainder=remainder.substring(1);
+			ix--;
+		}
+		
+		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
 		PageParameters parameters = decodePageParameters(parametersFragment);
