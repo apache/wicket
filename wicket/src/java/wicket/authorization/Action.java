@@ -19,6 +19,8 @@ package wicket.authorization;
 
 import java.io.Serializable;
 
+import wicket.util.string.Strings;
+
 /**
  * A class for constructing singleton constants that represent a given component
  * action that needs to be authorized. The Wicket core framework defines
@@ -48,9 +50,9 @@ public class Action implements Serializable
 	 */
 	public Action(final String name)
 	{
-		if (name == null)
+		if (Strings.isEmpty(name))
 		{
-			throw new IllegalArgumentException("Name argument may not be null");
+			throw new IllegalArgumentException("Name argument may not be null, whitespace or the empty string");
 		}
 
 		this.name = name;

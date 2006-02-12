@@ -50,13 +50,7 @@ final class ActionPermissions implements Serializable
 	 *            The roles
 	 */
 	public final void authorize(final Action action, final Roles rolesToAdd)
-	{
-		// FIXME Documentation: What is this magic looking code here for?
-		rolesForAction.put(new Action("")
-		{
-			private static final long serialVersionUID = 1L;
-		}, null);
-		
+	{		
 		if (action == null)
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");
