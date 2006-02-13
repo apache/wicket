@@ -48,10 +48,14 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @return AuthenticatedWebSession subclass to use in this authenticated web
-	 *         application.
+	 * @param roles
+	 *            The roles to check
+	 * @return True if the authenticated user has any of the given roles
 	 */
-	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
+	public boolean hasAnyRole(final Roles roles)
+	{
+		return AuthenticatedWebSession.get().getRoles().hasAnyRole(roles);
+	}
 
 	/**
 	 * Get session factory
@@ -80,12 +84,8 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @param roles
-	 *            The roles to check
-	 * @return True if the authenticated user has any of the given roles
+	 * @return AuthenticatedWebSession subclass to use in this authenticated web
+	 *         application.
 	 */
-	public boolean hasAnyRole(final Roles roles)
-	{
-		return AuthenticatedWebSession.get().getRoles().hasAnyRole(roles);
-	}
+	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
 }
