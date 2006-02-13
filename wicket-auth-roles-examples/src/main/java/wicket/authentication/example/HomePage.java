@@ -23,6 +23,7 @@ import wicket.markup.html.WebPage;
 
 /**
  * Simple home page.
+ * 
  * @author Jonathan Locke
  */
 public class HomePage extends WebPage
