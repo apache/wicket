@@ -34,7 +34,11 @@ package wicket;
  */
 public interface IResourceListener extends IRequestListener
 {
-    /**
+	/** Resource listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+			IResourceListener.class);
+
+	/**
      * Called when a resource is requested.
      */
     void onResourceRequested();
