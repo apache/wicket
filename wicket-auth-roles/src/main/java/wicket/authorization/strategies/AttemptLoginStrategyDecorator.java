@@ -15,7 +15,7 @@ import wicket.authorization.IAuthorizationStrategy;
  */
 public abstract class AttemptLoginStrategyDecorator implements IAuthorizationStrategy
 {
-	private IAuthorizationStrategy delegate;
+	private final IAuthorizationStrategy delegate;
 
 	/**
 	 * Constructor
