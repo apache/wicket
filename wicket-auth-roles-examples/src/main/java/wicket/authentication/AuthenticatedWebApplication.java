@@ -55,6 +55,16 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
+	 * @param roles
+	 *            The roles to check
+	 * @return True if the authenticated user has any of the given roles
+	 */
+	public final boolean hasAnyRole(final Roles roles)
+	{
+		return AuthenticatedWebSession.get().getRoles().hasAnyRole(roles);
+	}
+
+	/**
 	 * Called when an unauthorized component instantiation is about to take
 	 * place (but before it happens).
 	 * 
@@ -62,7 +72,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 *            The partially constructed component (only the id is guaranteed
 	 *            to be valid).
 	 */
-	public void onUnauthorizedInstantiation(final Component component)
+	public final void onUnauthorizedInstantiation(final Component component)
 	{
 		// If there is a sign in page class declared, and the unauthorized
 		// component is a page, but it's not the sign in page
@@ -83,30 +93,6 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			// The component was not a page, so throw an exception
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
-	}
-
-	/**
-	 * Called when an AUTHENTICATED user tries to navigate to a page that they
-	 * are not authorized to access. You might want to override this to navigate
-	 * to some explanatory page or to the application's home page.
-	 * 
-	 * @param page
-	 *            The page
-	 */
-	protected void onUnauthorizedPage(final Page page)
-	{
-		// The component was not a page, so throw an exception
-		throw new UnauthorizedInstantiationException(page.getClass());
-	}
-
-	/**
-	 * @param roles
-	 *            The roles to check
-	 * @return True if the authenticated user has any of the given roles
-	 */
-	public boolean hasAnyRole(final Roles roles)
-	{
-		return AuthenticatedWebSession.get().getRoles().hasAnyRole(roles);
 	}
 
 	/**
@@ -140,4 +126,18 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 *         application.
 	 */
 	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
+
+	/**
+	 * Called when an AUTHENTICATED user tries to navigate to a page that they
+	 * are not authorized to access. You might want to override this to navigate
+	 * to some explanatory page or to the application's home page.
+	 * 
+	 * @param page
+	 *            The page
+	 */
+	protected void onUnauthorizedPage(final Page page)
+	{
+		// The component was not a page, so throw an exception
+		throw new UnauthorizedInstantiationException(page.getClass());
+	}
 }
