@@ -80,9 +80,17 @@ public class RequestListenerInterface
 	/**
 	 * @return The method for this request listener interface
 	 */
-	public Method getMethod()
+	public final Method getMethod()
 	{
 		return method;
+	}
+
+	/**
+	 * @return The name of this request listener interface
+	 */
+	public final String getName()
+	{
+		return name;
 	}
 
 	/**
@@ -132,14 +140,6 @@ public class RequestListenerInterface
 		}
 	}
 
-	/**
-	 * @return The name of this request listener interface
-	 */
-	public String getName()
-	{
-		return name;
-	}
-	
 	/**
 	 * @see java.lang.Object#toString()
 	 */
