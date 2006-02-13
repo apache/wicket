@@ -25,7 +25,8 @@ import wicket.authorization.strategies.role.Roles;
 
 /**
  * Strategy that checks the
- * {@link wicket.authorization.strategies.role.annotations.AuthorizeInstantiation} annotation.
+ * {@link wicket.authorization.strategies.role.annotations.AuthorizeInstantiation}
+ * annotation.
  * 
  * @author Eelco Hillenius
  */
@@ -73,38 +74,52 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 	 *      wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(Component component, Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
-		// check for a single action
-		final AuthorizeAction authorizedAction = component.getClass().getAnnotation(AuthorizeAction.class);
-		if (authorizedAction != null)
+		// Check for a single action
+		final AuthorizeAction authorizeAction = component.getClass().getAnnotation(
+				AuthorizeAction.class);
+		if (authorizeAction != null)
 		{
-			if (authorizedAction.action().equals(action.toString()))
+			if (!check(action, authorizeAction))
 			{
-				if (!hasAny(new Roles(authorizedAction.roles())))
+				return false;
+			}
+		}
+
+		// Check for multiple actions
+		final AuthorizeActions authorizedActions = component.getClass().getAnnotation(
+				AuthorizeActions.class);
+		if (authorizedActions != null)
+		{
+			for (final AuthorizeAction a : authorizedActions.actions())
+			{
+				if (!check(action, a))
 				{
 					return false;
 				}
 			}
 		}
 
-		// check for multiple actions
-		AuthorizeActions authorizedActions = component.getClass()
-				.getAnnotation(AuthorizeActions.class);
-		if (authorizedActions != null)
+		return true;
+	}
+
+	/**
+	 * @param action
+	 *            The action to check
+	 * @param authorizedAction
+	 *            The annotations information
+	 * @return False if the action is not authorized
+	 */
+	private boolean check(Action action, final AuthorizeAction authorizedAction)
+	{
+		if (authorizedAction.action().equals(action.toString()))
 		{
-			for (AuthorizeAction a : authorizedActions.actions())
+			if (!hasAny(new Roles(authorizedAction.roles())))
 			{
-				if (a.action().equals(action.toString()))
-				{
-					if (!hasAny(new Roles(a.roles())))
-					{
-						return false;
-					}
-				}
+				return false;
 			}
 		}
-
 		return true;
 	}
 }
