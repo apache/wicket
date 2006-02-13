@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.14 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,6 +32,9 @@ import java.util.Map;
  */
 public abstract class Request
 {
+	/** Any Page decoded for this request */
+	private Page page;
+
 	/**
 	 * Construct.
 	 */
@@ -57,6 +60,14 @@ public abstract class Request
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
+
+	/**
+	 * @return Any Page for this request
+	 */
+	public Page getPage()
+	{
+		return page;
+	}
 
 	/**
 	 * Gets a given (query) parameter by name.
@@ -103,4 +114,15 @@ public abstract class Request
 	 * @return The absolute request URL for local use
 	 */
 	public abstract String getURL();
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param page
+	 *            The Page for this request
+	 */
+	public void setPage(final Page page)
+	{
+		this.page = page;
+	}
 }

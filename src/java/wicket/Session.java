@@ -139,12 +139,8 @@ public abstract class Session implements Serializable
 	/** The converter instance. */
 	private transient IConverter converter;
 
-	/** The current pagemap for this request */
-	private transient PageMap currentPageMap;
-
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
-
 
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
@@ -334,12 +330,12 @@ public abstract class Session implements Serializable
 		}
 
 		// Get page map by name, creating the default page map automatically
-		currentPageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
-		if (currentPageMap != null)
+		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
+		if (pageMap != null)
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			return currentPageMap.get(Integer.parseInt(id), versionNumber);
+			return pageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
 	}
@@ -784,14 +780,6 @@ public abstract class Session implements Serializable
 					.newConverter(getLocale());
 		}
 		return converter;
-	}
-
-	/**
-	 * @return The current pagemap
-	 */
-	PageMap getCurrentPageMap()
-	{
-		return currentPageMap == null ? getDefaultPageMap() : currentPageMap;
 	}
 
 	/**

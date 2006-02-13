@@ -146,6 +146,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		// Does page exist?
 		if (page != null)
 		{
+			// Set page on request
+			requestCycle.getRequest().setPage(page);
+			
 			// see whether this resolves to a component call or just the page
 			String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
