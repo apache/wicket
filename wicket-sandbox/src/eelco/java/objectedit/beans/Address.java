@@ -105,7 +105,7 @@ public class Address implements Serializable
 	 */
 	public String toString()
 	{
-		return "Address{address=" + address + ",postcode=" + postcode +
-			",city=" + city + ",country=" + country + "}";
+		return "[Address address=" + address + ", postcode=" + postcode +
+			", city=" + city + ", country=" + country + "]";
 	}
 }

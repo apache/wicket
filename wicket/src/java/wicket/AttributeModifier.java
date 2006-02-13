@@ -275,8 +275,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 */
 	public String toString()
 	{
-		return "AttributeModifier{attribute=" + attribute + ",enabled=" + isEnabled() + "pattern="
-				+ pattern + ",replacementModel=" + replaceModel + "}";
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled() + ", pattern="
+				+ pattern + ", replacementModel=" + replaceModel + "]";
 	}
 
 	/**
