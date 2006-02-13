@@ -26,7 +26,6 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
-import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.MarkupException;
@@ -34,11 +33,8 @@ import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.BehaviorRequestTarget;
 import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ComponentResourceRequestTarget;
 import wicket.request.target.ExpiredPageClassRequestTarget;
-import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.PageRequestTarget;
 import wicket.request.target.RedirectPageRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
@@ -52,6 +48,7 @@ import wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg
+ * @author Jonathan Locke
  */
 public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
@@ -205,20 +202,20 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			}
 			
 			// Get component
-			final String componentPart = Strings.afterFirstPathComponent(componentPath,
+			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
-			if (Strings.isEmpty(componentPart))
+			if (Strings.isEmpty(pageRelativeComponentPath))
 			{
-				// We have an interface that is not redirect, but no
+				// We have an interface that is not a redirect, but no
 				// component... that must be wrong
 				throw new WicketRuntimeException("When trying to call " + listener
 						+ ", a component must be provided");
 			}
-			final Component component = page.get(componentPart);
+			final Component component = page.get(pageRelativeComponentPath);
 			if (component == null)
 			{
 				throw new WicketRuntimeException(
-						"Calling listener methods on non-existing component: " + componentPath);
+						"Attempt to call listener method on non-existant component: " + componentPath);
 			}
 			if (!component.isVisible())
 			{
@@ -227,17 +224,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 								+ componentPath);
 			}
 			
-			// Call appropriate interface
-			if (listener == Resource.RESOURCE_LISTENER_INTERFACE)
-			{
-				return new ComponentResourceRequestTarget(page, component, listener);
-			}
-			else if (listener == Page.BEHAVIOR_LISTENER_INTERFACE)
-			{
-				return new BehaviorRequestTarget(page, component, listener, requestParameters);
-			}
-			return new ListenerInterfaceRequestTarget(page, component, listener,
-					requestParameters);
+			// Ask the request listener interface object to create a request target
+			return listener.newRequestTarget(page, component, listener, requestParameters);
 		}
 	}
 

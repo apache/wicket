@@ -34,6 +34,7 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.request.RequestParameters;
+import wicket.request.target.BehaviorRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
@@ -139,11 +140,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Redirect listener interface */
 	public static final RequestListenerInterface REDIRECT_LISTENER_INTERFACE = new RequestListenerInterface(
 			IRedirectListener.class);
-	
+
 	/** Behavior listener interface */
 	public static final RequestListenerInterface BEHAVIOR_LISTENER_INTERFACE = new RequestListenerInterface(
-			IBehaviorListener.class);
-	
+			IBehaviorListener.class)
+	{
+		public IRequestTarget newRequestTarget(Page page, Component component,
+				RequestListenerInterface listener, RequestParameters requestParameters)
+		{
+			return new BehaviorRequestTarget(page, component, listener, requestParameters);
+		}
+	};
+
 	private static final long serialVersionUID = 1L;
 
 	/** True if this page is currently rendering. */
@@ -1184,7 +1192,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(REDIRECT_LISTENER_INTERFACE);
-		
+
 		// Allow XmlHttpRequest calls
 		RequestCycle.registerRequestListenerInterface(BEHAVIOR_LISTENER_INTERFACE);
 	}
