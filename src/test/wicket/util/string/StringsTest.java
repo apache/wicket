@@ -473,7 +473,7 @@ public final class StringsTest extends TestCase
 	}
 
 	/**
-	 * Converts an array of strings to a String. {"a", "b"} becomes: "{a,b}"
+	 * Converts an array of strings to a String. ["a", "b"] becomes: "[a,b]"
 	 * 
 	 * @param arrayOfStrings
 	 *            the array to convert
@@ -481,7 +481,7 @@ public final class StringsTest extends TestCase
 	 */
 	private String stringValue(String[] arrayOfStrings)
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer("{");
+		AppendingStringBuffer sb = new AppendingStringBuffer("[");
 		String komma = "";
 		for (int i = 0; i < arrayOfStrings.length; i++)
 		{
@@ -489,7 +489,7 @@ public final class StringsTest extends TestCase
 			sb.append(arrayOfStrings[i]);
 			komma = ",";
 		}
-		sb.append("}");
+		sb.append("]");
 		return sb.toString();
 	}
 }

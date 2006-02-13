@@ -137,6 +137,6 @@ public class StringRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "StringRequestTarget@" + hashCode() + "{" + string + "}";
+		return "[StringRequestTarget@" + hashCode() + " " + string + "]";
 	}
 }

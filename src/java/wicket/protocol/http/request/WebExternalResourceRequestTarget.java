@@ -167,6 +167,6 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "WebExternalResourceRequestTarget@" + hashCode() + "{" + url + "}";
+		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + url + "]";
 	}
 }

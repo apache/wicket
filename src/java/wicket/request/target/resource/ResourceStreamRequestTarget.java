@@ -177,7 +177,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "ResourceStreamRequestTarget@" + hashCode() + "{resourceStream=" + resourceStream
-				+ ",responseType=" + responseType + "}";
+		return "[ResourceStreamRequestTarget@" + hashCode() + " resourceStream=" + resourceStream
+				+ ",responseType=" + responseType + "]";
 	}
 }
