@@ -28,6 +28,9 @@ import junit.framework.TestCase;
  */
 public class AttributeAppenderTest extends TestCase
 {
+	/**
+	 * Test
+	 */
 	public void testNewValue1() {
 		AttributeAppender appender = new AttributeAppender("", null, " ");
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
@@ -35,6 +38,9 @@ public class AttributeAppenderTest extends TestCase
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
 	}
 
+	/**
+	 * Test
+	 */
 	public void testNewValue2() {
 		AttributeAppender appender = new AttributeAppender("", null, ";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
