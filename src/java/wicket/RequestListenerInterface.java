@@ -19,6 +19,9 @@ package wicket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import wicket.authorization.UnauthorizedActionException;
 import wicket.request.RequestParameters;
@@ -32,6 +35,23 @@ import wicket.util.lang.Classes;
  */
 public class RequestListenerInterface
 {
+	/** Map from name to request listener interface */
+	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
+
+	/**
+	 * Looks up a request interface listener by name.
+	 * 
+	 * @param interfaceName
+	 *            The interface name
+	 * @return The RequestListenerInterface object, or null if none is found
+	 * 
+	 */
+	public static final RequestListenerInterface forName(
+			final String interfaceName)
+	{
+		return (RequestListenerInterface)interfaces.get(interfaceName);
+	}
+
 	/** The listener interface method */
 	private Method method;
 
@@ -80,7 +100,7 @@ public class RequestListenerInterface
 		this.name = Classes.name(listenerInterfaceClass);
 		
 		// Register this listener interface
-		RequestCycle.registerRequestListenerInterface(this);
+		registerRequestListenerInterface(this);
 	}
 
 	/**
@@ -171,6 +191,40 @@ public class RequestListenerInterface
 	 */
 	public String toString()
 	{
-		return "RequestListenerInterface{name=" + name + "}";
+		return "RequestListenerInterface{name=" + name + ",method=" + method + "}";
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * In previous versions of Wicket, request listeners were manually
+	 * registered by calling this method. Now there is a first class
+	 * RequestListenerInterface object which should be constructed as a constant
+	 * member of the interface to enable automatic interface registration.
+	 * <p>
+	 * Adds a request listener interface to the map of interfaces that can be
+	 * invoked by outsiders.
+	 * 
+	 * @param requestListenerInterface
+	 *            The request listener interface object
+	 */
+	private final void registerRequestListenerInterface(
+			final RequestListenerInterface requestListenerInterface)
+	{
+		// Check that a different interface method with the same name has not
+		// already been registered
+		final RequestListenerInterface existingInterface = RequestListenerInterface.forName(requestListenerInterface
+				.getName());
+		if (existingInterface != null
+				&& existingInterface.getMethod() != requestListenerInterface.getMethod())
+		{
+			throw new IllegalStateException("Cannot register listener interface "
+					+ requestListenerInterface
+					+ " because it conflicts with the already registered interface "
+					+ existingInterface);
+		}
+	
+		// Save this interface method by the non-qualified class name
+		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 	}
 }

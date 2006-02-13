@@ -194,8 +194,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		else
 		{
 			// Get the listener interface we need to call
-			final RequestListenerInterface listener = RequestCycle
-					.requestListenerInterfaceForName(interfaceName);
+			final RequestListenerInterface listener = RequestListenerInterface
+					.forName(interfaceName);
 			if (listener == null)
 			{
 				throw new WicketRuntimeException(
