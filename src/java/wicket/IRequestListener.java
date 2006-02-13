@@ -22,12 +22,14 @@ import java.io.Serializable;
 /**
  * Base interface for all interfaces that listen for requests from the client
  * browser. All sub-interfaces of this interface must have a single method which
- * takes no arguments. New listener interfaces must be registered by calling
- * {@link RequestListenerInterface#registerRequestListenerInterface(RequestListenerInterface)}.
- * The best way to do this is to create a public static final constant field for
- * your request listener of type RequestListenerInterface. Simply using the
- * interface will then cause the class to be loaded and the interface
- * registered.
+ * takes no arguments.
+ * <p>
+ * New listener interfaces must be registered with Wicket by constructing a
+ * {@link RequestListenerInterface} object for the given interface class. The
+ * best way to do this is to create a public static final constant field in your
+ * request listener interface. Doing this will cause the interface to
+ * automatically register whenever it is used. For example, see
+ * {@link wicket.IRedirectListener#INTERFACE}.
  * 
  * @author Jonathan Locke
  */
