@@ -17,9 +17,8 @@
  */
 package wicket.request;
 
-import java.lang.reflect.Method;
-
 import wicket.Component;
+import wicket.RequestListenerInterface;
 
 /**
  * Target that denotes a page instance and a call to a component on that page
@@ -41,7 +40,7 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 	 * 
 	 * @return the listener method
 	 */
-	Method getListenerMethod();
+	RequestListenerInterface getRequestListenerInterface();
 
 	/**
 	 * Get the request parameters

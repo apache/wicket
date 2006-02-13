@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -179,8 +178,8 @@ public abstract class RequestCycle
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
-	/** Map from request interface Class to Method. */
-	private static final Map listenerRequestInterfaceMethods = new HashMap();
+	/** Map from name to request listener interface */
+	private static final Map requestListenerInterfaces = new HashMap();
 
 	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;
@@ -261,44 +260,17 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Adds an interface to the map of interfaces that can be invoked by
-	 * outsiders. The interface must extend IRequestListener
+	 * Adds a request listener interface to the map of interfaces that can be
+	 * invoked by outsiders.
 	 * 
-	 * @param clazz
-	 *            The interface class, which must extend IRequestListener.
+	 * @param requestListenerInterface
+	 *            The request listener interface object
 	 */
-	public static void registerRequestListenerInterface(final Class clazz)
+	public static void registerRequestListenerInterface(
+			final RequestListenerInterface requestListenerInterface)
 	{
-		// Ensure that i extends IRequestListener
-		if (!IRequestListener.class.isAssignableFrom(clazz))
-		{
-			throw new IllegalArgumentException("Class " + clazz + " must extend IRequestListener");
-		}
-
-		// Get interface methods
-		final Method[] methods = clazz.getMethods();
-
-		// If there is only one method
-		if (methods.length == 1)
-		{
-			// and that method takes no parameters
-			if (methods[0].getParameterTypes().length == 0)
-			{
-				// Save this interface method by the non-qualified class name
-				listenerRequestInterfaceMethods.put(Classes.name(clazz), methods[0]);
-			}
-			else
-			{
-				throw new IllegalArgumentException("Method in interface " + clazz
-						+ " cannot have parameters");
-			}
-		}
-		else
-		{
-			throw new IllegalArgumentException("Interface " + clazz + " can have only one method");
-		}
+		// Save this interface method by the non-qualified class name
+		requestListenerInterfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 	}
 
 	/**
@@ -387,16 +359,16 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Looks up an request interface method by name.
+	 * Looks up a request interface listener by name.
 	 * 
 	 * @param interfaceName
 	 *            The interface name
-	 * @return The method, null of nothing is found
+	 * @return The RequestListenerInterface object, or null if none is found
 	 * 
 	 */
-	public final Method getRequestInterfaceMethod(final String interfaceName)
+	public static final RequestListenerInterface requestListenerInterfaceForName(final String interfaceName)
 	{
-		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
+		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
 	}
 
 	/**
@@ -432,7 +404,7 @@ public abstract class RequestCycle
 		{
 			return ((IPageRequestTarget)target).getPage();
 		}
-		else if(target instanceof BookmarkablePageRequestTarget)
+		else if (target instanceof BookmarkablePageRequestTarget)
 		{
 			return ((BookmarkablePageRequestTarget)target).getPage();
 		}
@@ -709,7 +681,7 @@ public abstract class RequestCycle
 		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
 				+ Thread.currentThread().getName() + "}";
 	}
-	
+
 	/**
 	 * Returns a URL that references a given interface on a component. When the
 	 * URL is requested from the server at a later time, the interface will be
@@ -730,12 +702,12 @@ public abstract class RequestCycle
 
 		// Get the listener interface name
 		String interfaceName = Classes.name(listenerInterface);
-		IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, getRequestInterfaceMethod(interfaceName));
-		IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
+		IRequestTarget target = new ListenerInterfaceRequestTarget(page, component,
+				requestListenerInterfaceForName(interfaceName));
+		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
-	
+
 	/**
 	 * Returns a URL that references the given request target.
 	 * 
@@ -745,11 +717,10 @@ public abstract class RequestCycle
 	 */
 	public final String urlFor(final IRequestTarget requestTarget)
 	{
-		IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
+		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, requestTarget);
 	}
-	
+
 	/**
 	 * Returns a URL that references a shared resource through the provided
 	 * resource reference.
@@ -760,10 +731,11 @@ public abstract class RequestCycle
 	 */
 	public final String urlFor(final ResourceReference resourceReference)
 	{
-		String url = getProcessor().getRequestCodingStrategy().encode(this,new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
+		String url = getProcessor().getRequestCodingStrategy().encode(this,
+				new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
 		return url;
 	}
-	
+
 	/**
 	 * Returns a bookmarkable URL that references a given page class using a
 	 * given set of page parameters. Since the URL which is returned contains
@@ -783,9 +755,8 @@ public abstract class RequestCycle
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMap.getName(), pageClass,
 				parameters);
-		
-		IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
+
+		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
 
@@ -983,7 +954,7 @@ public abstract class RequestCycle
 			processor.respond(this);
 		}
 	}
-	
+
 	/**
 	 * Safe version of {@link #getProcessor()} that throws an exception when the
 	 * processor is null.
@@ -1048,14 +1019,21 @@ public abstract class RequestCycle
 				}
 				case RESPOND : {
 					// generate a response
-					// NOTE: We have to do sync here because the processEventsAndRespond 
+					// NOTE: We have to do sync here because the
+					// processEventsAndRespond
 					// step will be unrolled by a RestartXX Exception.
-					// And if this is not the case then still it is not a problem 
-					// to have 2 locks on the same session this will not cause a deadlock.
-					// So only if the request targets are different and the getLock() 
-					// doesn't return 2 times the same object a deadlock could maybe occur.
-					// But we use the session as the lock at all times maybe use a variable 
-					// inside RequestCycle to know that a lock is still in place?
+					// And if this is not the case then still it is not a
+					// problem
+					// to have 2 locks on the same session this will not cause a
+					// deadlock.
+					// So only if the request targets are different and the
+					// getLock()
+					// doesn't return 2 times the same object a deadlock could
+					// maybe occur.
+					// But we use the session as the lock at all times maybe use
+					// a variable
+					// inside RequestCycle to know that a lock is still in
+					// place?
 					respond(processor);
 					break;
 				}

@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -203,6 +204,6 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	static
 	{
 		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IOnChangeListener.class));
 	}
 }

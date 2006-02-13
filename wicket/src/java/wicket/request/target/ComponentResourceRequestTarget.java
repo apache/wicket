@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ComponentResourceRequestTarget.java,v 1.7 2006/02/12 20:25:40 eelco12
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,12 +17,11 @@
  */
 package wicket.request.target;
 
-import java.lang.reflect.Method;
-
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
 
@@ -34,23 +33,23 @@ import wicket.authorization.UnauthorizedActionException;
  */
 public final class ComponentResourceRequestTarget implements IRequestTarget
 {
-
 	private final Page page;
 	private final Component component;
-	private final Method listenerMethod;
+	private final RequestListenerInterface listener;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param page
 	 * @param component
-	 * @param listenerMethod
+	 * @param listener
 	 */
-	public ComponentResourceRequestTarget(Page page, Component component, Method listenerMethod)
+	public ComponentResourceRequestTarget(Page page, Component component,
+			RequestListenerInterface listener)
 	{
 		this.page = page;
 		this.component = component;
-		this.listenerMethod = listenerMethod;
+		this.listener = listener;
 	}
 
 	/**
@@ -64,22 +63,22 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 			throw new UnauthorizedActionException(component, Component.ENABLE);
 		}
 
-		page.beforeCallComponent(component, listenerMethod);
+		page.beforeCallComponent(component, listener);
 
 		try
 		{
 			// Invoke the interface method on the component
-			listenerMethod.invoke(component, new Object[] {});
+			listener.getMethod().invoke(component, new Object[] {});
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("method " + listenerMethod.getName() + " of "
-					+ listenerMethod.getDeclaringClass() + " targetted at component " + component
+			throw new WicketRuntimeException("method " + listener.getName() + " of "
+					+ listener.getMethod().getDeclaringClass() + " targetted at component " + component
 					+ " threw an exception", e);
 		}
 		finally
 		{
-			page.afterCallComponent(component, listenerMethod);
+			page.afterCallComponent(component, listener);
 		}
 	}
 

@@ -21,6 +21,7 @@ import java.util.List;
 
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -466,6 +467,6 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	static
 	{
 		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IOnChangeListener.class));
 	}
 }

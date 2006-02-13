@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.209 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -118,8 +117,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
  * the page. Besides returning true or false, an implementation of checkAccess()
  * may also choose to send the user to another page with
- * Component.setResponsePage() or Component.redirectToInterceptPage(). This can be
- * used to allow a user to authenticate themselves if they were denied access.
+ * Component.setResponsePage() or Component.redirectToInterceptPage(). This can
+ * be used to allow a user to authenticate themselves if they were denied
+ * access.
  * 
  * @see wicket.markup.html.WebPage
  * @see wicket.MarkupContainer
@@ -238,15 +238,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * Called right after a component's listener method (the provided method
 	 * argument) was called. This method may be used to clean up dependencies,
 	 * do logging, etc. NOTE: this method will also be called when
-	 * {@link WebPage#beforeCallComponent(Component, Method)} or the method
-	 * invocation itself failed.
+	 * {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
+	 * or the method invocation itself failed.
 	 * 
 	 * @param component
 	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
 	 */
-	public void afterCallComponent(final Component component, final Method method)
+	public void afterCallComponent(final Component component,
+			final RequestListenerInterface listener)
 	{
 	}
 
@@ -255,15 +256,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * argument) is called. This method may be used to set up dependencies,
 	 * enforce authorization, etc. NOTE: if this method fails, the method will
 	 * not be excuted. Method
-	 * {@link WebPage#afterCallComponent(Component, Method)} will always be
-	 * called.
+	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)}
+	 * will always be called.
 	 * 
 	 * @param component
 	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
 	 */
-	public void beforeCallComponent(final Component component, final Method method)
+	public void beforeCallComponent(final Component component,
+			final RequestListenerInterface listener)
 	{
 	}
 
@@ -1105,7 +1107,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            The page map to put this page in.
 	 */
 	private final void init(final PageMap pageMap)
-	{		
+	{
 		// Set the page map
 		if (pageMap != null)
 		{
@@ -1173,10 +1175,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	static
 	{
 		// Allow calls through the IRedirectListener interface
-		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(
+				IRedirectListener.class));
 
 		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(IBehaviorListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(
+				IBehaviorListener.class));
 	}
 
 }

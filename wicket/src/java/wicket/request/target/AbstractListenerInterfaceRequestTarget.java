@@ -17,16 +17,11 @@
  */
 package wicket.request.target;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import wicket.AbstractRestartResponseException;
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
-import wicket.authorization.UnauthorizedActionException;
+import wicket.RequestListenerInterface;
 import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.settings.Settings;
@@ -52,7 +47,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	private final Component component;
 
 	/** the listener method. */
-	private final Method listenerMethod;
+	private final RequestListenerInterface listener;
 
 	/**
 	 * Construct.
@@ -61,13 +56,13 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
-	 *            the listener method
+	 * @param listener
+	 *            the listener interface
 	 */
 	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
-			Method listenerMethod)
+			RequestListenerInterface listener)
 	{
-		this(page, component, listenerMethod, null);
+		this(page, component, listener, null);
 	}
 
 
@@ -78,13 +73,13 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
+	 * @param listener
 	 *            the listener method
 	 * @param requestParameters
 	 *            the request parameter
 	 */
 	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
-			final Method listenerMethod, final RequestParameters requestParameters)
+			final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		super(page);
 
@@ -95,12 +90,12 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 
 		this.component = component;
 
-		if (listenerMethod == null)
+		if (listener == null)
 		{
 			throw new IllegalArgumentException("Argument listenerMethod must be not null");
 		}
 
-		this.listenerMethod = listenerMethod;
+		this.listener = listener;
 		this.requestParameters = requestParameters;
 	}
 
@@ -139,7 +134,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		if (obj != null && obj.getClass().equals(getClass()))
 		{
 			AbstractListenerInterfaceRequestTarget that = (AbstractListenerInterfaceRequestTarget)obj;
-			if (component.equals(that.component) && listenerMethod.equals(that.listenerMethod))
+			if (component.equals(that.component) && listener.equals(that.listener))
 			{
 				if (requestParameters != null)
 				{
@@ -163,11 +158,11 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getListenerMethod()
+	 * @see wicket.request.IListenerInterfaceRequestTarget#getRequestListenerInterface()
 	 */
-	public final Method getListenerMethod()
+	public final RequestListenerInterface getRequestListenerInterface()
 	{
-		return listenerMethod;
+		return listener;
 	}
 
 	/**
@@ -185,7 +180,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	{
 		int result = getClass().hashCode();
 		result += component.hashCode();
-		result += listenerMethod.hashCode();
+		result += listener.hashCode();
 		result += requestParameters != null ? requestParameters.hashCode() : 0;
 		return 17 * result;
 	}
@@ -197,62 +192,13 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	{
 		StringBuffer buf = new StringBuffer(getClass().getName()).append("@").append(hashCode())
 				.append(getPage().toString()).append("->").append(getTarget().getId()).append("->")
-				.append(getListenerMethod().getDeclaringClass()).append(".").append(
-						getListenerMethod().getName());
+				.append(getRequestListenerInterface().getMethod().getDeclaringClass()).append(".")
+				.append(getRequestListenerInterface().getName());
 
 		if (requestParameters != null)
 		{
 			buf.append(" (request paramaters: ").append(requestParameters.toString()).append(")");
 		}
 		return buf.toString();
-	}
-
-	/**
-	 * Invokes a given interface on a component.
-	 * 
-	 * @param component
-	 *            The component
-	 * @param method
-	 *            The name of the method to call
-	 * @param page
-	 *            The page on which the component resides
-	 */
-	protected final void invokeInterface(final Component component, final Method method,
-			final Page page)
-	{
-		// Check authorization
-		if (!component.isActionAuthorized(Component.ENABLE))
-		{
-			throw new UnauthorizedActionException(component, Component.ENABLE);
-		}
-
-		page.beforeCallComponent(component, method);
-
-		try
-		{
-			// Invoke the interface method on the component
-			method.invoke(component, new Object[] {});
-		}
-		catch (InvocationTargetException e)
-		{
-			// honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException)
-			{
-				throw (RuntimeException)e.getTargetException();
-			}
-			throw new WicketRuntimeException("method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targetted at component " + component
-					+ " threw an exception", e);
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targetted at component " + component
-					+ " threw an exception", e);
-		}
-		finally
-		{
-			page.afterCallComponent(component, method);
-		}
 	}
 }
