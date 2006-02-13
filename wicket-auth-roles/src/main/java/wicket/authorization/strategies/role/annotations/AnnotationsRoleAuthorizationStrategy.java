@@ -38,7 +38,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @param roleCheckingStrategy
 	 *            the authorizer delegate
 	 */
-	public AnnotationsRoleAuthorizationStrategy(IRoleCheckingStrategy roleCheckingStrategy)
+	public AnnotationsRoleAuthorizationStrategy(final IRoleCheckingStrategy roleCheckingStrategy)
 	{
 		super(roleCheckingStrategy);
 	}
@@ -114,7 +114,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 *            The annotations information
 	 * @return False if the action is not authorized
 	 */
-	private boolean check(Action action, final AuthorizeAction authorizeActionAnnotation)
+	private boolean check(final Action action, final AuthorizeAction authorizeActionAnnotation)
 	{
 		if (action.getName().equals(authorizeActionAnnotation.action()))
 		{
