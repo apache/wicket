@@ -76,25 +76,23 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 */
 	public boolean isActionAuthorized(final Component component, final Action action)
 	{
+		// Get component's class
+		final Class< ? extends Component> componentClass = component.getClass();
+
 		// Check for a single action
-		final AuthorizeAction authorizeAction = component.getClass().getAnnotation(
-				AuthorizeAction.class);
-		if (authorizeAction != null)
+		if (!check(action, componentClass.getAnnotation(AuthorizeAction.class)))
 		{
-			if (!check(action, authorizeAction))
-			{
-				return false;
-			}
+			return false;
 		}
 
 		// Check for multiple actions
-		final AuthorizeActions authorizedActions = component.getClass().getAnnotation(
-				AuthorizeActions.class);
+		final AuthorizeActions authorizedActions = componentClass
+				.getAnnotation(AuthorizeActions.class);
 		if (authorizedActions != null)
 		{
-			for (final AuthorizeAction a : authorizedActions.actions())
+			for (final AuthorizeAction authorizeAction : authorizedActions.actions())
 			{
-				if (!check(action, a))
+				if (!check(action, authorizeAction))
 				{
 					return false;
 				}
@@ -107,15 +105,15 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * @param action
 	 *            The action to check
-	 * @param authorizedAction
+	 * @param authorizeAction
 	 *            The annotations information
 	 * @return False if the action is not authorized
 	 */
-	private boolean check(Action action, final AuthorizeAction authorizedAction)
+	private boolean check(Action action, final AuthorizeAction authorizeAction)
 	{
-		if (authorizedAction.action().equals(action.toString()))
+		if (action.getName().equals(authorizeAction.action()))
 		{
-			if (!hasAny(new Roles(authorizedAction.roles())))
+			if (!hasAny(new Roles(authorizeAction.roles())))
 			{
 				return false;
 			}
