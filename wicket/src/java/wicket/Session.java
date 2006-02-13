@@ -239,18 +239,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
-	 * 
-	 * @return True if an original destination was redirected to
-	 * @see PageMap#redirectToInterceptPage(Page)
-	 */
-	public final boolean continueToOriginalDestination()
-	{
-		return currentPageMap.continueToOriginalDestination();
-	}
-
-	/**
 	 * Get the application that is currently working with this session.
 	 * 
 	 * @return Returns the application.
@@ -294,14 +282,6 @@ public abstract class Session implements Serializable
 			this.clientInfo = RequestCycle.get().newClientInfo();
 		}
 		return clientInfo;
-	}
-
-	/**
-	 * @return The current pagemap
-	 */
-	public PageMap getCurrentPageMap()
-	{
-		return currentPageMap == null ? getDefaultPageMap() : currentPageMap;
 	}
 
 	/**
@@ -517,15 +497,6 @@ public abstract class Session implements Serializable
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
-	}
-
-	/**
-	 * @param page
-	 *            The page to redirect to
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		getCurrentPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -813,6 +784,14 @@ public abstract class Session implements Serializable
 					.newConverter(getLocale());
 		}
 		return converter;
+	}
+
+	/**
+	 * @return The current pagemap
+	 */
+	PageMap getCurrentPageMap()
+	{
+		return currentPageMap == null ? getDefaultPageMap() : currentPageMap;
 	}
 
 	/**
