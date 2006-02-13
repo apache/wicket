@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import wicket.authorization.UnauthorizedActionException;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Classes;
@@ -129,14 +128,6 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final Page page, final Component component)
 	{
-		// Check authorization
-		// FIXME Bug: Why is Component.ENABLE hardwired into this code (which
-		// came from AbstractListenerInterfaceRequestTarget)!?
-		if (!component.isActionAuthorized(Component.ENABLE))
-		{
-			throw new UnauthorizedActionException(component, Component.ENABLE);
-		}
-
 		page.beforeCallComponent(component, this);
 
 		try
