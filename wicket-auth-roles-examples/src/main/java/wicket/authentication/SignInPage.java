@@ -1,6 +1,6 @@
 /*
- * $Id: RequestListenerInterface.java,v 1.3 2006/02/13 02:15:14 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,14 +17,39 @@
  */
 package wicket.authentication;
 
+import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 /**
- * Generalized sign in page.
+ * Simple example of a sign in page. It extends SignInPage, a base class which
+ * provide standard functionality for typical log-in pages
  * 
  * @author Jonathan Locke
  */
-public class SignInPage extends WebPage
+public final class SignInPage extends WebPage
 {
-	
+    /**
+     * Construct
+     */
+    public SignInPage()
+    {
+       this(null);  
+    }
+
+	/**
+	 * Constructor
+	 * 
+	 * @param parameters
+	 *            The page parameters
+	 */
+	public SignInPage(final PageParameters parameters)
+	{
+		add(new SignInPanel("signInPanel")
+		{
+			public boolean signIn(final String username, final String password)
+			{
+				return AuthenticatedWebSession.get().authenticate(username, password);
+			}
+		});
+	}
 }

@@ -32,6 +32,22 @@ public abstract class AuthenticatedWebSession extends WebSession
 	}
 
 	/**
+	 * Authenticates this session using the given username and password
+	 * 
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
+	 * @return True if the user was authenticated successfully
+	 */
+	public abstract boolean authenticate(final String username, final String password);
+
+	/**
+	 * @return True if the user is signed in to this session
+	 */
+	public abstract boolean isSignedIn();
+
+	/**
 	 * @return Get the roles that this session can play
 	 */
 	public abstract Roles getRoles();
