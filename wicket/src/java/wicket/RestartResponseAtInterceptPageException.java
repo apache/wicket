@@ -75,15 +75,24 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	private void redirectToInterceptPage(final Page interceptPage)
 	{
 		Page p = RequestCycle.get().getRequest().getPage();
+		final PageMap pageMap;
+
+
 		/*
 		 * page can be null if we throw the restart response exception before
 		 * any page is instantiated in user's session. if this happens we switch
 		 * to the pagemap of the interceptPage
 		 */
+
 		if (p == null)
 		{
-			p = interceptPage;
+			pageMap = p.getPageMap();
 		}
-		p.getPageMap().redirectToInterceptPage(interceptPage);
+		else
+		{
+			pageMap = interceptPage.getPageMap();
+		}
+
+		pageMap.redirectToInterceptPage(interceptPage);
 	}
 }
