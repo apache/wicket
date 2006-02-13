@@ -138,9 +138,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		String componentPath = requestParameters.getComponentPath();
-		Session session = requestCycle.getSession();
-		Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+		final String componentPath = requestParameters.getComponentPath();
+		final Session session = requestCycle.getSession();
+		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
 				requestParameters.getVersionNumber());
 
 		// Does page exist?
@@ -150,7 +150,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			requestCycle.getRequest().setPage(page);
 			
 			// see whether this resolves to a component call or just the page
-			String interfaceName = requestParameters.getInterfaceName();
+			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
 			{
 				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
