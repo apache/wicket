@@ -60,6 +60,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 */
 	public static final MetaDataKey ACTION_PERMISSIONS = new MetaDataKey(ActionPermissions.class)
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	/**
@@ -70,6 +71,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	private static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
 			InstantiationPermissions.class)
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	/** Special role string for denying access to all */
