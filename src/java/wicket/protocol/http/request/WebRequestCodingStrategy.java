@@ -187,7 +187,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
+	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
@@ -219,7 +219,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetMounter#mount(java.lang.String,
+	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String,
 	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
