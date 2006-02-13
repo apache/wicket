@@ -116,14 +116,14 @@ public class RequestListenerInterface
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
-			throw new WicketRuntimeException("method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targetted at component " + component
+			throw new WicketRuntimeException("Method " + method.getName() + " of "
+					+ method.getDeclaringClass() + " targeted at component " + component
 					+ " threw an exception", e);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targetted at component " + component
+			throw new WicketRuntimeException("Method " + method.getName() + " of "
+					+ method.getDeclaringClass() + " targeted at component " + component
 					+ " threw an exception", e);
 		}
 		finally
