@@ -31,6 +31,12 @@ import wicket.util.string.StringList;
 public final class Roles extends HashSet<String> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** USER role (for use in annotations) */
+	public static final String USER = "USER";
+	
+	/** ADMIN role (for use in annotations) */
+	public static final String ADMIN = "ADMIN";
 
 	/**
 	 * Construct.

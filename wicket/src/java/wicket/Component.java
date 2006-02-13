@@ -250,7 +250,7 @@ public abstract class Component implements Serializable
 	 * best dealt with in your model objects to be completely secured. Wicket
 	 * will catch all normal framework-directed use though.
 	 */
-	public static final Action ENABLE = new Action("ENABLE");
+	public static final Action ENABLE = new Action(Action.ENABLE);
 
 	/** Separator for component paths */
 	public static final char PATH_SEPARATOR = ':';
@@ -275,7 +275,7 @@ public abstract class Component implements Serializable
 	 * </ul>
 	 * </p>
 	 */
-	public static final Action RENDER = new Action("RENDER");
+	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;

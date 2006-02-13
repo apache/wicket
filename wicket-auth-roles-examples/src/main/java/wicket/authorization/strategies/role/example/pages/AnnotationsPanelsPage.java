@@ -17,6 +17,8 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
+import wicket.authorization.Action;
+import wicket.authorization.strategies.role.Roles;
 import wicket.authorization.strategies.role.annotations.AuthorizeAction;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.panel.Panel;
@@ -57,7 +59,7 @@ public class AnnotationsPanelsPage extends WebPage
 	/**
 	 * A panel that is only visible for users with role ADMIN or USER.
 	 */
-	@AuthorizeAction(action = "RENDER", roles = {"ADMIN", "USER"})
+	@AuthorizeAction(action = Action.RENDER, roles = { Roles.ADMIN, Roles.USER })
 	private static final class ForAdminsAndUsers extends Panel
 	{
 		/**
@@ -74,7 +76,7 @@ public class AnnotationsPanelsPage extends WebPage
 	/**
 	 * A panel that is only visible for users with role ADMIN.
 	 */
-	@AuthorizeAction(action = "RENDER", roles = "ADMIN")
+	@AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
 	private static final class ForAdmins extends Panel
 	{
 		/**
