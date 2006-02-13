@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RestartResponseAtInterceptPageException.java,v 1.10 2006/02/13 00:16:32
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,8 +21,8 @@ package wicket;
  * Causes Wicket to interrupt current request processing and immediately
  * redirect to an intercept page.
  * <p>
- * Similar to calling redirectToInteceptPage(Page) with the difference
- * that this exception will interrupt processing of the current request.
+ * Similar to calling redirectToInteceptPage(Page) with the difference that this
+ * exception will interrupt processing of the current request.
  * 
  * @see wicket.PageMap#redirectToInterceptPage(Page)
  * @see wicket.Component#redirectToInterceptPage(Page)
@@ -46,7 +46,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		{
 			throw new IllegalStateException("Argument interceptPage cannot be null");
 		}
-		Session.get().getCurrentPageMap().redirectToInterceptPage(interceptPage);
+
+		redirectToInterceptPage(interceptPage);
 	}
 
 	/**
@@ -61,6 +62,18 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		{
 			throw new IllegalStateException("Argument pageClass cannot be null");
 		}
-		Session.get().getCurrentPageMap().redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
+		redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
+	}
+
+	/**
+	 * Redirects to intercept page using the page map for the current request
+	 * 
+	 * @param interceptPage
+	 *            The intercept page to redirect to
+	 */
+	private void redirectToInterceptPage(final Page interceptPage)
+	{
+		RequestCycle.get().getRequest().getPage().getPageMap().redirectToInterceptPage(
+				interceptPage);
 	}
 }
