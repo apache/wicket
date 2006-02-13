@@ -28,6 +28,7 @@ import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.Roles;
+import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -130,7 +131,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class<? extends SignInPage> getSignInPageClass();
+	protected abstract Class<? extends WebPage> getSignInPageClass();
 	
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they

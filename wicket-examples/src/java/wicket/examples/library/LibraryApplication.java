@@ -17,8 +17,13 @@
  */
 package wicket.examples.library;
 
+import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Page;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
 import wicket.settings.Settings;
@@ -45,10 +50,27 @@ public final class LibraryApplication extends WicketExampleApplication
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
 
-		// set the sign in page
-		getApplicationSettings().setSignInPage(SignIn.class);
+		// Handle unauthorized access to pages
+		getSecuritySettings().setUnauthorizedComponentInstantiationListener(new IUnauthorizedComponentInstantiationListener()
+		{
+			public void onUnauthorizedInstantiation(final Component component)
+			{
+				// If there is a sign in page class declared, and the unauthorized
+				// component is a page, but it's not the sign in page
+				if (component instanceof Page)
+				{
+					// Redirect to intercept page to let the user sign in
+					throw new RestartResponseAtInterceptPageException(SignIn.class);
+				}
+				else
+				{
+					// The component was not a page, so throw an exception
+					throw new UnauthorizedInstantiationException(component.getClass());
+				}
+			}
+		});
 
-		// create a simple authorization strategy, that checks all pages of type
+		// Create a simple authorization strategy, that checks all pages of type
 		// Authenticated web page.
 		SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
 				AuthenticatedWebPage.class)

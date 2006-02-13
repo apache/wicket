@@ -64,14 +64,12 @@ public interface IAuthorizationStrategy
 	 * <p>
 	 * If you wish to implement a strategy that authenticates users which cannot
 	 * access a given Page (or other Component), you can simply throw a
-	 * {@link wicket.RestartResponseAtSignInPageException} in your
+	 * {@link wicket.RestartResponseAtInterceptPageException} in your
 	 * implementation of this method.
 	 * 
 	 * @param componentClass
 	 *            The component class to check
 	 * @return Whether the given component may be created
-	 * 
-	 * @see wicket.RestartResponseAtSignInPageException
 	 */
 	boolean isInstantiationAuthorized(Class componentClass);
 
