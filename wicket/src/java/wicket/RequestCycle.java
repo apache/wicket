@@ -17,9 +17,7 @@
  */
 package wicket;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.logging.Log;
@@ -177,9 +175,6 @@ public abstract class RequestCycle
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
-	/** Map from name to request listener interface */
-	private static final Map requestListenerInterfaces = new HashMap();
-
 	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;
 
@@ -256,54 +251,6 @@ public abstract class RequestCycle
 	public final static RequestCycle get()
 	{
 		return (RequestCycle)current.get();
-	}
-
-	/**
-	 * Looks up a request interface listener by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The RequestListenerInterface object, or null if none is found
-	 * 
-	 */
-	public static final RequestListenerInterface requestListenerInterfaceForName(
-			final String interfaceName)
-	{
-		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
-	}
-	
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * In previous versions of Wicket, request listeners were manually
-	 * registered by calling this method. Now there is a first class
-	 * RequestListenerInterface object which should be constructed as a constant
-	 * member of the interface to enable automatic interface registration.
-	 * <p>
-	 * Adds a request listener interface to the map of interfaces that can be
-	 * invoked by outsiders.
-	 * 
-	 * @param requestListenerInterface
-	 *            The request listener interface object
-	 */
-	static final void registerRequestListenerInterface(
-			final RequestListenerInterface requestListenerInterface)
-	{
-		// Check that a different interface method with the same name has not
-		// already been registered
-		final RequestListenerInterface existingInterface = requestListenerInterfaceForName(requestListenerInterface
-				.getName());
-		if (existingInterface != null
-				&& existingInterface.getMethod() != requestListenerInterface.getMethod())
-		{
-			throw new IllegalStateException("Cannot register listener interface "
-					+ requestListenerInterface
-					+ " because it conflicts with the already registered interface "
-					+ existingInterface);
-		}
-
-		// Save this interface method by the non-qualified class name
-		requestListenerInterfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 	}
 
 	/**

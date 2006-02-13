@@ -953,7 +953,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				throw new WicketRuntimeException(
 						"Calling listener methods on components that are not visible is not allowed");
 			}
-			final RequestListenerInterface listener = RequestCycle.requestListenerInterfaceForName(interfaceName);
+			final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
 			if (listener != null)
 			{
 				new FormSubmitInterfaceRequestTarget(page, component, listener)
