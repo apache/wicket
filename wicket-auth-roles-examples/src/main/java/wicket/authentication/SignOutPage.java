@@ -28,6 +28,14 @@ import wicket.markup.html.WebPage;
 public class SignOutPage extends WebPage
 {
 	/**
+	 * Construct.
+	 */
+	public SignOutPage()
+	{
+		this(null);
+	}
+	
+	/**
 	 * Constructor
 	 * 
 	 * @param parameters

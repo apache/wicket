@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,10 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authentication;
+package wicket.authentication.example;
 
 import wicket.PageParameters;
-import wicket.markup.html.WebPage;
+import wicket.authentication.AuthenticatedWebSession;
+import wicket.authentication.SignInPanel;
 
 /**
  * Simple example of a sign in page. It extends SignInPage, a base class which
@@ -26,15 +27,15 @@ import wicket.markup.html.WebPage;
  * 
  * @author Jonathan Locke
  */
-public class SignInPage extends WebPage
+public final class SignInPage extends wicket.authentication.SignInPage
 {
-    /**
-     * Construct
-     */
-    public SignInPage()
-    {
-       this(null);  
-    }
+	/**
+	 * Construct
+	 */
+	public SignInPage()
+	{
+		this(null);
+	}
 
 	/**
 	 * Constructor

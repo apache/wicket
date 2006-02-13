@@ -2,6 +2,7 @@ package wicket.authentication.example;
 
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
+import wicket.authentication.SignInPage;
 import wicket.authorization.strategies.role.Roles;
 
 /**
@@ -69,6 +70,12 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	protected Class< ? extends AuthenticatedWebSession> getWebSessionClass()
 	{
 		return MyAuthenticatedWebSession.class;
+	}
+	
+	@Override
+	protected Class< ? extends SignInPage> getSignInPageClass()
+	{
+		return SignInPage.class;
 	}
 
 	/**

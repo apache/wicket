@@ -81,7 +81,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			if (!AuthenticatedWebSession.get().isSignedIn())
 			{
 				// Redirect to intercept page to let the user sign in
-				throw new RestartResponseAtInterceptPageException(SignInPage.class);
+				throw new RestartResponseAtInterceptPageException(getSignInPageClass());
 			}
 			else
 			{
@@ -125,8 +125,13 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * @return AuthenticatedWebSession subclass to use in this authenticated web
 	 *         application.
 	 */
-	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
 
+	/**
+	 * @return Subclass of sign-in page
+	 */
+	protected abstract Class<? extends SignInPage> getSignInPageClass();
+	
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they
 	 * are not authorized to access. You might want to override this to navigate
