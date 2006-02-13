@@ -24,8 +24,10 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-class MetaDataEntry
+class MetaDataEntry implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	MetaDataKey key;
 	Serializable object;
 }

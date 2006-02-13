@@ -31,8 +31,10 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public abstract class MetaDataKey
+public abstract class MetaDataKey implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Type of data associated with this key */
 	private Class type;
 
