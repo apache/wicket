@@ -266,11 +266,24 @@ public abstract class RequestCycle
 	 * @param requestListenerInterface
 	 *            The request listener interface object
 	 */
-	public static void registerRequestListenerInterface(
+	public static final void registerRequestListenerInterface(
 			final RequestListenerInterface requestListenerInterface)
 	{
 		// Save this interface method by the non-qualified class name
 		requestListenerInterfaces.put(requestListenerInterface.getName(), requestListenerInterface);
+	}
+
+	/**
+	 * Looks up a request interface listener by name.
+	 * 
+	 * @param interfaceName
+	 *            The interface name
+	 * @return The RequestListenerInterface object, or null if none is found
+	 * 
+	 */
+	public static final RequestListenerInterface requestListenerInterfaceForName(final String interfaceName)
+	{
+		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
 	}
 
 	/**
@@ -356,19 +369,6 @@ public abstract class RequestCycle
 	public final Request getRequest()
 	{
 		return request;
-	}
-
-	/**
-	 * Looks up a request interface listener by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The RequestListenerInterface object, or null if none is found
-	 * 
-	 */
-	public static final RequestListenerInterface requestListenerInterfaceForName(final String interfaceName)
-	{
-		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
 	}
 
 	/**
@@ -701,10 +701,10 @@ public abstract class RequestCycle
 		page.setStateless(false);
 
 		// Get the listener interface name
-		String interfaceName = Classes.name(listenerInterface);
-		IRequestTarget target = new ListenerInterfaceRequestTarget(page, component,
+		final String interfaceName = Classes.name(listenerInterface);
+		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component,
 				requestListenerInterfaceForName(interfaceName));
-		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
 

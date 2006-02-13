@@ -136,6 +136,14 @@ import wicket.version.undo.UndoPageVersionManager;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
+	/** Redirect listener interface */
+	public static final RequestListenerInterface REDIRECT_LISTENER_INTERFACE = new RequestListenerInterface(
+			IRedirectListener.class);
+	
+	/** Behavior listener interface */
+	public static final RequestListenerInterface BEHAVIOR_LISTENER_INTERFACE = new RequestListenerInterface(
+			IBehaviorListener.class);
+	
 	private static final long serialVersionUID = 1L;
 
 	/** True if this page is currently rendering. */
@@ -1175,12 +1183,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	static
 	{
 		// Allow calls through the IRedirectListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(
-				IRedirectListener.class));
-
+		RequestCycle.registerRequestListenerInterface(REDIRECT_LISTENER_INTERFACE);
+		
 		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(
-				IBehaviorListener.class));
+		RequestCycle.registerRequestListenerInterface(BEHAVIOR_LISTENER_INTERFACE);
 	}
-
 }

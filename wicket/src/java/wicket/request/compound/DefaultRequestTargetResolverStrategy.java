@@ -188,7 +188,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			final Page page, final String componentPath, final String interfaceName,
 			RequestParameters requestParameters)
 	{
-		if (interfaceName.equals("IRedirectListener"))
+		if (interfaceName.equals(Page.REDIRECT_LISTENER_INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
 		}
