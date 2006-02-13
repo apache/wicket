@@ -17,7 +17,6 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
-import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.markup.html.WebPage;
 
 /**
@@ -29,14 +28,9 @@ import wicket.markup.html.WebPage;
 public class AdminInternalPage extends WebPage
 {
 	/*
-	 * We do it as a static call here, which is mainly for the purpose of the
-	 * example. Typically, you probably do this somewhere central, like in
-	 * {@link Application#init)
+	 * See for configuration of this class the {@link MyAuthenticatedWebApplication#init)
+	 * MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	 */
-	static
-	{
-		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
-	}
 
 	/**
 	 * Construct.
