@@ -18,7 +18,6 @@
  */
 package wicket.authentication.example;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 /**
@@ -28,13 +27,4 @@ import wicket.markup.html.WebPage;
  */
 public class HomePage extends WebPage
 {
-    /**
-     * Constructor
-     * @param parameters Page parameters (ignored since this is the home page)
-     */
-    public HomePage(final PageParameters parameters)
-    {
-    }
 }
-
-

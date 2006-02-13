@@ -17,10 +17,6 @@
  */
 package wicket.authentication.example;
 
-import wicket.PageParameters;
-import wicket.authentication.AuthenticatedWebSession;
-import wicket.authentication.SignInPanel;
-
 /**
  * Simple example of a sign in page. It extends SignInPage, a base class which
  * provide standard functionality for typical log-in pages
@@ -29,28 +25,4 @@ import wicket.authentication.SignInPanel;
  */
 public final class SignInPage extends wicket.authentication.SignInPage
 {
-	/**
-	 * Construct
-	 */
-	public SignInPage()
-	{
-		this(null);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            The page parameters
-	 */
-	public SignInPage(final PageParameters parameters)
-	{
-		add(new SignInPanel("signInPanel")
-		{
-			public boolean signIn(final String username, final String password)
-			{
-				return AuthenticatedWebSession.get().authenticate(username, password);
-			}
-		});
-	}
 }

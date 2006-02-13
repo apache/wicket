@@ -7,10 +7,4 @@ package wicket.authentication.example;
  */
 public class SignOutPage extends wicket.authentication.SignOutPage
 {
-	/**
-	 * Construct
-	 */
-	public SignOutPage()
-	{
-	}
 }

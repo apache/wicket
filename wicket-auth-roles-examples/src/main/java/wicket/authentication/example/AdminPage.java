@@ -17,7 +17,6 @@
  */
 package wicket.authentication.example;
 
-import wicket.PageParameters;
 import wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import wicket.markup.html.WebPage;
 
@@ -29,13 +28,4 @@ import wicket.markup.html.WebPage;
 @AuthorizeInstantiation("ADMIN")
 public class AdminPage extends WebPage
 {
-	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
-	 */
-	public AdminPage(final PageParameters parameters)
-	{
-	}
 }
