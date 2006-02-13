@@ -331,7 +331,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			String interfaceName = request.getParameter("interface");
 			if (interfaceName == null)
 			{
-				interfaceName = "IRedirectListener";
+				interfaceName = Page.REDIRECT_LISTENER_INTERFACE.getName();
 			}
 			parameters.setInterfaceName(interfaceName);
 			parameters.setBehaviorId(request.getParameter("behaviorId"));
@@ -515,7 +515,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 
 		final String listenerName = requestTarget.getRequestListenerInterface().getName();
-		if (!"IRedirectListener".equals(listenerName))
+		if (!Page.REDIRECT_LISTENER_INTERFACE.getName().equals(listenerName))
 		{
 			url.append("&interface=");
 			url.append(listenerName);

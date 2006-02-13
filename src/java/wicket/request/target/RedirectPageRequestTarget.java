@@ -37,7 +37,7 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	 */
 	public RedirectPageRequestTarget(final Page page)
 	{
-		super(page, page, RequestCycle.requestListenerInterfaceForName("IRedirectListener"));
+		super(page, page, Page.REDIRECT_LISTENER_INTERFACE);
 	}
 	
 	/**
