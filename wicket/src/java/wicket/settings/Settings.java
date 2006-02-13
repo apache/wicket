@@ -102,6 +102,15 @@ public final class Settings
 		}
 	}
 
+	/**
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * removed from output
+	 */
+	boolean stripWicketTags = false;
+
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	boolean stripXmlDeclarationFromOutput;
+
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
 
@@ -237,15 +246,6 @@ public final class Settings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
-	/**
-	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
-	 * removed from output
-	 */
-	boolean stripWicketTags = false;
-
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	boolean stripXmlDeclarationFromOutput;
-
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
 
@@ -369,27 +369,6 @@ public final class Settings
 			overriddenStringResourceLoaders = true;
 		}
 		stringResourceLoaders.add(loader);
-	}
-
-	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
-	 * 
-	 * @param pageClass
-	 *            the page class to check
-	 */
-	private void checkPageClass(final Class pageClass)
-	{
-		// NOTE: we can't really check on whether it is a bookmarkable page
-		// here, as - though the default is that a bookmarkable page must
-		// either have a default constructor and/or a constructor with a
-		// PageParameters object, this could be different for another
-		// IPageFactory implementation
-		if (!Page.class.isAssignableFrom(pageClass))
-		{
-			throw new IllegalArgumentException("argument " + pageClass
-					+ " must be a subclass of Page");
-		}
 	}
 
 	/**
@@ -764,7 +743,6 @@ public final class Settings
 		return useDefaultOnMissingResource;
 	}
 
-
 	/**
 	 * @see wicket.settings.IResourceSettings#getValidatorResourceKeyFactory()
 	 */
@@ -781,6 +759,7 @@ public final class Settings
 	{
 		return versionPagesByDefault;
 	}
+
 
 	/**
 	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
@@ -1133,5 +1112,26 @@ public final class Settings
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass
+	 * of Page.
+	 * 
+	 * @param pageClass
+	 *            the page class to check
+	 */
+	private void checkPageClass(final Class pageClass)
+	{
+		// NOTE: we can't really check on whether it is a bookmarkable page
+		// here, as - though the default is that a bookmarkable page must
+		// either have a default constructor and/or a constructor with a
+		// PageParameters object, this could be different for another
+		// IPageFactory implementation
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("argument " + pageClass
+					+ " must be a subclass of Page");
+		}
 	}
 }

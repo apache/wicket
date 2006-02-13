@@ -18,9 +18,14 @@
 package wicket.authentication;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Page;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.Roles;
@@ -33,7 +38,8 @@ import wicket.protocol.http.WebApplication;
  */
 public abstract class AuthenticatedWebApplication extends WebApplication
 		implements
-			IRoleCheckingStrategy
+			IRoleCheckingStrategy,
+			IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
 	private final Class< ? extends AuthenticatedWebSession> webSessionClass;
@@ -45,6 +51,52 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		this.webSessionClass = getWebSessionClass();
 		getSecuritySettings().setAuthorizationStrategy(new RoleAuthorizationStrategy(this));
+		getSecuritySettings().setUnauthorizedComponentInstantiationListener(this);
+	}
+
+	/**
+	 * Called when an unauthorized component instantiation is about to take
+	 * place (but before it happens).
+	 * 
+	 * @param component
+	 *            The partially constructed component (only the id is guaranteed
+	 *            to be valid).
+	 */
+	public void onUnauthorizedInstantiation(final Component component)
+	{
+		// If there is a sign in page class declared, and the unauthorized
+		// component is a page, but it's not the sign in page
+		if (component instanceof Page)
+		{
+			if (!AuthenticatedWebSession.get().isSignedIn())
+			{
+				// Redirect to intercept page to let the user sign in
+				throw new RestartResponseAtInterceptPageException(SignInPage.class);
+			}
+			else
+			{
+				onUnauthorizedPage((Page)component);
+			}
+		}
+		else
+		{
+			// The component was not a page, so throw an exception
+			throw new UnauthorizedInstantiationException(component.getClass());
+		}
+	}
+
+	/**
+	 * Called when an AUTHENTICATED user tries to navigate to a page that they
+	 * are not authorized to access. You might want to override this to navigate
+	 * to some explanatory page or to the application's home page.
+	 * 
+	 * @param page
+	 *            The page
+	 */
+	protected void onUnauthorizedPage(final Page page)
+	{
+		// The component was not a page, so throw an exception
+		throw new UnauthorizedInstantiationException(page.getClass());
 	}
 
 	/**
