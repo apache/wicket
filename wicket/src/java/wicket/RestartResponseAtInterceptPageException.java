@@ -74,7 +74,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 */
 	private void redirectToInterceptPage(final Page interceptPage)
 	{
-		Page p = RequestCycle.get().getRequest().getPage();
+		final Page p = RequestCycle.get().getRequest().getPage();
 		final PageMap pageMap;
 
 
