@@ -115,8 +115,16 @@ public abstract class Application
 	/** Log. */
 	private static Log log = LogFactory.getLog(Application.class);
 
+	/** list of {@link IComponentInstantiationListener}s. */
+	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
+
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
+
+	/**
+	 * Application level meta data.
+	 */
+	private MetaDataEntry[] metaData;
 
 	/** Name of application subclass. */
 	private final String name;
@@ -126,14 +134,6 @@ public abstract class Application
 
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
-
-	/** list of {@link IComponentInstantiationListener}s. */
-	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
-
-	/**
-	 * Application level meta data.
-	 */
-	private MetaDataEntry[] metaData;
 
 	/**
 	 * Get Application for current thread.
@@ -208,6 +208,39 @@ public abstract class Application
 				}
 			}
 		});
+	}
+
+	/**
+	 * Adds a component instantiation listener. This method should typicaly only
+	 * be called during application startup; it is not thread safe.
+	 * <p>
+	 * Note: wicket does not guarantee the execution order of added listeners
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 */
+	public final void addComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("argument listener may not be null");
+		}
+
+		// if an instance of this listener is already present ignore this call
+		for (int i = 0; i < componentInstantiationListeners.length; i++)
+		{
+			if (listener == componentInstantiationListeners[i])
+			{
+				return;
+			}
+		}
+
+		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
+		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
+				componentInstantiationListeners.length);
+		newListeners[componentInstantiationListeners.length] = listener;
+		componentInstantiationListeners = newListeners;
 	}
 
 	/**
@@ -345,6 +378,19 @@ public abstract class Application
 	}
 
 	/**
+	 * Gets metadata for this application using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
+	}
+
+	/**
 	 * Gets the name of this application.
 	 * 
 	 * @return The application name.
@@ -443,112 +489,6 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets metadata for this application using the given key.
-	 * 
-	 * @param key
-	 *            The key for the data
-	 * @return The metadata
-	 * @see MetaDataKey
-	 */
-	public final Serializable getMetaData(final MetaDataKey key)
-	{
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (key.equals(m.key))
-				{
-					return m.object;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Sets the metadata for this application using the given key. If the
-	 * metadata object is not of the correct type for the metadata key, an
-	 * IllegalArgumentException will be thrown. For information on creating
-	 * MetaDataKeys, see {@link MetaDataKey}.
-	 * 
-	 * @param key
-	 *            The singleton key for the metadata
-	 * @param object
-	 *            The metadata object
-	 * @throws IllegalArgumentException
-	 * @see MetaDataKey
-	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
-	{
-		key.checkType(object);
-		boolean set = false;
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (key.equals(m.key))
-				{
-					m.object = object;
-					set = true;
-				}
-			}
-		}
-		if (!set)
-		{
-			MetaDataEntry m = new MetaDataEntry();
-			m.key = key;
-			m.object = object;
-			if (metaData == null)
-			{
-				metaData = new MetaDataEntry[1];
-				metaData[0] = m;
-			}
-			else
-			{
-				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
-				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
-				newMetaData[metaData.length] = m;
-				metaData = newMetaData;
-			}
-		}
-	}
-
-	/**
-	 * Adds a component instantiation listener. This method should typicaly only
-	 * be called during application startup; it is not thread safe.
-	 * <p>
-	 * Note: wicket does not guarantee the execution order of added listeners
-	 * 
-	 * @param listener
-	 *            the listener to add
-	 */
-	public final void addComponentInstantiationListener(
-			final IComponentInstantiationListener listener)
-	{
-		if (listener == null)
-		{
-			throw new IllegalArgumentException("argument listener may not be null");
-		}
-
-		// if an instance of this listener is already present ignore this call
-		for (int i = 0; i < componentInstantiationListeners.length; i++)
-		{
-			if (listener == componentInstantiationListeners[i])
-			{
-				return;
-			}
-		}
-
-		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
-		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
-				componentInstantiationListeners.length);
-		newListeners[componentInstantiationListeners.length] = listener;
-		componentInstantiationListeners = newListeners;
-	}
-
-	/**
 	 * Removes a component instantiation listener. This method should typicaly
 	 * only be called during application startup; it is not thread safe.
 	 * 
@@ -585,19 +525,21 @@ public abstract class Application
 	}
 
 	/**
-	 * Notifies the registered component instantiation listeners of the
-	 * construction of the provided component
+	 * Sets the metadata for this application using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
-	 * @param component
-	 *            the component that is being instantiated
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
 	 */
-	final void notifyComponentInstantiationListeners(final Component component)
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		final int len = componentInstantiationListeners.length;
-		for (int i = 0; i < len; i++)
-		{
-			componentInstantiationListeners[i].onInstantiation(component);
-		}
+		metaData = key.set(metaData, object);
 	}
 
 	/**
@@ -627,6 +569,22 @@ public abstract class Application
 		// constructor and that subclass constructor may add class aliases that
 		// would be used in installing resources in the component.
 		initializeComponents();
+	}
+
+	/**
+	 * Notifies the registered component instantiation listeners of the
+	 * construction of the provided component
+	 * 
+	 * @param component
+	 *            the component that is being instantiated
+	 */
+	final void notifyComponentInstantiationListeners(final Component component)
+	{
+		final int len = componentInstantiationListeners.length;
+		for (int i = 0; i < len; i++)
+		{
+			componentInstantiationListeners[i].onInstantiation(component);
+		}
 	}
 
 	/**

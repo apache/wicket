@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 /**
  * A key to a piece of metadata associated with a Component at runtime. The key
  * contains type information that can be used to check the type of any metadata
@@ -51,6 +53,71 @@ public abstract class MetaDataKey
 	public boolean equals(Object obj)
 	{
 		return getClass().isInstance(obj);
+	}
+
+	/**
+	 * @param metaData
+	 *            Array of metadata to search
+	 * @return The entry value
+	 */
+	Serializable get(MetaDataEntry[] metaData)
+	{
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (equals(m.key))
+				{
+					return m.object;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param metaData
+	 *            The array of metadata
+	 * @param object
+	 *            The object to set
+	 * @return Any new metadata array (if it was reallocated)
+	 */
+	MetaDataEntry[] set(MetaDataEntry[] metaData, final Serializable object)
+	{
+		checkType(object);
+		boolean set = false;
+		if (metaData != null)
+		{
+			for (int i = 0; i < metaData.length; i++)
+			{
+				MetaDataEntry m = metaData[i];
+				if (equals(m.key))
+				{
+					m.object = object;
+					set = true;
+				}
+			}
+		}
+		if (!set)
+		{
+			MetaDataEntry m = new MetaDataEntry();
+			m.key = this;
+			m.object = object;
+			if (metaData == null)
+			{
+				metaData = new MetaDataEntry[1];
+				metaData[0] = m;
+			}
+			else
+			{
+				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
+				newMetaData[metaData.length] = m;
+				metaData = newMetaData;
+			}
+		}
+		return metaData;
 	}
 
 	/**
