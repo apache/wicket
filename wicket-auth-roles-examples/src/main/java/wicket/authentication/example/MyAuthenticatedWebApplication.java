@@ -3,21 +3,20 @@ package wicket.authentication.example;
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
 import wicket.authorization.strategies.role.Roles;
-import wicket.protocol.http.WebApplication;
 
 /**
  * A role-authorized, authenticated web application in just a few lines of code.
  * 
  * @author Jonathan Locke
  */
-public class MyApplication extends AuthenticatedWebApplication
+public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 {
 	/**
 	 * Authenticated session subclass
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public static class MySession extends AuthenticatedWebSession
+	public static class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	{
 		/** True when the user is signed in */
 		private boolean signedIn;
@@ -28,7 +27,7 @@ public class MyApplication extends AuthenticatedWebApplication
 		 * @param application
 		 *            The application
 		 */
-		protected MySession(WebApplication application)
+		public MyAuthenticatedWebSession(AuthenticatedWebApplication application)
 		{
 			super(application);
 		}
@@ -69,7 +68,7 @@ public class MyApplication extends AuthenticatedWebApplication
 	@Override
 	protected Class< ? extends AuthenticatedWebSession> getWebSessionClass()
 	{
-		return MySession.class;
+		return MyAuthenticatedWebSession.class;
 	}
 
 	/**

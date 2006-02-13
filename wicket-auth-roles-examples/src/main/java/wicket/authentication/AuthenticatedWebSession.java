@@ -2,7 +2,6 @@ package wicket.authentication;
 
 import wicket.Session;
 import wicket.authorization.strategies.role.Roles;
-import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
 /**
@@ -26,7 +25,7 @@ public abstract class AuthenticatedWebSession extends WebSession
 	 * @param application
 	 *            The web application
 	 */
-	protected AuthenticatedWebSession(WebApplication application)
+	public AuthenticatedWebSession(AuthenticatedWebApplication application)
 	{
 		super(application);
 	}

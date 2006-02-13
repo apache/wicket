@@ -17,7 +17,6 @@
  */
 package wicket.authentication;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Page;
@@ -109,7 +108,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			{
 				try
 				{
-					return webSessionClass.getConstructor(new Class[] { Application.class })
+					return webSessionClass.getDeclaredConstructor(AuthenticatedWebApplication.class)
 							.newInstance(AuthenticatedWebApplication.this);
 				}
 				catch (Exception e)
