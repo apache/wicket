@@ -279,7 +279,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, "\n<param name=\"getModelUrl\" value=\""
-				+ urlFor(Resource.RESOURCE_LISTENER_INTERFACE) + "\"/>"
+				+ urlFor(IResourceListener.INTERFACE) + "\"/>"
 				+ "\n<param name=\"setModelUrl\" value=\"" + urlFor(IFormSubmitListener.INTERFACE)
 				+ "\"/>" + "\n<param name=\"appletClassName\" value=\"" + appletClass.getName()
 				+ "\"/>\n");

@@ -24,9 +24,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestListenerInterface;
-import wicket.request.RequestParameters;
-import wicket.request.target.ComponentResourceRequestTarget;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Duration;
@@ -65,17 +62,6 @@ import wicket.util.value.ValueMap;
  */
 public abstract class Resource implements IResourceListener
 {
-	/** Resource listener interface object */
-	public static final RequestListenerInterface RESOURCE_LISTENER_INTERFACE = new RequestListenerInterface(
-			IResourceListener.class)
-	{
-		public IRequestTarget newRequestTarget(Page page, Component component,
-				RequestListenerInterface listener, RequestParameters requestParameters)
-		{
-			return new ComponentResourceRequestTarget(page, component, listener);
-		}
-	};
-
 	private static final long serialVersionUID = 1L;
 
 	/** Logger */
@@ -321,10 +307,5 @@ public abstract class Resource implements IResourceListener
 						+ resourceStream, e);
 			}
 		}
-	}
-
-	static
-	{
-		RequestCycle.registerRequestListenerInterface(RESOURCE_LISTENER_INTERFACE);
 	}
 }

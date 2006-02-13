@@ -97,7 +97,7 @@ public class ResourceLink extends Link implements IResourceListener
 			resourceReference.bind(getApplication());
 			return getRequestCycle().urlFor(resourceReference);
 		}
-		return urlFor(Resource.RESOURCE_LISTENER_INTERFACE);
+		return urlFor(IResourceListener.INTERFACE);
 	}
 
 	/**
