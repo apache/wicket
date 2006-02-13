@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.286 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -595,7 +595,7 @@ public abstract class Component implements Serializable
 	{
 		return getPage().getPageMap().continueToOriginalDestination();
 	}
-	
+
 	/**
 	 * Registers a debug feedback message for this component
 	 * 
@@ -650,10 +650,6 @@ public abstract class Component implements Serializable
 	 * locate this component in the generated markup for post-wicket processing
 	 * such as javascript or an xslt transform.
 	 * <p>
-	 * If the id attribute is present in the markup attributes of this component
-	 * it will be used, otherwise the page-relative path of this component will
-	 * be used.
-	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a
 	 * container with an associated markup file (Page, Panel or Border).
 	 * 
@@ -661,12 +657,26 @@ public abstract class Component implements Serializable
 	 */
 	public final String getMarkupId()
 	{
-		String id = getMarkupAttributes().getString("id");
-		if (id == null)
-		{
-			id = getPageRelativePath();
-		}
-		return id;
+		/*
+		 * TODO POST 1.2 restore the code below after the constructor refactor,
+		 * right now its causing too much pain for components inside listviews
+		 * and borders.
+		 * 
+		 * CODE:
+		 * 
+		 * String id = getMarkupAttributes().getString("id"); if (id == null) {
+		 * id = getPageRelativePath(); } return id;
+		 * 
+		 * JAVADOC:
+		 * 
+		 * If the id attribute is present in the markup attributes of this
+		 * component it will be used, otherwise the page-relative path of this
+		 * component will be used. <p>
+		 * 
+		 * 
+		 */
+
+		return getPageRelativePath();
 	}
 
 	/**
@@ -837,7 +847,7 @@ public abstract class Component implements Serializable
 
 		return Collections.unmodifiableList(behaviors);
 	}
-	
+
 	/**
 	 * @return A path of the form [page-class-name].[page-relative-path]
 	 * @see Component#getPageRelativePath()
@@ -1421,14 +1431,14 @@ public abstract class Component implements Serializable
 	 * 
 	 * @param page
 	 *            The sign in page
-	 *            
+	 * 
 	 * @see Component#continueToOriginalDestination()
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
 		getPage().getPageMap().redirectToInterceptPage(page);
 	}
-	
+
 	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
@@ -2016,7 +2026,7 @@ public abstract class Component implements Serializable
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
-	
+
 	/**
 	 * Registers a warning feedback message for this component.
 	 * 
