@@ -133,7 +133,7 @@ public final class PageMap implements Serializable
 		 */
 		public String toString()
 		{
-			return "Access{id=" + id + ",version=" + version + "}";
+			return "[Access id=" + id + ", version=" + version + "]";
 		}
 	}
 
@@ -370,7 +370,7 @@ public final class PageMap implements Serializable
 	 */
 	public String toString()
 	{
-		return "PageMap{name=" + name + ",access=" + accessStack + "}";
+		return "[PageMap name=" + name + ", access=" + accessStack + "]";
 	}
 
 	/**

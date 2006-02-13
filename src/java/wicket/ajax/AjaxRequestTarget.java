@@ -242,7 +242,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "AjaxRequestTarget@" + hashCode() + " components {" + components + "} javascripts {"
-				+ javascripts + "}";
+		return "[AjaxRequestTarget@" + hashCode() + " components [" + components + "], javascript ["
+				+ javascripts + "]";
 	}
 }

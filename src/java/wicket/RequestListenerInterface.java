@@ -182,7 +182,7 @@ public class RequestListenerInterface
 	 */
 	public String toString()
 	{
-		return "RequestListenerInterface{name=" + name + ",method=" + method + "}";
+		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
 	}
 
 	/**
