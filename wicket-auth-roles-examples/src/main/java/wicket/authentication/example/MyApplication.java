@@ -19,6 +19,7 @@ public class MyApplication extends AuthenticatedWebApplication
 	 */
 	public static class MySession extends AuthenticatedWebSession
 	{
+		/** True when the user is signed in */
 		private boolean signedIn;
 
 		/**
@@ -79,5 +80,4 @@ public class MyApplication extends AuthenticatedWebApplication
 	{
 		return HomePage.class;
 	}
-
 }
