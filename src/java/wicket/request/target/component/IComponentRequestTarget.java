@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,22 +15,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component;
 
-import wicket.Application;
+import wicket.Component;
+import wicket.IRequestTarget;
 
 /**
- * Special purpose target that points to a expiry page
+ * Target that denotes a single component instance.
+ * <p>
+ * NOTE: This target is typically only used for testing purposes.
+ * </p>
  * 
  * @author Eelco Hillenius
  */
-public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
+public interface IComponentRequestTarget extends IRequestTarget
 {
 	/**
-	 * Construct.
+	 * Gets the component instance.
+	 * 
+	 * @return the component instance
 	 */
-	public ExpiredPageClassRequestTarget()
-	{
-		super(Application.get().getApplicationSettings().getPageExpiredErrorPage());
-	}
+	Component getComponent();
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: IListenerInterfaceRequestTarget.java,v 1.2 2005/11/30 21:43:01 joco01
+ * $Id: IBookmarkablePageRequestTarget.java,v 1.1 2005/12/06 22:17:44 eelco12
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,37 +15,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.component;
 
-import wicket.Component;
-import wicket.RequestListenerInterface;
+import wicket.IRequestTarget;
+import wicket.PageParameters;
+import wicket.request.target.IEventProcessor;
 
 /**
- * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * Target that denotes a page that is to be created from the provided page
+ * class. This is typically used for redirects to bookmarkable pages.
  * 
  * @author Eelco Hillenius
  */
-public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
+public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventProcessor
 {
 	/**
-	 * Gets the target component.
+	 * Gets the page class.
 	 * 
-	 * @return the target component
+	 * @return the page class
 	 */
-	Component getTarget();
+	Class getPageClass();
 
 	/**
-	 * Gets listener method.
+	 * Gets the optional page parameters.
 	 * 
-	 * @return the listener method
+	 * @return the page parameters or null
 	 */
-	RequestListenerInterface getRequestListenerInterface();
+	PageParameters getPageParameters();
 
 	/**
-	 * Get the request parameters
+	 * Gets the optional page map name.
 	 * 
-	 * @return The request parameters 
+	 * @return the optional page map name
 	 */
-	RequestParameters getRequestParameters();
+	String getPageMapName();
 }

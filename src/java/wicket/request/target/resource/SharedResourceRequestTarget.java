@@ -15,13 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.resource;
 
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 
 /**
@@ -108,7 +107,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.ISharedResourceRequestTarget#getResourceKey()
+	 * @see wicket.request.target.resource.ISharedResourceRequestTarget#getResourceKey()
 	 */
 	public final String getResourceKey()
 	{

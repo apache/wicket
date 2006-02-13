@@ -25,16 +25,16 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ComponentRequestTarget;
-import wicket.request.target.ListenerInterfaceRequestTarget;
-import wicket.request.target.PageRequestTarget;
-import wicket.request.target.SharedResourceRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.ComponentRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
+import wicket.request.target.resource.SharedResourceRequestTarget;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT

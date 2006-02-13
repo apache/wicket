@@ -20,6 +20,7 @@ package wicket.request;
 import wicket.IRequestTarget;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.request.target.coding.IRequestTargetMounter;
 
 /**
  * Implementations of this interface are responsible for digesting the incoming

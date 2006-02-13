@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,22 +16,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.resource;
 
 import wicket.IRequestTarget;
-import wicket.Page;
 
 /**
- * Request target that denotes a page instance.
+ * Target that denotes a shared {@link wicket.Resource}.
  * 
  * @author Eelco Hillenius
  */
-public interface IPageRequestTarget extends IRequestTarget
+public interface ISharedResourceRequestTarget extends IRequestTarget
 {
 	/**
-	 * Gets the page instance.
+	 * Gets the key of the resource.
 	 * 
-	 * @return the page instance
+	 * @return the key of the resource
 	 */
-	Page getPage();
+	String getResourceKey();
 }

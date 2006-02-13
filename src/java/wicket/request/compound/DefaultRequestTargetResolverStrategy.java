@@ -34,11 +34,11 @@ import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ExpiredPageClassRequestTarget;
-import wicket.request.target.PageRequestTarget;
-import wicket.request.target.RedirectPageRequestTarget;
-import wicket.request.target.SharedResourceRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.ExpiredPageClassRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.RedirectPageRequestTarget;
+import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**

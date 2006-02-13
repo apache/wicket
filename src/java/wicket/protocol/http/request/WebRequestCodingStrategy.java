@@ -42,13 +42,13 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IListenerInterfaceRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
-import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
+import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -187,7 +187,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
@@ -219,7 +219,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String,
+	 * @see wicket.request.target.coding.IRequestTargetMounter#mount(java.lang.String,
 	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)

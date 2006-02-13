@@ -15,13 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component;
 
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.request.IBookmarkablePageRequestTarget;
 import wicket.request.IRequestCycleProcessor;
 
 /**
@@ -160,7 +159,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageClass()
+	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
 	 */
 	public final Class getPageClass()
 	{
@@ -168,7 +167,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageMapName()
+	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageMapName()
 	 */
 	public final String getPageMapName()
 	{
@@ -176,7 +175,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @see wicket.request.IBookmarkablePageRequestTarget#getPageParameters()
+	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageParameters()
 	 */
 	public final PageParameters getPageParameters()
 	{

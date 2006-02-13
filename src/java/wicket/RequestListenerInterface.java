@@ -25,7 +25,7 @@ import java.util.Map;
 
 import wicket.authorization.UnauthorizedActionException;
 import wicket.request.RequestParameters;
-import wicket.request.target.ListenerInterfaceRequestTarget;
+import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Classes;
 
 /**

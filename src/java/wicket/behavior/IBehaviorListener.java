@@ -23,7 +23,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestListenerInterface;
 import wicket.request.RequestParameters;
-import wicket.request.target.BehaviorRequestTarget;
+import wicket.request.target.component.listener.BehaviorRequestTarget;
 
 /**
  * Listens for requests to behaviors. When {@link wicket.behavior.IBehavior}s

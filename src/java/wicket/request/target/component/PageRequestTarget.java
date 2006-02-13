@@ -15,11 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component;
 
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.request.IPageRequestTarget;
 
 /**
  * Default implementation of {@link IPageRequestTarget}. Target that denotes a
@@ -70,7 +69,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IPageRequestTarget#getPage()
+	 * @see wicket.request.target.component.IPageRequestTarget#getPage()
 	 */
 	public final Page getPage()
 	{

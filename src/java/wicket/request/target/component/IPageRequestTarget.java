@@ -15,25 +15,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.component;
 
-import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.Page;
 
 /**
- * Target that denotes a single component instance.
- * <p>
- * NOTE: This target is typically only used for testing purposes.
- * </p>
+ * Request target that denotes a page instance.
  * 
  * @author Eelco Hillenius
  */
-public interface IComponentRequestTarget extends IRequestTarget
+public interface IPageRequestTarget extends IRequestTarget
 {
 	/**
-	 * Gets the component instance.
+	 * Gets the page instance.
 	 * 
-	 * @return the component instance
+	 * @return the page instance
 	 */
-	Component getComponent();
+	Page getPage();
 }
