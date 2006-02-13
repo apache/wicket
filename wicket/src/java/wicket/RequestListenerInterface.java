@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RequestListenerInterface.java,v 1.3 2006/02/13 02:15:14 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import wicket.authorization.UnauthorizedActionException;
+import wicket.request.RequestParameters;
+import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Classes;
 
 /**
@@ -104,7 +106,8 @@ public class RequestListenerInterface
 	public final void invoke(final Page page, final Component component)
 	{
 		// Check authorization
-		// FIXME Bug: Why is Component.ENABLE hardwired into this code (which came from AbstractListenerInterfaceRequestTarget)!?
+		// FIXME Bug: Why is Component.ENABLE hardwired into this code (which
+		// came from AbstractListenerInterfaceRequestTarget)!?
 		if (!component.isActionAuthorized(Component.ENABLE))
 		{
 			throw new UnauthorizedActionException(component, Component.ENABLE);
@@ -138,6 +141,25 @@ public class RequestListenerInterface
 		{
 			page.afterCallComponent(component, this);
 		}
+	}
+
+	/**
+	 * Creates a new request target for this request listener interface
+	 * 
+	 * @param page
+	 *            The page
+	 * @param component
+	 *            The component
+	 * @param listener
+	 *            The listener to call
+	 * @param requestParameters
+	 *            Request parameters
+	 * @return The request target
+	 */
+	public IRequestTarget newRequestTarget(final Page page, final Component component,
+			final RequestListenerInterface listener, final RequestParameters requestParameters)
+	{
+		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);
 	}
 
 	/**
