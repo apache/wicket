@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -186,7 +187,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			final Page page, final String componentPath, final String interfaceName,
 			final RequestParameters requestParameters)
 	{
-		if (interfaceName.equals(Page.REDIRECT_LISTENER_INTERFACE.getName()))
+		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
 		}

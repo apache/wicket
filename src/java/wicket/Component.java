@@ -1996,13 +1996,13 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
-	 * @param listenerInterface
+	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
-	public final String urlFor(final Class listenerInterface)
+	public final String urlFor(final RequestListenerInterface listener)
 	{
-		return getRequestCycle().urlFor(this, listenerInterface);
+		return getRequestCycle().urlFor(this, listener);
 	}
 
 	/**

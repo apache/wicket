@@ -91,7 +91,7 @@ public final class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{
-		this(page.urlFor(IRedirectListener.class), waitBeforeRedirectInSeconds);
+		this(page.urlFor(IRedirectListener.INTERFACE), waitBeforeRedirectInSeconds);
 	}
 
 	/**

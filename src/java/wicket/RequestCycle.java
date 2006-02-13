@@ -37,7 +37,6 @@ import wicket.request.target.ComponentRequestTarget;
 import wicket.request.target.ListenerInterfaceRequestTarget;
 import wicket.request.target.PageRequestTarget;
 import wicket.request.target.SharedResourceRequestTarget;
-import wicket.util.lang.Classes;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -269,6 +268,19 @@ public abstract class RequestCycle
 	public static final void registerRequestListenerInterface(
 			final RequestListenerInterface requestListenerInterface)
 	{
+		// Check that a different interface method with the same name has not
+		// already been registered
+		final RequestListenerInterface existingInterface = requestListenerInterfaceForName(requestListenerInterface
+				.getName());
+		if (existingInterface != null
+				&& existingInterface.getMethod() != requestListenerInterface.getMethod())
+		{
+			throw new IllegalStateException("Cannot register listener interface "
+					+ requestListenerInterface
+					+ " because it conflicts with the already registered interface "
+					+ existingInterface);
+		}
+
 		// Save this interface method by the non-qualified class name
 		requestListenerInterfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 	}
@@ -281,7 +293,8 @@ public abstract class RequestCycle
 	 * @return The RequestListenerInterface object, or null if none is found
 	 * 
 	 */
-	public static final RequestListenerInterface requestListenerInterfaceForName(final String interfaceName)
+	public static final RequestListenerInterface requestListenerInterfaceForName(
+			final String interfaceName)
 	{
 		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
 	}
@@ -690,21 +703,20 @@ public abstract class RequestCycle
 	 * 
 	 * @param component
 	 *            The component to reference
-	 * @param listenerInterface
+	 * @param listener
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final String urlFor(final Component component, final Class listenerInterface)
+	public final String urlFor(final Component component, final RequestListenerInterface listener)
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		page.setStateless(false);
 
 		// Get the listener interface name
-		final String interfaceName = Classes.name(listenerInterface);
-		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component,
-				requestListenerInterfaceForName(interfaceName));
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, listener);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
 

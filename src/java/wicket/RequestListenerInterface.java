@@ -76,7 +76,11 @@ public class RequestListenerInterface
 					+ " can have only one method");
 		}
 
+		// Save short class name
 		this.name = Classes.name(listenerInterfaceClass);
+		
+		// Register this listener interface
+		RequestCycle.registerRequestListenerInterface(this);
 	}
 
 	/**

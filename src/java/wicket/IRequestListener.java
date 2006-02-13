@@ -24,6 +24,10 @@ import java.io.Serializable;
  * browser. All sub-interfaces of this interface must have a single method which
  * takes no arguments. New listener interfaces must be registered by calling
  * {@link RequestCycle#registerRequestListenerInterface(RequestListenerInterface)}.
+ * The best way to do this is to create a public static final constant field for
+ * your request listener of type RequestListenerInterface. Simply using the
+ * interface will then cause the class to be loaded and the interface
+ * registered.
  * 
  * @author Jonathan Locke
  */

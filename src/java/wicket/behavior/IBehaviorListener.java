@@ -17,18 +17,36 @@
  */
 package wicket.behavior;
 
+import wicket.Component;
 import wicket.IRequestListener;
+import wicket.IRequestTarget;
+import wicket.Page;
+import wicket.RequestListenerInterface;
+import wicket.request.RequestParameters;
+import wicket.request.target.BehaviorRequestTarget;
 
 /**
- * Listens for requests to behaviors. When {@link wicket.behavior.IBehavior}s are
- * 'enriched' with this interface, they can receive requests themselves. You can
- * use this for example to implement AJAX behavior, though you'll probably want
- * to extend from {@link wicket.behavior.AbstractAjaxBehavior} directly instead in that case.
+ * Listens for requests to behaviors. When {@link wicket.behavior.IBehavior}s
+ * are 'enriched' with this interface, they can receive requests themselves. You
+ * can use this for example to implement AJAX behavior, though you'll probably
+ * want to extend from {@link wicket.behavior.AbstractAjaxBehavior} directly
+ * instead in that case.
  * 
  * @author Eelco Hillenius
  */
 public interface IBehaviorListener extends IRequestListener
 {
+	/** Behavior listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+			IBehaviorListener.class)
+	{
+		public IRequestTarget newRequestTarget(Page page, Component component,
+				RequestListenerInterface listener, RequestParameters requestParameters)
+		{
+			return new BehaviorRequestTarget(page, component, listener, requestParameters);
+		}
+	};
+
 	/**
 	 * Called when a request to a behavior is received.
 	 */

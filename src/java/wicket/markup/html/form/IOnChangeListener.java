@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.IRequestListener;
+import wicket.RequestListenerInterface;
 
 /**
  * Listener method for OnChange events of dropdown lists and onclick events of
@@ -30,6 +31,9 @@ import wicket.IRequestListener;
  */
 public interface IOnChangeListener extends IRequestListener
 {
+	/** Listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(IOnChangeListener.class);
+	
 	/**
 	 * Called when a new option is selected.
 	 */
