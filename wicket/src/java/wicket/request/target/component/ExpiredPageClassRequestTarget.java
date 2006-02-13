@@ -16,21 +16,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.component;
 
-import wicket.IRequestTarget;
+import wicket.Application;
 
 /**
- * Target that denotes a shared {@link wicket.Resource}.
+ * Special purpose target that points to a expiry page
  * 
  * @author Eelco Hillenius
  */
-public interface ISharedResourceRequestTarget extends IRequestTarget
+public class ExpiredPageClassRequestTarget extends BookmarkablePageRequestTarget
 {
 	/**
-	 * Gets the key of the resource.
-	 * 
-	 * @return the key of the resource
+	 * Construct.
 	 */
-	String getResourceKey();
+	public ExpiredPageClassRequestTarget()
+	{
+		super(Application.get().getApplicationSettings().getPageExpiredErrorPage());
+	}
 }

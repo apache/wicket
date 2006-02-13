@@ -15,26 +15,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component.listener;
 
-import wicket.RequestCycle;
+import wicket.Component;
+import wicket.RequestListenerInterface;
+import wicket.request.RequestParameters;
+import wicket.request.target.component.IPageRequestTarget;
 
 /**
- * Targets that implement this interface announce that they can process events.
- * This interface is not meant to be used on its own, but rather to be mixed in
- * with other interfaces, like
- * {@link wicket.request.target.component.listener.IListenerInterfaceRequestTarget}.
+ * Target that denotes a page instance and a call to a component on that page
+ * using an listener interface method.
  * 
  * @author Eelco Hillenius
  */
-public interface IEventProcessor
+public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 {
 	/**
-	 * After a page is restored, this method is responsible for calling any
-	 * event handling code based on the request.
+	 * Gets the target component.
 	 * 
-	 * @param requestCycle
-	 *            the current request cycle
+	 * @return the target component
 	 */
-	void processEvents(final RequestCycle requestCycle);
+	Component getTarget();
+
+	/**
+	 * Gets listener method.
+	 * 
+	 * @return the listener method
+	 */
+	RequestListenerInterface getRequestListenerInterface();
+
+	/**
+	 * Get the request parameters
+	 * 
+	 * @return The request parameters 
+	 */
+	RequestParameters getRequestParameters();
 }

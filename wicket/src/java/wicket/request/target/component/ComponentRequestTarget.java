@@ -15,15 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component;
 
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.request.IComponentRequestTarget;
 
 /**
- * Default implementation of {@link wicket.request.IComponentRequestTarget}.
+ * Default implementation of {@link wicket.request.target.component.IComponentRequestTarget}.
  * Target that denotes a single component instance.
  * 
  * @author Eelco Hillenius
@@ -80,7 +79,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.IComponentRequestTarget#getComponent()
+	 * @see wicket.request.target.component.IComponentRequestTarget#getComponent()
 	 */
 	public final Component getComponent()
 	{

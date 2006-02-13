@@ -19,8 +19,8 @@ package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class.

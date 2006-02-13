@@ -18,7 +18,7 @@
 package wicket;
 
 import wicket.request.RequestParameters;
-import wicket.request.target.ComponentResourceRequestTarget;
+import wicket.request.target.resource.ComponentResourceRequestTarget;
 
 /**
  * Listens for requests regarding resources. Such resources are typically

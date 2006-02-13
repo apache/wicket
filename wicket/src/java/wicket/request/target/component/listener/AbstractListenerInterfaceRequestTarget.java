@@ -15,20 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request.target;
+package wicket.request.target.component.listener;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
-import wicket.request.IListenerInterfaceRequestTarget;
 import wicket.request.RequestParameters;
+import wicket.request.target.IEventProcessor;
+import wicket.request.target.component.PageRequestTarget;
 import wicket.settings.Settings;
 
 /**
  * The abstract implementation of
- * {@link wicket.request.IListenerInterfaceRequestTarget}. Target that denotes
+ * {@link wicket.request.target.component.listener.IListenerInterfaceRequestTarget}. Target that denotes
  * a page instance and a call to a component on that page using an listener
  * interface method.
  * 
@@ -150,7 +151,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getRequestParameters()
+	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestParameters()
 	 */
 	public final RequestParameters getRequestParameters()
 	{
@@ -158,7 +159,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getRequestListenerInterface()
+	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestListenerInterface()
 	 */
 	public final RequestListenerInterface getRequestListenerInterface()
 	{
@@ -166,7 +167,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.IListenerInterfaceRequestTarget#getTarget()
+	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getTarget()
 	 */
 	public final Component getTarget()
 	{

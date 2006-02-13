@@ -15,10 +15,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.request;
+package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
-import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
 /**
  * Defines the contract for mounting request targets to paths.

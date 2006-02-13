@@ -25,7 +25,7 @@ import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.request.IPageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
 import wicket.settings.Settings;
 

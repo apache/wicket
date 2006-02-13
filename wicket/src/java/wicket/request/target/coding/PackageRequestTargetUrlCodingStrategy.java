@@ -20,8 +20,8 @@ package wicket.request.target.coding;
 import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Classes;
 import wicket.util.lang.PackageName;
 

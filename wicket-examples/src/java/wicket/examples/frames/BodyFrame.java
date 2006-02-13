@@ -24,8 +24,8 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebPage;
 import wicket.model.Model;
 import wicket.request.IRequestCodingStrategy;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.PageRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
 
 /**
  * Body frame page for the frames example.

@@ -23,7 +23,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
-import wicket.request.target.ComponentRequestTarget;
+import wicket.request.target.component.ComponentRequestTarget;
 
 /**
  * Example displaying partial page rendering using the counting link example and
