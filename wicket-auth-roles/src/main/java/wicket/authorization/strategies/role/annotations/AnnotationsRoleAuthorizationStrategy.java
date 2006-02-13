@@ -47,26 +47,32 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isInstantiationAuthorized(Class componentClass)
+	public boolean isInstantiationAuthorized(final Class componentClass)
 	{
+		// We are authorized unless we are found not to be
 		boolean authorized = true;
-		Package annotPackage = componentClass.getPackage();
-		if (annotPackage != null)
+
+		// Check package annotation first
+		final Package componentPackage = componentClass.getPackage();
+		if (componentPackage != null)
 		{
-			AuthorizeInstantiation packageRolesAllowed = (AuthorizeInstantiation)annotPackage
+			final AuthorizeInstantiation packageAnnotation = (AuthorizeInstantiation)componentPackage
 					.getAnnotation(AuthorizeInstantiation.class);
-			if (packageRolesAllowed != null)
+			if (packageAnnotation != null)
 			{
-				authorized = hasAny(new Roles(packageRolesAllowed.value()));
+				authorized = hasAny(new Roles(packageAnnotation.value()));
 			}
 		}
-		AuthorizeInstantiation classRolesAllowed = (AuthorizeInstantiation)componentClass
+		
+		// Check class annotation
+		final AuthorizeInstantiation classAnnotation = (AuthorizeInstantiation)componentClass
 				.getAnnotation(AuthorizeInstantiation.class);
-		if (classRolesAllowed != null)
+		if (classAnnotation != null)
 		{
-			// if roles are defined for the class, that overrides the package
-			authorized = hasAny(new Roles(classRolesAllowed.value()));
+			// If roles are defined for the class, that overrides the package
+			authorized = hasAny(new Roles(classAnnotation.value()));
 		}
+		
 		return authorized;
 	}
 
