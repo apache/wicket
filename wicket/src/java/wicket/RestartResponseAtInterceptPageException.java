@@ -29,6 +29,7 @@ package wicket;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke
+ * @author Philip Chapman
  */
 public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException
 {
@@ -73,7 +74,16 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 */
 	private void redirectToInterceptPage(final Page interceptPage)
 	{
-		RequestCycle.get().getRequest().getPage().getPageMap().redirectToInterceptPage(
-				interceptPage);
+		Page p = RequestCycle.get().getRequest().getPage();
+		/*
+		 * page can be null if we throw the restart response exception before
+		 * any page is instantiated in user's session. if this happens we switch
+		 * to the pagemap of the interceptPage
+		 */
+		if (p == null)
+		{
+			p = interceptPage;
+		}
+		p.getPageMap().redirectToInterceptPage(interceptPage);
 	}
 }
