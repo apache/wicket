@@ -31,7 +31,6 @@ import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
-import wicket.RestartResponseAtInterceptPageException;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
@@ -237,9 +236,6 @@ public final class Settings
 	/** The session store factory. */
 	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
 
-	/** Page class to use for user sign-ins */
-	private Class signInPage;
-
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
 
@@ -262,22 +258,7 @@ public final class Settings
 		 */
 		public void onUnauthorizedInstantiation(final Component component)
 		{
-			// Get sign-in page class
-			final Class signInPageClass = Application.get().getSecuritySettings().getSignInPage();
-
-			// If there is a sign in page class declared, and the unauthorized
-			// component is a page, but it's not the sign in page
-			if (signInPageClass != null && component instanceof Page
-					&& signInPageClass != component.getClass())
-			{
-				// Redirect to intercept page to let the user sign in
-				throw new RestartResponseAtInterceptPageException(signInPageClass);
-			}
-			else
-			{
-				// The component was not a page, so throw an exception
-				throw new UnauthorizedInstantiationException(component.getClass());
-			}
+			throw new UnauthorizedInstantiationException(component.getClass());
 		}
 	};
 
@@ -672,14 +653,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#getSignInPage()
-	 */
-	public Class getSignInPage()
-	{
-		return signInPage;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -1026,14 +999,6 @@ public final class Settings
 	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
 	{
 		this.sessionStoreFactory = sessionStoreFactory;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#setSignInPage(java.lang.Class)
-	 */
-	public void setSignInPage(Class signInPage)
-	{
-		this.signInPage = signInPage;
 	}
 
 	/**

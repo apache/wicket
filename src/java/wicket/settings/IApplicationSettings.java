@@ -67,13 +67,6 @@ public interface IApplicationSettings
 	Class getPageExpiredErrorPage();
 
 	/**
-	 * Gets the sign in page class.
-	 * 
-	 * @return Page class for sign-in.
-	 */
-	Class getSignInPage();
-
-	/**
 	 * Sets the access denied page class. The class must be bookmarkable and
 	 * must extend Page.
 	 * 
@@ -121,11 +114,4 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
-
-	/**
-	 * Sets the sign in page class.
-	 * 
-	 * @param signInPage Page class for sign-in.
-	 */
-	void setSignInPage(Class signInPage);
 }
