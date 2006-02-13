@@ -259,13 +259,34 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Looks up a request interface listener by name.
+	 * 
+	 * @param interfaceName
+	 *            The interface name
+	 * @return The RequestListenerInterface object, or null if none is found
+	 * 
+	 */
+	public static final RequestListenerInterface requestListenerInterfaceForName(
+			final String interfaceName)
+	{
+		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * In previous versions of Wicket, request listeners were manually
+	 * registered by calling this method. Now there is a first class
+	 * RequestListenerInterface object which should be constructed as a constant
+	 * member of the interface to enable automatic interface registration.
+	 * <p>
 	 * Adds a request listener interface to the map of interfaces that can be
 	 * invoked by outsiders.
 	 * 
 	 * @param requestListenerInterface
 	 *            The request listener interface object
 	 */
-	public static final void registerRequestListenerInterface(
+	static final void registerRequestListenerInterface(
 			final RequestListenerInterface requestListenerInterface)
 	{
 		// Check that a different interface method with the same name has not
@@ -283,20 +304,6 @@ public abstract class RequestCycle
 
 		// Save this interface method by the non-qualified class name
 		requestListenerInterfaces.put(requestListenerInterface.getName(), requestListenerInterface);
-	}
-
-	/**
-	 * Looks up a request interface listener by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The RequestListenerInterface object, or null if none is found
-	 * 
-	 */
-	public static final RequestListenerInterface requestListenerInterfaceForName(
-			final String interfaceName)
-	{
-		return (RequestListenerInterface)requestListenerInterfaces.get(interfaceName);
 	}
 
 	/**
@@ -796,8 +803,6 @@ public abstract class RequestCycle
 	protected void onEndRequest()
 	{
 	}
-
-	// internal ints for processing status; keep here to be out of sight a bit
 
 	/**
 	 * Checks whether no processing has been done yet and throws an exception

@@ -84,6 +84,14 @@ public class ResourceLink extends Link implements IResourceListener
 	public void onClick()
 	{
 	}
+
+	/**
+	 * @see wicket.IResourceListener#onResourceRequested()
+	 */
+	public final void onResourceRequested()
+	{
+		resource.onResourceRequested();
+	}
 	
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()
@@ -98,13 +106,5 @@ public class ResourceLink extends Link implements IResourceListener
 			return getRequestCycle().urlFor(resourceReference);
 		}
 		return urlFor(IResourceListener.INTERFACE);
-	}
-
-	/**
-	 * @see wicket.IResourceListener#onResourceRequested()
-	 */
-	public final void onResourceRequested()
-	{
-		resource.onResourceRequested();
 	}
 }
