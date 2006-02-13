@@ -17,11 +17,10 @@
  */
 package wicket.request.target;
 
-import java.lang.reflect.Method;
-
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.behavior.IBehaviorListener;
 import wicket.request.RequestParameters;
 
@@ -40,13 +39,13 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
+	 * @param listener
 	 *            the listener method
 	 */
 	public BehaviorRequestTarget(final Page page, final Component component,
-			final Method listenerMethod)
+			final RequestListenerInterface listener)
 	{
-		this(page, component, listenerMethod, null);
+		this(page, component, listener, null);
 	}
 
 	/**
@@ -56,15 +55,15 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
+	 * @param listener
 	 *            the listener method
 	 * @param requestParameters
 	 *            the request parameters
 	 */
 	public BehaviorRequestTarget(final Page page, final Component component,
-			final Method listenerMethod, final RequestParameters requestParameters)
+			final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
-		super(page, component, listenerMethod, requestParameters);
+		super(page, component, listener, requestParameters);
 	}
 
 	/**
@@ -72,24 +71,27 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
-		// Preprocess like standard component request. Do all the initialization necessary
+		// Preprocess like standard component request. Do all the initialization
+		// necessary
 		onProcessEvents(requestCycle);
-		
+
 		// Get the IBehavior for the component based on the request parameters
 		final Component component = getTarget();
 		final String id = getRequestParameters().getBehaviorId();
 		if (id == null)
 		{
 			throw new IllegalStateException(
-					"Parameter behaviorId was not provided: unable to locate listener. Component: " 
-					+ component.toString());
+					"Parameter behaviorId was not provided: unable to locate listener. Component: "
+							+ component.toString());
 		}
 
 		final int idAsInt = Integer.parseInt(id);
-		final IBehaviorListener behaviorListener = (IBehaviorListener)component.getBehaviors().get(idAsInt);
+		final IBehaviorListener behaviorListener = (IBehaviorListener)component.getBehaviors().get(
+				idAsInt);
 		if (behaviorListener == null)
 		{
-			throw new IllegalStateException("No behavior listener found with behaviorId " + id + "; Component: " + component.toString());
+			throw new IllegalStateException("No behavior listener found with behaviorId " + id
+					+ "; Component: " + component.toString());
 		}
 
 		// Invoke the interface method

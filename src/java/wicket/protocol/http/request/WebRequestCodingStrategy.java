@@ -49,7 +49,6 @@ import wicket.request.IRequestCodingStrategy;
 import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
-import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -499,23 +498,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final StringBuffer url = new StringBuffer(64);
 		url.append(urlPrefix(requestCycle));
 		url.append("?path=");
-		Component component = requestTarget.getTarget();
+		final Component component = requestTarget.getTarget();
 		url.append(component.getPath());
-		Page currentPage = component.getPage();
+		final Page currentPage = component.getPage();
 		final PageMap pageMap = currentPage.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			url.append("&pagemap=");
 			url.append(pageMap.getName());
 		}
-		int versionNumber = component.getPage().getCurrentVersionNumber();
+		final int versionNumber = component.getPage().getCurrentVersionNumber();
 		if (versionNumber > 0)
 		{
 			url.append("&version=");
 			url.append(versionNumber);
 		}
 
-		String listenerName = Classes.name(requestTarget.getListenerMethod().getDeclaringClass());
+		final String listenerName = requestTarget.getRequestListenerInterface().getName();
 		if (!"IRedirectListener".equals(listenerName))
 		{
 			url.append("&interface=");
@@ -523,7 +522,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 
 		return requestCycle.getResponse().encodeURL(url.toString());
-
 	}
 
 	/**

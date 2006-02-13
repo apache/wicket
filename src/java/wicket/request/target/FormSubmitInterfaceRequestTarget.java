@@ -17,11 +17,10 @@
  */
 package wicket.request.target;
 
-import java.lang.reflect.Method;
-
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 
 /**
  * Interface request target for forms.
@@ -37,12 +36,12 @@ public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceR
 	 *            The Page
 	 * @param component
 	 *            The component
-	 * @param listenerMethod
-	 *            The listener method to invoke
+	 * @param listener
+	 *            The listener interface to invoke
 	 */
-	public FormSubmitInterfaceRequestTarget(Page page, Component component, Method listenerMethod)
+	public FormSubmitInterfaceRequestTarget(Page page, Component component, RequestListenerInterface listener)
 	{
-		super(page, component, listenerMethod);
+		super(page, component, listener);
 	}
 
 	/**
@@ -50,6 +49,6 @@ public class FormSubmitInterfaceRequestTarget extends AbstractListenerInterfaceR
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{
-		invokeInterface(getTarget(), getListenerMethod(), getPage());
+		getRequestListenerInterface().invoke(getPage(), getTarget());
 	}
 }

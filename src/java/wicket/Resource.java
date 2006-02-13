@@ -311,6 +311,6 @@ public abstract class Resource implements IResourceListener
 
 	static
 	{
-		RequestCycle.registerRequestListenerInterface(IResourceListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IResourceListener.class));
 	}
 }

@@ -37,7 +37,7 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	 */
 	public RedirectPageRequestTarget(final Page page)
 	{
-		super(page, page, RequestCycle.get().getRequestInterfaceMethod("IRedirectListener"));
+		super(page, page, RequestCycle.requestListenerInterfaceForName("IRedirectListener"));
 	}
 	
 	/**
@@ -45,6 +45,6 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
-		invokeInterface(getTarget(), getListenerMethod(), getPage());
+		getRequestListenerInterface().invoke(getPage(), getTarget());
 	}	
 }

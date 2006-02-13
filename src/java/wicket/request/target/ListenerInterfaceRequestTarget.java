@@ -17,11 +17,10 @@
  */
 package wicket.request.target;
 
-import java.lang.reflect.Method;
-
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.request.RequestParameters;
 
 /**
@@ -39,13 +38,13 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
-	 *            the listener method
+	 * @param listener
+	 *            the request listener interface
 	 */
 	public ListenerInterfaceRequestTarget(final Page page, final Component component,
-			final Method listenerMethod)
+			final RequestListenerInterface listener)
 	{
-		this(page, component, listenerMethod, null);
+		this(page, component, listener, null);
 	}
 
 	/**
@@ -55,15 +54,15 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the page instance
 	 * @param component
 	 *            the target component
-	 * @param listenerMethod
-	 *            the listener method
+	 * @param listener
+	 *            the request listener interface
 	 * @param requestParameters
 	 *            the request parameters
 	 */
 	public ListenerInterfaceRequestTarget(final Page page, final Component component,
-			final Method listenerMethod, final RequestParameters requestParameters)
+			final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
-		super(page, component, listenerMethod, requestParameters);
+		super(page, component, listener, requestParameters);
 	}
 
 	/**
@@ -72,6 +71,6 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	public final void processEvents(final RequestCycle requestCycle)
 	{
 		onProcessEvents(requestCycle);
-		invokeInterface(getTarget(), getListenerMethod(), getPage());
+		getRequestListenerInterface().invoke(getPage(), getTarget()); 
 	}
 }

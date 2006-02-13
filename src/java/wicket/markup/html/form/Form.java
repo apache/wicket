@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,6 +28,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -953,10 +953,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				throw new WicketRuntimeException(
 						"Calling listener methods on components that are not visible is not allowed");
 			}
-			Method method = requestCycle.getRequestInterfaceMethod(interfaceName);
-			if (method != null)
+			final RequestListenerInterface listener = RequestCycle.requestListenerInterfaceForName(interfaceName);
+			if (listener != null)
 			{
-				new FormSubmitInterfaceRequestTarget(page, component, method)
+				new FormSubmitInterfaceRequestTarget(page, component, listener)
 						.processEvents(requestCycle);
 			}
 		}
@@ -1006,6 +1006,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	static
 	{
 		// Allow use of IFormSubmitListener interface
-		RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
+		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IFormSubmitListener.class));
 	}
 }

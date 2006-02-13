@@ -17,8 +17,6 @@
  */
 package wicket.request.compound;
 
-import java.lang.reflect.Method;
-
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.Application;
@@ -27,6 +25,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.MarkupException;
@@ -78,7 +77,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			// the path was mounted, so return that directly
 			return mounted;
-		} 
+		}
 
 		// See whether this request points to a rendered page
 		if (requestParameters.getComponentPath() != null)
@@ -148,7 +147,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			// Set page on request
 			requestCycle.getRequest().setPage(page);
-			
+
 			// see whether this resolves to a component call or just the page
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
@@ -182,11 +181,12 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            The component path for looking up the component in the page.
 	 * @param interfaceName
 	 *            The interface to resolve.
-	 * @param requestParameters 
+	 * @param requestParameters
 	 * @return The RequestTarget that was resolved
 	 */
 	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle,
-			final Page page, final String componentPath, final String interfaceName, RequestParameters requestParameters)
+			final Page page, final String componentPath, final String interfaceName,
+			RequestParameters requestParameters)
 	{
 		if (interfaceName.equals("IRedirectListener"))
 		{
@@ -194,42 +194,44 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		}
 		else
 		{
-			Method listenerMethod = requestCycle.getRequestInterfaceMethod(interfaceName);
-			if (listenerMethod == null)
+			final RequestListenerInterface listener = RequestCycle
+					.requestListenerInterfaceForName(interfaceName);
+			if (listener == null)
 			{
-				throw new WicketRuntimeException("Attempt to access unknown interface "
-						+ interfaceName);
+				throw new WicketRuntimeException(
+						"Attempt to access unknown request listener interface " + interfaceName);
 			}
-			String componentPart = Strings.afterFirstPathComponent(componentPath,
+			final String componentPart = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(componentPart))
 			{
-				// we have an interface that is not redirect, but no
+				// We have an interface that is not redirect, but no
 				// component... that must be wrong
-				throw new WicketRuntimeException("when trying to call " + listenerMethod
+				throw new WicketRuntimeException("When trying to call " + listener
 						+ ", a component must be provided");
 			}
-			Component component = page.get(componentPart);
+			final Component component = page.get(componentPart);
 			if (component == null)
 			{
 				throw new WicketRuntimeException(
-					"Calling listener methods on non-existing component: " + componentPath);
+						"Calling listener methods on non-existing component: " + componentPath);
 			}
 			if (!component.isVisible())
 			{
 				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed: " 
-						+ componentPath);
+						"Calling listener methods on components that are not visible is not allowed: "
+								+ componentPath);
 			}
 			if (interfaceName.equals("IResourceListener"))
 			{
-				return new ComponentResourceRequestTarget(page, component, listenerMethod);
+				return new ComponentResourceRequestTarget(page, component, listener);
 			}
 			else if (interfaceName.equals("IBehaviorListener"))
 			{
-				return new BehaviorRequestTarget(page, component, listenerMethod, requestParameters);
+				return new BehaviorRequestTarget(page, component, listener, requestParameters);
 			}
-			return new ListenerInterfaceRequestTarget(page, component, listenerMethod, requestParameters);
+			return new ListenerInterfaceRequestTarget(page, component, listener,
+					requestParameters);
 		}
 	}
 
@@ -262,7 +264,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),pageClass,params);
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
+					params);
 		}
 		catch (RuntimeException e)
 		{
