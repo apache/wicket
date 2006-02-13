@@ -19,8 +19,6 @@ package wicket.markup.html.link;
 
 import wicket.Application;
 import wicket.Page;
-import wicket.RequestCycle;
-import wicket.RequestListenerInterface;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -279,7 +277,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	protected String getURL()
 	{
-		return urlFor(ILinkListener.class);
+		return urlFor(ILinkListener.INTERFACE);
 	}
 
 	/**
@@ -415,11 +413,5 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		{
 			getResponse().write(afterDisabledLink);
 		}
-	}
-
-	static
-	{
-		// Allow calls through the ILinkListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(ILinkListener.class));
 	}
 }

@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.RequestCycle;
-import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -155,7 +153,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		// Should a roundtrip be made (have onSelectionChanged called) when the checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			final String url = urlFor(IOnChangeListener.class);
+			final String url = urlFor(IOnChangeListener.INTERFACE);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
 			try
@@ -199,11 +197,5 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		{
 			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
 		}
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IOnChangeListener.class));
 	}
 }

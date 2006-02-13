@@ -19,8 +19,6 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
-import wicket.RequestCycle;
-import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -158,7 +156,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		if (wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = urlFor(IOnChangeListener.class);
+			final String url = urlFor(IOnChangeListener.INTERFACE);
 
 			try
 			{
@@ -205,11 +203,5 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IOnChangeListener.class));
 	}
 }

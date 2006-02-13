@@ -331,7 +331,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			String interfaceName = request.getParameter("interface");
 			if (interfaceName == null)
 			{
-				interfaceName = Page.REDIRECT_LISTENER_INTERFACE.getName();
+				interfaceName = IRedirectListener.INTERFACE.getName();
 			}
 			parameters.setInterfaceName(interfaceName);
 			parameters.setBehaviorId(request.getParameter("behaviorId"));
@@ -515,7 +515,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 
 		final String listenerName = requestTarget.getRequestListenerInterface().getName();
-		if (!Page.REDIRECT_LISTENER_INTERFACE.getName().equals(listenerName))
+		if (!IRedirectListener.INTERFACE.getName().equals(listenerName))
 		{
 			url.append("&interface=");
 			url.append(listenerName);
@@ -537,8 +537,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		// Get the page we want a url from:
 		Page page = requestTarget.getPage();
+
 		// A url to a page is the IRedirectListener interface:
-		String urlRedirect = page.urlFor(IRedirectListener.class);
+		String urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
+		
 		// Touch the page once because it could be that it did go from stateless
 		// to statefull
 		// or it was a internally made page where just a url must be made for

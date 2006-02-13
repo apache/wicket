@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.RequestCycle;
-import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -145,11 +143,5 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
-	}
-	
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IOnChangeListener.class));
 	}
 }

@@ -95,7 +95,7 @@ public class Radio extends WebMarkupContainer
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = group.urlFor(IOnChangeListener.class);
+			final String url = group.urlFor(IOnChangeListener.INTERFACE);
 
 			try
 			{
@@ -113,6 +113,4 @@ public class Radio extends WebMarkupContainer
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
-
-
 }

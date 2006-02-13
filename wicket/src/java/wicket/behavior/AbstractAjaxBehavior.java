@@ -116,7 +116,7 @@ public abstract class AbstractAjaxBehavior
 					+ " was not registered with this component: " + getComponent().toString());
 		}
 
-		return getComponent().urlFor(IBehaviorListener.class) + "&behaviorId=" + index;
+		return getComponent().urlFor(IBehaviorListener.INTERFACE) + "&behaviorId=" + index;
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class Index extends WicketExamplePage
 			 */
 			protected String getOnClickScript(String url)
 			{
-				return "new Ajax.Updater('counter', '" + urlFor(ILinkListener.class)
+				return "new Ajax.Updater('counter', '" + urlFor(ILinkListener.INTERFACE)
 						+ "', {method:'get'}); return false;";
 			}
 		});

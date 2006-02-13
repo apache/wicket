@@ -273,7 +273,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		else
 		{
 			// Create URL to component
-			url = component.urlFor(IResourceListener.class);
+			url = component.urlFor(Resource.RESOURCE_LISTENER_INTERFACE);
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
@@ -392,5 +392,4 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 							+ "'.  Was expecting a value attribute of the form \"[resourceFactoryName]:[resourceReferenceName]?:[factorySpecification]\".");
 		}
 	}
-
 }

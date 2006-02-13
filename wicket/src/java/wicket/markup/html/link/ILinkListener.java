@@ -18,6 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.IRequestListener;
+import wicket.RequestListenerInterface;
 
 /**
  * Listener method for link clicks.
@@ -26,6 +27,9 @@ import wicket.IRequestListener;
  */
 public interface ILinkListener extends IRequestListener
 {
+	/** Listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(ILinkListener.class);
+	
 	/**
 	 * Called when a link is clicked.
 	 */

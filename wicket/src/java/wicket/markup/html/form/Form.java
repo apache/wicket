@@ -616,7 +616,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		}
 		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
 		if (multiPart)
 		{
 			tag.put("enctype", "multipart/form-data");
@@ -1001,11 +1001,5 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
 				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
-	}
-
-	static
-	{
-		// Allow use of IFormSubmitListener interface
-		RequestCycle.registerRequestListenerInterface(new RequestListenerInterface(IFormSubmitListener.class));
 	}
 }

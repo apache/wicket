@@ -18,6 +18,7 @@
  */
 package wicket.request.target;
 
+import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.RequestCycle;
 
@@ -37,7 +38,7 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	 */
 	public RedirectPageRequestTarget(final Page page)
 	{
-		super(page, page, Page.REDIRECT_LISTENER_INTERFACE);
+		super(page, page, IRedirectListener.INTERFACE);
 	}
 	
 	/**

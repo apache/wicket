@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.IRequestListener;
+import wicket.RequestListenerInterface;
 
 /**
  * Listener interface that is called when a form is submitted.
@@ -26,6 +27,9 @@ import wicket.IRequestListener;
  */
 public interface IFormSubmitListener extends IRequestListener
 {
+	/** Listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(IFormSubmitListener.class);
+	
 	/**
 	 * Called when a form is submitted
 	 */

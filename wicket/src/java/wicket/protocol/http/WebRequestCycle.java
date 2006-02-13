@@ -164,7 +164,7 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					servletResponse.close();
 
-					redirectUrl = page.urlFor(IRedirectListener.class);
+					redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
 					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
 					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl, servletResponse);
 				}
@@ -181,18 +181,21 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
-			redirectUrl = page.urlFor(IRedirectListener.class);
-			// redirect page can touch its models already (via for example the
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
+			
+			// Redirect page can touch its models already (via for example the
 			// constructors)
 			page.internalEndRequest();
 		}
 
 		if (redirectUrl == null)
 		{
-			redirectUrl = page.urlFor(IRedirectListener.class);
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
 		}
-		// always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
+		
+		// Always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
 		session.touch(page);
+		
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
