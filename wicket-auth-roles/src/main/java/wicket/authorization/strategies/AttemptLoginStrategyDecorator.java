@@ -52,7 +52,7 @@ public abstract class AttemptLoginStrategyDecorator implements IAuthorizationStr
 
 	private boolean processResponse(boolean isAuthorized)
 	{
-		if (isAuthorized == false && !isUserSignedIn())
+		if (isAuthorized == false && isUserSignedIn() == false)
 		{
 			throw new RestartResponseAtSignInPageException();
 		}
