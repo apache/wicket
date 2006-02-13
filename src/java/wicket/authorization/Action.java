@@ -38,6 +38,12 @@ import wicket.util.string.Strings;
 public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
+	
+	/** RENDER action name (for consistent name and use in annotations) */
+	public static final String RENDER = "RENDER";
+	
+	/** ENABLE action name (for consistent name and use in annotations) */
+	public static final String ENABLE = "ENABLE";
 
 	/** The name of this action. */
 	private final String name;
