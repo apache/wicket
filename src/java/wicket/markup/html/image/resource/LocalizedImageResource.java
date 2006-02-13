@@ -273,7 +273,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		else
 		{
 			// Create URL to component
-			url = component.urlFor(Resource.RESOURCE_LISTENER_INTERFACE);
+			url = component.urlFor(IResourceListener.INTERFACE);
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
