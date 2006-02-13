@@ -241,8 +241,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public String toString()
 	{
-		return "BookmarkablePageRequestTarget@" + hashCode() + "{pageClass=" + pageClass.getName()
-				+ "}";
+		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" + pageClass.getName()
+				+ "]";
 	}
 
 	/**

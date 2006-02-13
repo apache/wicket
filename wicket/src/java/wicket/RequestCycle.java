@@ -645,8 +645,8 @@ public abstract class RequestCycle
 	 */
 	public String toString()
 	{
-		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
-				+ Thread.currentThread().getName() + "}";
+		return "[RequestCycle" + "@" + Integer.toHexString(hashCode()) + " thread="
+				+ Thread.currentThread().getName() + "]";
 	}
 
 	/**

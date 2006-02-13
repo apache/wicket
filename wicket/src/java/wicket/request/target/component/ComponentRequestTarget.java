@@ -129,6 +129,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	 */
 	public String toString()
 	{
-		return "ComponentRequestTarget@" + hashCode() + "{" + component + "}";
+		return "[ComponentRequestTarget@" + hashCode() + " " + component + "]";
 	}
 }

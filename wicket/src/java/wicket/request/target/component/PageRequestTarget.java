@@ -122,6 +122,6 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public String toString()
 	{
-		return "PageRequestTarget@" + hashCode() + "{page=" + page + "}";
+		return "[PageRequestTarget@" + hashCode() + " page=" + page + "]";
 	}
 }

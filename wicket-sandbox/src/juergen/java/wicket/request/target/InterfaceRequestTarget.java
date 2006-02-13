@@ -164,6 +164,6 @@ public class InterfaceRequestTarget implements IComponentRequestTarget
 	 */
 	public String toString()
 	{
-		return "InterfaceRequestTarget@" + hashCode() + "{" + component + "}";
+		return "[InterfaceRequestTarget@" + hashCode() + " " + component + "]";
 	}
 }

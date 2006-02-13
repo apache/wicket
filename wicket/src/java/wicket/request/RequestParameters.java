@@ -299,7 +299,7 @@ public class RequestParameters implements Serializable
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer("{");
+		StringBuffer b = new StringBuffer("[RequestParameters ");
 		if (getComponentPath() != null)
 		{
 			b.append(" componentPath=").append(getComponentPath());
@@ -321,7 +321,7 @@ public class RequestParameters implements Serializable
 		{
 			b.append(" resourceKey=").append(getResourceKey());
 		}
-		b.append("}");
+		b.append("]");
 		return b.toString();
 	}
 }

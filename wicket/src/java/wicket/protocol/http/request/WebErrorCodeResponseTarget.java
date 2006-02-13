@@ -173,7 +173,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "WebErrorCodeResponseTarget@" + hashCode() + "{errorCode=" + getErrorCode()
-				+ ((message != null) ? " (" + message + ")" : "" + "}");
+		return "[WebErrorCodeResponseTarget@" + hashCode() + " errorCode=" + getErrorCode()
+				+ ((message != null) ? " (" + message + ")" : "" + "]");
 	}
 }

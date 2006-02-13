@@ -142,6 +142,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public String toString()
 	{
-		return "SharedResourceRequestTarget@" + hashCode() + "{" + resourceKey + "}";
+		return "[SharedResourceRequestTarget@" + hashCode() + " " + resourceKey + "]";
 	}
 }
