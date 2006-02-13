@@ -63,7 +63,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 				authorized = hasAny(new Roles(packageAnnotation.value()));
 			}
 		}
-		
+
 		// Check class annotation
 		final AuthorizeInstantiation classAnnotation = (AuthorizeInstantiation)componentClass
 				.getAnnotation(AuthorizeInstantiation.class);
@@ -72,7 +72,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			// If roles are defined for the class, that overrides the package
 			authorized = hasAny(new Roles(classAnnotation.value()));
 		}
-		
+
 		return authorized;
 	}
 
@@ -92,13 +92,12 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// Check for multiple actions
-		final AuthorizeActions authorizedActions = componentClass
-				.getAnnotation(AuthorizeActions.class);
-		if (authorizedActions != null)
+		final AuthorizeActions authorizeActionsAnnotation = componentClass.getAnnotation(AuthorizeActions.class);
+		if (authorizeActionsAnnotation != null)
 		{
-			for (final AuthorizeAction authorizeAction : authorizedActions.actions())
+			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation.actions())
 			{
-				if (!check(action, authorizeAction))
+				if (!check(action, authorizeActionAnnotation))
 				{
 					return false;
 				}
@@ -111,15 +110,15 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * @param action
 	 *            The action to check
-	 * @param authorizeAction
+	 * @param authorizeActionAnnotation
 	 *            The annotations information
 	 * @return False if the action is not authorized
 	 */
-	private boolean check(Action action, final AuthorizeAction authorizeAction)
+	private boolean check(Action action, final AuthorizeAction authorizeActionAnnotation)
 	{
-		if (action.getName().equals(authorizeAction.action()))
+		if (action.getName().equals(authorizeActionAnnotation.action()))
 		{
-			if (!hasAny(new Roles(authorizeAction.roles())))
+			if (!hasAny(new Roles(authorizeActionAnnotation.roles())))
 			{
 				return false;
 			}
