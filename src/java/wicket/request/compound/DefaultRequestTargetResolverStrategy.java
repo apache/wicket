@@ -26,6 +26,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.MarkupException;
@@ -184,9 +185,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 * @param requestParameters
 	 * @return The RequestTarget that was resolved
 	 */
-	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle,
+	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 			final Page page, final String componentPath, final String interfaceName,
-			RequestParameters requestParameters)
+			final RequestParameters requestParameters)
 	{
 		if (interfaceName.equals(Page.REDIRECT_LISTENER_INTERFACE.getName()))
 		{
@@ -194,6 +195,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		}
 		else
 		{
+			// Get the listener interface we need to call
 			final RequestListenerInterface listener = RequestCycle
 					.requestListenerInterfaceForName(interfaceName);
 			if (listener == null)
@@ -201,6 +203,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				throw new WicketRuntimeException(
 						"Attempt to access unknown request listener interface " + interfaceName);
 			}
+			
+			// Get component
 			final String componentPart = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(componentPart))
@@ -222,11 +226,13 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						"Calling listener methods on components that are not visible is not allowed: "
 								+ componentPath);
 			}
-			if (interfaceName.equals("IResourceListener"))
+			
+			// Call appropriate interface
+			if (listener == Resource.RESOURCE_LISTENER_INTERFACE)
 			{
 				return new ComponentResourceRequestTarget(page, component, listener);
 			}
-			else if (interfaceName.equals("IBehaviorListener"))
+			else if (listener == Page.BEHAVIOR_LISTENER_INTERFACE)
 			{
 				return new BehaviorRequestTarget(page, component, listener, requestParameters);
 			}
