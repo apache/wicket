@@ -29,20 +29,15 @@ import wicket.util.lang.Objects;
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
  * 
- * TODO General: Example
+ * TODO Post 1.2: General: Example
  *  
  * @see Select
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
- * 
  */
 public class SelectOption extends WebMarkupContainer
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)

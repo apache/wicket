@@ -34,19 +34,15 @@ import wicket.model.IModel;
  * control over the markup between the &lt;select&gt; tag and its children
  * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags.
  * 
- * TODO General: Example
+ * TODO Post 1.2: General: Example
  * 
  * @see SelectOption
  * @see SelectOptions
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
- * 
  */
 public class Select extends FormComponent
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
