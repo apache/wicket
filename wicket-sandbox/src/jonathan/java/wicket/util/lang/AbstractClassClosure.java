@@ -24,13 +24,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.ClassName;
 import org.netbeans.modules.classfile.ConstantPool;
 
 import wicket.WicketRuntimeException;
+import wicket.util.collections.ArrayListStack;
 
 /**
  * Closure: report all classes which a given class references in one way or
@@ -56,7 +56,7 @@ public abstract class AbstractClassClosure
 	public AbstractClassClosure(final List/* <Class> */classes, final boolean includeJDK)
 	{
 		final Set visited = new HashSet();
-		final Stack stack = new Stack();
+		final ArrayListStack stack = new ArrayListStack();
 
 		for (final Iterator iterator = classes.iterator(); iterator.hasNext();)
 		{

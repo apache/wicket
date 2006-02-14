@@ -18,7 +18,6 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Stack;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -27,6 +26,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.settings.IMarkupSettings;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -52,7 +52,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	public static final String AUTOLINK_ID = "_autolink_";
 
 	/** Allow to have link regions within link regions */
-	private Stack autolinkStatus;
+	private ArrayListStack autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
@@ -138,7 +138,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new Stack();
+							autolinkStatus = new ArrayListStack();
 						}
 
 						// remember the current setting to be reset after the

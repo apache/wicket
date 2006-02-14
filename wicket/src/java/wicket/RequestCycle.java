@@ -18,7 +18,6 @@
 package wicket;
 
 import java.util.Iterator;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +34,7 @@ import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
+import wicket.util.collections.ArrayListStack;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -233,9 +233,7 @@ public abstract class RequestCycle
 	private transient RequestParameters requestParameters;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO Performance: Use a more efficient implementation, maybe with a
-	// default size of 3
-	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
+	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();

@@ -21,12 +21,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 
 /**
@@ -61,7 +61,7 @@ public final class PageMap implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Stack of entry accesses by id */
-	private final Stack/* <Access> */accessStack = new Stack();
+	private final ArrayListStack/* <Access> */accessStack = new ArrayListStack(8);
 
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
@@ -229,7 +229,7 @@ public final class PageMap implements Serializable
 	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
-	public final Stack getAccessStack()
+	public final ArrayListStack getAccessStack()
 	{
 		return accessStack;
 	}

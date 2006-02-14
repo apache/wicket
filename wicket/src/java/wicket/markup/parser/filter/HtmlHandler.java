@@ -20,7 +20,6 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +28,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.util.collections.ArrayListStack;
 
 /**
  * This is a markup inline filter. It identifies HTML specific issues which make
@@ -43,7 +43,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	private static Log log = LogFactory.getLog(HtmlHandler.class);
 
 	/** Tag stack to find balancing tags */
-	final private Stack stack = new Stack();
+	final private ArrayListStack stack = new ArrayListStack();
 
 	/** Map of simple tags. */
 	private static final Map doesNotRequireCloseTag = new HashMap();
