@@ -227,7 +227,6 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	 */
 	public void setPropertySortOrder(String property, int state)
 	{
-		// TODO General: Auto-generated method stub
 	}
 
 	/**
@@ -235,7 +234,6 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 	 */
 	public int getPropertySortOrder(String property)
 	{
-		// TODO General: Auto-generated method stub
 		return 0;
 	}
 }
