@@ -32,7 +32,6 @@ public class InputTagVisibleWebPage extends WebPage
 
 	/**
 	 * Construct.
-	 * @param visible
 	 */
 	public InputTagVisibleWebPage()
 	{
