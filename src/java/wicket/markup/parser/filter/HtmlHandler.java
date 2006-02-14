@@ -131,6 +131,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 
 				if (mismatch)
 				{
+					top.setHasNoCloseTag(true);
+					
 					// Pop any simple tags off the top of the stack
 					while (mismatch && !requiresCloseTag(top.getName()))
 					{

@@ -214,11 +214,16 @@ public final class MarkupStream
 
 		if (startTag.isOpen())
 		{
-			// Skip <tag>
-			next();
-
-			// Skip nested components
-			skipToMatchingCloseTag(startTag);
+			// With HTML not all tags require a close tag which
+			// must have been detected by the HtmlHandler earlier on. 
+			if (startTag.hasNoCloseTag() == false)
+			{
+				// Skip <tag>
+				next();
+	
+				// Skip nested components
+				skipToMatchingCloseTag(startTag);
+			}
 
 			// Skip </tag>
 			next();
