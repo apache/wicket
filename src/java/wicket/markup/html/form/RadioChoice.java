@@ -397,10 +397,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		// Iterate through choices
 		final List choices = getChoices();
 
+		// The selected value
 		final String selected = getValue();
+
 		// Loop through choices
-
-
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
