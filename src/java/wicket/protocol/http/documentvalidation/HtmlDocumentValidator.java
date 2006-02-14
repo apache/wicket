@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import wicket.util.collections.ArrayListStack;
 
 /**
  * Simple class that provides a convenient programmatic way to define what an
@@ -78,8 +79,8 @@ public class HtmlDocumentValidator
     {
         HtmlDocumentParser parser = new HtmlDocumentParser(document);
         Iterator expectedElements = elements.iterator();
-        Stack iteratorStack = new Stack();
-        Stack tagNameStack = new Stack();
+        ArrayListStack iteratorStack = new ArrayListStack();
+        ArrayListStack tagNameStack = new ArrayListStack();
 
         boolean end = false;
         boolean valid = true;
@@ -224,8 +225,8 @@ public class HtmlDocumentValidator
      *            The stack of open tags
      * @return The iterator to continue to use
      */
-    private Iterator saveOpenTagState(Stack iteratorStack, Iterator expectedElements,
-            Stack tagNameStack)
+    private Iterator saveOpenTagState(ArrayListStack iteratorStack, Iterator expectedElements,
+            ArrayListStack tagNameStack)
     {
         if (!isNonClosedTag(workingTag.getTag()))
         {
@@ -249,8 +250,8 @@ public class HtmlDocumentValidator
      *            The stack of previous iterators
      * @return The next iterator to use, or null
      */
-    private Iterator validateCloseTag(Stack tagNameStack, HtmlDocumentParser parser,
-            Iterator expectedElements, Stack iteratorStack)
+    private Iterator validateCloseTag(ArrayListStack tagNameStack, HtmlDocumentParser parser,
+            Iterator expectedElements, ArrayListStack iteratorStack)
     {
         if (tagNameStack.isEmpty())
         {

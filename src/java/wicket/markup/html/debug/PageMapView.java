@@ -20,7 +20,6 @@ package wicket.markup.html.debug;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 import wicket.Page;
 import wicket.PageMap;
@@ -33,6 +32,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 
@@ -63,7 +63,7 @@ public final class PageMapView extends Panel
 		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
 		// Get entry accesses 
-		final Stack accessStack = pageMap.getAccessStack();
+		final ArrayListStack accessStack = pageMap.getAccessStack();
 		final List reversedAccessStack = new ArrayList();
 		reversedAccessStack.addAll(accessStack);
 		Collections.reverse(reversedAccessStack);

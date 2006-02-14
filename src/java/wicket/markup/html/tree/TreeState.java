@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -31,6 +30,8 @@ import javax.swing.tree.RowMapper;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import wicket.util.collections.ArrayListStack;
 
 /**
  * Holder and handler for tree state.
@@ -80,14 +81,14 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private SearchInfo info;
 
-	private Stack tempStacks;
+	private ArrayListStack tempStacks;
 
 	/**
 	 * Construct.
 	 */
 	public TreeState()
 	{
-		tempStacks = new Stack();
+		tempStacks = new ArrayListStack();
 		treePathMapping = new Hashtable();
 		info = new SearchInfo();
 	}
@@ -842,15 +843,15 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 				return null;
 
 			// Check all the parent paths, until a match is found.
-			Stack paths;
+			ArrayListStack paths;
 
 			if (tempStacks.size() == 0)
 			{
-				paths = new Stack();
+				paths = new ArrayListStack();
 			}
 			else
 			{
-				paths = (Stack) tempStacks.pop();
+				paths = (ArrayListStack)tempStacks.pop();
 			}
 
 			try
@@ -878,7 +879,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			}
 			finally
 			{
-				paths.removeAllElements();
+				paths.clear();
 				tempStacks.push(paths);
 			}
 			// If we get here it means they share a different root!
