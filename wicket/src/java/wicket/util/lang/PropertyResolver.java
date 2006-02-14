@@ -316,7 +316,8 @@ public class PropertyResolver
 						}
 						else
 						{
-							// TODO Enhancement: Find a public FIELD
+							// We do not look for a public FIELD because that is not good
+							// programming with beans patterns
 							throw new WicketRuntimeException("No get method defined for class: "
 									+ clz + " expression: " + exp);
 						}
