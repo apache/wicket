@@ -18,9 +18,12 @@
 package wicket.authorization.strategies.role.annotations;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 import wicket.Page;
+import wicket.WicketRuntimeException;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.Roles;
@@ -50,6 +53,24 @@ public class AnnotationsRoleTest extends TestCase
 	public AnnotationsRoleTest(String arg0)
 	{
 		super(arg0);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClear() throws Exception
+	{
+		WicketTester tester = new WicketTester();
+		tester.getSecuritySettings().setAuthorizationStrategy(
+				new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
+		tester.startPage(new ITestPageSource()
+		{
+			public Page getTestPage()
+			{
+				return new NormalPage();
+			}
+		});
+		tester.assertRenderedPage(NormalPage.class);
 	}
 
 	/**
@@ -91,6 +112,11 @@ public class AnnotationsRoleTest extends TestCase
 		}
 		catch (Exception e)
 		{
+			if (!(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e
+					.getCause()).getTargetException() instanceof UnauthorizedInstantiationException))
+			{
+				throw e;
+			}
 		}
 	}
 

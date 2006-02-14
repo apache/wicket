@@ -116,11 +116,14 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 */
 	private boolean check(final Action action, final AuthorizeAction authorizeActionAnnotation)
 	{
-		if (action.getName().equals(authorizeActionAnnotation.action()))
+		if (authorizeActionAnnotation != null)
 		{
-			if (!hasAny(new Roles(authorizeActionAnnotation.roles())))
+			if (action.getName().equals(authorizeActionAnnotation.action()))
 			{
-				return false;
+				if (!hasAny(new Roles(authorizeActionAnnotation.roles())))
+				{
+					return false;
+				}
 			}
 		}
 		return true;
