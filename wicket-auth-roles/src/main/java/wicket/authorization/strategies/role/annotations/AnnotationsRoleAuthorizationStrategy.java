@@ -92,10 +92,12 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// Check for multiple actions
-		final AuthorizeActions authorizeActionsAnnotation = componentClass.getAnnotation(AuthorizeActions.class);
+		final AuthorizeActions authorizeActionsAnnotation = componentClass
+				.getAnnotation(AuthorizeActions.class);
 		if (authorizeActionsAnnotation != null)
 		{
-			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation.actions())
+			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation
+					.actions())
 			{
 				if (!check(action, authorizeActionAnnotation))
 				{

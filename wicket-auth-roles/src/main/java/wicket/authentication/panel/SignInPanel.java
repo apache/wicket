@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
 package wicket.authentication.panel;
 
 import wicket.PageParameters;
+import wicket.authentication.AuthenticatedWebSession;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
@@ -31,17 +32,18 @@ import wicket.util.value.ValueMap;
 /**
  * Reusable user sign in panel with username and password as well as support for
  * cookie persistence of the both. When the SignInPanel's form is submitted, the
- * abstract method signIn(String, String) is called, passing the username and
- * password submitted. The signIn() method should sign the user in and return
- * null if no error ocurred, or a descriptive String in the event that the sign
- * in fails.
+ * method signIn(String, String) is called, passing the username and password
+ * submitted. The signIn() method should authenticate the user's session. The
+ * default implementation calls AuthenticatedWebSession.get().signIn().
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class SignInPanel extends Panel
+public class SignInPanel extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/** True if the panel should display a remember-me checkbox */
 	private boolean includeRememberMe = true;
 
@@ -59,6 +61,8 @@ public abstract class SignInPanel extends Panel
 	 */
 	public final class SignInForm extends Form
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** El-cheapo model for form. */
 		private final ValueMap properties = new ValueMap();
 
@@ -79,7 +83,7 @@ public abstract class SignInPanel extends Panel
 					"password")));
 
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
+			final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
@@ -113,10 +117,7 @@ public abstract class SignInPanel extends Panel
 			{
 				// Try the component based localizer first. If not found try the
 				// application localizer. Else use the default
-				final String errmsg = getLocalizer().getString("loginError", this,
-						"Unable to sign you in");
-
-				error(errmsg);
+				error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
 			}
 		}
 	}
@@ -197,7 +198,7 @@ public abstract class SignInPanel extends Panel
 	 * @param enable
 	 *            Whether the fields should be persistent
 	 */
-	public void setPersistent(boolean enable)
+	public void setPersistent(final boolean enable)
 	{
 		username.setPersistent(enable);
 		password.setPersistent(enable);
@@ -208,7 +209,7 @@ public abstract class SignInPanel extends Panel
 	 * 
 	 * @param rememberMe
 	 */
-	public void setRememberMe(boolean rememberMe)
+	public void setRememberMe(final boolean rememberMe)
 	{
 		this.rememberMe = rememberMe;
 		this.setPersistent(rememberMe);
@@ -223,5 +224,8 @@ public abstract class SignInPanel extends Panel
 	 *            The password
 	 * @return True if signin was successful
 	 */
-	public abstract boolean signIn(final String username, final String password);
+	public boolean signIn(String username, String password)
+	{
+		return AuthenticatedWebSession.get().signIn(username, password);
+	}
 }

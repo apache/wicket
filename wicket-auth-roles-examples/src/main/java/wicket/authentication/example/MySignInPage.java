@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,43 +15,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authentication.pages;
+package wicket.authentication.example;
 
 import wicket.PageParameters;
-import wicket.authentication.AuthenticatedWebSession;
-import wicket.authentication.panel.SignInPanel;
-import wicket.markup.html.WebPage;
+import wicket.authentication.pages.SignInPage;
 
 /**
- * Simple example of a sign in page. It extends SignInPage, a base class which
+ * Simple example of a sign in page. It extends MySignInPage, a base class which
  * provide standard functionality for typical log-in pages
  * 
  * @author Jonathan Locke
  */
-public class SignInPage extends WebPage
+public final class MySignInPage extends SignInPage
 {
-    /**
-     * Construct
-     */
-    public SignInPage()
-    {
-       this(null);  
-    }
-
+	/**
+	 * Constructor
+	 */
+	public MySignInPage()
+	{
+	}
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param parameters
-	 *            The page parameters
+	 *            Parameters to page
 	 */
-	public SignInPage(final PageParameters parameters)
+	public MySignInPage(final PageParameters parameters)
 	{
-		add(new SignInPanel("signInPanel")
-		{
-			public boolean signIn(final String username, final String password)
-			{
-				return AuthenticatedWebSession.get().authenticate(username, password);
-			}
-		});
 	}
 }

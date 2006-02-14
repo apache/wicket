@@ -21,12 +21,14 @@ import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 /**
- * Simple logout page.
+ * Simple sign out page.
  * 
  * @author Jonathan Locke
  */
 public class SignOutPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

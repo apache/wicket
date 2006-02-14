@@ -32,7 +32,7 @@ import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebApplication;
 
 /**
- * A web application subclass that does role based authentication.
+ * A web application subclass that does role-based authentication.
  * 
  * @author Jonathan Locke
  */
@@ -49,15 +49,16 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 */
 	public AuthenticatedWebApplication()
 	{
+		// Get web session class to instantiate
 		this.webSessionClass = getWebSessionClass();
+
+		// Set authorization strategy and unauthorized instantiation listener
 		getSecuritySettings().setAuthorizationStrategy(new RoleAuthorizationStrategy(this));
 		getSecuritySettings().setUnauthorizedComponentInstantiationListener(this);
 	}
 
 	/**
-	 * @param roles
-	 *            The roles to check
-	 * @return True if the authenticated user has any of the given roles
+	 * @see IRoleCheckingStrategy#hasAnyRole(Roles)
 	 */
 	public final boolean hasAnyRole(final Roles roles)
 	{
@@ -66,12 +67,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * Called when an unauthorized component instantiation is about to take
-	 * place (but before it happens).
-	 * 
-	 * @param component
-	 *            The partially constructed component (only the id is guaranteed
-	 *            to be valid).
+	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
 	 */
 	public final void onUnauthorizedInstantiation(final Component component)
 	{
@@ -97,21 +93,22 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * Get session factory
-	 * 
-	 * @return The Session factory
+	 * @see wicket.Application#getSessionFactory()
 	 */
 	@Override
 	protected final ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Session newSession()
 			{
 				try
 				{
-					return webSessionClass.getDeclaredConstructor(AuthenticatedWebApplication.class)
-							.newInstance(AuthenticatedWebApplication.this);
+					return webSessionClass
+							.getDeclaredConstructor(AuthenticatedWebApplication.class).newInstance(
+									AuthenticatedWebApplication.this);
 				}
 				catch (Exception e)
 				{
@@ -126,13 +123,13 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * @return AuthenticatedWebSession subclass to use in this authenticated web
 	 *         application.
 	 */
-	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
 
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class<? extends WebPage> getSignInPageClass();
-	
+	protected abstract Class< ? extends WebPage> getSignInPageClass();
+
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they
 	 * are not authorized to access. You might want to override this to navigate
