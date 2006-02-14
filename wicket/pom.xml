@@ -99,6 +99,11 @@
       <roles/>
     </developer>
     <developer>
+      <name>Igor Vaynberg</name>
+      <id>ivaynberg</id>
+      <email>ivaynberg at users.sourceforge.net</email>
+    </developer>
+    <developer>
       <name>Gwyn Evans</name>
       <id>gwynevans</id>
       <email>gwynevans at users.sourceforge.net</email>
@@ -189,10 +194,6 @@
     </contributor>
     <contributor>
       <name>Anatol Pomozov</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Igor Vaynberg</name>
       <email>-</email>
     </contributor>
     <contributor>
