@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
