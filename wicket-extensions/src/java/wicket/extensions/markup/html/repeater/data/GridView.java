@@ -202,9 +202,6 @@ public abstract class GridView extends DataViewBase
 
 			int row = 0;
 
-			// TODO General: Do we really need this index?
-			int index = 0;
-
 			do
 			{
 				// Build a row
@@ -214,7 +211,7 @@ public abstract class GridView extends DataViewBase
 				add(rowItem);
 
 				// Populate the row
-				for (int i = 0; i < cols; i++)
+				for (int index = 0; index < cols; index++)
 				{
 					final Item cellItem;
 					if (items.hasNext())
@@ -227,7 +224,6 @@ public abstract class GridView extends DataViewBase
 						populateEmptyItem(cellItem);
 					}
 					rowView.add(cellItem);
-					index++;
 				}
 
 				// increase row
