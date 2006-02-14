@@ -1511,7 +1511,7 @@ public abstract class Component implements Serializable
 		}
 		else
 		{
-			findMarkupStream().skipComponent();
+			markupStream.skipComponent();
 		}
 	}
 
