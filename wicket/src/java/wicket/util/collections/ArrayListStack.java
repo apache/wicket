@@ -38,7 +38,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param initialCapacity
 	 *            Initial capacity of the stack
 	 */
-	public ArrayListStack(int initialCapacity)
+	public ArrayListStack(final int initialCapacity)
 	{
 		super(initialCapacity);
 	}
@@ -57,7 +57,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param collection
 	 *            The collection to add
 	 */
-	public ArrayListStack(Collection collection)
+	public ArrayListStack(final Collection collection)
 	{
 		super(collection);
 	}
@@ -68,7 +68,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param item
 	 *            the item to be pushed onto this stack.
 	 */
-	public void push(Object item)
+	public final void push(final Object item)
 	{
 		add(item);
 	}
@@ -80,7 +80,7 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public Object pop()
+	public final Object pop()
 	{
 		final Object top = peek();
 		remove(size() - 1);
@@ -94,7 +94,7 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public Object peek()
+	public final Object peek()
 	{
 		int size = size();
 		if (size == 0)
@@ -110,7 +110,7 @@ public final class ArrayListStack extends ArrayList
 	 * @return <code>true</code> if and only if this stack contains no items;
 	 *         <code>false</code> otherwise.
 	 */
-	public boolean empty()
+	public final boolean empty()
 	{
 		return size() == 0;
 	}
@@ -129,7 +129,7 @@ public final class ArrayListStack extends ArrayList
 	 *         is located; the return value <code>-1</code> indicates that the
 	 *         object is not on the stack.
 	 */
-	public int search(Object o)
+	public final int search(final Object o)
 	{
 		int i = lastIndexOf(o);
 		if (i >= 0)
