@@ -5,6 +5,6 @@ package wicket.authentication.example;
  * 
  * @author Jonathan
  */
-public class SignOutPage extends wicket.authentication.SignOutPage
+public class SignOutPage extends wicket.authentication.pages.SignOutPage
 {
 }

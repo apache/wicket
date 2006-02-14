@@ -23,6 +23,6 @@ package wicket.authentication.example;
  * 
  * @author Jonathan Locke
  */
-public final class SignInPage extends wicket.authentication.SignInPage
+public final class SignInPage extends wicket.authentication.pages.SignInPage
 {
 }

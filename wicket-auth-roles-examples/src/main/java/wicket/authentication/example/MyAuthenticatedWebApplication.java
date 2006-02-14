@@ -2,7 +2,7 @@ package wicket.authentication.example;
 
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
-import wicket.authentication.SignInPage;
+import wicket.authentication.pages.SignInPage;
 import wicket.authorization.strategies.role.Roles;
 import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
 import wicket.authorization.strategies.role.example.pages.AdminInternalPage;

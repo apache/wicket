@@ -15,9 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.authentication;
+package wicket.authentication.pages;
 
 import wicket.PageParameters;
+import wicket.authentication.AuthenticatedWebSession;
+import wicket.authentication.panel.SignInPanel;
 import wicket.markup.html.WebPage;
 
 /**
