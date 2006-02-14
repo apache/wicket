@@ -351,7 +351,9 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		// Iterate through choices
 		final List choices = getChoices();
 
+		// Value of this choice
 		final String selected = getValue();
+		
 		// Loop through choices
 		for (int index = 0; index < choices.size(); index++)
 		{
