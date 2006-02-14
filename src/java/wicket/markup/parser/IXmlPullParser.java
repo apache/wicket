@@ -40,36 +40,35 @@ public interface IXmlPullParser extends IMarkupFilter
 	public abstract String getEncoding();
 
 	/**
-	 * Return the XML declaration string, in case if found in the
-	 * markup.
+	 * Return the XML declaration string, in case if found in the markup.
 	 * 
 	 * @return Null, if not found.
 	 */
 	public String getXmlDeclaration();
 
 	/**
-	 * Wicket dissects the markup into Wicket relevant tags and raw markup, which 
-	 * is not further analysed by Wicket. The method getInputFromPositionMarker() 
-	 * is used to access the raw markup. 
-	 *
+	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
+	 * which is not further analysed by Wicket. The method
+	 * getInputFromPositionMarker() is used to access the raw markup.
+	 * 
 	 * @param toPos
-	 *			  To position 
-	 * @return The raw markup in between the position marker and toPos 
+	 *            To position
+	 * @return The raw markup in between the position marker and toPos
 	 */
 	public abstract CharSequence getInputFromPositionMarker(int toPos);
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
-	 * which is not further analysed by Wicket. The getInputSubsequence()
-	 * method is used to access the raw markup.
+	 * which is not further analysed by Wicket. The getInputSubsequence() method
+	 * is used to access the raw markup.
 	 * 
 	 * @param fromPos
-	 *			  From position
+	 *            From position
 	 * @param toPos
-	 *			  To position
+	 *            To position
 	 * @return The raw markup in between fromPos and toPos
 	 */
-	public abstract CharSequence getInputSubsequence(final int fromPos, final int toPos);
+	public abstract CharSequence getInput(final int fromPos, final int toPos);
 
 	/**
 	 * Parse the markup provided. Use nextTag() to access the tags contained one
@@ -79,28 +78,30 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * provided does have the correct encoding already.
 	 * 
 	 * @param string
-	 *			  The markup to be parsed
+	 *            The markup to be parsed
 	 * @throws IOException
-	 *			   Error while reading the resource
+	 *             Error while reading the resource
 	 * @throws ResourceStreamNotFoundException
-	 *			   Resource not found
+	 *             Resource not found
 	 */
 	public abstract void parse(final CharSequence string) throws IOException,
-		ResourceStreamNotFoundException;
+			ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from a resource like file. Use nextTag() to
 	 * access the tags contained, one after another.
 	 * 
 	 * @param resource
-	 *			  A resource like e.g. a file
+	 *            A resource like e.g. a file
+	 * @param encoding
+	 *            Use null to apply JVM/OS default
 	 * @throws IOException
-	 *			   Error while reading the resource
+	 *             Error while reading the resource
 	 * @throws ResourceStreamNotFoundException
-	 *			   Resource not found
+	 *             Resource not found
 	 */
-	public abstract void parse(final IResourceStream resource) throws IOException,
-			ResourceStreamNotFoundException;
+	public abstract void parse(final IResourceStream resource, final String encoding)
+			throws IOException, ResourceStreamNotFoundException;
 
 	/**
 	 * Set the position marker of the markup at the current position.

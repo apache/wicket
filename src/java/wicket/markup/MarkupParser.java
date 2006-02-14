@@ -137,7 +137,7 @@ public class MarkupParser
 
 	/**
 	 * By default don't do anything. Subclasses may append additional markup
-	 * filter if required.
+	 * filters if required.
 	 */
 	protected void initFilterChain()
 	{
@@ -145,6 +145,7 @@ public class MarkupParser
 
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters.
+	 * To be used by subclasses which implement initFilterChain().
 	 * 
 	 * @param filter
 	 *            The filter to be appended
@@ -164,7 +165,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final Markup readAndParse(final MarkupResourceStream resource) throws IOException, 
+	final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -174,7 +175,7 @@ public class MarkupParser
 		this.markup.setResource(resource);
 
 		// Initialize the xml parser
-		this.xmlParser.parse(resource);
+		this.xmlParser.parse(resource, this.application.getMarkupSettings().getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements

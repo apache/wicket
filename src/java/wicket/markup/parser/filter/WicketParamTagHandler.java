@@ -177,7 +177,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		// By now we know it is a Wicket param tag.
 		// Only empty TEXT is allowed in between the preceding component
 		// tag and the param tag.
-		final CharSequence rawMarkup = xmlParser.getInputSubsequence(lastTag.getPos()
+		final CharSequence rawMarkup = xmlParser.getInput(lastTag.getPos()
 				+ lastTag.getLength(), tag.getPos());
 
 		if (rawMarkup.length() > 0)
