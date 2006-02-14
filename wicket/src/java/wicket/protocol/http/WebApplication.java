@@ -387,7 +387,15 @@ public abstract class WebApplication extends Application
 				new WebApplicationPath(getWicketServlet().getServletContext()));
 
 		// Check if system property -Dwicket.configuration exists
-		String configuration = System.getProperty("wicket." + Application.CONFIGURATION);
+		String configuration = null;
+		try
+		{
+			configuration = System.getProperty("wicket." + Application.CONFIGURATION);
+		}
+		catch (SecurityException e)
+		{
+			// ignore; it is not allowed to read system properties
+		}
 
 		// If no system parameter check servlet specific <init-param>
 		if (configuration == null)
