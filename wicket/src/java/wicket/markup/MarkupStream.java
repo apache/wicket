@@ -351,6 +351,7 @@ public final class MarkupStream
 			// Skip element
 			next();
 		}
+		throwMarkupException("Expected close tag for " + openTag);
 	}
 
 	/**
