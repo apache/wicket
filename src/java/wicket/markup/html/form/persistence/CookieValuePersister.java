@@ -85,7 +85,7 @@ public class CookieValuePersister implements IValuePersister
 		final Cookie cookie = new Cookie(name, value == null ? "" : value);
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
-
+		
 		save(cookie);
 	}
 
@@ -103,7 +103,7 @@ public class CookieValuePersister implements IValuePersister
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
 			cookie.setValue(null);
-			cookie.setPath(getWebRequest().getContextPath());
+
 			save(cookie);
 		}
 	}
@@ -250,6 +250,8 @@ public class CookieValuePersister implements IValuePersister
     			cookie.setDomain(domain);
     		}
     
+			cookie.setPath(getWebRequest().getContextPath());
+
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().getSecure());
 
