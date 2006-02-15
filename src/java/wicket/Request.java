@@ -20,6 +20,10 @@ package wicket;
 import java.util.Locale;
 import java.util.Map;
 
+import wicket.request.IRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.RequestParameters;
+
 /**
  * Base class for page request implementations allowing access to request
  * parameters. A Request has a URL and a parameter map. You can retrieve the URL
@@ -34,6 +38,9 @@ public abstract class Request
 {
 	/** Any Page decoded for this request */
 	private Page page;
+
+	/** the type safe request parameters object for this request. */
+	private RequestParameters requestParameters;
 
 	/**
 	 * Construct.
@@ -124,5 +131,39 @@ public abstract class Request
 	public void setPage(final Page page)
 	{
 		this.page = page;
+	}
+
+	/**
+	 * Gets the request parameters object using the instance of
+	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
+	 * 
+	 * @return the request parameters object
+	 */
+	public final RequestParameters getRequestParameters()
+	{
+		// reused cached parameters
+		if (requestParameters != null)
+		{
+			return requestParameters;
+		}
+
+		// get the request encoder to decode the request parameters
+		IRequestCycleProcessor processor = RequestCycle.get().getProcessor();
+		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
+		if (encoder == null)
+		{
+			throw new WicketRuntimeException("request encoder must be not-null (provided by "
+					+ processor + ")");
+		}
+
+		// decode the request parameters into a strongly typed parameters
+		// object that is to be used by the target resolving
+		requestParameters = encoder.decode(this);
+		if (requestParameters == null)
+		{
+			throw new WicketRuntimeException("request parameters must be not-null (provided by "
+					+ encoder + ")");
+		}
+		return requestParameters;
 	}
 }

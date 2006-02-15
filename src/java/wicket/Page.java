@@ -1091,8 +1091,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		String pageMapName = null;
 		if (cycle != null)
 		{
-			RequestParameters parameters = cycle.getProcessor().getRequestCodingStrategy().decode(
-					cycle.getRequest());
+			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
 		}
 		final PageMap pageMap = PageMap.forName(pageMapName);
