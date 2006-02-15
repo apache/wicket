@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.form.AbstractTextComponent;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.Strings;
 
@@ -58,22 +57,16 @@ public class RequiredValidator extends StringValidator
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
 	 *      java.lang.String)
 	 */
-	public final void onValidate(FormComponent formComponent, String value)
+	public final void onValidate(final FormComponent formComponent, final String value)
 	{
-		// if input was null then value was not submitted (disabled field),
-		// ignore it
-		// TODO General: For now only a test on a text component is done for the
-		// disabled == null. Checkbox, RadioChoice or CheckBoxMultipleChoice can
-		// all be null and not disabled.
-		if (formComponent instanceof AbstractTextComponent && value == null)
+		// Check value only if form component can take on a null value
+		if (formComponent.isValueNullable())
 		{
-			return;
-		}
-
-		// Check value
-		if (Strings.isEmpty(value))
-		{
-			error(formComponent);
+			// Check value
+			if (Strings.isEmpty(value))
+			{
+				error(formComponent);
+			}
 		}
 	}
 

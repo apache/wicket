@@ -58,6 +58,15 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 	
 	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isValueNullable()
+	 */
+	public boolean isValueNullable()
+	{
+		return true;
+	}
+	
+	/**
 	 * Should the bound object become <code>null</code> when the input is
 	 * empty?
 	 * 

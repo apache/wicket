@@ -284,7 +284,15 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	{
 		super(id, model, choices, renderer);
 	}
-
+	
+	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isValueNullable()
+	 */
+	public boolean isValueNullable()
+	{
+		return true;
+	}
 
 	/**
 	 * @return Prefix to use before choice
