@@ -335,7 +335,12 @@ abstract class AbstractChoice extends FormComponent
 		buffer.append("value=\"");
 		buffer.append(renderer.getIdValue(choice, index));
 		buffer.append("\">");
-		String display = getLocalizer().getString(displayValue, this, displayValue);
+		
+		String display = displayValue;
+		if(localizeDisplayValues())
+		{
+			display = getLocalizer().getString(displayValue, this, displayValue);
+		}
 		String escaped = Strings.escapeMarkup(display, false, true);
 		buffer.append(escaped);
 		buffer.append("</option>");
@@ -347,6 +352,17 @@ abstract class AbstractChoice extends FormComponent
 	protected boolean supportsPersistence()
 	{
 		return true;
+	}
+	
+	/**
+	 * Override this method if you want to localize the display values of the generated options.
+	 * By default false is returned so that the display values of options are not tested if they have a i18n key.
+	 * 
+	 * @return true If you want to localize the display values, default == false
+	 */
+	protected boolean localizeDisplayValues()
+	{
+		return false;
 	}
 
 	/**
