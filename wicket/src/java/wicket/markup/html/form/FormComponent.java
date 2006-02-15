@@ -366,7 +366,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @return True if this component's value can be null
 	 * @see wicket.markup.html.form.validation.RequiredValidator
 	 */
-	public boolean isValueNullable()
+	public boolean isInputNullable()
 	{
 		return false;
 	}
