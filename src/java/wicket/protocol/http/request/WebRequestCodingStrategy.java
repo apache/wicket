@@ -558,8 +558,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		// TODO Performance: Optimize algorithm if possible and/ or cache lookup
-		// results
+		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or cache lookup results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
 			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
