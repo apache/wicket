@@ -604,7 +604,7 @@ public class MockHttpServletResponse implements HttpServletResponse
     {
         List l = new ArrayList(1);
         l.add(value);
-        headers.put(name, value);
+        headers.put(name, l);
     }
 
     /**
