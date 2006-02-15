@@ -658,7 +658,7 @@ public abstract class Component implements Serializable
 	public final String getMarkupId()
 	{
 		/*
-		 * TODO POST 1.2 restore the code below after the constructor refactor,
+		 * TODO Post 1.2: Restore the code below after the constructor refactor,
 		 * right now its causing too much pain for components inside listviews
 		 * and borders.
 		 * 
