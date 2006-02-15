@@ -76,6 +76,15 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
 		}
 	}
+	
+	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isValueNullable()
+	 */
+	public boolean isValueNullable()
+	{
+		return true;
+	}
 
 	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()

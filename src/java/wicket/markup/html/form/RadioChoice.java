@@ -384,6 +384,15 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		this.suffix = suffix;
 		return this;
 	}
+	
+	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isValueNullable()
+	 */
+	public boolean isValueNullable()
+	{
+		return true;
+	}
 
 	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
