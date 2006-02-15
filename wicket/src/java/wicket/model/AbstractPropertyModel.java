@@ -173,7 +173,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 				}
 			}
 
-			PropertyResolver.setValue(expression, modelObject, object, component.getConverter());
+			PropertyResolver.setValue(expression, modelObject, object, component==null ? null:component.getConverter());
 		}
 	}
 
