@@ -678,7 +678,7 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert previous rendered page expired
 	 * 
-	 * TODO General: This test is no longer valid because it depends on an
+	 * TODO Post 1.2: General: This test is no longer valid because it depends on an
 	 * implementation detail that just changed!
 	 * 
 	 * public void assertExpirePreviousPage() { PageMap pageMap =
