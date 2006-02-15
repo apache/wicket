@@ -97,10 +97,17 @@ public final class Markup
 	Markup(final Markup markup, final List markupElements)
 	{
 		this.resource = markup.resource;
-		this.markup = markupElements;
 		this.xmlDeclaration = markup.xmlDeclaration;
 		this.encoding = markup.encoding;
 		setWicketNamespace(markup.wicketNamespace);
+		
+		// Because the markup elements are not added, they are copied in,
+		// the componentMap has to be manually re-created
+		this.markup = new ArrayList();
+		for (int i=0; i < markupElements.size(); i++)
+		{
+			addMarkupElement((MarkupElement)markupElements.get(i));
+		}
 
 		initialize();
 	}
