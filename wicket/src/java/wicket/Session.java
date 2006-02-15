@@ -501,6 +501,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void removePageMap(final PageMap pageMap)
 	{
+	    if(pageMaps>0)pageMaps--;
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 	}
 
