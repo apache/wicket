@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.159 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -978,20 +978,15 @@ public abstract class RequestCycle
 				case RESPOND : {
 					// generate a response
 					// NOTE: We have to do sync here because the
-					// processEventsAndRespond
-					// step will be unrolled by a RestartXX Exception.
-					// And if this is not the case then still it is not a
-					// problem
-					// to have 2 locks on the same session this will not cause a
-					// deadlock.
+					// processEventsAndRespond step will be unrolled by a
+					// RestartXX Exception. And if this is not the case
+					// then still it is not a problem to have 2 locks on
+					// the same session this will not cause a deadlock.
 					// So only if the request targets are different and the
-					// getLock()
-					// doesn't return 2 times the same object a deadlock could
-					// maybe occur.
-					// But we use the session as the lock at all times maybe use
-					// a variable
-					// inside RequestCycle to know that a lock is still in
-					// place?
+					// getLock() doesn't return 2 times the same object a
+					// deadlock could maybe occur. But we use the session
+					// as the lock at all times maybe use a variable inside
+					// RequestCycle to know that a lock is still in place?
 					respond();
 					break;
 				}
