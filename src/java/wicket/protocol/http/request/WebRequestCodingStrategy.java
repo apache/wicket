@@ -99,7 +99,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
 	 * now suppose we want to access Page1 with a single paramter param="test".
-	 * we have a url collission since both pages can be access with /page/test
+	 * we have a url collision since both pages can be access with /page/test
 	 * <br />
 	 * the sorting by longest path first guarantees that the iterator will
 	 * return the mount /page/test before it returns mount /page therefore
