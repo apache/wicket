@@ -181,29 +181,23 @@ public abstract class RequestCycle
 	/** Starting the actual request processing. */
 	private static final int PREPARE_REQUEST = 1;
 
-	/**
-	 * Decoding request parameters into a strongly typed
-	 * {@link RequestParameters} object.
-	 */
-	private static final int DECODE_PARAMETERS = 2;
-
 	/** Resolving the {@link RequestParameters} object to a request target. */
-	private static final int RESOLVE_TARGET = 3;
+	private static final int RESOLVE_TARGET = 2;
 
 	/** Dispatching and handling of events. */
-	private static final int PROCESS_EVENTS = 4;
+	private static final int PROCESS_EVENTS = 3;
 
 	/** Responding using the currently set {@link IRequestTarget}. */
-	private static final int RESPOND = 5;
+	private static final int RESPOND = 4;
 
 	/** Responding to an uncaught exception. */
-	private static final int HANDLE_EXCEPTION = 6;
+	private static final int HANDLE_EXCEPTION = 5;
 
 	/** Cleaning up after responding to a request. */
-	private static final int CLEANUP_REQUEST = 7;
+	private static final int CLEANUP_REQUEST = 6;
 
 	/** Request cycle processing is done. */
-	private static final int DONE = 8;
+	private static final int DONE = 7;
 
 	/** The application object. */
 	protected final Application application;;
@@ -231,9 +225,6 @@ public abstract class RequestCycle
 	 * just rendering it back to the user.
 	 */
 	private boolean redirect;
-
-	/** the current request parameters (if any). */
-	private transient RequestParameters requestParameters;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
@@ -834,35 +825,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the request parameters object using the instance of
-	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
-	 * 
-	 * @param processor
-	 *            the request cycle processor
-	 * @return the request parameters object
-	 */
-	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
-	{
-		// get the request encoder to decode the request parameters
-		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
-		if (encoder == null)
-		{
-			throw new WicketRuntimeException("request encoder must be not-null (provided by "
-					+ processor + ")");
-		}
-
-		// decode the request parameters into a strongly typed parameters
-		// object that is to be used by the target resolving
-		final RequestParameters requestParameters = encoder.decode(getRequest());
-		if (requestParameters == null)
-		{
-			throw new WicketRuntimeException("request parameters must be not-null (provided by "
-					+ encoder + ")");
-		}
-		return requestParameters;
-	}
-
-	/**
 	 * Prepare the request cycle.
 	 */
 	private void prepare()
@@ -946,16 +908,10 @@ public abstract class RequestCycle
 					prepare();
 					break;
 				}
-				case DECODE_PARAMETERS : {
-					// get the request parameters object using the request
-					// encoder of the processor
-					requestParameters = getRequestParameters(processor);
-					break;
-				}
 				case RESOLVE_TARGET : {
 					// resolve the target of the request using the request
 					// parameters
-					final IRequestTarget target = processor.resolve(this, requestParameters);
+					final IRequestTarget target = processor.resolve(this, request.getRequestParameters());
 
 					// has to result in a request target
 					if (target == null)
