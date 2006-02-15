@@ -59,31 +59,32 @@ import java.io.UnsupportedEncodingException;
  * Here is an exaple of usage of this class.<br>
  * 
  * <pre>
- *     try {
- *         MultipartStream multipartStream = new MultipartStream(input,
- *                                                               boundary);
- *         boolean nextPart = malitPartStream.skipPreamble();
- *         OutputStream output;
- *         while(nextPart) {
- *             header = chunks.readHeader();
- *             // process headers
- *             // create some output stream
- *             multipartStream.readBodyPart(output);
- *             nextPart = multipartStream.readBoundary();
- *         }
- *     } catch(MultipartStream.MalformedStreamException e) {
- *           // the stream failed to follow required syntax
- *     } catch(IOException) {
- *           // a read or write error occurred
- *     }
- * 
+ *      try {
+ *          MultipartStream multipartStream = new MultipartStream(input,
+ *                                                                boundary);
+ *          boolean nextPart = malitPartStream.skipPreamble();
+ *          OutputStream output;
+ *          while(nextPart) {
+ *              header = chunks.readHeader();
+ *              // process headers
+ *              // create some output stream
+ *              multipartStream.readBodyPart(output);
+ *              nextPart = multipartStream.readBoundary();
+ *          }
+ *      } catch(MultipartStream.MalformedStreamException e) {
+ *            // the stream failed to follow required syntax
+ *      } catch(IOException) {
+ *            // a read or write error occurred
+ *      }
+ *  
  * </pre>
  * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
  * 
- * @version $Id$
+ * @version $Id: MultipartFormInputStream.java,v 1.2 2006/02/05 18:41:32
+ *          jonathanlocke Exp $
  */
 public class MultipartFormInputStream
 {
@@ -423,26 +424,23 @@ public class MultipartFormInputStream
 		System.arraycopy(boundary, 0, this.boundary, 4, boundary.length);
 	}
 
-
 	/**
 	 * <p>
 	 * Reads the <code>header-part</code> of the current
 	 * <code>encapsulation</code>.
-	 * 
 	 * <p>
 	 * Headers are returned verbatim to the input stream, including the trailing
 	 * <code>CRLF</code> marker. Parsing is left to the application.
 	 * 
-	 * <p>
-	 * TODO Robustness: Allow limiting maximum header size to protect against
-	 * abuse.
+	 * @param maxSize
+	 *            The maximum amount to read before giving up
 	 * 
 	 * @return The <code>header-part</code> of the current encapsulation.
 	 * 
 	 * @exception MalformedStreamException
 	 *                if the stream ends unexpecetedly.
 	 */
-	public String readHeaders() throws MalformedStreamException
+	public String readHeaders(final int maxSize) throws MalformedStreamException
 	{
 		int i = 0;
 		byte[] b = new byte[1];
@@ -461,6 +459,10 @@ public class MultipartFormInputStream
 				throw new MalformedStreamException("Stream ended unexpectedly");
 			}
 			size++;
+			if (size > maxSize)
+			{
+				throw new MalformedStreamException("Stream exceeded maximum of " + maxSize + " bytes");
+			}
 			if (b[0] == HEADER_SEPARATOR[i])
 			{
 				i++;
@@ -865,20 +867,19 @@ public class MultipartFormInputStream
 
 	// These are the methods that were used to debug this stuff.
 	/*
-	 *  // Dump data. protected void dump() { System.out.println("01234567890");
+	 * // Dump data. protected void dump() { System.out.println("01234567890");
 	 * byte[] temp = new byte[buffer.length]; for(int i=0; i<buffer.length;
 	 * i++) { if (buffer[i] == 0x0D || buffer[i] == 0x0A) { temp[i] = 0x21; }
 	 * else { temp[i] = buffer[i]; } } System.out.println(new String(temp)); int
 	 * i; for (i=0; i<head; i++) System.out.print(" ");
 	 * System.out.println("h"); for (i=0; i<tail; i++) System.out.print(" ");
-	 * System.out.println("t"); System.out.flush(); }
-	 *  // Main routine, for testing purposes only. // // @param args A String[]
-	 * with the command line arguments. // @exception Exception, a generic
-	 * exception. public static void main( String[] args ) throws Exception {
-	 * File boundaryFile = new File("boundary.dat"); int boundarySize =
-	 * (int)boundaryFile.length(); byte[] boundary = new byte[boundarySize];
-	 * FileInputStream input = new FileInputStream(boundaryFile);
-	 * input.read(boundary,0,boundarySize);
+	 * System.out.println("t"); System.out.flush(); } // Main routine, for
+	 * testing purposes only. // // @param args A String[] with the command line
+	 * arguments. // @exception Exception, a generic exception. public static
+	 * void main( String[] args ) throws Exception { File boundaryFile = new
+	 * File("boundary.dat"); int boundarySize = (int)boundaryFile.length();
+	 * byte[] boundary = new byte[boundarySize]; FileInputStream input = new
+	 * FileInputStream(boundaryFile); input.read(boundary,0,boundarySize);
 	 * 
 	 * input = new FileInputStream("multipart.dat"); MultipartStream chunks =
 	 * new MultipartStream(input, boundary);

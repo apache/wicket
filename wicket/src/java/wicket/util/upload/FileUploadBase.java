@@ -271,8 +271,11 @@ public abstract class FileUploadBase {
             multi.setHeaderEncoding(headerEncoding);
 
             boolean nextPart = multi.skipPreamble();
+            
+            // Don't allow a header larger than this size (to prevent DOS attacks)
+            final int maxHeaderBytes = 65536;
             while (nextPart) {
-                Map headers = parseHeaders(multi.readHeaders());
+                Map headers = parseHeaders(multi.readHeaders(maxHeaderBytes));
                 String fieldName = getFieldName(headers);
                 if (fieldName != null) {
                     String subContentType = getHeader(headers, CONTENT_TYPE);
@@ -283,7 +286,7 @@ public abstract class FileUploadBase {
                         multi.setBoundary(subBoundary);
                         boolean nextSubPart = multi.skipPreamble();
                         while (nextSubPart) {
-                            headers = parseHeaders(multi.readHeaders());
+                            headers = parseHeaders(multi.readHeaders(maxHeaderBytes));
                             if (getFileName(headers) != null) {
                                 FileItem item =
                                         createItem(headers, false);
