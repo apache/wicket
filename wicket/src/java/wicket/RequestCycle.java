@@ -714,18 +714,14 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(PageMap pageMap, final Class pageClass,
+	public final String urlFor(final PageMap pageMap, final Class pageClass,
 			final PageParameters parameters)
 	{
-	        // If PageMap was not given use default PageMap
-	        if(pageMap==null)
-		{
-		    pageMap=PageMap.forName(PageMap.DEFAULT_NAME);
-		}
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageMap.getName(), pageClass,
-				parameters);
-
-		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
+				? PageMap.DEFAULT_NAME
+				: pageMap.getName(), pageClass, parameters);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
 
