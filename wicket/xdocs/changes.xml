@@ -6,9 +6,14 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
     <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
+    <author email="joco01 at users.sourceforge.net">Johan Compagner</author>
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Johan Compagner" issue="1418043" due-to="Arto Arffman">DropDownList: flag to indicate localization of options, By default options are not localized anymore you have to override localizeDisplayValues() method for this.</action>
+      <action type="fix" dev="Johan Compagner">Cookies where not deleted when cleared.</action>
+      <action type="delete" dev="Johan Compagner">Removed the Page.checkAccess() method, see the new Authorizaton interfaces for a replacement</action>
+      <action type="add" dev="Johan Compagner">All wicket exception/status pages are sending the HTTP status codes that represents that page (FORBIDDEN for accessed denied, INTERNAL_ERROR for exception pages)</action>
       <action type="add" dev="Martijn Dashorst">Added the AttributeAppender to make additions to markup attributes easier.</action>
       <action type="add" dev="Martijn Dashorst">Added the ability to reset the user input on all form components.</action>
       <action type="add" dev="Juergen Donnerstag">Added component level output transformer (container and behavior)</action>
