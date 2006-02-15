@@ -32,7 +32,7 @@ import wicket.util.time.Time;
  * 
  * @author Johan Compagner
  */
-public abstract class DynamicByteArrayResource extends WebResource
+public abstract class DynamicByteArrayResource extends WebResource implements ICachingResource
 {
 	/** The time this image resource was last modified */
 	private Time lastModifiedTime;
@@ -219,4 +219,12 @@ public abstract class DynamicByteArrayResource extends WebResource
 	 * @return The byte array for this dynamic resource.
 	 */
 	protected abstract byte[] getData();
+	
+	/**
+	 * @see wicket.Resource#invalidate()
+	 */
+	public void invalidate()
+	{
+		super.invalidate();
+	}
 }
