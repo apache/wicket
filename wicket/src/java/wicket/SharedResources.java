@@ -26,7 +26,7 @@ import java.util.TimerTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.resource.DynamicByteArrayResource;
+import wicket.resource.ICachingResource;
 import wicket.util.file.Files;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Duration;
@@ -82,15 +82,15 @@ public class SharedResources
 
 		private void makeCacheTask(String key)
 		{
-			if (resource instanceof DynamicByteArrayResource)
+			if (resource instanceof ICachingResource)
 			{
-				DynamicByteArrayResource dynamicResource = (DynamicByteArrayResource)resource;
+				ICachingResource dynamicResource = (ICachingResource)resource;
 				Duration cacheTimeout = dynamicResource.getCacheTimeout();
 				long milliseconds = cacheTimeout.getMilliseconds();
 				if (milliseconds != 0)
 				{
 					this.cacheTask = getDynamicImageFlushTask(key,
-							(DynamicByteArrayResource)resource);
+							(ICachingResource)resource);
 					idleTimer.schedule(cacheTask, milliseconds);
 				}
 			}
@@ -484,7 +484,7 @@ public class SharedResources
 	 * @return The TimerTaks for that Dymamic Image
 	 */
 	private TimerTask getDynamicImageFlushTask(final String key,
-			final DynamicByteArrayResource resource)
+			final ICachingResource resource)
 	{
 		return new TimerTask()
 		{
