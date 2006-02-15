@@ -31,6 +31,7 @@ import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
+import wicket.Session;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
@@ -43,12 +44,13 @@ import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
 import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.protocol.http.HttpSessionStoreFactory;
+import wicket.protocol.http.HttpSessionStore;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
+import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
@@ -234,7 +236,17 @@ public final class Settings
 	private String responseRequestEncoding = "UTF-8";
 
 	/** The session store factory. */
-	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
+	private ISessionStoreFactory sessionStoreFactory = new ISessionStoreFactory()
+	{
+		/**
+		 * @see wicket.session.ISessionStoreFactory#newSessionStore(wicket.Session)
+		 */
+		public ISessionStore newSessionStore(Session session)
+		{
+			return new HttpSessionStore();
+		}
+
+	};
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
