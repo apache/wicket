@@ -106,7 +106,15 @@ public final class Markup
 		this.markup = new ArrayList();
 		for (int i=0; i < markupElements.size(); i++)
 		{
-			addMarkupElement((MarkupElement)markupElements.get(i));
+			Object element = markupElements.get(i);
+			if(element instanceof ComponentTag)
+			{
+				addMarkupElement((ComponentTag)element);
+			}
+			else
+			{
+				addMarkupElement((MarkupElement)element);
+			}
 		}
 
 		initialize();
