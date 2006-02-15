@@ -217,6 +217,9 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
+	/** The processor for this request. */
+	protected final IRequestCycleProcessor processor;
+
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
 
@@ -268,6 +271,7 @@ public abstract class RequestCycle
 		this.request = request;
 		this.response = response;
 		this.originalResponse = response;
+		this.processor = safeGetRequestProcessor();
 
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
@@ -873,11 +877,8 @@ public abstract class RequestCycle
 	/**
 	 * Call the event processing and and respond methods on the request
 	 * processor and apply synchronization if needed.
-	 * 
-	 * @param processor
-	 *            the request processor
 	 */
-	private final void processEventsAndRespond(IRequestCycleProcessor processor)
+	private final void processEventsAndRespond()
 	{
 		// Use any synchronization lock provided by the target
 		Object lock = getRequestTarget().getLock(this);
@@ -897,11 +898,8 @@ public abstract class RequestCycle
 	/**
 	 * Call the event processing and and respond methods on the request
 	 * processor and apply synchronization if needed.
-	 * 
-	 * @param processor
-	 *            the request processor
 	 */
-	private final void respond(IRequestCycleProcessor processor)
+	private final void respond()
 	{
 		// Use any synchronization lock provided by the target
 		Object lock = getRequestTarget().getLock(this);
@@ -924,7 +922,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the request processor
 	 */
-	private IRequestCycleProcessor safeGetRequestProcessor()
+	private final IRequestCycleProcessor safeGetRequestProcessor()
 	{
 		IRequestCycleProcessor processor = getProcessor();
 		if (processor == null)
@@ -936,11 +934,8 @@ public abstract class RequestCycle
 
 	/**
 	 * handle the current step in the request processing.
-	 * 
-	 * @param processor
-	 *            the cycle processor that can be used
 	 */
-	private final void step(IRequestCycleProcessor processor)
+	private final void step()
 	{
 		try
 		{
@@ -977,7 +972,7 @@ public abstract class RequestCycle
 					// that same block
 					// NOTE: because of synchronization, we need to take the
 					// steps PROCESS_EVENS and RESPOND together
-					processEventsAndRespond(processor);
+					processEventsAndRespond();
 					break;
 				}
 				case RESPOND : {
@@ -997,7 +992,7 @@ public abstract class RequestCycle
 					// a variable
 					// inside RequestCycle to know that a lock is still in
 					// place?
-					respond(processor);
+					respond();
 					break;
 				}
 				default : {
@@ -1056,7 +1051,7 @@ public abstract class RequestCycle
 				}
 				try
 				{
-					step(processor);
+					step();
 					currentStep++;
 				}
 				catch (AbstractRestartResponseException e)
