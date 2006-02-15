@@ -177,7 +177,9 @@ public class Localizer
 			id += ":" + component.getId();
 		}
 
-		// The cached key value
+		// The cached key value, NULL can be returned so that we don't search a second time for the same id.
+		// TODO juergen? Is this cached value not totally depended on the searchStack? (getComponentStack(component))
+		// Depending on where the component is used different values could be returned?
 		String string = getCachedValue(id);
 
 		// If not found in the cache
@@ -210,6 +212,12 @@ public class Localizer
 				// substitute
 				this.cachedValues.put(id, NULL);
 			}
+		}
+		
+		// Check now if the string was NULL (not found the last time)
+		if(string == NULL)
+		{
+			string = null;
 		}
 
 		if (string != null)
@@ -316,7 +324,7 @@ public class Localizer
 		// If value is cached already ...
 		String id = createCacheId(componentClass, locale, style, key);
 
-		// The cached key value
+		// The cached key value, NULL can be returned so that we don't search a second time for the same id.
 		String string = getCachedValue(id);
 
 		// If not found in the cache
@@ -336,8 +344,8 @@ public class Localizer
 				this.cachedValues.put(id, NULL);
 			}
 		}
-
-		return string;
+		// Check now if the string was NULL (not found the last time)
+		return string == NULL?null:string;
 	}
 
 	/**
@@ -407,11 +415,6 @@ public class Localizer
 			if (log.isDebugEnabled())
 			{
 				log.debug("Found message key in cache: " + cacheId);
-			}
-
-			if (value == NULL)
-			{
-				value = null;
 			}
 		}
 		return value;
