@@ -90,7 +90,7 @@ import wicket.util.collections.ArrayListStack;
  * session-relative number:
  * <p>
  * <ul>
- * /[Application]?path=[pageId]
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]: ...
  * </ul>
  * <p>
  * Often, the reason to access an existing session page is due to some kind of
@@ -99,13 +99,13 @@ import wicket.util.collections.ArrayListStack;
  * registered listener is dispatched like so:
  * <p>
  * <ul>
- * /[Application]?path=[pageId.componentPath]&interface=[interface]
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]:[componentPath]:[version]:[interfaceName]
  * </ul>
  * <p>
  * For example:
  * <p>
  * <ul>
- * /[Application]?path=3.signInForm.submit&interface=IFormSubmitListener
+ * /[Application]?wicket:interface=:3:signInForm:submit::IFormSubmitListener
  * </ul>
  * </td>
  * </tr>

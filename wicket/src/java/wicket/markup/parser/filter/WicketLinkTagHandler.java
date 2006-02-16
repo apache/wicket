@@ -56,13 +56,6 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 	/** Current status */
 	private boolean autolinking = true;
-
-	/** 
-	 * The application settings required.
-	 * Note: you can rely on Application.get().getMarkupSettings() as reading
-	 * the markup happens in another thread due to ModificationWatcher. 
-	 */
-	private IMarkupSettings settings;
 	
 	/**
 	 * Construct.

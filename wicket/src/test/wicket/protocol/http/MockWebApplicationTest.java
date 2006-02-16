@@ -117,7 +117,7 @@ public class MockWebApplicationTest extends TestCase {
 		Tag body = new Tag("body");
 		html.addExpectedChild(body);
 		Tag a = new Tag("a");
-		a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?path=[0-9]+.actionLink(&amp;version=[0-9]+)?&amp;interface=ILinkListener");
+		a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?wicket:interface=:[0-9]+:actionLink:[0-9]*:ILinkListener");
 		a.addExpectedAttribute("wicket:id", "actionLink");
 		body.addExpectedChild(a);
 		a.addExpectedChild(new TextContent("Action link clicked "));

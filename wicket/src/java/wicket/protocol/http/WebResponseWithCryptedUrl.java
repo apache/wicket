@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.PageParameters;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.Strings;
 
@@ -153,14 +154,13 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 */
 	private String shortenUrl(String queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, "path=", "1=");
-	    queryString = Strings.replaceAll(queryString, "version=", "2=");
-	    queryString = Strings.replaceAll(queryString, "interface=IRedirectListener", "4=");
-	    queryString = Strings.replaceAll(queryString, "interface=IFormSubmitListener", "5=");
-	    queryString = Strings.replaceAll(queryString, "interface=IOnChangeListener", "6=");
-	    queryString = Strings.replaceAll(queryString, "interface=ILinkListener", "7=");
-	    queryString = Strings.replaceAll(queryString, "interface=", "8=");
-	    queryString = Strings.replaceAll(queryString, PageParameters.BOOKMARKABLE_PAGE+"=", "9=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6=");
+	    queryString = Strings.replaceAll(queryString, PageParameters.BOOKMARKABLE_PAGE+"=", "7=");
 
 	    // For debugging only: determine possibilities to further shorten
 	    // the query string

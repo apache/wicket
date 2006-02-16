@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
-import wicket.protocol.http.MockWebApplication;
 
 /**
  * Tests the Objects class.
@@ -79,7 +78,6 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testComponentClone()
 	{
-		MockWebApplication application = new MockWebApplication(null);
 		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),"modelObject");
 		PropertyModel pm2= (PropertyModel)Objects.clone(pm);
 		assertTrue(pm.getObject(null) == pm2.getObject(null));

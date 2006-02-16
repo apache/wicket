@@ -18,10 +18,7 @@
  */
 package wicket.markup.html.list;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
-import wicket.model.Model;
 import wicket.protocol.http.MockWebApplication;
 
 
@@ -49,7 +46,7 @@ public class ListItemTest extends TestCase
 	/**
 	 * @param modelListSize
 	 * @return list view
-	 */
+	 *
 	private ListView createListView(final int modelListSize)
 	{
 		ArrayList modelList = new ArrayList();
@@ -67,7 +64,7 @@ public class ListItemTest extends TestCase
 				// do nothing
 			}
 		};
-	}
+	}*/
 
 	/**
 	 *

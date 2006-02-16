@@ -87,20 +87,17 @@ public final class PageMapView extends Panel
 				listItem.add(link);
 				listItem.add(new Label("class", "" + entry.getClass().getName()));
 				long size;
-				int version;
 				int versions;
 				if (entry instanceof Page)
 				{
 					Page page = (Page)entry;
 					page.detachModels();
 					size = page.getSizeInBytes();
-					version = page.getCurrentVersionNumber();
 					versions = page.getVersions();
 				}
 				else
 				{
 					size = Objects.sizeof(entry);
-					version = 0;
 					versions = 0;
 				}
 				listItem.add(new Label("access", "" + (accessStack.size() - listItem.getIndex())));

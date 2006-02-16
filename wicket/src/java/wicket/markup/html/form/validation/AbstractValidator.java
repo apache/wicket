@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
@@ -66,7 +63,7 @@ import wicket.util.lang.Classes;
 public abstract class AbstractValidator implements IValidator
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(AbstractValidator.class);
+	// private static Log log = LogFactory.getLog(AbstractValidator.class);
 
 	/**
 	 * Sets an error on the component being validated using the map returned by

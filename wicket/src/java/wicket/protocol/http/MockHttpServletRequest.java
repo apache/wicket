@@ -50,6 +50,7 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -940,15 +941,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToComponent(final Component component)
 	{
+		final PageMap pageMap = component.getPage().getPageMap();
+		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{
-			Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(PageParameters.BOOKMARKABLE_PAGE, clazz.getName());
+			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
+			parameters.put(PageParameters.BOOKMARKABLE_PAGE, pageMapName + ':' + clazz.getName());
 		}
 		else
 		{
-			parameters.put("path", component.getPath());
-			parameters.put("version", "" + component.getPage().getCurrentVersionNumber());
+			int version = component.getPage().getCurrentVersionNumber();
 			Class clazz = null;
 			if (component instanceof IRedirectListener)
 			{
@@ -971,10 +973,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 				clazz = IOnChangeListener.class;
 			}
 
-			if (clazz != null)
-			{
-				parameters.put("interface", Classes.name(clazz));
-			}
+			parameters.put("wicket:interface", pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.name(clazz));
 		}
 	}
 

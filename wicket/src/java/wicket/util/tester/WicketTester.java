@@ -441,7 +441,7 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("componet '" + Classes.name(component.getClass()) + "' is not type:"
+		Assert.assertTrue("component '" + Classes.name(component.getClass()) + "' is not type:"
 				+ Classes.name(expectedComponentClass), expectedComponentClass
 				.isAssignableFrom(component.getClass()));
 	}
