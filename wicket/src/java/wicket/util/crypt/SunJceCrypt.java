@@ -29,17 +29,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketRuntimeException;
 
 /**
  * Provide some simple means to encrypt and decrypt strings such as passwords.
  * The whole implementation is based around Sun's security providers and uses
- * the <a
- * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES
- * </a> method to encrypt and decrypt the data.
+ * the <a href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a> 
+ * method to encrypt and decrypt the data.
  * 
  * @author Juergen Donnerstag
  */
@@ -53,9 +49,6 @@ public class SunJceCrypt extends AbstractCrypt
 
 	/** Name of encryption method */
 	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
-	
-	/** Log. */
-	private static Log log = LogFactory.getLog(SunJceCrypt.class);
 
 	/** Salt */
 	private final static byte[] salt = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
@@ -70,7 +63,8 @@ public class SunJceCrypt extends AbstractCrypt
 	    {
 			// Initialize and add a security provider required for encryption
 			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
-	        final Class clazz = Class.forName("com.sun.crypto.provider.SunJCE");
+	        final Class clazz = getClass().getClassLoader().loadClass(
+    			"com.sun.crypto.provider.SunJCE");
 	        Security.addProvider((Provider)clazz.newInstance());
 	    }
 	    catch (ClassNotFoundException ex)

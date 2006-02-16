@@ -18,13 +18,13 @@
  */
 package wicket.markup.parser.filter;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketRuntimeException;
+import wicket.WicketTestCase;
+import wicket.markup.html.PackageResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -32,12 +32,10 @@ import wicket.protocol.http.MockWebApplication;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionTest extends TestCase
+public class HeaderSectionTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(HeaderSectionTest.class);
-
-	private MockWebApplication application;
-
+	
 	/**
 	 * Create the test.
 	 * 
@@ -124,6 +122,14 @@ public class HeaderSectionTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testRenderHomePage_9a() throws Exception
+	{
+	    executeTest(HeaderSectionPage_9a.class, "HeaderSectionPageExpectedResult_9a.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testRenderHomePage_10() throws Exception
 	{
 	    executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
@@ -138,25 +144,49 @@ public class HeaderSectionTest extends TestCase
 	}
 
 	/**
-	 * @param pageClass
-	 * @param filename
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
+	public void testRenderHomePage_12() throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-		
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
+	    executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
+	    PackageResource res = (PackageResource) application.getSharedResources().get("wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
+	    assertNotNull(res);
+	    String absPath = res.getAbsolutePath();
+	    assertNotNull(absPath);
+	    IResourceStream stream = res.getResourceStream();
+	    assertNotNull(stream);
+	}
 
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_13() throws Exception
+	{
+		boolean hit = false;
+		try
+		{
+			executeTest(HeaderSectionPage_13.class, "HeaderSectionPageExpectedResult_13.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			hit = true;
+		}
+		assertTrue("Expected a MarkupException to be thrown", hit);
+	}
 
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_14() throws Exception
+	{
+	    executeTest(HeaderSectionPage_14.class, "HeaderSectionPageExpectedResult_14.html");
+	}
 
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_15() throws Exception
+	{
+	    executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
 	}
 }

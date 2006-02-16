@@ -17,9 +17,8 @@
  */
 package wicket.markup.html.link;
 
-import wicket.Component;
+import wicket.Application;
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -36,13 +35,13 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *       add(new Link(&quot;myLink&quot;){
- *      
- *         public void onClick(RequestCycle cycle)
- *         {
- *            // do something here...  
- *         }
- *       );
+ *        add(new Link(&quot;myLink&quot;)
+ *        {
+ *            public void onClick(RequestCycle cycle)
+ *            {
+ *                // do something here...  
+ *            }
+ *        );
  * </pre>
  * 
  * and in your HTML file:
@@ -58,6 +57,18 @@ import wicket.util.string.Strings;
  * </pre>
  * 
  * </p>
+ * The following snippet shows how to pass a parameter from the Page creating
+ * the Page to the Page responded by the Link.
+ * 
+ * <pre>
+ *        add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *        {
+ *            public void onClick() 
+ *            {
+ *                MyObject obj = (MyObject)getModelObject();
+ *                setResponsePage(new MyPage(obj.getId(), ... ));
+ *            }
+ * </pre>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -70,8 +81,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	private String afterDisabledLink;
 
-	/** True if link should automatically enable/disable based on current page. */
-	private boolean autoEnable = true;
+	/**
+	 * True if link should automatically enable/disable based on current page;
+	 * false by default.
+	 */
+	private boolean autoEnable = false;
 
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
@@ -79,9 +93,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	private String beforeDisabledLink;
 
-	/** True if this link is enabled. */
-	private boolean enabled = true;
-	
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
 	 * will be generated that opens a new window using the popup properties.
@@ -151,13 +162,17 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Gets whether this link is enabled.
-	 * 
-	 * @return whether this link is enabled.
+	 * @see wicket.Component#isEnabled()
 	 */
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
-		return enabled;
+		// If we're auto-enabling
+		if (getAutoEnable())
+		{
+			// the link is enabled if this link doesn't link to the current page
+			return !linksTo(getPage());
+		}
+		return super.isEnabled();
 	}
 
 	/**
@@ -231,21 +246,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Sets link enabled state. Note that you have to setAutoEnable(false) 
-	 * as well in case you want to manually enable/disable the link.
-	 * 
-	 * @param enabled
-	 *            The enabled to set.
-	 * @return This
-	 */
-	public final Link setEnabled(final boolean enabled)
-	{
-		// Set enabled state
-		this.enabled = enabled;
-		return this;
-	}
-
-	/**
 	 * Sets the popup specification. If not-null, a javascript on-click event
 	 * handler will be generated that opens a new window using the popup
 	 * properties.
@@ -277,7 +277,21 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	protected String getURL()
 	{
-		return urlFor(ILinkListener.class);
+		return urlFor(ILinkListener.INTERFACE);
+	}
+
+	/**
+	 * @see wicket.Component#internalOnBeginRequest()
+	 */
+	protected void internalOnBeginRequest()
+	{
+		// Set default for before/after link text
+		if (beforeDisabledLink == null)
+		{
+			final Application app = getApplication();
+			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
+			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
+		}
 	}
 
 	/**
@@ -304,18 +318,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		// Default handling for tag
 		super.onComponentTag(tag);
 
-		// If we're auto-enabling
-		if (autoEnable)
-		{
-			// the link is enabled if this link doesn't link to the current page
-			setEnabled(!linksTo(getPage()));
-		}
-
 		// Set href to link to this link's linkClicked method
 		String url = getURL();
 
 		// If we're disabled
-		if (!enabled)
+		if (!isEnabled())
 		{
 			// if the tag is an anchor proper
 			if (tag.getName().equalsIgnoreCase("a"))
@@ -345,7 +352,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
 				// generate the href attribute
-				tag.put("href", Strings.replaceAll(url,"&", "&amp;"));
+				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
 
 				// Add any popup script
 				if (popupSettings != null)
@@ -379,32 +386,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			tag.put("onclick", onClickJavaScript);
 		}
 	}
-	
-	/**
-	 * @see wicket.Component#internalOnBeginRequest()
-	 */
-	protected void internalOnBeginRequest()
-	{
-		// Get disabled component of the same name with "Disabled" appended
-		final Component disabledComponent = (Component)get("disabled");
-
-		if (disabledComponent != null)
-		{
-			// Get enabled container
-			final Component enabledComponent = (Component)get("enabled");
-
-			// Set visibility of enabled and disabled children
-			enabledComponent.setVisible(enabled);
-			disabledComponent.setVisible(!enabled);
-		}
-
-		// Set default for before/after link text
-		if (beforeDisabledLink == null)
-		{
-			beforeDisabledLink = getApplicationSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = getApplicationSettings().getDefaultAfterDisabledLink();
-		}		
-	}
 
 	/**
 	 * Renders this link's body.
@@ -419,7 +400,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		if (!enabled && beforeDisabledLink != null)
+		if (!isEnabled() && beforeDisabledLink != null)
 		{
 			getResponse().write(beforeDisabledLink);
 		}
@@ -428,15 +409,9 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		renderComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
-		if (!enabled && afterDisabledLink != null)
+		if (!isEnabled() && afterDisabledLink != null)
 		{
 			getResponse().write(afterDisabledLink);
 		}
-	}
-
-	static
-	{
-		// Allow calls through the ILinkListener interface
-		RequestCycle.registerRequestListenerInterface(ILinkListener.class);
 	}
 }

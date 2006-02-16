@@ -24,6 +24,7 @@ package wicket.resource;
  */
 public class DummySubClassPage extends DummyPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.

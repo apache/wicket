@@ -29,6 +29,8 @@ import wicket.markup.html.panel.Panel;
  */
 public class HeaderSectionPanel_2 extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id
@@ -36,6 +38,6 @@ public class HeaderSectionPanel_2 extends Panel
 	public HeaderSectionPanel_2(final String id) 
 	{
 	    super(id);
-	    addToHeader(new ExternalLink("cssHref", "myStyle.css"));
+	    add(new ExternalLink("cssHref", "myStyle.css"));
     }
 }

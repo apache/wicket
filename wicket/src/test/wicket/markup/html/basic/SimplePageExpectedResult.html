@@ -14,8 +14,10 @@
 -->
 <html xmlns:wicket>
 <body>
-  body
-  <wicket:panel>Inside the panel</wicket:panel>
+  <span wicket:id="myLabel">Test Label</span>
+  body<span wicket:id="myLabel2">Test Label2</span>
+  <wicket:panel>Inside the panel<span wicket:id="label">mein Label</span></wicket:panel>
   <wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>
+  <span wicket:id="myBorder2" testAttr="myValue"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>
 </body>
 </html>

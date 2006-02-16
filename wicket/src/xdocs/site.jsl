@@ -3,7 +3,7 @@
 <!--
  * ========================================================================
  * 
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,212 +27,673 @@
   xmlns:log="jelly:log"
   xmlns:util="jelly:util"
   xmlns:x="jelly:xml"
+  xmlns:fmt="jelly:fmt"
   xmlns:doc="doc"
   xmlns:maven="jelly:maven"
-  xmlns="dummy"
-  trim="true">
+  xmlns="dummy">
+
   <jsl:template match="document" trim="true">
+    <x:doctype name="html" publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+
     <j:useBean var="navbean" class="org.apache.maven.NavBean"/>
-	<j:set var="location" value="${outFile.substring(destdir.length())}"/>
-	<util:replace var="location" oldChar="\" newChar="/" value="${location}"/>
+    <j:set var="location" value="${outFile.substring(destdir.length())}"/>
+    <util:replace var="location" oldChar="\" newChar="/" value="${location}"/>
     <!-- Stores location for publish date / version -->
     <j:set var="date">${maven.xdoc.date}</j:set>
-	<j:setProperties object="${navbean}" document="${doc}" location="${location}"/>
-	
-    <x:doctype name="html" publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+    <j:setProperties object="${navbean}" document="${doc}" location="${location}"/>
+    <x:set var="templateContext" select="." />
+
+    <!-- Sets the current locale -->
+    <fmt:setLocale trim="true" value="${currentLocale}"/>
+
+    <j:if test="${now == null}">
+      <j:useBean var="now" class="java.util.Date"/>
+    </j:if>
+
+    <!-- Format the build date depending the current locale and pattern depending if there is a pattern -->
+    <j:set var="myDateFormat" value="${maven.xdoc.date.format}"/>
+    <j:choose>
+      <j:when test="${!empty(myDateFormat)}">
+        <fmt:formatDate value="${now}" type="both" var="build.date" pattern="${maven.xdoc.date.format}"/>
+      </j:when>
+      <j:otherwise>
+        <fmt:formatDate value="${now}" type="both" dateStyle="long" timeStyle="long" var="build.date"/>
+      </j:otherwise>
+    </j:choose>
+
     <html>
       <head>
-        <j:set var="docTitle"><x:expr select="./properties/title"/></j:set>
+
+        <!-- Key is more important than message... -->
+        <!-- From doc -->
+        <j:set var="_docKey">
+          <x:expr select="./properties/title/@key" />
+        </j:set>
+        <j:set var="_docBundle">
+          <x:expr select="./properties/title/@bundle" />
+        </j:set>
+        <j:if test="${empty(_docKey)}">
+          <x:set var="_docTitle" select="string(./properties/title)"/>
+        </j:if>
+        <j:if test="${!empty(_docKey)}">
+          <!-- Shortcut for the user bundle -->
+          <j:if test="${empty(_docBundle)}">
+            <fmt:message key="${_docKey}" bundle="${myMsg}" var="_docTitle"/>
+          </j:if>
+          <j:if test="${!empty(_docBundle)}">
+            <fmt:bundle basename="${_docBundle}">
+              <fmt:message key="${_docKey}" var="_docTitle"/>
+            </fmt:bundle>
+          </j:if>
+        </j:if>
+
+        <!-- From nav -->
+        <j:set var="_navKey">
+          <x:expr select="$nav/title/@key" />
+        </j:set>
+        <j:set var="_navBundle">
+          <x:expr select="$nav/title/@bundle" />
+        </j:set>
+        <j:if test="${empty(_navKey)}">
+          <x:set var="_navTitle" select="string($nav/title)"/>
+        </j:if>
+        <j:if test="${!empty(_navKey)}">
+          <!-- Shortcut for the user bundle -->
+          <j:if test="${empty(_navBundle)}">
+            <fmt:message key="${_navKey}" bundle="${myMsg}" var="_navTitle"/>
+          </j:if>
+          <j:if test="${!empty(_navBundle)}">
+            <fmt:bundle basename="${_navBundle}">
+              <fmt:message key="${_navKey}" var="_navTitle"/>
+            </fmt:bundle>
+          </j:if>
+        </j:if>
+
+        <j:set var="titleSeparator" value=" - "/>
+        
         <x:if select="$nav/title">
-          <title><x:expr select="$nav/title"/> - ${docTitle}</title>
+          <title>
+            ${_docTitle}${titleSeparator}${_navTitle}
+          </title>
         </x:if>
         <x:if select="not($nav/title)">
-          <title>${pom.name} - ${docTitle}</title>
+          <title>
+            ${pom.name}${titleSeparator}${_navTitle}
+          </title>
         </x:if>
         
         <j:set var="themeUrl" value="${maven.xdoc.theme.url}"/>
         <util:file var="projectCssFile" name="${maven.docs.src}/style/project.css"/>
-        
-        <style type="text/css" media="all"><![CDATA[
-          @import url("${relativePath}/style/maven-base.css");
-          ]]>
-			    <j:if test="${!empty(themeUrl)}"><![CDATA[
-				    @import url("${maven.xdoc.theme.url}");
-			    ]]></j:if>
-			    <j:if test="${empty(themeUrl)}"><![CDATA[
-				    @import url("${relativePath}/style/maven-${maven.xdoc.theme}.css");
-			    ]]></j:if>
-			    <j:if test="${projectCssFile.exists()}"><![CDATA[
-				    @import url("${relativePath}/style/project.css");
-			    ]]></j:if>
+
+        <j:set var="themefile" value="${maven.xdoc.theme.file}"/>
+        <util:replace var="themeFile" oldChar="\" newChar="/" value="${themefile}"/>
+        <j:if test="${!empty(themefile)}">
+          <j:new className="java.lang.String" var="cssFile">
+              <j:arg value="${themefile}" type="java.lang.String"/>
+          </j:new>
+          <j:invoke var="index" on="${cssFile}" method="lastIndexOf">
+              <j:arg value="/" type="java.lang.String"/>
+          </j:invoke>
+          <j:invoke var="cssFileName" on="${cssFile}" method="substring">
+              <j:arg value="${index}"/>
+          </j:invoke>
+          <util:file var="customCssFile" name="${maven.docs.dest}/style${cssFileName}"/>
+        </j:if>
+
+        <style type="text/css" media="all"><j:if test="${!empty(themeUrl)}"><![CDATA[
+            @import url("${maven.xdoc.theme.url}");
+          ]]></j:if>
+          <j:if test="${empty(themeUrl)}"><![CDATA[
+            @import url("${relativePathForLocale}style/maven-${maven.xdoc.theme}.css");
+          ]]></j:if>
+          <j:if test="${projectCssFile.exists()}"><![CDATA[
+            @import url("${relativePathForLocale}style/project.css");
+          ]]></j:if>
+          <j:if test="${customCssFile.exists()}"><![CDATA[
+            @import url("${relativePathForLocale}style${cssFileName}");
+          ]]></j:if>
         </style>
-        
-        <link rel="stylesheet" type="text/css" href="${relativePath}/style/print.css" media="print"/>
+
+        <link rel="stylesheet" type="text/css" href="${relativePathForLocale}style/print.css" media="print"/>
         <meta http-equiv="Content-Type" content="text/html; charset=${outputencoding}"/>
         <x:forEach var="author" select="./properties/author">
           <meta name="author" content="${author.text}"/>
           <meta name="email" content="${author.attribute('email').value}"/>
         </x:forEach>
         
-        <jsl:applyTemplates select="$doc/document/head/*"/>
-        
+        <jsl:applyTemplates select="$templateContext/head/*" />
       </head>
-
-      <x:element name="body"><j:whitespace trim="true">
-        <x:attribute name="class">composite</x:attribute>
-        <x:forEach var="attr" select="$doc/document/body/@*">
-          <x:attribute name="${attr.name}">${attr.value}</x:attribute>
-        </x:forEach>
-        </j:whitespace>
-        <div id="container">
-            <div id="banner">
-                  <!-- organization logo -->
-                    <j:set var="logo" value="${pom.organization.logo}"/>
-                    <j:if test="${!empty(logo)}">
-                      <!-- set url to org or project url -->
-                      <j:set var="url" value="${pom.organization.url}"/>
-                      <j:if test="${!empty(url)}">
-                        <j:set var="home" value="${pom.organization.url}"/>
-                      </j:if>
-                      <j:if test="${empty(url)}">
-                        <j:set var="home" value="${pom.url}"/>
-                      </j:if>
-                      <!-- set image to relative or complete -->
-                      <j:set var="image" value="${pom.organization.logo}"/>
-                      <j:if test="${!image.startsWith('http://') and !image.startsWith('https://')}">
-                        <j:set var="image" value="${relativePath}${image}"/>
-                      </j:if>
-                      <div id="organizationLogo">
-                      	<a href="${home}">
-                        	<img src="${image}" alt="${pom.organization.name}" />
-                      	</a>
-                      </div>
-                    </j:if>
-    
-                  <!-- project logo and link -->
-                      <j:set var="logo" value="${pom.logo}"/>
-                      <j:if test="${logo != null and logo != ''}">
-                        <!-- set image to relative or complete -->
-                        <j:set var="image" value="${pom.logo}"/>
-                        <j:if test="${!image.startsWith('http://') and !image.startsWith('https://')}">
-                          <j:set var="image" value="${relativePath}${image}"/>
-                        </j:if>
-    
-						<div id="projectLogo">
-	                        <a href="${pom.url}">
-	                          <img src="${image}" alt="${pom.name}"/>
-	                        </a>
-						</div>
-                      </j:if>
-                      <j:if test="${logo == null or logo == ''}">
-						<div id="projectLogo">
-                          <a href="${pom.url}">
-                            <span>${pom.name}</span>
-                          </a>
-						</div>
-                      </j:if>
-                    <div class="clear"><hr /></div>
-            </div>
-    
-            <div id="breadcrumbs">
-                  <j:if test="${date == 'left'}">
-                    <maven:property var="version" name="maven.xdoc.version" defaultValue="${pom.currentVersion}"/>
-                    <p>
-                    	Last published: ${build.date}
-                      <j:if test="${!empty(version)}">| Doc for ${version}</j:if>
-                    </p>
-                  </j:if>
-                    <div class="clear"><hr /></div>
-            </div>
-            
-            <!-- left column start -->
-            <div id="leftColumn">
-              <div id="navcolumn">
-                <j:if test="${date == 'navigation-top'}">
-                  <div id="lastPublished">Last published: ${build.date}</div>
-                </j:if>
-                <x:if select="$nav">
-                  <jsl:applyTemplates select="$nav/body/menu[not(@type) | @type='header'] | $nav/body/search"/>
-                </x:if>
-                <jsl:applyTemplates select="$projectNav/body/menu"/>
-                <!-- allows user to put menu items after standard reports -->
-                <x:if select="$nav">
-                  <jsl:applyTemplates select="$nav/body/menu[@type='footer']"/>
-                </x:if>
-                <!-- Standard Maven Navigation -->
-                <j:set var="fileName">${file}</j:set>
-                <j:set var="poweredbyimage">${maven.xdoc.poweredby.image}</j:set>
-                <j:set var="poweredbytitle">${maven.xdoc.poweredby.title}</j:set>
-                <j:set var="poweredbyurl" value="${maven.xdoc.poweredby.url}" />
-                <j:if test="${!empty(poweredbyimage)}">
-                  <a id="poweredBy" href="${poweredbyurl}" title="${poweredbytitle}">
-                    <img alt="${maven.xdoc.poweredby.title}" src="${relativePath}/images/logos/${poweredbyimage}" />
-                  </a>
-                </j:if>
-                <j:if test="${date == 'navigation-bottom'}">
-                  <div id="lastPublished">Last published: ${build.date}</div>
-                </j:if>
-              </div>
-           </div>
-           <!-- left column end -->
-                  
-           <!-- body start -->
-           <div id="bodyColumn">
-             <div class="contentBox">
-               <!-- FIXME really shouldn't use $doc, but jelly loses it's context again -->
-               <jsl:applyTemplates select="$doc/document/body/section"/>
-               <jsl:applyTemplates select="$doc/document/body/release" />
-               <jsl:applyTemplates select="$doc/document/body/goals" />
-             </div>
-           </div>
-           <div class="clear"><hr /></div>
-           <!-- body end -->
-            
-                  
-           <!-- footer start -->    
-           <div id="footer">  
-              <jsl:applyTemplates select="$nav/body/footer"/>
-              <div class="xright">
-                <j:if test="${!empty(pom.organization.name)}">
-                  <j:if test="${!empty(pom.inceptionYear)}">
-                    <j:if test="${pom.inceptionYear == mavenCurrentYear}">
-                      &#169; ${mavenCurrentYear}, ${pom.organization.name}
-                    </j:if>
-                    <j:if test="${pom.inceptionYear != mavenCurrentYear}">
-                      &#169; ${pom.inceptionYear}-${mavenCurrentYear}, ${pom.organization.name}
-                    </j:if>
-                  </j:if>
-                  <j:if test="${empty(pom.inceptionYear)}">
-                    &#169; ${mavenCurrentYear}, ${pom.organization.name}
-                  </j:if>
-                </j:if>
-                <j:if test="${date == 'bottom'}">
-                  - Last published: ${build.date}
-                </j:if>
-              </div>
-              <div class="clear"><hr /></div>
-            </div>
-            <!-- footer end --> 
-        </div>
-        <!-- container end -->              
-        
-      </x:element>
+      <jsl:applyTemplates select="$templateContext/*" />
     </html>
   </jsl:template>
 
-  <!-- process the properties of the doc -->
-  <jsl:template match="properties" trim="true">
-    <!-- stick head block here later -->
+  <!-- Skip properties -->
+  <jsl:template match="properties" />
+
+  <!-- Skip head repeat -->
+  <jsl:template match="head" />
+
+  <jsl:template match="body" trim="true">
+    <x:set var="templateContext" select="." />
+      <x:element name="body"><j:whitespace trim="true">
+        <x:attribute name="class">composite</x:attribute>
+      <x:forEach var="attr" select="@*">
+          <x:attribute name="${attr.name}">${attr.value}</x:attribute>
+        </x:forEach>
+        </j:whitespace>
+	<div id="container">
+        <div id="banner">
+          <!-- set url to org or project url -->
+          <j:set var="url" value="${pom.organization.url}"/>
+          <j:if test="${!empty(url)}">
+            <j:set var="home" value="${pom.organization.url}"/>
+          </j:if>
+          <j:if test="${empty(url)}">
+            <j:set var="home" value="${pom.url}"/>
+          </j:if>
+          <!-- set home to relative or complete -->
+          <j:if test="${!home.startsWith('http://') and !home.startsWith('https://')}">
+            <j:set var="home" value="${relativePathForLocale}${home}"/>
+          </j:if>
+
+          <!-- organization logo -->
+          <j:set var="logo" value="${pom.organization.logo}"/>
+          <j:if test="${!empty(logo)}">
+            <!-- set image to relative or complete -->
+            <j:set var="image" value="${pom.organization.logo}"/>
+            <j:if test="${!image.startsWith('http://') and !image.startsWith('https://')}">
+              <j:if test="${!image.startsWith('/')}" trim="yes">
+                <j:set var="image" value="${relativePathForLocale}${image}"/>
+              </j:if>
+              <j:if test="${image.startsWith('/')}" trim="yes">
+                <j:set var="image" value="${relativePathForLocale}${image.substring(1)}"/>
+              </j:if>
+            </j:if>
+            <a href="${home}" id="organizationLogo">
+              <img src="${image}" alt="${pom.organization.name}" />
+            </a>
+          </j:if>
+          <j:if test="${empty(logo)}">
+            <a href="${home}" id="organizationLogo">
+              <span class="xleft">${pom.organization.name}</span>
+            </a>
+          </j:if>
+
+          <!-- set project to relative or complete -->
+          <j:set var="home" value="${pom.url}"/>
+          <j:if test="${!home.startsWith('http://') and !home.startsWith('https://')}">
+            <j:set var="home" value="${relativePathForLocale}${home}"/>
+          </j:if>
+
+          <!-- project logo and link -->
+          <j:set var="logo" value="${pom.logo}"/>
+          <j:if test="${logo != null and logo != ''}">
+            <!-- set image to relative or complete -->
+            <j:set var="image" value="${pom.logo}"/>
+            <j:if test="${!image.startsWith('http://') and !image.startsWith('https://')}">
+              <j:if test="${!image.startsWith('/')}" trim="yes">
+                <j:set var="image" value="${relativePathForLocale}${image}"/>
+              </j:if>
+              <j:if test="${image.startsWith('/')}" trim="yes">
+                <j:set var="image" value="${relativePathForLocale}${image.substring(1)}"/>
+              </j:if>
+            </j:if>
+
+            <a href="${home}" id="projectLogo">
+              <img src="${image}" alt="${pom.name}"/>
+            </a>
+          </j:if>
+          <j:if test="${logo == null or logo == ''}">
+            <a href="${home}" id="projectLogo">
+              <span class="xright">${pom.name}</span>
+            </a>
+          </j:if>
+          <div class="clear"><hr /></div>
+        </div>
+
+        <div id="breadcrumbs">
+          <maven:property var="version" name="maven.xdoc.version" defaultValue="${pom.currentVersion}"/>
+                
+          <j:set var="breadcrumbsUsed" value=""/>  
+          <x:if select="$nav/body/breadcrumbs">
+            <j:set var="breadcrumbsUsed" value="'true'"/>  
+          </x:if>
+                      
+          <div class="xleft">
+            <j:if test="${empty(breadcrumbsUsed)}">
+              <j:if test="${date == 'left'}">
+                <fmt:message key="site.last_published" bundle="${msg}"/>: ${build.date}
+                <j:if test="${!empty(version)}">
+                  <j:if test="${!(maven.xdoc.crumb.separator == '')}">
+                    <span class="separator">${maven.xdoc.crumb.separator}</span>
+                  </j:if>
+                  &#160;<fmt:message key="site.doc_for" bundle="${msg}"/> ${version}
+                </j:if>
+              </j:if>
+            </j:if>
+            <j:if test="${!empty( breadcrumbsUsed )}">
+              <jsl:applyTemplates select="$nav/body/breadcrumbs" />
+              <a href="${home}">${pom.name}</a>&#160;<span class="separator">&gt;</span>&#160;${_docTitle}
+            </j:if>             
+          </div>
+
+          <div class="xright">
+            <j:if test="${empty(breadcrumbsUsed)}">
+              <j:if test="${date == 'right'}">
+                <fmt:message key="site.last_published" bundle="${msg}"/>: ${build.date}
+                <j:if test="${!empty(version)}">
+                  <j:if test="${!(maven.xdoc.crumb.separator == '')}">
+                    <span class="separator">${maven.xdoc.crumb.separator}</span>
+                  </j:if>
+                  &#160;<fmt:message key="site.doc_for" bundle="${msg}"/> ${version}
+                </j:if>
+              </j:if>
+            </j:if>
+            <!-- render links -->
+            <x:if select="$nav/body/links">
+              <jsl:applyTemplates select="$nav/body/links"/>
+            </x:if>
+          </div>
+          <div class="clear"><hr /></div>
+        </div>
+
+        <!-- left column start -->
+        <div id="leftColumn">
+          <div id="navcolumn">
+            <x:if select="$nav">
+              <jsl:applyTemplates select="$nav/body/menu[not(@type) | @type='header'] | $nav/body/search"/>
+            </x:if>
+            <jsl:applyTemplates select="$projectNav/body/menu"/>
+            <!-- allows user to put menu items after standard reports -->
+            <x:if select="$nav">
+              <jsl:applyTemplates select="$nav/body/menu[@type='footer']"/>
+            </x:if>
+            <j:if test="${context.getVariable('maven.xdoc.legend') == 'true'}">
+              <div id="legend">
+                <h5><fmt:message key="site.legend" bundle="${msg}"/></h5>
+                <ul>
+                  <li class="externalLink"><fmt:message key="site.external_link" bundle="${msg}"/></li>
+                  <li class="newWindow"><fmt:message key="site.opens_new_window" bundle="${msg}"/></li>
+                </ul>
+              </div>
+            </j:if>
+            
+            <!-- Display all availables locales depending :
+                * the user preferences 
+                * the size of the maven.xdoc.locale.supported property -->
+            <j:if test="${locales != null}">
+              <j:if test="${size(locales) gt 0}">
+                <j:set var="displaySelect" value="${maven.xdoc.ui.localeList.asSelect}" />
+                <j:set var="displayMaxElt" value="${maven.xdoc.ui.localeList.max}"/>
+                <j:useBean var="mavenTool" class="org.apache.maven.util.MavenTool"/>
+                <j:set var="displayMaxEltAsInteger" value="${mavenTool.toInteger(displayMaxElt)}"/>
+
+                <div id="language">
+                  <h5><fmt:message key="site.language" bundle="${msg}"/></h5>
+                  <ul>
+                    <!--  Display language in a form with select tag -->
+                    <j:if test="${displaySelect == 'true' or size(locales) gt displayMaxEltAsInteger}">
+                      <form name="languageForm" method="GET">
+                        <select size="1" name="languageSelect" 
+                          onChange="javascript:window.location=this.options[this.selectedIndex].value;">
+                          <!-- Default language -->
+                          <j:invokeStatic className="org.apache.maven.xdoc.util.LocaleUtil" method="displayName" var="displayLocale">
+                            <j:arg value="${defaultLocale}" type="java.util.Locale"/>
+                            <j:arg value="${defaultLocale}" type="java.util.Locale"/>
+                          </j:invokeStatic>
+                          <j:if test="${maven.xdoc.ui.displayByDefault == 'true'}">
+                            <j:set var="displayLocale">${displayLocale} <fmt:message key="defaultLocale.byDefault" bundle="${msg}"/></j:set>
+                          </j:if>
+                          <option value="${relativePathForLocale}${location}">${displayLocale}</option>
+
+                          <!-- Supported language -->
+                          <j:forEach var="locale" items="${locales}">
+                            <j:invokeStatic className="org.apache.maven.xdoc.util.LocaleUtil" method="displayName" var="displayLocale">
+                              <j:arg value="${locale}" type="java.util.Locale"/>
+                              <j:arg value="${locale}" type="java.util.Locale"/>
+                            </j:invokeStatic>
+                            <j:if test="${currentLocale.equals(defaultLocale)}">
+                              <option value="${relativePathForLocale}${locale}${location}">${displayLocale}</option>
+                            </j:if>
+                            <j:if test="${!currentLocale.equals(defaultLocale)}">
+                              <j:if test="${locale.equals(currentLocale)}">
+                                <option value="${relativePathForLocale}${locale}${location}" selected="true">${displayLocale}</option>
+                              </j:if>
+                              <j:if test="${!locale.equals(currentLocale)}">
+                                <option value="${relativePathForLocale}${locale}${location}">${displayLocale}</option>
+                              </j:if>
+                            </j:if>
+                          </j:forEach>
+                        </select>
+                      </form>
+                    </j:if>
+
+                    <!--  Display language as listing -->
+                    <j:if test="${!(displaySelect == 'true' or size(locales) gt displayMaxEltAsInteger)}">
+                      <!-- Default language -->
+                      <j:invokeStatic className="org.apache.maven.xdoc.util.LocaleUtil" method="displayName" var="displayLocale">
+                        <j:arg value="${defaultLocale}" type="java.util.Locale"/>
+                        <j:arg value="${defaultLocale}" type="java.util.Locale"/>
+                      </j:invokeStatic>
+                      <j:if test="${maven.xdoc.ui.displayByDefault == 'true'}">
+                        <j:set var="displayLocale">${displayLocale} <fmt:message key="defaultLocale.byDefault" bundle="${msg}"/></j:set>
+                      </j:if>
+                      <li><doc:itemLink name="${displayLocale}" link="/${location}" relativePath="${relativePathForLocale}"/></li>
+
+                      <!-- Supported language -->
+                      <j:forEach var="locale" items="${locales}">
+                      <j:invokeStatic className="org.apache.maven.xdoc.util.LocaleUtil" method="displayName" var="displayLocale">
+                        <j:arg value="${locale}" type="java.util.Locale"/>
+                        <j:arg value="${locale}" type="java.util.Locale"/>
+                      </j:invokeStatic>
+                        <li><doc:itemLink name="${displayLocale}" link="${locale}${location}" relativePath="${relativePathForLocale}"/></li>
+                      </j:forEach>
+                    </j:if>
+                  </ul>
+                </div>
+              </j:if>
+            </j:if>
+
+            <x:if select="$nav/body/powered-by">
+              <jsl:applyTemplates select="$nav/body/powered-by"/>
+            </x:if>
+
+            <!-- Standard Maven Navigation -->
+            <j:set var="fileName">${file}</j:set>
+            <j:set var="poweredbyimage">${maven.xdoc.poweredby.image}</j:set>
+            <j:set var="poweredbytitle">${maven.xdoc.poweredby.title}</j:set>
+            <j:set var="poweredbyurl" value="${maven.xdoc.poweredby.url}" />
+            <j:if test="${!empty(poweredbyimage)}">
+              <a id="poweredBy" href="${poweredbyurl}" title="${poweredbytitle}">
+                <img alt="${maven.xdoc.poweredby.title}" src="${relativePathForLocale}images/logos/${poweredbyimage}" />
+              </a>
+            </j:if>
+          <j:if test="${empty( breadcrumbsUsed )}">
+            <j:if test="${date == 'navigation-bottom'}">
+              <div id="lastPublished"><fmt:message key="site.last_published" bundle="${msg}"/>: ${build.date}</div>
+            </j:if>
+          </j:if>  
+          </div>
+        </div>
+        <!-- left column end -->
+              
+        <!-- body start -->
+        <div id="bodyColumn">
+          <div class="contentBox">
+          <jsl:applyTemplates select="$templateContext/*" />
+          </div>
+        </div>
+        <div class="clear"><hr /></div>
+        <!-- body end -->
+              
+        <!-- footer start -->    
+        <div id="footer">  
+          <jsl:applyTemplates select="$nav/body/footer"/>
+       
+          <j:if test="${!empty(breadcrumbsUsed)}">
+            <div class="xleft">
+              <fmt:message key="site.last_published" bundle="${msg}"/>: ${build.date}
+              <j:if test="${!empty(version)}">
+                <j:if test="${!(maven.xdoc.crumb.separator == '')}">
+                  <span class="separator">${maven.xdoc.crumb.separator}</span>
+                </j:if>
+                &#160;<fmt:message key="site.doc_for" bundle="${msg}"/> ${version}
+              </j:if>
+            </div>
+          </j:if>
+          <div class="xright">
+            <j:if test="${!empty(pom.organization.name)}">
+              <j:if test="${!empty(pom.inceptionYear)}">
+                <j:if test="${pom.inceptionYear == mavenCurrentYear}">
+                  &#169; ${mavenCurrentYear}, ${pom.organization.name}
+                </j:if>
+                <j:if test="${pom.inceptionYear != mavenCurrentYear}">
+                  &#169; ${pom.inceptionYear}-${mavenCurrentYear}, ${pom.organization.name}
+                </j:if>
+              </j:if>
+              <j:if test="${empty(pom.inceptionYear)}">
+                &#169; ${mavenCurrentYear}, ${pom.organization.name}
+              </j:if>
+            <j:if test="${empty(breadcrumbsUsed)}">
+            <j:if test="${date == 'bottom'}">
+              &#169; - <fmt:message key="site.last_published" bundle="${msg}"/>: ${build.date}
+            </j:if>
+           </j:if>
+  
+          </j:if>                      
+          </div>
+          <div class="clear"><hr /></div>
+        </div>
+        <!-- footer end --> 
+    </div>
+    <!-- container end -->
+      </x:element>
+  </jsl:template>
+
+  <!-- process a documentation section -->
+  <jsl:template match="section" trim="true">
+    <div class="section">
+      <x:set var="_sectionName" select="string(@name)"/>
+      <j:set var="_sectionId"><x:expr select="@id"/></j:set>
+
+      <!-- Key is more important than message... -->
+      <j:set var="_key">
+        <x:expr select="@key" />
+      </j:set>
+      <j:set var="_bundle">
+        <x:expr select="@bundle" />
+      </j:set>
+      <j:if test="${!empty(_key)}">
+        <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+        <j:if test="${empty(_bundle)}">
+          <fmt:message key="${_key}" bundle="${myMsg}" var="_sectionName"/>
+        </j:if>
+        <j:if test="${!empty(_bundle)}">
+          <fmt:bundle basename="${_bundle}">
+            <fmt:message key="${_key}" var="_sectionName"/>
+          </fmt:bundle>
+        </j:if>
+      </j:if>
+
+      <!-- construct anchor from 'id' tag if it exists, from 'name' tag otherwise -->
+      <j:if test="${!empty(_sectionId)}">
+        <j:set var="_anchorName"><x:expr select="@id"/></j:set>
+       </j:if>
+       <j:if test="${empty(_sectionId)}">
+        <!-- named anchors can't contain whitespaces -->
+        <j:set var="_anchorName"><doc:escapeNameToken value="${_sectionName}"/></j:set>
+      </j:if>
+      <j:if test="${!empty(_anchorName)}">
+        <a name="${_anchorName}"/>
+      </j:if>
+      <h2>${_sectionName}</h2>
+      <jsl:applyTemplates />
+    </div>
+  </jsl:template>
+
+  <jsl:template match="subsection" trim="true">
+    <div class="subsection">
+      <x:set var="_sectionName" select="string(@name)"/>
+      <j:set var="_sectionId"><x:expr select="@id"/></j:set>
+
+      <!-- Key is more important than message... -->
+      <j:set var="_key">
+        <x:expr select="@key" />
+      </j:set>
+      <j:set var="_bundle">
+        <x:expr select="@bundle" />
+      </j:set>
+      <j:if test="${!empty(_key)}">
+        <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+        <j:if test="${empty(_bundle)}">
+          <fmt:message key="${_key}" bundle="${myMsg}" var="_sectionName"/>
+        </j:if>
+        <j:if test="${!empty(_bundle)}">
+          <fmt:bundle basename="${_bundle}">
+            <fmt:message key="${_key}" var="_sectionName"/>
+          </fmt:bundle>
+        </j:if>
+      </j:if>
+
+      <!-- construct anchor from 'id' tag if it exists, from 'name' tag otherwise -->
+      <j:if test="${!empty(_sectionId)}">
+        <j:set var="_anchorName"><x:expr select="@id"/></j:set>
+       </j:if>
+      <j:if test="${empty(_sectionId)}">
+        <!-- named anchors can't contain whitespaces -->
+        <j:set var="_anchorName"><doc:escapeNameToken value="${_sectionName}"/></j:set>
+      </j:if>
+      <j:if test="${!empty(_anchorName)}">
+        <a name="${_anchorName}"/>
+      </j:if>
+      <h3>${_sectionName}</h3>
+      <jsl:applyTemplates />
+    </div>
+  </jsl:template>
+  
+  <jsl:template match="source" trim="false">
+    <div class="source"><pre><jsl:applyTemplates /></pre></div>
+  </jsl:template>
+  
+  <jsl:template match="escapeXml" trim="false"><j:set var="escapedChunk"><jsl:applyTemplates/></j:set>${escapedChunk}</jsl:template>
+  
+  <jsl:template match="a" trim="true">
+    <x:element name="a" trim="true">
+      <x:forEach var="attr" select="@*">
+        <j:choose>
+          <j:set var="attr_name" value="${attr.name}"/>
+          <j:set var="attr_value" value="${attr.value}"/>
+          <j:if test="${attr_name == 'hrefkey'}">
+            <j:set var="_bundle">
+              <x:expr select="@bundle" />
+            </j:set>
+            <j:if test="${!empty(attr_value)}">
+              <!-- If there is hrefkey, then change attr_name to href -->
+              <!-- and attr_value to the formatted message -->
+              <j:set var="attr_name" value="href"/>
+              <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+              <j:if test="${empty(_bundle)}">
+                <fmt:message key="${attr_value}" bundle="${myMsg}" var="attr_value"/>
+              </j:if>
+              <j:if test="${!empty(_bundle)}">
+                <fmt:bundle basename="${_bundle}">
+                  <fmt:message key="${attr_value}" var="attr_value"/>
+                </fmt:bundle>
+              </j:if>
+            </j:if>
+          </j:if>
+          <j:when test="${attr_name == 'href'}">
+            <j:set var="href" value="${attr_value}" />
+            <j:choose>
+              <j:when test="${href.startsWith('#')}">
+                <x:attribute name="href">
+                  <doc:escapeNameToken value="${href}"/>
+                </x:attribute>
+              </j:when>
+              <j:when test="${href.startsWith('http://') or href.startsWith('https://')}">
+                <x:attribute name="href">${href}</x:attribute>
+                <x:attribute name="class">externalLink</x:attribute>
+                <x:attribute name="title">External Link</x:attribute>
+              </j:when>
+              <j:otherwise>
+                <x:attribute name="href">${href}</x:attribute>
+              </j:otherwise>
+            </j:choose>
+          </j:when>
+          <j:when test="${attr_name == 'target'}">
+            <j:set var="target">${attr_value}</j:set>
+            <j:if test="${!empty(target) and target.equals('_blank')}">
+              <x:attribute name="class">newWindow</x:attribute>
+              <x:attribute name="title">New Window</x:attribute>
+            </j:if>
+            <x:attribute name="target">${target}</x:attribute>
+          </j:when>
+          <j:when test="${attr_name == 'name'}">
+            <x:attribute name="name">
+              <doc:escapeNameToken value="${attr_value}"/>
+            </x:attribute>
+          </j:when>
+          <j:when test="${attr.name == 'bundle'}"/>
+          <j:otherwise>
+            <x:attribute name="${attr_name}">${attr_value}</x:attribute>
+          </j:otherwise>
+        </j:choose>
+      </x:forEach>
+      <jsl:applyTemplates/>
+    </x:element>
+  </jsl:template>
+
+  <!-- Process the links navbar -->
+  <jsl:template match="links" trim="true">
+    <j:set var="linkCount" value="1"/>
+    <x:forEach var="link" select="item">
+      <x:set var="_img" select="string(@img)"/>
+      <x:set var="_name" select="string(@name)"/>
+      <x:set var="_link" select="string(@href)"/>
+      <x:set var="_target" select="string(@target)"/>
+      <j:whitespace trim="false">
+        <j:if test="${linkCount != 1}">
+          <j:if test="${!(maven.xdoc.crumb.separator == '')}">
+            <span class="separator">${maven.xdoc.crumb.separator}</span>
+          </j:if>
+        </j:if>
+        <doc:itemLink name="${_name}" link="${_link}" img="${_img}" target="${_target}"/>
+      </j:whitespace>
+      <j:set var="linkCount" value="${1+linkCount}"/>
+    </x:forEach>
+  </jsl:template>
+
+  <!-- Process additional powered-by's -->
+  <jsl:template match="powered-by" trim="true">
+    <x:forEach var="link" select="item">
+      <x:set var="poweredbyimage" select="string(@img)"/>
+      <x:set var="poweredbytitle" select="string(@name)"/>
+      <x:set var="poweredbyurl" select="string(@href)"/>
+      <j:if test="${!empty(poweredbyimage)}">
+        <a id="poweredByExternal" href="${poweredbyurl}" title="${poweredbytitle}">
+          <img alt="${poweredbytitle}" src="${poweredbyimage}" />
+        </a>
+      </j:if>
+    </x:forEach>
+   </jsl:template>
+
+  <!-- Process the breadcrumb navbar -->
+  <jsl:template match="breadcrumbs" trim="true">    
+    <x:forEach var="link" select="item">
+      <x:set var="_name" select="string(@name)"/>
+      <x:set var="_link" select="string(@href)"/>
+      <a href="${_link}">${_name}</a>
+      &#160;<span class="separator">&gt;</span>&#160;
+    </x:forEach>
   </jsl:template>
 
   <!-- Process a menu for the navigation bar -->
   <jsl:template match="menu" trim="true">
-    <j:set var="_menuName"><x:expr select="@name"/></j:set>
-    <j:set var="_menuName"><doc:escapeNameToken value="${_menuName}"/></j:set>
+    <x:set var="_menuName" select="string(@name)"/>
+    <!-- Key is more important than message... -->
+    <j:set var="_key">
+        <x:expr select="@key" />
+    </j:set>
+    <j:set var="_bundle">
+        <x:expr select="@bundle" />
+    </j:set>
+    <j:if test="${!empty(_key)}">
+        <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+        <j:if test="${empty(_bundle)}">
+            <fmt:message key="${_key}" bundle="${myMsg}" var="_menuName"/>
+        </j:if>
+        <j:if test="${!empty(_bundle)}">
+            <fmt:bundle basename="${_bundle}">
+                <fmt:message key="${_key}" var="_menuName"/>
+            </fmt:bundle>
+        </j:if>
+    </j:if>
+    <j:set var="_menuNameEscaped"><doc:escapeNameToken value="${_menuName}"/></j:set>
+
     <j:choose>
       <j:when test="${!empty(_menuName)}">
-        <div id="menu${_menuName}">
-          <h5><x:expr select="@name"/></h5>
+        <div id="menu${_menuNameEscaped}">
+          <h5>${_menuName}</h5>
           <ul><jsl:applyTemplates select="item"/></ul>
         </div>
       </j:when>
@@ -242,7 +703,6 @@
         </div>
       </j:otherwise>
     </j:choose>
-    
   </jsl:template>
 
   <jsl:template match="item" trim="true">
@@ -254,6 +714,26 @@
     <x:set var="_childCount" select="count(./item)"/>
     <j:set var="_isCollapsed" value="${navbean.isCollapsed(item.get(0))}"/>
     <j:set var="_state" value="none"/>
+
+    <!-- Key is more important than message... -->
+    <j:set var="_key">
+        <x:expr select="@key" />
+    </j:set>
+    <j:set var="_bundle">
+        <x:expr select="@bundle" />
+    </j:set>    
+    <j:if test="${!empty(_key)}">
+        <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+        <j:if test="${empty(_bundle)}">
+            <fmt:message key="${_key}" bundle="${myMsg}" var="_name"/>
+        </j:if>
+        <j:if test="${!empty(_bundle)}">
+            <fmt:bundle basename="${_bundle}">
+                <fmt:message key="${_key}" var="_name"/>
+            </fmt:bundle>
+        </j:if>
+    </j:if>
+
     <j:if test="${_childCount.intValue() gt 0}">
       <j:if test="${!_isCollapsed}"><j:set var="_state" value="expanded"/></j:if>
       <j:if test="${_isCollapsed}"><j:set var="_state" value="collapsed"/></j:if>
@@ -271,26 +751,6 @@
         </ul>
       </j:if>
     </li>
-  </jsl:template>
-
-  <!-- Process the breadcrumb navbar -->
-  <jsl:template match="links" trim="true">
-    <j:set var="linkCount" value="1"/>
-    <x:forEach var="link" select="item">
-      <j:set var="_img"><x:expr select="@img"/></j:set>
-      <j:set var="_name"><x:expr select="@name"/></j:set>
-      <j:set var="_link"><x:expr select="@href"/></j:set>
-      <j:set var="_target"><x:expr select="@target"/></j:set>
-      <j:whitespace trim="false">
-        <j:if test="${linkCount != 1}">
-          <j:if test="${!(maven.xdoc.crumb.separator == '')}">
-            <span class="separator">${maven.xdoc.crumb.separator}</span>
-          </j:if>
-        </j:if>
-        <doc:itemLink name="${_name}" link="${_link}" img="${_img}" target="${_target}"/>
-      </j:whitespace>
-      <j:set var="linkCount" value="${1+linkCount}"/>
-    </x:forEach>
   </jsl:template>
 
   <!-- Google site search -->
@@ -318,35 +778,6 @@
     </div>
   </jsl:template>
 
-  <!-- process a documentation section -->
-  <jsl:template match="section" trim="true">
-    <div class="section">
-      <j:set var="_sectionName"><x:expr select="@name"/></j:set>
-      <!-- named anchors can't contain whitespaces -->
-      <j:set var="_anchorName"><doc:escapeNameToken value="${_sectionName}"/></j:set>
-      <j:if test="${!empty(_sectionName)}">
-          <a name="${_anchorName}"/><h2>${_sectionName}</h2>
-      </j:if>
-      <jsl:applyTemplates select="*"/>
-    </div>
-  </jsl:template>
-
-  <jsl:template match="subsection" trim="true">
-    <div class="subsection">
-      <j:set var="_sectionName"><x:expr select="@name"/></j:set>
-      <!-- named anchors can't contain whitespaces -->
-      <j:set var="_anchorName"><doc:escapeNameToken value="${_sectionName}"/></j:set>
-      <j:if test="${!empty(_sectionName)}">
-          <a name="${_anchorName}"/><h3>${_sectionName}</h3>
-      </j:if>
-      <jsl:applyTemplates select="*"/>
-    </div>
-  </jsl:template>
-
-  <jsl:template match="source" trim="false">
-    <div class="source"><pre><jsl:applyTemplates /></pre></div>
-  </jsl:template>
-  
   <!-- preserve whitespace in the following elements -->
   <jsl:template match="pre | script | style" trim="true">
     <x:set var="nodename" select="name()"/>
@@ -373,14 +804,14 @@
 
   <jsl:template match="footer" trim="true">
     <div class="xleft">
-      <jsl:applyTemplates select="*"/>
+      <jsl:applyTemplates />
     </div>
   </jsl:template>
 
   <jsl:template match="table" trim="true">
     <j:set var="rowcount" value="0"/>
     <table class="bodyTable">
-      <jsl:applyTemplates select="*"/>
+      <jsl:applyTemplates />
     </table>
   </jsl:template>
 
@@ -398,21 +829,19 @@
       <x:forEach var="attr" select="@*">
         <x:attribute name="${attr.name}">${attr.value}</x:attribute>
       </x:forEach>
-      <jsl:applyTemplates select="*"/>
-</j:whitespace></x:element>
-  </jsl:template>
+      <jsl:applyTemplates />
+       </j:whitespace></x:element>
+      </jsl:template>
 
-      <!--************************-->
       <!-- goals documentation    -->
-      <!--************************-->
       <jsl:template match="goals" trim="true">
         <!-- reset row alternation -->
         <j:set var="rowMode" value="" />
         <div class="h3">
-          <a name="Goals"/><h3>Goals</h3>
+          <a name="Goals"/><h3><fmt:message key="site.goals" bundle="${msg}"/></h3>
           <table class="bodyTable">
             <thead>
-              <tr><th>Goal</th><th>Description</th></tr>
+              <tr><th><fmt:message key="site.goal" bundle="${msg}"/></th><th><fmt:message key="site.description" bundle="${msg}"/></th></tr>
             </thead>
             <tbody>
               <jsl:applyTemplates select="goal"/>
@@ -432,70 +861,74 @@
           </j:otherwise>
         </j:choose>
         
-        <x:element name="tr"><j:whitespace trim="true">
-          <x:attribute name="class">${rowMode}</x:attribute>
-          <j:set var="_goalName"><x:expr select="./name" /></j:set>
-          <td style="width:20%"><a name="${_goalName}"/>${_goalName}</td>
-          <td ><jsl:applyTemplates select="description" /></td>
-</j:whitespace></x:element>
+        <x:element name="tr">
+          <j:whitespace trim="true">
+            <x:attribute name="class">${rowMode}</x:attribute>
+            <j:set var="_goalName"><x:expr select="./name" /></j:set>
+            <td style="width:20%"><a name="${_goalName}"/>${_goalName}</td>
+            <td ><jsl:applyTemplates select="description" /></td>
+          </j:whitespace>
+        </x:element>
       </jsl:template>   
       
-      <jsl:template match="description">
-        <jsl:applyTemplates trim="false"/>
-      </jsl:template>
-
-  <!-- remove the space at the end of parsed "a" anchors and fix local hrefs -->
-  <jsl:template match="a" trim="true">
-    <x:element name="a" trim="true">
-      <x:forEach var="attr" select="@*">
-        <j:choose>
-          <j:when test="${attr.name == 'href'}">
-            <j:set var="href" value="${attr.value}" />
-            <j:choose>                 
-              <j:when test="${href.startsWith('#')}">
-              	<x:attribute name="href">
-              	  <doc:escapeNameToken value="${href}"/>
-              	</x:attribute>
-              </j:when>
-              <j:when test="${href.startsWith('http://')}">
-                <x:attribute name="href">${href}</x:attribute>
-              	<x:attribute name="class">externalLink</x:attribute>
-              	<x:attribute name="title">External Link</x:attribute>
-              </j:when>                  
-              <j:otherwise>
-                <x:attribute name="href">${href}</x:attribute>
-              </j:otherwise>
-            </j:choose>
-          </j:when>
-          <j:when test="${attr.name == 'target'}">
-            <j:set var="target">${attr.value}</j:set>
-            <j:if test="${!empty(target) and target.equals('_blank')}">
-              <x:attribute name="class">newWindow</x:attribute>
-              <x:attribute name="title">New Window</x:attribute>
-            </j:if>              
-            <x:attribute name="target">${target}</x:attribute>
-          </j:when>
-          <j:when test="${attr.name == 'name'}">
-            <x:attribute name="name">
-              <doc:escapeNameToken value="${attr.value}"/>
-            </x:attribute>
-          </j:when>
-          <j:otherwise>
-            <x:attribute name="${attr.name}">${attr.value}</x:attribute>
-          </j:otherwise>
-        </j:choose>
-      </x:forEach>
-      <jsl:applyTemplates/>
-    </x:element>
+  <jsl:template match="description">
+    <jsl:applyTemplates trim="false"/>
   </jsl:template>
-   
-  <!-- copy any other elements through -->
-  <jsl:template match="*" trim="false"><jsl:copy trim="false"><jsl:applyTemplates trim="false"/></jsl:copy></jsl:template>
-   
+
+  <!-- process a guide-like navbar -->
+  <jsl:template match="navbar" trim="false">
+    <x:set var="_prevlink" select="string(@prev)"/>
+    <x:set var="_homelink" select="string(@home)"/>
+    <x:set var="_nextlink" select="string(@next)"/>
+    <j:set var="prev"><fmt:message key="site.navbar.previous" bundle="${msg}"/></j:set>
+    <j:set var="home"><fmt:message key="site.navbar.home" bundle="${msg}"/></j:set>
+    <j:set var="next"><fmt:message key="site.navbar.next" bundle="${msg}"/></j:set>
+    <hr/>
+    <div align="center" class="navbar">
+      [
+      <j:if test="${ ! empty(_prevlink) }"><a href="${_prevlink}">${prev}</a></j:if>
+      <j:if test="${ empty(_prevlink) }">${prev}</j:if>
+      |
+      <j:if test="${ ! empty(_homelink)}"><a href="${_homelink}">${home}</a></j:if>
+      <j:if test="${ empty(_homelink) }">home</j:if>
+      |
+      <j:if test="${ ! empty(_nextlink)}"><a href="${_nextlink}">${next}</a></j:if>
+      <j:if test="${ empty(_nextlink)}">${next}</j:if>
+      ]
+    </div>
+  </jsl:template>
+
   <!-- element values don't pass through as text -->
   <jsl:template match="@*"/>
 
   <!-- CDATA and text nodes pass-thru -->
   <jsl:template match="text()"><x:expr select="."/></jsl:template>
+
+  <!-- copy any other elements through -->
+  <jsl:template match="*" trim="false"><jsl:copy trim="false"><jsl:applyTemplates trim="false"/></jsl:copy></jsl:template>
+   
+  <!-- process a message -->
+  <!-- Key is more important than message... -->
+  <jsl:template match="message" trim="true">
+    <j:set var="_key">
+      <x:expr select="@key" />
+    </j:set>
+    <j:set var="_bundle">
+      <x:expr select="@bundle" />
+    </j:set>
+    <j:if test="${!empty(_key)}">
+      <!-- Default bundle is the user one in ${maven.xdoc.bundle} -->
+      <j:if test="${empty(_bundle)}">
+        <fmt:message key="${_key}" bundle="${myMsg}" />
+      </j:if>
+      <j:if test="${!empty(_bundle)}">
+        <fmt:bundle basename="${_bundle}">
+          <fmt:message key="${_key}" />
+        </fmt:bundle>
+      </j:if>
+    </j:if>
+
+    <jsl:applyTemplates />
+  </jsl:template>
 
 </jsl:stylesheet>

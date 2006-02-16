@@ -22,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import org.apache.commons.fileupload.FileItem;
-
 import wicket.util.file.Files;
+import wicket.util.upload.FileItem;
 
 /**
  * Model for file uploads.
@@ -33,6 +32,8 @@ import wicket.util.file.Files;
  */
 public class FileUpload implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	final FileItem item;
 
 	/**
@@ -47,13 +48,21 @@ public class FileUpload implements Serializable
 	}
 
 	/**
+	 * Deletes temp file from disk
+	 */
+	public void delete()
+	{
+		item.delete();
+	}
+	
+	/**
 	 * @return Uploaded file as an array of bytes
 	 */
 	public byte[] getBytes()
 	{
 		return item.get();
 	}
-	
+
 	/**
 	 * @return Content type for upload
 	 */
@@ -61,7 +70,7 @@ public class FileUpload implements Serializable
 	{
 		return item.getContentType();
 	}
-
+	
 	/**
 	 * @return File object for client-side file that was uploaded.
 	 */

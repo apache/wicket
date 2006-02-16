@@ -18,7 +18,6 @@
 package wicket.util.time;
 
 import java.text.ParseException;
-
 import java.util.Calendar;
 
 import wicket.util.lang.EnumeratedType;
@@ -58,6 +57,8 @@ import wicket.util.lang.EnumeratedType;
  */
 public final class TimeOfDay extends AbstractTime
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Constant for AM time. */
 	public static final Meridian AM = new Meridian("AM");
 
@@ -73,6 +74,8 @@ public final class TimeOfDay extends AbstractTime
 	/** Typesafe AM/PM enumeration. */
 	public static final class Meridian extends EnumeratedType
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 
@@ -279,7 +282,7 @@ public final class TimeOfDay extends AbstractTime
 	 */
 	public static TimeOfDay valueOf(final Time time)
 	{
-		return valueOf(Time.localtime, time);
+		return valueOf(AbstractTime.localtime, time);
 	}
 
 	/**
@@ -326,7 +329,7 @@ public final class TimeOfDay extends AbstractTime
 	 */
 	public Time next()
 	{
-		return next(Time.localtime);
+		return next(AbstractTime.localtime);
 	}
 
 	/**

@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.2  2005/12/25 23:03:57  jdonnerstag
+ * Applied eclipse 3.2M4 cleanUp wizard to remove unused private variables and methods
+ *
  * Revision 1.1  2005/01/26 09:27:54  eelco12
  * refactoring:
  * package rename table -> list
@@ -359,7 +362,6 @@ public class Diff
 
 			int d = diag(xoff, xlim, yoff, ylim);
 			int c = cost;
-			int f = fdiag[fdiagoff + d];
 			int b = bdiag[bdiagoff + d];
 
 			if (c == 1)

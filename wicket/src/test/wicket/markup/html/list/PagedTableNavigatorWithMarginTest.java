@@ -26,7 +26,7 @@ import wicket.protocol.http.MockWebApplication;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class PagedTableNavigatorWithMarginTest extends TestCase
 {
@@ -48,13 +48,13 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(PagedTableNavigatorWithMarginPage.class);
+		application.setHomePage(PagedTableNavigatorWithMarginPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)application.getLastRenderedPage();

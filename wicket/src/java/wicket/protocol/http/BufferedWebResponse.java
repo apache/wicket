@@ -17,14 +17,10 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketRuntimeException;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Subclass of WebResponse which buffers output and any redirection.
@@ -33,14 +29,11 @@ import wicket.WicketRuntimeException;
  */
 public class BufferedWebResponse extends WebResponse
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(BufferedWebResponse.class);
-
 	/** URL to redirect to when response is flushed, if any */
 	private String redirectURL;
 
 	/** Buffer to hold page */
-	private StringBuffer buffer = new StringBuffer(1024);
+	private AppendingStringBuffer buffer = new AppendingStringBuffer(4096);
 
 	/**
 	 * Constructor for testing harness.
@@ -54,9 +47,8 @@ public class BufferedWebResponse extends WebResponse
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	BufferedWebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	BufferedWebResponse(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
@@ -78,7 +70,7 @@ public class BufferedWebResponse extends WebResponse
             // Write the buffer to the response stream
             if (buffer.length() != 0)
             {
-                super.write(buffer.toString());
+                super.write(buffer);
             }
         }
 	}
@@ -91,11 +83,10 @@ public class BufferedWebResponse extends WebResponse
 	 */
 	public final void redirect(final String url)
 	{
-        if (redirect)
+        if (redirectURL != null)
         {
         	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
         }
-		super.redirect = true;
 		this.redirectURL = url;
 	}
 
@@ -108,5 +99,17 @@ public class BufferedWebResponse extends WebResponse
 	public void write(final String string)
 	{
 		buffer.append(string);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 */
+	public final void filter()
+	{
+        if (redirectURL == null && buffer.length() != 0)
+        {
+        	this.buffer = filter(buffer);
+
+        }
 	}
 }

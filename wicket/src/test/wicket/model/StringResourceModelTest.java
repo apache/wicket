@@ -30,7 +30,7 @@ import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.resource.BundleStringResourceLoader;
+import wicket.resource.loader.BundleStringResourceLoader;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
@@ -60,9 +60,9 @@ public class StringResourceModelTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getSettings().addStringResourceLoader(
+		application.getResourceSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
-		page = new MockPage(null);
+		page = new MockPage();
 		ws = new WeatherStation();
 		wsModel = new Model(ws);
 	}
@@ -115,7 +115,7 @@ public class StringResourceModelTest extends TestCase
 	 * 
 	 *
 	 */
-	public void testGetOGNLResource()
+	public void testGetPropertySubstitutedResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
 		Assert.assertEquals("Text should be as expected",
@@ -207,6 +207,8 @@ public class StringResourceModelTest extends TestCase
 	{
 		IModel wsDetachModel = new AbstractReadOnlyDetachableModel()
 		{
+			private static final long serialVersionUID = 1L;
+
 			private transient WeatherStation station;
 			
 			protected void onAttach()
@@ -226,7 +228,7 @@ public class StringResourceModelTest extends TestCase
 
 			public IModel getNestedModel()
 			{
-				// TODO remove: return station;
+				// TODO General: Remove return station;
 				return null;
 			}
 		};
@@ -235,7 +237,7 @@ public class StringResourceModelTest extends TestCase
 		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(((IModel)model.getNestedModel()).getObject(page));
+		Assert.assertNotNull(model.getNestedModel().getObject(page));
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...
@@ -246,8 +248,10 @@ public class StringResourceModelTest extends TestCase
 	/**
 	 * Inner class used for testing.
 	 */
-	class WeatherStation implements Serializable
+	public class WeatherStation implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 
 		private String currentStatus = "sunny";
 

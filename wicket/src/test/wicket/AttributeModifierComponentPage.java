@@ -32,12 +32,14 @@ import wicket.model.Model;
  */
 public class AttributeModifierComponentPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * 
 	 */
-	public AttributeModifierComponentPage(final PageParameters parameters)
+	public AttributeModifierComponentPage()
 	{
 		// Label with attribute modifier
 		Label label1 = new Label("label1", new Model("Label 1"));
@@ -53,6 +55,8 @@ public class AttributeModifierComponentPage extends WebPage
 		Label label3 = new Label("label3", new Model("Label 3"));
 		label3.add(new AttributeModifier("class", true, new AbstractDetachableModel()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			private transient String text = null;
 
 			public void onDetach()
@@ -77,7 +81,7 @@ public class AttributeModifierComponentPage extends WebPage
 
 			public IModel getNestedModel()
 			{
-				// TODO: remove return text;
+				// TODO General: Remove return text
 				return null;
 			}
 		}));

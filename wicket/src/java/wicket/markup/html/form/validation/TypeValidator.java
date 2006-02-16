@@ -26,6 +26,7 @@ import wicket.Session;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
@@ -34,7 +35,7 @@ import wicket.util.string.Strings;
  * validation.
  * <p>
  * This component adds ${type}, ${exception}, ${locale} and ${format} to the
- * model for OGNL error message interpolation. Format is only valid if the type
+ * model for error message interpolation. Format is only valid if the type
  * conversion involves a date.
  * 
  * @author Eelco Hillenius
@@ -42,6 +43,8 @@ import wicket.util.string.Strings;
  */
 public class TypeValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The locale to use */
 	private Locale locale = null;
 
@@ -133,7 +136,7 @@ public class TypeValidator extends StringValidator
 	protected Map messageModel(FormComponent formComponent, final ConversionException e)
 	{
 		final Map model = super.messageModel(formComponent);
-		model.put("type", type);
+		model.put("type", Classes.name(type));
 		final Locale locale = e.getLocale();
 		if (locale != null)
 		{

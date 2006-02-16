@@ -18,8 +18,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
 
 /**
@@ -29,9 +27,8 @@ public class WebResponseCrawlerSaveTest extends TestCase
 {
     /**
      * 
-     * @throws IOException
      */
-    public void testEncode() throws IOException
+    public void testEncode()
     {
         WebResponseCrawlerSave resp = new WebResponseCrawlerSave(null); 
         

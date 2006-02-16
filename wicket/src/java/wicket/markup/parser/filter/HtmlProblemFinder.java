@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
 
 /**
@@ -35,18 +34,10 @@ import wicket.markup.parser.AbstractMarkupFilter;
  *     public class MyApplication extends Application
  *     {
  *         ...
- * 	       public MarkupParser newMarkupParser()
+ *         public IMarkupFilter[] getAdditionalMarkupHandler()
  *         {
- *             final MarkupParser parser = new MarkupParser(new XmlPullParser())
- *                 {
- *                     public void initFilterChain()
- *                     {
- *                         appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
- *                     }
- *                 };
- *             parser.configure(getSettings());
- *             return parser;
- *             }
+ *             return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
+ *         }
  * </pre>
  * 
  * The purpose of the filter is to find possible HTML issues and to log a 
@@ -71,7 +62,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	/** Throw an exception on the issue detected */
 	public static final int ERR_THROW_EXCEPTION = 0;
 	
-	/** Default behaviour in case of a potential HTML issue detected */
+	/** Default behavior in case of a potential HTML issue detected */
 	private final int problemEscalation; 
 	    
 	/**
@@ -126,8 +117,9 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	 * 
 	 * @param msg The message
 	 * @param tag The current tag
+	 * @throws ParseException
 	 */
-	private void escalateWarning(final String msg, final ComponentTag tag)
+	private void escalateWarning(final String msg, final ComponentTag tag) throws ParseException
 	{
 	    if (problemEscalation == ERR_LOG_WARN)
 	    {
@@ -139,11 +131,11 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	    }
 	    else if (problemEscalation == ERR_INGORE)
 	    {
-	        ;
+	        // no action required
 	    }
 	    else // if (problemEscalation == ERR_THROW_EXCEPTION)
 	    {
-	        throw new MarkupException(msg + tag.toUserDebugString());
+	        throw new ParseException(msg + tag.toUserDebugString(), tag.getPos());
 	    }
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,6 +19,7 @@ package wicket.resource;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.markup.MarkupStream;
 
 /**
  * Dummy component used for testing or resource loading funationality.
@@ -27,6 +28,8 @@ import wicket.Component;
  */
 public class DummyComponent extends Component
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Create the component with the given name.
 	 * 
@@ -41,9 +44,10 @@ public class DummyComponent extends Component
 	}
 
 	/**
-	 * Implementation which renders this component.
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
 	}
 }

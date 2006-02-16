@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.list;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -59,9 +58,11 @@ public class ListViewTest extends TestCase
 
 		return new ListView("listView", new Model(modelList))
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 	}
@@ -103,9 +104,9 @@ public class ListViewTest extends TestCase
 	}
 
 	/**
-	 * @throws IOException
+	 *
 	 */
-	public void testEmptyListView() throws IOException
+	public void testEmptyListView()
 	{
 		// Empty tables
 		ListView lv = createListView(0);
@@ -117,9 +118,11 @@ public class ListViewTest extends TestCase
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
 		lv = new ListView("listView", new Model(null))
 		{
+			private static final long serialVersionUID = 1L;
+			
 			protected void populateItem(final ListItem listItem)
 			{
-				; // do nothing
+				// do nothing
 			}
 		};
 		assertEquals(0, lv.getStartIndex());

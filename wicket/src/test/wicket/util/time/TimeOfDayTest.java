@@ -22,10 +22,6 @@ package wicket.util.time;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import java.text.ParseException;
-
-import wicket.util.time.TimeOfDay;
-
 /**
  * Test cases for this object
  * @author Jonathan Locke
@@ -34,9 +30,8 @@ public final class TimeOfDayTest extends TestCase
 {
     /**
      * 
-     * @throws ParseException
      */
-    public void test() throws ParseException
+    public void test()
     {
         Assert.assertTrue(TimeOfDay.MIDNIGHT.hour() == 0);
         Assert.assertTrue(TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()).equals(TimeOfDay.MIDNIGHT));

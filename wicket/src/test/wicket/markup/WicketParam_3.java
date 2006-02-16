@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -29,11 +28,12 @@ import wicket.markup.html.WebPage;
  */
 public class WicketParam_3 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public WicketParam_3(final PageParameters parameters) 
+	public WicketParam_3() 
 	{
 	    add(new WicketParamPanel("myPanel"));
     }

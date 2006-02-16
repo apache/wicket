@@ -17,20 +17,21 @@
  */
 package wicket.protocol.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
-import java.util.Locale;
-import java.util.List;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
+
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import wicket.util.value.ValueMap;
 
@@ -119,13 +120,13 @@ public class MockHttpServletResponse implements HttpServletResponse
      */
     public void addHeader(final String name, final String value)
     {
-        List l = (List)headers.get(name);
-        if (l == null)
+        List list = (List)headers.get(name);
+        if (list == null)
         {
-            l = new ArrayList(1);
-            headers.put(name, l);
+            list = new ArrayList(1);
+            headers.put(name, list);
         }
-        l.add(value);
+        list.add(value);
     }
 
     /**
@@ -232,11 +233,17 @@ public class MockHttpServletResponse implements HttpServletResponse
     public int getBufferSize()
     {
         if (mode == MODE_NONE)
+        {
             return 0;
+        }
         else if (mode == MODE_BINARY)
+        {
             return byteStream.size();
+        }
         else
+        {
             return stringWriter.getBuffer().length();
+        }
     }
 
     /**
@@ -277,9 +284,13 @@ public class MockHttpServletResponse implements HttpServletResponse
     public String getDocument()
     {
         if (mode == MODE_BINARY)
+        {
             return new String(byteStream.toByteArray());
+        }
         else
+        {
             return stringWriter.getBuffer().toString();
+        }
     }
 
     /**
@@ -303,9 +314,13 @@ public class MockHttpServletResponse implements HttpServletResponse
     {
         List l = (List)headers.get(name);
         if (l == null || l.size() < 1)
+        {
             return null;
+        }
         else
+        {
             return (String)l.get(0);
+        }
     }
 
     /**
@@ -589,7 +604,7 @@ public class MockHttpServletResponse implements HttpServletResponse
     {
         List l = new ArrayList(1);
         l.add(value);
-        headers.put(name, value);
+        headers.put(name, l);
     }
 
     /**

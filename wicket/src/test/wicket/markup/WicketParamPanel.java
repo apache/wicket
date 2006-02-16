@@ -29,6 +29,8 @@ import wicket.model.PropertyModel;
  */
 public class WicketParamPanel extends Panel
 {
+	private static final long serialVersionUID = 1L;
+	
     private String text;
     
     /**

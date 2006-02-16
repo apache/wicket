@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.111 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,132 +18,121 @@
 package wicket.markup.html.form;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IFeedback;
-import wicket.IFeedbackBoundary;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
-import wicket.markup.html.form.upload.MultipartWebRequest;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.target.component.listener.FormSubmitInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
+import wicket.util.upload.FileUploadException;
+import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 
 /**
- * Base class for forms. To implement a form, subclass this class, add FormComponents
- * (such as CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple
- * buttons if you want to vary submit behaviour. However, it is not nescesarry to use
- * Wicket's button class, just putting e.g. &lt;input type="submit" value="go"&gt;
- * suffices.
+ * Base class for forms. To implement a form, subclass this class, add
+ * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
+ * You can nest multiple buttons if you want to vary submit behavior. However,
+ * it is not necessary to use Wicket's button class, just putting e.g. &lt;input
+ * type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting button is looked up. A submitting button is a button that is nested
- * in this form (is a child component) and that was clicked by the user. If a submitting
- * button was found, and it has the immediate field true (default is false), it's onSubmit
- * method will be called right away, thus no validition is done, and things like updating
- * form component models that would normally be done are skipped. In that respect, nesting
- * a button with the immediate field set to true has the same effect as nesting a normal
- * link. If you want you can call validate() to execute form validation, hasError() to
+ * <li> The submitting button is looked up. A submitting button is a button that
+ * is nested in this form (is a child component) and that was clicked by the
+ * user. If a submitting button was found, and it has the immediate field true
+ * (default is false), it's onSubmit method will be called right away, thus no
+ * validition is done, and things like updating form component models that would
+ * normally be done are skipped. In that respect, nesting a button with the
+ * immediate field set to true has the same effect as nesting a normal link. If
+ * you want you can call validate() to execute form validation, hasError() to
  * find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components. </li>
- * <li> When no immediate submitting button was found, this form is validated (method
- * validate()). Now, two possible paths exist:
+ * updateFormComponentModels() to update the models of nested form components.
+ * </li>
+ * <li> When no immediate submitting button was found, this form is validated
+ * (method validate()). Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked valid, and
- * onError() is called to allow clients to provide custom error handling code. </li>
- * <li> Form validation succeeded. The nested components will be asked to update their
- * models and persist their data is applicable. After that, method delegateSubmit with
- * optionally the submitting button is called. The default when there is a submitting
- * button is to first call onSubmit on that button, and after that call onSubmit on this
- * form. Clients may override delegateSubmit if they want different behaviour. </li>
+ * <li> Form validation failed. All nested form components will be marked valid,
+ * and onError() is called to allow clients to provide custom error handling
+ * code. </li>
+ * <li> Form validation succeeded. The nested components will be asked to update
+ * their models and persist their data is applicable. After that, method
+ * delegateSubmit with optionally the submitting button is called. The default
+ * when there is a submitting button is to first call onSubmit on that button,
+ * and after that call onSubmit on this form. Clients may override
+ * delegateSubmit if they want different behavior. </li>
  * </ul>
  * </li>
  * </li>
  * </p>
  * 
- * Form for handling (file) uploads with multipart requests is supported by callign setMultiPart(true).
- * Use this with {@link wicket.markup.html.form.upload.FileUploadField} components. You can
+ * Form for handling (file) uploads with multipart requests is supported by
+ * callign setMultiPart(true). Use this with
+ * {@link wicket.markup.html.form.upload.FileUploadField} components. You can
  * attach mutliple FileInput fields for muliple file uploads.
  * <p>
- * Using multipart forms causes a runtime dependency on 
- * <a href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>, version 1.0.
+ * Using multipart forms causes a runtime dependency on <a
+ * href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>,
+ * version 1.0.
  * </p>
  * 
-
+ * 
  * <p>
- * If you want to have multiple buttons which submit the same form, simply put two or more
- * button components somewhere in the hierarchy of components that are children of the
- * form.
+ * If you want to have multiple buttons which submit the same form, simply put
+ * two or more button components somewhere in the hierarchy of components that
+ * are children of the form.
  * </p>
  * <p>
- * To get form components to persist their values for users via cookies, simply call
- * setPersistent(true) on the form component.
+ * To get form components to persist their values for users via cookies, simply
+ * call setPersistent(true) on the form component.
  * </p>
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  * @author Cameron Braid
+ * @author Johan Compagner
  */
-public class Form extends WebMarkupContainer
-	implements IFormSubmitListener, IFeedbackBoundary
+public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;
 
-	protected boolean multiPart = false;
+	/** True if the form has enctype of multipart/form-data */
+	private boolean multiPart = false;
 
-	/**
-	 * set to true to use enctype='multipart/form-data', and to process file uplloads by
-	 * default multiPart = false
-	 * @param multiPart whether this form should behave as a multipart form
-	 */
-	public void setMultiPart(boolean multiPart)
-	{
-		this.multiPart = multiPart;
-	}
+	private String javascriptId;
 
 	/**
 	 * Constructs a form with no validation.
-	 * @param id See Component
+	 * 
+	 * @param id
+	 *            See Component
 	 */
 	public Form(final String id)
 	{
-		this(id, null);
-	}
-
-	/**
-	 * @param id
-	 *            See Component
-	 * @param feedback
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @see wicket.Component#Component(String)
-	 */
-	public Form(final String id, final IFeedback feedback)
-	{
 		super(id);
-		if (feedback != null)
-		{
-			feedback.setCollectingComponent(this);
-		}
 	}
 
 	/**
@@ -151,18 +140,19 @@ public class Form extends WebMarkupContainer
 	 *            See Component
 	 * @param model
 	 *            See Component
-	 * @param feedback
-	 *            Interface to a component that can handle/display validation
-	 *            errors
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Form(final String id, IModel model, final IFeedback feedback)
+	public Form(final String id, IModel model)
 	{
 		super(id, model);
-		if (feedback != null)
-		{
-			feedback.setCollectingComponent(this);
-		}
+	}
+
+	/**
+	 * @return the maxSize of uploaded files
+	 */
+	public Bytes getMaxSize()
+	{
+		return this.maxSize;
 	}
 
 	/**
@@ -208,8 +198,41 @@ public class Form extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted()
 	{
-		// process the form for this request
-		process();
+		if (handleMultiPart())
+		{
+			// Tells FormComponents that a new user input has come
+			registerNewUserInput();
+
+			String url = getRequest().getParameter(getHiddenFieldId());
+			if (!Strings.isEmpty(url))
+			{
+				dispatchEvent(getPage(), url);
+			}
+			else
+			{
+				// First, see if the processing was triggered by a Wicket button
+				final Button submittingButton = findSubmittingButton();
+
+				// When processing was triggered by a Wicket button and that
+				// button
+				// indicates it wants to be called immediately (without
+				// processing),
+				// call Button.onSubmit() right away.
+				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
+				{
+					submittingButton.onSubmit();
+				}
+				else
+				{
+					// process the form for this request
+					if (process())
+					{
+						// let clients handle further processing
+						delegateSubmit(submittingButton);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -233,12 +256,13 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				if(formComponent.isVisibleInHierarchy())
+				if (formComponent.isVisibleInHierarchy())
 				{
 					// remove the FormComponent's persisted data
 					persister.clear(formComponent);
-	
-					// Disable persistence if requested. Leave unchanged otherwise.
+
+					// Disable persistence if requested. Leave unchanged
+					// otherwise.
 					if (formComponent.isPersistent() && disablePersistence)
 					{
 						formComponent.setPersistent(false);
@@ -249,9 +273,30 @@ public class Form extends WebMarkupContainer
 	}
 
 	/**
+	 * @param maxSize
+	 *            The maxSize for uploaded files
+	 */
+	public void setMaxSize(final Bytes maxSize)
+	{
+		this.maxSize = maxSize;
+	}
+
+	/**
+	 * Set to true to use enctype='multipart/form-data', and to process file
+	 * uplloads by default multiPart = false
+	 * 
+	 * @param multiPart
+	 *            whether this form should behave as a multipart form
+	 */
+	public void setMultiPart(boolean multiPart)
+	{
+		this.multiPart = multiPart;
+	}
+
+	/**
 	 * @see wicket.Component#setVersioned(boolean)
 	 */
-	public void setVersioned(final boolean isVersioned)
+	public final Component setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
 
@@ -263,6 +308,17 @@ public class Form extends WebMarkupContainer
 				formComponent.setVersioned(isVersioned);
 			}
 		});
+		return this;
+	}
+
+	/**
+	 * Method made final because we want to ensure users call setVersioned.
+	 * 
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return super.isVersioned();
 	}
 
 	/**
@@ -281,144 +337,64 @@ public class Form extends WebMarkupContainer
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
 
-	/**
-	 * Process the form. Though you can override this method to provide your whole own algoritm,
-	 * it is not recommended to do so.
-	 * <p>
-	 * See the class documentation for further details on the form processing
-	 * </p>
-	 */
-	protected void process()
-	{
-		if (multiPart) 
+		/**
+		 * TODO General: Maybe we should re-think how Borders are implemented,
+		 * because there are just too many exceptions in the code base because
+		 * of borders. This time it is to solve the problem tested in
+		 * BoxBorderTestPage_3 where the Form is defined in the box border and
+		 * the FormComponents are in the "body". Thus, the formComponents are
+		 * not childs of the form. They are rather childs of the border, as the
+		 * Form itself.
+		 */
+		if (getParent() instanceof Border)
 		{
-			// Change the request to a multipart web request so parameters are
-			// parsed out correctly
-			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
-			try
+			MarkupContainer border = getParent();
+			Iterator iter = border.iterator();
+			while (iter.hasNext())
 			{
-				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(this.maxSize, request);
-				getRequestCycle().setRequest(multipartWebRequest);
-			}
-			catch (FileUploadException e)
-			{
-				// Create model with exception and maximum size values
-				final HashMap model = new HashMap();
-				model.put("exception", e);
-				model.put("maxSize", maxSize);
-
-				if (e instanceof SizeLimitExceededException)
+				Component child = (Component)iter.next();
+				if (child instanceof FormComponent)
 				{
-					// Resource key should be <form-id>.uploadTooLarge to override default message
-					final String defaultValue = "Upload must be less than " + maxSize;
-					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model), defaultValue);
-					error(msg);
-
-					if (log.isDebugEnabled())
-					{
-						log.error(msg, e);
-					}
-					else
-					{
-						log.error(msg);
-					}
+					visitor.formComponent((FormComponent)child);
 				}
-				else
-				{
-					// Resource key should be <form-id>.uploadFailed to override default message
-					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model), defaultValue);
-					error(msg);
-
-					log.error(msg, e);
-				}
-				
-				// don't process the form if there is a FileUploadException
-				return;
-			}
-
-		}
-		
-		// first, see if the processing was triggered by a Wicket button
-		final Button submittingButton = findSubmittingButton();
-
-		// when processing was triggered by a Wicket button and that button indicates
-		// it wants to be called immediately (without validating), call onSubmit right away.
-		if (submittingButton != null && (submittingButton.isImmediate()))
-		{
-			submittingButton.onSubmit();
-		}
-		else
-		{
-			// as processing was not triggered by a button with immediate == true,
-			// we execute validation now before anything else
-			validate();
-
-			// If a validation error occurred
-			if (hasError())
-			{
-				// mark all children as invalid
-				markFormComponentsInvalid();
-
-				// let subclass handle error
-				onError();
-			}
-			else
-			{
-				// before updating, call the interception method for clients
-				beforeUpdateFormComponentModels();
-
-				// Update model using form data
-				updateFormComponentModels();
-
-				// Persist FormComponents if requested
-				persistFormComponentData();
-
-				// let clients handle further processing
-				delegateSubmit(submittingButton);
 			}
 		}
 	}
 
-
 	/**
-	 * @param maxSize
-	 *            The maxSize for uploaded files
+	 * Template method to allow clients to do any processing (like recording the
+	 * current model so that, in case onSubmit does further validation, the
+	 * model can be rolled back) before the actual updating of form component
+	 * models is done.
 	 */
-	public void setMaxSize(final Bytes maxSize)
+	protected void beforeUpdateFormComponentModels()
 	{
-		this.maxSize = maxSize;
-	}
-	/**
-	 * @return the maxSize of uploaded files
-	 */
-	public Bytes getMaxSize()
-	{
-		return this.maxSize;
 	}
 
-
 	/**
-	 * Called (by the default implementation of 'process') when all fields validated,
-	 * the form was updated and it's data was allowed to be persisted. It is meant for delegating
-	 * further processing to clients.
+	 * Called (by the default implementation of 'process') when all fields
+	 * validated, the form was updated and it's data was allowed to be
+	 * persisted. It is meant for delegating further processing to clients.
 	 * <p>
-	 * This implementation first finds out whether the form processing was triggered by a nested
-	 * button of this form. If that is the case, that button's onSubmit is called first.
+	 * This implementation first finds out whether the form processing was
+	 * triggered by a nested button of this form. If that is the case, that
+	 * button's onSubmit is called first.
 	 * </p>
 	 * <p>
-	 * Regardless of whether a submitting button was found, the form's onSubmit method is called
-	 * next.
+	 * Regardless of whether a submitting button was found, the form's onSubmit
+	 * method is called next.
 	 * </p>
-	 * @param submittingButton the button that triggered this form processing, or null if the
-	 * 		processing was triggered by something else (like a non-Wicket submit button or
-	 * 		a javascript execution)
+	 * 
+	 * @param submittingButton
+	 *            the button that triggered this form processing, or null if the
+	 *            processing was triggered by something else (like a non-Wicket
+	 *            submit button or a javascript execution)
 	 */
 	protected void delegateSubmit(Button submittingButton)
 	{
-		// when the given button is not null, it means that it was the submitting button
+		// when the given button is not null, it means that it was the
+		// submitting button
 		if (submittingButton != null)
 		{
 			submittingButton.onSubmit();
@@ -429,82 +405,87 @@ public class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates the form's nested children of type {@link FormComponent}. This method
-	 * is typically called before updating any models.
-	 */
-	protected void validate()
-	{
-		// Validate model using validation strategy
-		// Visit all the form components and validate each
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					// Validate form component
-					formComponent.validate();
-	
-					// If component is not valid (has an error)
-					if (!formComponent.isValid())
-					{
-						// tell component to deal with invalidity
-						formComponent.invalid();
-					}
-					else
-					{
-						// tell component that it is valid now
-						formComponent.valid();
-					}
-				}
-			}
-		});
-	}
-
-	/**
-	 * Method to override if you want to do something special when an error
-	 * occurs (other than simply displaying validation errors).
-	 */
-	protected void onError()
-	{
-	}
-
-	/**
-	 * Template method to allow clients to do any processing (like recording the current
-	 * model so that, in case onSubmit does further validation, the model can be rolled
-	 * back) before the actual updating of form component models is done.
-	 */
-	protected void beforeUpdateFormComponentModels()
-	{		
-	}
-
-	/**
-	 * Implemented by subclasses to deal with form submits.
-	 */
-	protected void onSubmit()
-	{
-	}
-
-	/**
-	 * Update the model of all form components using the fields that were sent with the
-	 * current request.
+	 * Gets the button which submitted this form.
 	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @return The button which submitted this form or null if the processing
+	 *         was not trigger by a registered button component
 	 */
-	protected final void updateFormComponentModels()
+	protected final Button findSubmittingButton()
 	{
-		visitFormComponents(new FormComponent.IVisitor()
+		Button button = (Button)visitChildren(Button.class, new IVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public Object component(final Component component)
 			{
-				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() )
+				// Get button
+				final Button button = (Button)component;
+
+				// Check for button-name or button-name.x request string
+				if (getRequest().getParameter(button.getInputName()) != null
+						|| getRequest().getParameter(button.getInputName() + ".x") != null)
 				{
-					// Potentially update the model
-					formComponent.updateModel();
+					if (!button.isVisible())
+					{
+						throw new WicketRuntimeException("Submit Button is not visible");
+					}
+					return button;
 				}
+				return CONTINUE_TRAVERSAL;
 			}
 		});
+
+		if (button == null)
+		{
+			button = (Button)getPage().visitChildren(SubmitLink.class, new IVisitor()
+			{
+				public Object component(final Component component)
+				{
+					// Get button
+					final SubmitLink button = (SubmitLink)component;
+
+					// Check for button-name or button-name.x request string
+					if (button.getSubmitLinkForm() == Form.this
+							&& (getRequest().getParameter(button.getInputName()) != null || getRequest()
+									.getParameter(button.getInputName() + ".x") != null))
+					{
+						if (!button.isVisible())
+						{
+							throw new WicketRuntimeException("Submit Button is not visible");
+						}
+						return button;
+					}
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
+		return button;
+	}
+
+	/**
+	 * Gets the form component persistence manager; it is lazy loaded.
+	 * 
+	 * @return The form component value persister
+	 */
+	protected IValuePersister getValuePersister()
+	{
+		return new CookieValuePersister();
+	}
+
+	/**
+	 * Gets whether the current form has any error registered.
+	 * 
+	 * @return True if this form has at least one error.
+	 */
+	protected final boolean hasError()
+	{
+		// if this form itself has an error message
+		if (hasErrorMessage())
+		{
+			return true;
+		}
+
+		// the form doesn't have any errors, now check any nested form
+		// components
+		return anyFormComponentError();
 	}
 
 	/**
@@ -527,46 +508,6 @@ public class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
-	 * @return The form component value persister
-	 */
-	protected IValuePersister getValuePersister()
-	{
-		return new CookieValuePersister();
-	}
-
-	/**
-	 * @see wicket.Component#onComponentTag(ComponentTag)
-	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		checkComponentTag(tag, "form");
-		super.onComponentTag(tag);
-		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
-		if (multiPart) {
-			tag.put("enctype", "multipart/form-data");
-		}
-	}
-
-	/**
-	 * Gets whether the current form has any error registered.
-	 * @return True if this form has at least one error.
-	 */
-	protected final boolean hasError()
-	{
-		// if this form itself has an error message
-		if (hasErrorMessage())
-		{
-			return true;
-		}
-
-		// the form doesn't have any errors, now check any nested form components
-		return anyFormComponentError();
-	}
-
-	/**
 	 * Mark each form component on this form invalid.
 	 */
 	protected final void markFormComponentsInvalid()
@@ -576,7 +517,7 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				if(formComponent.isVisibleInHierarchy())
+				if (formComponent.isVisibleInHierarchy())
 				{
 					formComponent.invalid();
 				}
@@ -584,33 +525,260 @@ public class Form extends WebMarkupContainer
 		});
 	}
 
-	/**
-	 * Gets the button which submitted this form.
-	 * @return The button which submitted this form or null if the processing was not trigger
-	 * 		by a registered button component
-	 */
-	protected final Button findSubmittingButton()
-	{
-		return (Button)visitChildren(Button.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Get button
-				final Button button = (Button)component;
 
-				// Check for button-name or button-name.x request string
-				if (!Strings.isEmpty(button.getInput())
-						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
+	/**
+	 * Mark each form component on this form invalid.
+	 */
+	protected final void markFormComponentsValid()
+	{
+		// call invalidate methods of all nested form components
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
 				{
-					return button;
+					formComponent.valid();
 				}
-				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
+	 * Returns the HiddenFieldId which will be used as the name and id property
+	 * of the hiddenfield that is generated for event dispatches.
+	 * 
+	 * @return The name and id of the hidden field.
+	 */
+	protected final String getHiddenFieldId()
+	{
+		return getJavascriptId() + ":hf:0";
+	}
+
+	/**
+	 * Returns the javascript/css id of this form that will be used to generated
+	 * the id="xxx" attribute. it will be generated if not set already in the
+	 * onComponentTag. Where it will be tried to load from the markup first
+	 * before it is generated.
+	 * 
+	 * @return The javascript/css id of this form.
+	 */
+	protected final String getJavascriptId()
+	{
+		if (Strings.isEmpty(javascriptId))
+		{
+			javascriptId = getPageRelativePath();
+		}
+		return javascriptId;
+	}
+
+	/**
+	 * Append an additional hidden input tag to support anchor tags that can
+	 * submit a form
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		String nameAndId = getHiddenFieldId();
+		getResponse().write(
+				"<input type=\"hidden\" name=\"" + nameAndId + "\" id=\"" + nameAndId + "\"/>");
+		super.onComponentTagBody(markupStream, openTag);
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		checkComponentTag(tag, "form");
+		super.onComponentTag(tag);
+		// If the javascriptid is already generated then use that on even it was
+		// before the first render.
+		// because there could be a component which already uses it to submit
+		// the forum.
+		// This should be fixed when we pre parse the markup so that we know the
+		// id is at front.
+		if (!Strings.isEmpty(javascriptId))
+		{
+			tag.put("id", javascriptId);
+		}
+		else
+		{
+			javascriptId = (String)tag.getAttributes().get("id");
+			if (Strings.isEmpty(javascriptId))
+			{
+				javascriptId = getJavascriptId();
+				tag.put("id", javascriptId);
+			}
+		}
+		tag.put("method", "post");
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
+		if (multiPart)
+		{
+			tag.put("enctype", "multipart/form-data");
+		}
+		else
+		{
+			// sanity check
+			String enctype = (String)tag.getAttributes().get("enctype");
+			if ("multipart/form-data".equalsIgnoreCase(enctype))
+			{
+				// though not set explicitly in Java, this is a multipart form
+				setMultiPart(true);
+			}
+		}
+	}
+
+	/**
+	 * Method to override if you want to do something special when an error
+	 * occurs (other than simply displaying validation errors).
+	 */
+	protected void onError()
+	{
+	}
+
+	/**
+	 * @see wicket.Component#onRender(MarkupStream)
+	 */
+	protected void onRender(final MarkupStream markupStream)
+	{
+		// Force multi-part on if any child form component is multi-part
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(FormComponent formComponent)
+			{
+				if (formComponent.isVisible() && formComponent.isMultiPart())
+				{
+					setMultiPart(true);
+				}
+			}
+		});
+
+		super.onRender(markupStream);
+	}
+
+	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected void onSubmit()
+	{
+	}
+
+	/**
+	 * Process the form. Though you can override this method to provide your
+	 * whole own algorithm, it is not recommended to do so.
+	 * <p>
+	 * See the class documentation for further details on the form processing
+	 * </p>
+	 * 
+	 * @return False if the form had an error
+	 */
+	public boolean process()
+	{
+		// Execute validation now before anything else
+		validate();
+
+		// If a validation error occurred
+		if (hasError())
+		{
+			// mark all children as invalid
+			markFormComponentsInvalid();
+
+			// let subclass handle error
+			onError();
+
+			// Form has an error
+			return false;
+		}
+		else
+		{
+			// mark all childeren as valid
+			markFormComponentsValid();
+
+			// before updating, call the interception method for clients
+			beforeUpdateFormComponentModels();
+
+			// Update model using form data
+			updateFormComponentModels();
+
+			// Persist FormComponents if requested
+			persistFormComponentData();
+
+			// Form has no error
+			return true;
+		}
+	}
+
+	/**
+	 * Update the model of all form components using the fields that were sent
+	 * with the current request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected final void updateFormComponentModels()
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				// Only update the component when it is visible and valid
+				if (formComponent.isVisibleInHierarchy() && formComponent.isValid())
+				{
+					// Potentially update the model
+					formComponent.updateModel();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Clears the input from the form's nested children of type {@link FormComponent}. 
+	 * This method is typically called when a form needs to be reset.
+	 */
+	protected void clearInput()
+	{
+		// Visit all the (visible) form components and clear the input on each.
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					// Clear input from form component
+					formComponent.clearInput();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Validates the form's nested children of type {@link FormComponent}. This
+	 * method is typically called before updating any models.
+	 */
+	protected void validate()
+	{
+		// Validate model using validation strategy
+		// Visit all the form components and validate each
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					// Validate form component
+					formComponent.validate();
+				}
 			}
 		});
 	}
 
 	/**
 	 * Find out whether there is any registered error for a form component.
+	 * 
 	 * @return whether there is any registered error for a form component
 	 */
 	private boolean anyFormComponentError()
@@ -630,6 +798,71 @@ public class Form extends WebMarkupContainer
 		});
 
 		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+	}
+
+	/**
+	 * @return False if form is multipart and upload failed
+	 */
+	private final boolean handleMultiPart()
+	{
+		if (multiPart)
+		{
+			// Change the request to a multipart web request so parameters are
+			// parsed out correctly
+			try
+			{
+				final WebRequest multipartWebRequest = ((WebRequest)getRequest())
+						.newMultipartWebRequest(this.maxSize);
+				getRequestCycle().setRequest(multipartWebRequest);
+			}
+			catch (WicketRuntimeException wre)
+			{
+				if (wre.getCause() == null || !(wre.getCause() instanceof FileUploadException))
+				{
+					throw wre;
+				}
+
+				FileUploadException e = (FileUploadException)wre.getCause();
+				// Create model with exception and maximum size values
+				final Map model = new HashMap();
+				model.put("exception", e);
+				model.put("maxSize", maxSize);
+
+				if (e instanceof SizeLimitExceededException)
+				{
+					// Resource key should be <form-id>.uploadTooLarge to
+					// override default message
+					final String defaultValue = "Upload must be less than " + maxSize;
+					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
+							defaultValue);
+					error(msg);
+
+					if (log.isDebugEnabled())
+					{
+						log.error(msg, e);
+					}
+					else
+					{
+						log.error(msg);
+					}
+				}
+				else
+				{
+					// Resource key should be <form-id>.uploadFailed to override
+					// default message
+					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
+					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
+							defaultValue);
+					error(msg);
+
+					log.error(msg, e);
+				}
+
+				// don't process the form if there is a FileUploadException
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -654,9 +887,10 @@ public class Form extends WebMarkupContainer
 			{
 				public void formComponent(final FormComponent formComponent)
 				{
-					if(formComponent.isVisibleInHierarchy())
+					if (formComponent.isVisibleInHierarchy())
 					{
-						// If peristence is switched on for that FormComponent ...
+						// If peristence is switched on for that FormComponent
+						// ...
 						if (formComponent.isPersistent())
 						{
 							// Save component's data (e.g. in a cookie)
@@ -673,9 +907,99 @@ public class Form extends WebMarkupContainer
 		}
 	}
 
-	static
+	/**
+	 * Method for dispatching/calling a interface on a page from the given url.
+	 * Used by {@link wicket.markup.html.form.Form#onFormSubmitted()} for
+	 * dispatching events
+	 * 
+	 * @param page
+	 *            The page where the event should be called on.
+	 * @param url
+	 *            The url which describes the component path and the interface
+	 *            to be called.
+	 * @deprecated refactor this to use the
+	 *             {@link wicket.request.IRequestCodingStrategy}
+	 */
+	// TODO Post 1.2: Remove this method?
+	private void dispatchEvent(final Page page, final String url)
 	{
-		// Allow use of IFormSubmitListener interface
-		RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
+		RequestCycle requestCycle = RequestCycle.get();
+		String decodedUrl = requestCycle.getRequest().decodeURL(url);
+		int indexOfPath = decodedUrl.indexOf("path=");
+		int indexOfInterface = decodedUrl.indexOf("interface=");
+		if (indexOfPath != -1 && indexOfInterface != -1)
+		{
+			indexOfPath += "path=".length();
+			indexOfInterface += "interface=".length();
+			int indexOfPathEnd = decodedUrl.indexOf("&", indexOfPath);
+			if (indexOfPathEnd == -1)
+			{
+				indexOfPathEnd = decodedUrl.length();
+			}
+			int indexOfInterfaceEnd = decodedUrl.indexOf("&", indexOfInterface);
+			if (indexOfInterfaceEnd == -1)
+			{
+				indexOfInterfaceEnd = decodedUrl.length();
+			}
+
+			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
+			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
+
+			final Component component = page.get(Strings.afterFirstPathComponent(path,
+					Component.PATH_SEPARATOR));
+
+			if (!component.isVisible())
+			{
+				throw new WicketRuntimeException(
+						"Calling listener methods on components that are not visible is not allowed");
+			}
+			final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
+			if (listener != null)
+			{
+				new FormSubmitInterfaceRequestTarget(page, component, listener)
+						.processEvents(requestCycle);
+			}
+		}
+		else
+		{
+			// log warning??
+		}
+	}
+
+	/**
+	 * Visits the form's children FormComponents and inform them that a new user
+	 * input is available in the Request
+	 */
+	private void registerNewUserInput()
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.registerNewUserInput();
+				}
+			}
+		});
+	}
+
+	/**
+	 * This generates a piece of javascript code that sets the url in the
+	 * special hidden field and submits the form.
+	 * 
+	 * Warning: This code should only be called in the rendering phase for form
+	 * components inside the form because it uses the css/javascript id of the
+	 * form which can be stored in the markup.
+	 * 
+	 * @param url
+	 *            The interface url that has to be stored in the hidden field
+	 *            and submitted
+	 * @return The javascript code that submits the form.
+	 */
+	public final String getJsForInterfaceUrl(String url)
+	{
+		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
+				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
 	}
 }

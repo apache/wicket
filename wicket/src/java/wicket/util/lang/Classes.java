@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -53,24 +53,24 @@ public final class Classes
 	}
 
 	/**
-	 * Takes a package and a relative path to a class and returns any class at
-	 * that relative path. For example, if the given package was java.lang and
-	 * the relative path was "../util/List", then the java.util.List class would
-	 * be returned.
+	 * Takes a Class and a relative path to a class and returns any class at
+	 * that relative path. For example, if the given Class was java.lang.System
+	 * and the relative path was "../util/List", then the java.util.List class
+	 * would be returned.
 	 * 
-	 * @param p
+	 * @param scope
 	 *            The package to start at
 	 * @param path
 	 *            The relative path to the class
 	 * @return The class
 	 * @throws ClassNotFoundException
 	 */
-	public static Class relativeClass(final Package p, final String path)
+	public static Class relativeClass(final Class scope, final String path)
 			throws ClassNotFoundException
 	{
-		return Class.forName(Packages.absolutePath(p, path).replace('/', '.'));
+		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
 	}
-	
+
 	/**
 	 * Invoke the setter method for 'name' on object and provide the 'value'
 	 * 
@@ -79,75 +79,74 @@ public final class Classes
 	 * @param value
 	 * @param locale
 	 */
-	public static void invokeSetter(final Object object, final String name, final String value, final Locale locale)
+	public static void invokeSetter(final Object object, final String name, final String value,
+			final Locale locale)
 	{
-	    // Note: tag attributes are maintained in a LowerCaseKeyValueMap, thus 'name' will
-	    // be all lowercase. OGNL however requires correct cases, except for the first letter.
-	    // Thus, we have to find the proper name first.
-	    // Note: because the attributes are all lowercase, there is slight possibility of 
-	    // akward error due to naming issues.
-	    // Note: all setters must start with "set"
-	    
-        // Get the setter for the attribute
-        final String methodName = "set" + name;
-        final Method[] methods = object.getClass().getMethods();
-        Method method = null;
-        for (int i = 0; i < methods.length; i++)
-        {
-            if (methods[i].getName().equalsIgnoreCase(methodName))
-            {
-                method = methods[i];
-            }
-        }
+		// Note: tag attributes are maintained in a LowerCaseKeyValueMap, thus
+		// 'name' will be all lowercase.
 
-        if (method == null)
-        {
-            throw new MarkupException(
-                    "Unable to initialize Component. Method with name " + methodName
-                            + " not found");
-        }
+		// Note: because the attributes are all lowercase, there is slight
+		// possibility of error due to naming issues.
+		
+		// Note: all setters must start with "set"
 
-        // The method must have a single parameter
-        final Class[] parameterClasses = method.getParameterTypes();
-        if (parameterClasses.length != 1)
-        {
-            throw new MarkupException(
-                    "Unable to initialize Component. Method with name " + methodName
-                            + " must have one and only one parameter");
-        }
+		// Get the setter for the attribute
+		final String methodName = "set" + name;
+		final Method[] methods = object.getClass().getMethods();
+		Method method = null;
+		for (int i = 0; i < methods.length; i++)
+		{
+			if (methods[i].getName().equalsIgnoreCase(methodName))
+			{
+				method = methods[i];
+			}
+		}
 
-        // Convert the parameter if necessary, depending on the setter's attribute
-        final Class paramClass = parameterClasses[0];
-        try
-        {
-            // Implicitly use OGNL for default conversions
-            final IConverter converter = new ConverterFactory().newConverter(Locale.US);
-            final Object param = converter.convert(value, paramClass);
-            if (param == null)
-            {
-                throw new MarkupException(
-                        "Unable to convert value '" + value + "' into " + paramClass 
-                        + ". May be there is no converter for that type registered?");
-            }
-            method.invoke(object, new Object[] { param });
-        }
-        catch (IllegalAccessException ex)
-        {
-            throw new MarkupException(
-                    "Unable to initialize Component. Failure while invoking method "
-                            + methodName + ". Cause: " + ex);
-        }
-        catch (InvocationTargetException ex)
-        {
-            throw new MarkupException(
-                    "Unable to initialize Component. Failure while invoking method "
-                            + methodName + ". Cause: " + ex);
-        }
-        catch (NumberFormatException ex)
-        {
-            throw new MarkupException(
-                    "Unable to initialize Component. Failure while invoking method "
-                            + methodName + ". Cause: " + ex);
-        }
+		if (method == null)
+		{
+			throw new MarkupException("Unable to initialize Component. Method with name "
+					+ methodName + " not found");
+		}
+
+		// The method must have a single parameter
+		final Class[] parameterClasses = method.getParameterTypes();
+		if (parameterClasses.length != 1)
+		{
+			throw new MarkupException("Unable to initialize Component. Method with name "
+					+ methodName + " must have one and only one parameter");
+		}
+
+		// Convert the parameter if necessary, depending on the setter's
+		// attribute
+		final Class paramClass = parameterClasses[0];
+		try
+		{
+			final IConverter converter = new ConverterFactory().newConverter(Locale.US);
+			final Object param = converter.convert(value, paramClass);
+			if (param == null)
+			{
+				throw new MarkupException("Unable to convert value '" + value + "' into "
+						+ paramClass + ". May be there is no converter for that type registered?");
+			}
+			method.invoke(object, new Object[] { param });
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new MarkupException(
+					"Unable to initialize Component. Failure while invoking method " + methodName
+							+ ". Cause: " + ex);
+		}
+		catch (InvocationTargetException ex)
+		{
+			throw new MarkupException(
+					"Unable to initialize Component. Failure while invoking method " + methodName
+							+ ". Cause: " + ex);
+		}
+		catch (NumberFormatException ex)
+		{
+			throw new MarkupException(
+					"Unable to initialize Component. Failure while invoking method " + methodName
+							+ ". Cause: " + ex);
+		}
 	}
 }

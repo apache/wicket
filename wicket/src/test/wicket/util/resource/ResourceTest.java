@@ -27,8 +27,8 @@ import junit.framework.TestCase;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
-import wicket.util.resource.locator.DefaultResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.resource.locator.CompoundResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.Strings;
 
 
@@ -64,8 +64,8 @@ public class ResourceTest extends TestCase
 	 */
 	public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
 	{
-		ResourceStreamLocator locator = new DefaultResourceStreamLocator(sourcePath);
-		IResourceStream resource = locator.locate(this.getClass(), style, locale, "txt");
+		IResourceStreamLocator locator = new CompoundResourceStreamLocator(sourcePath);
+		IResourceStream resource = locator.locate(this.getClass(), this.getClass().getName().replace('.', '/'),style, locale, "txt");
 		compareFilename(resource, extension);
 	}
 
@@ -112,8 +112,8 @@ public class ResourceTest extends TestCase
 		executeMultiple(new Path());
 
 		// Determine source path
-		ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
-		IResourceStream resource = locator.locate(getClass(), null, null, "txt");
+		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
+		IResourceStream resource = locator.locate(getClass(),this.getClass().getName().replace('.', '/'), null, null, "txt");
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 

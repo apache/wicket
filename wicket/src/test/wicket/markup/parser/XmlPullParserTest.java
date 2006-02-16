@@ -38,7 +38,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testBasics() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
+        final XmlPullParser parser = new XmlPullParser();
         parser.parse("This is a text");
         MarkupElement elem = parser.nextTag();
         assertNull(elem);
@@ -129,19 +129,19 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testEncoding() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
-        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"));
+        final XmlPullParser parser = new XmlPullParser();
+        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"), null);
         assertEquals("iso-8859-1", parser.getEncoding());
         XmlTag tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
-        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test"));
+        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test"), null);
         assertEquals("iso-8859-1", parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // re-order and move close (remove whitespaces
-        parser.parse(new StringResourceStream("   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test"));
+        parser.parse(new StringResourceStream("   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test"), null);
         assertEquals("iso-8859-1", parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
@@ -150,7 +150,7 @@ public class XmlPullParserTest extends TestCase
         Exception ex = null;
         try
         {
-            parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"));
+            parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"), null);
         }
         catch (UnsupportedEncodingException e)
         {
@@ -162,7 +162,7 @@ public class XmlPullParserTest extends TestCase
         ex = null;
         try
         {
-            parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>"));
+            parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>"), null);
         }
         catch (UnsupportedEncodingException e)
         {
@@ -171,21 +171,21 @@ public class XmlPullParserTest extends TestCase
         assertNotNull(ex);
 
         // no extra characters allowed before <?xml>
-        // TODO I'd certainly prefer an exception
-        parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>"));
+        // TODO General: I'd certainly prefer an exception
+        parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>"), null);
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // no extra characters allowed before <?xml>
         // Are comments allowed preceding the encoding string?
-        parser.parse(new StringResourceStream("<!-- Comment --!> <?xml encoding='iso-8859-1' ?>"));
+        parser.parse(new StringResourceStream("<!-- Comment --> <?xml encoding='iso-8859-1' ?>"), null);
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // 'test' is not a valid attribut. But we currently don't test it.
-        parser.parse(new StringResourceStream("<?xml test='123' >"));
+        parser.parse(new StringResourceStream("<?xml test='123' >"), null);
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
@@ -197,7 +197,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testAttributes() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
+        final XmlPullParser parser = new XmlPullParser();
         parser.parse("<tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertEquals(0, tag.getAttributes().size());
@@ -262,7 +262,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testComments() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
+        final XmlPullParser parser = new XmlPullParser();
         parser.parse("<!-- test --><tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
 //      assertTrue(tag.isOpen("tag"));
@@ -295,7 +295,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testCompressWhitespace() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
+        final XmlPullParser parser = new XmlPullParser();
         parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
     }
     
@@ -305,7 +305,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testScript() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser(null);
+        final XmlPullParser parser = new XmlPullParser();
         parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isOpen());

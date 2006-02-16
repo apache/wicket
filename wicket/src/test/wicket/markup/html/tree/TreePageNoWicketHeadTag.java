@@ -17,18 +17,18 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.PageParameters;
 
 /**
  */
 public class TreePageNoWicketHeadTag extends AbstractTreePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 *  Page parameters
 	 */
-	public TreePageNoWicketHeadTag(final PageParameters parameters)
+	public TreePageNoWicketHeadTag()
 	{
-		super(parameters);
 	}
 }

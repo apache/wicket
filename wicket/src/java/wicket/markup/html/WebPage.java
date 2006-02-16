@@ -17,51 +17,61 @@
  */
 package wicket.markup.html;
 
-import java.util.Iterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IEventRequestListener;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
-import wicket.WicketRuntimeException;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
-import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.util.lang.Classes;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
  * asked for its markup type. It also has a method which subclasses can use to
  * retrieve a bookmarkable link to the application's home page.
  * <p>
- * WebPages can be constructed with any
- * constructor when they are being used in a Wicket session, but if you wish to
- * link to a Page using a URL that is "bookmarkable" (which implies that the URL
- * will not have any session information encoded in it, and that you can call this
- * page directly without having a session first directly from your browser),
- * you need to implement your Page with a no-arg constructor or with a constructor
- * that accepts a PageParameters argument (which wraps any query string parameters for a
- * request). In case the page has both constructors, the constructor with PageParameters will
- * be used.
+ * WebPages can be constructed with any constructor when they are being used in
+ * a Wicket session, but if you wish to link to a Page using a URL that is
+ * "bookmarkable" (which implies that the URL will not have any session
+ * information encoded in it, and that you can call this page directly without
+ * having a session first directly from your browser), you need to implement
+ * your Page with a no-arg constructor or with a constructor that accepts a
+ * PageParameters argument (which wraps any query string parameters for a
+ * request). In case the page has both constructors, the constructor with
+ * PageParameters will be used.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
+ * @author Gwyn Evans
  */
-public class WebPage extends Page implements IHeaderRenderer
+public class WebPage extends Page
 {
-    /** Components contribution to <body onLoad="..." */
-    private String bodyOnLoad;
-    
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WebPage.class);
+
+	private static final long serialVersionUID = 1L;
+
+	/** The body container */
+	private BodyContainer bodyContainer;
+
 	/**
-	 * Constructor.
+	 * Constructor. Having this constructor public means that you page is
+	 * 'bookmarkable' and hence can be called/ created from anywhere.
 	 */
 	protected WebPage()
 	{
-		super();
+		commonInit();
 	}
 
 	/**
@@ -70,121 +80,53 @@ public class WebPage extends Page implements IHeaderRenderer
 	protected WebPage(final IModel model)
 	{
 		super(model);
+		commonInit();
 	}
 
 	/**
-	 * Returns a bookmarkable URL that references a given page class using a given set of
-	 * page parameters. Since the URL which is returned contains all information necessary
-	 * to instantiate and render the page, it can be stored in a user's browser as a
-	 * stable bookmark.
-	 * @param pageMapName Name of pagemap to use
-	 * @param pageClass Class of page
-	 * @param parameters Parameters to page
-	 * @return Bookmarkable URL to page
+	 * @see Page#Page(PageMap)
 	 */
-	public String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters)
+	protected WebPage(final PageMap pageMap)
 	{
-		if (pageClass == null)
-		{
-			throw new NullPointerException("argument pageClass may not be null");
-		}
-
-		final WebRequestCycle cycle = getWebRequestCycle(); 
-		final StringBuffer buffer = urlPrefix(cycle);
-		if (pageMapName == null)
-		{
-			appendPageMapName(buffer);
-		}
-		else
-		{
-			buffer.append("?pagemap=");
-			buffer.append(pageMapName);
-			buffer.append('&');
-		}
-		buffer.append("bookmarkablePage=");
-		String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
-		if (pageReference == null) pageReference = pageClass.getName();
-		buffer.append(pageReference);
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(parameters.getString(key));
-			}
-		}
-		return cycle.getResponse().encodeURL(buffer.toString());
+		super(pageMap);
+		commonInit();
 	}
 
 	/**
-	 * Returns a URL that references a given interface on a component. When the
-	 * URL is requested from the server at a later time, the interface will be
-	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
+	 * @see Page#Page(PageMap, IModel)
+	 */
+	protected WebPage(final PageMap pageMap, final IModel model)
+	{
+		super(pageMap, model);
+		commonInit();
+	}
+
+	/**
+	 * Constructor which receives wrapped query string parameters for a request.
+	 * Having this constructor public means that you page is 'bookmarkable' and
+	 * hence can be called/ created from anywhere. For bookmarkable pages (as
+	 * opposed to when you construct page instances yourself, this constructor
+	 * will be used in preference to a no-arg constructor, if both exist. Note
+	 * that nothing is done with the page parameters argument. This constructor
+	 * is provided so that tools such as IDEs will include it their list of
+	 * suggested constructors for derived classes.
 	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param listenerInterface
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component and interface to call
+	 * @param parameters
+	 *            Wrapped query string parameters.
 	 */
-	public String urlFor(final Component component, final Class listenerInterface)
+	protected WebPage(final PageParameters parameters)
 	{
-		// Ensure that component instanceof listenerInterface
-		if (!listenerInterface.isAssignableFrom(component.getClass()))
-		{
-			throw new WicketRuntimeException("The component " + component + " of class "
-					+ component.getClass() + " does not implement " + listenerInterface);
-		}
-
-		// Buffer for composing URL
-		final WebRequestCycle cycle = getWebRequestCycle();
-		final StringBuffer buffer = urlPrefix(cycle);
-		appendPageMapName(buffer);
-		buffer.append("path=");
-		buffer.append(component.getPath());
-		int versionNumber = component.getPage().getCurrentVersionNumber();
-		if(versionNumber > 0)
-		{
-			buffer.append("&version=");
-			buffer.append(versionNumber);
-		}
-		String listenerName = Classes.name(listenerInterface);
-		if(!"IRedirectListener".equals(listenerName))
-		{
-			buffer.append("&interface=");
-			buffer.append(listenerName);
-		}
-
-		// add an extra parameter for regconition in case we are targetting a dispatched handler
-		if (IEventRequestListener.class.isAssignableFrom(listenerInterface))
-		{
-			// TODO we might come up with a more elegant pattern in future?
-			buffer.append("&dispatched=true");
-		}
-
-		return cycle.getResponse().encodeURL(buffer.toString());
+		this((IModel)null);
 	}
 
 	/**
-	 * @param path
-	 *            The path
-	 * @return The url for the path
+	 * Get the body container for adding onLoad javascript to the body tag.
+	 * 
+	 * @return The body container
 	 */
-	public String urlFor(final String path)
+	public BodyContainer getBodyContainer()
 	{
-		if ((path == null) || (path.trim().length() == 0))
-		{
-			return urlPrefix(getWebRequestCycle()).toString();
-		}
-		else
-		{
-			return urlPrefix(getWebRequestCycle()) + "/" + path;
-		}
+		return bodyContainer;
 	}
 
 	/**
@@ -205,6 +147,18 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
+	 * @see wicket.Page#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+
+		final WebResponse response = getWebRequestCycle().getWebResponse();
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
+	}
+
+	/**
 	 * @return The WebRequestCycle for this WebPage.
 	 */
 	protected final WebRequestCycle getWebRequestCycle()
@@ -221,138 +175,68 @@ public class WebPage extends Page implements IHeaderRenderer
 	 */
 	protected final BookmarkablePageLink homePageLink(final String id)
 	{
-		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
+		return new BookmarkablePageLink(id, getApplication().getHomePage());
 	}
 
-	/**
-	 * Appends any pagemap name to the buffer
-	 * 
-	 * @param buffer
-	 *            The string buffer to append to
-	 */
-	private void appendPageMapName(final StringBuffer buffer)
-	{
-		final PageMap pageMap = getPageMap();
-		if (!pageMap.isDefault())
-		{
-			buffer.append("?pagemap=");
-			buffer.append(pageMap.getName());
-			buffer.append('&');
-		}
-		else
-		{
-		    buffer.append('?');
-		}
-	}
-
-	/**
-	 * Creates a prefix for a url.
-	 * @param cycle
-	 *            The web request cycle
-	 * @return Prefix for URLs including the context path and servlet path.
-	 */
-	private StringBuffer urlPrefix(final WebRequestCycle cycle)
-	{
-		final StringBuffer buffer = new StringBuffer();
-		final WebRequest request = cycle.getWebRequest();
-		if (request != null)
-		{
-			final String contextPath = request.getContextPath();
-			buffer.append(contextPath);
-			buffer.append(((WebRequest)request).getServletPath());
-		}
-
-		return buffer;
-	}
-
-	/**
-	 * Invoked from HtmlHeaderContainer it'll ask all child components of the 
-	 * Page if they have something to contribute to the &lt;head&gt; section 
-	 * of the HTML output. If they have, child components will return a 
-	 * WebMarkupContainer which is (auto) added to the component hierarchie 
-	 * and immediately rendered.<p>
-	 * Note: HtmlHeaderContainer will be removed from the component hierachie
-	 * at the end of the request (@see #onEndRequest()) and thus can not 
-	 * transport status from one request to the next. This is true for all
-	 * components added to the header as well. 
-	 * 
-	 * @param container The header container 
-	 */
-	public final void renderHeadSections(final HtmlHeaderContainer container)
-	{
-		// Collect all header parts and render them.
-	    // Only MarkupContainer have associated markup files which
-	    // may contain <wicket:head> regions.
-		visitChildren(IHeaderContributor.class, new IVisitor()
-        {
-			/**
-			 * @see wicket.Component.IVisitor#component(wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (component.isVisible())
-				{
-				    if (component instanceof IHeaderContributor)
-				    {
-				        ((IHeaderContributor)component).printHead(container);
-					}
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-        });
-	}
-
-	/**
-	 * THIS IS NOT PART OF THE PUBLIC API. 
-	 * 
-	 * Get what will be appended to the page markup's body onLoad attribute
-	 * 
-	 * @return The onLoad attribute
-	 */
-	public String getBodyOnLoad()
-	{
-	    return this.bodyOnLoad;
-	}
-
-	/**
-	 * THIS IS NOT PART OF THE PUBLIC API. 
-	 * 
-	 * Append string to body onLoad attribute
-	 * 
-	 * @param onLoad Attribute value to be appended
-	 */
-	public final void appendToBodyOnLoad(final String onLoad)
-	{
-	    if (onLoad != null)
-	    {
-	        // Tell the page to change the Page's 
-	        // body tags.
-		    if (this.bodyOnLoad == null)
-		    {
-		        this.bodyOnLoad = onLoad;
-		    }
-		    else
-		    {
-		        this.bodyOnLoad = this.bodyOnLoad + onLoad;
-		    }
-	    }
-	}
-	
 	/**
 	 * Remove the header component and all its children from the component
-	 * hierachie. Be aware, thus you can not transfer state from one 
-	 * request to another.
+	 * hierachy. Be aware, thus you can not transfer state from one request to
+	 * another.
 	 * 
 	 * @see wicket.Component#onEndRequest()
 	 */
 	protected void onEndRequest()
 	{
-	    final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
-	    if (header != null)
-	    {
-	        this.remove(header.getId());
-	    }
-		
+		// TODO Documentation: What again was the reason why this is necessary?
+		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
+		if (header != null)
+		{
+			this.remove(header);
+		}
+
 		super.onEndRequest();
+	}
+
+	/**
+	 * Common code executed by constructors
+	 */
+	private void commonInit()
+	{
+		// Add a Body container if the associated markup contains a <body> tag
+		// get markup stream gracefully
+		MarkupStream markupStream = getApplication().getMarkupCache().getMarkupStream(this, false);
+		if (markupStream != null)
+		{
+			// The default <body> container. It can be accessed, replaced
+			// and attribute modifiers can be attached. <body> tags without
+			// wicket:id get automatically a wicket:id="body" assigned.
+			// find the body tag
+			while (markupStream.hasMore())
+			{
+				final MarkupElement element = (MarkupElement)markupStream.next();
+				if (element instanceof ComponentTag)
+				{
+					final ComponentTag tag = (ComponentTag)element;
+					if (tag.isOpen() && "body".equals(tag.getName())
+							&& (tag.getNamespace() == null))
+					{
+						// Add a default container if the tag has the default
+						// _body name
+						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+						{
+							add(new HtmlBodyContainer());
+						}
+						// remember the id of the tag
+						bodyContainer = new BodyContainer(this, tag.getId());
+						break;
+					}
+				}
+			}
+		}
+
+		// TODO General: If the concept proofs valuable we could add the header
+		// container the same way instead of using a resolver. The advantages
+		// would be that the header container be available at build time already
+		// and not only at render time.
 	}
 }

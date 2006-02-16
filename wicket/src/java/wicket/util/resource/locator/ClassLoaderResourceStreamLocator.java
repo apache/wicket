@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ClassLoaderResourceStreamLocator.java,v 1.4 2005/08/24 20:42:59
+ * jdonnerstag Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +26,8 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
 /**
- * IResourceStreamLocator implementation that locates resources using a class loader.
+ * IResourceStreamLocator implementation that locates resources using a class
+ * loader.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -34,10 +35,7 @@ import wicket.util.resource.UrlResourceStream;
 public final class ClassLoaderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
-
-	/** The path to search along */
-	private ClassLoader classloader;
+	private static Log log = LogFactory.getLog(ClassLoaderResourceStreamLocator.class);
 
 	/**
 	 * Constructor
@@ -47,32 +45,39 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param classloader
-	 *            The class loader to search
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
+	 *      java.lang.String)
 	 */
-	public ClassLoaderResourceStreamLocator(final ClassLoader classloader)
+	protected IResourceStream locate(final Class clazz, final String path)
 	{
-		this.classloader = classloader;
-	}
-
-	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
-	 */
-	protected IResourceStream locate(final String path)
-	{
-		// Ensure classloader
-		if (classloader == null)
+		ClassLoader classLoader = null;
+		if (clazz != null)
 		{
-			classloader = getClass().getClassLoader();
+			classLoader = clazz.getClassLoader();
+		}
+
+		if (classLoader == null)
+		{
+			// use context classloader when no specific classloader is set
+			// (package resources for instance)
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		if (classLoader == null)
+		{
+			// use Wicket classloader when no specific classloader is set
+			classLoader = getClass().getClassLoader();
 		}
 
 		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' using classloader " + classloader);
+		if (log.isDebugEnabled())
+		{
+			log.debug("Attempting to locate resource '" + path + "' using classloader "
+					+ classLoader);
+		}
 
 		// Try loading path using classloader
-		final URL url = classloader.getResource(path);
+		final URL url = classLoader.getResource(path);
 		if (url != null)
 		{
 			return new UrlResourceStream(url);

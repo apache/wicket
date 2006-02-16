@@ -34,6 +34,8 @@ import wicket.model.Model;
  */
 public final class RedirectPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor. The page will immediately redirect to the given url.
 	 * 
@@ -89,6 +91,14 @@ public final class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{
-		this(page.urlFor(page, IRedirectListener.class), waitBeforeRedirectInSeconds);
+		this(page.urlFor(IRedirectListener.INTERFACE), waitBeforeRedirectInSeconds);
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
 	}
 }

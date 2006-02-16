@@ -33,6 +33,8 @@ import wicket.model.IModel;
  */
 public class HiddenField extends TextField
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 * @param id component id

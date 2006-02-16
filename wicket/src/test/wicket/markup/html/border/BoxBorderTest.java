@@ -17,26 +17,22 @@
  */
 package wicket.markup.html.border;
 
-import java.io.IOException;
-
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketTestCase;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
+import wicket.protocol.http.MockHttpServletRequest;
 
 /**
- * Test the component: WicketComponentTree
+ * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
-public class BoxBorderTest extends TestCase
+public class BoxBorderTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(BoxBorderTest.class);
-
-	private MockWebApplication application;
 
 	/**
 	 * Create the test.
@@ -48,35 +44,48 @@ public class BoxBorderTest extends TestCase
 	{
 		super(name);
 	}
-
-	/**
-	 * @throws Exception
-	 */
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(BoxBorderTestPage.class);
-	}
-
+	
 	/**
 	 * Test a simply page containing the debug component
 	 * @throws Exception
 	 */
 	public void test1() throws Exception
 	{
-		// Do the processing
-	    application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		log.info(document);
-		assertTrue(validatePage(document, "BoxBorderTestPage_ExpectedResult.html"));
+		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_1.html");
 	}
 	
-	private boolean validatePage(final String document, final String file) throws IOException
+	/**
+	 * Test a simply page containing the debug component
+	 * @throws Exception
+	 */
+	public void test2() throws Exception
 	{
-		return DiffUtil.validatePage(document, this.getClass(), file);
+		executeTest(BoxBorderTestPage_2.class, "BoxBorderTestPage_ExpectedResult_2.html");
+	}
+	
+	/**
+	 * Test a simply page containing the debug component
+	 * @throws Exception
+	 */
+	public void test3() throws Exception
+	{
+		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
+
+        Border border = (Border) application.getLastRenderedPage().get("border");
+        Form form = (Form) application.getLastRenderedPage().get("border:myForm");
+        
+        TextField input = (TextField) application.getLastRenderedPage().get("border:name");
+        assertEquals("", input.getModelObjectAsString());
+        
+        application.setupRequestAndResponse();
+
+        MockHttpServletRequest mockRequest = application.getServletRequest();
+        mockRequest.setRequestToComponent(form);
+        mockRequest.setParameter(input.getInputName(), "jdo");
+
+        application.processRequestCycle();      
+
+        input = (TextField) application.getLastRenderedPage().get("border:name");
+        assertEquals("jdo", input.getModelObjectAsString());
 	}
 }

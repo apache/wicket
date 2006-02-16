@@ -54,7 +54,7 @@ public class WicketTagPanelTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(WicketPanelPage.class);
+		application.setHomePage(WicketPanelPage.class);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
-		application.getSettings().setStripWicketTags(true);
+		application.getMarkupSettings().setStripWicketTags(true);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 

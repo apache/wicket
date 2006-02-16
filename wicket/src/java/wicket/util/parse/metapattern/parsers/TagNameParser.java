@@ -72,13 +72,12 @@ public final class TagNameParser extends MetaPatternParser
 	}
 
 	/**
-	 * Gets the tag name part (eg 'form' in 'html:form' or 'form') converted to
-	 * all lower case characters.
+	 * Gets the tag name part (eg 'form' in 'html:form' or 'form')
 	 * 
 	 * @return the name part
 	 */
 	public String getName()
 	{
-		return nameGroup.get(matcher()).toLowerCase();
+		return nameGroup.get(matcher());
 	}
 }

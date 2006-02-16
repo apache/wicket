@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -28,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Time;
 
 /**
@@ -64,13 +66,22 @@ public class WebResponse extends Response
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponse(final HttpServletResponse httpServletResponse)
 	{
 		this.httpServletResponse = httpServletResponse;
 	}
 
+	/**
+	 * Add a cookie to the web response
+	 * 
+	 * @param cookie
+	 */
+	public void addCookie(final Cookie cookie)
+	{
+		getHttpServletResponse().addCookie(cookie);
+	}
+	
 	/**
 	 * Closes response output.
 	 */
@@ -139,27 +150,34 @@ public class WebResponse extends Response
 	 */
 	public void redirect(final String url)
 	{
-		if (httpServletResponse != null)
+		if (!redirect)
 		{
-			try
+			if (httpServletResponse != null)
 			{
-				if (httpServletResponse.isCommitted())
+				try
 				{
-					log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+					if (httpServletResponse.isCommitted())
+					{
+						log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+					}
+	
+					if (log.isDebugEnabled())
+					{
+						log.debug("Redirecting to " + url);
+					}
+	
+					httpServletResponse.sendRedirect(url);
+					redirect = true;
 				}
-
-				if (log.isDebugEnabled())
+				catch (IOException e)
 				{
-					log.debug("Redirecting to " + url);
+					throw new WicketRuntimeException("Redirect failed", e);
 				}
-
-				httpServletResponse.sendRedirect(url);
-				redirect = true;
 			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Redirect failed", e);
-			}
+		}
+		else
+		{
+			log.info("Already redirecting to an url current one ignored: " + url);
 		}
 	}
 
@@ -187,11 +205,8 @@ public class WebResponse extends Response
 	 */
 	public void setLastModifiedTime(Time time)
 	{
-		if (time != null)
+		if (time != null && time.getMilliseconds() != -1)
 		{
-			// If time is set also set cache headers.
-			httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			httpServletResponse.setHeader("Cache-Control", "max-age=" + 3600);
 			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
 		}
 	}
@@ -229,5 +244,46 @@ public class WebResponse extends Response
 		{
 			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
 		}
+	}
+
+	/**
+	 * Writes AppendingStringBuffer to response output.
+	 * 
+	 * @param asb
+	 *  		  The AppendingStringBuffer to write to the stream
+	 */
+	public void write(AppendingStringBuffer asb)
+	{
+		try
+		{
+			httpServletResponse.getWriter().write(asb.getValue(),0,asb.length());
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+		}
+	}
+	
+	/**
+	 * Set a header to the date value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param date
+	 */
+	public void setDateHeader(String header, long date)
+	{
+		httpServletResponse.setDateHeader(header, date);
+	}
+	
+
+	/**
+	 * Set a header to the string value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param value
+	 */
+	public void setHeader(String header, String value)
+	{
+		httpServletResponse.setHeader(header, value);
 	}
 }

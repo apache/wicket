@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,17 +20,19 @@ import java.net.URL;
 
 /**
  * Path for working with OSGi bundles.
- *
+ * 
  * @author Timur Mehrvarz
  */
 public final class OsgiPath implements IResourceFinder
 {
-	/** class loader to be used for locating resources. */
+	/** ClassLoader to be used for locating resources. */
 	final ClassLoader classLoader;
 
 	/**
 	 * Constructor.
-	 * @param classLoader class loader to be used for locating resources
+	 * 
+	 * @param classLoader
+	 *            class loader to be used for locating resources
 	 */
 	public OsgiPath(ClassLoader classLoader)
 	{
@@ -40,8 +40,8 @@ public final class OsgiPath implements IResourceFinder
 	}
 
 	/**
-	 * Looks for a given pathname along this path in the OSGi (jar)  bundle.
-	 *
+	 * Looks for a given pathname along this path in the OSGi (jar) bundle.
+	 * 
 	 * @param pathname
 	 *            The filename with possible path
 	 * @return The url located on the path

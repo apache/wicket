@@ -11,16 +11,15 @@
 				<item name="Motivations" href="#Motivations" />
 				<item name="Goals" href="#Goals" />
 			</item>
+			<item name="Roadmap" href="/Roadmap.html" />
 		</menu>
 		<menu name="Getting Started">
-			<item name="Examples" href="/QuickTour.html" collapse="true">
+			<item name="Examples" href="/Examples.html" collapse="true">
 				<item name="Hello World!" href="/ExampleHelloWorld.html" />
 				<item name="Navomatic" href="/ExampleNavomatic.html" />
-				<item name="GuestBook" href="/ExampleGuestBook.html" />
-			</item>
-			<item name="QuickStart" href="/QuickStart.html" collapse="true">
-				<item name="Binary" href="/QuickStartBinary.html" />
-				<item name="Source" href="/QuickStartSource.html" />
+				<item name="GuestBook Application" href="/ExampleGuestBook.html" />
+				<item name="StockQuote Component" href="/ExampleStockQuote.html" />
+				<item name="Running the Examples" href="/Examples.html#Running_the_Examples_Yourself" />
 			</item>
 			<item name="Download" href="/Download.html" />
 		</menu>
@@ -32,7 +31,7 @@
 				<item name="Jonathan's Blog" href="http://www.jroller.com/page/JonathanLocke" />
 				<item name="Geertjan's Blog" href="http://blogs.sun.com/geertjan" />
 			</item>
-			<item name="RSS" img="/images/rss.png" href="/news.rss" />
+<!-- 			<item name="RSS" img="/images/rss.png" href="/news.rss" /> -->
 		</menu>
 		<menu name="Documentation">
 			<item name="Vision" href="/Vision.html" />
@@ -42,10 +41,13 @@
 			<item name="Dependencies" href="/dependencies.html" />
 		</menu>
 		<menu name="Releases">
-			<item name="Wicket 1.1 (beta)" href="/wicket-1.1/index.html" />
+			<!--  <item name="Wicket 1.2 (n/a)" href="/Roadmap.html#Wicket_1.2"/> -->
+			<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
 			<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
 		</menu>
 		<menu name="Related projects">
+			<item name="Wicket Extensions" href="/wicket-extensions/index.html" />
+			<item name="Wicket QuickStart" href="/wicket-quickstart/index.html" />
 			<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
 			<item name="Wicket Library" href="http://www.wicket-library.com" />
 		</menu>

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Roadmap</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, roadmap" />
+	<body>
+		<section name="Roadmap">
+			<p>
+				The roadmap for Wicket is not clearly defined. We usually look 1 or two releases
+				ahead. In this document you can find the latest insights in our roadmap and what
+				lies ahead for Wicket.
+			</p>
+			<subsection name="Wicket 1.1">
+				<p>
+					The Wicket 1.1 release is scheduled to become final in late september.
+					<ul>
+						<li>JavaScript support</li>
+						<li>CSS support</li>
+						<li>Markup inheritence</li>
+						<li>Experimental AJAX support</li>
+						<li>Improved URL handling</li>
+						<li>Include of external markup</li>
+						<li>Simplified Choice component</li>
+						<li>Improved Feedback support</li>
+						<li>Thread safe validation (bug fix)</li>
+						<li>Immediate button support for Forms</li>
+						<li>Panel support for TreeView</li>
+						<li>Date picker component</li>
+						<li>Component reference examples</li>
+					</ul>
+					Release information can be found here: <a href="wicket-1.1/">Wicket 1.1</a>.
+				</p>
+				<p>
+					The first release candidate is out for testing, with one or two release candidates 
+					coming until late september (last week), then Wicket 1.1 will be marked final.
+				</p>
+			</subsection>
+			<subsection name="Wicket 1.2">
+				<p>
+					The Wicket 1.2 release is scheduled to become final for early januari, possibly
+					earlier.
+					<ul>
+						<li>AJAX support</li>
+						<li>Portlet support (JSR 168)</li>
+						<li>Clean and pretty URL's</li>
+						<li>JAAS/Acegi/other security integration</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Future plans">
+				<p>
+					Some interesting ideas for the future of Wicket, but not currently on any
+					planning horizon.
+				</p>
+				<ul>
+					<li>WML (Wap) output</li>
+					<li>VoiceXML output</li>
+					<li>JSF integration</li>
+					<li>Zero server state</li>
+				</ul>
+			</subsection>
+			<subsection name="Wicket 2.0">
+				<p>No date available, depending on industry support.</p>
+				<ul>
+					<li>Migration to Java 5</li>
+				</ul>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.util.file.File;
 import wicket.util.time.Time;
 
@@ -36,10 +33,9 @@ import wicket.util.time.Time;
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class FileResourceStream extends AbstractResourceStream
+public class FileResourceStream extends AbstractResourceStream
 {
-	/** Logging */
-	private static Log log = LogFactory.getLog(FileResourceStream.class);
+	private static final long serialVersionUID = 1L;
 
 	/** Any associated file */
 	private File file;
@@ -48,7 +44,7 @@ public final class FileResourceStream extends AbstractResourceStream
 	private transient InputStream inputStream;
 
 	/**
-	 * Private constructor to force use of static factory methods.
+	 * Constructor.
 	 * 
 	 * @param file
 	 *            File containing resource

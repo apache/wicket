@@ -18,13 +18,12 @@
  */
 package wicket.protocol.http;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Simple application that demonstrates the mock http application
@@ -48,7 +47,7 @@ public class MockWebApplicationTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(MockPage.class);
+		application.setHomePage(MockPage.class);
 	}
 
 	/**

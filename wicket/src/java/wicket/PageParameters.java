@@ -37,6 +37,11 @@ import wicket.util.value.ValueMap;
  */
 public final class PageParameters extends ValueMap
 {
+	/** Parameter name used all over the place */
+	public static final String BOOKMARKABLE_PAGE = "bookmarkablePage";
+	
+	private static final long serialVersionUID = 1L;
+	
 	/**
      * Null value for page parameters
      */

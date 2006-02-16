@@ -23,6 +23,9 @@ import java.util.Locale;
 import junit.framework.Assert;
 import wicket.Application;
 import wicket.ISessionFactory;
+import wicket.request.IRequestCycleProcessor;
+import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -60,29 +63,20 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 			{
 				return null;
 			}
+
+			protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
+			{
+				return null;
+			}
+
+			public Class getHomePage()
+			{
+				return null;
+			}
 		};
 
 		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component,
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
 				"test.string", Locale.getDefault(), null));
 	}
-
-	/**
-	 * 
-	 */
-	public void testNullApplication()
-	{
-		try
-		{
-			new ApplicationStringResourceLoader(null);
-			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Extected result
-		}
-	}
-
 }
-
-// 

@@ -20,17 +20,15 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
-import wicket.markup.parser.XmlTag;
+import wicket.util.collections.ArrayListStack;
 
 /**
  * This is a markup inline filter. It identifies HTML specific issues which make
@@ -44,11 +42,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	/** Logging */
 	private static Log log = LogFactory.getLog(HtmlHandler.class);
 
-	/** Remember the last tag in order to close specific tags automatically */
-	private ComponentTag lastTag;
-
 	/** Tag stack to find balancing tags */
-	final private Stack stack = new Stack();
+	final private ArrayListStack stack = new ArrayListStack();
 
 	/** Map of simple tags. */
 	private static final Map doesNotRequireCloseTag = new HashMap();
@@ -95,7 +90,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			// If there's still a non-simple tag left, it's an error
 			while (stack.size() > 0)
 			{
-				final XmlTag top = (XmlTag)stack.peek();
+				final ComponentTag top = (ComponentTag)stack.peek();
 
 				if (!requiresCloseTag(top.getName()))
 				{
@@ -131,12 +126,13 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				ComponentTag top = (ComponentTag)stack.pop();
 
 				// If the name of the current close tag does not match the
-				// tag on the stack
-				// then we may have a mismatched close tag
-				boolean mismatch = !top.getName().equalsIgnoreCase(tag.getName());
+				// tag on the stack then we may have a mismatched close tag
+				boolean mismatch = !top.hasEqualTagName(tag);
 
 				if (mismatch)
 				{
+					top.setHasNoCloseTag(true);
+					
 					// Pop any simple tags off the top of the stack
 					while (mismatch && !requiresCloseTag(top.getName()))
 					{
@@ -144,15 +140,16 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						top = (ComponentTag)stack.pop();
 
 						// Does new top of stack mismatch too?
-						mismatch = !top.getName().equalsIgnoreCase(tag.getName());
+						mismatch = !top.hasEqualTagName(tag);
 					}
 
 					// If adjusting for simple tags did not fix the problem,
 					// it must be a real mismatch.
 					if (mismatch)
 					{
-						throw new MarkupException("Tag " + top.toUserDebugString()
-								+ " has a mismatched close tag at " + tag.toUserDebugString());
+						throw new ParseException("Tag " + top.toUserDebugString()
+								+ " has a mismatched close tag at " + tag.toUserDebugString(), 
+								top.getPos());
 					}
 				}
 
@@ -161,8 +158,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				throw new MarkupException("Tag " + tag.toUserDebugString()
-						+ " does not have a matching open tag");
+				throw new ParseException("Tag " + tag.toUserDebugString()
+						+ " does not have a matching open tag", tag.getPos());
 			}
 		}
 		else if (tag.isOpenClose())

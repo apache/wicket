@@ -17,15 +17,15 @@
  */
 package wicket.markup.html.border;
 
-import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.resolver.IComponentResolver;
+import wicket.markup.resolver.IComponentResolverMarker;
 import wicket.model.IModel;
 
 /**
@@ -79,13 +79,17 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainer implements IComponentResolver, IHeaderRenderer
+public abstract class Border extends WebMarkupContainer implements IComponentResolver, 
+	IComponentResolverMarker
 {
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
 	
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
+	
+	/** Should be true for bordered pages */
+	private boolean transparentResolver = false;
 	
 	/**
      * @see wicket.Component#Component(String)
@@ -104,7 +108,34 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}	
 
 	/**
-	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
+	 * 
+	 * @see wicket.MarkupContainer#isTransparentResolver()
+	 */
+	public boolean isTransparentResolver()
+	{
+		if (getMarkupStream() == null)
+		{
+			return true;
+		}
+		
+		return transparentResolver;
+	}
+	
+	/**
+	 * Borders used for bordered pages should set it to "true".
+	 * Default is "false".
+	 * 
+	 * @param transparentResolver
+	 * @return this for chaining
+	 */
+	public final Border setTransparentResolver(final boolean transparentResolver)
+	{
+		this.transparentResolver = transparentResolver;
+		return this;
+	}
+	
+	/**
+	 * Border makes use of a &lt;wicket:body&gt; tag to identify the position
 	 * to insert within the border's body. As &lt;wicket:body&gt; is a special
      * tag and MarkupContainer is not able to handle it, we do that here.
      * <p>
@@ -141,6 +172,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
             return false;
         }
 
+        // Ok, it is a wicket:body tag. Now render its body
         ComponentTag bodyTag = tag;
         if (tag.isOpen())
         {
@@ -166,12 +198,10 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		// Render the body tag
 		renderComponentTag(bodyTag);
 
-		// Find nearest Border at or above this container
-		Border border = (Border)((this instanceof Border) ? this : findParent(Border.class));
-
 		// If markup stream is null, that indicates we already recursed into
 		// this block of log and set it to null (below). If we did that,
 		// then we want to go up another level of border nesting.
+		Border border = this;
 		if (border.getMarkupStream() == null)
 		{
 			// Find Border at or above parent of this border
@@ -239,26 +269,17 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			markupStream.throwMarkupException(
 			        "There must be exactly one <wicket:body> tag for each border compoment.");
         }
+        
+        setMarkupStream(null);
 	}
-
-	/**
-	 * "Visit all components of the component hierarchie and ask if they have
-	 * something to contribute to the header section of the page. If yes,
-	 * child components will return a MarkupContainer of there header
-	 * section which gets (auto) added to the component hierarchie and
-	 * immediately rendered.". In case of bordered Pages, the header component
-	 * is not added to the Page, but to the Border component. Thus, in order
-	 * to handle bordered pages properly, we must the request down one more 
-	 * level. In case of a bordered page, it is a Page component.
-     *
-     * @param container The current html header container
-	 */
-	public final void renderHeadSections(final HtmlHeaderContainer container)
-	{
-		MarkupContainer parent = getParent();
-		if (parent instanceof IHeaderRenderer)
-		{
-		    ((IHeaderRenderer)parent).renderHeadSections(container);
-		}
-	}
+    
+    /**
+     * 
+     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+     */
+    public void renderHead(HtmlHeaderContainer container)
+    {
+    	this.renderHeadFromAssociatedMarkupFile(container);
+    	super.renderHead(container);
+    }
 }

@@ -20,8 +20,16 @@ package wicket;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.resource.ICachingResource;
 import wicket.util.file.Files;
+import wicket.util.string.AppendingStringBuffer;
+import wicket.util.time.Duration;
 
 /**
  * Class which holds shared resources. Resources can be shared by name. An
@@ -29,24 +37,141 @@ import wicket.util.file.Files;
  * style can be given as well.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Gili Tzabari
  */
 public class SharedResources
 {
-	/** Map of shared resources */
+	/** Logger */
+	private static Log log = LogFactory.getLog(SharedResources.class);
+
+	/**
+	 * The state associated with each shared resource.
+	 */
+	private class ResourceState
+	{
+		/**
+		 * The resource of this ResourceState;
+		 */
+		private Resource resource;
+
+		/**
+		 * The idle Task for this resource (if any)
+		 */
+		private TimerTask idleTask;
+
+		/**
+		 * The cacheTimout Task for this resource (if any)
+		 */
+		private TimerTask cacheTask;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param key
+		 *            The resource key
+		 * @param resource
+		 *            The resource
+		 */
+		ResourceState(String key, Resource resource)
+		{
+			this.resource = resource;
+			makeIdleTask(key);
+			makeCacheTask(key);
+		}
+
+		private void makeCacheTask(String key)
+		{
+			if (resource instanceof ICachingResource)
+			{
+				ICachingResource dynamicResource = (ICachingResource)resource;
+				Duration cacheTimeout = dynamicResource.getCacheTimeout();
+				long milliseconds = cacheTimeout.getMilliseconds();
+				if (milliseconds != 0)
+				{
+					this.cacheTask = getDynamicImageFlushTask(key,
+							(ICachingResource)resource);
+					idleTimer.schedule(cacheTask, milliseconds);
+				}
+			}
+		}
+
+		private void makeIdleTask(String key)
+		{
+			Duration idleTimeout = resource.getIdleTimeout();
+			long milliseconds = idleTimeout.getMilliseconds();
+			if (milliseconds != 0)
+			{
+				this.idleTask = getResourceTimeoutTask(key);
+				idleTimer.schedule(idleTask, milliseconds);
+			}
+		}
+
+		/**
+		 * Cancel all timer task (if any)
+		 */
+		void cancel()
+		{
+			if (idleTask != null)
+			{
+				idleTask.cancel();
+				idleTask = null;
+			}
+			if (cacheTask != null)
+			{
+				cacheTask.cancel();
+				cacheTask = null;
+			}
+		}
+
+		/**
+		 * Touch this resource, update timer task (if any)
+		 * 
+		 * @param key
+		 *            They key of the resource
+		 */
+		void touch(String key)
+		{
+			if (idleTask != null)
+			{
+				idleTask.cancel();
+				makeIdleTask(key);
+			}
+			if (cacheTask != null)
+			{
+				cacheTask.cancel();
+				makeCacheTask(key);
+			}
+		}
+	}
+
+	/** Map of Class to alias String */
+	private final Map classAliasMap = new HashMap();
+
+	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
-	
+
+	/** Executes tasks when resources become idle */
+	private final Timer idleTimer = new Timer(true);
+
+	/** The application that holds these shared resources */
 	private final Application application;
-	
+
+	/**
+	 * Construct.
+	 * 
+	 * @param application
+	 *            The application
+	 */
 	SharedResources(Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Inserts _[locale] and _[style] into path just before any extension that
-	 * might exist.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
+	 * _[locale] and _[style] into path just before any extension that might
+	 * exist.
 	 * 
 	 * @param path
 	 *            The resource path
@@ -56,24 +181,35 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final String path, final Locale locale, final String style)
+	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
-		final StringBuffer buffer = new StringBuffer();
 		final String extension = Files.extension(path);
 		final String basePath = Files.basePath(path, extension);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
-		if (locale != null)
-		{
-			if (!locale.equals(Locale.getDefault()))
-			{
-				buffer.append('_');
-				buffer.append(locale.toString());
-			}
-		}
+
+		// First style because locale can append later on.
 		if (style != null)
 		{
 			buffer.append('_');
 			buffer.append(style);
+		}
+		if (locale != null)
+		{
+			buffer.append('_');
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c || (l && v))
+			{
+				buffer.append('_').append(locale.getCountry()); // This may just
+				// append '_'
+			}
+			if (v && (l || c))
+			{
+				buffer.append('_').append(locale.getVariant());
+			}
 		}
 		if (extension != null)
 		{
@@ -86,8 +222,6 @@ public class SharedResources
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param application 
-	 * `		  The application object
 	 * @param scope
 	 *            The scope of the resource
 	 * @param path
@@ -98,10 +232,30 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final Application application, final Class scope, final String path, final Locale locale,
+	public String resourceKey(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
-		return application.getPages().aliasForClass(scope) + '/' + path(path, locale, style);
+		String alias = (String)classAliasMap.get(scope);
+		if (alias == null)
+		{
+			alias = scope.getName();
+		}
+		return alias + '/' + resourceKey(path, locale, style);
+	}
+
+	/**
+	 * Sets an alias for a class so that a resource url can look like:
+	 * resources/images/Image.jpg instead of
+	 * resources/wicket.resources.ResourceClass/Image.jpg
+	 * 
+	 * @param clz
+	 *            The class that has to be aliased.
+	 * @param alias
+	 *            The alias string.
+	 */
+	public final void putClassAlias(Class clz, String alias)
+	{
+		classAliasMap.put(clz, alias);
 	}
 
 	/**
@@ -120,11 +274,20 @@ public class SharedResources
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String key = path(application,scope, name, locale, style);
-		resourceMap.put(key, resource);
-
-		// Application shared resources are cacheable.
-		resource.setCacheable(true);
+		final String resourceKey = resourceKey(scope, name, locale, style);
+		ResourceState resourceState;
+		synchronized (resourceMap)
+		{
+			resourceState = (ResourceState)resourceMap.get(resourceKey);
+		}
+		if (resourceState == null)
+		{
+			resourceState = new ResourceState(resourceKey, resource);
+		}
+		synchronized (resourceMap)
+		{
+			resourceMap.put(resourceKey, resourceState);
+		}
 	}
 
 	/**
@@ -160,53 +323,63 @@ public class SharedResources
 	 *            The locale of the resource
 	 * @param style
 	 *            The resource style (see {@link wicket.Session})
+	 * @param exact
+	 *            If true then only return the resource that is registered for
+	 *            the given locale and style.
+	 * 
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
-			final String style)
+			final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String key = path(application,scope, name, locale, style);
-			final Resource resource = get(key);
+			final String resourceKey = resourceKey(scope, name, locale, style);
+			final Resource resource = get(resourceKey);
 			if (resource != null)
 			{
 				return resource;
+			}
+			if (exact)
+			{
+				return null;
 			}
 		}
 
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = path(application,scope, name, locale, null);
+			final String key = resourceKey(scope, name, locale, null);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
+			}
+			if (exact)
+			{
+				return null;
 			}
 		}
 
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = path(application,scope, name, null, style);
+			final String key = resourceKey(scope, name, null, style);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
 			}
+			if (exact)
+			{
+				return null;
+			}
 		}
 
 		// 4. Look for base name with no locale or style
-		if (locale == null && style == null)
-		{
-			final String key = application.getPages().aliasForClass(scope) + '/' + name;
-			return get(key);
-		}
-
-		// Resource not found!
-		return null;
+		final String key = resourceKey(scope, name, null, null);
+		return get(key);
 	}
 
 	/**
@@ -218,6 +391,115 @@ public class SharedResources
 	 */
 	public final Resource get(final String key)
 	{
-		return (Resource)resourceMap.get(key);
+		synchronized (resourceMap)
+		{
+			ResourceState resourceState = ((ResourceState)resourceMap.get(key));
+			if (resourceState != null)
+			{
+				return resourceState.resource;
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * Removes a shared resource.
+	 * 
+	 * @param key
+	 *            Shared resource key
+	 */
+	public final void remove(final String key)
+	{
+		ResourceState state;
+		synchronized (resourceMap)
+		{
+			state = (ResourceState)resourceMap.get(key);
+			if (state == null)
+			{
+				return;
+			}
+			resourceMap.remove(key);
+		}
+		state.cancel();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Called
+	 * when a resource is requested.
+	 * 
+	 * @param key
+	 *            Shared resource key
+	 */
+	public final void onResourceRequested(final String key)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("Resource " + key + " requested");
+		}
+
+		final ResourceState resourceState;
+		synchronized (resourceMap)
+		{
+			resourceState = (ResourceState)resourceMap.get(key);
+		}
+		if (resourceState == null)
+		{
+			throw new IllegalArgumentException("No resource associated with key " + key);
+		}
+		resourceState.touch(key);
+	}
+
+	/**
+	 * Returns a task which removes idle resources.
+	 * 
+	 * @param key
+	 *            The key for which a TimerTaks must be made
+	 * @return The TimerTask for the given key
+	 */
+	private TimerTask getResourceTimeoutTask(final String key)
+	{
+		return new TimerTask()
+		{
+			public void run()
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Resource " + key + " removed");
+				}
+				remove(key);
+			}
+		};
+	}
+
+	/**
+	 * Returns a task which flushes a DynamicImageResource.
+	 * 
+	 * @param key
+	 *            The key of the resource
+	 * @param resource
+	 *            The DynamicImageResource where a TimerTaks must be made for.
+	 * @return The TimerTaks for that Dymamic Image
+	 */
+	private TimerTask getDynamicImageFlushTask(final String key,
+			final ICachingResource resource)
+	{
+		return new TimerTask()
+		{
+			public void run()
+			{
+				// Someone might hit the image while we flush its cache
+				synchronized (resource)
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("Resource " + key + " flushed");
+					}
+					resource.invalidate();
+				}
+			}
+		};
 	}
 }

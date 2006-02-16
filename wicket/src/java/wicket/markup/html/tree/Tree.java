@@ -30,7 +30,8 @@ import javax.swing.tree.TreePath;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
-import wicket.markup.html.StaticResourceReference;
+import wicket.WicketRuntimeException;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -64,22 +65,18 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** Blank image. */
-	private static final ResourceReference BLANK =
-		new StaticResourceReference(Tree.class, "blank.gif");
+	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class, "blank.gif");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS =
-		new StaticResourceReference(Tree.class, "minus.gif");
+	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS =
-		new StaticResourceReference(Tree.class, "plus.gif");
+	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class, "plus.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final StaticResourceReference CSS =
-		new StaticResourceReference(Tree.class, "tree.css");
+	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class, "tree.css");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get
@@ -93,16 +90,18 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	private boolean optimizeItemRemoval = true;
 
 	/** Model for the paths of the tree. */
-	private final TreePathsModel treePathsModel;
+	private TreePathsModel treePathsModel;
 
 	/** List view for tree paths. */
-	private final TreePathsListView treePathsListView;
+	private TreePathsListView treePathsListView;
 
 	/**
 	 * Replacement model that looks up whether the current row is the active one.
 	 */
 	private final class SelectedPathReplacementModel extends Model
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** the tree node. */
 		private final DefaultMutableTreeNode node;
 
@@ -140,6 +139,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class SpacerList extends Loop
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param id component id
@@ -164,6 +165,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class TreePathsListView extends ListView
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * @param name name of the component
@@ -192,6 +195,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			// it should be displayed or not
 			return new ListItem(index, listItemModel)
 			{
+				private static final long serialVersionUID = 1L;
+
 				public boolean isVisible()
 				{
 					TreeState treeState = getTreeState();
@@ -218,7 +223,17 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			listItem.add(new SpacerList("spacers", level));
 
 			// add node panel
-			listItem.add(newNodePanel("node", node));
+			NodePanel nodePanel = newNodePanel("node", node);
+			if (nodePanel == null)
+			{
+				throw new WicketRuntimeException("node panel must be not-null");
+			}
+			if (!"node".equals(nodePanel.getId()))
+			{
+				throw new WicketRuntimeException("panel must have id 'node' assigned");
+			}
+
+			listItem.add(nodePanel);
 
 			// add attr modifier for highlighting the selection
 			listItem.add(new AttributeModifier("class", true,
@@ -231,6 +246,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class TreePathsModel extends AbstractReadOnlyDetachableModel
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** whether this model is dirty. */
 		boolean dirty = true;
 
@@ -274,13 +291,13 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			if (dirty)
 			{
 				paths.clear();
-				TreeModel model = (TreeModel)getTreeState().getModel();
+				TreeModel model = getTreeState().getModel();
 				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
 				Enumeration e = rootNode.preorderEnumeration();
 				while (e.hasMoreElements())
 				{
 					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
-					TreePath path = new TreePath(treeNode.getPath());
+					//TreePath path = new TreePath(treeNode.getPath());
 					paths.add(treeNode);
 				}
 				dirty = false;
@@ -307,7 +324,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		 */
 		public IModel getNestedModel()
 		{
-			//TODO check calls to this method; original: return paths;
+			// TODO General: Check calls to this method; original: return paths;
 			return null;
 		}
 	}
@@ -340,6 +357,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected class DefaultNodePanel extends NodePanel
 	{
+		private static final long serialVersionUID = 1L;
+
 		DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
 		{
 			super(panelId, node);
@@ -382,24 +401,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * Add stylesheet to header.
-	 */
-	private void addCSS()
-	{
-		IModel hrefReplacement = new Model()
-		{
-			public Object getObject(Component component)
-			{
-				String url = getPage().urlFor(CSS.getPath());
-				return url;
-			};
-		};
-		WebMarkupContainer css = new WebMarkupContainer("css");
-		css.add(new AttributeModifier("href", true, hrefReplacement));
-		addToHeader(css);
-	}
-
-	/**
 	 * Gets whether item removal should be optimized. If true, re-rendering the tree is
 	 * more efficient if the tree model doesn't get changed. However, if this is true, you
 	 * need to push changes to this tree. This can easility be done by registering this
@@ -430,6 +431,33 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
+	 * Sets the current tree state to the given tree state.
+	 * 
+	 * @param treeState
+	 *            the tree state to set as the current one
+	 */
+	public void setTreeState(final TreeState treeState)
+	{
+		super.setTreeState(treeState);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
+	}
+
+	/**
+	 * Sets the current tree model.
+	 *
+	 * @param treeModel the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		super.setTreeModel(treeModel);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
+	}
+
+	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesChanged(javax.swing.event.TreeModelEvent)
 	 */
 	public void treeNodesChanged(TreeModelEvent e)
@@ -443,8 +471,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void treeNodesInserted(TreeModelEvent e)
 	{
 		modelChanging();
-		TreePath parentPath = e.getTreePath();
-		TreeState treeState = getTreeState();
 		Object[] newNodes = e.getChildren();
 		int len = newNodes.length;
 		for (int i = 0; i < len; i++)
@@ -480,8 +506,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void treeNodesRemoved(TreeModelEvent e)
 	{
 		modelChanging();
-		TreePath parentPath = e.getTreePath();
-		TreeState treeState = getTreeState();
 		Object[] deletedNodes = e.getChildren();
 		int len = deletedNodes.length;
 		for (int i = 0; i < len; i++)
@@ -546,7 +570,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected final TreePathsListView createTreePathsListView()
 	{
-		final TreeState treeState = getTreeState();
 		final TreePathsListView treePaths = new TreePathsListView("tree");
 		return treePaths;
 	}
@@ -579,6 +602,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			// we want the image to be dynamically, yet resolving to a static image.
 			return new Image(JUNCTION_IMAGE_NAME)
 			{
+				private static final long serialVersionUID = 1L;
+
 				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
@@ -633,12 +658,41 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Handler that is called when a node link is clicked; this implementation sets the
 	 * expanded state just as a click on a junction would do. Override this for custom
-	 * behaviour.
+	 * behavior.
 	 * @param node the tree node model
 	 */
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
 		setSelected(node);
+	}
+
+	/**
+	 * Gets the stylesheet.
+	 * @return the stylesheet
+	 */
+	protected PackageResourceReference getCss()
+	{
+		return CSS;
+	}
+
+	/**
+	 * Add stylesheet to header.
+	 */
+	private void addCSS()
+	{
+		IModel hrefReplacement = new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component)
+			{
+				String url = getRequestCycle().urlFor(getCss());
+				return url;
+			}
+		};
+		WebMarkupContainer css = new WebMarkupContainer("css");
+		css.add(new AttributeModifier("href", true, hrefReplacement));
+		add(css);
 	}
 
 	/**
@@ -650,6 +704,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		final Link junctionLink = new Link("junctionLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void onClick()
 			{
 				junctionLinkClicked(node);
@@ -668,6 +724,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		final Link nodeLink = new Link("nodeLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void onClick()
 			{
 				nodeLinkClicked(node);

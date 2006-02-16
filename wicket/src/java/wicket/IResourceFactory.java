@@ -40,5 +40,5 @@ public interface IResourceFactory
 	 *            The style of the resource (see {@link wicket.Session})
 	 * @return The resource
 	 */
-	public Resource newResource(final String specification, final Locale locale, final String style);
+	Resource newResource(final String specification, final Locale locale, final String style);
 }

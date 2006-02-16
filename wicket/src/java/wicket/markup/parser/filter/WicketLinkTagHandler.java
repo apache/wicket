@@ -18,14 +18,15 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Stack;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.WicketTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.settings.IMarkupSettings;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -47,21 +48,34 @@ import wicket.util.string.Strings;
  */
 public class WicketLinkTagHandler extends AbstractMarkupFilter
 {
+	/** The id of autolink components */
+	public static final String AUTOLINK_ID = "_autolink_";
+
 	/** Allow to have link regions within link regions */
-	private Stack autolinkStatus;
+	private ArrayListStack autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
 
+	/** 
+	 * The application settings required.
+	 * Note: you can rely on Application.get().getMarkupSettings() as reading
+	 * the markup happens in another thread due to ModificationWatcher. 
+	 */
+	private IMarkupSettings settings;
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param parent
 	 *            The next element in the chain.
+	 * @param settings
+	 *            The application settings
 	 */
-	public WicketLinkTagHandler(final IMarkupFilter parent)
+	public WicketLinkTagHandler(final IMarkupFilter parent, final IMarkupSettings settings)
 	{
 		super(parent);
+		setAutomaticLinking(settings.getAutomaticLinking());
 	}
 
 	/**
@@ -106,7 +120,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 			tag.enableAutolink(true);
 
 			// Just a dummy name. The ComponentTag will not be forwarded.
-			tag.setId("_autolink_");
+			tag.setId(AUTOLINK_ID);
 			return tag;
 		}
 
@@ -124,7 +138,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new Stack();
+							autolinkStatus = new ArrayListStack();
 						}
 
 						// remember the current setting to be reset after the
@@ -149,7 +163,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
 				}
 
-				return nextTag();
+				return wtag;
 			}
 		}
 
@@ -172,16 +186,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 		if ((tag.getId() == null) && (href != null)
 				&& (href.indexOf(":") == -1))
 		{
-			if (href.endsWith(".html") || (href.indexOf(".html?") != -1))
-			{
-			    return true;
-			}
-
-			// All <head><link> which are used for referencing css and js file.
-			if ("link".equals(tag.getName()))
-			{
-			    return true;
-			}
+		    return true;
 		}
 		
 		return false;

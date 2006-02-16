@@ -25,7 +25,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent extends FormComponent
 {
 	/**
 	 * @see wicket.Component#Component(String)
@@ -58,6 +58,15 @@ abstract class AbstractTextComponent extends FormComponent
 	}
 	
 	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
+	 */
+	public boolean isInputNullable()
+	{
+		return true;
+	}
+	
+	/**
 	 * Should the bound object become <code>null</code> when the input is
 	 * empty?
 	 * 
@@ -87,10 +96,14 @@ abstract class AbstractTextComponent extends FormComponent
 	public void updateModel()
 	{
 		String input = getInput();
-		if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+		// if input was null then value was not submitted (disabled field), ignore it
+		if (input != null)
 		{
-			input = null;
+			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+			{
+				input = null;
+			}
+			setModelObject(input);
 		}
-		setModelObject(input);
 	}
 }

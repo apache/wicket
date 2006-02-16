@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,53 +17,58 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
-
-import wicket.Request;
-
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
+import wicket.Request;
+import wicket.util.lang.Bytes;
+
 /**
  * Subclass of Request for HTTP protocol requests which holds an underlying
- * HttpServletRequest object. A NULL request object implementing all methods as
- * NOPs is available via WebRequest#NULL. A variety of convenience methods are
- * available that operate on the HttpServletRequest object. These methods do
- * things such as providing access to parameters, cookies, URLs and path
- * information.
+ * HttpServletRequest object. A variety of convenience methods are available
+ * that operate on the HttpServletRequest object. These methods do things such
+ * as providing access to parameters, cookies, URLs and path information.
  * 
  * @author Jonathan Locke
  */
-public class WebRequest extends Request
+public abstract class WebRequest extends Request
 {
-	/** Null WebRequest object that does nothing */
-	public static final WebRequest NULL = new NullWebRequest();
-
-	/** Servlet request information. */
-	private final HttpServletRequest httpServletRequest;
+	/**
+	 * Gets the application context path.
+	 * 
+	 * @return application context path
+	 */
+	public abstract String getContextPath();
 
 	/**
-	 * Protected constructor.
+	 * Get the requests' cookies
 	 * 
-	 * @param httpServletRequest
-	 *            The servlet request information
+	 * @return Cookies
 	 */
-	public WebRequest(final HttpServletRequest httpServletRequest)
+	public Cookie[] getCookies()
 	{
-		this.httpServletRequest = httpServletRequest;
+		return getHttpServletRequest().getCookies();
 	}
 
 	/**
-	 * Gets the servlet context path.
+	 * Gets the servlet path.
 	 * 
-	 * @return Servlet context path
+	 * @return Servlet path
 	 */
-	public String getContextPath()
-	{
-		return httpServletRequest.getContextPath();
-	}
+	public abstract String getServletPath();
+
+	/**
+	 * Create a runtime context type specific (e.g. Servlet or Portlet)
+	 * MultipartWebRequest wrapper for handling multipart content uploads.
+	 * 
+	 * @param maxSize
+	 *            the maximum size this request may be
+	 * @return new WebRequest wrapper implementing MultipartWebRequest
+	 */
+	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
 
 	/**
 	 * Returns the preferred <code>Locale</code> that the client will accept
@@ -73,10 +78,7 @@ public class WebRequest extends Request
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
-	public Locale getLocale()
-	{
-		return httpServletRequest.getLocale();
-	}
+	public abstract Locale getLocale();
 
 	/**
 	 * Gets the request parameter with the given key.
@@ -85,29 +87,14 @@ public class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter value
 	 */
-	public String getParameter(final String key)
-	{
-		return httpServletRequest.getParameter(key);
-	}
+	public abstract String getParameter(final String key);
 
 	/**
 	 * Gets the request parameters.
 	 * 
 	 * @return Map of parameters
 	 */
-	public Map getParameterMap()
-	{
-		final Map map = new HashMap();
-
-		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			map.put(name, httpServletRequest.getParameter(name));
-		}
-
-		return map;
-	}
+	public abstract Map getParameterMap();
 
 	/**
 	 * Gets the request parameters with the given key.
@@ -116,45 +103,13 @@ public class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter values
 	 */
-	public String[] getParameters(final String key)
-	{
-		return httpServletRequest.getParameterValues(key);
-	}
-
-	/**
-	 * Gets the path info if any.
-	 * 
-	 * @return Any servlet path info
-	 */
-	public String getPath()
-	{
-		return httpServletRequest.getPathInfo();
-	}
-
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	public String getServletPath()
-	{
-		return httpServletRequest.getServletPath();
-	}
-
-	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
-	}
+	public abstract String[] getParameters(final String key);
 
 	/**
 	 * Retrieves the URL of this request for local use.
-	 *
-	 * @return The request URL for local use, which is the context path + the relative url
+	 * 
+	 * @return The request URL for local use, which is the context path + the
+	 *         relative url
 	 */
 	public String getURL()
 	{
@@ -166,67 +121,20 @@ public class WebRequest extends Request
 		 * path starts with a "/" character but does not end with a "/"
 		 * character.
 		 */
-		return httpServletRequest.getContextPath() + '/' + getRelativeURL();
+		return getContextPath() + '/' + getRelativeURL();
 	}
 
 	/**
-	 * Gets the relative url (url without the context path and without a leading
-	 * '/'). Use this method to load resources using the servlet context.
+	 * Gets the wrapped http servlet request object.
+	 * <p>
+	 * WARNING: it is a bad idea to depend on the http servlet request directly.
+	 * Please use the classes and methods that are exposed by Wicket (such as
+	 * {@link wicket.Session} instead. Send an email to the mailing list in case
+	 * it is not clear how to do things or you think you miss funcionality which
+	 * causes you to depend on this directly.
+	 * </p>
 	 * 
-	 * @return Request URL
+	 * @return the wrapped http serlvet request object.
 	 */
-	public String getRelativeURL()
-	{
-		/*
-		 * Servlet 2.3 specification :
-		 * 
-		 * Servlet Path: The path section that directly corresponds to the
-		 * mapping which activated this request. This path starts with a "/"
-		 * character except in the case where the request is matched with the
-		 * "/*" pattern, in which case it is the empty string.
-		 * 
-		 * PathInfo: The part of the request path that is not part of the
-		 * Context Path or the Servlet Path. It is either null if there is no
-		 * extra path, or is a string with a leading "/".
-		 */
-		String url = httpServletRequest.getServletPath();
-		final String pathInfo = httpServletRequest.getPathInfo();
-
-		if (pathInfo != null)
-		{
-			url += pathInfo;
-		}
-
-		final String queryString = httpServletRequest.getQueryString();
-
-		if (queryString != null)
-		{
-			url += ("?" + queryString);
-		}
-
-		// If url is non-empty it has to start with '/', which we should lose
-		if (!url.equals(""))
-		{
-			// Remove leading '/'
-			url = url.substring(1);
-		}
-		return url;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-				+ httpServletRequest.getProtocol() + ", requestURL = "
-				+ httpServletRequest.getRequestURL() + ", contentType = "
-				+ httpServletRequest.getContentType() + ", contentLength = "
-				+ httpServletRequest.getContentLength() + ", contextPath = "
-				+ httpServletRequest.getContextPath() + ", pathInfo = "
-				+ httpServletRequest.getPathInfo() + ", requestURI = "
-				+ httpServletRequest.getRequestURI() + ", servletPath = "
-				+ httpServletRequest.getServletPath() + ", pathTranslated = "
-				+ httpServletRequest.getPathTranslated() + "]";
-	}
+	public abstract HttpServletRequest getHttpServletRequest();
 }

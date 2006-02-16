@@ -25,13 +25,7 @@ import wicket.markup.html.WebPage;
  */
 public class MyPage5 extends WebPage
 {
-    /**
-     * Construct.
-     * @param parameters parameters
-     */
-    public MyPage5(final PageParameters parameters)
-    {
-    }
+	private static final long serialVersionUID = 1L;
 
     /**
      * Construct.

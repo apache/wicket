@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +19,7 @@ package wicket.util.file;
 
 /**
  * Knows how to manage paths and folders, and how to find resources in them.
- *
+ * 
  * @author jcompagner
  */
 public interface IResourcePath extends IResourceFinder
@@ -28,5 +28,5 @@ public interface IResourcePath extends IResourceFinder
 	 * @param folder
 	 *            Adds a folder to the path
 	 */
-	public void add(String folder);
+	void add(String folder);
 }

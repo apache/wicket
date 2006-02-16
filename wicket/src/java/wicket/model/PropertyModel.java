@@ -18,10 +18,12 @@
 package wicket.model;
 
 import wicket.Component;
+import wicket.util.lang.PropertyResolver;
 
 /**
- * A PropertyModel is used to dynamically access a model using an <a
- * href="www.ognl.org">Ognl expression </a>.
+ * A PropertyModel is used to dynamically access a model using a "property
+ * expression". See {@link PropertyResolver} javadoc for allowed property
+ * expressions.
  * <p>
  * For example, take the following bean:
  * 
@@ -46,12 +48,24 @@ import wicket.Component;
  * given person object like this:
  * 
  * <pre>
- *                 Person person = getSomePerson();
- *                 ...
- *                 add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *  
+ *   
+ *    
+ *     
+ *      
+ *       
+ *                         Person person = getSomePerson();
+ *                         ...
+ *                         add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
+ *        
+ *       
+ *      
+ *     
+ *    
+ *   
  * </pre>
  * 
- * Where 'myLabel' is the name of the component, and 'name' is the Ognl
+ * Where 'myLabel' is the name of the component, and 'name' is property
  * expression to get the name property.
  * </p>
  * <p>
@@ -60,19 +74,32 @@ import wicket.Component;
  * updates the name property of a person like this:
  * 
  * <pre>
- *                 add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *  
+ *   
+ *    
+ *     
+ *      
+ *       
+ *                         add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
+ *        
+ *       
+ *      
+ *     
+ *    
+ *   
  * </pre>
  * 
  * </p>
  * <p>
- * To force Ognl to convert to a specific type, you can provide constructor
- * argument 'propertyType'.if that is set, that type is used for conversion
- * instead of the type that is figured out by Ognl. This can be especially
- * usefull for when you have a generic property (like Serializable myProp) that
- * you want to be converted to a narrower type (e.g. an Integer). Ognl sees an
- * incomming string being compatible with the target property, and will then
- * bypass the converter. Hence, to force myProp being converted to and from and
- * integer, propertyType should be set to Integer.
+ * To force conversion of property value to a specific type, you can provide
+ * constructor argument 'propertyType'. if that is set, that type is used for
+ * conversion instead of the type that is figured out by
+ * {@link PropertyResolver}. This can be especially useful for when you have a
+ * generic property (like Serializable myProp) that you want to be converted to
+ * a narrower type (e.g. an Integer). {@link PropertyResolver} sees an incomming
+ * string being compatible with the target property, and will then bypass the
+ * converter. Hence, to force myProp being converted to and from an integer,
+ * propertyType should be set to Integer.
  * </p>
  * 
  * @see wicket.model.IModel
@@ -85,29 +112,32 @@ import wicket.Component;
  */
 public class PropertyModel extends AbstractPropertyModel
 {
-	/** Ognl expression for property access. */
+	private static final long serialVersionUID = 1L;
+
+	/** Property expression for property access. */
 	private final String expression;
 
 	/**
 	 * If this is set, this type is used for conversion instead of the type that
-	 * is figured out by Ognl. This can be especially usefull for when you have
-	 * a generic property (like Serializable myProp) that you want to be
-	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
-	 * string being compatible with the target property, and will then bypass
-	 * the converter. Hence, to force myProp being converted to and from and
-	 * integer, propertyType should be set to Integer.
+	 * is figured out by the property expression code. This can be especially
+	 * useful for when you have a generic property (like Serializable myProp)
+	 * that you want to be converted to a narrower type (e.g. an Integer). The
+	 * property expression code sees an incoming string being compatible with
+	 * the target property, and will then bypass the converter. Hence, to force
+	 * myProp being converted to and from an integer, propertyType should be set
+	 * to Integer.
 	 */
 	private final Class propertyType;
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the
-	 * given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
+	 * property expression that works on the given model. Additional formatting
+	 * will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
 	 * @param expression
-	 *            Ognl expression for property access
+	 *            Property expression for property access
 	 */
 	public PropertyModel(final Object modelObject, final String expression)
 	{
@@ -115,22 +145,23 @@ public class PropertyModel extends AbstractPropertyModel
 	}
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the
-	 * given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
+	 * property expression that works on the given model. Additional formatting
+	 * will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
 	 * @param expression
-	 *            Ognl expression for property access
+	 *            Property expression for property access
 	 * @param propertyType
 	 *            The type to be used for conversion instead of the type that is
-	 *            figured out by Ognl. This can be especially usefull for when
-	 *            you have a generic property (like Serializable myProp) that
-	 *            you want to be converted to a narrower type (e.g. an Integer).
-	 *            Ognl sees an incoming string being compatible with the target
+	 *            figured out by the property expression code. This can be
+	 *            especially useful for when you have a generic property (like
+	 *            Serializable myProp) that you want to be converted to a
+	 *            narrower type (e.g. an Integer). The property expression code
+	 *            sees an incoming string being compatible with the target
 	 *            property, and will then bypass the converter. Hence, to force
-	 *            myProp being converted to and from and integer, propertyType
+	 *            myProp being converted to and from an integer, propertyType
 	 *            should be set to Integer.
 	 */
 	public PropertyModel(final Object modelObject, final String expression, Class propertyType)
@@ -145,14 +176,16 @@ public class PropertyModel extends AbstractPropertyModel
 	 */
 	public String toString()
 	{
-		return "[PropertyModel super = " + super.toString() + ", expression = " + expression
-				+ ", propertyType = " + propertyType + "]";
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":expression=[").append(expression).append("]");
+		sb.append(":propertyType=[").append(propertyType).append("]");
+		return sb.toString();
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#ognlExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
-	protected String ognlExpression(Component component)
+	protected String propertyExpression(Component component)
 	{
 		return expression;
 	}

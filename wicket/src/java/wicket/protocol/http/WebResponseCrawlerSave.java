@@ -17,14 +17,11 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import wicket.PageParameters;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
@@ -37,17 +34,13 @@ import wicket.util.value.ValueMap;
  */
 public class WebResponseCrawlerSave extends WebResponse
 {
-    /** Logger */
-    private static Log log = LogFactory.getLog(WebResponseCrawlerSave.class);
-
 	/**
 	 * Constructor.
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponseCrawlerSave(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponseCrawlerSave(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
@@ -96,12 +89,12 @@ public class WebResponseCrawlerSave extends WebResponse
 	{
 	    final ValueMap param = new ValueMap(queryString, "&");
 	    
-	    final String bookmarkablePage = param.getString("bookmarkablePage");
+	    final String bookmarkablePage = param.getString(PageParameters.BOOKMARKABLE_PAGE);
 	    if (bookmarkablePage != null)
 	    {
 	        String url = "/" + Strings.replaceAll(bookmarkablePage, ".", "/") + ".wic";
 	        
-	        param.remove("bookmarkablePage");
+	        param.remove(PageParameters.BOOKMARKABLE_PAGE);
 	        if (param.size() > 0)
 	        {
 	            char separator = '?';

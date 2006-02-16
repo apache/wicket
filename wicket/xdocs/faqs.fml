@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <faqs title="Frequently Asked Questions">
-
 	<part id="general-questions">
 		<title>General Questions</title>
 		<faq id="why-wicket">
@@ -66,6 +65,62 @@
 					And finally <a href="http://article.gmane.org/gmane.comp.java.wicket.devel/4011">most
 					Wicket users</a> prefer mailinglists over discussion forums. (Check out the votes in
 					the linked thread).
+				</p>
+			</answer>
+		</faq>
+		<faq id="why-no-tiger">
+			<question>Why doesn't Wicket use Java 5?</question>
+			<answer>
+				<p>
+					We strive to make Wicket available for the largest possible number of developers. This
+					means that we have to take into account those developers that don't have the luxury of
+					running their application servers on Java 5. Many shops don't run on Java 5 yet. We would
+					be doing ourselves and our users a great disservice when we would target Java 5 as our
+					base platform.
+				</p>
+				<p>
+					As several members of our community have pointed out, there is a code converter for 
+					running Java 5 code on a Java 1.4 runtime, <a href="http://retroweaver.sf.net">RetroWeaver</a>.
+					Even though it is a remarkable product, and probably works flawlessly, we, the
+					Wicket core team, can't support using such a tool on a framework. Debugging web applications
+					is already a very complex thing to do, and when we introduce such an unknown component (or
+					to be more precise: 2 components), bug finding becomes even harder. Furthermore, some clients 
+					of our users won't or can't accept such retrofitted code.
+				</p>
+				<p>
+					Also note that RetroWeaver only takes your source code into consideration. The standard libraries, 
+					which are an integral part of a Java Runtime Environment, are not backported. For instance, Wicket
+					uses the 
+					<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">concurrent</a>
+					package of <a href="http://gee.cs.oswego.edu/dl">Doug Lea</a>. This package has been adopted
+					by the Java 5 runtime library. However the backport of this JDK 1.5 extension is not a 1-on-1
+					drop in library that makes our code ready for JDK 1.5. Java explicitly forbids that other than
+					the Java Runtime Library classes contribute to the <code>java.xxx</code> namespace. So supplying
+					the backport with Wicket will <em>not</em> solve our problem.
+				</p>
+				<p>
+					Please keep in mind that we <em>do</em> see the benefits of using Java 5. We like annotations, generics,
+					autoboxing, removing the need for concurrent.jar, etc. But we have to look at the world around us,
+					and that world is unfortunately not using Java 5.
+				</p>
+			</answer>
+		</faq>
+		<faq id="when-tiger">
+			<question>When will Wicket use Java 5?</question>
+			<answer>
+				<p>
+					Basically a large part of the answer is: when the majority of our customers can run their web 
+					applications on Java 5. As IBM WebSphere is one of the leading application servers, having Java 
+					5 support for WebSphere application server is one condition.
+				</p>
+				<p>
+					Furthermore, upgrading to Java 5 will break a lot of stuff, so this will be scheduled for a major 
+					release. At the moment this is scheduled for Wicket 2.
+				</p>
+				<p>
+					We would like to give other functional requirements a higher priority, like AJAX and Portlet support,
+					as those will help <em>all</em> users of Wicket. So first Wicket 1.1 and 1.2 will see the light of day,
+					after that we will see what needs to be done.
 				</p>
 			</answer>
 		</faq>

@@ -19,13 +19,32 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
-import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
 /**
  * A choice implemented as a dropdown menu/list.
- * TODO elaborate with an example
+ * <p>
+ * Java:
+ * <pre>
+ * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+ *
+ *	// Add a dropdown choice component that uses Input's 'site' property to designate the
+ *	// current selection, and that uses the SITES list for the available options.
+ *	// Note that when the selection is null, Wicket will lookup a localized string to
+ *	// represent this null with key: "id + '.null'". In this case, this is 'site.null'
+ *	// which can be found in DropDownChoicePage.properties
+ *	form.add(new DropDownChoice("site", SITES));
+ * </pre>
+ * HTML:
+ * <pre>
+ *	&lt;select wicket:id="site"&gt;
+ *		&lt;option&gt;site 1&lt;/option&gt;
+ *		&lt;option&gt;site 2&lt;/option&gt;
+ *	&lt;/select&gt;
+ * </pre>
+ * </p>
  * 
  * <p>
  * You can can extend this class and override method wantOnSelectionChangedNotifications()
@@ -38,6 +57,8 @@ import wicket.model.IModel;
  */
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
@@ -135,11 +156,19 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		if (wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = urlFor(IOnChangeListener.class);
+			final String url = urlFor(IOnChangeListener.INTERFACE);
 
-			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onChange", "location.href='" + url + "&" + getPath()
-					+ "=' + this.options[this.selectedIndex].value;");
+			try
+			{
+				Form form = getForm();
+				tag.put("onChange", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onChange", "location.href='" + url + "&" + getInputName()
+						+ "=' + this.options[this.selectedIndex].value;");
+			}
 		}
 
 		super.onComponentTag(tag);
@@ -174,11 +203,5 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }

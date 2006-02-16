@@ -79,7 +79,7 @@ public class WicketParamTest extends TestCase
 		System.out.println("=== " + pageClass.getName() + " ===");
 		
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(pageClass);
+		application.setHomePage(pageClass);
 
 		// Do the processing
 		application.setupRequestAndResponse();
@@ -87,7 +87,7 @@ public class WicketParamTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		//System.out.println(document);
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}

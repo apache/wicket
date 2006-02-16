@@ -119,6 +119,25 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:message'
+	 */
+	public final boolean isMessageTag()
+	{
+		return "message".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * 
+	 * @param wicketNamespace The wicket namespace defined by the markup
+	 * @return True if &lt;wicket:fragment&gt;
+	 */
+	public final boolean isFragementTag(final String wicketNamespace)
+	{
+		return ("fragment".equalsIgnoreCase(getName())
+				&& (getNamespace() != null) 
+				&& getNamespace().equals(wicketNamespace));
+	}
+	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
 	 * 

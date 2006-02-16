@@ -17,14 +17,9 @@
  */
 package wicket.util.value;
 
-import java.io.Serializable;
-
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.string.IStringIterator;
@@ -55,23 +50,21 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap implements Map, Serializable
+public class ValueMap extends HashMap
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 	
+	private static final long serialVersionUID = 1L;
+	
 	/** True if this value map has been made immutable. */
 	private boolean immutable = false;
-
-	/** The underlying map. */
-	private Map map;
 
 	/**
 	 * Constructs empty value map.
 	 */
 	public ValueMap()
 	{
-		this.map = new HashMap();
 	}
 
 	/**
@@ -82,7 +75,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public ValueMap(final Map map)
 	{
-		this.map = new HashMap(map);
+		super.putAll(map);
 	}
 
 	/**
@@ -108,9 +101,6 @@ public class ValueMap implements Map, Serializable
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
-		// Create empty map
-		this.map = new HashMap();
-
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
@@ -142,39 +132,20 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final void clear()
 	{
-		map.clear();
+		checkMutability();
+		super.clear();
 	}
 
 	/**
-	 * @see java.util.Map#containsKey(java.lang.Object)
+	 * Gets a boolean value by key.
+	 *
+	 * @param key The key
+	 * @return The value
+	 * @throws StringValueConversionException
 	 */
-	public boolean containsKey(final Object key)
+	public final boolean getBoolean(final String key) throws StringValueConversionException
 	{
-		return map.containsKey(key);
-	}
-
-	/**
-	 * @see java.util.Map#containsValue(java.lang.Object)
-	 */
-	public final boolean containsValue(final Object value)
-	{
-		return map.containsValue(value);
-	}
-
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public final Set entrySet()
-	{
-		return map.entrySet();
-	}
-
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(final Object key)
-	{
-		return map.get(key);
+		return getStringValue(key).toBoolean();
 	}
 
 	/**
@@ -272,8 +243,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final String getString(final String key)
 	{
-		final Object o = getStringValue(key);
-
+		final Object o = get(key);
 		if (o == null)
 		{
 			return null;
@@ -293,7 +263,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public StringValue getStringValue(final String key)
 	{
-		return StringValue.valueOf(get(key));
+		return StringValue.valueOf(getString(key));
 	}
 
 	/**
@@ -310,19 +280,12 @@ public class ValueMap implements Map, Serializable
 	}
 
 	/**
-	 * @see java.util.Map#isEmpty()
+	 * Gets whether this value map is made immutable.
+	 * @return whether this value map is made immutable
 	 */
-	public final boolean isEmpty()
+	public final boolean isImmutable()
 	{
-		return map.isEmpty();
-	}
-
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public final Set keySet()
-	{
-		return map.keySet();
+		return immutable;
 	}
 
 	/**
@@ -333,11 +296,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final void makeImmutable()
 	{
-		if (!immutable)
-		{
-			map = Collections.unmodifiableMap(map);
-			immutable = true;
-		}
+		this.immutable = true;
 	}
 
 	/**
@@ -345,15 +304,17 @@ public class ValueMap implements Map, Serializable
 	 */
 	public Object put(final Object key, final Object value)
 	{
-		return map.put(key, value);
+		checkMutability();
+		return super.put(key, value);
 	}
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map t)
+	public void putAll(final Map map)
 	{
-		map.putAll(t);
+		checkMutability();
+		super.putAll(map);
 	}
 
 	/**
@@ -361,15 +322,8 @@ public class ValueMap implements Map, Serializable
 	 */
 	public Object remove(final Object key)
 	{
-		return map.remove(key);
-	}
-
-	/**
-	 * @see java.util.Map#size()
-	 */
-	public final int size()
-	{
-		return map.size();
+		checkMutability();
+		return super.remove(key);
 	}
 
 	/**
@@ -388,23 +342,27 @@ public class ValueMap implements Map, Serializable
 	 */
 	public String toString()
 	{
-		final StringList list = new StringList();
-
-		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
+		final StringBuffer buffer = (StringBuffer)new StringBuffer();
+		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
 		{
-			final String key = (String)iterator.next();
-
-			list.add(key + " = \"" + getString(key) + "\"");
+			Map.Entry entry = (Map.Entry)iterator.next();
+			buffer.append(entry.getKey() + " = \"" + entry.getValue() + "\"");
+			if (iterator.hasNext())
+			{
+				buffer.append(' ');
+			}
 		}
-
-		return list.join(" ");
+		return buffer.toString();
 	}
-
+	
 	/**
-	 * @see java.util.Map#values()
+	 * Throw exception if map is immutable.
 	 */
-	public final Collection values()
+	private final void checkMutability()
 	{
-		return map.values();
+		if (immutable)
+		{
+			throw new UnsupportedOperationException("Map is immutable");
+		}
 	}
 }

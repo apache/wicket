@@ -30,9 +30,11 @@ import wicket.util.string.Strings;
  */
 public class RequiredValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Singleton instance */
 	private static final RequiredValidator instance = new RequiredValidator();
-	
+
 	/**
 	 * @return Instance of required validator
 	 */
@@ -40,25 +42,31 @@ public class RequiredValidator extends StringValidator
 	{
 		return instance;
 	}
-	
+
 	/**
-	 * Private constructor to force use of static singleton accessor method.
+	 * Protectected constructor to force use of static singleton accessor
+	 * method. Or override it to implement resourceKey(Component)
 	 */
-	private RequiredValidator()
+	protected RequiredValidator()
 	{
 	}
-	
+
 	/**
 	 * Validates whether the input value is not-null or empty.
-	 *
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * 
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+	 *      java.lang.String)
 	 */
-	public void onValidate(FormComponent formComponent, String value)
+	public final void onValidate(final FormComponent formComponent, final String value)
 	{
-		// Check value
-		if (Strings.isEmpty(value))
+		// Check value only if form component can take on a null value
+		if (formComponent.isInputNullable())
 		{
-			error(formComponent);
+			// Check value
+			if (Strings.isEmpty(value))
+			{
+				error(formComponent);
+			}
 		}
 	}
 

@@ -19,8 +19,8 @@ package wicket.markup.html.panel;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.parser.XmlTag;
+import wicket.markup.html.OpenWebMarkupContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IModel;
 
 /**
@@ -48,10 +48,13 @@ import wicket.model.IModel;
  * </pre>
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
-public class Panel extends WebMarkupContainer
+public class Panel extends OpenWebMarkupContainer
 {
-    /**
+	private static final long serialVersionUID = 1L;
+	
+	/**
      * @see wicket.Component#Component(String)
      */
     public Panel(final String id)
@@ -68,57 +71,26 @@ public class Panel extends WebMarkupContainer
     }    
 
     /**
-     * Renders this component.
+     * 
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected final void onRender()
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        // Render the tag that included this html compoment
-        final MarkupStream markupStream = findMarkupStream();
-
-        // True if our panel is referenced by <wicket:panel>
-        final boolean atOpenTag = markupStream.atOpenTag();
-
-        // In order to be html compliant (though we are xhtml compliant already) 
-        // and even more intuitive, we open up the tag, change it from open-close to
-        // open, the panel now becomes the tag body and we'll close it manually
-        // later.
-        final ComponentTag openTag = markupStream.getTag().mutable();
-        openTag.setType(XmlTag.OPEN);
-        if (getRenderBodyOnly() == false)
-        {
-            renderComponentTag(openTag);
-        }
-
         // Render the associated markup
         renderAssociatedMarkup("panel",
                 "Markup for a panel component has to contain part '<wicket:panel>'");
-        
-        if (getRenderBodyOnly() == false)
-        {
-	        // Close the manually opened panel tag.
-	        getResponse().write(openTag.syntheticCloseTagString());
-        }
-        
-        // Skip opening tag
-		markupStream.next();
-		
-        // If we are at an open tag, then there is nested preview markup
-        if (atOpenTag)
-        {
-			// Skip any raw markup in the body
-			markupStream.skipRawMarkup();
-			
-			// Open tag must have close tag
-			if (!markupStream.atCloseTag())
-			{
-				// There must be a component in this discarded body
-				markupStream
-						.throwMarkupException("Expected close tag.  Possible attempt to embed component(s) "
-								+ "in the body of a component which discards its body");
-			}
-	        
-	        // Skip closing tag
-			markupStream.next();
-        }
+
+        super.onComponentTagBody(markupStream, openTag);
+    }
+
+    /**
+     * Check the associated markup file for a wicket header tag
+     * 
+     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+     */
+    public void renderHead(HtmlHeaderContainer container)
+    {
+    	this.renderHeadFromAssociatedMarkupFile(container);
+    	super.renderHead(container);
     }
 }

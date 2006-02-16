@@ -38,10 +38,12 @@ public abstract class ListenerSet
 	 * 
 	 * @param listener
 	 *            The listener to add
+	 * @return  <tt>true</tt> if the set did not already contain the specified
+     * listener.
 	 */
-	public void add(final IListener listener)
+	public boolean add(final IListener listener)
 	{
-		listeners.add(listener);
+		return listeners.add(listener);
 	}
 
 	/**

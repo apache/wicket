@@ -38,13 +38,12 @@ public abstract class WicketParamListView extends ListView
         super(id, list);
     }
 
-    /* (non-Javadoc)
-	 * @see wicket.markup.html.list.ListView#onRender()
-	 */
-	protected void onRender()
+    /**
+     * 
+     * @see wicket.Component#onRender(wicket.markup.MarkupStream)
+     */
+	protected void onRender(final MarkupStream markupStream)
 	{
-		final MarkupStream markupStream = findMarkupStream();
-		
 	    try
 	    {
 	        ComponentTag tag = (ComponentTag)markupStream.get();
@@ -54,8 +53,6 @@ public abstract class WicketParamListView extends ListView
 	    {
 	        // ignore
 	    }
-	    
-		// TODO Auto-generated method stub
-		super.onRender();
+		super.onRender(markupStream);
 	}
 }

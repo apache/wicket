@@ -19,7 +19,9 @@ package wicket;
 
 import java.io.Serializable;
 
+import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
@@ -44,7 +46,7 @@ import wicket.util.value.ValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link wicket.Component#add(AttributeModifier)}method after the component
+ * {@link wicket.Component#add(AttributeModifier)} method after the component
  * has been constucted.
  * <p>
  * It is possible to create new subclasses of AttributeModifier by overriding
@@ -63,11 +65,18 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * @author Martijn Dashorst
+ * @author Ralf Ebert
  */
-public class AttributeModifier implements Serializable
+public class AttributeModifier extends AbstractBehavior implements Serializable
 {
-	/** The next attribute modifier in any chain */
-	AttributeModifier next;
+	/** Marker value to have an attribute without a value added. */
+	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";
+
+	/** Marker value to have an attribute without a value removed. */
+	public static final String VALUELESS_ATTRIBUTE_REMOVE = "VA_REMOVE";
+	
+	private static final long serialVersionUID = 1L;
 
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
@@ -139,10 +148,6 @@ public class AttributeModifier implements Serializable
 		{
 			throw new IllegalArgumentException("Attribute parameter cannot be null");
 		}
-		if (replaceModel == null)
-		{
-			throw new IllegalArgumentException("ReplaceModel parameter cannot be null");
-		}
 
 		this.attribute = attribute;
 		this.pattern = pattern;
@@ -170,6 +175,18 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
+	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
+	 * be called from the outside
+	 */
+	public final void detachModel()
+	{
+		if (replaceModel != null)
+		{
+			replaceModel.detach();
+		}
+	}
+
+	/**
 	 * Checks whether this attribute modifier is enabled or not.
 	 * 
 	 * @return Whether enabled or not
@@ -177,6 +194,69 @@ public class AttributeModifier implements Serializable
 	public boolean isEnabled()
 	{
 		return enabled;
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
+	 *      wicket.markup.ComponentTag)
+	 */
+	public final void onComponentTag(Component component, ComponentTag tag)
+	{
+		if (tag.getType() != XmlTag.CLOSE)
+		{
+			replaceAttibuteValue(component, tag);
+		}
+	}
+
+	/**
+	 * Checks the given component tag for an instance of the attribute to modify
+	 * and if all criteria are met then replace the value of this attribute with
+	 * the value of the contained model object.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param tag
+	 *            The tag to replace the attribute value for
+	 */
+	public final void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	{
+		if (isEnabled())
+		{
+			final ValueMap attributes = tag.getAttributes();
+			final Object replacementValue = getReplacementOrNull(component);
+
+			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))
+			{
+				attributes.put(attribute, null);
+			}
+			else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacementValue))
+			{
+				attributes.remove(attribute);
+			}
+			else
+			{
+				if (attributes.containsKey(attribute))
+				{
+					final String value = toStringOrNull(attributes.get(attribute));
+					if (pattern == null || value.matches(pattern))
+					{
+						final String newValue = newValue(value, toStringOrNull(replacementValue));
+						if (newValue != null)
+						{
+							attributes.put(attribute, newValue);
+						}
+					}
+				}
+				else if (addAttributeIfNotPresent)
+				{
+					final String newValue = newValue(null, toStringOrNull(replacementValue));
+					if (newValue != null)
+					{
+						attributes.put(attribute, newValue);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -191,12 +271,34 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
-	 * Gets the value that should replace the current attribute value.
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled() + ", pattern="
+				+ pattern + ", replacementModel=" + replaceModel + "]";
+	}
+
+	/**
+	 * Gets the replacement model. Allows subclasses access to replace model.
+	 * 
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
+	/**
+	 * Gets the value that should replace the current attribute value. This
+	 * gives users the ultimate means to customize what will be used as the
+	 * attribute value. For instance, you might decide to append the replacement
+	 * value to the current instead of just replacing it as is Wicket's default.
 	 * 
 	 * @param currentValue
-	 *            The current attribute value
+	 *            The current attribute value. This value might be null!
 	 * @param replacementValue
-	 *            The replacement value
+	 *            The replacement value. This value might be null!
 	 * @return The value that should replace the current attribute value
 	 */
 	protected String newValue(final String currentValue, final String replacementValue)
@@ -204,48 +306,15 @@ public class AttributeModifier implements Serializable
 		return replacementValue;
 	}
 
-	/**
-	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
-	 * be called from the outside
-	 */
-	final void detachModel()
+	/* gets replacement with null check. */
+	private Object getReplacementOrNull(final Component component)
 	{
-		replaceModel.detach();
+		return (replaceModel != null) ? replaceModel.getObject(component) : null;
 	}
 
-	/**
-	 * Checks the given component tag for an instance of the attribute to modify
-	 * and if all criteria are met then replace the value of this attribute with
-	 * the value of the contained model object.
-	 * 
-	 * @param component
-	 *            The component
-	 * @param tag
-	 *            The tag to replace the attribute value for
-	 */
-	final void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	/* gets replacement as a string with null check. */
+	private String toStringOrNull(final Object replacementValue)
 	{
-		if (isEnabled())
-		{
-			final ValueMap attributes = tag.getAttributes();
-			final Object replacementValue = replaceModel.getObject(component);
-
-			// Only do something when we have a replacement
-			if (replacementValue != null)
-			{
-				if (attributes.containsKey(attribute))
-				{
-					final String value = attributes.get(attribute).toString();
-					if (pattern == null || value.matches(pattern))
-					{
-						attributes.put(attribute, newValue(value, replacementValue.toString()));
-					}
-				}
-				else if (addAttributeIfNotPresent)
-				{
-					attributes.put(attribute, newValue(null, replacementValue.toString()));
-				}
-			}
-		}
+		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
 }

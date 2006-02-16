@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.PageParameters;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
@@ -39,7 +41,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class WebRequestCrawlerSave extends WebRequest
+public class WebRequestCrawlerSave extends ServletWebRequest
 {
 	/** URL querystring decoded */
 	private final String queryString;
@@ -60,9 +62,7 @@ public class WebRequestCrawlerSave extends WebRequest
 	{
 		super(request);
 
-		String servletPath = request.getServletPath();
 		queryString = request.getQueryString();
-		String contextPath = request.getContextPath();
 		this.path = request.getPathInfo();
 		
 		if (this.path == null)
@@ -76,7 +76,7 @@ public class WebRequestCrawlerSave extends WebRequest
 			
 			path = Strings.replaceAll(path, "/", ".");
 			this.parameters = new ValueMap();
-			this.parameters.put("bookmarkablePage", path);
+			this.parameters.put(PageParameters.BOOKMARKABLE_PAGE, path);
 			
 			this.path = null;
 		}

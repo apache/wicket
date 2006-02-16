@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.15 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,19 +18,24 @@
 package wicket.markup.html;
 
 import wicket.Component;
-import wicket.IEventRequestHandler;
+import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see WebMarkupContainer or use Panel if the
- * component will have its own associated markup.
+ * you need to support nested components, see WebMarkupContainer or use Panel if
+ * the component will have its own associated markup.
  * 
  * @see wicket.markup.html.WebMarkupContainer
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
-public class WebComponent extends Component implements IHeaderContributor
+public class WebComponent extends Component
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -48,32 +53,11 @@ public class WebComponent extends Component implements IHeaderContributor
 	}
 
 	/**
-	 * Print to the web response what ever the component wants
-	 * to contribute to the head section. Does nothing by default.
-	 *
-	 * @param container The HtmlHeaderContainer
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	public void printHead(final HtmlHeaderContainer container)
+	protected void onRender(final MarkupStream markupStream)
 	{
-		IEventRequestHandler[] handlers = getEventRequestHandlers();
-		if (handlers != null)
-		{
-			for (int i = 0; i < handlers.length; i++)
-			{
-				if (handlers[i] instanceof IHeaderContributor)
-				{
-					((IHeaderContributor)handlers[i]).printHead(container);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Renders this component.
-	 */
-	protected void onRender()
-	{
-		renderComponent(findMarkupStream());
+		renderComponent(markupStream);
 	}
 }

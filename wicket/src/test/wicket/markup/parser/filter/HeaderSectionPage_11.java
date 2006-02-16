@@ -18,7 +18,6 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -29,11 +28,12 @@ import wicket.markup.html.WebPage;
  */
 public class HeaderSectionPage_11 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public HeaderSectionPage_11(final PageParameters parameters) 
+	public HeaderSectionPage_11() 
 	{
 	    add(new HeaderSectionMyLabel2("label", "mein Label"));
     }

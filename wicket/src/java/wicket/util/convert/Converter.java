@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import ognl.OgnlOps;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -33,6 +32,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
+import wicket.util.lang.Objects;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -69,6 +69,8 @@ import wicket.util.convert.converters.StringConverter;
  */
 public final class Converter implements IConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
 
@@ -77,15 +79,19 @@ public final class Converter implements IConverter
 	 */
 	private IConverter defaultConverter = new IConverter()
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
-		 * Converts the given value object to class c using OgnlOps.
+		 * Converts the given value object to class c.
 		 * 
 		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 		 *      java.lang.Class)
 		 */
 		public Object convert(Object value, Class c)
 		{
-			return OgnlOps.convertValue(value, c);
+			if(value == null || "".equals(value)) return null;
+			
+			return Objects.convertValue(value, c);
 		}
 
 		public Locale getLocale()
@@ -169,7 +175,7 @@ public final class Converter implements IConverter
 		// Class cannot be null
 		if (c == null)
 		{
-			throw new NullPointerException("Class cannot be null");
+			throw new IllegalArgumentException("Class cannot be null");
 		}
 
 		// Catch all cases where value is already the right type
@@ -257,11 +263,11 @@ public final class Converter implements IConverter
 	{
 		if (converter == null)
 		{
-			throw new NullPointerException("Converter cannot be null");
+			throw new IllegalArgumentException("Converter cannot be null");
 		}
 		if (c == null)
 		{
-			throw new NullPointerException("Class cannot be null");
+			throw new IllegalArgumentException("Class cannot be null");
 		}
 		return (ITypeConverter)classToConverter.put(c, converter);
 	}

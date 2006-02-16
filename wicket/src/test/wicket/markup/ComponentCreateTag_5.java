@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -29,11 +28,12 @@ import wicket.markup.html.WebPage;
  */
 public class ComponentCreateTag_5 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public ComponentCreateTag_5(final PageParameters parameters) 
+	public ComponentCreateTag_5() 
 	{
     }
 }

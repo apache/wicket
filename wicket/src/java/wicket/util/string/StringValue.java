@@ -47,6 +47,8 @@ import wicket.util.time.Time;
  */
 public class StringValue implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
 	
@@ -62,7 +64,7 @@ public class StringValue implements Serializable
 	 */
 	public static StringValue repeat(final int times, final char c)
 	{
-		final StringBuffer buffer = new StringBuffer(times);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(times);
 
 		for (int i = 0; i < times; i++)
 		{
@@ -81,7 +83,7 @@ public class StringValue implements Serializable
 	 */
 	public static StringValue repeat(final int times, final String s)
 	{
-		final StringBuffer buffer = new StringBuffer(times);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(times);
 
 		for (int i = 0; i < times; i++)
 		{
@@ -202,7 +204,7 @@ public class StringValue implements Serializable
 	 *            A string buffer
 	 * @return String value
 	 */
-	public static StringValue valueOf(final StringBuffer buffer)
+	public static StringValue valueOf(final AppendingStringBuffer buffer)
 	{
 		return valueOf(buffer.toString());
 	}
