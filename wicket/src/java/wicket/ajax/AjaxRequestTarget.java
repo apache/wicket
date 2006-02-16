@@ -17,6 +17,7 @@
  */
 package wicket.ajax;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.WebResponse;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A request target that produces ajax response envelopes used on the client
@@ -58,6 +60,12 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final List/* <Component> */components = new ArrayList();
 
 	private final List/* <String> */javascripts = new ArrayList();
+
+	/**
+	 * create a response that will escape output to make it safe to use inside a
+	 * CDATA block
+	 */
+	private final EncodingResponse tempResponse = new EncodingResponse(new Wicket1Encoder());
 
 	/**
 	 * Constructor
@@ -153,11 +161,23 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondInvocation(final Response response, final String js)
 	{
-		response.write("<evaluate>");
+		tempResponse.reset();
+		tempResponse.write(js);
+
+		response.write("<evaluate");
+		if (tempResponse.isContentsEncoded())
+		{
+			response.write(" encoding=\"");
+			response.write(tempResponse.getEncodingName());
+			response.write("\"");
+		}
+		response.write(">");
 		response.write("<![CDATA[");
-		response.write(js);
+		response.write(tempResponse.getContents());
 		response.write("]]>");
 		response.write("</evaluate>");
+		
+		tempResponse.reset();
 	}
 
 	/**
@@ -167,11 +187,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondComponent(final Response response, final Component component)
 	{
-		String id=component.getMarkupId();
+		String id = component.getMarkupId();
 
-		response.write("<component id=\"" + id + "\">");
-
-		response.write("<![CDATA[");
+		// substitute our encoding response for the real one so we can capture
+		// component's markup in a manner safe for transport inside CDATA block
+		final Response originalResponse = response;
+		tempResponse.reset();
+		RequestCycle.get().setResponse(tempResponse);
 
 		// Initialize temporary variables
 		Page page = component.getPage();
@@ -193,9 +215,25 @@ public class AjaxRequestTarget implements IRequestTarget
 			page.endComponentRender(component);
 		}
 
-		response.write("]]>");
+		// restore original response
+		RequestCycle.get().setResponse(originalResponse);
 
-		response.write("</component>");
+
+		response.write("<component id=\"" + id + "\" ");
+		if (tempResponse.isContentsEncoded())
+		{
+			response.write(" encoding=\"");
+			response.write(tempResponse.getEncodingName());
+			response.write("\" ");
+		}
+		response.write("><![CDATA[");
+
+
+		response.write(tempResponse.getContents());
+
+		response.write("]]></component>");
+		
+		tempResponse.reset();
 	}
 
 	/**
@@ -242,7 +280,155 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[AjaxRequestTarget@" + hashCode() + " components [" + components + "], javascript ["
-				+ javascripts + "]";
+		return "[AjaxRequestTarget@" + hashCode() + " components [" + components
+				+ "], javascript [" + javascripts + "]";
+	}
+
+	private static interface IMarkupEncoder
+	{
+		/**
+		 * @return name of encoding. <b>NOTE:</b> return name must be a valid
+		 *         xml attribute value.
+		 */
+		public String getEncoderName();
+
+		/**
+		 * @param str
+		 * @return true if str needs to be encoded, false otherwise
+		 */
+		public boolean needsEncoding(String str);
+
+		/**
+		 * @param str
+		 * @return encoded version of str
+		 */
+		public String encode(String str);
+
+	}
+
+	/**
+	 * IMarkupEncoder that ensures the markup is safe to use inside a CDATA
+	 * block. This means escaping the CDATA termination sequence ']]>', this
+	 * encoder does that by escaping all ']' with ']^'
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static final class Wicket1Encoder implements IMarkupEncoder
+	{
+		private final String ENCODER_NAME = "wicket1";
+
+		private final char target = ']';
+		private final CharSequence targetSeq = "]";
+		private final CharSequence replacementSeq = "]^";
+
+
+		/**
+		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#getEncoderName()
+		 */
+		public String getEncoderName()
+		{
+			return ENCODER_NAME;
+		}
+
+		/**
+		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#needsEncoding(java.lang.String)
+		 */
+		public boolean needsEncoding(String str)
+		{
+			return str.indexOf(target) >= 0;
+		}
+
+		/**
+		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#encode(java.lang.String)
+		 */
+		public String encode(String str)
+		{
+			return str.replace(targetSeq, replacementSeq);
+		}
+
+	}
+
+
+	/**
+	 * Response that uses an encoder to encode its contents
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static final class EncodingResponse extends Response
+	{
+
+		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
+		private boolean escaped = false;
+		private final IMarkupEncoder encoder;
+
+
+		/**
+		 * Construct.
+		 * 
+		 * @param encoder
+		 */
+		public EncodingResponse(IMarkupEncoder encoder)
+		{
+			this.encoder = encoder;
+		}
+
+		/**
+		 * @see wicket.Response#write(java.lang.String)
+		 */
+		public void write(String string)
+		{
+			if (encoder.needsEncoding(string))
+			{
+				string = encoder.encode(string);
+				escaped = true;
+			}
+
+			buffer.append(string);
+		}
+
+		/**
+		 * Resets the response to a clean state so it can be reused to save on
+		 * garbage.
+		 */
+		public void reset()
+		{
+			buffer.clear();
+			escaped = false;
+
+		}
+
+		/**
+		 * @return true if any escaping has been performed, false otherwise
+		 */
+		public boolean isContentsEncoded()
+		{
+			return escaped;
+		}
+
+		/**
+		 * @return contents of the response
+		 */
+		public String getContents()
+		{
+			return buffer.toString();
+		}
+
+		/**
+		 * NOTE: this method is not supported
+		 * 
+		 * @see wicket.Response#getOutputStream()
+		 */
+		public OutputStream getOutputStream()
+		{
+			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
+		}
+
+		/**
+		 * @return the name of encoder used
+		 */
+		public String getEncodingName()
+		{
+			return encoder.getEncoderName();
+		}
 	}
 }
