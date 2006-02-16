@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -177,9 +177,12 @@ public class Localizer
 			id += ":" + component.getId();
 		}
 
-		// The cached key value, NULL can be returned so that we don't search a second time for the same id.
-		// TODO juergen? Is this cached value not totally depended on the searchStack? (getComponentStack(component))
-		// Depending on where the component is used different values could be returned?
+		// The cached key value, NULL can be returned so that we don't search a
+		// second time for the same id.
+		// TODO juergen? Is this cached value not totally depended on the
+		// searchStack? (getComponentStack(component))
+		// Depending on where the component is used different values could be
+		// returned?
 		String string = getCachedValue(id);
 
 		// If not found in the cache
@@ -213,14 +216,13 @@ public class Localizer
 				this.cachedValues.put(id, NULL);
 			}
 		}
-		
+
 		// Check now if the string was NULL (not found the last time)
-		if(string == NULL)
+		if (string == NULL)
 		{
 			string = null;
 		}
-
-		if (string != null)
+		else if (string != null)
 		{
 			return substitutePropertyExpressions(component, string, model);
 		}
@@ -324,11 +326,17 @@ public class Localizer
 		// If value is cached already ...
 		String id = createCacheId(componentClass, locale, style, key);
 
-		// The cached key value, NULL can be returned so that we don't search a second time for the same id.
+		// The cached key value, NULL can be returned so that we don't search a
+		// second time for the same id.
 		String string = getCachedValue(id);
 
+		// Check now if the string was NULL (not found the last time)
+		if (string == NULL)
+		{
+			string = null;
+		}
 		// If not found in the cache
-		if (string == null)
+		else if (string == null)
 		{
 			string = traverseResourceLoaders(key, path, searchStack, locale, style);
 
@@ -344,8 +352,8 @@ public class Localizer
 				this.cachedValues.put(id, NULL);
 			}
 		}
-		// Check now if the string was NULL (not found the last time)
-		return string == NULL?null:string;
+
+		return string;
 	}
 
 	/**
@@ -384,7 +392,7 @@ public class Localizer
 			buffer.append(locale.getLanguage());
 			if (c || (l && v))
 			{
-				// This may just append '_' 
+				// This may just append '_'
 				buffer.append('_').append(locale.getCountry());
 			}
 			if (v && (l || c))
@@ -394,7 +402,7 @@ public class Localizer
 		}
 		buffer.append('.');
 		buffer.append(key);
-		
+
 		final String id = buffer.toString();
 		return id;
 	}
@@ -470,7 +478,7 @@ public class Localizer
 	private String substitutePropertyExpressions(final Component component, final String string,
 			final IModel model)
 	{
-		if (string != null && model != null)
+		if ((string != null) && (model != null))
 		{
 			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
 		}
