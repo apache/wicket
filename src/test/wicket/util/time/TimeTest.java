@@ -40,8 +40,8 @@ public final class TimeTest extends TestCase
 		final Time start = Time.now();
 
 		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
-		// from time to time.
-		Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
+		// from time to time.  I have seen this and it's very weird -- Jonathan
+		// Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
 
 		final Time birthday = Time.parseDate("1966.06.01");
 

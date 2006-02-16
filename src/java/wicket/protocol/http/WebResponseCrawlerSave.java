@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
 
-import wicket.PageParameters;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
@@ -89,12 +89,12 @@ public class WebResponseCrawlerSave extends WebResponse
 	{
 	    final ValueMap param = new ValueMap(queryString, "&");
 	    
-	    final String bookmarkablePage = param.getString(PageParameters.BOOKMARKABLE_PAGE);
+	    final String bookmarkablePage = param.getString(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 	    if (bookmarkablePage != null)
 	    {
 	        String url = "/" + Strings.replaceAll(bookmarkablePage, ".", "/") + ".wic";
 	        
-	        param.remove(PageParameters.BOOKMARKABLE_PAGE);
+	        param.remove(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 	        if (param.size() > 0)
 	        {
 	            char separator = '?';

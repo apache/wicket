@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *	http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.protocol.http;
 
@@ -24,27 +23,32 @@ import wicket.markup.html.link.Link;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
- * Simple application that demonstrates the mock http application
- * code (and checks that it is working)
- *
+ * Simple application that demonstrates the mock http application code (and
+ * checks that it is working)
+ * 
  * @author Chris Turner
  */
-public class MockWebApplicationTest extends TestCase {
+public class MockWebApplicationTest extends TestCase
+{
 
 	private MockWebApplication application;
 
 	/**
 	 * Create the test.
-	 *
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
-	public MockWebApplicationTest(String name) {
+	public MockWebApplicationTest(String name)
+	{
 		super(name);
 	}
 
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception
+	{
 		super.setUp();
 		application = new MockWebApplication(null);
 		application.setHomePage(MockPage.class);
@@ -53,7 +57,8 @@ public class MockWebApplicationTest extends TestCase {
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception {
+	public void testRenderHomePage() throws Exception
+	{
 		// Do the processing
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
@@ -70,7 +75,8 @@ public class MockWebApplicationTest extends TestCase {
 	/**
 	 * @throws Exception
 	 */
-	public void testClickLink() throws Exception {
+	public void testClickLink() throws Exception
+	{
 		// Need to call the home page first
 		testRenderHomePage();
 
@@ -82,13 +88,14 @@ public class MockWebApplicationTest extends TestCase {
 		application.processRequestCycle();
 
 		// Check that redirect was set as expected and invoke it
-/*		
-		Assert.assertTrue("Response should be a redirect", application.getServletResponse().isRedirect());
-		String redirect = application.getServletResponse().getRedirectLocation();
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString(redirect);
-		application.processRequestCycle();
-*/
+		/*
+		 * Assert.assertTrue("Response should be a redirect",
+		 * application.getServletResponse().isRedirect()); String redirect =
+		 * application.getServletResponse().getRedirectLocation();
+		 * application.setupRequestAndResponse();
+		 * application.getServletRequest().setRequestToRedirectString(redirect);
+		 * application.processRequestCycle();
+		 */
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		Assert.assertTrue(validateDocument(document, 1));
@@ -98,15 +105,17 @@ public class MockWebApplicationTest extends TestCase {
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
 	}
 
-
 	/**
 	 * Helper method to validate the returned XML document.
-	 *
-	 * @param document The document
-	 * @param expectedLinkClickCount The number of times the link should have been clicked
+	 * 
+	 * @param document
+	 *            The document
+	 * @param expectedLinkClickCount
+	 *            The number of times the link should have been clicked
 	 * @return The validation result
 	 */
-	private boolean validateDocument(String document, int expectedLinkClickCount) {
+	private boolean validateDocument(String document, int expectedLinkClickCount)
+	{
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -117,7 +126,9 @@ public class MockWebApplicationTest extends TestCase {
 		Tag body = new Tag("body");
 		html.addExpectedChild(body);
 		Tag a = new Tag("a");
-		a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?wicket:interface=:[0-9]+:actionLink:[0-9]*:ILinkListener");
+		a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?"
+				+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME
+				+ "=:[0-9]+:actionLink:[0-9]*:ILinkListener");
 		a.addExpectedAttribute("wicket:id", "actionLink");
 		body.addExpectedChild(a);
 		a.addExpectedChild(new TextContent("Action link clicked "));
@@ -129,6 +140,4 @@ public class MockWebApplicationTest extends TestCase {
 
 		return validator.isDocumentValid(document);
 	}
-
-
 }
