@@ -2772,6 +2772,10 @@ public abstract class Component implements Serializable
 		String componentPath = parent.getPageRelativePath();
 		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
 		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+		if (relativePath.startsWith(":"))
+		{
+			relativePath = relativePath.substring(1);
+		}
 
 		int index = markupStream.findComponentIndex(relativePath, getId());
 		if (index == -1)
