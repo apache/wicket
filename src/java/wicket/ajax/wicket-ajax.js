@@ -106,14 +106,50 @@ function wicketAjaxProcess(envelope, successHandler) {
 
 function wicketAjaxProcessComponent(node) {
     var compId=node.getAttribute("id");
+    
     var text=node.firstChild.nodeValue;
+    
+    var encoding=node.getAttribute("encoding");
+    if (encoding!=null) {
+        text=wicketDecode(encoding, text);
+    }
     document.getElementById(compId).innerHTML=text;
 }
 
 function wicketAjaxProcessEvaluation(node) {
     var text=node.firstChild.nodeValue;
+
+    var encoding=node.getAttribute("encoding");
+    if (encoding!=null) {
+        text=wicketDecode(encoding, text);
+    }
+
     eval(text);
 }
+
+function wicketDecode(encoding, text) {
+    if (encoding=="wicket1") {
+        return wicketDecode1(text);
+    }
+}
+
+function wicketDecode1(text) {
+    return wicketReplaceAll(text, "]^", "]");
+}
+
+
+function wicketReplaceAll( str, from, to ) {
+    var idx = str.indexOf( from );
+
+
+    while ( idx > -1 ) {
+        str = str.replace( from, to );
+        idx = str.indexOf( from );
+    }
+
+    return str;
+}
+
 
 //FORM SERIALIZATION FUNCTIONS
 function wicketEncode(text) {

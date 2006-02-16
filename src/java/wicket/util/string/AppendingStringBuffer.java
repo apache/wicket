@@ -1502,4 +1502,11 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		}
 		return h;
 	}
+	
+	/**
+	 * Clears the buffer contents, but leaves the allocated size intact
+	 */
+	public void clear() {
+		count=0;
+	}
 }
