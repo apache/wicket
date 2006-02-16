@@ -17,9 +17,6 @@
  */
 package wicket.resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.util.value.ValueMap;
 
 /**
@@ -32,7 +29,7 @@ import wicket.util.value.ValueMap;
 public class Properties
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Properties.class);
+	// private static final Log log = LogFactory.getLog(Properties.class);
 
 	/** The resource key for the properties file */
 	private final String key;

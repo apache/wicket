@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.border;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -32,7 +29,7 @@ import wicket.protocol.http.MockHttpServletRequest;
  */
 public class BoxBorderTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(BoxBorderTest.class);
+	// private static Log log = LogFactory.getLog(BoxBorderTest.class);
 
 	/**
 	 * Create the test.

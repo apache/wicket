@@ -27,6 +27,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
@@ -116,7 +117,7 @@ public abstract class AbstractAjaxBehavior
 					+ " was not registered with this component: " + getComponent().toString());
 		}
 
-		return getComponent().urlFor(IBehaviorListener.INTERFACE) + "&behaviorId=" + index;
+		return getComponent().urlFor(IBehaviorListener.INTERFACE) + '&' + WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + '=' + index;
 	}
 
 	/**

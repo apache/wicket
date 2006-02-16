@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import wicket.Application;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.IStringIterator;
@@ -159,14 +160,13 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 */
 	private String rebuildUrl(String queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, "1=", "path=");
-	    queryString = Strings.replaceAll(queryString, "2=", "version=");
-	    queryString = Strings.replaceAll(queryString, "4=", "interface=IRedirectListener");
-	    queryString = Strings.replaceAll(queryString, "5=", "interface=IFormSubmitListener");
-	    queryString = Strings.replaceAll(queryString, "6=", "interface=IOnChangeListener");
-	    queryString = Strings.replaceAll(queryString, "7=", "interface=ILinkListener");
-	    queryString = Strings.replaceAll(queryString, "8=", "interface=");
-	    queryString = Strings.replaceAll(queryString, "9=", PageParameters.BOOKMARKABLE_PAGE+"=");
+	    queryString = Strings.replaceAll(queryString, "1=", WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
+	    queryString = Strings.replaceAll(queryString, "2=", WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener");
+	    queryString = Strings.replaceAll(queryString, "3=", WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener");
+	    queryString = Strings.replaceAll(queryString, "4=", WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener");
+	    queryString = Strings.replaceAll(queryString, "5=", WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener");
+	    queryString = Strings.replaceAll(queryString, "6=", WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=");
+	    queryString = Strings.replaceAll(queryString, "7=", PageParameters.BOOKMARKABLE_PAGE + "=");
 
 	    return queryString;
 	}

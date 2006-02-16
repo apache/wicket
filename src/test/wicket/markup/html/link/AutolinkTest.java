@@ -18,9 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 
 
@@ -31,7 +28,7 @@ import wicket.WicketTestCase;
  */
 public class AutolinkTest extends WicketTestCase 
 {
-	private static Log log = LogFactory.getLog(AutolinkTest.class);
+	// private static Log log = LogFactory.getLog(AutolinkTest.class);
 
     /**
      * Create the test.

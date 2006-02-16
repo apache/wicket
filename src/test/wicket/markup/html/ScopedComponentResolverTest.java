@@ -17,9 +17,6 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.markup.resolver.ScopedComponentResolver;
 
@@ -29,7 +26,7 @@ import wicket.markup.resolver.ScopedComponentResolver;
  */
 public class ScopedComponentResolverTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(ScopedComponentResolverTest.class);
+	// private static Log log = LogFactory.getLog(ScopedComponentResolverTest.class);
 
 	/**
 	 * Create the test.

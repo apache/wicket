@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.image;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.ResourceReference;
@@ -42,7 +39,7 @@ public class Image extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Log log = LogFactory.getLog(Image.class);
+	// private static final Log log = LogFactory.getLog(Image.class);
 	
 	/** The image resource this image component references */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);

@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
@@ -44,7 +41,7 @@ import wicket.settings.IResourceSettings;
 public final class WicketMessageTagHandler extends AbstractMarkupFilter
 {
 	/** Logging */
-	private final static Log log = LogFactory.getLog(WicketMessageTagHandler.class);
+	// private final static Log log = LogFactory.getLog(WicketMessageTagHandler.class);
 
 	/** TODO General: Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTR_NAME = "wicket:message";

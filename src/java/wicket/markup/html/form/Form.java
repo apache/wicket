@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -40,6 +39,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.FormSubmitInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
@@ -923,46 +923,18 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	// TODO Post 1.2: Remove this method?
 	private void dispatchEvent(final Page page, final String url)
 	{
-		RequestCycle requestCycle = RequestCycle.get();
-		String decodedUrl = requestCycle.getRequest().decodeURL(url);
-		int indexOfPath = decodedUrl.indexOf("path=");
-		int indexOfInterface = decodedUrl.indexOf("interface=");
-		if (indexOfPath != -1 && indexOfInterface != -1)
+		final RequestParameters requestParameters = getRequest().getRequestParameters();
+		final Component component = page.get(requestParameters.getComponentPath());
+		if (!component.isVisible())
 		{
-			indexOfPath += "path=".length();
-			indexOfInterface += "interface=".length();
-			int indexOfPathEnd = decodedUrl.indexOf("&", indexOfPath);
-			if (indexOfPathEnd == -1)
-			{
-				indexOfPathEnd = decodedUrl.length();
-			}
-			int indexOfInterfaceEnd = decodedUrl.indexOf("&", indexOfInterface);
-			if (indexOfInterfaceEnd == -1)
-			{
-				indexOfInterfaceEnd = decodedUrl.length();
-			}
-
-			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
-			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
-
-			final Component component = page.get(Strings.afterFirstPathComponent(path,
-					Component.PATH_SEPARATOR));
-
-			if (!component.isVisible())
-			{
-				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed");
-			}
-			final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
-			if (listener != null)
-			{
-				new FormSubmitInterfaceRequestTarget(page, component, listener)
-						.processEvents(requestCycle);
-			}
+			throw new WicketRuntimeException(
+					"Calling listener methods on components that are not visible is not allowed");
 		}
-		else
+		final RequestListenerInterface listener = requestParameters.getInterface();
+		if (listener != null)
 		{
-			// log warning??
+			new FormSubmitInterfaceRequestTarget(page, component, listener)
+					.processEvents(getRequestCycle());
 		}
 	}
 

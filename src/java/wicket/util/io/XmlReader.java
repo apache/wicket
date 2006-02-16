@@ -126,7 +126,6 @@ public final class XmlReader extends Reader
 
 		// Depending on the encoding determined from the markup-file, read
 		// the rest either with specific encoding or JVM default
-		final String markup;
 		if (this.encoding == null)
 		{
 			// Use JVM default

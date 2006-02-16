@@ -18,9 +18,6 @@
  */
 package wicket.markup.html.panel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 import wicket.markup.resolver.InlinePanelResolver;
@@ -33,7 +30,7 @@ import wicket.markup.resolver.InlinePanelResolver;
  */
 public class PanelTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(PanelTest.class);
+	// private static Log log = LogFactory.getLog(PanelTest.class);
 
 	/**
 	 * Create the test.

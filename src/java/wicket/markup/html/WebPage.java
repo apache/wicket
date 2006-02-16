@@ -17,9 +17,6 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Component;
 import wicket.Page;
 import wicket.PageMap;
@@ -58,7 +55,7 @@ import wicket.protocol.http.WebResponse;
 public class WebPage extends Page
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(WebPage.class);
+	// private static final Log log = LogFactory.getLog(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
 

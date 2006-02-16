@@ -19,9 +19,6 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
@@ -46,7 +43,7 @@ import wicket.markup.parser.XmlTag;
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(WicketTagIdentifier.class);
+	// private static final Log log = LogFactory.getLog(WicketTagIdentifier.class);
 
 	/** The current markup needed to get the markups namespace */
 	private final Markup markup;

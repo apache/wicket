@@ -17,9 +17,6 @@
  */
 package wicket.protocol.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IRequestCycleFactory;
 import wicket.Session;
 
@@ -31,7 +28,7 @@ import wicket.Session;
 public class WebSession extends Session
 {
 	/** log. careful, this log is used to trigger profiling too! */
-	private static Log log = LogFactory.getLog(WebSession.class);
+	// private static Log log = LogFactory.getLog(WebSession.class);
 
 	private static final long serialVersionUID = 1L;
 

@@ -19,9 +19,6 @@ package wicket.resource.loader;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Application;
 
 /**
@@ -38,7 +35,7 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 			IStringResourceLoader
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
+	// private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
 
 	/** The application we are loading for. */
 	private final Class clazz;

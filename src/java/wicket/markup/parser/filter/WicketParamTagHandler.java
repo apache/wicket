@@ -62,13 +62,6 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 
 	/** True, if wicket param tags shall be removed from output */
 	private boolean stripWicketTag = true;
-
-	/** 
-	 * The application settings required.
-	 * Note: you can rely on Application.get().getMarkupSettings() as reading
-	 * the markup happens in another thread due to ModificationWatcher. 
-	 */
-	private IMarkupSettings settings;
 	
 	/**
 	 * Construct.
