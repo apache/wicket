@@ -87,7 +87,7 @@ function wicketAjaxProcess(envelope, successHandler) {
     
     if (root==null||root.tagName!="ajax-response") {
         //TODO handle error properly
-        alert('error, ajas-response element not found');
+        alert('error, ajax-response element not found');
     }
     
     for (var i=0;i<root.childNodes.length;i++) {
