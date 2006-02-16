@@ -39,11 +39,15 @@ public abstract class Response
     /** Default encoding of output stream */
     private String defaultEncoding;
 
+    private final String lineSeparator;
+    
     /**
      * Construct.
      */
     public Response()
     {
+		lineSeparator = (String) java.security.AccessController.doPrivileged(
+	            new sun.security.action.GetPropertyAction("line.separator"));
     }
 
 	/**
@@ -212,4 +216,16 @@ public abstract class Response
 	 *            The string to write
 	 */
 	public abstract void write(final String string);
+
+	/**
+	 * Writes the given string to the Response subclass output destination and
+	 * appends a cr/nl depending on the OS
+	 * 
+	 * @param string
+	 */
+	public final void println(final String string)
+	{
+		write(string);
+		write(lineSeparator);
+	}
 }

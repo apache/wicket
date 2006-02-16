@@ -190,7 +190,7 @@ public abstract class AbstractAjaxBehavior
 		String url = RequestCycle.get().urlFor(ref);
 		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"");
 		response.write(url);
-		response.write("\"></script>\n");
+		response.println("\"></script>");
 	}
 
 	/**
