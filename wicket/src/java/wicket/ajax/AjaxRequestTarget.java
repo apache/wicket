@@ -318,8 +318,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		private final String ENCODER_NAME = "wicket1";
 
 		private final char target = ']';
-		private final CharSequence targetSeq = "]";
-		private final CharSequence replacementSeq = "]^";
+		private final String targetSeq = "]";
+		private final String replacementSeq = "]^";
 
 
 		/**
@@ -343,7 +343,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 */
 		public String encode(String str)
 		{
-			return str.replace(targetSeq, replacementSeq);
+			return str.replaceAll(targetSeq, replacementSeq);
 		}
 
 	}
