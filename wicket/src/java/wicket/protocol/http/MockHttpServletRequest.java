@@ -51,13 +51,13 @@ import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
 import wicket.PageMap;
-import wicket.PageParameters;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ILinkListener;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.lang.Classes;
 import wicket.util.value.ValueMap;
 
@@ -930,7 +930,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToBookmarkablePage(final Page page, final Map params)
 	{
 		parameters.putAll(params);
-		parameters.put(PageParameters.BOOKMARKABLE_PAGE, page.getClass().getName());
+		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass().getName());
 	}
 
 	/**
@@ -946,7 +946,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(PageParameters.BOOKMARKABLE_PAGE, pageMapName + ':' + clazz.getName());
+			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName + ':' + clazz.getName());
 		}
 		else
 		{
@@ -973,7 +973,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 				clazz = IOnChangeListener.class;
 			}
 
-			parameters.put("wicket:interface", pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.name(clazz));
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.name(clazz));
 		}
 	}
 

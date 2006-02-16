@@ -18,6 +18,7 @@
  */
 package wicket.protocol.http;
 
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import junit.framework.TestCase;
 
 /**
@@ -32,14 +33,14 @@ public class WebResponseCrawlerSaveTest extends TestCase
     {
         WebResponseCrawlerSave resp = new WebResponseCrawlerSave(null); 
         
-        String url = resp.encodeURL("http://localhost:8080/library?bookmarkablePage=wicket.examples.library.BookDetails");
+        String url = resp.encodeURL("http://localhost:8080/library?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.examples.library.BookDetails");
         assertEquals(url, "http://localhost:8080/library/wicket/examples/library/BookDetails.wic");
         
-        url = resp.encodeURL("http://localhost:8080/myApp?bookmarkablePage=wicket.markup.html.Page&id=5");
+        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5");
         assertEquals(url, "http://localhost:8080/myApp/wicket/markup/html/Page.wic?id=5");
         
         /** Note that param order has changed due to HashMap key order */
-        url = resp.encodeURL("http://localhost:8080/myApp?bookmarkablePage=wicket.markup.html.Page&id=5&test=abcd");
+        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5&test=abcd");
         assertEquals(url, "http://localhost:8080/myApp/wicket/markup/html/Page.wic?test=abcd&id=5");
     }
 }

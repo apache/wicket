@@ -57,6 +57,7 @@ import wicket.util.string.Strings;
  * and path info to construct the request parameters object.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class WebRequestCodingStrategy implements IRequestCodingStrategy
 {
@@ -65,6 +66,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/** AJAX query parameter name */
 	public static final String BEHAVIOR_ID_PARAMETER_NAME = "wicket:behaviorId";
+	
+	/** Parameter name used all over the place */
+	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = "wicket:bookmarkablePage";
 
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
@@ -309,7 +313,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected void addBookmarkablePageParameters(final Request request, final RequestParameters parameters)
 	{
-		final String requestString = request.getParameter(PageParameters.BOOKMARKABLE_PAGE);
+		final String requestString = request.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
@@ -434,7 +438,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final StringBuffer url = new StringBuffer(64);
 		url.append(urlPrefix(requestCycle));
 		url.append('?');
-		url.append(PageParameters.BOOKMARKABLE_PAGE);
+		url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		url.append('=');
 		
 		// Get page Class
