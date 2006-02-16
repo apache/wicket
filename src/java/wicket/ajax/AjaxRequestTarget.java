@@ -65,13 +65,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * create a response that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
-	private final EncodingResponse tempResponse = new EncodingResponse(new Wicket1Encoder());
+	private final EncodingResponse encodingResponse = new EncodingResponse();
 
 	/**
 	 * Constructor
 	 */
 	public AjaxRequestTarget()
 	{
+
 	}
 
 	/**
@@ -161,23 +162,30 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondInvocation(final Response response, final String js)
 	{
-		tempResponse.reset();
-		tempResponse.write(js);
+		boolean encoded = false;
+		String javascript = js;
+
+		// encode the response if needed
+		if (needsEncoding(js))
+		{
+			encoded = true;
+			javascript = encode(js);
+		}
 
 		response.write("<evaluate");
-		if (tempResponse.isContentsEncoded())
+		if (encoded)
 		{
 			response.write(" encoding=\"");
-			response.write(tempResponse.getEncodingName());
+			response.write(getEncodingName());
 			response.write("\"");
 		}
 		response.write(">");
 		response.write("<![CDATA[");
-		response.write(tempResponse.getContents());
+		response.write(javascript);
 		response.write("]]>");
 		response.write("</evaluate>");
-		
-		tempResponse.reset();
+
+		encodingResponse.reset();
 	}
 
 	/**
@@ -192,8 +200,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		final Response originalResponse = response;
-		tempResponse.reset();
-		RequestCycle.get().setResponse(tempResponse);
+		encodingResponse.reset();
+		RequestCycle.get().setResponse(encodingResponse);
 
 		// Initialize temporary variables
 		Page page = component.getPage();
@@ -220,20 +228,20 @@ public class AjaxRequestTarget implements IRequestTarget
 
 
 		response.write("<component id=\"" + id + "\" ");
-		if (tempResponse.isContentsEncoded())
+		if (encodingResponse.isContentsEncoded())
 		{
 			response.write(" encoding=\"");
-			response.write(tempResponse.getEncodingName());
+			response.write(getEncodingName());
 			response.write("\" ");
 		}
 		response.write("><![CDATA[");
 
 
-		response.write(tempResponse.getContents());
+		response.write(encodingResponse.getContents());
 
 		response.write("]]></component>");
-		
-		tempResponse.reset();
+
+		encodingResponse.reset();
 	}
 
 	/**
@@ -284,68 +292,36 @@ public class AjaxRequestTarget implements IRequestTarget
 				+ "], javascript [" + javascripts + "]";
 	}
 
-	private static interface IMarkupEncoder
+	/**
+	 * @return name of encoding used to possibly encode the contents of the
+	 *         CDATA blocks
+	 */
+	protected String getEncodingName()
 	{
-		/**
-		 * @return name of encoding. <b>NOTE:</b> return name must be a valid
-		 *         xml attribute value.
-		 */
-		public String getEncoderName();
-
-		/**
-		 * @param str
-		 * @return true if str needs to be encoded, false otherwise
-		 */
-		public boolean needsEncoding(String str);
-
-		/**
-		 * @param str
-		 * @return encoded version of str
-		 */
-		public String encode(String str);
-
+		return "wicket1";
 	}
 
 	/**
-	 * IMarkupEncoder that ensures the markup is safe to use inside a CDATA
-	 * block. This means escaping the CDATA termination sequence ']]>', this
-	 * encoder does that by escaping all ']' with ']^'
+	 * Encodes a string so it is safe to use inside CDATA blocks
 	 * 
-	 * @author Igor Vaynberg (ivaynberg)
+	 * @param str
+	 * @return encoded string
 	 */
-	private static final class Wicket1Encoder implements IMarkupEncoder
+	protected String encode(String str)
 	{
-		private final String ENCODER_NAME = "wicket1";
+		// TODO Java5: we can use str.replace(charseq, charseq) for more efficient
+		// replacement
+		return str.replaceAll("]", "]^");
+	}
 
-		private final char target = ']';
-		private final String targetSeq = "]";
-		private final String replacementSeq = "]^";
-
-
-		/**
-		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#getEncoderName()
-		 */
-		public String getEncoderName()
-		{
-			return ENCODER_NAME;
-		}
-
-		/**
-		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#needsEncoding(java.lang.String)
-		 */
-		public boolean needsEncoding(String str)
-		{
-			return str.indexOf(target) >= 0;
-		}
-
-		/**
-		 * @see wicket.ajax.AjaxRequestTarget.IMarkupEncoder#encode(java.lang.String)
-		 */
-		public String encode(String str)
-		{
-			return str.replaceAll(targetSeq, replacementSeq);
-		}
-
+	/**
+	 * 
+	 * @param str
+	 * @return true if string needs to be encoded, false otherwise
+	 */
+	protected boolean needsEncoding(String str)
+	{
+		return str.indexOf(']') >= 0;
 	}
 
 
@@ -354,22 +330,17 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static final class EncodingResponse extends Response
+	private final class EncodingResponse extends Response
 	{
 
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 		private boolean escaped = false;
-		private final IMarkupEncoder encoder;
-
 
 		/**
 		 * Construct.
-		 * 
-		 * @param encoder
 		 */
-		public EncodingResponse(IMarkupEncoder encoder)
+		public EncodingResponse()
 		{
-			this.encoder = encoder;
 		}
 
 		/**
@@ -377,12 +348,11 @@ public class AjaxRequestTarget implements IRequestTarget
 		 */
 		public void write(String string)
 		{
-			if (encoder.needsEncoding(string))
+			if (needsEncoding(string))
 			{
-				string = encoder.encode(string);
+				string = encode(string);
 				escaped = true;
 			}
-
 			buffer.append(string);
 		}
 
@@ -423,12 +393,5 @@ public class AjaxRequestTarget implements IRequestTarget
 			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
 		}
 
-		/**
-		 * @return the name of encoder used
-		 */
-		public String getEncodingName()
-		{
-			return encoder.getEncoderName();
-		}
 	}
 }
