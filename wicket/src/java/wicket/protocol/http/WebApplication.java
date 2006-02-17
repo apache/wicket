@@ -585,6 +585,7 @@ public abstract class WebApplication extends Application
 		{
 			throw new IllegalArgumentException("mounting path has to start with '/'");
 		}
+		//FIXME General: make sure path does not start with resource prefix. 
 	}
 
 	/**
