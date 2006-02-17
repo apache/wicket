@@ -325,6 +325,15 @@ public abstract class Component implements Serializable
 	/** Boolean whether this component was rendered once for tracking changes. */
 	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
 
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer)
+	 */
+	private static final short FLAG_IS_RENDER_ALLOWED = 0x2000;
+	
 	/** Render tag boolean */
 	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
 
@@ -341,7 +350,7 @@ public abstract class Component implements Serializable
 	private List behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED | FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
 	private String id;
@@ -351,16 +360,6 @@ public abstract class Component implements Serializable
 
 	/** Any parent container. */
 	private MarkupContainer parent;
-
-	/**
-	 * Internal indicator of whether this component may be rendered given the
-	 * current context's authorization. It overrides the visible flag in case
-	 * this is false. Authorization is done before trying to render any
-	 * component (otherwise we would end up with a half rendered page in the
-	 * buffer), and as an optimization, the result for the current request is
-	 * stored in this variable.
-	 */
-	private transient boolean renderAllowed = true;
 
 	/**
 	 * MetaDataEntry array.
@@ -1355,7 +1354,7 @@ public abstract class Component implements Serializable
 		Component component = this;
 		while (component != null)
 		{
-			if (component.renderAllowed && component.isVisible())
+			if (component.isRenderAllowed() && component.isVisible())
 			{
 				component = component.getParent();
 			}
@@ -1490,7 +1489,7 @@ public abstract class Component implements Serializable
 
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
-		if (renderAllowed && isVisible())
+		if (isRenderAllowed() && isVisible())
 		{
 			// Rendering is beginning
 			if (log.isDebugEnabled())
@@ -1951,7 +1950,7 @@ public abstract class Component implements Serializable
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
 						.append(getPage().getClass().getName()).append(", path = ").append(
 								getPath()).append(".").append(Classes.name(getClass())).append(
-								", isVisible = ").append((renderAllowed && isVisible())).append(
+								", isVisible = ").append((isRenderAllowed() && isVisible())).append(
 								", isVersioned = ").append(isVersioned()).append("]").toString();
 			}
 		}
@@ -2723,7 +2722,12 @@ public abstract class Component implements Serializable
 	 */
 	final void setRenderAllowed(boolean renderAllowed)
 	{
-		this.renderAllowed = renderAllowed;
+		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
+	}
+	
+	final boolean isRenderAllowed()
+	{
+		return getFlag(FLAG_IS_RENDER_ALLOWED);
 	}
 
 	/**
