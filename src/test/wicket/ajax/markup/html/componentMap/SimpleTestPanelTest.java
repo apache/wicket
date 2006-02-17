@@ -47,7 +47,7 @@ public class SimpleTestPanelTest extends WicketTestCase
 	    
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		// TODO this is a fragile test as it depends on a string
+		// TODO Post 1.2: This is a fragile test as it depends on a string
 		application.getServletRequest().setRequestToRedirectString(
 				"?path=0:testPanel:baseSpan:linja1&interface=IBehaviorListener&"
 						+ WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=0");

@@ -48,8 +48,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	}
 
 	/**
-	 * 
-	 * @return XXX
+	 * @return Count
 	 */
 	public int getCount()
 	{
