@@ -1684,12 +1684,6 @@ public abstract class Component implements Serializable
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-			// FIXME General: We can't record any state change as
-			// Link.onComponentTag
-			// potentially sets this property we probably don't need to support
-			// this, but I'll keep this commented so that we can think about it
-			// I (johan) changed the way Link.onComponentTag works. It will
-			// disable versioning for a the setEnabled call.
 			// Tell the page that this component's enabled was changed
 			if (isVersioned())
 			{
@@ -1699,6 +1693,7 @@ public abstract class Component implements Serializable
 					addStateChange(new EnabledChange(this));
 				}
 			}
+			
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
 		}
