@@ -18,6 +18,10 @@
 package wicket;
 
 import wicket.ajax.AjaxInitializer;
+import wicket.behavior.IBehaviorListener;
+import wicket.markup.html.form.IFormSubmitListener;
+import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.tree.TreeComponentInitializer;
 
 /**
@@ -32,6 +36,15 @@ public class Initializer implements IInitializer
 	 */
 	public void init(Application application)
 	{
+		
+		// touch all interfaces once, so that they are registered for the complete webapplication
+		Object o = IBehaviorListener.INTERFACE;
+		o = IFormSubmitListener.INTERFACE;
+		o = IOnChangeListener.INTERFACE;
+		o = ILinkListener.INTERFACE;
+		o = IRedirectListener.INTERFACE;
+		o = IResourceListener.INTERFACE;
+
 		// initialize the tree component
 		new TreeComponentInitializer().init(application);
 		
