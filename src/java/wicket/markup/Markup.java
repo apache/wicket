@@ -267,14 +267,14 @@ public final class Markup
 			throw new IllegalArgumentException("Parameter 'id' must not be null");
 		}
 
-		// TODO General: a component path e.g. "panel:label" does not match 1:1
+		// TODO General: A component path e.g. "panel:label" does not match 1:1
 		// with the markup in case of ListView, where the path contains a number
 		// for each list item. E.g. list:0:label. What we currently do is simply
 		// remove the number from the path and hope that no user uses an integer
 		// for a component id. This is a hack only. A much better solution would
 		// delegate to the various components recursivly to search within there
-		// realm only for the components markup. ListItem could than simply
-		// do nothing and delegate to there parents.
+		// realm only for the components markup. ListItems could then simply
+		// do nothing and delegate to their parents.
 		String completePath = (path == null || path.length() == 0 ? id : path + ":" + id);
 
 		// s/:\d+//g
