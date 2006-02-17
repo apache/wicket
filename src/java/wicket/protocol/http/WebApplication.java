@@ -585,9 +585,9 @@ public abstract class WebApplication extends Application
 		{
 			throw new IllegalArgumentException("Mount path has to start with '/'");
 		}
-		if (path.startsWith("/resource"))
+		if (path.startsWith("/resources/") || path.equals("/resources"))
 		{
-			throw new IllegalArgumentException("Mount path cannot start with '/resource");
+			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
 		}
 	}
 
