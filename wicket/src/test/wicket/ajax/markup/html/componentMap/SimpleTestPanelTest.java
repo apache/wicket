@@ -20,6 +20,7 @@ package wicket.ajax.markup.html.componentMap;
 import wicket.Page;
 import wicket.WicketTestCase;
 import wicket.markup.html.list.DiffUtil;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
  * Test for ajax handler.
@@ -46,7 +47,10 @@ public class SimpleTestPanelTest extends WicketTestCase
 	    
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString("?path=0:testPanel:baseSpan:linja1&interface=IBehaviorListener&behaviorId=0");
+		// TODO this is a fragile test as it depends on a string
+		application.getServletRequest().setRequestToRedirectString(
+				"?path=0:testPanel:baseSpan:linja1&interface=IBehaviorListener&"
+						+ WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=0");
 		application.processRequestCycle();
 		String document = application.getServletResponse().getDocument();
 
