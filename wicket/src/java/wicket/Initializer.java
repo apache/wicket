@@ -37,7 +37,7 @@ public class Initializer implements IInitializer
 	public void init(Application application)
 	{
 		// Register listener interfaces explicitly (even though they implicitly
-		// register when loaded) because of deserialization of an object that
+		// register when loaded) because deserialization of an object that
 		// implements an interface does not load the interfaces it implements!
 		IBehaviorListener.INTERFACE.register();
 		IFormSubmitListener.INTERFACE.register();
