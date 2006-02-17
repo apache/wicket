@@ -822,7 +822,7 @@ public abstract class Component implements Serializable
 	 * @return The application settings from the application that this component
 	 *         belongs to
 	 * @see Settings
-	 * @deprecated
+	 * @deprecated will be removed after 1.2
 	 */
 	// TODO Post 1.2: Remove this method
 	public final Settings getApplicationSettings()

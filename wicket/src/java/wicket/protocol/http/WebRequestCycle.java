@@ -28,7 +28,6 @@ import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.settings.IRequestCycleSettings;
-import wicket.settings.Settings;
 
 /**
  * RequestCycle implementation for HTTP protocol. Holds the application,
@@ -124,7 +123,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Check if use serverside response for client side redirects
 		IRequestCycleSettings settings = application.getRequestCycleSettings();
-		if ((settings.getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
+		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 				&& (application instanceof WebApplication))
 		{
 			// remember the current response

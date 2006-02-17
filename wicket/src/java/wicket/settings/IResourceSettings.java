@@ -101,7 +101,7 @@ public interface IResourceSettings
 	/**
 	 * Get the application's localizer.
 	 * 
-	 * @see wicket.settings.Settings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
+	 * @see IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 *      for means of extending the way Wicket resolves keys to localized
 	 *      messages.
 	 * 
@@ -127,13 +127,13 @@ public interface IResourceSettings
 	 * Gets the resource finder to use when searching for resources.
 	 * 
 	 * @return Returns the resourceFinder.
-	 * @see Settings#setResourceFinder(IResourceFinder)
+	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	IResourceFinder getResourceFinder();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
-	 * @see Settings#setResourcePollFrequency(Duration)
+	 * @see IResourceSettings#setResourcePollFrequency(Duration)
 	 */
 	Duration getResourcePollFrequency();
 
@@ -202,7 +202,7 @@ public interface IResourceSettings
 	 * 
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
-	 * @see Settings#setResourceFinder(IResourceFinder)
+	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
 

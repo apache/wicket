@@ -75,7 +75,15 @@ import wicket.util.string.Strings;
  * </pre>
  * 
  * @see WicketServlet
- * @see wicket.settings.Settings
+ * @see wicket.settings.IApplicationSettings
+ * @see wicket.settings.IDebugSettings
+ * @see wicket.settings.IExceptionSettings
+ * @see wicket.settings.IMarkupSettings
+ * @see wicket.settings.IPageSettings
+ * @see wicket.settings.IRequestCycleSettings
+ * @see wicket.settings.IResourceSettings
+ * @see wicket.settings.ISecuritySettings
+ * @see wicket.settings.ISessionSettings
  * 
  * @author Jonathan Locke
  * @author Chris Turner

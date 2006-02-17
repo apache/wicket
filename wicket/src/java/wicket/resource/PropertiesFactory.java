@@ -46,7 +46,7 @@ import wicket.util.watch.ModificationWatcher;
  * loaded just once.
  * <p>
  * 
- * @see wicket.settings.Settings#getPropertiesFactory()
+ * @see wicket.settings.IResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */

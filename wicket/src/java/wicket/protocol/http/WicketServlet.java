@@ -33,7 +33,7 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.settings.Settings;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
 
@@ -141,7 +141,8 @@ public class WicketServlet extends HttpServlet
 
 		// Try to see if there is a redirect stored
 		HttpSession httpSession = servletRequest.getSession(false);
-		if (httpSession != null && webApplication.getRequestCycleSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
+		if (httpSession != null
+				&& webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 		{
 			String sessionId = httpSession.getId();
 			String queryString = servletRequest.getQueryString();
