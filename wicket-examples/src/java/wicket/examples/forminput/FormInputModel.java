@@ -88,7 +88,7 @@ public final class FormInputModel implements Serializable
 	private Integer integerInRangeProperty = new Integer(50);
 	private Boolean booleanProperty;
 	private URL urlProperty;
-	private String numberRadioChoice;
+	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
 	private Set siteSelection = new HashSet();
 	private List lines = new ArrayList();
 
