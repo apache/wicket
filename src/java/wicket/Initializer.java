@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.8 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,18 +36,19 @@ public class Initializer implements IInitializer
 	 */
 	public void init(Application application)
 	{
-		
-		// touch all interfaces once, so that they are registered for the complete webapplication
-		Object o = IBehaviorListener.INTERFACE;
-		o = IFormSubmitListener.INTERFACE;
-		o = IOnChangeListener.INTERFACE;
-		o = ILinkListener.INTERFACE;
-		o = IRedirectListener.INTERFACE;
-		o = IResourceListener.INTERFACE;
+		// Register listener interfaces explicitly (even though they implicitly
+		// register when loaded) because of deserialization of an object that
+		// implements an interface does not load the interfaces it implements!
+		IBehaviorListener.INTERFACE.register();
+		IFormSubmitListener.INTERFACE.register();
+		ILinkListener.INTERFACE.register();
+		IOnChangeListener.INTERFACE.register();
+		IRedirectListener.INTERFACE.register();
+		IResourceListener.INTERFACE.register();
 
 		// initialize the tree component
 		new TreeComponentInitializer().init(application);
-		
+
 		// initialize ajax components
 		new AjaxInitializer().init(application);
 	}
