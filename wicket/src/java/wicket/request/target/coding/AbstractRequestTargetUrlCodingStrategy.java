@@ -135,7 +135,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 				    String escapedValue = urlEncode((String)entry.getValue().toString());
 				    if(!Strings.isEmpty(escapedValue))
 				    {
-					url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+				    		url.append("/").append(entry.getKey()).append("/").append(escapedValue);
 				    }
 				}
 			}

@@ -20,7 +20,6 @@ import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrate
  */
 public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
 {
-
 	/**
 	 * Construct.
 	 * 
