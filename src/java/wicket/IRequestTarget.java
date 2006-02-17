@@ -20,6 +20,10 @@ package wicket;
 /**
  * <p>
  * A request target is the base entity that is the subject of a request.
+ * Different types of request have different request targets. For instance a
+ * request for a bookmarkable page differs from a request for a link on a
+ * previously rendered page, which in turn differs from a request for a shared
+ * resource.
  * </p>
  * <p>
  * It is very important (for mounting) that implementations implement
@@ -34,7 +38,7 @@ package wicket;
 public interface IRequestTarget
 {
 	/**
-	 * Generate a response.
+	 * Generates a response.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -52,10 +56,13 @@ public interface IRequestTarget
 	void cleanUp(RequestCycle requestCycle);
 
 	/**
+	 * Gets the lock to be used for synchronization.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * 
-	 * @return Any lock to be used to synchronize this target.
+	 * @return Any lock to be used to synchronize this target or null if no
+	 *         synchronization is needed.
 	 */
 	Object getLock(RequestCycle requestCycle);
 }
