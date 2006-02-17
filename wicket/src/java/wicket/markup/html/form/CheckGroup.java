@@ -155,5 +155,4 @@ public class CheckGroup extends FormComponent
 
 		modelChanged();
 	}
-
 }

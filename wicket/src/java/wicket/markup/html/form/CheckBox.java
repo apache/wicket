@@ -197,16 +197,13 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 */
 	public void updateModel()
 	{
-		if (isEnabled())
+		try
 		{
-			try
-			{
-				setModelObject(Strings.toBoolean(getInput()));
-			}
-			catch (StringValueConversionException e)
-			{
-				throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
-			}
+			setModelObject(Strings.toBoolean(getInput()));
+		}
+		catch (StringValueConversionException e)
+		{
+			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
 		}
 	}
 }

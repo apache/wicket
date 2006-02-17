@@ -278,43 +278,39 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		final String[] ids = inputAsStringArray();
 
-		// If component is disabled, ignore it
-		if (isEnabled())
+		// Get the list of selected values
+		Collection selectedValues = (Collection)getModelObject();
+		if (selectedValues != null)
 		{
-			// Get the list of selected values
-			Collection selectedValues = (Collection)getModelObject();
-			if (selectedValues != null)
+			selectedValues.clear();
+		}
+
+		// If one or more ids is selected
+		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+		{
+			if (selectedValues == null)
 			{
-				selectedValues.clear();
+				selectedValues = new ArrayList();
 			}
+			
+			// Get values that could be selected
+			final List choices = getChoices();
 
-			// If one or more ids is selected
-			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+			// Loop through selected indices
+			for (int i = 0; i < ids.length; i++)
 			{
-				if (selectedValues == null)
+				for (int index = 0; index < choices.size(); index++)
 				{
-					selectedValues = new ArrayList();
-				}
-				
-				// Get values that could be selected
-				final List choices = getChoices();
-
-				// Loop through selected indices
-				for (int i = 0; i < ids.length; i++)
-				{
-					for (int index = 0; index < choices.size(); index++)
+					// Get next choice
+					final Object choice = choices.get(index);
+					if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
 					{
-						// Get next choice
-						final Object choice = choices.get(index);
-						if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
-						{
-							selectedValues.add(choice);
-							break;
-						}
+						selectedValues.add(choice);
+						break;
 					}
 				}
 			}
-			setModelObject(selectedValues);
 		}
+		setModelObject(selectedValues);
 	}
 }

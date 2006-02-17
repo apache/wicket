@@ -105,6 +105,7 @@ public class TextField extends AbstractTextComponent
 	public void updateModel()
 	{
 		String input = getInput();
+		
 		// if input was null then value was not submitted (disabled field), ignore it
 		if (input != null)
 		{
