@@ -466,7 +466,7 @@ public abstract class Application
 	 * @see Application#getResourceSettings()
 	 * @see Application#getSecuritySettings()
 	 * @see Application#getSessionSettings()
-	 * @deprecated
+	 * @deprecated will be made private after 1.2
 	 */
 	// TODO Post 1.2: Make private
 	public Settings getSettings()

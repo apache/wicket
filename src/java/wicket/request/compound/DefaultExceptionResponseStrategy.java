@@ -27,7 +27,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
-import wicket.settings.Settings;
 
 /**
  * Default implementation of
@@ -66,13 +65,13 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			requestCycle.setResponsePage(override);
 			requestCycle.setRedirect(true);
 		}
-		else if (settings.getUnexpectedExceptionDisplay() != Settings.SHOW_NO_EXCEPTION_PAGE)
+		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
 			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == Settings.SHOW_INTERNAL_ERROR_PAGE)
+					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
 				final IPageFactory pageFactory;

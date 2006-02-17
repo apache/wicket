@@ -31,7 +31,7 @@ import wicket.util.concurrent.ConcurrentHashMap;
 /**
  * A factory that constructs Pages.
  * 
- * @see wicket.settings.Settings#setPageFactory(IPageFactory)
+ * @see wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
  * @see IPageFactory
  * 
  * @author Juergen Donnerstag

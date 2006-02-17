@@ -29,7 +29,7 @@ public interface IMarkupSettings
 
 	/**
 	 * @return Returns the compressWhitespace.
-	 * @see Settings#setCompressWhitespace(boolean)
+	 * @see IMarkupSettings#setCompressWhitespace(boolean)
 	 */
 	boolean getCompressWhitespace();
 
@@ -57,7 +57,7 @@ public interface IMarkupSettings
 
 	/**
 	 * @return Returns the stripComments.
-	 * @see Settings#setStripComments(boolean)
+	 * @see IMarkupSettings#setStripComments(boolean)
 	 */
 	boolean getStripComments();
 
