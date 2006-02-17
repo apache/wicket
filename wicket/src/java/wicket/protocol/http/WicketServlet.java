@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -139,9 +140,10 @@ public class WicketServlet extends HttpServlet
 		Application.set(webApplication);
 
 		// Try to see if there is a redirect stored
-		if (webApplication.getRequestCycleSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
+		HttpSession httpSession = servletRequest.getSession(false);
+		if (httpSession != null && webApplication.getRequestCycleSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
 		{
-			String sessionId = servletRequest.getSession(true).getId();
+			String sessionId = httpSession.getId();
 			String queryString = servletRequest.getQueryString();
 			String requestUri = servletRequest.getRequestURI();
 			String bufferId = requestUri;
