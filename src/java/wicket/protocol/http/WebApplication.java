@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
+import wicket.IRedirectListener;
 import wicket.IRequestCycleFactory;
+import wicket.IResourceListener;
 import wicket.ISessionFactory;
 import wicket.PageMap;
 import wicket.Request;
@@ -33,6 +35,10 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.behavior.IBehaviorListener;
+import wicket.markup.html.form.IFormSubmitListener;
+import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
@@ -85,6 +91,17 @@ import wicket.util.string.Strings;
  */
 public abstract class WebApplication extends Application
 {
+	// touch all interfaces once, so that they are registered for the complete webapplication
+	static
+	{
+		Object o = IBehaviorListener.INTERFACE;
+		o = IFormSubmitListener.INTERFACE;
+		o = IOnChangeListener.INTERFACE;
+		o = ILinkListener.INTERFACE;
+		o = IRedirectListener.INTERFACE;
+		o = IResourceListener.INTERFACE;
+		
+	}
 	/**
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
