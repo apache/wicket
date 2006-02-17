@@ -56,8 +56,6 @@ public class PagingNavigationLink extends Link
 		this.pageable = pageable;
 	}
 
-	// TODO Documentation: We need to explain this onClick method!
-
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
