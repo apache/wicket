@@ -579,13 +579,16 @@ public abstract class WebApplication extends Application
 	{
 		if (path == null)
 		{
-			throw new IllegalArgumentException("mounting path cannot be null");
+			throw new IllegalArgumentException("Mount path cannot be null");
 		}
 		if (!path.startsWith("/"))
 		{
-			throw new IllegalArgumentException("mounting path has to start with '/'");
+			throw new IllegalArgumentException("Mount path has to start with '/'");
 		}
-		//FIXME General: make sure path does not start with resource prefix. 
+		if (path.startsWith("/resource"))
+		{
+			throw new IllegalArgumentException("Mount path cannot start with '/resource");
+		}
 	}
 
 	/**
