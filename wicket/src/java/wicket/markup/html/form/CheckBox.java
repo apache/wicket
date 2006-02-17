@@ -197,14 +197,16 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 */
 	public void updateModel()
 	{
-		// TODO General: Can't test here for disabled input... null value is a valid input for checkbox
-		try
+		if (isEnabled())
 		{
-			setModelObject(Strings.toBoolean(getInput()));
-		}
-		catch (StringValueConversionException e)
-		{
-			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+			try
+			{
+				setModelObject(Strings.toBoolean(getInput()));
+			}
+			catch (StringValueConversionException e)
+			{
+				throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+			}
 		}
 	}
 }
