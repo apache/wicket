@@ -164,7 +164,7 @@ public final class PageMap implements Serializable
 	{
 		return Session.get().pageMapForName(pageMapName, true);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -197,35 +197,12 @@ public final class PageMap implements Serializable
 		accessStack.clear();
 	}
 
-	// FIXME General: We should include an ISessionSettings.trackStatelessPages
-	// flag and let users track accesses to stateless pages. This would allow us
-	// to delete the long, complicated warning below and replace it with a
-	// shorter one. The stateless pages would still not go into the session.
-	// Just the Access information would be replicated through the PageMap
-	// object using a subclass like StatelessPageAccess having a class and
-	// PageParameters.
+	// TODO Post 1.2: We should encode the page id of the current page into the
+	// URL for truly stateless pages so we can adjust the stack correctly
 
 	/**
 	 * Returns a stack of PageMap.Access entries pushed in the order that the
 	 * pages and versions were accessed.
-	 * <p>
-	 * IMPORTANT NOTE: This stack will be in sync with the browser stack EXCEPT
-	 * in certain circumstances where stateless pages and the back button are
-	 * involved. The problem is this: if stateless pages are rendered to the
-	 * browser, they will not be on the access stack because they are not in the
-	 * PageMap at all. So, if the user goes back to a stateless page and
-	 * navigates forward to a stateful page, the stack will not be correctly
-	 * adjusted (unlike with stateful pages, where it will always be adjusted
-	 * correctly). Instead, the new stateful page will be on top of the access
-	 * stack and any unreachable page versions that the user may have backed up
-	 * over will still be in the session and on the access stack instead of
-	 * being eliminated. This is not a major problem, however as they will
-	 * expire in the normal way (although they will take up pagemap space until
-	 * they do). It's important to realize that this is a problem with stateless
-	 * pages and not with the implementation of PageMap, which is now actually a
-	 * better implementation than in previous versions because it at least CAN
-	 * remove unused information from the map when the back button is used on
-	 * stateful pages.
 	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
