@@ -27,7 +27,7 @@ import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
-import wicket.settings.Settings;
+import wicket.settings.IRequestCycleSettings;
 
 
 /**
@@ -56,7 +56,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
+		application.getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_BUFFER);
 		application.setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();

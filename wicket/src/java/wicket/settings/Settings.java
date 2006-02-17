@@ -61,7 +61,6 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.lang.EnumeratedType;
 import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.time.Duration;
@@ -89,20 +88,6 @@ public final class Settings
 			ISecuritySettings,
 			ISessionSettings
 {
-	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
-	 */
-	public static class RenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-
-		RenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
-
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
@@ -203,7 +188,7 @@ public final class Settings
 	 * 'action' and a 'render' part is handled, and is mainly used to have a
 	 * means to circumvent the 'refresh' problem.
 	 */
-	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
+	private IRequestCycleSettings.RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = new Path();
@@ -574,7 +559,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getRenderStrategy()
 	 */
-	public RenderStrategy getRenderStrategy()
+	public IRequestCycleSettings.RenderStrategy getRenderStrategy()
 	{
 		return renderStrategy;
 	}
@@ -965,7 +950,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setRenderStrategy(wicket.settings.Settings.RenderStrategy)
 	 */
-	public void setRenderStrategy(RenderStrategy renderStrategy)
+	public void setRenderStrategy(IRequestCycleSettings.RenderStrategy renderStrategy)
 	{
 		this.renderStrategy = renderStrategy;
 	}

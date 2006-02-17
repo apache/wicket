@@ -26,7 +26,7 @@ import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
-import wicket.settings.Settings;
+import wicket.settings.IRequestCycleSettings;
 
 /**
  * WicketServlet class for example.
@@ -48,7 +48,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_RENDER);
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
 
 		// Handle unauthorized access to pages
 		getSecuritySettings().setUnauthorizedComponentInstantiationListener(new IUnauthorizedComponentInstantiationListener()
