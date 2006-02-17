@@ -43,8 +43,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/** Logging */
 	// private final static Log log = LogFactory.getLog(WicketMessageTagHandler.class);
 
-	/** TODO General: Namespace should not be a constant */
-	private final static String WICKET_MESSAGE_ATTR_NAME = "wicket:message";
+	/** TODO Post 1.2: General: Namespace should not be a constant */
+	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
 	/**
 	 * globally enable wicket:message; If accepted by user, we should use an
@@ -108,14 +108,14 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 
 		final String wicketMessageAttribute = tag.getAttributes().getString(
-				WICKET_MESSAGE_ATTR_NAME);
+				WICKET_MESSAGE_ATTRIBUTE_NAME);
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
 			if (this.containerInfo == null)
 			{
 				throw new ParseException(
 						"Found "
-								+ WICKET_MESSAGE_ATTR_NAME
+								+ WICKET_MESSAGE_ATTRIBUTE_NAME
 								+ " but the message can not be resolved, because the associated Page is not known."
 								+ " This might be caused by using the wrong MarkupParser constructor",
 						tag.getPos());
