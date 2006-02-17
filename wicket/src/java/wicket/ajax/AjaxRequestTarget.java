@@ -309,7 +309,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected String encode(String str)
 	{
-		// TODO Java5: we can use str.replace(charseq, charseq) for more efficient
+		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for more efficient
 		// replacement
 		return str.replaceAll("]", "]^");
 	}
