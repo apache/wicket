@@ -5,7 +5,7 @@ import java.util.List;
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
 import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
-import wicket.settings.Settings.RenderStrategy;
+import wicket.util.lang.EnumeratedType;
 
 /**
  * Inteface for request related settings
@@ -65,6 +65,20 @@ import wicket.settings.Settings.RenderStrategy;
 public interface IRequestCycleSettings
 {
 	/**
+	 * Enumerated type for different ways of handling the render part of
+	 * requests.
+	 */
+	public static class RenderStrategy extends EnumeratedType
+	{
+		private static final long serialVersionUID = 1L;
+	
+		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
 	 * All logical parts of a request (the action and render part) are handled
 	 * within the same request. To enable a the client side redirect for a
 	 * request, users can set the 'redirect' property of {@link RequestCycle}to
@@ -77,7 +91,7 @@ public interface IRequestCycleSettings
 	 * when you want to do sophisticated (non-sticky session) clustering.
 	 * </p>
 	 */
-	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
+	public static final IRequestCycleSettings.RenderStrategy ONE_PASS_RENDER = new IRequestCycleSettings.RenderStrategy("ONE_PASS_RENDER");
 
 	/**
 	 * All logical parts of a request (the action and render part) are handled
@@ -86,7 +100,7 @@ public interface IRequestCycleSettings
 	 * redirect command is issued to the browser specifically to render this
 	 * request.
 	 */
-	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
+	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_BUFFER = new IRequestCycleSettings.RenderStrategy("REDIRECT_BUFFER");
 
 	/**
 	 * The render part of a request (opposed to the 'action part' which is
@@ -117,7 +131,7 @@ public interface IRequestCycleSettings
 	 * actually two instances of RequestCycle are created and processed.
 	 * </p>
 	 */
-	public static final RenderStrategy REDIRECT_TO_RENDER = new RenderStrategy(
+	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_RENDER = new IRequestCycleSettings.RenderStrategy(
 			"CLIENT_SIDE_REDIRECT");
 
 	/**
@@ -139,7 +153,7 @@ public interface IRequestCycleSettings
 	 * 
 	 * @return the render strategy
 	 */
-	RenderStrategy getRenderStrategy();
+	IRequestCycleSettings.RenderStrategy getRenderStrategy();
 
 	/**
 	 * @return an unmodifiable list of added response filters, null if none
@@ -215,7 +229,7 @@ public interface IRequestCycleSettings
 	 * @param renderStrategy
 	 *            the render strategy that should be used by default.
 	 */
-	void setRenderStrategy(RenderStrategy renderStrategy);
+	void setRenderStrategy(IRequestCycleSettings.RenderStrategy renderStrategy);
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the
