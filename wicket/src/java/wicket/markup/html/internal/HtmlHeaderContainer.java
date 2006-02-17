@@ -40,7 +40,7 @@ import wicket.response.StringResponse;
  * &lt;head&gt; regions may contain additional wicket components, which can be
  * added by means of add(Component) as usual.
  * <p>
- * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
+ * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.
  * <p>
  * <ul>
