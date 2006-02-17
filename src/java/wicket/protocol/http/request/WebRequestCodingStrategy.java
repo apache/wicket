@@ -200,27 +200,24 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
+	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(final String path)
 	{
-		if (path != null && path.equals("/"))
-		{
-			// make sure path / is always the home page even if a package or a
-			// page was mounted
-			// FIXME Request Processing: maybe we should disallow mounting of a
-			// page onto a / path
-			return null;
-		}
-
 		if (path == null)
 		{
 			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
 		}
-
-		Iterator it = mountsOnPath.entrySet().iterator();
-		while (it.hasNext())
+		else
 		{
-			Map.Entry entry = (Entry)it.next();
-			String key = (String)entry.getKey();
+			if (path.equals("/"))
+			{
+				throw new IllegalArgumentException("The mount path '/' is reserved for the application home page");		
+			}
+		}
+
+		for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext(); )
+		{
+			final Map.Entry entry = (Entry)it.next();
+			final String key = (String)entry.getKey();
 			if (path.startsWith(key))
 			{
 				return (IRequestTargetUrlCodingStrategy)entry.getValue();
