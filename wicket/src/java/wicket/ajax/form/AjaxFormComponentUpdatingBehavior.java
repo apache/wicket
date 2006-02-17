@@ -89,17 +89,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
-		FormComponent fc = getFormComponent();
-		fc.registerNewUserInput();
-		fc.validate();
-		if (fc.hasErrorMessage())
+		final FormComponent formComponent = getFormComponent();
+		formComponent.registerNewUserInput();
+		formComponent.validate();
+		if (formComponent.hasErrorMessage())
 		{
-			fc.invalid();
+			formComponent.invalid();
 		}
 		else
 		{
-			fc.valid();
-			fc.updateModel();
+			formComponent.valid();
+			formComponent.updateModel();
 			// TODO Ajax: Do we need to persist values for persistent components
 		}
 
