@@ -132,7 +132,13 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
-				final WebResponse redirectResponse = new WebResponse(servletResponse);
+				final WebResponse redirectResponse = new WebResponse(servletResponse)
+				{
+					public String encodeURL(String url) 
+					{
+						return currentResponse.encodeURL(url);
+					};
+				};
 				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
 				// redirect the response to the buffer
