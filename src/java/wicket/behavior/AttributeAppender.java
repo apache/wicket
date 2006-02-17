@@ -19,6 +19,7 @@ package wicket.behavior;
 
 import wicket.AttributeModifier;
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -27,7 +28,7 @@ import wicket.util.string.Strings;
  * JavaScript snippets to existing element handlers.
  * 
  * <pre>
- *  &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
+ *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
  * </pre>
  * 
  * can be modified with these AttributeAppenders:
@@ -40,7 +41,7 @@ import wicket.util.string.Strings;
  * this will result in the following markup:
  * 
  * <pre>
- *  &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
+ *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
  * </pre>
  * 
  * @author Martijn Dashorst
@@ -102,7 +103,19 @@ public class AttributeAppender extends AttributeModifier
 	 */
 	protected String newValue(String currentValue, String appendValue)
 	{
-		StringBuffer sb = new StringBuffer(currentValue==null?"":currentValue);
+		final int appendValueLen = (appendValue == null) ? 0 : appendValue.length();
+
+		AppendingStringBuffer sb;
+		if (currentValue == null)
+		{
+			sb = new AppendingStringBuffer(appendValueLen + separator.length());
+		}
+		else
+		{
+			sb = new AppendingStringBuffer(currentValue.length() + appendValueLen
+					+ separator.length());
+			sb.append(currentValue);
+		}
 
 		// if the current value or the append value is empty, the separator is
 		// not needed.
