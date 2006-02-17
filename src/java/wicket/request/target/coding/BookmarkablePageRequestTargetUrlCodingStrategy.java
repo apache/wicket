@@ -62,18 +62,18 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
-	public final String encode(IRequestTarget requestTarget)
+	public final String encode(final IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("this encoder can only be used with instances of "
+			throw new IllegalArgumentException("This encoder can only be used with instances of "
 					+ IBookmarkablePageRequestTarget.class.getName());
 		}
-		StringBuffer url = new StringBuffer();
+		final StringBuffer url = new StringBuffer();
 		url.append(getMountPath());
-		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
+		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
-		// FIXME General: What to do with the page map?
+		target.getPageParameters().put("wicket:pageMapName", pageMapName);
 		appendPageParameters(url, target.getPageParameters());
 		return url.toString();
 	}
@@ -81,11 +81,12 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
 	 */
-	public IRequestTarget decode(String urlFragment)
+	public IRequestTarget decode(final String urlFragment)
 	{
-		String parametersFragment = urlFragment.substring(getMountPath().length());
-		PageParameters parameters = decodePageParameters(parametersFragment);
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
+		final String parametersFragment = urlFragment.substring(getMountPath().length());
+		final PageParameters parameters = decodePageParameters(parametersFragment);
+		final String pageMapName = parameters.getString("wicket:pageMapName");
+		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
 				bookmarkablePageClass, parameters);
 		return target;
 	}
