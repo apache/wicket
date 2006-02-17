@@ -102,6 +102,11 @@ public class AttributeAppender extends AttributeModifier
 	 */
 	protected String newValue(String currentValue, String appendValue)
 	{
+		if(currentValue==null)
+		{
+		    return null;
+		}
+
 		StringBuffer sb = new StringBuffer(currentValue);
 
 		// if the current value or the append value is empty, the separator is
