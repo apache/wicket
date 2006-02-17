@@ -254,28 +254,19 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            request cycle
 	 * @return new instance of page
 	 */
-	protected Page newPage(Class pageClass, RequestCycle requestCycle)
+	protected Page newPage(final Class pageClass, final RequestCycle requestCycle)
 	{
-		PageParameters params = pageParameters;
-
-		// TODO General: The parameters should already have been resolved?
-		/*
-		 * if (isMounted()) { //decode page parameters from url Request request =
-		 * requestCycle.getRequest(); String urlFragment =
-		 * request.getPath().substring(mountPath.length()); params =
-		 * paramsEncoder.decode(urlFragment); }
-		 */
-		// construct a new instance using the default page factory
+		// Construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
 				.getPageFactory();
 
-		if (params==null||params.size() == 0)
+		if (pageParameters == null || pageParameters.size() == 0)
 		{
 			return pageFactory.newPage(pageClass);
 		}
 		else
 		{
-			return pageFactory.newPage(pageClass, params);
+			return pageFactory.newPage(pageClass, pageParameters);
 		}
 	}
 

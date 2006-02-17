@@ -186,7 +186,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 			}
 		}
 
-		// TODO Enhancement: <wicket:params name = "myProperty">My completely
+		// TODO Post 1.2: Enhancement: <wicket:params name = "myProperty">My completely
 		// free text that can contain everything</wicket:params> is currently
 		// not supported
 

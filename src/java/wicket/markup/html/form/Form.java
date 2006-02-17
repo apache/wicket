@@ -339,7 +339,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * TODO General: Maybe we should re-think how Borders are implemented,
+		 * FIXME General: (Juergen, has this been fixed?)  Maybe we should re-think how Borders are implemented,
 		 * because there are just too many exceptions in the code base because
 		 * of borders. This time it is to solve the problem tested in
 		 * BoxBorderTestPage_3 where the Form is defined in the box border and

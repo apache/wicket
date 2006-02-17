@@ -60,14 +60,16 @@ public class FormTester
 		this.wicketTester = wicketTester;
 		this.wicketTester.setupRequestAndResponse();
 
-		// TODO General: Skip "disabled" formComponent
 		if (fillBlankString)
 		{
 			workingForm.visitFormComponents(new FormComponent.IVisitor()
 			{
 				public void formComponent(FormComponent formComponent)
 				{
-					setValue(formComponent.getInputName(), "");
+					if (formComponent.isEnabled())
+					{
+						setValue(formComponent.getInputName(), "");
+					}
 				}
 			});
 		}

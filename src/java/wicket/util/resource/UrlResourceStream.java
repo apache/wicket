@@ -166,7 +166,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			Application application = Application.get();
 			if (application instanceof WebApplication)
 			{
-				// TODO General: For non webapplication another method should be
+				// TODO Post 1.2: General: For non webapplication another method should be
 				// implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getWicketServlet().getServletContext()
 						.getMimeType(url.getFile());
