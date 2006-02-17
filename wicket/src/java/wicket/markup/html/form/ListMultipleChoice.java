@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
 public class ListMultipleChoice extends AbstractChoice
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
 
@@ -64,6 +64,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		ListMultipleChoice.defaultMaxRows = defaultMaxRows;
 	}
+
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
@@ -235,7 +236,8 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int, String)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
+	 *      String)
 	 */
 	protected final boolean isSelected(Object choice, int index, String selected)
 	{
@@ -276,30 +278,27 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		final String[] ids = inputAsStringArray();
 
-		// if input was null then value was not submitted (disabled field), ignore it
-		// FIXME General: This can't be done! null is nothing selected! we need check for isEnabled for this.
-//		if (ids != null)
+		// If component is disabled, ignore it
+		if (isEnabled())
 		{
 			// Get the list of selected values
 			Collection selectedValues = (Collection)getModelObject();
-	
 			if (selectedValues != null)
 			{
 				selectedValues.clear();
 			}
-	
-			// Get indices selected from request
-	
+
 			// If one or more ids is selected
 			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 			{
-				if(selectedValues == null)
+				if (selectedValues == null)
 				{
 					selectedValues = new ArrayList();
 				}
+				
 				// Get values that could be selected
 				final List choices = getChoices();
-	
+
 				// Loop through selected indices
 				for (int i = 0; i < ids.length; i++)
 				{
