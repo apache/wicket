@@ -62,6 +62,8 @@ import wicket.util.lang.Classes;
  */
 public abstract class AbstractValidator implements IValidator
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Log. */
 	// private static Log log = LogFactory.getLog(AbstractValidator.class);
 
