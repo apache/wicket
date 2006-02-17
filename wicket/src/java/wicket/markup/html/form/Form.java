@@ -19,15 +19,19 @@ package wicket.markup.html.form;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.RequestListenerInterface;
+import wicket.Request;
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -39,8 +43,9 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
-import wicket.request.target.component.listener.FormSubmitInterfaceRequestTarget;
+import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;
@@ -917,29 +922,22 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @param url
 	 *            The url which describes the component path and the interface
 	 *            to be called.
-	 * @deprecated refactor this to use the
-	 *             {@link wicket.request.IRequestCodingStrategy}
 	 */
-	// TODO Post 1.2: Remove this method?
 	private void dispatchEvent(final Page page, final String url)
 	{
-		final RequestParameters requestParameters = getRequest().getRequestParameters();
-		final Component component = page.get(requestParameters.getComponentPath());
-		if (component == null)
+		RequestCycle rc = RequestCycle.get();
+		IRequestCycleProcessor processor = rc.getProcessor();
+		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(new FormDispatchRequest(rc.getRequest(),url));
+		IRequestTarget rt = processor.resolve(rc, requestParameters);
+		if(rt instanceof ListenerInterfaceRequestTarget)
 		{
-			throw new WicketRuntimeException(
-					"Component not found: " + requestParameters.getComponentPath());
+			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
+			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
 		}
-		if (!component.isVisible())
+		else
 		{
-			throw new WicketRuntimeException(
-					"Calling listener methods on components that are not visible is not allowed");
-		}
-		final RequestListenerInterface listener = requestParameters.getInterface();
-		if (listener != null)
-		{
-			new FormSubmitInterfaceRequestTarget(page, component, listener)
-					.processEvents(getRequestCycle());
+			throw new WicketRuntimeException("Attempt to access unknown request listener interface " + 
+					requestParameters.getInterfaceName());
 		}
 	}
 
@@ -978,5 +976,93 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
 				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
+	}
+	
+	class FormDispatchRequest extends Request
+	{
+		private final Request realRequest;
+		private final String url;
+		private final HashMap params = new HashMap(4);
+
+		/**
+		 * Construct.
+		 * @param realRequest
+		 * @param url
+		 */
+		public FormDispatchRequest(Request realRequest, String url)
+		{
+			this.realRequest = realRequest;
+			this.url = realRequest.decodeURL(url);
+			
+			String queryPart = this.url.substring(this.url.indexOf("?")+1);
+			StringTokenizer paramsSt = new StringTokenizer(queryPart,"&");
+			while(paramsSt.hasMoreTokens())
+			{
+				String param = paramsSt.nextToken();
+				int equalsSign = param.indexOf("=");
+				String paramName = param.substring(0,equalsSign);
+				String value = param.substring(equalsSign+1);
+				params.put(paramName,value);
+			}
+		}
+		
+		/**
+		 * @see wicket.Request#getLocale()
+		 */
+		public Locale getLocale()
+		{
+			return realRequest.getLocale();
+		}
+
+		/**
+		 * @see wicket.Request#getParameter(java.lang.String)
+		 */
+		public String getParameter(String key)
+		{
+			return (String)params.get(key);
+		}
+
+		/**
+		 * @see wicket.Request#getParameterMap()
+		 */
+		public Map getParameterMap()
+		{
+			return params;
+		}
+
+		/**
+		 * @see wicket.Request#getParameters(java.lang.String)
+		 */
+		public String[] getParameters(String key)
+		{
+			String param = (String)params.get(key);
+			if(param != null) return new String[] {param};
+			return new String[0];
+		}
+
+		/**
+		 * @see wicket.Request#getPath()
+		 */
+		public String getPath()
+		{
+			return realRequest.getPath();
+		}
+
+		/**
+		 * @see wicket.Request#getRelativeURL()
+		 */
+		public String getRelativeURL()
+		{
+			return url.substring(url.indexOf("/",1));
+		}
+
+		/**
+		 * @see wicket.Request#getURL()
+		 */
+		public String getURL()
+		{
+			return url;
+		}
+		
 	}
 }
