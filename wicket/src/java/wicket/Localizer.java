@@ -21,48 +21,44 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.MissingResourceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.model.IModel;
-import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.settings.IResourceSettings;
-import wicket.util.concurrent.ConcurrentReaderHashMap;
-import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
  * Utility class that encapsulates all of the localization related functionality
- * in a way that is can be accessed by all areas of the framework in a
+ * in a way that it can be accessed by all areas of the framework in a
  * consistent way. A singleton instance of this class is available via the
- * <code>Application</code> object.
+ * <code>Application</code> object.<p>
+ * You may register additional IStringResourceLoader to extend or replace 
+ * Wickets default search strategy for the properties. E.g. string resource
+ * loaders which load the properties from a database.
+ * 
+ * @see wicket.settings.Settings#getLocalizer()
+ * @see IStringResourceLoader
+ * @see wicket.settings.Settings#getStringResourceLoaders()
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
- * @see wicket.settings.Settings#getLocalizer()
  */
 public class Localizer
 {
 	/** Log */
 	private static final Log log = LogFactory.getLog(Localizer.class);
 
-	/** ConcurrentReaderHashMap does not allow null values. This is a substitute */
-	private static final String NULL = new String();
-
 	/** The application and its settings to use to control the utils. */
 	private Application application;
 
-	/** Because properties search can be expensive, we cache the value */
-	private Map cachedValues = new ConcurrentReaderHashMap();
-
 	/**
 	 * Create the utils instance class backed by the configuration information
-	 * contained within the supplied settings object.
+	 * contained within the supplied application object.
 	 * 
 	 * @param application
 	 *            The application to localize for
@@ -70,35 +66,6 @@ public class Localizer
 	public Localizer(final Application application)
 	{
 		this.application = application;
-
-		// Register a listener to the properties factory which is invoked after
-		// a properties file has been reloaded.
-		application.getResourceSettings().getPropertiesFactory().addListener(
-				new IPropertiesReloadListener()
-				{
-					public void propertiesLoaded(final String key)
-					{
-						// Remove all cached values. Unfortunately I did not yet
-						// find a proper way (which is easy and clean to
-						// implement) which selectively removes just the cache
-						// entries affected. Hence they all get removed.
-						// Actually that is less worse as it may sound, because
-						// type Properties does cache them as well. We only have
-						// to walk the properties resolution path once again.
-						// And, the feature of reloading the properties file
-						// is usually activated during development only and
-						// for production. Hence, it affect development only.
-						cachedValues.clear();
-					}
-				});
-	}
-
-	/**
-	 * Remove all cached properties
-	 */
-	public final void clearCache()
-	{
-		this.cachedValues.clear();
 	}
 
 	/**
@@ -169,60 +136,24 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		// Create the cache key
-		Class clazz = (component != null ? component.getClass() : null);
-		String id = createCacheId(clazz, locale, style, key);
+		final List searchStack;
+		final String path;
 		if (component != null)
 		{
-			id += ":" + component.getId();
+			searchStack = getComponentStack(component);
+			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".");
 		}
-
-		// The cached key value, NULL can be returned so that we don't search a
-		// second time for the same id.
-		// TODO juergen? Is this cached value not totally depended on the
-		// searchStack? (getComponentStack(component))
-		// Depending on where the component is used different values could be
-		// returned?
-		String string = getCachedValue(id);
-
-		// If not found in the cache
-		if (string == null)
+		else
 		{
-			final List searchStack;
-			final String path;
-			if (component != null)
-			{
-				searchStack = getComponentStack(component);
-				path = Strings.replaceAll(component.getPageRelativePath(), ":", ".");
-			}
-			else
-			{
-				searchStack = new ArrayList(0);
-				searchStack.add(Application.get().getClass());
-				path = null;
-			}
-
-			string = traverseResourceLoaders(key, path, searchStack, locale, style);
-
-			// cache all values, not matter the key has been found or not
-			if (string != null)
-			{
-				this.cachedValues.put(id, string);
-			}
-			else
-			{
-				// ConcurrentReaderHashMap does not allow null values. This is a
-				// substitute
-				this.cachedValues.put(id, NULL);
-			}
+			searchStack = new ArrayList(0);
+			searchStack.add(Application.get().getClass());
+			path = null;
 		}
+
+		String string = traverseResourceLoaders(key, path, searchStack, locale, style);
 
 		// Check now if the string was NULL (not found the last time)
-		if (string == NULL)
-		{
-			string = null;
-		}
-		else if (string != null)
+		if (string != null)
 		{
 			return substitutePropertyExpressions(component, string, model);
 		}
@@ -237,9 +168,8 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			throw new MissingResourceException("Unable to find resource: " + key, (clazz != null
-					? getClass().getName()
-					: ""), key);
+			throw new MissingResourceException("Unable to find resource: " + key, 
+					(component != null ? component.getClass().getName() : ""), key);
 		}
 		else
 		{
@@ -324,108 +254,8 @@ public class Localizer
 		Class componentClass = (searchStack.size() > 0 ? (Class)searchStack.get(0) : null);
 
 		// If value is cached already ...
-		String id = createCacheId(componentClass, locale, style, key);
-
-		// The cached key value, NULL can be returned so that we don't search a
-		// second time for the same id.
-		String string = getCachedValue(id);
-
-		// Check now if the string was NULL (not found the last time)
-		if (string == NULL)
-		{
-			string = null;
-		}
-		// If not found in the cache
-		else if (string == null)
-		{
-			string = traverseResourceLoaders(key, path, searchStack, locale, style);
-
-			// cache all values, not matter the key has been found or not
-			if (string != null)
-			{
-				this.cachedValues.put(id, string);
-			}
-			else
-			{
-				// ConcurrentReaderHashMap does not allow null values. This is a
-				// substitute
-				this.cachedValues.put(id, NULL);
-			}
-		}
-
+		String string = traverseResourceLoaders(key, path, searchStack, locale, style);
 		return string;
-	}
-
-	/**
-	 * Helper method to create a unique id for caching previously loaded
-	 * resources.
-	 * 
-	 * @param clazz
-	 *            The class that the resources is being loaded for
-	 * @param locale
-	 *            The locale of the resources
-	 * @param style
-	 *            The style of the resources (see {@link wicket.Session})
-	 * @param key
-	 *            The message key
-	 * @return The unique cache id
-	 */
-	private String createCacheId(final Class clazz, final Locale locale, final String style,
-			final String key)
-	{
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(80);
-		if (clazz != null)
-		{
-			buffer.append(clazz.getName());
-		}
-		if (style != null)
-		{
-			buffer.append(Component.PATH_SEPARATOR);
-			buffer.append(style);
-		}
-		if (locale != null)
-		{
-			buffer.append(Component.PATH_SEPARATOR);
-			boolean l = locale.getLanguage().length() != 0;
-			boolean c = locale.getCountry().length() != 0;
-			boolean v = locale.getVariant().length() != 0;
-			buffer.append(locale.getLanguage());
-			if (c || (l && v))
-			{
-				// This may just append '_'
-				buffer.append('_').append(locale.getCountry());
-			}
-			if (v && (l || c))
-			{
-				buffer.append('_').append(locale.getVariant());
-			}
-		}
-		buffer.append('.');
-		buffer.append(key);
-
-		final String id = buffer.toString();
-		return id;
-	}
-
-	/**
-	 * Helper method to create a unique id for caching previously loaded
-	 * resources.
-	 * 
-	 * @param cacheId
-	 *            The resources cache id
-	 * @return The unique cache id
-	 */
-	private String getCachedValue(final String cacheId)
-	{
-		String value = (String)cachedValues.get(cacheId);
-		if (value != null)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Found message key in cache: " + cacheId);
-			}
-		}
-		return value;
 	}
 
 	/**
