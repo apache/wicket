@@ -925,6 +925,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final RequestParameters requestParameters = getRequest().getRequestParameters();
 		final Component component = page.get(requestParameters.getComponentPath());
+		if (component == null)
+		{
+			throw new WicketRuntimeException(
+					"Component not found: " + requestParameters.getComponentPath());
+		}
 		if (!component.isVisible())
 		{
 			throw new WicketRuntimeException(
