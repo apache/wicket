@@ -98,8 +98,8 @@ public class RequestListenerInterface
 		// Save short class name
 		this.name = Classes.name(listenerInterfaceClass);
 		
-		// Register this listener interface
-		registerRequestListenerInterface(this);
+		// Register this listener
+		register();
 	}
 
 	/**
@@ -175,6 +175,15 @@ public class RequestListenerInterface
 			final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);
+	}
+
+	/**
+	 * Method to call to register this interface for use
+	 */
+	public void register()
+	{
+		// Register this listener interface
+		registerRequestListenerInterface(this);
 	}
 
 	/**
