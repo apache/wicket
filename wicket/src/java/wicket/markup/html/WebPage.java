@@ -184,7 +184,7 @@ public class WebPage extends Page
 	 */
 	protected void onEndRequest()
 	{
-		// TODO Documentation: What again was the reason why this is necessary?
+		// FIXME Documentation: What again was the reason why this is necessary?
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{

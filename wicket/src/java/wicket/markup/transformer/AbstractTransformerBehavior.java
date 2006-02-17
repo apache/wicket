@@ -33,7 +33,7 @@ import wicket.response.StringResponse;
  * 
  * @author Juergen Donnerstag
  * 
- * TODO Robustness: IBehavior does not have an event which gets called in case
+ * FIXME Robustness: IBehavior does not have an event which gets called in case
  * of an exception. Hence the response object might not be restored.
  */
 public abstract class AbstractTransformerBehavior extends AbstractBehavior implements ITransformer

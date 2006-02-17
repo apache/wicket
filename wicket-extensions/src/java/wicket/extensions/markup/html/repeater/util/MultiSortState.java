@@ -30,7 +30,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortState;
  * @author Igor Vaynberg
  * @author Phil Kulak
  */
-// TODO General: Finish
+// FIXME General: If we are not going to finish this for 1.2 final, please remove.
 /*public */class MultiSortState implements ISortState
 {
 	/**
