@@ -109,6 +109,9 @@ public abstract class Application
 	/** Configuration type constant for development */
 	public static final String DEVELOPMENT = "development";
 
+	/** Configuration type constant for getting the context path out of the web.xml*/
+	public static final String CONTEXTPATH = "contextpath";
+
 	/** Thread local holder of the application object. */
 	private static final ThreadLocal current = new ThreadLocal();
 
