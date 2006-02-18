@@ -679,8 +679,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
 			if (request != null)
 			{
-				final String contextPath = request.getContextPath();
-				buffer.append(contextPath);
+				String contextPath = Application.get().getApplicationSettings().getContextPath();
+				if (contextPath == null)
+				{
+					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest().getContextPath();
+					if (contextPath == null)
+					{
+						contextPath = "";
+					}
+				}
+				if(!contextPath.equals("/"))
+				{
+					buffer.append(contextPath);
+				}
 				String path = request.getServletPath();
 				if (path == null || "".equals(path))
 				{
