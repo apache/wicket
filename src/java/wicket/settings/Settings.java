@@ -271,6 +271,9 @@ public final class Settings
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
+	/** The context path that should be used for url prefixing */
+	private String contextPath;
+
 
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -414,6 +417,14 @@ public final class Settings
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#getContextPath()
+	 */
+	public String getContextPath()
+	{
+		return contextPath;
 	}
 
 	/**
@@ -795,6 +806,24 @@ public final class Settings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#setContextPath(java.lang.String)
+	 */
+	public void setContextPath(String contextPath)
+	{
+		if(contextPath != null)
+		{
+			if(!contextPath.startsWith("/"))
+			{
+				this.contextPath = "/" + contextPath;
+			}
+			else
+			{
+				this.contextPath = contextPath;
+			}
+		}
 	}
 
 	/**
