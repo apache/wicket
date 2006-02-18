@@ -89,7 +89,10 @@ public class FormInput extends WicketExamplePage
 	 */
 	public void setLocale(Locale locale)
 	{
-		getSession().setLocale(locale);
+		if (locale != null)
+		{
+			getSession().setLocale(locale);
+		}
 	}
 
 	/**
