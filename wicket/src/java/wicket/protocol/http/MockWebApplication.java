@@ -134,6 +134,9 @@ public class MockWebApplication extends WebApplication
 		wicketRequest = newWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
 
+		// set the default context path
+		getApplicationSettings().setContextPath(context.getServletContextName());
+		
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 	}
