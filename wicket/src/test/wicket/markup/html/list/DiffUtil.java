@@ -102,8 +102,8 @@ public final class DiffUtil
 			log.error("===================");
 			/* */
 
-			String[] test1 = StringList.tokenize(document, "\n").toArray();
-			String[] test2 = StringList.tokenize(reference, "\n").toArray();
+			String[] test1 = StringList.tokenize(reference, "\n").toArray();
+			String[] test2 = StringList.tokenize(document, "\n").toArray();
 			Diff diff = new Diff(test1, test2);
 			Diff.change script = diff.diff_2(false);
 			DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
