@@ -542,6 +542,15 @@ public abstract class WebApplication extends Application
 				// Save this session in the HttpSession using the attribute name
 				httpSession.setAttribute(sessionAttribute, webSession);
 			}
+			
+			// Set the default context path if the context path is not already set
+			// (previous time or by the developer itself)
+			// This all to do missing api in the servlet spec.. You can't get a 
+			// context path from the servlet context, which is just stupid.
+			if(getApplicationSettings().getContextPath() == null)
+			{
+				getApplicationSettings().setContextPath(request.getContextPath());
+			}
 		}
 
 		// Set application on session
