@@ -19,13 +19,14 @@ package wicket.markup.html.form.validation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.MissingResourceException;
 
+import wicket.Application;
 import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * Base class for form component validators. This class is thread-safe and
@@ -63,9 +64,6 @@ import wicket.util.lang.Classes;
 public abstract class AbstractValidator implements IValidator
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Log. */
-	// private static Log log = LogFactory.getLog(AbstractValidator.class);
 
 	/**
 	 * Sets an error on the component being validated using the map returned by
@@ -79,47 +77,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent)
 	{
-		error(formComponent, messageModel(formComponent));
-	}
-
-	/**
-	 * Returns a formatted validation error message for a given component. The
-	 * error message is retrieved from a message bundle associated with the page
-	 * in which this validator is contained using the given resource key. The
-	 * resourceModel is used for variable interpolation.
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @param resourceKey
-	 *            The resource key to use
-	 * @param resourceModel
-	 *            The model for variable interpolation
-	 */
-	public void error(final FormComponent formComponent, final String resourceKey,
-			final IModel resourceModel)
-	{
-		// Return formatted error message
-		Localizer localizer = formComponent.getLocalizer();
-
-		// TODO Post 1.2: I didn't find a simpler way to getString() throw a
-		// MissingResourceException without changes the application settings. I
-		// guess this is something to change in 1.2 or 1.3
-		String message = localizer.getString(resourceKey, formComponent.getParent(), resourceModel,
-				"");
-		if ((message == null) || (message.length() == 0))
-		{
-			if (formComponent.getApplication().getResourceSettings()
-					.getThrowExceptionOnMissingResource())
-			{
-				throw new MissingResourceException("Unable to find resource: " + resourceKey,
-						formComponent.getClass().getName(), resourceKey);
-			}
-			else
-			{
-				message = "[Warning: String resource for '" + resourceKey + "' not found]";
-			}
-		}
-		formComponent.error(message);
+		error(formComponent, resourceKey(formComponent), messageModel(formComponent));
 	}
 
 	/**
@@ -149,16 +107,51 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final Map map)
 	{
-		IModel model = Model.valueOf(map);
-		try
+		error(formComponent, resourceKey(formComponent), Model.valueOf(map));
+	}
+
+	/**
+	 * Returns a formatted validation error message for a given component. The
+	 * error message is retrieved from a message bundle associated with the page
+	 * in which this validator is contained using the given resource key. The
+	 * resourceModel is used for variable interpolation.
+	 * 
+	 * @param formComponent
+	 *            form component
+	 * @param resourceKey
+	 *            The resource key to use
+	 * @param resourceModel
+	 *            The model for variable interpolation
+	 */
+	public void error(final FormComponent formComponent, final String resourceKey,
+			final IModel resourceModel)
+	{
+		// Return formatted error message
+		Localizer localizer = formComponent.getLocalizer();
+
+		// Get the property value associated with the key.
+		
+		// Note: It is important that the default value of "" is provided
+		// to getString() not to throw a MissingResourceException or to 
+		// return a default string like "[Warning: String ..." 
+		String message = localizer.getString(resourceKey, formComponent.getParent(), 
+				resourceModel, "");
+		
+		// If not found, than ..
+		if (Strings.isEmpty(message))
 		{
-			error(formComponent, resourceKey(formComponent), model);
-		}
-		catch (MissingResourceException ex)
-		{
+			// Have a 2nd try with the class name as the key. This makes for
+			// keys like "RequiredValidator" in any of the properties files
+			// along the path.
+			
+			// Note: It is important that the default value of "" is NOT provided
+			// to getString() throw either MissingResourceException or to to 
+			// return a default string like "[Warning: String ..." in case the
+			// property could not be found.
 			String key = Classes.name(getClass());
-			error(formComponent, key, model);
+			message = localizer.getString(key, formComponent.getParent(), resourceModel);
 		}
+		formComponent.error(message);
 	}
 
 	/**
@@ -172,8 +165,8 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	protected String resourceKey(final FormComponent formComponent)
 	{
-		return formComponent.getApplication().getResourceSettings()
-				.getValidatorResourceKeyFactory().newKey(this, formComponent);
+		return Application.get().getResourceSettings().getValidatorResourceKeyFactory().newKey(
+				this, formComponent);
 	}
 
 	/**

@@ -17,6 +17,8 @@
  */
 package wicket.properties;
 
+import java.util.MissingResourceException;
+
 import junit.framework.TestCase;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.RequiredValidator;
@@ -64,5 +66,41 @@ public class ValidatorPropertiesTest extends TestCase
 		
 		// Test caching
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
+	}
+	
+	/**
+	 * 
+	 */
+	public void test2()
+	{
+		WicketTester tester = new MyTesterApplication();
+		tester.getResourceSettings().setThrowExceptionOnMissingResource(false);
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		
+		String str = tester.getResourceSettings().getLocalizer().getString("XXX", null);
+		assertEquals("[Warning: String resource for 'XXX' not found]", str);
+	}
+	
+	/**
+	 * 
+	 */
+	public void test3()
+	{
+		WicketTester tester = new MyTesterApplication();
+		tester.getResourceSettings().setThrowExceptionOnMissingResource(true);
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		
+		boolean hit = false;
+		try
+		{
+			tester.getResourceSettings().getLocalizer().getString("XXX", null);
+		}
+		catch (MissingResourceException ex)
+		{
+			hit = true;
+		}
+		assertEquals("MissingResourceException expected", hit, true);
 	}
 }
