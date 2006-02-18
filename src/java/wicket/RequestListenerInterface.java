@@ -45,8 +45,7 @@ public class RequestListenerInterface
 	 * @return The RequestListenerInterface object, or null if none is found
 	 * 
 	 */
-	public static final RequestListenerInterface forName(
-			final String interfaceName)
+	public static final RequestListenerInterface forName(final String interfaceName)
 	{
 		return (RequestListenerInterface)interfaces.get(interfaceName);
 	}
@@ -58,12 +57,37 @@ public class RequestListenerInterface
 	private String name;
 
 	/**
-	 * Constructor.
+	 * Whether or not this listener is targetted for a specific page version. If
+	 * recordVersion is true the page will be rolled back to the version which
+	 * created the url, if false the latest version of the page will be used.
+	 */
+	private boolean recordsPageVersion = true;
+
+
+	/**
+	 * Constructor that creates listener interfaces which record the page
+	 * version.
 	 * 
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
 	 */
 	public RequestListenerInterface(final Class listenerInterfaceClass)
+	{
+		this(listenerInterfaceClass, true);
+	}
+
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param listenerInterfaceClass
+	 *            The interface class, which must extend IRequestListener.
+	 * @param recordsPageVersion
+	 *            Whether or not urls encoded for this interface contain the
+	 *            page version. If set to false the latest page version is
+	 *            always used.
+	 */
+	public RequestListenerInterface(final Class listenerInterfaceClass, boolean recordsPageVersion)
 	{
 		// Ensure that i extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
@@ -71,6 +95,8 @@ public class RequestListenerInterface
 			throw new IllegalArgumentException("Class " + listenerInterfaceClass
 					+ " must extend IRequestListener");
 		}
+
+		this.recordsPageVersion = recordsPageVersion;
 
 		// Get interface methods
 		final Method[] methods = listenerInterfaceClass.getMethods();
@@ -97,7 +123,7 @@ public class RequestListenerInterface
 
 		// Save short class name
 		this.name = Classes.name(listenerInterfaceClass);
-		
+
 		// Register this listener
 		register();
 	}
@@ -213,8 +239,8 @@ public class RequestListenerInterface
 	{
 		// Check that a different interface method with the same name has not
 		// already been registered
-		final RequestListenerInterface existingInterface = RequestListenerInterface.forName(requestListenerInterface
-				.getName());
+		final RequestListenerInterface existingInterface = RequestListenerInterface
+				.forName(requestListenerInterface.getName());
 		if (existingInterface != null
 				&& existingInterface.getMethod() != requestListenerInterface.getMethod())
 		{
@@ -223,8 +249,19 @@ public class RequestListenerInterface
 					+ " because it conflicts with the already registered interface "
 					+ existingInterface);
 		}
-	
+
 		// Save this interface method by the non-qualified class name
 		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
+	}
+
+
+	/**
+	 * @return true if urls encoded for this interface should record the page
+	 *         version, false if they should always be encoded for the latest
+	 *         page version
+	 */
+	public final boolean getRecordsPageVersion()
+	{
+		return recordsPageVersion;
 	}
 }

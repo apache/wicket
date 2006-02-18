@@ -73,7 +73,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			getComponent().getPage().setVersioned(isPageVersioned);
 		}
 	}
-
+	
 	/**
 	 * @param target
 	 *            The AJAX target
