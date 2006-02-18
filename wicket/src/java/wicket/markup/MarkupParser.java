@@ -308,7 +308,7 @@ public class MarkupParser
 	
 	                    if (stripComments)
 	                    {
-	                        rawMarkup = rawMarkup.replaceAll("<!--(.|\n|\r)*?-->", "");
+	                        rawMarkup = removeComment(rawMarkup);
 	                    }
 	
 	                    if (compressWhitespace)
@@ -391,6 +391,33 @@ public class MarkupParser
         return Collections.unmodifiableList(list);
     }
 
+    /**
+     * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup.
+     * For reasons I don't understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
+     * causes a stack overflow in some circumstances (jdk 1.5) 
+     * 
+     * @param rawMarkup
+     * @return raw markup
+     */
+    private String removeComment(String rawMarkup)
+    {
+    	int pos1 = rawMarkup.indexOf("<!--");
+    	while (pos1 >= 0)
+    	{
+    		StringBuffer buf = new StringBuffer(rawMarkup.length());
+    		int pos2 = rawMarkup.indexOf("-->", pos1);
+    		
+    		if (pos2 >= 0)
+    		{
+    			buf.append(rawMarkup.substring(0, pos1 - 1));
+    			buf.append(rawMarkup.substring(pos2 + 4));
+    			rawMarkup = buf.toString();
+    		}
+        	pos1 = rawMarkup.indexOf("<!--");
+    	}
+    	return rawMarkup;
+    }
+    
     /**
      * Determine wicket namespace from xmlns:wicket or
      * xmlns:wicket="http://wicket.sourceforge.net"
