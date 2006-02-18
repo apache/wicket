@@ -10,6 +10,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Johan Compagner" issue="1433735" due-to="Alastair Maw">Proxying breaks because ContextPath is included in links: contextpath now configurable through ApplicationSettings.setContextPath(), also through a servlet init param: contextpath</action>
       <action type="add" dev="Johan Compagner" issue="1418043" due-to="Arto Arffman">DropDownList: flag to indicate localization of options, By default options are not localized anymore you have to override localizeDisplayValues() method for this.</action>
       <action type="fix" dev="Johan Compagner">Cookies where not deleted when cleared.</action>
       <action type="delete" dev="Johan Compagner">Removed the Page.checkAccess() method, see the new Authorizaton interfaces for a replacement</action>
