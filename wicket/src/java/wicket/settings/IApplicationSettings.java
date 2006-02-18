@@ -39,6 +39,19 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
+	 * Gets context path to use for absolute path generation.
+	 * For example an Application Server that is used as a 
+	 * virtual server on a Webserver:
+	 *  
+	 * <pre>
+	 *    appserver.com/context mapped to webserver/ (context path should be '/')
+	 * </pre>
+	 * 
+	 * @return The context path
+	 */
+	String getContextPath();
+
+	/**
 	 * Gets the converter factory.
 	 * 
 	 * @return the converter factory
@@ -84,6 +97,20 @@ public interface IApplicationSettings
 	void setClassResolver(final IClassResolver defaultClassResolver);
 
 	/**
+	 * Sets context path to use for absolute path generation.
+	 * For example an Application Server that is used as a 
+	 * virtual server on a Webserver:
+	 *  
+	 * <pre>
+	 *    appserver.com/context mapped to webserver/ (context path should be '/')
+	 * </pre>
+	 * 
+	 * @param contextPath The context path to use. 
+	 * 
+	 */
+	void setContextPath(String contextPath);
+
+	/**
 	 * Sets converter factory
 	 * 
 	 * @param factory
@@ -114,4 +141,5 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
+
 }
