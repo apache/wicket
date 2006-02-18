@@ -394,6 +394,12 @@ public abstract class WebApplication extends Application
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(getWicketServlet().getServletContext()));
 
+		String contextPath = wicketServlet.getInitParameter(Application.CONTEXTPATH);
+		if(contextPath != null)
+		{
+			getApplicationSettings().setContextPath(contextPath);
+		}
+		
 		// Check if system property -Dwicket.configuration exists
 		String configuration = null;
 		try
