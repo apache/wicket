@@ -30,6 +30,7 @@ import wicket.protocol.http.MockPage;
 public class FormDispatchEventTest extends WicketTestCase
 {
 	private boolean selection;
+	private boolean submit;
 
 	/**
 	 * Construct.
@@ -52,7 +53,7 @@ public class FormDispatchEventTest extends WicketTestCase
 
 			protected void onSubmit()
 			{
-				assertTrue("on submit shouldn't be reached", true);
+				submit= true;
 			}
 		};
 
@@ -86,15 +87,8 @@ public class FormDispatchEventTest extends WicketTestCase
 		page.urlFor(IRedirectListener.INTERFACE);
 		cycle.getSession().touch(page);
 
-		try
-		{
-			form.onFormSubmitted();
-			assertTrue("form should throw an error", true);
-		}
-		catch (WicketRuntimeException ex)
-		{
-			// nothing to do
-		}
+		form.onFormSubmitted();
+		assertTrue("form should should set value ", submit);
 
 		application.getServletRequest().setParameter(form.getHiddenFieldId(),
 				dropDown.urlFor(IOnChangeListener.INTERFACE));
