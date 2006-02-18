@@ -19,14 +19,13 @@
 package wicket.markup.html.panel;
 
 import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
 
 
 /**
  *
  * @author Juergen Donnerstag
  */
-public class InlinePanelPage_2 extends WebPage 
+public class InlinePanelPage_3 extends WebPage 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -34,11 +33,12 @@ public class InlinePanelPage_2 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public InlinePanelPage_2() 
+	public InlinePanelPage_3() 
 	{
-	    Fragment panel1 = new Fragment("myPanel1", "frag1");
-	    add(panel1);
-	    
-	    panel1.add(new Label("label1", "my label text"));
+		// tell the fragment that this page is the one that contains its markup
+		Fragment child=new Fragment("child", "child-frag", this);
+		
+		InlineTestPanel p=new InlineTestPanel("test-panel", child);
+		add(p);
     }
 }

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -30,7 +31,7 @@ import wicket.markup.parser.XmlTag;
  * maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
- * Inline panels provide a means to maintain the panels tiny piece of markup in
+ * Fragments provide a means to maintain the panels tiny piece of markup in
  * the parents markup file.
  * <p>
  * 
@@ -41,18 +42,37 @@ import wicket.markup.parser.XmlTag;
  *     &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *   	 add(new InlinePanel(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *   	 add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  *   &lt;pre&gt;
  *   
  *   @author Juergen Donnerstag
  * 
  */
-public class InlinePanel extends WebMarkupContainer
+public class Fragment extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The wicket:id of the associated markup fragment */
 	private String markupId;
+
+	private Component markupProvider;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @see wicket.Component#Component(String)
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param markupId
+	 *            The associated id of the associated markup fragment
+	 */
+	public Fragment(final String id, final String markupId)
+	{
+		super(id);
+
+		this.markupId = markupId;
+	}
 
 	/**
 	 * Constructor.
@@ -64,13 +84,16 @@ public class InlinePanel extends WebMarkupContainer
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 */
-	public InlinePanel(final String id, final String markupId)
+	public Fragment(final String id, final String markupId, Component markupProvider)
 	{
 		super(id);
 
 		this.markupId = markupId;
+		
+		this.markupProvider=markupProvider;
 	}
 
+	
 	/**
 	 * The associated markup fragment can be modified
 	 * 
@@ -78,6 +101,7 @@ public class InlinePanel extends WebMarkupContainer
 	 */
 	public final void setMarkupTagReferenceId(final String markupId)
 	{
+		//FIXME General: does this need to be versioned?
 		this.markupId = markupId;
 	}
 
@@ -102,7 +126,7 @@ public class InlinePanel extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		// Skip the components body. It will be replaced by the inline panel
+		// Skip the components body. It will be replaced by the fragment
 		markupStream.skipRawMarkup();
 
 		// remember the current position in the markup. Will have to come back

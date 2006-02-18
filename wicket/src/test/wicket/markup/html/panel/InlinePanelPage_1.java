@@ -35,10 +35,10 @@ public class InlinePanelPage_1 extends WebPage
 	 */
 	public InlinePanelPage_1() 
 	{
-	    InlinePanel panel1 = new InlinePanel("myPanel1", "frag1");
+	    Fragment panel1 = new Fragment("myPanel1", "frag1");
 	    add(panel1);
 	    
-	    InlinePanel panel2 = new InlinePanel("myPanel2", "frag2");
+	    Fragment panel2 = new Fragment("myPanel2", "frag2");
 	    add(panel2);
     }
 }

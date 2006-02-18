@@ -36,7 +36,7 @@ import wicket.markup.WicketTag;
  * 
  * @author Juergen Donnerstag
  */
-public class InlinePanelResolver implements IComponentResolver
+public class FragmentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
