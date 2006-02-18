@@ -55,7 +55,7 @@ public interface IStringResourceLoader
      * skin/brand.
      * 
      * @param clazz
-     *            The component class to get the string resource for
+     *            The class to get the string resource for
      * @param key
      *            The key to obtain the string for
      * @param locale

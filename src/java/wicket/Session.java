@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.133 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -501,7 +501,8 @@ public abstract class Session implements Serializable
 	 */
 	public final void removePageMap(final PageMap pageMap)
 	{
-	    if(pageMaps>0)pageMaps--;
+		if (pageMaps > 0)
+			pageMaps--;
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 	}
 
@@ -541,6 +542,10 @@ public abstract class Session implements Serializable
 	 */
 	public final void setLocale(final Locale locale)
 	{
+		if (locale == null)
+		{
+			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+		}
 		this.locale = locale;
 		this.converter = null;
 		dirty();

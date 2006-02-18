@@ -105,7 +105,7 @@ public class AttributeAppender extends AttributeModifier
 	{
 		final int appendValueLen = (appendValue == null) ? 0 : appendValue.length();
 
-		AppendingStringBuffer sb;
+		final AppendingStringBuffer sb;
 		if (currentValue == null)
 		{
 			sb = new AppendingStringBuffer(appendValueLen + separator.length());
@@ -119,14 +119,12 @@ public class AttributeAppender extends AttributeModifier
 
 		// if the current value or the append value is empty, the separator is
 		// not needed.
-
 		if (!Strings.isEmpty(currentValue) && !Strings.isEmpty(appendValue))
 		{
 			sb.append(separator);
 		}
 
 		// only append the value when it is not empty.
-
 		if (!Strings.isEmpty(appendValue))
 		{
 			sb.append(appendValue);

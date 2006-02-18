@@ -45,7 +45,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 * Iteration count used in combination with the salt to create the
 	 * encryption key.
 	 */
-	private final static int count = 17;
+	private final static int COUNT = 17;
 
 	/** Name of encryption method */
 	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
@@ -94,7 +94,7 @@ public class SunJceCrypt extends AbstractCrypt
 	protected final byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
 	{
 		SecretKey key = generateSecretKey();
-		PBEParameterSpec spec = new PBEParameterSpec(salt, count);
+		PBEParameterSpec spec = new PBEParameterSpec(salt, COUNT);
 		Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
 		ciph.init(mode, key, spec);
 		return ciph.doFinal(input);

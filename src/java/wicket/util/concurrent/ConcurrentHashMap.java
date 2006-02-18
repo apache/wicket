@@ -159,20 +159,17 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 */
 	protected transient Entry[] table;
 
-
 	/**
 	 * The number of concurrency control segments. The value can be at most 32
 	 * since ints are used as bitsets over segments. Emprically, it doesn't seem
 	 * to pay to decrease it either, so the value should be at least 32. In
 	 * other words, do not redefine this :-)
 	 */
-
 	protected static final int CONCURRENCY_LEVEL = 32;
 
 	/**
 	 * Mask value for indexing into segments
 	 */
-
 	protected static final int SEGMENT_MASK = CONCURRENCY_LEVEL - 1;
 
 	/**
@@ -183,6 +180,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	protected final static class Segment implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
+		
 		/**
 		 * The number of elements in this segment's region. It is always updated
 		 * within synchronized blocks.
@@ -212,13 +210,11 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	protected final Segment[] segments = new Segment[CONCURRENCY_LEVEL];
 
-
 	/**
 	 * The default initial number of table slots for this table (32). Used when
 	 * not otherwise specified in constructor.
 	 */
-	public static int DEFAULT_INITIAL_CAPACITY = 32;
-
+	public static final int DEFAULT_INITIAL_CAPACITY = 32;
 
 	/**
 	 * The minimum capacity, used if a lower value is implicitly specified by
@@ -236,7 +232,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * The default load factor for this table (0.75) Used when not otherwise
 	 * specified in constructor.
 	 */
-
 	public static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
 	/**
@@ -253,15 +248,12 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 */
 	protected int threshold;
 
-
 	/**
 	 * Number of segments voting for resize. The table is doubled when 1/4 of
 	 * the segments reach threshold. Volatile but updated without synch since
 	 * this is just a heuristic.
 	 */
-
 	protected transient volatile int votesForResize;
-
 
 	/**
 	 * Return the number of set bits in w. For a derivation of this algorithm,
@@ -323,7 +315,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		return ((h << 7) - h + (h >>> 9) + (h >>> 17));
 	}
 
-
 	/**
 	 * Check for equality of non-null references x and y.
 	 * @param x ref
@@ -368,10 +359,14 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	public ConcurrentHashMap(int initialCapacity, float loadFactor)
 	{
 		if (!(loadFactor > 0))
+		{
 			throw new IllegalArgumentException("Illegal Load factor: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		for (int i = 0; i < segments.length; ++i)
+		{
 			segments[i] = new Segment();
+		}
 		int cap = p2capacity(initialCapacity);
 		table = newTable(cap);
 	}
@@ -421,7 +416,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	{
 		int c = 0;
 		for (int i = 0; i < segments.length; ++i)
+		{
 			c += segments[i].getCount();
+		}
 		return c;
 	}
 
@@ -433,11 +430,14 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	public boolean isEmpty()
 	{
 		for (int i = 0; i < segments.length; ++i)
+		{
 			if (segments[i].getCount() != 0)
+			{
 				return false;
+			}
+		}
 		return true;
 	}
-
 
 	/**
 	 * Returns the value to which the specified key is mapped in this table.
@@ -504,12 +504,10 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 *                if the key is <code>null</code>.
 	 * @see #contains(Object)
 	 */
-
 	public boolean containsKey(Object key)
 	{
 		return get(key) != null;
 	}
-
 
 	/**
 	 * Maps the specified <code>key</code> to the specified <code>value</code>
@@ -593,7 +591,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 *            any call, the attempt is aborted because the table has already
 	 *            been resized by another thread.
 	 */
-
 	protected void resize(int index, Entry[] assumedTab)
 	{
 		Segment seg = segments[index];
@@ -687,7 +684,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		table = newTable;
 	}
 
-
 	/**
 	 * Removes the key (and its corresponding value) from this table. This
 	 * method does nothing if the key is not in the table.
@@ -704,7 +700,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		return remove(key, null);
 	}
 
-
 	/**
 	 * Removes the (key, value) pair from this table. This method does nothing
 	 * if the key is not in the table, or if the key is associated with a
@@ -720,7 +715,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * @exception NullPointerException
 	 *                if the key is <code>null</code>.
 	 */
-
 	protected Object remove(Object key, Object value)
 	{
 		/*
@@ -764,7 +758,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			return oldValue;
 		}
 	}
-
 
 	/**
 	 * Returns <tt>true</tt> if this map maps one or more keys to the
@@ -821,7 +814,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * @see #containsValue(Object)
 	 * @see Map
 	 */
-
 	public boolean contains(Object value)
 	{
 		return containsValue(value);
@@ -836,7 +828,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * @param t
 	 *            Mappings to be stored in this map.
 	 */
-
 	public void putAll(Map t)
 	{
 		int n = t.size();
@@ -870,7 +861,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Removes all mappings from this map.
 	 */
-
 	public void clear()
 	{
 		// We don't need all locks at once so long as locks
@@ -898,7 +888,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @return a shallow copy of this map.
 	 */
-
 	public Object clone()
 	{
 		// We cannot call super.clone, since it would share final segments
@@ -924,7 +913,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 */
-
 	public Set keySet()
 	{
 		Set ks = keySet;
@@ -986,7 +974,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
-
 	public Collection values()
 	{
 		Collection vs = values;
@@ -1041,7 +1028,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @return a collection view of the mappings contained in this map.
 	 */
-
 	public Set entrySet()
 	{
 		Set es = entrySet;
@@ -1122,7 +1108,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * @see #values()
 	 * @see Map
 	 */
-
 	public Enumeration elements()
 	{
 		return new ValueIterator();
@@ -1131,7 +1116,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * ConcurrentHashMap collision list entry.
 	 */
-
 	protected static class Entry implements Map.Entry
 	{
 		/*
@@ -1199,7 +1183,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 *                if the value is <code>null</code>.
 		 * 
 		 */
-
 		public Object setValue(Object value)
 		{
 			if (value == null)
@@ -1237,7 +1220,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		{
 			return key + "=" + value;
 		}
-
 	}
 
 	protected class HashIterator implements Iterator, Enumeration
@@ -1345,7 +1327,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			ConcurrentHashMap.this.remove(lastReturned.key);
 			lastReturned = null;
 		}
-
 	}
 
 	protected class KeyIterator extends HashIterator
@@ -1375,7 +1356,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 *             null pair. The key-value mappings are emitted in no
 	 *             particular order.
 	 */
-
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		// Write out the loadfactor, and any hidden stuff

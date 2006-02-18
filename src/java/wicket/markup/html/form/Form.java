@@ -219,10 +219,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				final Button submittingButton = findSubmittingButton();
 
 				// When processing was triggered by a Wicket button and that
-				// button
-				// indicates it wants to be called immediately (without
-				// processing),
-				// call Button.onSubmit() right away.
+				// button indicates it wants to be called immediately 
+				// (without processing), call Button.onSubmit() right away.
 				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
 				{
 					submittingButton.onSubmit();
@@ -344,7 +342,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * FIXME General: (Juergen, has this been fixed?)  Maybe we should re-think how Borders are implemented,
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented,
 		 * because there are just too many exceptions in the code base because
 		 * of borders. This time it is to solve the problem tested in
 		 * BoxBorderTestPage_3 where the Form is defined in the box border and
@@ -601,12 +599,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
+		
 		// If the javascriptid is already generated then use that on even it was
-		// before the first render.
-		// because there could be a component which already uses it to submit
-		// the forum.
-		// This should be fixed when we pre parse the markup so that we know the
-		// id is at front.
+		// before the first render. Bbecause there could be a component which 
+		// already uses it to submit the forum. This should be fixed when we 
+		// pre parse the markup so that we know the id is at front.
 		if (!Strings.isEmpty(javascriptId))
 		{
 			tag.put("id", javascriptId);
@@ -977,19 +974,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
 				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
 	}
-	
+
+	/**
+	 * 
+	 */
 	class FormDispatchRequest extends Request
 	{
 		private final Request realRequest;
+		
 		private final String url;
-		private final HashMap params = new HashMap(4);
+		
+		private final Map params = new HashMap(4);
 
 		/**
 		 * Construct.
 		 * @param realRequest
 		 * @param url
 		 */
-		public FormDispatchRequest(Request realRequest, String url)
+		public FormDispatchRequest(final Request realRequest, final String url)
 		{
 			this.realRequest = realRequest;
 			this.url = realRequest.decodeURL(url);
@@ -1036,7 +1038,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		public String[] getParameters(String key)
 		{
 			String param = (String)params.get(key);
-			if(param != null) return new String[] {param};
+			if (param != null) 
+			{
+				return new String[] {param};
+			}
 			return new String[0];
 		}
 
@@ -1053,7 +1058,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public String getRelativeURL()
 		{
-			return url.substring(url.indexOf("/",1));
+			return url.substring(url.indexOf("/", 1));
 		}
 
 		/**
@@ -1063,6 +1068,5 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			return url;
 		}
-		
 	}
 }
