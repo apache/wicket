@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 
+import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 
 /**
@@ -61,11 +62,11 @@ public abstract class BlobImageResource extends DynamicImageResource
 		}
 		catch (SQLException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 	}
 

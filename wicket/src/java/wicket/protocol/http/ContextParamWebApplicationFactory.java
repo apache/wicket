@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,10 +37,15 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	{
 		final String applicationClassName = servlet.getInitParameter(APP_CLASS_PARAM);
 
-		if (applicationClassName==null) {
-			throw new RuntimeException("servlet init param ["+APP_CLASS_PARAM+"] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["+WicketServlet.APP_FACT_PARAM+"] is missing");
+		if (applicationClassName == null)
+		{
+			throw new WicketRuntimeException(
+					"servlet init param ["
+							+ APP_CLASS_PARAM
+							+ "] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
+							+ WicketServlet.APP_FACT_PARAM + "] is missing");
 		}
-		
+
 		try
 		{
 			final Class applicationClass = getClass().getClassLoader().loadClass(

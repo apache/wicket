@@ -34,7 +34,6 @@ import wicket.markup.parser.XmlTag;
  * Fragments provide a means to maintain the panels tiny piece of markup in
  * the parents markup file.
  * <p>
- * 
  * <pre>
  *     &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
  *    
@@ -42,11 +41,10 @@ import wicket.markup.parser.XmlTag;
  *     &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *   	 add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
- *   &lt;pre&gt;
+ *     add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ * </pre>
  *   
- *   @author Juergen Donnerstag
- * 
+ * @author Juergen Donnerstag
  */
 public class Fragment extends WebMarkupContainer
 {
@@ -55,6 +53,7 @@ public class Fragment extends WebMarkupContainer
 	/** The wicket:id of the associated markup fragment */
 	private String markupId;
 
+	/** The 'component' providing the inline markup */
 	private Component markupProvider;
 	
 	/**
@@ -83,16 +82,16 @@ public class Fragment extends WebMarkupContainer
 	 *            The component id
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
+	 * @param markupProvider
+	 *            ???
 	 */
-	public Fragment(final String id, final String markupId, Component markupProvider)
+	public Fragment(final String id, final String markupId, final Component markupProvider)
 	{
 		super(id);
 
 		this.markupId = markupId;
-		
-		this.markupProvider=markupProvider;
+		this.markupProvider = markupProvider;
 	}
-
 	
 	/**
 	 * The associated markup fragment can be modified

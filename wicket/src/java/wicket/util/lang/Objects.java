@@ -30,6 +30,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import wicket.Component;
+import wicket.WicketRuntimeException;
 import wicket.util.io.ByteCountingOutputStream;
 
 /**
@@ -114,18 +115,30 @@ public abstract class Objects implements NumericTypes
 	public static BigDecimal bigDecValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return BigDecimal.valueOf(0L);
+		}
 		Class c = value.getClass();
 		if (c == BigDecimal.class)
+		{
 			return (BigDecimal)value;
+		}
 		if (c == BigInteger.class)
+		{
 			return new BigDecimal((BigInteger)value);
+		}
 		if (c.getSuperclass() == Number.class)
+		{
 			return new BigDecimal(((Number)value).doubleValue());
+		}
 		if (c == Boolean.class)
+		{
 			return BigDecimal.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		}
 		if (c == Character.class)
+		{
 			return BigDecimal.valueOf(((Character)value).charValue());
+		}
 		return new BigDecimal(stringValue(value, true));
 	}
 
@@ -141,18 +154,30 @@ public abstract class Objects implements NumericTypes
 	public static BigInteger bigIntValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return BigInteger.valueOf(0L);
+		}
 		Class c = value.getClass();
 		if (c == BigInteger.class)
+		{
 			return (BigInteger)value;
+		}
 		if (c == BigDecimal.class)
+		{
 			return ((BigDecimal)value).toBigInteger();
+		}
 		if (c.getSuperclass() == Number.class)
+		{
 			return BigInteger.valueOf(((Number)value).longValue());
+		}
 		if (c == Boolean.class)
+		{
 			return BigInteger.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		}
 		if (c == Character.class)
+		{
 			return BigInteger.valueOf(((Character)value).charValue());
+		}
 		return new BigInteger(stringValue(value, true));
 	}
 
@@ -168,16 +193,22 @@ public abstract class Objects implements NumericTypes
 	public static boolean booleanValue(Object value)
 	{
 		if (value == null)
+		{
 			return false;
+		}
 		Class c = value.getClass();
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue();
-		// if ( c == String.class )
-		// return ((String)value).length() > 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue() != 0;
+		}
 		if (value instanceof Number)
+		{
 			return ((Number)value).doubleValue() != 0;
+		}
 		return true; // non-null
 	}
 
@@ -242,11 +273,11 @@ public abstract class Objects implements NumericTypes
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new RuntimeException("Internal error cloning object", e);
+				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException("Internal error cloning object", e);
+				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 		}
 	}
@@ -409,21 +440,25 @@ public abstract class Objects implements NumericTypes
 	public static double doubleValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return 0.0;
+		}
 		Class c = value.getClass();
 		if (c.getSuperclass() == Number.class)
+		{
 			return ((Number)value).doubleValue();
+		}
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue() ? 1 : 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue();
+		}
 		String s = stringValue(value, true);
 
 		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
-		/*
-		 * For 1.1 parseDouble() is not available
-		 */
-		// return Double.valueOf( value.toString() ).doubleValue();
 	}
 
 	/**
@@ -442,7 +477,7 @@ public abstract class Objects implements NumericTypes
 			return true;
 		}
 
-		if (a != null && b != null && a.equals(b))
+		if ((a != null) && (b != null) && a.equals(b))
 		{
 			return true;
 		}
@@ -466,36 +501,56 @@ public abstract class Objects implements NumericTypes
 	public static int getNumericType(int t1, int t2, boolean canBeNonNumeric)
 	{
 		if (t1 == t2)
+		{
 			return t1;
+		}
 
 		if (canBeNonNumeric && (t1 == NONNUMERIC || t2 == NONNUMERIC || t1 == CHAR || t2 == CHAR))
+		{
 			return NONNUMERIC;
+		}
 
 		if (t1 == NONNUMERIC)
+		{
 			t1 = DOUBLE; // Try to interpret strings as doubles...
+		}
 		if (t2 == NONNUMERIC)
+		{
 			t2 = DOUBLE; // Try to interpret strings as doubles...
+		}
 
 		if (t1 >= MIN_REAL_TYPE)
 		{
 			if (t2 >= MIN_REAL_TYPE)
+			{
 				return Math.max(t1, t2);
+			}
 			if (t2 < INT)
+			{
 				return t1;
+			}
 			if (t2 == BIGINT)
+			{
 				return BIGDEC;
+			}
 			return Math.max(DOUBLE, t1);
 		}
 		else if (t2 >= MIN_REAL_TYPE)
 		{
 			if (t1 < INT)
+			{
 				return t2;
+			}
 			if (t1 == BIGINT)
+			{
 				return BIGDEC;
+			}
 			return Math.max(DOUBLE, t2);
 		}
 		else
+		{
 			return Math.max(t1, t2);
+		}
 	}
 
 	/**
@@ -612,8 +667,8 @@ public abstract class Objects implements NumericTypes
 				// equivalence
 				result = (object1 != null)
 						&& (object2 != null)
-						&& ((compareWithConversion(object1, object2) == 0) || object1
-								.equals(object2));
+						&& ((compareWithConversion(object1, object2) == 0) || 
+								object1.equals(object2));
 			}
 		}
 		return result;
@@ -631,14 +686,22 @@ public abstract class Objects implements NumericTypes
 	public static long longValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return 0L;
+		}
 		Class c = value.getClass();
 		if (c.getSuperclass() == Number.class)
+		{
 			return ((Number)value).longValue();
+		}
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue() ? 1 : 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue();
+		}
 		return Long.parseLong(stringValue(value, true));
 	}
 

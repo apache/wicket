@@ -216,7 +216,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	 * The default initial number of table slots for this table (32). Used when
 	 * not otherwise specified in constructor.
 	 */
-	public static int DEFAULT_INITIAL_CAPACITY = 32;
+	public static final int DEFAULT_INITIAL_CAPACITY = 32;
 
 	/**
 	 * The minimum capacity, used if a lower value is implicitly specified by
