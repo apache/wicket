@@ -137,6 +137,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * When passed to {@link Page#getVersion(int)} the latest page version is
+	 * returned.
+	 */
+	public static final int LATEST_VERSION = -1;
+
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
 
@@ -537,7 +543,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// If we're still the original Page and that's what's desired
 		if (versionManager == null)
 		{
-			if (versionNumber == 0)
+			if (versionNumber == 0 || versionNumber == LATEST_VERSION)
 			{
 				return this;
 			}
@@ -552,6 +558,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			// Save original change tracking state
 			final boolean originalTrackChanges = getFlag(FLAG_TRACK_CHANGES);
+
 			try
 			{
 				// While the version manager is potentially playing around with
@@ -560,7 +567,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page page = versionManager.getVersion(versionNumber);
+				final Page page;
+				if (versionNumber != LATEST_VERSION)
+				{
+					page = versionManager.getVersion(versionNumber);
+				}
+				else
+				{
+					page = versionManager.getVersion(versionManager.getVersions());
+				}
 
 				// If we went all the way back to the original page
 				if (page != null && page.getCurrentVersionNumber() == 0)

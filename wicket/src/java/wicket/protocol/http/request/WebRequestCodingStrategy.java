@@ -38,6 +38,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
@@ -66,7 +67,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/** AJAX query parameter name */
 	public static final String BEHAVIOR_ID_PARAMETER_NAME = "wicket:behaviorId";
-	
+
 	/** Parameter name used all over the place */
 	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = "wicket:bookmarkablePage";
 
@@ -210,11 +211,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			if (path.equals("/"))
 			{
-				throw new IllegalArgumentException("The mount path '/' is reserved for the application home page");		
+				throw new IllegalArgumentException(
+						"The mount path '/' is reserved for the application home page");
 			}
 		}
 
-		for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext(); )
+		for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
 		{
 			final Map.Entry entry = (Entry)it.next();
 			final String key = (String)entry.getKey();
@@ -308,9 +310,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
-	protected void addBookmarkablePageParameters(final Request request, final RequestParameters parameters)
+	protected void addBookmarkablePageParameters(final Request request,
+			final RequestParameters parameters)
 	{
-		final String requestString = request.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		final String requestString = request
+				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
@@ -318,14 +322,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			{
 				throw new WicketRuntimeException("Invalid bookmarkablePage parameter");
 			}
-			
+
 			// Extract any pagemap name
 			final String pageMapName = components[0];
-			parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME : pageMapName);
-			
+			parameters.setPageMapName(pageMapName.length() == 0
+					? PageMap.DEFAULT_NAME
+					: pageMapName);
+
 			// Extract bookmarkable page class name
 			final String pageClassName = components[1];
-			parameters.setBookmarkablePageClass(pageClassName);			
+			parameters.setBookmarkablePageClass(pageClassName);
 		}
 	}
 
@@ -351,7 +357,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			// There must be at least 4 components
 			if (pathComponents.length < 4)
 			{
-				throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME + " = " + requestString);
+				throw new WicketRuntimeException("Internal error parsing "
+						+ INTERFACE_PARAMETER_NAME + " = " + requestString);
 			}
 
 			// Set pagemap name
@@ -374,8 +381,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 			// Component path is everything after pageMapName and before version
 			final int start = pageMapName.length() + 1;
-			final int end = requestString.length() - interfaceName.length() - versionNumberString.length()
-					- 2;
+			final int end = requestString.length() - interfaceName.length()
+					- versionNumberString.length() - 2;
 			final String componentPath = requestString.substring(start, end);
 			parameters.setComponentPath(componentPath);
 		}
@@ -437,7 +444,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		url.append('?');
 		url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		url.append('=');
-		
+
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
 
@@ -547,6 +554,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	protected final String encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
+		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
+
 		// Start string buffer for url
 		final StringBuffer url = new StringBuffer(64);
 		url.append(urlPrefix(requestCycle));
@@ -572,14 +581,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 		// Add version
 		final int versionNumber = component.getPage().getCurrentVersionNumber();
-		if (versionNumber > 0)
+		if (!rli.getRecordsPageVersion())
+		{
+			url.append(Page.LATEST_VERSION);
+		}
+		else if (versionNumber > 0)
 		{
 			url.append(versionNumber);
 		}
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add listener interface
-		final String listenerName = requestTarget.getRequestListenerInterface().getName();
+		final String listenerName = rli.getName();
 		if (!IRedirectListener.INTERFACE.getName().equals(listenerName))
 		{
 			url.append(listenerName);

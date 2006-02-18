@@ -19,6 +19,7 @@ package wicket;
 
 import wicket.ajax.AjaxInitializer;
 import wicket.behavior.IBehaviorListener;
+import wicket.behavior.IUnversionedBehaviorListener;
 import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.ILinkListener;
@@ -40,6 +41,7 @@ public class Initializer implements IInitializer
 		// register when loaded) because deserialization of an object that
 		// implements an interface does not load the interfaces it implements!
 		IBehaviorListener.INTERFACE.register();
+		IUnversionedBehaviorListener.INTERFACE.register();
 		IFormSubmitListener.INTERFACE.register();
 		ILinkListener.INTERFACE.register();
 		IOnChangeListener.INTERFACE.register();

@@ -22,6 +22,7 @@ import java.util.Set;
 
 import wicket.Component;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
@@ -94,9 +95,29 @@ public abstract class AbstractAjaxBehavior
 	/**
 	 * Gets the url that references this handler.
 	 * 
+	 * NOTE: This function generates urls that are always executed against the
+	 * latest page version so they do not cause versioning issues. This is a
+	 * good default for ajax.
+	 * 
 	 * @return the url that references this handler
 	 */
 	public final String getCallbackUrl()
+	{
+		return getCallbackUrl(false);
+	}
+
+
+	/**
+	 * Gets the url that references this handler.
+	 * 
+	 * @param recordPageVersion
+	 *            if true the url will be encoded to execute on the current page
+	 *            version, otherwise url will be encoded to execute on the
+	 *            latest page version
+	 * 
+	 * @return the url that references this handler
+	 */
+	public final String getCallbackUrl(final boolean recordPageVersion)
 	{
 		if (getComponent() == null)
 		{
@@ -117,7 +138,19 @@ public abstract class AbstractAjaxBehavior
 					+ " was not registered with this component: " + getComponent().toString());
 		}
 
-		return getComponent().urlFor(IBehaviorListener.INTERFACE) + '&' + WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + '=' + index;
+
+		final RequestListenerInterface rli;
+		if (recordPageVersion)
+		{
+			rli = IBehaviorListener.INTERFACE;
+		}
+		else
+		{
+			rli = IUnversionedBehaviorListener.INTERFACE;
+		}
+
+		return getComponent().urlFor(rli) + '&'
+				+ WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + '=' + index;
 	}
 
 	/**
