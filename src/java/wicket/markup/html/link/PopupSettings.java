@@ -19,6 +19,8 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
+import wicket.PageMap;
+
 /**
  * A popup specification can be used as a property of the {@link Link}classes
  * to specify that the link should be rendered with an onClick javascript event
@@ -81,21 +83,33 @@ public class PopupSettings implements Serializable
 	private String windowName = null;
 
 	/**
-	 * Construct.
+	 * The pagemap name where the page that will be created by this popuplink 
+	 * will be created in.
 	 */
-	public PopupSettings()
+	private String pageMapName;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pagemap The pagemap where this popup must be in.
+	 */
+	public PopupSettings(PageMap pagemap)
 	{
+		this.pageMapName = pagemap.getName();
 	}
 
 	/**
 	 * Construct.
 	 * 
+	 * @param pagemap 
+	 * 			  The pagemap where this popup must be in.
 	 * @param displayFlags
 	 *            Display flags
 	 */
-	public PopupSettings(final int displayFlags)
+	public PopupSettings(PageMap pagemap, final int displayFlags)
 	{
 		this.displayFlags = displayFlags;
+		this.pageMapName = pagemap.getName();
 	}
 
 	/**
@@ -243,5 +257,13 @@ public class PopupSettings implements Serializable
 	private String flagToString(final int flag)
 	{
 		return (this.displayFlags & flag) != 0 ? "yes" : "no";
+	}
+
+	/**
+	 * @return The pagemap where the popup page must be created in. 
+	 */
+	public PageMap getPageMap()
+	{
+		return PageMap.forName(pageMapName);
 	}
 }

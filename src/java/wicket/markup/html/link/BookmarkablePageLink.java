@@ -29,9 +29,6 @@ import wicket.PageParameters;
  */
 public class BookmarkablePageLink extends Link
 {
-	/** Just a unique identifier for popup windows within a session. */
-	private static int popupNumber = 0;
-
 	private static final long serialVersionUID = 1L;
 
 	/** The page class that this link links to. */
@@ -203,7 +200,7 @@ public class BookmarkablePageLink extends Link
 
 		if (getPopupSettings() != null)
 		{
-			return urlFor(PageMap.forName("popup" + (popupNumber++)), pageClass, parameters);
+			return urlFor(getPopupSettings().getPageMap(), pageClass, parameters);
 		}
 		else
 		{
