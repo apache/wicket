@@ -56,7 +56,16 @@ public abstract class AbstractTextComponent extends FormComponent
 	{
 		return getFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL);
 	}
-
+	
+	/**
+	 * This component has a nullable value
+	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
+	 */
+	public boolean isInputNullable()
+	{
+		return false;
+	}
+	
 	/**
 	 * Should the bound object become <code>null</code> when the input is
 	 * empty?

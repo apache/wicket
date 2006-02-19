@@ -52,21 +52,38 @@ public class RequiredValidator extends StringValidator
 	}
 
 	/**
-	 * Validates whether the input value is not-null or empty.
+	 * Validates whether the input value is not-null or empty. Validation is
+	 * only executed when the component is enabled. If the value is null and the
+	 * form component is not input nullable ({@link FormComponent#isInputNullable()},
+	 * that is interpreted as the component being disabled too. If that is the
+	 * case, validation will not be executed.
 	 * 
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
 	 *      java.lang.String)
 	 */
 	public final void onValidate(final FormComponent formComponent, final String value)
 	{
-		// Check value only if form component can take on a null value
+		// Check value only if form component is enabled
 		if (formComponent.isEnabled())
 		{
-			// Check value
-			if (Strings.isEmpty(value))
-			{
-				error(formComponent);
-			}
+			// do not perform validation
+			return;
+		}
+
+		// when null, check whether this is natural for that component, or
+		// whether - as is the case with text fields - this can only happen
+		// when the component was disabled
+		if (value == null && (!formComponent.isInputNullable()))
+		{
+			// this value must have come from a disabled field
+			// do not perform validation
+			return;
+		}
+
+		// peform validation by looking whether the value is null or empty
+		if (Strings.isEmpty(value))
+		{
+			error(formComponent);
 		}
 	}
 
