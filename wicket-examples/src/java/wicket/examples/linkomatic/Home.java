@@ -18,6 +18,7 @@
 package wicket.examples.linkomatic;
 
 import wicket.Page;
+import wicket.PageMap;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
@@ -120,7 +121,7 @@ public class Home extends WicketExamplePage
 				new BookmarkablePageLink("page3", Page3.class)));
 
 		// Popup example
-		PopupSettings popupSettings = new PopupSettings().setHeight(500).setWidth(500);
+		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(500).setWidth(500);
 		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
