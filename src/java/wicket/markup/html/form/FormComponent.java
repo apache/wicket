@@ -361,6 +361,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		return this.validators != null;
 	}
+	
+	/**
+	 * Gets whether this component's input can be null. By default, components
+	 * that do not get input will have null values passed in for input. However,
+	 * component TextField is an example (possibly the only one) that never gets
+	 * a null passed in, even if the field is left empty UNLESS it had
+	 * attribute <code>disabled="disabled"</code> set.
+	 * 
+	 * @return True if this component's input can be null/empty
+	 * @see wicket.markup.html.form.validation.RequiredValidator
+	 */
+	public boolean isInputNullable()
+	{
+		return true;
+	}
 
 	/**
 	 * Sets the value for a form component.
