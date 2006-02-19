@@ -64,7 +64,7 @@ public class RequiredValidator extends StringValidator
 	public final void onValidate(final FormComponent formComponent, final String value)
 	{
 		// Check value only if form component is enabled
-		if (formComponent.isEnabled())
+		if (!formComponent.isEnabled())
 		{
 			// do not perform validation
 			return;
