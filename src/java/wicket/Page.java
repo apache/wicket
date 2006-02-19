@@ -920,8 +920,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException(
-						"The markup file must not contain the same wicket:id at the same level: "
-								+ component.getId());
+						"The component " + component + " has the same wicket:id as another component already added at the same level");
 			}
 			if (log.isDebugEnabled())
 			{
