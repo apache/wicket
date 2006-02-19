@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,16 +56,20 @@ public abstract class AbstractTextComponent extends FormComponent
 	{
 		return getFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL);
 	}
-	
+
 	/**
-	 * This component has a nullable value
+	 * TextFields return an empty string even if the user didn't type anything
+	 * in them. To be able to work nice with validation, this method returns
+	 * false.
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
+	 * @see wicket.markup.html.form.validation.RequiredValidator
 	 */
 	public boolean isInputNullable()
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Should the bound object become <code>null</code> when the input is
 	 * empty?
@@ -96,7 +100,8 @@ public abstract class AbstractTextComponent extends FormComponent
 	public void updateModel()
 	{
 		String input = getInput();
-		// if input was null then value was not submitted (disabled field), ignore it
+		// if input was null then value was not submitted (disabled field),
+		// ignore it
 		if (input != null)
 		{
 			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
