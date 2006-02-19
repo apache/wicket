@@ -29,6 +29,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/** The update interval */
 	private final Duration updateInterval;
 
+	private boolean attachedBodyOnLoadModifier = false;
 	/**
 	 * Construct.
 	 * 
@@ -46,7 +47,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected void onRenderHeadContribution(final Response response)
 	{
 		super.onRenderHeadContribution(response);
-		((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
+		
+		if (this.attachedBodyOnLoadModifier == false)
+		{
+			this.attachedBodyOnLoadModifier = true;
+			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
+		}
 	}
 
 	/**
