@@ -60,7 +60,7 @@ public class RequiredValidator extends StringValidator
 	public final void onValidate(final FormComponent formComponent, final String value)
 	{
 		// Check value only if form component can take on a null value
-		if (formComponent.isInputNullable())
+		if (formComponent.isEnabled())
 		{
 			// Check value
 			if (Strings.isEmpty(value))
