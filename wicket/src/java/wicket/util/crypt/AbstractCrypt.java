@@ -17,7 +17,6 @@
  */
 package wicket.util.crypt;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
@@ -26,8 +25,6 @@ import javax.crypto.Cipher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import wicket.WicketRuntimeException;
 
 /**
@@ -87,26 +84,7 @@ public abstract class AbstractCrypt implements ICrypt
 		try
 		{
 			byte[] cipherText = encryptStringToByteArray(plainText);
-			String text = new BASE64Encoder().encode(cipherText);
-
-			// A standard compliant base64 encoder will insert a newline
-			// after 76 chars. Remove it. Hopefully the decoder is flexible
-			// enough to cope with the missing new line.
-			if ((text.indexOf("\n") != -1) || (text.indexOf("\r") != -1))
-			{
-				StringBuffer buf = new StringBuffer(text.length());
-				for (int i = 0; i < text.length(); i++)
-				{
-					char ch = text.charAt(i);
-					if ((ch != '\n') && (ch != '\r'))
-					{
-						buf.append(ch);
-					}
-				}
-				text = buf.toString();
-			}
-
-			return text;
+			return new String(Base64.encodeBase64(cipherText));
 		}
 		catch (GeneralSecurityException e)
 		{
@@ -161,12 +139,8 @@ public abstract class AbstractCrypt implements ICrypt
 		final byte[] plainBytes;
 		try
 		{
-			plainBytes = new BASE64Decoder().decodeBuffer(encrypted);
+			plainBytes = Base64.decodeBase64(encrypted.getBytes());;
 			return crypt(plainBytes, Cipher.DECRYPT_MODE);
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e.getMessage());
 		}
 		catch (GeneralSecurityException e)
 		{
