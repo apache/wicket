@@ -18,10 +18,7 @@ package wicket.markup.html.form;
 
 import wicket.IRedirectListener;
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
 import wicket.protocol.http.MockPage;
 
 /**
