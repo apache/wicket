@@ -281,6 +281,8 @@ public abstract class Application
 		{
 			getResourceSettings().setResourceFinder(resourceFinder);
 		}
+		// As long as this is public api the developermenat and deployment mode 
+		// should counter act each other for all properties.
 		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
 			log.info("You are in DEVELOPMENT mode");
@@ -292,6 +294,7 @@ public abstract class Application
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
+			getResourceSettings().setResourcePollFrequency(null);
 			getDebugSettings().setComponentUseCheck(false);
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
