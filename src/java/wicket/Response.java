@@ -18,6 +18,8 @@
 package wicket;
 
 import java.io.OutputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,8 +48,13 @@ public abstract class Response
      */
     public Response()
     {
-		lineSeparator = (String) java.security.AccessController.doPrivileged(
-	            new sun.security.action.GetPropertyAction("line.separator"));
+		lineSeparator = (String)AccessController.doPrivileged(new PrivilegedAction()
+		{
+			public Object run()
+			{
+				return System.getProperty("line.separator");
+			}
+		});
     }
 
 	/**
