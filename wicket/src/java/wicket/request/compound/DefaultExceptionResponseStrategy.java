@@ -51,7 +51,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 	 * @see wicket.request.compound.IExceptionResponseStrategy#respond(wicket.RequestCycle,
 	 *      java.lang.RuntimeException)
 	 */
-	public final void respond(RequestCycle requestCycle, RuntimeException e)
+	public final void respond(final RequestCycle requestCycle, final RuntimeException e)
 	{
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
@@ -63,7 +63,6 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		if (override != null)
 		{
 			requestCycle.setResponsePage(override);
-			requestCycle.setRedirect(true);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
@@ -90,8 +89,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			else if (responseClass != ExceptionErrorPage.class)
 			{
 				// Show full details
-				requestCycle.setResponsePage(new ExceptionErrorPage(e, requestCycle
-						.getResponsePage()));
+				requestCycle.setResponsePage(new ExceptionErrorPage(e, responsePage));
 			}
 			else
 			{
@@ -99,10 +97,16 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 				throw new WicketRuntimeException("Internal Error: Could not render error page "
 						+ internalErrorPageClass, e);
 			}
+		}
 
-			// We generally want to redirect the response because we
-			// were in the middle of rendering and the page may end up
-			// looking like spaghetti otherwise
+		// We generally want to redirect the response because we
+		// were in the middle of rendering and the page may end up
+		// looking like spaghetti otherwise. If responsePage == null,
+		// than the Page constructor failed and we don't need to
+		// redirect and this allows to reload the page when the
+		// bug has been fixed.
+		if (responsePage != null)
+		{
 			requestCycle.setRedirect(true);
 		}
 	}
@@ -123,7 +127,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 	 *            The exception
 	 * @return Any error page to redirect to
 	 */
-	protected Page onRuntimeException(Page page, RuntimeException e)
+	protected Page onRuntimeException(final Page page, final RuntimeException e)
 	{
 		return RequestCycle.get().onRuntimeException(page, e);
 	}
