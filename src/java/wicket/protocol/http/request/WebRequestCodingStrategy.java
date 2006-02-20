@@ -207,22 +207,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
 		}
-		else
+		else if (!path.equals("/")) // ignore root paths.. is this the right path?
 		{
-			if (path.equals("/"))
+			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
 			{
-				throw new IllegalArgumentException(
-						"The mount path '/' is reserved for the application home page");
-			}
-		}
-
-		for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
-		{
-			final Map.Entry entry = (Entry)it.next();
-			final String key = (String)entry.getKey();
-			if (path.startsWith(key))
-			{
-				return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				final Map.Entry entry = (Entry)it.next();
+				final String key = (String)entry.getKey();
+				if (path.startsWith(key))
+				{
+					return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				}
 			}
 		}
 		return null;
@@ -238,7 +232,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			throw new IllegalArgumentException("Argument path must be not-null");
 		}
-
+		if (path.equals("/"))
+		{
+			throw new IllegalArgumentException(
+					"The mount path '/' is reserved for the application home page");
+		}
 		if (encoder == null)
 		{
 			throw new IllegalArgumentException("Argument encoder must be not-null");
