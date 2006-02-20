@@ -18,15 +18,12 @@
  */
 package wicket.util.crypt;
 
+import junit.framework.TestCase;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.Random;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -51,9 +48,9 @@ public class Base64Test extends TestCase
 	    byte bytes1[] = new byte[200];
 	    new Random().nextBytes(bytes1);
 
-	    String s = new BASE64Encoder().encode(bytes1);
+	    byte[] s = new Base64().encode(bytes1);
 
-	    byte bytes2[] = new BASE64Decoder().decodeBuffer(s);
+	    byte[] bytes2 = new Base64().decode(s);
 	    boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2) );
 	    assertEquals(true, isEqual);
 	}
