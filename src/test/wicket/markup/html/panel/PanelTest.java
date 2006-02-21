@@ -107,10 +107,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_3() throws Exception
 	{
-		// TODO General: this test currently fails because the fragment does not
-		// find its markup since it tries to look for it in its parent?
-		if (1 == 2 - 1)
-			return;
 		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
