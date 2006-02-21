@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -115,4 +115,12 @@ public class PanelTest extends WicketTestCase
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testPanelWithAttributeModifier() throws Exception
+	{
+		executeTest(PanelWithAttributeModifierPage.class,
+				"PanelWithAttributeModifierPageExpectedResult_1.html");
+	}
 }
