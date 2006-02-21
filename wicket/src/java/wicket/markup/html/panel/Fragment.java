@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,19 +31,20 @@ import wicket.markup.parser.XmlTag;
  * maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
- * Fragments provide a means to maintain the panels tiny piece of markup in
- * the parents markup file.
+ * Fragments provide a means to maintain the panels tiny piece of markup in the
+ * parents markup file.
  * <p>
+ * 
  * <pre>
- *     &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *    
- *     &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *     &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *      &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *     
+ *      &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *      &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *     add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *      add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
- *   
+ * 
  * @author Juergen Donnerstag
  */
 public class Fragment extends WebMarkupContainer
@@ -55,7 +56,7 @@ public class Fragment extends WebMarkupContainer
 
 	/** The 'component' providing the inline markup */
 	private Component markupProvider;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -68,9 +69,7 @@ public class Fragment extends WebMarkupContainer
 	 */
 	public Fragment(final String id, final String markupId)
 	{
-		super(id);
-
-		this.markupId = markupId;
+		this(id, markupId, null);
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class Fragment extends WebMarkupContainer
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 * @param markupProvider
-	 *            ???
+	 *            The component whose markup contains the fragment markup
 	 */
 	public Fragment(final String id, final String markupId, final Component markupProvider)
 	{
@@ -91,8 +90,14 @@ public class Fragment extends WebMarkupContainer
 
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
+
+		// FIXME General: implement this feature.
+		if (markupProvider != null)
+		{
+			throw new UnsupportedOperationException("markupProvider parameter is not yet supported");
+		}
 	}
-	
+
 	/**
 	 * The associated markup fragment can be modified
 	 * 
@@ -100,7 +105,7 @@ public class Fragment extends WebMarkupContainer
 	 */
 	public final void setMarkupTagReferenceId(final String markupId)
 	{
-		//FIXME General: does this need to be versioned?
+		// FIXME General: does this need to be versioned?
 		this.markupId = markupId;
 	}
 
