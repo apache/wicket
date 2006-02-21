@@ -71,4 +71,13 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 		executeTest(Page_1.class, "PageExpectedResult_othercontext.html");
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public final void testAnchors() throws Exception
+	{
+		application.getApplicationSettings().setContextPath("/other");
+		executeTest(Page_2.class, "Page2ExpectedResult.html");
+	}
+	
 }

@@ -138,7 +138,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
 				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-						&& (attrValue.indexOf(":") < 0))
+						&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
 					String url = contextPath + attrValue;
 					tag.getAttributes().put(attrName, url);
