@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -36,13 +36,13 @@ import wicket.markup.parser.XmlTag;
  * <p>
  * 
  * <pre>
- *      &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *     
- *      &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *      &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *       &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *      
+ *       &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *       &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *      add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *       add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -54,8 +54,8 @@ public class Fragment extends WebMarkupContainer
 	/** The wicket:id of the associated markup fragment */
 	private String markupId;
 
-	/** The 'component' providing the inline markup */
-	private Component markupProvider;
+	/** The container providing the inline markup */
+	private MarkupContainer markupProvider;
 
 	/**
 	 * Constructor.
@@ -84,7 +84,7 @@ public class Fragment extends WebMarkupContainer
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment markup
 	 */
-	public Fragment(final String id, final String markupId, final Component markupProvider)
+	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
 	{
 		super(id);
 
@@ -92,10 +92,10 @@ public class Fragment extends WebMarkupContainer
 		this.markupProvider = markupProvider;
 
 		// FIXME General: implement this feature.
-		if (markupProvider != null)
-		{
-			throw new UnsupportedOperationException("markupProvider parameter is not yet supported");
-		}
+//		if (markupProvider != null)
+//		{
+//			throw new UnsupportedOperationException("markupProvider parameter is not yet supported");
+//		}
 	}
 
 	/**
@@ -133,12 +133,37 @@ public class Fragment extends WebMarkupContainer
 		// Skip the components body. It will be replaced by the fragment
 		markupStream.skipRawMarkup();
 
+		if (this.markupProvider == null)
+		{
+			renderFragment(markupStream, openTag);
+		}
+		else
+		{
+			// The following statement assumes that the markup provider is a
+			// parent
+			// along the line up to the Page
+			final MarkupStream providerMarkupStream = this.markupProvider.getMarkupStream();
+
+			renderFragment(providerMarkupStream, openTag);
+		}
+	}
+
+	/**
+	 * Render the markup starting at the current position of the markup strean
+	 * 
+	 * @see #onComponentTagBody(MarkupStream, ComponentTag)
+	 * 
+	 * @param providerMarkupStream
+	 * @param openTag
+	 */
+	private void renderFragment(final MarkupStream providerMarkupStream, final ComponentTag openTag)
+	{
 		// remember the current position in the markup. Will have to come back
 		// to it.
-		int currentIndex = markupStream.getCurrentIndex();
+		int currentIndex = providerMarkupStream.getCurrentIndex();
 
 		// Find the markup fragment
-		int index = markupStream.findComponentIndex(null, markupId);
+		int index = providerMarkupStream.findComponentIndex(null, markupId);
 		if (index == -1)
 		{
 			throw new MarkupException("Markup does not contain a fragment with id=" + markupId
@@ -146,25 +171,25 @@ public class Fragment extends WebMarkupContainer
 		}
 
 		// Set the markup stream position to where the fragment begins
-		markupStream.setCurrentIndex(index);
+		providerMarkupStream.setCurrentIndex(index);
 
 		try
 		{
 			// Get the fragments open tag
-			ComponentTag fragmentOpenTag = markupStream.getTag();
+			ComponentTag fragmentOpenTag = providerMarkupStream.getTag();
 
 			// We'll completely ignore the fragments open tag. It'll not be
 			// rendered
-			markupStream.next();
+			providerMarkupStream.next();
 
 			// Render the body of the fragment
-			super.onComponentTagBody(markupStream, fragmentOpenTag);
+			super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
 		}
 		finally
 		{
 			// Make sure the markup stream is positioned where we started back
 			// at the original component
-			markupStream.setCurrentIndex(currentIndex);
+			providerMarkupStream.setCurrentIndex(currentIndex);
 		}
 	}
 }
