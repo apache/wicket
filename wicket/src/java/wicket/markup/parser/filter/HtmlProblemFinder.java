@@ -18,6 +18,7 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,6 +108,22 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 		                tag);
 		    }
         }
+
+		// Some people are using a dot "wicket.xxx" instead of a colon "wicket:xxx"
+		Iterator iter = tag.getAttributes().keySet().iterator();
+		while (iter.hasNext())
+		{
+			String key = (String)iter.next();
+			if (key != null)
+			{
+				key = key.toLowerCase();
+				if (key.startsWith("wicket."))
+				{
+			        escalateWarning("You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ", 
+			                tag);
+				}
+			}
+		}
 		
 		return tag;
 	}
