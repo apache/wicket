@@ -134,7 +134,7 @@ public abstract class MetaDataKey implements Serializable
 	 */
 	void checkType(final Object object)
 	{
-		if (object != null && object.getClass() != type)
+		if (object != null && type.isAssignableFrom(object.getClass()) )
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass()
 					+ " requires argument of " + type + ", not " + object.getClass());
