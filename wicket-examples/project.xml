@@ -367,7 +367,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>wicket/examples/AllTests.java</include>
+        <include>**/*Test.java</include>
       </includes>
       <resources>
         <resource>
