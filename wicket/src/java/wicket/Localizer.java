@@ -394,7 +394,7 @@ public class Localizer
 						// for the next component on the path from the page down.  
 						if (string == null)
 						{
-							prefix = Strings.beforeLast(prefix, '.');
+							prefix = Strings.afterFirst(prefix, '.');
 						}
 					}
 				}
