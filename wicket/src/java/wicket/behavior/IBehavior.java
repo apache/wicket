@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.3 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,10 +26,9 @@ import wicket.markup.ComponentTag;
  * Behaviors are kind of plug-ins for Components. They allow to be added to a
  * component and get essential events forwarded by the component. Currently they
  * can be bound to a concrete component (the bind method is called when the
- * behavior is attached), but they don't need to. They can modify the
- * components markup by changing the rendered ComponentTag. Behaviors could
- * have own models as well, they are notified when these are to be detached by
- * the component.
+ * behavior is attached), but they don't need to. They can modify the components
+ * markup by changing the rendered ComponentTag. Behaviors could have own models
+ * as well, they are notified when these are to be detached by the component.
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius
@@ -36,7 +36,13 @@ import wicket.markup.ComponentTag;
 public interface IBehavior extends Serializable
 {
 	/**
-	 * Bind this handler to the given component.
+	 * Bind this handler to the given component. This method is called by the
+	 * host component immediately after this behavior is added to it. This
+	 * method is useful if you need to do initialization based on the component
+	 * it is attached can you can't wait to do it at render time. Keep in mind
+	 * that if you decide to keep a reference to the host component, it is not
+	 * thread safe anymore, and should thus only be used in situations where you
+	 * do not reuse the behavior for multiple components.
 	 * 
 	 * @param hostComponent
 	 *            the component to bind to
@@ -44,8 +50,10 @@ public interface IBehavior extends Serializable
 	void bind(Component hostComponent);
 
 	/**
-	 * Detaches all models, called by components which have this behavior
-	 * attached
+	 * Provides for the ability to detach any models this behavior has. This
+	 * method is called by the components which have this behavior attached to
+	 * them when they are detaching their models themselves (ie after
+	 * rendering).
 	 */
 	void detachModel();
 

@@ -23,16 +23,13 @@ import wicket.markup.ComponentTag;
 /**
  * Adapter implementation of {@link wicket.behavior.IBehavior}. This class just
  * implements the interface with empty methods; override this class when you
- * don't want to implement the whole interface.
+ * do not want to implement the whole interface.
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
 public abstract class AbstractBehavior implements IBehavior
 {
-	/** The component the behavior is attached to */
-	private Component hostComponent;
-
 	/**
 	 * Construct.
 	 */
@@ -41,21 +38,10 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * Get the host component
-	 * 
-	 * @return host component
-	 */
-	public final Component getComponent()
-	{
-		return this.hostComponent;
-	}
-
-	/**
 	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
 	 */
 	public void bind(final Component hostComponent)
 	{
-		this.hostComponent = hostComponent;
 	}
 
 	/**
@@ -68,8 +54,6 @@ public abstract class AbstractBehavior implements IBehavior
 	/**
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
-	 * 
-	 * @TODO What is the component needed for?!?!
 	 */
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
@@ -77,8 +61,6 @@ public abstract class AbstractBehavior implements IBehavior
 
 	/**
 	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
-	 * 
-	 * @TODO What is the component needed for?!?!
 	 */
 	public void rendered(final Component hostComponent)
 	{
