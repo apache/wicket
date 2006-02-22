@@ -2,7 +2,7 @@ package wicket.util.lang;
 
 import java.io.Serializable;
 
-import junit.framework.TestCase;
+import wicket.WicketTestCase;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -12,8 +12,14 @@ import wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class ObjectsTest extends TestCase
+public class ObjectsTest extends WicketTestCase
 {
+
+        public ObjectsTest(String name)
+        {
+	    super(name);
+	}
+
 	/**
 	 * Test method for 'wicket.util.lang.Objects.equal(Object, Object)'
 	 */
