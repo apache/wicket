@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.15 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -35,7 +36,10 @@ import wicket.model.Model;
  * A simple "guest book" example that allows visitors to the page to add a
  * comment and see the comments others have added.
  * 
+ * For unit testing, added a parameter to clear the commentList.
+ * 
  * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public final class GuestBook extends WicketExamplePage
 {
@@ -47,9 +51,14 @@ public final class GuestBook extends WicketExamplePage
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
+	 * @param pars parameters to initialize the page
 	 */
-	public GuestBook()
+	public GuestBook(PageParameters pars)
 	{
+		if (pars.containsKey("clear"))
+		{
+			commentList.clear();
+		}
 		// Add comment form
 		add(new CommentForm("commentForm"));
 
@@ -82,7 +91,7 @@ public final class GuestBook extends WicketExamplePage
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel(new Comment()));
-			
+
 			// Add text entry widget
 			add(new TextArea("text"));
 		}
