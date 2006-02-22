@@ -59,6 +59,10 @@ public class TestPage extends WebPage
 		panel2.add(new MyTextField("text5", "input-5"));
 		panel2.add(new MyTextField("text6", "input-6"));
 		panel2.add(new MyTextField("text8", "input-8"));
+		panel2.add(new MyTextField("text9", "input-9"));
+		panel2.add(new MyTextField("text10", "input-10"));
+		panel2.add(new MyTextField("text11", "input-11"));
+		panel2.add(new MyTextField("text12", "input-12"));
 	}
 	
 	/**
@@ -131,6 +135,42 @@ public class TestPage extends WebPage
 	public TextField getText8()
 	{
 		return (TextField) get("form2:panel2:text8");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText9()
+	{
+		return (TextField) get("form2:panel2:text9");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText10()
+	{
+		return (TextField) get("form2:panel2:text10");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText11()
+	{
+		return (TextField) get("form2:panel2:text11");
+	}
+	
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public TextField getText12()
+	{
+		return (TextField) get("form2:panel2:text12");
 	}
 	
 	/**

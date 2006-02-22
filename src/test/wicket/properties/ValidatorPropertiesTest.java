@@ -54,6 +54,10 @@ public class ValidatorPropertiesTest extends TestCase
 		validator.error(page.getText6());
 		validator.error(page.getText7());
 		validator.error(page.getText8());
+		validator.error(page.getText9());
+		validator.error(page.getText10());
+		validator.error(page.getText11());
+		validator.error(page.getText12());
 		
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
 		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());
@@ -63,6 +67,10 @@ public class ValidatorPropertiesTest extends TestCase
 		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage().getMessage());
 		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage().getMessage());
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
+		assertEquals("found it in panel", page.getText9().getFeedbackMessage().getMessage());
+		assertEquals("found it in form", page.getText10().getFeedbackMessage().getMessage());
+		assertEquals("found it in page", page.getText11().getFeedbackMessage().getMessage());
+		assertEquals("found it in page", page.getText12().getFeedbackMessage().getMessage());
 		
 		// Test caching
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
