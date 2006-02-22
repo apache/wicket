@@ -17,6 +17,12 @@
  */
 package wicket.examples.encodings;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.StringWriter;
+
 import junit.framework.Test;
 import wicket.examples.WicketWebTestCase;
 
@@ -55,6 +61,6 @@ public class EncodingTest extends WicketWebTestCase
 		beginAt("/encodings");
 		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - encodings");
-		assertTextPresent("Hello world! Test: äöü");
+		assertTextPresent("Hello world! Test: ŠšŸ");
 	}
 }
