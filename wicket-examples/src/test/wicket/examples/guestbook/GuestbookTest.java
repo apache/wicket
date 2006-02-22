@@ -50,6 +50,14 @@ public class GuestbookTest extends WicketWebTestCase
 	{
 		super(name);
 	}
+	/**
+	 * Sets up the test.
+	 * @throws Exception 
+	 */
+	public void setUp() throws Exception {
+		super.setUp();
+		GuestBook.clear();
+	}
 
 	/**
 	 * Test page.

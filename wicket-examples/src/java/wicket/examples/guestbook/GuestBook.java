@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -51,14 +50,9 @@ public final class GuestBook extends WicketExamplePage
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
-	 * @param pars parameters to initialize the page
 	 */
-	public GuestBook(PageParameters pars)
+	public GuestBook()
 	{
-		if (pars.containsKey("clear"))
-		{
-			commentList.clear();
-		}
 		// Add comment form
 		add(new CommentForm("commentForm"));
 
@@ -116,5 +110,12 @@ public final class GuestBook extends WicketExamplePage
 			// Clear out the text component
 			comment.setText("");
 		}
+	}
+
+	/**
+	 * Clears the comments.
+	 */
+	public static void clear() {
+		commentList.clear();
 	}
 }
