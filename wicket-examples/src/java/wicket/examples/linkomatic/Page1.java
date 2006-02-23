@@ -35,7 +35,6 @@ public class Page1 extends WicketExamplePage
      */
     public Page1(PageParameters parameters)
     {
-    	boolean a=true;
     }
     
 }

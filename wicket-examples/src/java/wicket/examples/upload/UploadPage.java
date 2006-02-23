@@ -178,26 +178,6 @@ public class UploadPage extends WicketExamplePage
 				refreshFiles();
 			}
 		}
-
-		/**
-		 * Gets the last part of the string after c or the string itself when c
-		 * is not found.
-		 * 
-		 * @param s
-		 *            the string
-		 * @param c
-		 *            the char
-		 * @return part of string
-		 */
-		private String afterLast(final String s, final char c)
-		{
-			final int index = s.lastIndexOf(c);
-			if (index == -1)
-			{
-				return s;
-			}
-			return s.substring(index + 1);
-		}
 	}
 
 	/**

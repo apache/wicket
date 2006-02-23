@@ -115,14 +115,6 @@ public class ExamplePaging extends Displaytag
         
         MyPageableListViewNavigator nav3 = new MyPageableListViewNavigator("pageTableNav3", table3)
         {
-            protected PagingNavigation newNavigation(final PageableListView table)
-            {
-                final PagingNavigation nav = new PagingNavigation("navigation", table);
-                nav.setMargin(2);
-                nav.setViewSize(5);
-                nav.setSeparator(", ");
-                return nav;
-            }
         };
         
         add(nav3);
@@ -148,18 +140,6 @@ public class ExamplePaging extends Displaytag
         
         MyPageableListViewNavigator nav4 = new MyPageableListViewNavigator("pageTableNav4", table4)
         {
-            protected PagingNavigation newNavigation(final PageableListView table)
-            {
-                final PagingNavigation nav = new PagingNavigation("navigation", table);
-                nav.setMargin(2);
-                if (nav.getViewSize() > 5)
-                {
-                    nav.setViewSize(5);
-                }
-                
-                nav.setSeparator(", ");
-                return nav;
-            }
         };
         add(nav4);
 

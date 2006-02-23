@@ -45,10 +45,6 @@ public class Export
      */
     public int doExport(final RequestCycle cycle, final BaseExportView exportView, final List data) 
     {
-        final boolean exportFullList = true;
-        final boolean exportHeader = true;
-        final boolean exportDecorated = true;
-
         String mimeType = exportView.getMimeType();
         String exportString = exportView.doExport();
 

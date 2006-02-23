@@ -108,7 +108,9 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 			{
 				b.append(i.next());
 				if (i.hasNext())
+				{
 					b.append(", ");
+				}
 			}
 			return b.toString();
 		}

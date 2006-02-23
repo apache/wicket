@@ -41,9 +41,6 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	/** default http listen port. */
 	private static final int DEFAULT_PORT = 8080;
 
-	/** calling class for getting config resource. */
-	private static Class callee = JettyDecorator.class;
-
 	/**
 	 * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be
 	 * instantiated, if false, org.mortbay.jetty.Server will be instantiated.
@@ -94,7 +91,6 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	public void setJettyConfig(String newJettyConfig, Class classCallee)
 	{
 		jettyConfig = newJettyConfig;
-		callee = classCallee;
 	}
 
 	/**

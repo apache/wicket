@@ -42,9 +42,6 @@ public class SortableListViewHeaderGroup implements Serializable
 	/** The underlying listView to be sorted */
 	private ListView listView;
 
-	/** The html container the header must be added to */
-	private MarkupContainer container;
-
 	/**
 	 * Maintain a group SortableTableHeader
 	 * @param container The html container the header will be added to
@@ -53,7 +50,6 @@ public class SortableListViewHeaderGroup implements Serializable
 	public SortableListViewHeaderGroup(final MarkupContainer container, final ListView listView)
 	{
 		this.listView = listView;
-		this.container = container;
 	}
 
 	/**

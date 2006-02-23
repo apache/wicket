@@ -54,19 +54,9 @@ public abstract class BaseExportView implements Serializable
     private List model;
 
     /**
-     * export full list?
-     */
-    private boolean exportFull;
-
-    /**
      * include header in export?
      */
     private boolean header;
-
-    /**
-     * decorate export?
-     */
-    private boolean decorated;
 
     /**
      * Constructor for BaseExportView.
@@ -78,9 +68,7 @@ public abstract class BaseExportView implements Serializable
     public BaseExportView(final List tableModel, final boolean exportFullList, final boolean includeHeader, final boolean decorateValues)
     {
         this.model = tableModel;
-        this.exportFull = exportFullList;
         this.header = includeHeader;
-        this.decorated = decorateValues;
     }
 
     /**

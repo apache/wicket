@@ -109,7 +109,10 @@ public class ListMultipleChoicePage extends WicketExamplePage
 			for (Iterator i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
-				if (i.hasNext()) b.append(", ");
+				if (i.hasNext())
+				{
+					b.append(", ");
+				}
 			}
 			return b.toString();
 		}

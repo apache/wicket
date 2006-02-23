@@ -52,7 +52,7 @@ public class SortableContactDataProvider extends SortableDataProvider
 	 */
 	public Iterator iterator(int first, int count)
 	{
-		SortParam sp = (SortParam)getSort();
+		SortParam sp = getSort();
 		return getContactsDB().find(first, count, sp.getProperty(), sp.isAscending()).iterator();
 	}
 

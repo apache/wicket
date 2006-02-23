@@ -127,7 +127,6 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	{
 		// Must be <thead> tag
 		ComponentTag tag = markupStream.getTag();
-		final ComponentTag openTag = tag;
 		checkComponentTag(tag, "thead");
 
 		// Continue with default behavior

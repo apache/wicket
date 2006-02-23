@@ -53,7 +53,9 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel
 	public DetachableContactModel(long id)
 	{
 		if (id == 0)
+		{
 			throw new IllegalArgumentException();
+		}
 		this.id = id;
 	}
 
