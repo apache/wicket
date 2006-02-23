@@ -20,7 +20,7 @@ package wicket.markup.parser.filter;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.Model;
 
@@ -30,7 +30,7 @@ import wicket.model.Model;
  *
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel extends WebMarkupContainer
+public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 

@@ -21,7 +21,7 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.resolver.IComponentResolver;
@@ -79,7 +79,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainer implements IComponentResolver, 
+public abstract class Border extends WebMarkupContainerWithAssociatedMarkup implements IComponentResolver, 
 	IComponentResolverMarker
 {
 	/** Will be true, once the first <wicket:body> has been seen */
