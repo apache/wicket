@@ -19,8 +19,9 @@ package wicket.markup.html.panel;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.OpenWebMarkupContainer;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 
 /**
@@ -50,9 +51,12 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class Panel extends OpenWebMarkupContainer
+public class Panel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** If if tag was an open-close tag */
+	private boolean wasOpenCloseTag = false;
 	
 	/**
      * @see wicket.Component#Component(String)
@@ -72,6 +76,23 @@ public class Panel extends OpenWebMarkupContainer
 
     /**
      * 
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+     */
+    protected void onComponentTag(final ComponentTag tag)
+    {
+    	if (tag.isOpenClose())
+    	{
+    		this.wasOpenCloseTag = true;
+    		
+    		// Convert <span wicket:id="myPanel" /> into 
+    		// <span wicket:id="myPanel">...</span>  
+    		tag.setType(XmlTag.OPEN);
+    	}
+    	super.onComponentTag(tag);
+    }
+
+    /**
+     * 
      * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
@@ -80,7 +101,11 @@ public class Panel extends OpenWebMarkupContainer
         renderAssociatedMarkup("panel",
                 "Markup for a panel component has to contain part '<wicket:panel>'");
 
-        super.onComponentTagBody(markupStream, openTag);
+        if (this.wasOpenCloseTag == false)
+        {
+			// Skip any raw markup in the body
+			markupStream.skipRawMarkup();
+        }
     }
 
     /**
