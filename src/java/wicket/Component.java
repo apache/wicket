@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.315 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -333,7 +333,7 @@ public abstract class Component implements Serializable
 	 * buffer)
 	 */
 	private static final short FLAG_IS_RENDER_ALLOWED = 0x2000;
-	
+
 	/** Render tag boolean */
 	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
 
@@ -343,6 +343,18 @@ public abstract class Component implements Serializable
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	private static final short FLAG_OUTPUT_MARKUP_ID = 0x4000;
+
+	/**
+	 * The name of attribute that will hold markup id
+	 */
+	private static final String MARKUP_ID_ATTR_NAME = "id";
+
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -350,7 +362,8 @@ public abstract class Component implements Serializable
 	private List behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED | FLAG_IS_RENDER_ALLOWED;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
+			| FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
 	private String id;
@@ -1693,7 +1706,7 @@ public abstract class Component implements Serializable
 					addStateChange(new EnabledChange(this));
 				}
 			}
-			
+
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
 		}
@@ -1811,6 +1824,20 @@ public abstract class Component implements Serializable
 			modelChanged();
 		}
 
+		return this;
+	}
+
+	/**
+	 * Sets whether or not component will output id attribute into the markup.
+	 * id attribute will be set to the value returned from
+	 * {@link Component#getMarkupId()}.
+	 * 
+	 * @param output
+	 * @return this for chaining
+	 */
+	public final Component setOutputMarkupId(final boolean output)
+	{
+		setFlag(FLAG_OUTPUT_MARKUP_ID, output);
 		return this;
 	}
 
@@ -1945,8 +1972,8 @@ public abstract class Component implements Serializable
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
 						.append(getPage().getClass().getName()).append(", path = ").append(
 								getPath()).append(".").append(Classes.name(getClass())).append(
-								", isVisible = ").append((isRenderAllowed() && isVisible())).append(
-								", isVersioned = ").append(isVersioned()).append("]").toString();
+								", isVisible = ").append((isRenderAllowed() && isVisible()))
+						.append(", isVersioned = ").append(isVersioned()).append("]").toString();
 			}
 		}
 		else
@@ -2362,6 +2389,10 @@ public abstract class Component implements Serializable
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+		{
+			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
+		}
 	}
 
 	/**
@@ -2719,7 +2750,7 @@ public abstract class Component implements Serializable
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
 	}
-	
+
 	final boolean isRenderAllowed()
 	{
 		return getFlag(FLAG_IS_RENDER_ALLOWED);
