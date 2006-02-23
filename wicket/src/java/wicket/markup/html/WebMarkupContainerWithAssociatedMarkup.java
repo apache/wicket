@@ -75,7 +75,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	 * @param container
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	public void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
+	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
 	{
 		// Ask the Panel/Border if it has something to contribute to the header
 		final HeaderPartContainer headerPart = getHeaderPart();
