@@ -15,9 +15,14 @@ import wicket.model.PropertyModel;
 public class ObjectsTest extends WicketTestCase
 {
 
-        public ObjectsTest(String name)
-        {
-	    super(name);
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public ObjectsTest(String name)
+	{
+		super(name);
 	}
 
 	/**
@@ -78,14 +83,15 @@ public class ObjectsTest extends WicketTestCase
 			assertTrue(true);
 		}
 	}
-	
+
 	/**
-	 *  Test method for component cloning
+	 * Test method for component cloning
 	 */
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),"modelObject");
-		PropertyModel pm2= (PropertyModel)Objects.clone(pm);
+		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),
+				"modelObject");
+		PropertyModel pm2 = (PropertyModel)Objects.clone(pm);
 		assertTrue(pm.getObject(null) == pm2.getObject(null));
 	}
 
