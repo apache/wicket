@@ -112,7 +112,6 @@ public class HttpSessionStore implements ISessionStore
 		if (log.isDebugEnabled())
 		{
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			int size;
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream();

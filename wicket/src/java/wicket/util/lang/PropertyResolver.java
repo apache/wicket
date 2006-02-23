@@ -83,11 +83,15 @@ public class PropertyResolver
 	public final static Object getValue(final String expression, final Object object)
 	{
 		if (expression == null || expression.equals("") || object == null)
+		{
 			return object;
+		}
 
 		ObjectAndGetSetter getter = getObjectAndGetSetter(expression, object, false);
 		if (getter == null)
+		{
 			return null;
+		}
 		return getter.getValue();
 
 	}

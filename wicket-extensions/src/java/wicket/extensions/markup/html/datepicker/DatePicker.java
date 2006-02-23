@@ -158,9 +158,6 @@ public class DatePicker extends Panel
 		}
 	}
 
-	/** any label component. */
-	private final Component label;
-
 	/** the receiving component. */
 	private final Component target;
 
@@ -233,8 +230,6 @@ public class DatePicker extends Panel
 		{
 			label.add(new PathAttributeModifier("for", target));
 		}
-		this.label = label;
-
 		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
 		add(new InitScript("script"));
 		add(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));

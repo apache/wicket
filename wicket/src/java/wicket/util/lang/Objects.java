@@ -395,27 +395,49 @@ public abstract class Objects implements NumericTypes
 			else
 			{
 				if ((toType == Integer.class) || (toType == Integer.TYPE))
+				{
 					result = new Integer((int)longValue(value));
+				}
 				if ((toType == Double.class) || (toType == Double.TYPE))
+				{
 					result = new Double(doubleValue(value));
+				}
 				if ((toType == Boolean.class) || (toType == Boolean.TYPE))
+				{
 					result = booleanValue(value) ? Boolean.TRUE : Boolean.FALSE;
+				}
 				if ((toType == Byte.class) || (toType == Byte.TYPE))
+				{
 					result = new Byte((byte)longValue(value));
+				}
 				if ((toType == Character.class) || (toType == Character.TYPE))
+				{
 					result = new Character((char)longValue(value));
+				}
 				if ((toType == Short.class) || (toType == Short.TYPE))
+				{
 					result = new Short((short)longValue(value));
+				}
 				if ((toType == Long.class) || (toType == Long.TYPE))
+				{
 					result = new Long(longValue(value));
+				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
+				{
 					result = new Float(doubleValue(value));
+				}
 				if (toType == BigInteger.class)
+				{
 					result = bigIntValue(value);
+				}
 				if (toType == BigDecimal.class)
+				{
 					result = bigDecValue(value);
+				}
 				if (toType == String.class)
+				{
 					result = stringValue(value);
+				}
 			}
 		}
 		else
@@ -567,25 +589,45 @@ public abstract class Objects implements NumericTypes
 		{
 			Class c = value.getClass();
 			if (c == Integer.class)
+			{
 				return INT;
+			}
 			if (c == Double.class)
+			{
 				return DOUBLE;
+			}
 			if (c == Boolean.class)
+			{
 				return BOOL;
+			}
 			if (c == Byte.class)
+			{
 				return BYTE;
+			}
 			if (c == Character.class)
+			{
 				return CHAR;
+			}
 			if (c == Short.class)
+			{
 				return SHORT;
+			}
 			if (c == Long.class)
+			{
 				return LONG;
+			}
 			if (c == Float.class)
+			{
 				return FLOAT;
+			}
 			if (c == BigInteger.class)
+			{
 				return BIGINT;
+			}
 			if (c == BigDecimal.class)
+			{
 				return BIGDEC;
+			}
 		}
 		return NONNUMERIC;
 	}
@@ -728,15 +770,15 @@ public abstract class Objects implements NumericTypes
 				return new Integer((int)value);
 
 			case FLOAT :
-				if ((long)(float)value == value)
+				if ((long)value == value)
 				{
-					return new Float((float)value);
+					return new Float(value);
 				}
 			// else fall through:
 			case DOUBLE :
-				if ((long)(double)value == value)
+				if ((long)value == value)
 				{
-					return new Double((double)value);
+					return new Double(value);
 				}
 			// else fall through:
 			case LONG :

@@ -59,12 +59,6 @@ public class Palette extends Panel
 	private int rows;
 
 	/**
-	 * flag indicating whether or not the user is allowed to reorder selected
-	 * items
-	 */
-	private boolean allowOrder;
-
-	/**
 	 * recorder component used to track user's selection. it is updated by
 	 * javascript on changes.
 	 */
@@ -125,8 +119,6 @@ public class Palette extends Panel
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
-		this.allowOrder = allowOrder;
-
 		recorderComponent = newRecorderComponent();
 		add(recorderComponent);
 

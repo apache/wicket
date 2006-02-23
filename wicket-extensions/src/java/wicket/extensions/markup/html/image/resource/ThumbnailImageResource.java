@@ -120,7 +120,10 @@ public class ThumbnailImageResource extends DynamicImageResource
 		}
 		finally
 		{
-			if (is != null) try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			if (is != null)
+			{
+				try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			}
 		}
 
 		int originalWidth = originalImage.getWidth();

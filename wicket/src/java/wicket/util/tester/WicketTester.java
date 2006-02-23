@@ -570,7 +570,7 @@ public class WicketTester extends MockWebApplication
 			Assert.fail("before using this method, at least one page has to be rendered");
 		}
 
-		Component c = (Component)getComponentFromLastRenderedPage(componentPath);
+		Component c = getComponentFromLastRenderedPage(componentPath);
 		if (c == null)
 		{
 			Assert.fail("component " + componentPath + " was not found");

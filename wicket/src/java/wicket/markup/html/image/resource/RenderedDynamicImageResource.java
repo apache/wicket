@@ -140,9 +140,13 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 		synchronized (this)
 		{
 			if (imageData!=null)
+			{
 				data = (byte[]) imageData.get();
+			}
 			else
+			{
 				data = null;
+			}
 		}
 		if (data == null)
 		{

@@ -23,7 +23,6 @@ import java.util.Locale;
 import junit.framework.Assert;
 import wicket.Application;
 import wicket.ISessionFactory;
-import wicket.request.IRequestCycleProcessor;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 
@@ -60,11 +59,6 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		Application app = new Application()
 		{                        
 			public ISessionFactory getSessionFactory()
-			{
-				return null;
-			}
-
-			protected IRequestCycleProcessor getDefaultRequestCycleProcessor()
 			{
 				return null;
 			}

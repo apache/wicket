@@ -89,7 +89,10 @@ public final class Converter implements IConverter
 		 */
 		public Object convert(Object value, Class c)
 		{
-			if(value == null || "".equals(value)) return null;
+			if(value == null || "".equals(value))
+			{
+				return null;
+			}
 			
 			return Objects.convertValue(value, c);
 		}

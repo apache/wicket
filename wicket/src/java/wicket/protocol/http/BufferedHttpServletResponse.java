@@ -80,7 +80,10 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addCookie(Cookie cookie)
 	{
 		isOpen();
-		if(cookies == null) cookies = new ArrayList(2);
+		if(cookies == null)
+		{
+			cookies = new ArrayList(2);
+		}
 		cookies.add(cookie);
 	}
 
@@ -90,7 +93,10 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public boolean containsHeader(String name)
 	{
 		isOpen();
-		if(headers == null) return false;
+		if(headers == null)
+		{
+			return false;
+		}
 		return headers.containsKey(name);
 	}
 
@@ -183,7 +189,10 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 */
 	private void isOpen()
 	{
-		if(realResponse == null) throw new WicketRuntimeException("the buffered servlet response already closed.");
+		if(realResponse == null)
+		{
+			throw new WicketRuntimeException("the buffered servlet response already closed.");
+		}
 	}
 
 	private void addHeaderObject(String name, Object object)

@@ -384,7 +384,10 @@ public abstract class FileUploadBase {
                 if (fileName != null) {
                     fileName = fileName.trim();
                     int index = fileName.lastIndexOf('\\');
-                    if(index == -1) index = fileName.lastIndexOf('/');
+                    if(index == -1)
+					{
+						index = fileName.lastIndexOf('/');
+					}
                     if(index != -1)
                     {
                     	fileName = fileName.substring(index+1);

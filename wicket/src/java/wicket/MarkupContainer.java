@@ -660,7 +660,7 @@ public abstract class MarkupContainer extends Component
 		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
-			final Component child = (Component)children_get(i);
+			final Component child = children_get(i);
 			Object value = null;
 			
 			// Is the child of the correct class (or was no class specified)?

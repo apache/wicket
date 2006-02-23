@@ -222,7 +222,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressList(addresses);
 		Object size = PropertyResolver.getValue("addressList.size", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)PropertyResolver.getValue("addressList.size()", person);
+		size = PropertyResolver.getValue("addressList.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -238,7 +238,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressMap(addresses);
 		Object addressFromMap = PropertyResolver.getValue("addressMap.size", person);
 		assertEquals(addressFromMap, address);
-		Object size = (Integer)PropertyResolver.getValue("addressMap.size()", person);
+		Object size = PropertyResolver.getValue("addressMap.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -250,7 +250,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressArray(new Address[] {new Address(), new Address()});
 		Object size = PropertyResolver.getValue("addressArray.length", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)PropertyResolver.getValue("addressArray.size", person);
+		size = PropertyResolver.getValue("addressArray.size", person);
 		assertEquals(size, new Integer(2));
 	}
 	

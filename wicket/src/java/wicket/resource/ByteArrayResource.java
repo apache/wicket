@@ -123,7 +123,9 @@ public class ByteArrayResource extends WebResource
 			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
 				if (inputStream == null)
+				{
 					inputStream = new ByteArrayInputStream(array);
+				}
 
 				return inputStream;
 			}

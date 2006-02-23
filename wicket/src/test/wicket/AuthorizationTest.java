@@ -76,10 +76,6 @@ public class AuthorizationTest extends TestCase
 	{
 		WicketTester app = new WicketTester()
 		{
-			public IAuthorizationStrategy getAuthorizationStrategy()
-			{
-				return new DummyAuthorizationStrategy();
-			}
 		};
 		WebComponent c = new WebComponent("test");
 	}

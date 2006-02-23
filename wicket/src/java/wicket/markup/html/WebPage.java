@@ -210,7 +210,7 @@ public class WebPage extends Page
 			// find the body tag
 			while (markupStream.hasMore())
 			{
-				final MarkupElement element = (MarkupElement)markupStream.next();
+				final MarkupElement element = markupStream.next();
 				if (element instanceof ComponentTag)
 				{
 					final ComponentTag tag = (ComponentTag)element;

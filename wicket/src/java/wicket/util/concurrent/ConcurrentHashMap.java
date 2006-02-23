@@ -294,7 +294,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		{
 			result = MINIMUM_CAPACITY;
 			while (result < cap)
+			{
 				result <<= 1;
+			}
 		}
 		return result;
 	}
@@ -467,9 +469,13 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			{
 				Object value = e.value;
 				if (value != null)
+				{
 					return value;
+				}
 				else
+				{
 					break;
+				}
 			}
 		}
 
@@ -485,7 +491,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 				for (e = newFirst; e != null; e = e.next)
 				{
 					if (e.hash == hash && eq(key, e.key))
+					{
 						return e.value;
+					}
 				}
 			}
 			return null;
@@ -563,19 +571,25 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			tab[index] = newEntry;
 
 			if ((segcount = ++seg.count) < threshold)
+			{
 				return null;
+			}
 
 			int bit = (1 << (hash & SEGMENT_MASK));
 			votes = votesForResize;
 			if ((votes & bit) == 0)
+			{
 				votes = votesForResize |= bit;
+			}
 		}
 
 		// Attempt resize if 1/4 segs vote,
 		// or if this seg itself reaches the overall threshold.
 		// (The latter check is just a safeguard to avoid pathological cases.)
 		if (bitcount(votes) >= CONCURRENCY_LEVEL / 4 || segcount > (threshold * CONCURRENCY_LEVEL))
+		{
 			resize(0, tab);
+		}
 
 		return null;
 	}
@@ -600,9 +614,13 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			{
 				int next = index + 1;
 				if (next < segments.length)
+				{
 					resize(next, assumedTab);
+				}
 				else
+				{
 					rehash();
+				}
 			}
 		}
 	}
@@ -653,8 +671,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 				// Single node on list
 				if (next == null)
+				{
 					newTable[idx] = e;
-
+				}
 				else
 				{
 					// Reuse trailing consecutive sequence of all same bit
@@ -738,21 +757,29 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			for (;;)
 			{
 				if (e == null)
+				{
 					return null;
+				}
 				if (e.hash == hash && eq(key, e.key))
+				{
 					break;
+				}
 				e = e.next;
 			}
 
 			Object oldValue = e.value;
 			if (value != null && !value.equals(oldValue))
+			{
 				return null;
+			}
 
 			e.value = null;
 
 			Entry head = e.next;
 			for (Entry p = first; p != e; p = p.next)
+			{
 				head = new Entry(p.hash, p.key, p.value, head);
+			}
 			tab[index] = head;
 			seg.count--;
 			return oldValue;
@@ -788,8 +815,12 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			for (int i = s; i < tab.length; i += segments.length)
 			{
 				for (Entry e = tab[i]; e != null; e = e.next)
+				{
 					if (value.equals(e.value))
+					{
 						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -832,7 +863,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	{
 		int n = t.size();
 		if (n == 0)
+		{
 			return;
+		}
 
 		// Expand enough to hold at least n elements without resizing.
 		// We can only resize table by factor of two at a time.
@@ -847,7 +880,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 				max = threshold * CONCURRENCY_LEVEL;
 			}
 			if (n < max)
+			{
 				break;
+			}
 			resize(0, tab);
 		}
 
@@ -874,7 +909,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 				for (int i = s; i < tab.length; i += segments.length)
 				{
 					for (Entry e = tab[i]; e != null; e = e.next)
+					{
 						e.value = null;
+					}
 					tab[i] = null;
 					seg.count = 0;
 				}
@@ -1050,7 +1087,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			Map.Entry entry = (Map.Entry)o;
 			Object v = ConcurrentHashMap.this.get(entry.getKey());
 			return v != null && v.equals(entry.getValue());
@@ -1062,7 +1101,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public boolean remove(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			Map.Entry e = (Map.Entry)o;
 			return ConcurrentHashMap.this.remove(e.getKey(), e.getValue()) != null;
 		}
@@ -1200,7 +1241,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			Map.Entry e = (Map.Entry)o;
 			return (key.equals(e.getKey()) && value.equals(e.getValue()));
 		}
@@ -1239,7 +1282,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 				tab = table;
 			}
 			for (int i = 1; i < segments.length; ++i)
+			{
 				segments[i].synch();
+			}
 			index = tab.length - 1;
 		}
 
@@ -1283,11 +1328,15 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 						return true;
 					}
 					else
+					{
 						entry = entry.next;
+					}
 				}
 
 				while (entry == null && index >= 0)
+				{
 					entry = tab[index--];
+				}
 
 				if (entry == null)
 				{
@@ -1308,7 +1357,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public Object next()
 		{
 			if (currentKey == null && !hasNext())
+			{
 				throw new NoSuchElementException();
+			}
 
 			Object result = returnValueOfNext();
 			lastReturned = entry;
@@ -1323,7 +1374,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		public void remove()
 		{
 			if (lastReturned == null)
+			{
 				throw new IllegalStateException();
+			}
 			ConcurrentHashMap.this.remove(lastReturned.key);
 			lastReturned = null;
 		}
@@ -1410,7 +1463,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		int cap = s.readInt();
 		table = newTable(cap);
 		for (int i = 0; i < segments.length; ++i)
+		{
 			segments[i] = new Segment();
+		}
 
 
 		// Read the keys and values, and put the mappings in the table
@@ -1419,7 +1474,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 			Object key = s.readObject();
 			Object value = s.readObject();
 			if (key == null)
+			{
 				break;
+			}
 			put(key, value);
 		}
 	}

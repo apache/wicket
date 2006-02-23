@@ -366,7 +366,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	public Enumeration getVisiblePathsFrom(TreePath path)
 	{
 		if (path == null)
+		{
 			return null;
+		}
 
 		TreeStateNode node = getNodeForPath(path, true, false);
 
@@ -490,7 +492,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 						}
 					}
 					if (changedParent.isVisible() && changedParent.isExpanded())
+					{
 						visibleNodesChanged();
+					}
 				}
 				// Null for root indicates it changed.
 				else if (changedParent == root
@@ -540,9 +544,13 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 							isVisible);
 				}
 				if (isVisible && treeSelectionModel != null)
+				{
 					treeSelectionModel.resetRowSelection();
+				}
 				if (changedParent.isVisible())
+				{
 					this.visibleNodesChanged();
+				}
 			}
 		}
 	}
@@ -591,7 +599,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 				if (isVisible)
 				{
 					if (treeSelectionModel != null)
+					{
 						treeSelectionModel.resetRowSelection();
+					}
 					if (treeModel.getChildCount(changedParentNode.getUserObject()) == 0
 							&& changedParentNode.isLeaf())
 					{
@@ -601,7 +611,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 					visibleNodesChanged();
 				}
 				else if (changedParentNode.isVisible())
+				{
 					visibleNodesChanged();
+				}
 			}
 		}
 	}
@@ -659,9 +671,13 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 					changedNode.expand();
 				}
 				if (treeSelectionModel != null && wasVisible && wasExpanded)
+				{
 					treeSelectionModel.resetRowSelection();
+				}
 				if (wasVisible)
+				{
 					this.visibleNodesChanged();
+				}
 			}
 		}
 	}
@@ -792,7 +808,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 				{
 					lastNode.makeVisible();
 					if (expandLast)
+					{
 						lastNode.expand();
+					}
 					return true;
 				}
 			}
@@ -836,11 +854,15 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			if (node != null)
 			{
 				if (onlyIfVisible && !node.isVisible())
+				{
 					return null;
+				}
 				return node;
 			}
 			if (onlyIfVisible)
+			{
 				return null;
+			}
 
 			// Check all the parent paths, until a match is found.
 			ArrayListStack paths;
@@ -977,9 +999,13 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 				TreeStateNode parent = (TreeStateNode) getParent();
 
 				if (parent != null)
+				{
 					resetChildrenPaths(parent.getTreePath());
+				}
 				else
+				{
 					resetChildrenPaths(null);
+				}
 			}
 		}
 
@@ -1019,8 +1045,12 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		{
 			// PENDING: Make this a binary search!
 			for (int counter = getChildCount() - 1; counter >= 0; counter--)
+			{
 				if (((TreeStateNode) getChildAt(counter)).childIndex == index)
+				{
 					return (TreeStateNode) getChildAt(counter);
+				}
+			}
 			return null;
 		}
 
@@ -1035,7 +1065,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			TreeStateNode parent = (TreeStateNode) getParent();
 
 			if (parent == null)
+			{
 				return true;
+			}
 			return (parent.isExpanded() && parent.isVisible());
 		}
 
@@ -1067,9 +1099,13 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 				if (child.childIndex >= index)
 				{
 					if (child.childIndex == index)
+					{
 						return child.row;
+					}
 					if (counter == 0)
+					{
 						return getRow() + 1 + index;
+					}
 					return child.row - (child.childIndex - index);
 				}
 			}
@@ -1153,12 +1189,18 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		{
 			removeMapping(this);
 			if (parentPath == null)
+			{
 				path = new TreePath(getUserObject());
+			}
 			else
+			{
 				path = parentPath.pathByAddingChild(getUserObject());
+			}
 			addMapping(this);
 			for (int counter = getChildCount() - 1; counter >= 0; counter--)
+			{
 				((TreeStateNode) getChildAt(counter)).resetChildrenPaths(path);
+			}
 		}
 
 		/**
@@ -1170,7 +1212,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			{
 				removeMapping(this);
 				for (int counter = getChildCount() - 1; counter >= 0; counter--)
+				{
 					((TreeStateNode) getChildAt(counter)).removeFromMapping();
+				}
 			}
 		}
 
@@ -1188,7 +1232,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			int newChildIndex = treeModel.getIndexOfChild(getUserObject(), userObject);
 
 			if (newChildIndex < 0)
+			{
 				return null;
+			}
 
 			TreeStateNode aNode;
 			TreeStateNode child = createNodeForValue(userObject, newChildIndex);
@@ -1229,7 +1275,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			if (isExpanded)
 			{
 				for (int counter = getChildCount() - 1; counter >= 0; counter--)
+				{
 					((TreeStateNode) getChildAt(counter)).adjustRowBy(adjust);
+				}
 			}
 		}
 
@@ -1248,7 +1296,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			{
 				// children following startIndex.
 				for (int counter = getChildCount() - 1; counter >= startIndex; counter--)
+				{
 					((TreeStateNode) getChildAt(counter)).adjustRowBy(adjust);
+				}
 			}
 			// Parent
 			TreeStateNode parent = (TreeStateNode) getParent();
@@ -1289,7 +1339,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			row = nextRow;
 
 			if (!isExpanded())
+			{
 				return row + 1;
+			}
 
 			int lastRow = row + 1;
 			int lastModelIndex = 0;
@@ -1372,7 +1424,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			TreeStateNode parent = (TreeStateNode) getParent();
 
 			if (parent != null)
+			{
 				parent.expandParentAndReceiver();
+			}
 		}
 
 		/**
@@ -1384,7 +1438,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			TreeStateNode parent = (TreeStateNode) getParent();
 
 			if (parent != null)
+			{
 				parent.expandParentAndReceiver();
+			}
 			expand();
 		}
 
@@ -1435,10 +1491,14 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 					adjustRowBy(-childCount, 0);
 				}
 				else
+				{
 					isExpanded = false;
+				}
 
 				if (adjustRows && isVisible() && treeSelectionModel != null)
+				{
 					treeSelectionModel.resetRowSelection();
+				}
 			}
 		}
 
@@ -1525,7 +1585,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 						// index, no need to continue testing with the
 						// above.
 						for (; counter < maxCounter; counter++)
+						{
 							((TreeStateNode) getChildAt(counter)).childIndex--;
+						}
 						childCount--;
 						return;
 					}
@@ -1585,7 +1647,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 					 * need to continue testing with the above.
 					 */
 					for (; counter < maxCounter; counter++)
+					{
 						((TreeStateNode) getChildAt(counter)).childIndex++;
+					}
 					childCount++;
 					return;
 				}
@@ -1772,11 +1836,15 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		private TreePath getPath()
 		{
 			if (node == null)
+			{
 				return null;
+			}
 
 			if (isNodeParentNode)
+			{
 				return node.getTreePath().pathByAddingChild(
 						treeModel.getChild(node.getUserObject(), childIndex));
+			}
 			return node.path;
 		}
 	}
@@ -1824,21 +1892,29 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		public Object nextElement()
 		{
 			if (!hasMoreElements())
+			{
 				throw new NoSuchElementException("No more visible paths");
+			}
 
 			TreePath retObject;
 
 			if (nextIndex == -1)
+			{
 				retObject = parent.getTreePath();
+			}
 			else
 			{
 				TreeStateNode node = parent.getChildAtModelIndex(nextIndex);
 
 				if (node == null)
+				{
 					retObject = parent.getTreePath().pathByAddingChild(
 							treeModel.getChild(parent.getUserObject(), nextIndex));
+				}
 				else
+				{
 					retObject = node.getTreePath();
+				}
 			}
 			updateNextObject();
 			return retObject;
@@ -1880,10 +1956,14 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 					parent = newParent;
 					childCount = treeModel.getChildCount(parent.getUserObject());
 					if (updateNextIndex())
+					{
 						return true;
+					}
 				}
 				else
+				{
 					parent = null;
+				}
 			}
 			return false;
 		}

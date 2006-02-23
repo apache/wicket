@@ -98,22 +98,32 @@ public class HtmlDocumentValidator
                 case HtmlDocumentParser.COMMENT :
                     valid = validateComment(expectedElements, parser);
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
                 case HtmlDocumentParser.OPEN_TAG :
                     valid = validateTag(expectedElements, parser);
                     if (!valid)
-                        end = true;
-                    else
-                        expectedElements = saveOpenTagState(iteratorStack, expectedElements,
+					{
+						end = true;
+					}
+					else
+					{
+						expectedElements = saveOpenTagState(iteratorStack, expectedElements,
                                 tagNameStack);
+					}
                     break;
                 case HtmlDocumentParser.OPENCLOSE_TAG :
                     valid = validateTag(expectedElements, parser);
                     if (valid)
-                        valid = checkOpenCloseTag();
+					{
+						valid = checkOpenCloseTag();
+					}
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
                 case HtmlDocumentParser.CLOSE_TAG :
                     expectedElements = validateCloseTag(tagNameStack, parser, expectedElements,
@@ -127,7 +137,9 @@ public class HtmlDocumentValidator
                 case HtmlDocumentParser.TEXT :
                     valid = validateText(expectedElements, parser);
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
             }
         }
@@ -177,39 +189,73 @@ public class HtmlDocumentValidator
     {
         tag = workingTag.getTag().toLowerCase();
         if (tag.equals("area"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("base"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("basefont"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("bgsound"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("br"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("col"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("frame"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("hr"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("img"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("input"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("isindex"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("keygen"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("link"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("meta"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("param"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("spacer"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("wbr"))
-            return true;
+		{
+			return true;
+		}
         return false;
     }
 

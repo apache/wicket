@@ -76,7 +76,10 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		PageParameters pageParameters = target.getPageParameters();
 		if(pageMapName != null)
 		{
-			if(pageParameters == null) pageParameters = new PageParameters();
+			if(pageParameters == null)
+			{
+				pageParameters = new PageParameters();
+			}
 			pageParameters.put("wicket:pageMapName", pageMapName);
 		}
 		appendPageParameters(url, pageParameters);

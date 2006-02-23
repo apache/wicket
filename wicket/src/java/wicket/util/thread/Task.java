@@ -210,7 +210,9 @@ public final class Task
 	protected Log getLog()
 	{
 		if (log == null)
+		{
 			log = LogFactory.getLog(Task.class);
+		}
 		return log;
 	}
 }

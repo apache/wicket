@@ -279,8 +279,8 @@ public class MockWebApplication extends WebApplication
 		{
 			generateLastRenderedPage(cycle);
 
-			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)((WebRequest)cycle
-					.getWebRequest()).getHttpServletRequest();
+			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)cycle
+					.getWebRequest().getHttpServletRequest();
 
 			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketSession = getSession(wicketRequest);

@@ -43,11 +43,6 @@ public class BeanPanel extends AbstractBeanPanel
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * factory for property editors. 
-	 */
-	private IPropertyEditorFactory propertyEditorFactory;
-
 	/** boolean types. */
 	private static final Class[] BOOL_TYPES = new Class[] { Boolean.class, Boolean.TYPE };
 
