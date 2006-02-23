@@ -17,12 +17,6 @@
  */
 package wicket.examples.encodings;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringWriter;
-
 import junit.framework.Test;
 import wicket.examples.WicketWebTestCase;
 
