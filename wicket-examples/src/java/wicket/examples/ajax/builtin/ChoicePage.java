@@ -29,7 +29,6 @@ import java.util.Set;
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -123,7 +122,7 @@ public class ChoicePage extends BasePage
 		 * same trick can be used when a listview needs to be rerendered.
 		 */
 		final WebMarkupContainer modelsContainer = new WebMarkupContainer("modelsContainer");
-		modelsContainer.add(MarkupIdSetter.INSTANCE);
+		modelsContainer.setOutputMarkupId(true);
 
 		final DropDownChoice models = new DropDownChoice("models", new Model(), modelChoices);
 

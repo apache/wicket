@@ -4,7 +4,6 @@ import java.util.List;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.link.Link;
 
 /**
@@ -26,7 +25,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	public AjaxTabbedPanel(String id, List tabs)
 	{
 		super(id, tabs);
-		add(MarkupIdSetter.INSTANCE);
+		setOutputMarkupId(true);
 	}
 	
 	protected Link newLink(String linkId, final int index)

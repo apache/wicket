@@ -19,7 +19,6 @@
 package wicket.examples.ajax.builtin;
 
 import wicket.ajax.form.AjaxFormValidatingBehavior;
-import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RequiredTextField;
@@ -47,12 +46,14 @@ public class FormPage extends BasePage
 		// add feedback panel with a markup id setter so it can be updated via
 		// ajax
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback.add(MarkupIdSetter.INSTANCE));
+		feedback.setOutputMarkupId(true);
+		add(feedback);
 
 		// add form with markup id setter so it can be updated via ajax
 		Form form = new Form("form", new CompoundPropertyModel(bean));
 		add(form);
-		form.add(MarkupIdSetter.INSTANCE);
+		form.setOutputMarkupId(true);
+		form.add(form);
 
 		FormComponent fc;
 

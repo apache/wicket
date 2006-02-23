@@ -21,7 +21,6 @@ package wicket.examples.ajax.builtin;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
-import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
 
@@ -73,10 +72,12 @@ public class EffectsPage extends BasePage
 	public EffectsPage()
 	{
 		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
-		add(c1.add(MarkupIdSetter.INSTANCE));
+		c1.setOutputMarkupId(true);
+		add(c1);
 
 		final Label c2 = new Label("c2", new PropertyModel(this, "counter2"));
-		add(c2.add(MarkupIdSetter.INSTANCE));
+		c2.setOutputMarkupId(true);
+		add(c2);
 
 		add(new AjaxLink("c1-link")
 		{
