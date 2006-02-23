@@ -19,7 +19,6 @@ package wicket.ajax.markup.html.ajaxLink;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
-import wicket.behavior.MarkupIdSetter;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
@@ -39,7 +38,7 @@ public class AjaxLinkPage extends WebPage
 	public AjaxLinkPage()
 	{
 		final Label label = new Label("ajaxLabel", new PropertyModel(this, "labelText"));
-		label.add(MarkupIdSetter.INSTANCE);
+		label.setOutputMarkupId(true);
 		add(label);
 		add(new AjaxLink("ajaxLink")
 		{
