@@ -100,7 +100,9 @@ public class Person
 	public void setAddressAt(int index, Address address)
 	{
 		if (addressList == null)
+		{
 			addressList = new ArrayList();
+		}
 		while (addressList.size() < index)
 		{
 			addressList.add(null);

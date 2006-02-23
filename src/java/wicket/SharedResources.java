@@ -154,9 +154,6 @@ public class SharedResources
 	/** Executes tasks when resources become idle */
 	private final Timer idleTimer = new Timer(true);
 
-	/** The application that holds these shared resources */
-	private final Application application;
-
 	/**
 	 * Construct.
 	 * 
@@ -165,7 +162,6 @@ public class SharedResources
 	 */
 	SharedResources(Application application)
 	{
-		this.application = application;
 	}
 
 	/**

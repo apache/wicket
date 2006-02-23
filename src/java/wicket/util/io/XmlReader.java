@@ -162,9 +162,6 @@ public final class XmlReader extends Reader
 		// Max one line
 		final StringBuffer pushBack = new StringBuffer(readAheadSize);
 
-		// True if '<' has been found
-		boolean foundOpenBracket = false;
-		
 		// The current char from the markup file
 		int value;
 		while ((value = in.read()) != -1)

@@ -637,7 +637,7 @@ public final class PageMap implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				list.add((IPageMapEntry)session.getAttribute(attribute));
+				list.add(session.getAttribute(attribute));
 			}
 		}
 		return list;

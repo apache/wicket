@@ -342,7 +342,7 @@ public class ValueMap extends HashMap
 	 */
 	public String toString()
 	{
-		final StringBuffer buffer = (StringBuffer)new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry)iterator.next();

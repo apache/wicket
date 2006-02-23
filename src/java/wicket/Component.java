@@ -2768,7 +2768,7 @@ public abstract class Component implements Serializable
 		IModel nestedModelObject = model;
 		while (true)
 		{
-			final IModel next = ((IModel)nestedModelObject).getNestedModel();
+			final IModel next = nestedModelObject.getNestedModel();
 			if (next == null)
 			{
 				break;

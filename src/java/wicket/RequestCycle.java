@@ -359,7 +359,7 @@ public abstract class RequestCycle
 	 */
 	public final Page getResponsePage()
 	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		IRequestTarget target = getRequestTarget();
 		if (target instanceof PageRequestTarget)
 		{
 			return ((IPageRequestTarget)target).getPage();
@@ -380,7 +380,7 @@ public abstract class RequestCycle
 	 */
 	public final Class getResponsePageClass()
 	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
 		{
 			return ((IBookmarkablePageRequestTarget)target).getPageClass();

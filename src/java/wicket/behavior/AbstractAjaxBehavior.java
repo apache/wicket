@@ -27,7 +27,6 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
@@ -286,18 +285,5 @@ public abstract class AbstractAjaxBehavior
 	 */
 	protected void onRenderHeadInitContribution(final Response response)
 	{
-	}
-
-	/**
-	 * Writes the given string to the header container.
-	 * 
-	 * @param container
-	 *            the header container
-	 * @param str
-	 *            the string to write
-	 */
-	private final void write(final HtmlHeaderContainer container, final String str)
-	{
-		container.getResponse().write(str);
 	}
 }

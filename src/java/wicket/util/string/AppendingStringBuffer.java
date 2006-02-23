@@ -386,7 +386,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		int len = str.length();
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		str.getChars(0, len, value, count);
 		count = newcount;
 		return this;
@@ -430,7 +432,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		int len = sb.length();
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		sb.getChars(0, len, value, count);
 		count = newcount;
 		return this;
@@ -460,7 +464,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		int len = str.length;
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		System.arraycopy(str, 0, value, count, len);
 		count = newcount;
 		return this;
@@ -492,7 +498,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	{
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		System.arraycopy(str, offset, value, count, len);
 		count = newcount;
 		return this;
@@ -518,7 +526,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			int newcount = count + 4;
 			if (newcount > value.length)
+			{
 				expandCapacity(newcount);
+			}
 			value[count++] = 't';
 			value[count++] = 'r';
 			value[count++] = 'u';
@@ -528,7 +538,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			int newcount = count + 5;
 			if (newcount > value.length)
+			{
 				expandCapacity(newcount);
+			}
 			value[count++] = 'f';
 			value[count++] = 'a';
 			value[count++] = 'l';
@@ -558,7 +570,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	{
 		int newcount = count + 1;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		value[count++] = c;
 		return this;
 	}
@@ -660,11 +674,17 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	public AppendingStringBuffer delete(int start, int end)
 	{
 		if (start < 0)
+		{
 			throw new StringIndexOutOfBoundsException(start);
+		}
 		if (end > count)
+		{
 			end = count;
+		}
 		if (start > end)
+		{
 			throw new StringIndexOutOfBoundsException();
+		}
 
 		int len = end - start;
 		if (len > 0)
@@ -691,7 +711,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	public AppendingStringBuffer deleteCharAt(int index)
 	{
 		if ((index < 0) || (index >= count))
+		{
 			throw new StringIndexOutOfBoundsException();
+		}
 		System.arraycopy(value, index + 1, value, index, count - index - 1);
 		count--;
 		return this;
@@ -723,16 +745,24 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	public AppendingStringBuffer replace(int start, int end, String str)
 	{
 		if (start < 0)
+		{
 			throw new StringIndexOutOfBoundsException(start);
+		}
 		if (end > count)
+		{
 			end = count;
+		}
 		if (start > end)
+		{
 			throw new StringIndexOutOfBoundsException();
+		}
 
 		int len = str.length();
 		int newCount = count + len - (end - start);
 		if (newCount > value.length)
+		{
 			expandCapacity(newCount);
+		}
 
 		System.arraycopy(value, end, value, start + len, count - end);
 		str.getChars(0, len, value, start);
@@ -826,11 +856,17 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	public String substring(int start, int end)
 	{
 		if (start < 0)
+		{
 			throw new StringIndexOutOfBoundsException(start);
+		}
 		if (end > count)
+		{
 			throw new StringIndexOutOfBoundsException(end);
+		}
 		if (start > end)
+		{
 			throw new StringIndexOutOfBoundsException(end - start);
+		}
 		return new String(value, start, end - start);
 	}
 
@@ -864,14 +900,22 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	public AppendingStringBuffer insert(int index, char str[], int offset, int len)
 	{
 		if ((index < 0) || (index > count))
+		{
 			throw new StringIndexOutOfBoundsException();
+		}
 		if ((offset < 0) || (offset + len < 0) || (offset + len > str.length))
+		{
 			throw new StringIndexOutOfBoundsException(offset);
+		}
 		if (len < 0)
+		{
 			throw new StringIndexOutOfBoundsException(len);
+		}
 		int newCount = count + len;
 		if (newCount > value.length)
+		{
 			expandCapacity(newCount);
+		}
 		System.arraycopy(value, index, value, index + len, count - index);
 		System.arraycopy(str, offset, value, index, len);
 		count = newCount;
@@ -959,7 +1003,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		int len = str.length();
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		System.arraycopy(value, offset, value, offset + len, count - offset);
 		str.getChars(0, len, value, offset);
 		count = newcount;
@@ -997,7 +1043,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		int len = str.length;
 		int newcount = count + len;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		System.arraycopy(value, offset, value, offset + len, count - offset);
 		System.arraycopy(str, 0, value, offset, len);
 		count = newcount;
@@ -1061,7 +1109,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	{
 		int newcount = count + 1;
 		if (newcount > value.length)
+		{
 			expandCapacity(newcount);
+		}
 		System.arraycopy(value, offset, value, offset + 1, count - offset);
 		value[offset] = c;
 		count = newcount;
@@ -1462,7 +1512,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 				while (n-- != 0)
 				{
 					if (v1[i++] != v2[j++])
+					{
 						return false;
+					}
 				}
 				return true;
 			}

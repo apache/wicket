@@ -398,7 +398,7 @@ public abstract class Session implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				list.add((PageMap)getAttribute(attribute));
+				list.add(getAttribute(attribute));
 			}
 		}
 		return list;
@@ -502,7 +502,9 @@ public abstract class Session implements Serializable
 	public final void removePageMap(final PageMap pageMap)
 	{
 		if (pageMaps > 0)
+		{
 			pageMaps--;
+		}
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 	}
 

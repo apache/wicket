@@ -895,7 +895,10 @@ public final class Strings
 				sb.append("     at ");
 				sb.append(traceString);
 				sb.append("\n");
-				if(stopAtWicketServlet && traceString.startsWith("wicket.protocol.http.WicketServlet")) return;
+				if(stopAtWicketServlet && traceString.startsWith("wicket.protocol.http.WicketServlet"))
+				{
+					return;
+				}
 			}
 		}
 	}

@@ -178,13 +178,19 @@ public class HtmlDocumentParser
 				{
 					value.append(bits[j]);
 					if (j < (bits.length - 1))
+					{
 						value.append('=');
+					}
 				}
 				bits[1] = value.toString().trim();
 				if (bits[1].startsWith("\""))
+				{
 					bits[1] = bits[1].substring(1);
+				}
 				if (bits[1].endsWith("\""))
+				{
 					bits[1] = bits[1].substring(0, bits[1].length() - 1);
+				}
 				m.put(bits[0].toLowerCase(), bits[1]);
 			}
 		}
