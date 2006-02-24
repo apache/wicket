@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.111 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -88,9 +88,19 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * </p>
  * 
  * Form for handling (file) uploads with multipart requests is supported by
- * callign setMultiPart(true). Use this with
+ * callign setMultiPart(true) ( although wicket will try to automatically detect
+ * this for you ). Use this with
  * {@link wicket.markup.html.form.upload.FileUploadField} components. You can
- * attach mutliple FileInput fields for muliple file uploads.
+ * attach mutliple FileUploadField components for muliple file uploads.
+ * <p>
+ * In case of an upload error two resource keys are available to specify error
+ * messages: uploadTooLarge and uploadFailed
+ * 
+ * ie in [page].properties
+ * 
+ * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed
+ * limit of 2Mb
+ * 
  * <p>
  * Using multipart forms causes a runtime dependency on <a
  * href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>,
@@ -116,6 +126,10 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
+	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+
+	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
+
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
@@ -219,7 +233,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				final Button submittingButton = findSubmittingButton();
 
 				// When processing was triggered by a Wicket button and that
-				// button indicates it wants to be called immediately 
+				// button indicates it wants to be called immediately
 				// (without processing), call Button.onSubmit() right away.
 				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
 				{
@@ -342,13 +356,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented,
-		 * because there are just too many exceptions in the code base because
-		 * of borders. This time it is to solve the problem tested in
-		 * BoxBorderTestPage_3 where the Form is defined in the box border and
-		 * the FormComponents are in the "body". Thus, the formComponents are
-		 * not childs of the form. They are rather childs of the border, as the
-		 * Form itself.
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
+		 * implemented, because there are just too many exceptions in the code
+		 * base because of borders. This time it is to solve the problem tested
+		 * in BoxBorderTestPage_3 where the Form is defined in the box border
+		 * and the FormComponents are in the "body". Thus, the formComponents
+		 * are not childs of the form. They are rather childs of the border, as
+		 * the Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -599,10 +613,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
-		
+
 		// If the javascriptid is already generated then use that on even it was
-		// before the first render. Bbecause there could be a component which 
-		// already uses it to submit the forum. This should be fixed when we 
+		// before the first render. Bbecause there could be a component which
+		// already uses it to submit the forum. This should be fixed when we
 		// pre parse the markup so that we know the id is at front.
 		if (!Strings.isEmpty(javascriptId))
 		{
@@ -728,7 +742,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			public void formComponent(final FormComponent formComponent)
 			{
 				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled() && formComponent.isValid())
+				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
+						&& formComponent.isValid())
 				{
 					// Potentially update the model
 					formComponent.updateModel();
@@ -738,8 +753,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Clears the input from the form's nested children of type {@link FormComponent}. 
-	 * This method is typically called when a form needs to be reset.
+	 * Clears the input from the form's nested children of type
+	 * {@link FormComponent}. This method is typically called when a form needs
+	 * to be reset.
 	 */
 	protected void clearInput()
 	{
@@ -835,8 +851,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					// Resource key should be <form-id>.uploadTooLarge to
 					// override default message
 					final String defaultValue = "Upload must be less than " + maxSize;
-					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
-							defaultValue);
+					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY, Model
+							.valueOf(model), defaultValue);
 					error(msg);
 
 					if (log.isDebugEnabled())
@@ -853,8 +869,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					// Resource key should be <form-id>.uploadFailed to override
 					// default message
 					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
-							defaultValue);
+					String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY, Model
+							.valueOf(model), defaultValue);
 					error(msg);
 
 					log.error(msg, e);
@@ -924,17 +940,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		RequestCycle rc = RequestCycle.get();
 		IRequestCycleProcessor processor = rc.getProcessor();
-		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(new FormDispatchRequest(rc.getRequest(),url));
+		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
+				new FormDispatchRequest(rc.getRequest(), url));
 		IRequestTarget rt = processor.resolve(rc, requestParameters);
-		if(rt instanceof ListenerInterfaceRequestTarget)
+		if (rt instanceof ListenerInterfaceRequestTarget)
 		{
 			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
 			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
 		}
 		else
 		{
-			throw new WicketRuntimeException("Attempt to access unknown request listener interface " + 
-					requestParameters.getInterfaceName());
+			throw new WicketRuntimeException(
+					"Attempt to access unknown request listener interface "
+							+ requestParameters.getInterfaceName());
 		}
 	}
 
@@ -981,13 +999,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	class FormDispatchRequest extends Request
 	{
 		private final Request realRequest;
-		
+
 		private final String url;
-		
+
 		private final Map params = new HashMap(4);
 
 		/**
 		 * Construct.
+		 * 
 		 * @param realRequest
 		 * @param url
 		 */
@@ -995,19 +1014,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			this.realRequest = realRequest;
 			this.url = realRequest.decodeURL(url);
-			
-			String queryPart = this.url.substring(this.url.indexOf("?")+1);
-			StringTokenizer paramsSt = new StringTokenizer(queryPart,"&");
-			while(paramsSt.hasMoreTokens())
+
+			String queryPart = this.url.substring(this.url.indexOf("?") + 1);
+			StringTokenizer paramsSt = new StringTokenizer(queryPart, "&");
+			while (paramsSt.hasMoreTokens())
 			{
 				String param = paramsSt.nextToken();
 				int equalsSign = param.indexOf("=");
-				String paramName = param.substring(0,equalsSign);
-				String value = param.substring(equalsSign+1);
-				params.put(paramName,value);
+				String paramName = param.substring(0, equalsSign);
+				String value = param.substring(equalsSign + 1);
+				params.put(paramName, value);
 			}
 		}
-		
+
 		/**
 		 * @see wicket.Request#getLocale()
 		 */
@@ -1038,9 +1057,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		public String[] getParameters(String key)
 		{
 			String param = (String)params.get(key);
-			if (param != null) 
+			if (param != null)
 			{
-				return new String[] {param};
+				return new String[] { param };
 			}
 			return new String[0];
 		}
