@@ -30,8 +30,6 @@ import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.navigation.paging.PagingNavigation;
 import wicket.model.Model;
 
 /**
