@@ -23,6 +23,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.model.IModel;
 
 /**
  * Usually you either have a markup file or a xml tag with
@@ -36,13 +37,13 @@ import wicket.markup.parser.XmlTag;
  * <p>
  * 
  * <pre>
- *       &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *      
- *       &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *       &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *         &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *        
+ *         &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *         &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *       add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *         add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -69,7 +70,42 @@ public class Fragment extends WebMarkupContainer
 	 */
 	public Fragment(final String id, final String markupId)
 	{
-		this(id, markupId, null);
+		this(id, markupId, null, null);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @see wicket.Component#Component(String)
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param markupId
+	 *            The associated id of the associated markup fragment
+	 * @param model
+	 *            The model for this fragment
+	 */
+	public Fragment(final String id, final String markupId, final IModel model)
+	{
+		this(id, markupId, null, model);
+	}
+
+
+	/**
+	 * Constructor.
+	 * 
+	 * @see wicket.Component#Component(String)
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param markupId
+	 *            The associated id of the associated markup fragment
+	 * @param markupProvider
+	 *            The component whose markup contains the fragment's markup
+	 */
+	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
+	{
+		this(id, markupId, markupProvider, null);
 	}
 
 	/**
@@ -82,21 +118,19 @@ public class Fragment extends WebMarkupContainer
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 * @param markupProvider
-	 *            The component whose markup contains the fragment markup
+	 *            The component whose markup contains the fragment's markup
+	 * @param model
+	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
+	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
+			final IModel model)
 	{
-		super(id);
+		super(id, model);
 
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
-
-		// FIXME General: implement this feature.
-//		if (markupProvider != null)
-//		{
-//			throw new UnsupportedOperationException("markupProvider parameter is not yet supported");
-//		}
 	}
+
 
 	/**
 	 * The associated markup fragment can be modified
