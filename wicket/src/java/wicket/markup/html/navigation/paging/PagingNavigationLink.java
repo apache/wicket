@@ -61,27 +61,10 @@ public class PagingNavigationLink extends Link
 	 */
 	public void onClick()
 	{
-	    // We do not need to redirect
+		pageable.setCurrentPage(getPageNumber());
+
+		// We do not need to redirect
 		setRedirect(false);
-		
-		int idx = pageNumber;
-		if (idx < 0)
-		{
-			idx = pageable.getPageCount() + idx;
-		}
-		
-		if (idx > (pageable.getPageCount() - 1))
-		{
-			idx = pageable.getPageCount() - 1;
-		}
-
-		if (idx < 0)
-		{
-			idx = 0;
-		}
-	    
-		pageable.setCurrentPage(idx);
-
 		setResponsePage(getPage());
 	}
 
