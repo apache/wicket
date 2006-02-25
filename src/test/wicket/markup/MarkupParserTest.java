@@ -385,23 +385,29 @@ public final class MarkupParserTest extends WicketTestCase
 				.get(1)).toString());
 	}
 
-
-/*
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
 	public final void testBalancing() throws IOException, ResourceStreamNotFoundException
 	{
 		final MarkupParser parser = new MarkupParser(application, new XmlPullParser());
 
+		// Note: <img> is one of these none-balanced HTML tags
 		Markup markup = parser
 				.parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
 
-		ComponentTag t;
-
+		ComponentTag t = (ComponentTag)markup.get(0);
+		assertEquals(t.getId(), "span");
+		assertEquals(t.getPath(), null);
+		
+		t = (ComponentTag)markup.get(1);
+		assertEquals(t.getId(), "img");
+		assertEquals(t.getPath(), "span");
+		
 		t = (ComponentTag)markup.get(2);
 		assertEquals(t.getId(), "span2");
-		assertEquals(t.getId(), "span:img");// <== THIS IS WRONG IMG SHOULD BE
-											// POPPED OFF THE PATH STACK
 		assertEquals(t.getPath(), "span");
 	}
-	
-	*/
 }

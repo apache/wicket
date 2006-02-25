@@ -96,27 +96,12 @@ public final class Markup
 	 */
 	Markup(final Markup markup, final List markupElements)
 	{
+		this.markup = markupElements;
 		this.resource = markup.resource;
 		this.xmlDeclaration = markup.xmlDeclaration;
 		this.encoding = markup.encoding;
 		setWicketNamespace(markup.wicketNamespace);
 		
-		// Because the markup elements are not added, they are copied in,
-		// the componentMap has to be manually re-created
-		this.markup = new ArrayList();
-		for (int i=0; i < markupElements.size(); i++)
-		{
-			Object element = markupElements.get(i);
-			if(element instanceof ComponentTag)
-			{
-				addMarkupElement((ComponentTag)element);
-			}
-			else
-			{
-				addMarkupElement((MarkupElement)element);
-			}
-		}
-
 		initialize();
 	}
 
@@ -134,6 +119,9 @@ public final class Markup
 	 */
 	private void initialize()
 	{
+		// Reset
+		this.componentMap = null;
+		
 		if (markup != null)
 		{
 			// Initialize the index where <wicket:extend> can be found.
@@ -148,6 +136,25 @@ public final class Markup
 						headerIndex = i;
 						break;
 					}
+				}
+			}
+
+			// HTML tags like <img> may not have a close tag. But because that
+			// can only be detected until later on in the sequential markup 
+			// reading loop, we only can do it now.
+			StringBuffer componentPath = null;
+			for (int i = 0; i < this.markup.size(); i++)
+			{
+				MarkupElement elem = (MarkupElement)this.markup.get(i);
+				if (elem instanceof ComponentTag)
+				{
+					ComponentTag tag = (ComponentTag) elem;
+					
+					// Set the tags components path 
+					componentPath = setComponentPathForTag(componentPath, tag);
+					
+					// and add it to the local cache to be found fast if required
+					addToCache(i, tag);
 				}
 			}
 		}
@@ -356,28 +363,13 @@ public final class Markup
 	}
 
 	/**
-	 * Add a ComponentTag
-	 * 
-	 * @param tag
-	 */
-	final void addMarkupElement(final ComponentTag tag)
-	{
-		this.markup.add(tag);
-
-		// Set the tags components path and add it to the local cache
-		setComponentPath(tag);
-		
-		// Add to the local cache to be found fast if required
-		addToCache(tag);
-	}
-
-	/**
 	 * Add the tag to the local cache if open or open-close and if wicket:id is
 	 * present
 	 * 
+	 * @param index
 	 * @param tag
 	 */
-	private void addToCache(final ComponentTag tag)
+	private void addToCache(final int index, final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
@@ -388,9 +380,16 @@ public final class Markup
 				this.componentMap = new HashMap();
 			}
 
-			final String key = (tag.getPath() != null ? tag.getPath() + ":" + tag.getId() : tag
-					.getId());
-			this.componentMap.put(key, new Integer(this.markup.size() - 1));
+			final String key;
+			if (tag.getPath() != null)
+			{
+				key = tag.getPath() + ":" + tag.getId();
+			}
+			else
+			{
+				key = tag.getId();
+			}
+			this.componentMap.put(key, new Integer(index));
 		}
 	}
 
@@ -398,16 +397,19 @@ public final class Markup
 	 * Set the components path within the markup and add the component tag to
 	 * the local cache
 	 * 
+	 * @param componentPath
 	 * @param tag
+	 * @return componentPath
 	 */
-	private void setComponentPath(final ComponentTag tag)
+	private StringBuffer setComponentPathForTag(final StringBuffer componentPath, final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
 		{
 			// With open-close the path does not change. It can/will not have
-			// children
-			if (tag.isOpenClose())
+			// children. The same is true for HTML tags like <br> or <img>
+			// which might not have close tags.
+			if (tag.isOpenClose() || tag.hasNoCloseTag())
 			{
 				// Set the components path.
 				if ((this.currentPath != null) && (this.currentPath.length() > 0))
@@ -446,10 +448,12 @@ public final class Markup
 				this.currentPath.setLength(0);
 			}
 		}
+		
+		return this.currentPath;
 	}
 
 	/**
-	 * Make all tags immutable and the list of elements unmodifable
+	 * Make all tags immutable and the list of elements unmodifable.
 	 */
 	final void makeImmutable()
 	{
@@ -458,12 +462,17 @@ public final class Markup
 			MarkupElement elem = (MarkupElement)this.markup.get(i);
 			if (elem instanceof ComponentTag)
 			{
+				// Make the tag immutable
 				((ComponentTag)elem).makeImmutable();
 			}
 		}
 
 		this.markup = Collections.unmodifiableList(this.markup);
 
+		// We assume all markup elements have now been added. It is 
+		// now time to initialize all remaining variables based
+		// on the markup loaded, which could not be initialized
+		// earlier on.
 		initialize();
 	}
 
