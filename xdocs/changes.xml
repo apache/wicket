@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+      <action type="add" dev="Juergen Donnerstag">Added markup fragments (inline panels)</action>
       <action type="fix" dev="Martijn Dashorst" issue="1435245" due-to="Alistair Maw">Response uses sun.* class GetPropertyAction</action>
       <action type="fix" dev="Martijn Dashorst" issue="1435251" due-to="Alistair Maw">wicket.util.crypt.AbstractCrypt uses proprietary Sun classes. Fixed by implementing our own Base64 encoder (copied from commons-codec and adjusted to our needs).</action>
       <action type="fix" dev="Johan Compagner" issue="1434863" due-to="Nick Heudecker">Clicking on bookmarkable links exhausts page map, Fixed this by changing the PopupSettings class, you have to specify the pagemap now as a constructor param.</action>
