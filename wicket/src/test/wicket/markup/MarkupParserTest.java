@@ -48,13 +48,14 @@ public final class MarkupParserTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public MarkupParserTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * 
 	 * @throws StringValueConversionException
@@ -64,7 +65,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		final MarkupParser parser = new MarkupParser(application, new XmlPullParser());
 		parser.setWicketNamespace("componentName");
-		
+
 		final Markup markup = parser
 				.parse("This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
 						+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
@@ -180,10 +181,11 @@ public final class MarkupParserTest extends WicketTestCase
 		// tokens.get(0).toString());
 	}
 
-	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator, final Class c,
-			final String style, final Locale locale, final String extension)
+	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator,
+			final Class c, final String style, final Locale locale, final String extension)
 	{
-		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'),style, locale, extension);
+		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'), style, locale,
+				extension);
 		MarkupResourceStream res = new MarkupResourceStream(resource, null, null);
 		return res;
 	}
@@ -202,7 +204,8 @@ public final class MarkupParserTest extends WicketTestCase
 
 		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
 
-		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1", null, "html");
+		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1",
+				null, "html");
 
 		Markup tokens = parser.readAndParse(resource);
 		log.info("tok(0)=" + tokens.get(0));
@@ -280,9 +283,12 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
-		parser.parse("<span wicket:id=\"test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
-		parser.parse("<span wicket:id=\"test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
+		parser
+				.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
+		parser
+				.parse("<span wicket:id=\"test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
+		parser
+				.parse("<span wicket:id=\"test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
 
 		// parser.parse("<span wicket:id=\"test\"/><wicket:param
 		// name=myParam>value</wicket>", null);
@@ -324,10 +330,14 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
-		parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
+		parser
+				.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
 	}
 
 	/**
@@ -374,4 +384,24 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", ((RawMarkup)markup
 				.get(1)).toString());
 	}
+
+
+/*
+	public final void testBalancing() throws IOException, ResourceStreamNotFoundException
+	{
+		final MarkupParser parser = new MarkupParser(application, new XmlPullParser());
+
+		Markup markup = parser
+				.parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
+
+		ComponentTag t;
+
+		t = (ComponentTag)markup.get(2);
+		assertEquals(t.getId(), "span2");
+		assertEquals(t.getId(), "span:img");// <== THIS IS WRONG IMG SHOULD BE
+											// POPPED OFF THE PATH STACK
+		assertEquals(t.getPath(), "span");
+	}
+	
+	*/
 }
