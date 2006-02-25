@@ -90,7 +90,6 @@ public class Fragment extends WebMarkupContainer
 		this(id, markupId, null, model);
 	}
 
-
 	/**
 	 * Constructor.
 	 * 
@@ -130,7 +129,6 @@ public class Fragment extends WebMarkupContainer
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
 	}
-
 
 	/**
 	 * The associated markup fragment can be modified
@@ -174,8 +172,7 @@ public class Fragment extends WebMarkupContainer
 		else
 		{
 			// The following statement assumes that the markup provider is a
-			// parent
-			// along the line up to the Page
+			// parent along the line up to the Page
 			final MarkupStream providerMarkupStream = this.markupProvider.getMarkupStream();
 
 			renderFragment(providerMarkupStream, openTag);
