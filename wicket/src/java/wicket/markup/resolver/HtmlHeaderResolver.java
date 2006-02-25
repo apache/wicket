@@ -95,7 +95,15 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
 				final WebMarkupContainer header2 = new WebMarkupContainer(
-						HtmlHeaderSectionHandler.HEADER_ID);
+						HtmlHeaderSectionHandler.HEADER_ID)
+						{
+							private static final long serialVersionUID = 1L;
+
+							public boolean isTransparentResolver()
+							{
+								return true;
+							}
+						};
 				header2.setRenderBodyOnly(true);
 				
 				header.add(header2);
@@ -109,7 +117,15 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
 				final WebMarkupContainer header = new WebMarkupContainer(
-						HtmlHeaderSectionHandler.HEADER_ID);
+						HtmlHeaderSectionHandler.HEADER_ID)
+						{
+							private static final long serialVersionUID = 1L;
+		
+							public boolean isTransparentResolver()
+							{
+								return true;
+							}
+						};
 				header.setRenderBodyOnly(true);
 	
 				try
