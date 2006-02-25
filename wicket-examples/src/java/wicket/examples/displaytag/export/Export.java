@@ -25,45 +25,65 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
+import wicket.Page;
 import wicket.WicketRuntimeException;
+import wicket.markup.MarkupStream;
 import wicket.protocol.http.WebResponse;
 
-
 /**
+ * 
  */
-public class Export
+public class Export extends Page
 {
     final private static Log log = LogFactory.getLog(Export.class);
 
+    private final BaseExportView exportView;
+    private final List data;
+
     /**
-     * called when data are not displayed in a html page but should be exported.
-     * @param cycle
+     * 
      * @param exportView
      * @param data
+     */
+    public Export(final BaseExportView exportView, final List data)
+    {
+    	this.exportView = exportView;
+    	this.data = data;
+    }
+
+    /**
+     * 
+     * @param markupStream
+     */
+    protected void onRender(MarkupStream markupStream)
+    {
+    	doExport();
+    }
+    
+    /**
+     * called when data are not displayed in a html page but should be exported.
      * @return int EVAL_PAGE or SKIP_PAGE
      */
-    public int doExport(final RequestCycle cycle, final BaseExportView exportView, final List data) 
+    public int doExport() 
     {
         String mimeType = exportView.getMimeType();
         String exportString = exportView.doExport();
 
         String filename = null; // getExportFileName(MediaTypeEnum.XML);
-        return writeExport(cycle, mimeType, exportString, filename);
+        return writeExport(mimeType, exportString, filename);
     }
 
     /**
      * Will write the export. The default behavior is to write directly to the response. If the ResponseOverrideFilter
      * is configured for this request, will instead write the export content to a StringBuffer in the Request object.
-     * @param cycle
      * @param mimeType mime type to set in the response
      * @param exportString String
      * @param filename name of the file to be saved. Can be null, if set the content-disposition header will be added.
      * @return int
      */
-    protected int writeExport(final RequestCycle cycle, final String mimeType, final String exportString, final String filename)
+    protected int writeExport(final String mimeType, final String exportString, final String filename)
     {
-        WebResponse response = (WebResponse)cycle.getResponse();
+        WebResponse response = (WebResponse)getResponse();
         HttpServletResponse servletResponse = response.getHttpServletResponse();
 
         // response can't be already committed at this time

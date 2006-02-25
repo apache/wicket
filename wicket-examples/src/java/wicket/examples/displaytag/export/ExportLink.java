@@ -20,8 +20,6 @@ package wicket.examples.displaytag.export;
 
 import java.util.List;
 
-import wicket.Page;
-import wicket.RequestCycle;
 import wicket.markup.html.link.Link;
 
 /**
@@ -52,11 +50,6 @@ public class ExportLink extends Link
      */
     public void onClick()
     {
-        final RequestCycle cycle = getRequestCycle();
-        
-        new Export().doExport(cycle, exportView, data);
-        
-        // rendering completed
-        cycle.setResponsePage((Page)null);
+        setResponsePage(new Export(exportView, data));
     }
 }
