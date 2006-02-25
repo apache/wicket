@@ -23,13 +23,7 @@
 					Wicket development. All these steps are explained in more detail below.
 				</p>
 				<ul>
-					<li>
-						<a
-							href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054">
-							download
-						</a>
-						the quickstart project for your IDE
-					</li>
+					<li>download the quickstart project (follow the link in the navigation menu)</li>
 					<li>unzip in your projects directory</li>
 					<li>rename the directory to the name of your project</li>
 					<li>start IDEA and load the project file</li>
