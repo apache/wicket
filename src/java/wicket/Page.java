@@ -830,7 +830,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param markupStream
 	 */
-	protected final void onRender(final MarkupStream markupStream)
+	protected void onRender(final MarkupStream markupStream)
 	{
 		// Set page's associated markup stream
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
