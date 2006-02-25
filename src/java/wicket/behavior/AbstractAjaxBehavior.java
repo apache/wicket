@@ -286,4 +286,12 @@ public abstract class AbstractAjaxBehavior
 	protected void onRenderHeadInitContribution(final Response response)
 	{
 	}
+	
+	/**
+	 * 
+	 * @see wicket.behavior.IBehavior#onException()
+	 */
+	public void onException()
+	{
+	}
 }

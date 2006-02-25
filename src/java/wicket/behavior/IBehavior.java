@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -75,4 +75,11 @@ public interface IBehavior extends Serializable
 	 *            the component that has this behavior coupled
 	 */
 	void rendered(Component hostComponent);
+
+	/**
+	 * In case an exception happened anywhere between onComponentTag() and
+	 * rendered(), onException() will be called for any behavior.
+	 * 
+	 */
+	void onException();
 }

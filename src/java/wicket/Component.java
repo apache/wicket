@@ -1510,11 +1510,37 @@ public abstract class Component implements Serializable
 				log.debug("Begin render " + this);
 			}
 
-			// Call implementation to render component
-			onRender(markupStream);
+			try
+			{
+				// Call implementation to render component
+				onRender(markupStream);
+	
+				// Component has been rendered
+				rendered();
+			}
+			catch (RuntimeException ex)
+			{
+				// Call each behaviors onException() to allow the
+				// behavior to clean up
+				if (behaviors != null)
+				{
+					for (Iterator i = behaviors.iterator(); i.hasNext();)
+					{
+						IBehavior behavior = (IBehavior)i.next();
+						try
+						{
+							behavior.onException();
+						}
+						catch (Throwable ex2)
+						{
+							log.error("Error while cleaning up after exception", ex2);
+						}
+					}
+				}
 
-			// Component has been rendered
-			rendered();
+				// Re-thtow the exception
+				throw ex;
+			}
 
 			if (log.isDebugEnabled())
 			{

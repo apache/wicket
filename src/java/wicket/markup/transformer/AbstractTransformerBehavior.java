@@ -32,9 +32,6 @@ import wicket.response.StringResponse;
  * @see wicket.markup.transformer.AbstractOutputTransformerContainer
  * 
  * @author Juergen Donnerstag
- * 
- * FIXME Robustness: IBehavior does not have an event which gets called in case
- * of an exception. Hence the response object might not be restored.
  */
 public abstract class AbstractTransformerBehavior extends AbstractBehavior implements ITransformer
 {
@@ -103,11 +100,26 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 		{
 			throw new WicketRuntimeException("Error while transforming the output: " + this, ex);
 		}
-
-		// Restore the original response object
-		requestCycle.setResponse(this.webResponse);
+		finally
+		{
+			// Restore the original response object
+			requestCycle.setResponse(this.webResponse);
+			this.webResponse = null;
+		}
 	}
 
+	/**
+	 * @see wicket.behavior.IBehavior#onException()
+	 */
+	public void onException()
+	{
+		if (this.webResponse != null)
+		{
+			final RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.setResponse(this.webResponse);
+		}
+	}
+	
 	/**
 	 * 
 	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,

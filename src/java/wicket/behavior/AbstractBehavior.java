@@ -65,4 +65,13 @@ public abstract class AbstractBehavior implements IBehavior
 	public void rendered(final Component hostComponent)
 	{
 	}
+
+	/**
+	 * In case an exception happened anywhere between onComponentTag() and
+	 * rendered(), onException() will be called for any behavior.
+	 * 
+	 */
+	public void onException()
+	{
+	}
 }
