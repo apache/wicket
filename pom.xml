@@ -1,404 +1,383 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>wicket</groupId>
-  <artifactId>wicket</artifactId>
-  <packaging>jar</packaging>
-  <version>1.2-SNAPSHOT</version>
-  <name>Wicket</name>
-  <description></description>
-  <url>http://wicket.sourceforge.net</url>
-  <inceptionYear>2004</inceptionYear>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <organization>
-    <name>Wicket developers</name>
-    <url>http://wicket.sourceforge.net</url>
-  </organization>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>wicket</groupId>
+	<artifactId>wicket</artifactId>
+	<packaging>jar</packaging>
+	<version>1.2-SNAPSHOT</version>
+	<name>Wicket</name>
+	<description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favourite technology.</description>
+	<url>http://wicket.sourceforge.net</url>
+	<inceptionYear>2004</inceptionYear>
 
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  
-  <issueManagement>
-    <url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
-  </issueManagement>
+	<organization>
+		<name>Wicket developers</name>
+		<url>http://wicket.sourceforge.net</url>
+	</organization>
 
-  <scm>
-    <connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
-    <developerConnection>scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
-    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
-  </scm>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-  <mailingLists>
-    <mailingList>
-      <name>${pom.name} Announcements List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-announce</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} User List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} Development List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} CVS commit List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} automated builds List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-builds</archive>
-    </mailingList>
-  </mailingLists>
+	<issueManagement>
+		<url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
+	</issueManagement>
 
-  <developers>
-    <developer>
-      <name>Jonathan Locke</name>
-      <id>jonathanlocke</id>
-      <email>jonathanlocke at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Christopher Turner</name>
-      <id>skipoles</id>
-      <email>skipoles at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Eelco Hillenius</name>
-      <id>eelco12</id>
-      <email>eelco12 at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Johan Compagner</name>
-      <id>joco01</id>
-      <email>joco01 at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Martijn Dashorst</name>
-      <id>dashorst</id>
-      <email>dashorst at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Juergen Donnerstag</name>
-      <id>jdonnerstag</id>
-      <email>jdonnerstag at users.sourceforge.net</email>
-      <roles/>
-    </developer>
-    <developer>
-      <name>Igor Vaynberg</name>
-      <id>ivaynberg</id>
-      <email>ivaynberg at users.sourceforge.net</email>
-    </developer>
-    <developer>
-      <name>Gwyn Evans</name>
-      <id>gwynevans</id>
-      <email>gwynevans at users.sourceforge.net</email>
-      <roles/>
-    </developer>
-    <developer>
-      <name>Ate Douma</name>
-      <id>adouma</id>
-      <email>adouma at users.sourceforge.net</email>
-      <roles/>
-    </developer>
-    <developer>
-      <name>Jan Blok</name>
-      <id>jan_blok</id>
-      <email>jan_blok at users.sourceforge.net</email>
-      <roles/>
-    </developer>
-  </developers>
+	<scm>
+		<connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
+		<developerConnection>scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
+		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
+	</scm>
 
-  <contributors>
-    <contributor>
-      <name>Wouter de Jong</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Peter Veenendaal</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Maurice Marrink</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Gili Tzabari</name>
-      <email>cowwoc at users.sourceforge.net</email>
-    </contributor>
-    <contributor>
-      <name>Martin Fey</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Cameron Braid</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Jan Blok</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Wang Lei</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Xiaoyz</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Andrew de Torres</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Dan Gould</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Francois Denommee</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Timur Mehrvarz</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Cameron Braid</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Phil Kulak</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Matej Knopp</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Jonathan Carlson</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Anatol Pomozov</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Jan Mikkelsen</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Simon Berriman</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Ingram Chen</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Nick Heudecker</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Andrew Berman</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Gert Jan Verhoog</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Timothy Bennet</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Niclas Hedhman</name>
-      <email>-</email>
-    </contributor>
-    <contributor>
-      <name>Ralf Ebert</name>
-      <email>-</email>
-    </contributor>
-  </contributors>
+	<mailingLists>
+		<mailingList>
+			<name>Wicket Announcements List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket User List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket Development List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket CVS commit List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-autocvs</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket automated builds List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
+		</mailingList>
+	</mailingLists>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.0.4</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.3</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.12</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
+	<developers>
+		<developer>
+			<name>Jonathan Locke</name>
+			<id>jonathanlocke</id>
+			<email>jonathanlocke at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Christopher Turner</name>
+			<id>skipoles</id>
+			<email>skipoles at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Eelco Hillenius</name>
+			<id>eelco12</id>
+			<email>eelco12 at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Johan Compagner</name>
+			<id>joco01</id>
+			<email>joco01 at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Martijn Dashorst</name>
+			<id>dashorst</id>
+			<email>dashorst at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Juergen Donnerstag</name>
+			<id>jdonnerstag</id>
+			<email>jdonnerstag at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Igor Vaynberg</name>
+			<id>ivaynberg</id>
+			<email>ivaynberg at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Gwyn Evans</name>
+			<id>gwynevans</id>
+			<email>gwynevans at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Ate Douma</name>
+			<id>adouma</id>
+			<email>adouma at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Jan Blok</name>
+			<id>jan_blok</id>
+			<email>jan_blok at users.sourceforge.net</email>
+			<roles />
+		</developer>
+	</developers>
 
-  <build>
-    <sourceDirectory>src/java</sourceDirectory>
-    <testSourceDirectory>src/test</testSourceDirectory>
-    
-    <resources>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/java</directory>
-        <includes>
-            <include>**</include>
-        </includes>
-        <excludes>
-            <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    
-    <testResources>
-      <testResource>
-        <filtering>false</filtering>
-        <directory>src/test</directory>
-        <includes>
-            <include>**</include>
-        </includes>
-        <excludes>
-            <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
+	<contributors>
+		<contributor>
+			<name>Wouter de Jong</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Peter Veenendaal</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Maurice Marrink</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Gili Tzabari</name>
+			<email>cowwoc at users.sourceforge.net</email>
+		</contributor>
+		<contributor>
+			<name>Martin Fey</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Cameron Braid</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Jan Blok</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Wang Lei</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Xiaoyz</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Andrew de Torres</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Dan Gould</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Francois Denommee</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Timur Mehrvarz</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Cameron Braid</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Phil Kulak</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Matej Knopp</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Jonathan Carlson</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Anatol Pomozov</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Jan Mikkelsen</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Simon Berriman</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Ingram Chen</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Nick Heudecker</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Andrew Berman</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Gert Jan Verhoog</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Timothy Bennet</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Niclas Hedhman</name>
+			<email>-</email>
+		</contributor>
+		<contributor>
+			<name>Ralf Ebert</name>
+			<email>-</email>
+		</contributor>
+	</contributors>
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-            <descriptor>src/assembly/bin.xml</descriptor>
-            <finalName>${artifactId}-${version}</finalName>
-            <outputDirectory>target/distributions</outputDirectory>
-            <workDirectory>target/assembly/work</workDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <minmemory>128m</minmemory>
-          <maxmemory>256m</maxmemory>
-        </configuration>        
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <templateDirectory>file:src/site/template/</templateDirectory>
-          <template>wicket-site.vm</template>
-        </configuration>        
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
-          <testFailureIgnore>true</testFailureIgnore>
-        </configuration>        
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>surefire-report-maven-plugin</artifactId>
-      </plugin>
-      <!-- plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changes-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
-        <configuration>
-          <xmlPath>xdocs</xmlPath>
-          <link_template>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</link_template>
-        </configuration>
-      </plugin -->
-    </plugins>
-  </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>dependencies</report>
-              <report>project-team</report>
-              <report>mailing-list</report>
-              <report>issue-tracking</report>
-              <report>license</report>
-              <report>scm</report>
-              <!-- report>cim</report -->
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>surefire-report-maven-plugin</artifactId>
-      </plugin>
-      <!-- plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changes-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
-        <configuration>
-          <xmlPath>xdocs/changes.xml</xmlPath>
-          <link_template>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</link_template>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin -->
-      <!--  plugin>
-      	<groupId>org.apache.maven.plugins</groupId>
-      	<artifactId>maven-clover-plugin</artifactId>
-      	<configuration>
-      	  <cloverOutputDirectory>${project.build.directory}/clover-classes</cloverOutputDirectory>
-      	  <cloverDatabase>${project.build.directory}/clover/clover.db</cloverDatabase>
-      	  <licenseFile>lib/clover.license</licenseFile>
-      	</configuration>
-      </plugin -->
-    </plugins>
-  </reporting>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.3</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/java</sourceDirectory>
+		<testSourceDirectory>src/test</testSourceDirectory>
+
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptor>src/assembly/bin.xml</descriptor>
+					<finalName>${artifactId}-${version}</finalName>
+					<outputDirectory>target/distributions</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>256m</maxmemory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<templateDirectory>file:src/site/template/</templateDirectory>
+					<template>wicket-site.vm</template>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependencies</report>
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
