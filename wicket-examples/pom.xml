@@ -7,8 +7,8 @@
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
 	<version>1.2-SNAPSHOT</version>
-	<name>Wicket Extensions</name>
-	<description></description>
+	<name>Wicket Examples</name>
+	<description>Examples displaying a component reference and several componens in action.</description>
 	<url>http://wicket.sourceforge.net/</url>
 	<inceptionYear>2004</inceptionYear>
 
@@ -35,40 +35,11 @@
 		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples</url>
 	</scm>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>1.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.12</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -80,11 +51,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>2.1</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.3</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
@@ -266,15 +237,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>surefire-report-maven-plugin</artifactId>
 			</plugin>
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clover-plugin</artifactId>
-				<configuration>
-				<cloverOutputDirectory>${project.build.directory}/clover-classes</cloverOutputDirectory>
-				<cloverDatabase>${project.build.directory}/clover/clover.db</cloverDatabase>
-				<licenseFile>../wicket/lib/clover.license</licenseFile>
-				</configuration>
-				</plugin -->
 		</plugins>
 	</reporting>
 </project>

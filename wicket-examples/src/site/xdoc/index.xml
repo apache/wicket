@@ -11,7 +11,7 @@
 			</p>
 			<ul>
 				<li>Download the binary release</li>
-				<li>Or build your own (<code>maven war</code>)</li>
+				<li>Or build your own (<code>maven war</code> or <code>mvn war</code>)</li>
 				<li>Install the <code>wicket-examples.war</code>-archive in your application server</li>
 				<li>Start your application server</li>
 				<li>Point your browser to the <code>/wicket-examples</code> URL on your application server and enjoy the examples</li>
