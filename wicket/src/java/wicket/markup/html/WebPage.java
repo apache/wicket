@@ -17,7 +17,6 @@
  */
 package wicket.markup.html;
 
-import wicket.Component;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -27,7 +26,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
-import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
@@ -176,25 +174,6 @@ public class WebPage extends Page
 	}
 
 	/**
-	 * Remove the header component and all its children from the component
-	 * hierachy. Be aware, thus you can not transfer state from one request to
-	 * another.
-	 * 
-	 * @see wicket.Component#onEndRequest()
-	 */
-	protected void onEndRequest()
-	{
-		// FIXME Documentation: What again was the reason why this is necessary?
-		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
-		if (header != null)
-		{
-			this.remove(header);
-		}
-
-		super.onEndRequest();
-	}
-
-	/**
 	 * Common code executed by constructors
 	 */
 	private void commonInit()
@@ -231,7 +210,7 @@ public class WebPage extends Page
 			}
 		}
 
-		// TODO General: If the concept proofs valuable we could add the header
+		// TODO Post 1.2: If the concept proofs valuable we could add the header
 		// container the same way instead of using a resolver. The advantages
 		// would be that the header container be available at build time already
 		// and not only at render time.

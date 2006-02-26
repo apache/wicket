@@ -20,6 +20,7 @@ package wicket;
 import junit.framework.TestCase;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -75,22 +76,30 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to
-	 * automatically replace the expected output file.
 	 * 
 	 * @param pageClass
+	 * @param component
+	 * @param listener
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executePreparedTest(final Class pageClass, final String filename) throws Exception
+	protected void executedListener(final Class pageClass, final Component component,
+			final RequestListenerInterface listener, final String filename) throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " ===");
+		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath() + " : " + listener.getClass().getName() + " ===");
+		
+		assertNotNull(component);
+		assertNotNull(listener);
 
 		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		WebRequestCycle cycle = application.createRequestCycle();
+		Page page = application.getLastRenderedPage();
+		String url = cycle.urlFor(component, listener);
 
-		// Validate the document
+		application.getServletRequest().setRequestToRedirectString(url);
+		application.processRequestCycle(cycle);
+
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}
 }
