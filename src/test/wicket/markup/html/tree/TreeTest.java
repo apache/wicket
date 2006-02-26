@@ -20,10 +20,8 @@ package wicket.markup.html.tree;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Page;
 import wicket.WicketTestCase;
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.markup.html.link.ILinkListener;
 
 /**
  * Test for the Tree component. Also tests header insertion as that is what the
@@ -57,16 +55,9 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePage.class, "TreePageExpectedResult_1.html");
 
-		Page page = application.getLastRenderedPage();
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString(
-				'?' + WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME
-						+ "=:0:tree:tree:3:node:junctionLink::ILinkListener");
-		application.processRequestCycle();
-		String document = application.getServletResponse().getDocument();
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"TreePageExpectedResult_1-1.html"));
+		executedListener(TreePage.class, 
+				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
+				ILinkListener.INTERFACE, "TreePageExpectedResult_1-1.html");
 	}
 
 	/**
@@ -79,16 +70,9 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePageWithBorder.class, "TreePageWithBorderExpectedResult_1.html");
 
-		Page page = application.getLastRenderedPage();
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString(
-				'?' + WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME
-						+ "=:0:tree:tree:3:node:junctionLink::ILinkListener");
-		application.processRequestCycle();
-		String document = application.getServletResponse().getDocument();
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"TreePageWithBorderExpectedResult_1-1.html"));
+		executedListener(TreePageWithBorder.class, 
+				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
+				ILinkListener.INTERFACE, "TreePageWithBorderExpectedResult_1-1.html");
 	}
 
 	/**
@@ -101,15 +85,8 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePageNoWicketHeadTag.class, "TreePageNoWicketHeadTagExpectedResult_1.html");
 
-		Page page = application.getLastRenderedPage();
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString(
-				'?' + WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME
-						+ "=:0:tree:tree:3:node:junctionLink::ILinkListener");
-		application.processRequestCycle();
-		String document = application.getServletResponse().getDocument();
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"TreePageNoWicketHeadTagExpectedResult_1-1.html"));
+		executedListener(TreePageNoWicketHeadTag.class, 
+				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
+				ILinkListener.INTERFACE, "TreePageNoWicketHeadTagExpectedResult_1-1.html");
 	}
 }
