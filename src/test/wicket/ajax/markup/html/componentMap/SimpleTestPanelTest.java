@@ -20,7 +20,7 @@ package wicket.ajax.markup.html.componentMap;
 import wicket.Page;
 import wicket.WicketTestCase;
 import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
  * Test for ajax handler.
@@ -41,19 +41,21 @@ public class SimpleTestPanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	public void testRenderHomePage_2() throws Exception
 	{
 	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 	    
-		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		// TODO Post 1.2: This is a fragile test as it depends on a string
-		application.getServletRequest().setRequestToRedirectString(
-				"?path=0:testPanel:baseSpan:linja1&interface=IBehaviorListener&"
-						+ WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=0");
-		application.processRequestCycle();
-		String document = application.getServletResponse().getDocument();
+		WebRequestCycle cycle = application.createRequestCycle();
+		
+		Page page = application.getLastRenderedPage();
+	    String url = ((SimpleTestPanel)page.get("testPanel")).getTimeBehavior().getCallbackUrl();
+		application.getServletRequest().setRequestToRedirectString(url);
 
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "SimpleTestPageExpectedResult-1.html"));
+		application.processRequestCycle(cycle);
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		assertTrue(DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html"));
 	}
 }
