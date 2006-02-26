@@ -73,4 +73,24 @@ public abstract class WicketTestCase extends TestCase
 		String document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to
+	 * automatically replace the expected output file.
+	 * 
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
+	protected void executePreparedTest(final Class pageClass, final String filename) throws Exception
+	{
+		System.out.println("=== " + pageClass.getName() + " ===");
+
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	}
 }

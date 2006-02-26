@@ -228,7 +228,6 @@ public class StringResourceModelTest extends TestCase
 
 			public IModel getNestedModel()
 			{
-				// TODO General: Remove return station;
 				return null;
 			}
 		};
