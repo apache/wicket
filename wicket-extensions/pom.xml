@@ -31,7 +31,7 @@
 
 	<scm>
 		<connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</connection>
-		<developerConnection>	scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</developerConnection>
+		<developerConnection>scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-extensions</developerConnection>
 		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-extensions</url>
 	</scm>
 
@@ -159,6 +159,21 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+				<version>2.0-beta-1-SNAPSHOT</version>
+				<configuration>
+					<xmlPath>xdocs/changes.xml</xmlPath>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
