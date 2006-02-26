@@ -91,6 +91,17 @@
   </versions>
   <dependencies>
     <dependency>
+      <groupId>wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <version>1.2-SNAPSHOT</version>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This is the wicket library</wicket.description>
+        <eclipse.dependency>true</eclipse.dependency>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
       <groupId>servletapi</groupId>
       <artifactId>servletapi</artifactId>
       <version>2.3</version>
@@ -128,17 +139,6 @@
       <properties>
         <wicket.group>optional</wicket.group>
         <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>wicket</groupId>
-      <artifactId>wicket</artifactId>
-      <version>1.2-SNAPSHOT</version>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description>This is the wicket library</wicket.description>
-        <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
