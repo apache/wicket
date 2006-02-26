@@ -25,13 +25,14 @@ import wicket.markup.html.link.Link;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Martijn Dashorst
  */
 public class PagingNavigationLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 	
 	/** The pageable list view. */
-	private final IPageable pageable;
+	protected final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;

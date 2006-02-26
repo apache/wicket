@@ -25,9 +25,9 @@ import wicket.markup.html.link.Link;
  * navigation looks like
  * 
  * <pre>
- *  
- * 	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- * 	
+ *    
+ *   	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *   	
  * </pre>
  * 
  * <p>
@@ -35,16 +35,17 @@ import wicket.markup.html.link.Link;
  * than it is this kind of incremental page links which can easily be created.
  * 
  * @author Juergen Donnerstag
+ * @author Martijn Dashorst
  */
 public class PagingNavigationIncrementLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The increment. */
 	private final int increment;
 
 	/** The PageableListView the page links are referring to. */
-	private final IPageable pageable;
+	protected final IPageable pageable;
 
 	/**
 	 * Constructor.
@@ -56,8 +57,8 @@ public class PagingNavigationIncrementLink extends Link
 	 * @param increment
 	 *            increment by
 	 */
-	public PagingNavigationIncrementLink(final String id,
-			final IPageable pageable, final int increment)
+	public PagingNavigationIncrementLink(final String id, final IPageable pageable,
+			final int increment)
 	{
 		super(id);
 		setAutoEnable(true);
@@ -70,27 +71,29 @@ public class PagingNavigationIncrementLink extends Link
 	 */
 	public void onClick()
 	{
+		// Tell the PageableListView which page to print next
+		pageable.setCurrentPage(getPageNumber());
+
 		// We do not need to redirect
 		setRedirect(false);
 
-		// Determine the page number based on the current
-		// PageableListView page
-		// and the increment
-		int idx = pageable.getCurrentPage() + increment;
-		if (idx < 0)
-		{
-			idx = 0;
-		}
-		else if (idx > (pageable.getPageCount() - 1))
-		{
-			idx = pageable.getPageCount() - 1;
-		}
-
-		// Tell the PageableListView which page to print next
-		pageable.setCurrentPage(idx);
-
-		// Return the the current page.
+		// Return the current page.
 		setResponsePage(getPage());
+	}
+
+	/**
+	 * Determines the next page number for the pageable component.
+	 * 
+	 * @return the new page number
+	 */
+	public final int getPageNumber()
+	{
+		// Determine the page number based on the current
+		// PageableListView page and the increment
+		int idx = pageable.getCurrentPage() + increment;
+
+		// make sure the index lies between 0 and the last page
+		return Math.max(0, Math.min(pageable.getPageCount() - 1, idx));
 	}
 
 	/**
@@ -115,15 +118,14 @@ public class PagingNavigationIncrementLink extends Link
 	 * Returns true if the page link links to the given page.
 	 * 
 	 * @param page
-	 *            The page to test
+	 *            ignored
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */
 	public boolean linksTo(final Page page)
 	{
 		int currentPage = pageable.getCurrentPage();
-		if (((increment < 0) && (currentPage <= 0))
-				|| ((increment > 0) && (currentPage >= (pageable.getPageCount() - 1))))
+		if (((increment < 0) && isFirst()) || ((increment > 0) && isLast()))
 		{
 			return true;
 		}

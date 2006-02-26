@@ -1,6 +1,6 @@
 /*
- * $Id: PagingNavigator.java,v 1.3 2005/02/12 22:02:48 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -45,8 +46,9 @@ public class PagingNavigator extends Panel
 	 */
 	public PagingNavigator(final String id, final IPageable pageable)
 	{
-		this(id,pageable,null);
+		this(id, pageable, null);
 	}
+
 	/**
 	 * Constructor.
 	 * 
@@ -54,23 +56,58 @@ public class PagingNavigator extends Panel
 	 *            See Component
 	 * @param pageable
 	 *            The pageable component the page links are referring to.
-	 * @param labelProvider 
-	 * 			  The label provider for the link text.
+	 * @param labelProvider
+	 *            The label provider for the link text.
 	 */
-	public PagingNavigator(final String id, final IPageable pageable, final IPagingLabelProvider labelProvider)
+	public PagingNavigator(final String id, final IPageable pageable,
+			final IPagingLabelProvider labelProvider)
 	{
 		super(id);
 
-		
+
 		// Get the navigation bar and add it to the hierarchy
 		this.pagingNavigation = newNavigation(pageable, labelProvider);
 		add(pagingNavigation);
 
 		// Add additional page links
-		add(new PagingNavigationLink("first", pageable, 0));
-		add(new PagingNavigationIncrementLink("prev", pageable, -1));
-		add(new PagingNavigationIncrementLink("next", pageable, 1));
-		add(new PagingNavigationLink("last", pageable, -1));
+		add(newPagingNavigationLink("first", pageable, 0));
+		add(newPagingNavigationIncrementLink("prev", pageable, -1));
+		add(newPagingNavigationIncrementLink("next", pageable, 1));
+		add(newPagingNavigationLink("last", pageable, -1));
+	}
+
+	/**
+	 * Create a new increment link. May be subclassed to make use of specialized
+	 * links, e.g. Ajaxian links.
+	 * 
+	 * @param id
+	 *            the link id
+	 * @param pageable
+	 *            the pageable to control
+	 * @param increment
+	 *            the increment
+	 * @return the increment link
+	 */
+	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	{
+		return new PagingNavigationIncrementLink(id, pageable, increment);
+	}
+
+	/**
+	 * Create a new pagenumber link. May be subclassed to make use of
+	 * specialized links, e.g. Ajaxian links.
+	 * 
+	 * @param id
+	 *            the link id
+	 * @param pageable
+	 *            the pageable to control
+	 * @param pageNumber
+	 *            the page to jump to
+	 * @return the pagenumber link
+	 */
+	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	{
+		return new PagingNavigationLink(id, pageable, pageNumber);
 	}
 
 	/**
@@ -79,17 +116,19 @@ public class PagingNavigator extends Panel
 	 * 
 	 * @param pageable
 	 *            the pageable component
-	 * @param labelProvider 
-	 * 			  The label provider for the link text.
+	 * @param labelProvider
+	 *            The label provider for the link text.
 	 * @return the navigation object
 	 */
-	protected PagingNavigation newNavigation(final IPageable pageable, final IPagingLabelProvider labelProvider)
+	protected PagingNavigation newNavigation(final IPageable pageable,
+			final IPagingLabelProvider labelProvider)
 	{
-		return new PagingNavigation("navigation", pageable,labelProvider);
+		return new PagingNavigation("navigation", pageable, labelProvider);
 	}
 
 	/**
 	 * Gets the pageable navigation component for configuration purposes.
+	 * 
 	 * @return the associated pageable navigation.
 	 */
 	public final PagingNavigation getPagingNavigation()
