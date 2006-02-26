@@ -20,6 +20,7 @@ import wicket.Application;
 import wicket.IInitializer;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
+import wicket.extensions.markup.html.yui.calendar.Calendar;
 
 /**
  * Initializer for the extensions package.
@@ -35,5 +36,6 @@ public class Initializer implements IInitializer
 	{
 		new DatePickerComponentInitializer().init(application);
 		new PaletteInitializer().init(application);
+		new Calendar.ComponentInitializer().init(application);
 	}
 }

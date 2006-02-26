@@ -2,19 +2,19 @@
  * $Id$
  * $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.datepicker;
 
@@ -47,34 +47,38 @@ import wicket.model.Model;
  * (html)
  * 
  * <pre>
- *     &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *     &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *       &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *       &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
  * <p>
- * Your target doesn't have to be a text field however, attach to any tag that is
- * supported by JSCalendar.
+ * Your target doesn't have to be a text field however, attach to any tag that
+ * is supported by JSCalendar.
  * </p>
  * <p>
  * Customize the looks, localization etc of the datepicker by providing a custom
  * {@link wicket.extensions.markup.html.datepicker.DatePickerSettings} object.
  * </p>
  * <p>
- * This component is based on Dynarch's JSCalendar component, which can be found at <a
- * href="http://www.dynarch.com/">the Dynarch site</a>.
+ * This component is based on Dynarch's JSCalendar component, which can be found
+ * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
  * </p>
+ * 
  * @see wicket.extensions.markup.html.datepicker.DatePickerSettings
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
+ * 
+ * @deprecated As JSCalendar does not seem to be actively supported anymore,
+ *             this component will not be supported in the future by us either.
  */
 public class DatePicker extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Attribute modifier that modifies/ adds an attribute with value of the given
-	 * component's path.
+	 * Attribute modifier that modifies/ adds an attribute with value of the
+	 * given component's path.
 	 */
 	private final static class PathAttributeModifier extends AttributeModifier
 	{
@@ -82,8 +86,11 @@ public class DatePicker extends Panel
 
 		/**
 		 * Construct.
-		 * @param attribute the attribute to modify
-		 * @param pathProvider the component that provides the path
+		 * 
+		 * @param attribute
+		 *            the attribute to modify
+		 * @param pathProvider
+		 *            the component that provides the path
 		 */
 		public PathAttributeModifier(String attribute, final Component pathProvider)
 		{
@@ -110,8 +117,11 @@ public class DatePicker extends Panel
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param resourceReference button icon reference
+		 * 
+		 * @param id
+		 *            component id
+		 * @param resourceReference
+		 *            button icon reference
 		 */
 		public TriggerButton(final String id, final wicket.ResourceReference resourceReference)
 		{
@@ -140,7 +150,9 @@ public class DatePicker extends Panel
 
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public InitScript(String id)
 		{
@@ -169,8 +181,11 @@ public class DatePicker extends Panel
 
 	/**
 	 * Construct with a default button and style.
-	 * @param id the component id
-	 * @param target the receiving component
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param target
+	 *            the receiving component
 	 */
 	public DatePicker(String id, Component target)
 	{
@@ -179,9 +194,13 @@ public class DatePicker extends Panel
 
 	/**
 	 * Construct with a default button and style.
-	 * @param id the component id
-	 * @param label the label for target component.
-	 * @param target the receiving component
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param label
+	 *            the label for target component.
+	 * @param target
+	 *            the receiving component
 	 */
 	public DatePicker(String id, Component label, Component target)
 	{
@@ -190,9 +209,13 @@ public class DatePicker extends Panel
 
 	/**
 	 * Construct.
-	 * @param id the component id
-	 * @param target the receiving component
-	 * @param settings datepicker properties
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param target
+	 *            the receiving component
+	 * @param settings
+	 *            datepicker properties
 	 */
 	public DatePicker(final String id, final Component target, final DatePickerSettings settings)
 	{
@@ -201,10 +224,15 @@ public class DatePicker extends Panel
 
 	/**
 	 * Construct.
-	 * @param id the component id
-	 * @param label the label component (may be null)
-	 * @param target the receiving component
-	 * @param settings datepicker properties
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param label
+	 *            the label component (may be null)
+	 * @param target
+	 *            the receiving component
+	 * @param settings
+	 *            datepicker properties
 	 */
 	public DatePicker(final String id, final Component label, final Component target,
 			final DatePickerSettings settings)
@@ -213,7 +241,8 @@ public class DatePicker extends Panel
 
 		if (settings == null)
 		{
-			throw new IllegalArgumentException("Settings must be non null when using this constructor");
+			throw new IllegalArgumentException(
+					"Settings must be non null when using this constructor");
 		}
 
 		this.settings = settings;
@@ -248,6 +277,7 @@ public class DatePicker extends Panel
 
 	/**
 	 * Gets the initilization javascript.
+	 * 
 	 * @return the initilization javascript
 	 */
 	private String getInitScript()
