@@ -31,11 +31,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>RolesAuthApplication</servlet-name>
-		<url-pattern>/authorization/*</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>MyAuthenticatedWebApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -47,6 +42,11 @@
 	</servlet>
 
 	<servlet-mapping>
+		<servlet-name>RolesAuthApplication</servlet-name>
+		<url-pattern>/authorization/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>MyAuthenticatedWebApplication</servlet-name>
 		<url-pattern>/authentication/*</url-pattern>
 	</servlet-mapping>
@@ -54,5 +54,4 @@
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-
 </web-app>
