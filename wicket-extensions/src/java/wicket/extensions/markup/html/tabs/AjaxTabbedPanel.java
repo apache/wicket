@@ -34,7 +34,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 
 			private static final long serialVersionUID = 1L;
 
-			protected void onClick(AjaxRequestTarget target)
+			public void onClick(AjaxRequestTarget target)
 			{
 				setSelectedTab(index);
 				if (target!=null) {

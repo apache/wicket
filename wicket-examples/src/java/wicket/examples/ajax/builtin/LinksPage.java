@@ -84,7 +84,7 @@ public class LinksPage extends BasePage
 		add(new AjaxLink("c1-link")
 		{
 
-			protected void onClick(AjaxRequestTarget target)
+			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
@@ -95,7 +95,7 @@ public class LinksPage extends BasePage
 		add(new AjaxFallbackLink("c2-link")
 		{
 
-			protected void onClick(AjaxRequestTarget target)
+			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;
 				if (target != null)
