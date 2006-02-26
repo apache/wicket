@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.navigation.paging;
 
-import wicket.WicketTestCase;
 
 /**
  * Testcase for the navigation increment link.
