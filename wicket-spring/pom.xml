@@ -5,7 +5,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-spring</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Spring Integration</name>
 	<description>Integration project to use Spring injection in your Wicket applications. See the wicket-spring-examples for integration patterns.</description>
 	<url>http://wicket.sourceforge.net/spring</url>
@@ -25,7 +25,7 @@
 	</licenses>
 
 	<issueManagement>
-		<url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
+		<url>http://sourceforge.net/tracker/?group_id=119783</url>
 	</issueManagement>
 
 	<scm>
@@ -119,18 +119,6 @@
 			<version>1.5.3</version>
 			<type>jar</type>
 		</dependency>
-		<!-- log dependencies need to be bundled until wicket uses maven2 -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.12</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-		</dependency>
-		<!-- end log dependencies -->
 	</dependencies>
 
 
