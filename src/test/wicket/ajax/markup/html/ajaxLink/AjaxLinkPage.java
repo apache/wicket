@@ -44,7 +44,7 @@ public class AjaxLinkPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onClick(AjaxRequestTarget target)
+			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";
 				target.addComponent(label);

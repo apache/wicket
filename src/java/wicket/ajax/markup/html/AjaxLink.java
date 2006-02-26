@@ -25,7 +25,7 @@ import wicket.model.IModel;
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
  */
-public abstract class AjaxLink extends WebMarkupContainer
+public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -84,5 +84,5 @@ public abstract class AjaxLink extends WebMarkupContainer
 	 * 
 	 * @param target
 	 */
-	protected abstract void onClick(final AjaxRequestTarget target);
+	public abstract void onClick(final AjaxRequestTarget target);
 }

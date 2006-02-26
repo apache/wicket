@@ -26,7 +26,7 @@ import wicket.model.IModel;
  * An ajax link that will degrade to a normal request if ajax is not available
  * or javascript is disabled
  */
-public abstract class AjaxFallbackLink extends Link
+public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -101,5 +101,5 @@ public abstract class AjaxFallbackLink extends Link
 	 *            ajax target if this linked was invoked using ajax, null
 	 *            otherwise
 	 */
-	protected abstract void onClick(final AjaxRequestTarget target);
+	public abstract void onClick(final AjaxRequestTarget target);
 }
