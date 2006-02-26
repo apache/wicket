@@ -17,6 +17,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>licenses</directory>
+            <outputDirectory>licenses</outputDirectory>
+            <includes>
+                <include>*.*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>target</directory>
             <outputDirectory></outputDirectory>
             <includes>
@@ -31,8 +38,8 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>target/site/apidocs</directory>
-            <outputDirectory>javadoc</outputDirectory>
+            <directory>target/site</directory>
+            <outputDirectory>docs</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>

@@ -1,19 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wicket</groupId>
 	<artifactId>wicket-auth-roles</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Wicket Authorization Integration Based on roles, metadata and annotations</name>
-	
+	<name>Wicket Authorization</name>
+	<description>Wicket Authorization Integration Based on roles, metadata and annotations. This project requires Java 5.</description>
+
 	<scm>
 		<connection>scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-auth-roles</connection>
 		<developerConnection>scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-auth-roles</developerConnection>
 		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-auth-roles</url>
 	</scm>
-	
-	
+
 	<developers>
 		<developer>
 			<name>Eelco Hillenius</name>
@@ -28,14 +30,14 @@
 	</developers>
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-		</dependency>
-		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -123,6 +125,10 @@
 	</build>
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
