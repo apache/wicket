@@ -18,6 +18,7 @@
 package wicket.ajax.markup.html.componentMap;
 
 import wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
 import wicket.util.time.Duration;
@@ -31,6 +32,8 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 
 	private int count = 0;
 
+	private AbstractAjaxBehavior timer;
+
 	/**
 	 * Construct.
 	 * 
@@ -41,12 +44,21 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 		super(name);
 
 		Label ajaxLabel = new Label("linja1", new PropertyModel(this, "count"));
-		AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
+		this.timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
 
 		ajaxLabel.add(timer);
 		baseSpan.add(ajaxLabel);
 	}
 
+	/**
+	 * 
+	 * @return timer behvior
+	 */
+	public AbstractAjaxBehavior getTimeBehavior()
+	{
+		return this.timer;
+	}
+	
 	/**
 	 * @return Count
 	 */

@@ -265,7 +265,17 @@ public class MockWebApplication extends WebApplication
 	 */
 	public void processRequestCycle()
 	{
-		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		processRequestCycle(createRequestCycle());
+	}
+	
+	/**
+	 * Create and process the request cycle using the current request and
+	 * response information.
+	 * 
+	 * @param cycle
+	 */
+	public void processRequestCycle(final WebRequestCycle cycle)
+	{
 		cycle.request();
 
 		previousRenderedPage = lastRenderedPage;
