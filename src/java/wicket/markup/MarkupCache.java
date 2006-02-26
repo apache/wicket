@@ -449,9 +449,7 @@ public class MarkupCache
 		});
 
 		// Merge base and derived markup
-		// TODO General: The merged markup resource modify time is wrong. It
-		// should be the latest of all resources involved.
-		Markup mergedMarkup = InheritedMarkupMerger.mergeMarkups(markup, baseMarkup, extendIndex);
+		Markup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
 		return mergedMarkup;
 	}
 

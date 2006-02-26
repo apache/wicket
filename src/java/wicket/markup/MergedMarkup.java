@@ -17,9 +17,6 @@
  */
 package wicket.markup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import wicket.WicketRuntimeException;
 import wicket.markup.parser.XmlTag;
 
@@ -29,15 +26,8 @@ import wicket.markup.parser.XmlTag;
  * 
  * @author Juergen Donnerstag
  */
-public class InheritedMarkupMerger
+public class MergedMarkup extends Markup
 {
-	/**
-	 * Constructor.
-	 */
-	InheritedMarkupMerger()
-	{
-	}
-
 	/**
 	 * Merge inherited and base markup.
 	 * 
@@ -47,13 +37,31 @@ public class InheritedMarkupMerger
 	 *            The base markup
 	 * @param extendIndex
 	 *            Index where <wicket:extend> has been found
-	 * @return The merged markup
 	 */
-	static Markup mergeMarkups(final Markup markup, final Markup baseMarkup, int extendIndex)
+	MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
-		// The new list of merged elements
-		List markupElements = new ArrayList();
+		setResource(markup.getResource());
+		setXmlDeclaration(markup.getXmlDeclaration());
+		setEncoding(markup.getEncoding());
+		setWicketNamespace(markup.getWicketNamespace());
 
+		merge(markup, baseMarkup, extendIndex);
+		
+		initialize();
+	}
+	
+	/**
+	 * Merge inherited and base markup.
+	 * 
+	 * @param markup
+	 *            The inherited markup
+	 * @param baseMarkup
+	 *            The base markup
+	 * @param extendIndex
+	 *            Index where <wicket:extend> has been found
+	 */
+	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
+	{
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
 		boolean headProcessed = false;
@@ -75,7 +83,7 @@ public class InheritedMarkupMerger
 					childTag = wtag;
 					WicketTag childOpenTag = (WicketTag)wtag.mutable();
 					childOpenTag.getXmlTag().setType(XmlTag.OPEN);
-					markupElements.add(childOpenTag);
+					addMarkupElement(childOpenTag);
 					break;
 				}
 			}
@@ -100,7 +108,7 @@ public class InheritedMarkupMerger
 			    	openTag.setNamespace(tag.getNamespace());
 			    	openTag.setType(XmlTag.OPEN);
 			    	
-			    	markupElements.add(openTag);
+			    	addMarkupElement(openTag);
 			    }
 			    	
 			    boolean hitHead = tag.isClose() && "head".equalsIgnoreCase(tag.getName()) 
@@ -137,7 +145,7 @@ public class InheritedMarkupMerger
 					    
 			            if (copy == true)
 					    {
-					        markupElements.add(elem);
+			            	addMarkupElement(elem);
 					    }
 			        }
 			    }
@@ -152,7 +160,7 @@ public class InheritedMarkupMerger
 			    	closeTag.setType(XmlTag.CLOSE);
 			    	closeTag.setOpenTag(openTag);
 			    	
-			    	markupElements.add(closeTag);
+			    	addMarkupElement(closeTag);
 			    }
 			}
 
@@ -195,13 +203,13 @@ public class InheritedMarkupMerger
 					    
 			            if (copy == true)
 					    {
-					        markupElements.add(elem);
+			            	addMarkupElement(elem);
 					    }
 			        }
 			    }
 			}
 
-			markupElements.add(element);
+			addMarkupElement(element);
 		}
 
 		if (baseIndex == baseMarkup.size())
@@ -214,7 +222,7 @@ public class InheritedMarkupMerger
 		for (; extendIndex < markup.size(); extendIndex++)
 		{
 			MarkupElement element = markup.get(extendIndex);
-			markupElements.add(element);
+			addMarkupElement(element);
 
 			if (element instanceof WicketTag)
 			{
@@ -235,15 +243,12 @@ public class InheritedMarkupMerger
 		// But first add </wicket:child>
 		WicketTag childCloseTag = (WicketTag)childTag.mutable();
 		childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
-		markupElements.add(childCloseTag);
+		addMarkupElement(childCloseTag);
 
 		for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
-			markupElements.add(element);
+			addMarkupElement(element);
 		}
-
-		// Replace the markups elements.
-		return new Markup(markup, markupElements);
 	}
 }

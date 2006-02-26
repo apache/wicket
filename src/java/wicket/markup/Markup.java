@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public final class Markup
+public class Markup
 {
 	private static final Log log = LogFactory.getLog(Markup.class);
 
@@ -87,25 +87,6 @@ public final class Markup
 	private Map componentMap;
 
 	/**
-	 * Kind of copy constructor, though new markup elements are attached
-	 * 
-	 * @param markup
-	 *            The Markup which variables are copied
-	 * @param markupElements
-	 *            The new list of markup elements
-	 */
-	Markup(final Markup markup, final List markupElements)
-	{
-		this.markup = markupElements;
-		this.resource = markup.resource;
-		this.xmlDeclaration = markup.xmlDeclaration;
-		this.encoding = markup.encoding;
-		setWicketNamespace(markup.wicketNamespace);
-		
-		initialize();
-	}
-
-	/**
 	 * Constructor
 	 */
 	Markup()
@@ -117,7 +98,7 @@ public final class Markup
 	/**
 	 * Initialize the index where <head> can be found.
 	 */
-	private void initialize()
+	protected void initialize()
 	{
 		// Reset
 		this.componentMap = null;
@@ -274,7 +255,7 @@ public final class Markup
 			throw new IllegalArgumentException("Parameter 'id' must not be null");
 		}
 
-		// TODO General: A component path e.g. "panel:label" does not match 1:1
+		// TODO Post 1.2: A component path e.g. "panel:label" does not match 1:1
 		// with the markup in case of ListView, where the path contains a number
 		// for each list item. E.g. list:0:label. What we currently do is simply
 		// remove the number from the path and hope that no user uses an integer
