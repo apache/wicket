@@ -17,8 +17,6 @@
  */
 package wicket.examples.displaytag.list;
 
-import junit.framework.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -82,7 +80,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		// Check that redirect was set as expected and invoke it
 		MockHttpServletResponse redirectResponse = application.getServletResponse();
 
-		Assert.assertTrue("Response should be a redirect", redirectResponse.isRedirect());
+		assertTrue("Response should be a redirect", redirectResponse.isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
@@ -100,7 +98,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 
 		// Check that redirect was set as expected and invoke it
 		// Check that wicket:border tag gets removed
-		Assert.assertTrue("Response should be a redirect", application.getServletResponse()
+		assertTrue("Response should be a redirect", application.getServletResponse()
 				.isRedirect());
 		application.getMarkupSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();

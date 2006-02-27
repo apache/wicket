@@ -21,6 +21,7 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -91,7 +92,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * @param tag
 	 * @return true, if component got resolved
 	 */
-	public boolean resolve(wicket.MarkupContainer container,MarkupStream markupStream,ComponentTag tag)
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
 	{
 		if (tag.getName().equalsIgnoreCase("th"))
 		{

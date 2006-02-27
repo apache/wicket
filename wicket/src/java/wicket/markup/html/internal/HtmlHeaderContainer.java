@@ -222,4 +222,14 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		return true;
 	}
+	
+	/**
+	 * 
+	 * @see wicket.Component#onEndRequest()
+	 */
+	protected void onEndRequest()
+	{
+		this.remove();
+		super.onEndRequest();
+	}
 }
