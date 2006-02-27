@@ -108,6 +108,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public FeedbackPanel(final String id)
 	{
+		this(id, null);
+	}
+
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
+	{
 		super(id);
 		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
 		{
@@ -122,8 +130,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
+		
+		if (filter!=null) {
+			setFilter(filter);
+		}
 	}
 
+	
+	
 	/**
 	 * Gets whether model messages should be HTML escaped. Default is true.
 	 * 

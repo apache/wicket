@@ -23,7 +23,6 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	 */
 	public ComponentFeedbackPanel(String id, Component filter)
 	{
-		super(id);
-		setFilter(new ComponentFeedbackMessageFilter(filter));
+		super(id, new ComponentFeedbackMessageFilter(filter));
 	}
 }
