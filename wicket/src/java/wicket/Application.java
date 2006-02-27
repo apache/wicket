@@ -162,7 +162,19 @@ public abstract class Application
 	 */
 	public static void set(Application application)
 	{
+		if(application == null)
+		{
+			throw new IllegalArgumentException("Argument application can not be null");
+		}
 		current.set(application);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 */
+	public static void unset()
+	{
+		current.set(null);
 	}
 
 	/**

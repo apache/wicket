@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
@@ -211,9 +212,12 @@ public class WicketServlet extends HttpServlet
 		{
 			// Close response
 			response.close();
+			
+			// Clean up thread local session
+			Session.unset();
 
-			// Clean up thread local
-			Application.set(null);
+			// Clean up thread local application
+			Application.unset();
 		}
 	}
 
@@ -268,7 +272,7 @@ public class WicketServlet extends HttpServlet
 		}
 		finally
 		{
-			Application.set(null);
+			Application.unset();
 		}
 	}
 
@@ -382,7 +386,7 @@ public class WicketServlet extends HttpServlet
 				finally
 				{
 					resource.setParameters(null);
-					Application.set(null);
+					Application.unset();
 				}
 			}
 		}

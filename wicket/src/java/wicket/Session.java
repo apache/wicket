@@ -199,9 +199,20 @@ public abstract class Session implements Serializable
 	{
 		if (session == null)
 		{
-			throw new IllegalArgumentException("Argument session must me not null");
+			throw new IllegalArgumentException("Argument session can not be null");
 		}
 		current.set(session);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Clears the session for calling thread.
+	 * 
+	 */
+	public static void unset()
+	{
+		current.set(null);
 	}
 
 	/**
