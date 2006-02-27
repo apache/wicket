@@ -131,7 +131,7 @@ public class PopupSettings implements Serializable
 			windowTitle = windowTitle.replace(':', '_'); 
 		}
 
-		StringBuffer script = new StringBuffer("if (!window.focus) return true; window.open("
+		StringBuffer script = new StringBuffer("window.open("
 				+ target + ", '").append(windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
