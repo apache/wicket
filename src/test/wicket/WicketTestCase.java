@@ -79,24 +79,20 @@ public abstract class WicketTestCase extends TestCase
 	 * 
 	 * @param pageClass
 	 * @param component
-	 * @param listener
 	 * @param filename
 	 * @throws Exception
 	 */
 	protected void executedListener(final Class pageClass, final Component component,
-			final RequestListenerInterface listener, final String filename) throws Exception
+			final String filename) throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath() + " : " + listener.getClass().getName() + " ===");
-		
+		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
+				+ " ===");
+
 		assertNotNull(component);
-		assertNotNull(listener);
 
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
-		Page page = application.getLastRenderedPage();
-		String url = cycle.urlFor(component, listener);
-
-		application.getServletRequest().setRequestToRedirectString(url);
+		application.getServletRequest().setRequestToComponent(component);
 		application.processRequestCycle(cycle);
 
 		String document = application.getServletResponse().getDocument();

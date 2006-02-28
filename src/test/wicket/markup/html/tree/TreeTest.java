@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
-import wicket.markup.html.link.ILinkListener;
 
 /**
  * Test for the Tree component. Also tests header insertion as that is what the
@@ -57,7 +56,7 @@ public class TreeTest extends WicketTestCase
 
 		executedListener(TreePage.class, 
 				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				ILinkListener.INTERFACE, "TreePageExpectedResult_1-1.html");
+				"TreePageExpectedResult_1-1.html");
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class TreeTest extends WicketTestCase
 
 		executedListener(TreePageWithBorder.class, 
 				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				ILinkListener.INTERFACE, "TreePageWithBorderExpectedResult_1-1.html");
+				"TreePageWithBorderExpectedResult_1-1.html");
 	}
 
 	/**
@@ -87,6 +86,6 @@ public class TreeTest extends WicketTestCase
 
 		executedListener(TreePageNoWicketHeadTag.class, 
 				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				ILinkListener.INTERFACE, "TreePageNoWicketHeadTagExpectedResult_1-1.html");
+				"TreePageNoWicketHeadTagExpectedResult_1-1.html");
 	}
 }
