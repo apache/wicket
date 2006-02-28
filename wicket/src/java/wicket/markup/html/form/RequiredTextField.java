@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.IModel;
 
 /**
