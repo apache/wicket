@@ -17,7 +17,6 @@
  */
 package wicket.ajax;
 
-import wicket.markup.ComponentTag;
 import wicket.util.time.Duration;
 
 /**
@@ -37,21 +36,6 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	public AjaxSelfUpdatingTimerBehavior(final Duration updateInterval)
 	{
 		super(updateInterval);
-	}
-
-	/**
-	 * 
-	 * @see wicket.behavior.AbstractAjaxBehavior#onComponentTag(wicket.markup.ComponentTag)
-	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		// make sure this component is rendered with an id so its markup can be
-		// found and replaced
-		super.onComponentTag(tag);
-		if (!tag.getAttributes().containsKey("id"))
-		{
-			tag.put("id", getComponent().getMarkupId());
-		}
 	}
 
 	/**

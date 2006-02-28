@@ -40,6 +40,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		this.updateInterval = updateInterval;
 	}
+	
+	protected void onBind()
+	{
+		getComponent().setOutputMarkupId(true);
+	}
 
 	/**
 	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadContribution(wicket.Response)
