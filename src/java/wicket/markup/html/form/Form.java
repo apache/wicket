@@ -127,6 +127,34 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
+	/**
+	 * Visitor used for validation
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static abstract class ValidationVisitor implements FormComponent.IVisitor
+	{
+
+		/**
+		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.FormComponent)
+		 */
+		public void formComponent(FormComponent formComponent)
+		{
+			if (formComponent.isVisibleInHierarchy() && formComponent.isValid())
+			{
+				validate(formComponent);
+			}
+		}
+
+		/**
+		 * Callback that should be used to validate form component
+		 * 
+		 * @param formComponent
+		 */
+		public abstract void validate(FormComponent formComponent);
+
+	}
+
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 
 	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
@@ -697,19 +725,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public boolean process()
 	{
-		// Validation pass 1: validate required fields
-		validateRequired();
-		if (!hasError())
-		{
-			// Validation pass 2: convert raw input to desired type and check
-			// for errors
-			convertAndValidate();
-			if (!hasError())
-			{
-				// Validation pass 3: run validators
-				validate();
-			}
-		}
+		// run validation
+		validate();
 
 		// If a validation error occurred
 		if (hasError())
@@ -765,6 +782,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 	}
 
+
 	/**
 	 * Clears the input from the form's nested children of type
 	 * {@link FormComponent}. This method is typically called when a form needs
@@ -792,45 +810,27 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void validate()
 	{
-		// Validate model using validation strategy
-		// Visit all the form components and validate each
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new ValidationVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void validate(final FormComponent formComponent)
 			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					// Validate form component
-					formComponent.validate();
-				}
+				formComponent.validateRequired();
 			}
 		});
-	}
 
-	private void convertAndValidate()
-	{
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new ValidationVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void validate(final FormComponent formComponent)
 			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					formComponent.convertAndValidate();
-				}
+				formComponent.convertAndValidate();
 			}
 		});
-	}
 
-	private void validateRequired()
-	{
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new ValidationVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void validate(final FormComponent formComponent)
 			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					formComponent.validateRequired();
-				}
+				formComponent.validate();
 			}
 		});
 	}
