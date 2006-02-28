@@ -36,7 +36,6 @@ import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -142,7 +141,7 @@ public class FormInput extends WicketExamplePage
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
-			rc.add(RequiredValidator.getInstance());
+			rc.setRequired(true);
 			add(rc);
 			
 			add(new ListMultipleChoice("siteSelection", SITES));

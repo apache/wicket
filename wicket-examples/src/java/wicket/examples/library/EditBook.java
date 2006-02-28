@@ -32,7 +32,6 @@ import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.FormComponentFeedbackBorder;
 import wicket.markup.html.form.validation.LengthValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -112,7 +111,7 @@ public final class EditBook extends AuthenticatedWebPage
 			// Create a required text field with a max length of 30 characters
 			// that edits the book's title
 			final TextField title = new TextField("title");
-			title.add(RequiredValidator.getInstance());
+			title.setRequired(true);
 			title.add(LengthValidator.max(30));
 			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
 					"titleFeedback");
@@ -121,7 +120,7 @@ public final class EditBook extends AuthenticatedWebPage
 
 			// Create a required text field that edits the book's author
 			final TextField author = new TextField("author");
-			author.add(RequiredValidator.getInstance());
+			author.setRequired(true);
 			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
 					"authorFeedback");
 			add(authorFeedback);
@@ -144,9 +143,10 @@ public final class EditBook extends AuthenticatedWebPage
 			add(relatedBook);
 
 			// Multi-select among writing styles
-			add(new ListMultipleChoice("writingStyles", EnumeratedType.getValues(Book.WritingStyle.class)));
+			add(new ListMultipleChoice("writingStyles", EnumeratedType
+					.getValues(Book.WritingStyle.class)));
 		}
-		
+
 		/**
 		 * Show the resulting valid edit
 		 */
