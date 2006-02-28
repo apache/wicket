@@ -1092,7 +1092,7 @@ public abstract class Component implements Serializable
 	 */
 	public final boolean getRenderBodyOnly()
 	{
-		return getFlag(FLAG_RENDER_BODY_ONLY) && !getFlag(FLAG_OUTPUT_MARKUP_ID);
+		return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 
 	/**
