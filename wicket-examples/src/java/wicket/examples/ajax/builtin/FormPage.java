@@ -22,10 +22,12 @@ import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RequiredTextField;
+import wicket.markup.html.form.SimpleFormComponentLabel;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.LengthValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.ResourceModel;
 
 /**
  * Page to demonstrate instant ajax validaion feedback. Validation is trigger in
@@ -53,7 +55,6 @@ public class FormPage extends BasePage
 		Form form = new Form("form", new CompoundPropertyModel(bean));
 		add(form);
 		form.setOutputMarkupId(true);
-		form.add(form);
 
 		FormComponent fc;
 
@@ -61,14 +62,17 @@ public class FormPage extends BasePage
 
 		fc = new RequiredTextField("name");
 		fc.add(LengthValidator.min(4));
-
+		fc.setLabel(new ResourceModel("label.name"));
+		
 		form.add(fc);
-
+		form.add(new SimpleFormComponentLabel("name-label", fc));
+		
 		fc = new RequiredTextField("email");
 		fc.add(EmailAddressPatternValidator.getInstance());
-
+		fc.setLabel(new ResourceModel("label.email"));
 		form.add(fc);
-
+		form.add(new SimpleFormComponentLabel("email-label", fc));
+		
 		// add ajax form validating behavior to onblur event of all form
 		// components
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onblur");
