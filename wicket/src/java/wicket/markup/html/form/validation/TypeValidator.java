@@ -30,6 +30,9 @@ import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
+ * This validator has been depreacted in favor of
+ * {@link FormComponent#setType(Class)}
+ * 
  * Validates input by trying it to convert to the given type using the
  * {@link wicket.util.convert.IConverter}instance of the component doing the
  * validation.
@@ -40,11 +43,13 @@ import wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * @deprecated
  */
 public class TypeValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The locale to use */
 	private Locale locale = null;
 
@@ -91,7 +96,9 @@ public class TypeValidator extends StringValidator
 	 * Validates input by trying it to convert to the given type using the
 	 * {@link wicket.util.convert.IConverter}instance of the component doing
 	 * the validation.
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * 
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+	 *      java.lang.String)
 	 */
 	public void onValidate(FormComponent formComponent, String value)
 	{
@@ -128,9 +135,11 @@ public class TypeValidator extends StringValidator
 
 	/**
 	 * Gets the message context.
-	 *
-	 * @param formComponent form component 
-	 * @param e the conversion exception
+	 * 
+	 * @param formComponent
+	 *            form component
+	 * @param e
+	 *            the conversion exception
 	 * @return a map with variables for interpolation
 	 */
 	protected Map messageModel(FormComponent formComponent, final ConversionException e)

@@ -21,12 +21,16 @@ import wicket.markup.html.form.FormComponent;
 import wicket.util.string.Strings;
 
 /**
+ * This validator has been deprecated in favor of
+ * {@link FormComponent#setRequired(boolean)}
+ * 
  * Validator that ensures a component has a non-null and non-empty value. If the
  * component's value is null or empty (a value is considered empty if it just
  * contains whitespace) when its containing form is submitted then the
  * errorMessage() method will be called by the framework.
  * 
  * @author Jonathan Locke
+ * @deprecated
  */
 public class RequiredValidator extends StringValidator
 {

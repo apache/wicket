@@ -28,12 +28,15 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.IConverter;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * An HTML form component knows how to validate itself. Validators that
@@ -48,6 +51,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
@@ -63,6 +67,26 @@ public abstract class FormComponent extends WebMarkupContainer
 		 *            The form component
 		 */
 		public void formComponent(FormComponent formComponent);
+	}
+
+	/**
+	 * Change object to capture the required flag change
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private final class RequiredStateChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final boolean required = isRequired();
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setRequired(required);
+		}
 	}
 
 	/**
@@ -104,6 +128,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Type that the raw input string will be converted to
+	 */
+	private Class type;
+
+	/**
 	 * Make empty strings null values boolean. Used by AbstractTextComponent
 	 * subclass.
 	 */
@@ -114,6 +143,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * sessions. This is false by default.
 	 */
 	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
+
+
+	/** Whether or not this component's value is required (non-empty) */
+	private static final short FLAG_REQUIRED = FLAG_RESERVED3;
 
 	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
 
@@ -133,6 +166,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 */
 	private IModel labelModel = null;
+
+	private transient Object convertedInput;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -244,29 +279,6 @@ public abstract class FormComponent extends WebMarkupContainer
 			id = c.getId();
 		}
 		return inputName.toString();
-	}
-
-	/**
-	 * Gets the type for any TypeValidator assigned to this component.
-	 * 
-	 * @return Any type assigned to this component via type validation, or null
-	 *         if no TypeValidator has been added.
-	 */
-	public final Class getValidationType()
-	{
-		// Loop through validators
-		final int size = validators_size();
-		for (int i = 0; i < size; i++)
-		{
-			// If validator is a TypeValidator
-			final IValidator validator = validators_get(i);
-			if (validator instanceof TypeValidator)
-			{
-				// Return the type validator's type
-				return ((TypeValidator)validator).getType();
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -432,6 +444,49 @@ public abstract class FormComponent extends WebMarkupContainer
 	final void clearInput()
 	{
 		rawInput = NO_RAW_INPUT;
+	}
+
+	/**
+	 * Checks if the raw input value is not null if this component is required
+	 */
+	public final void validateRequired()
+	{
+		if (isRequired())
+		{
+			// FIXME General: move the validator logic into here? also see fixme
+			// in convertAndValidate regarding validation keys.
+			RequiredValidator.getInstance().validate(this);
+		}
+	}
+
+	/**
+	 * Converts raw input string into the object specified by
+	 * {@link FormComponent#setType(Class)} and records any errors
+	 */
+	public final void convertAndValidate()
+	{
+		if (type == null)
+		{
+			convertedInput = getInput();
+		}
+		else if (!Strings.isEmpty(getInput()))
+		{
+			// FIXME General: how and where do we set conversion locale?
+			// Check value by attempting to convert it
+			final IConverter converter = getConverter();
+			try
+			{
+				convertedInput = converter.convert(getInput(), type);
+			}
+			catch (Exception e)
+			{
+				// FIXME General: for now we do conversion twice because its
+				// easier.
+				// need to figure out a way to generate error message outside of
+				// validators. maybe a static util class?
+				new TypeValidator(type).validate(this);
+			}
+		}
 	}
 
 	/**
@@ -682,5 +737,63 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return rawInput;
 	}
+
+	/**
+	 * Sets the required flag
+	 * 
+	 * @param required
+	 * @return this for chaining
+	 */
+	public final FormComponent setRequired(final boolean required)
+	{
+		if (required != isRequired())
+		{
+			addStateChange(new RequiredStateChange());
+		}
+		setFlag(FLAG_REQUIRED, required);
+		return this;
+	}
+
+	/**
+	 * @return whether or not this component's value is required
+	 */
+	public boolean isRequired()
+	{
+		return getFlag(FLAG_REQUIRED);
+	}
+
+	/**
+	 * @return value of input converted into appropriate type if any was set
+	 */
+	public final Object getConvertedInput()
+	{
+		return convertedInput;
+	}
+
+	protected void onEndRequest()
+	{
+		super.onEndRequest();
+		convertedInput = null;
+	}
+
+	/**
+	 * @return the type to use when updating the model for this form component
+	 */
+	public final Class getType()
+	{
+		return type;
+	}
+
+	/**
+	 * Sets the type that will be used when updating the model for this
+	 * component. If no type is specified String type is assumed.
+	 * 
+	 * @param type
+	 */
+	public final void setType(Class type)
+	{
+		this.type = type;
+	}
+
 
 }

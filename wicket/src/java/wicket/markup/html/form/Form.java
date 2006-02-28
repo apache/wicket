@@ -123,6 +123,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * @author Eelco Hillenius
  * @author Cameron Braid
  * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
@@ -684,6 +685,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 	}
 
+
 	/**
 	 * Process the form. Though you can override this method to provide your
 	 * whole own algorithm, it is not recommended to do so.
@@ -695,8 +697,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public boolean process()
 	{
-		// Execute validation now before anything else
-		validate();
+		// Validation pass 1: validate required fields
+		validateRequired();
+		if (!hasError())
+		{
+			// Validation pass 2: convert raw input to desired type and check
+			// for errors
+			convertAndValidate();
+			if (!hasError())
+			{
+				// Validation pass 3: run validators
+				validate();
+			}
+		}
 
 		// If a validation error occurred
 		if (hasError())
@@ -789,6 +802,34 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				{
 					// Validate form component
 					formComponent.validate();
+				}
+			}
+		});
+	}
+
+	private void convertAndValidate()
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.convertAndValidate();
+				}
+			}
+		});
+	}
+
+	private void validateRequired()
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.validateRequired();
 				}
 			}
 		});
@@ -1088,4 +1129,5 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			return url;
 		}
 	}
+
 }
