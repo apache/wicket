@@ -58,7 +58,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
-	public interface IVisitor
+	public static interface IVisitor
 	{
 		/**
 		 * Called when visiting a form component
@@ -68,7 +68,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public void formComponent(FormComponent formComponent);
 	}
-
+	
 	/**
 	 * Change object to capture the required flag change
 	 * 
