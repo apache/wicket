@@ -104,11 +104,12 @@ public abstract class AbstractTextComponent extends FormComponent
 		// ignore it
 		if (input != null)
 		{
-			if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+			if (getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
 			{
-				input = null;
+				setModelObject(null);
+			} else {
+				setModelObject(getConvertedInput());
 			}
-			setModelObject(input);
 		}
 	}
 }

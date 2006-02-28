@@ -70,7 +70,7 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, IModel model, Class type)
 	{
 		super(id, model);
-		add(new TypeValidator(type));
+		setType(type);
 	}
 
 	/**
@@ -99,28 +99,4 @@ public class TextField extends AbstractTextComponent
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-		String input = getInput();
-		
-		// if input was null then value was not submitted (disabled field), ignore it
-		if (input != null)
-		{
-			// Get any validation type
-			final Class type = getValidationType();
-			if (type != null)
-			{
-				// Set model to request string converted to the appropriate type
-				setModelObject(getConverter().convert(input, type));
-			}
-			else
-			{
-				// Update String model
-				super.updateModel();
-			}
-		}
-	}
 }

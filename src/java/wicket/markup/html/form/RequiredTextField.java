@@ -36,7 +36,7 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id)
 	{
 		super(id);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, final Class type)
 	{
 		super(id, type);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, final IModel model)
 	{
 		super(id, model);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -69,6 +69,6 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, IModel model, Class type)
 	{
 		super(id, model, type);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 }
