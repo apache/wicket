@@ -3,10 +3,16 @@ package wicket.markup.html.form.validation;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * Factory for creating resource keys for validator error messages
+ * This factory has been deprecated because wicket's resource key resolution is
+ * flexible enough not to need this.
+ * 
+ * Factory for creating resource keys for
+ * validator error messages
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @deprecated
  * 
+ * TODO Post 1.2: Remove this interface and any related artifacts
  */
 public interface IValidatorResourceKeyFactory
 {
