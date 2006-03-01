@@ -20,6 +20,7 @@ package wicket.markup.html;
 import wicket.Resource;
 import wicket.Response;
 import wicket.protocol.http.WebResponse;
+import wicket.util.time.Duration;
 
 /**
  * Base class for web resources. See the base class {@link wicket.Resource} for
@@ -30,6 +31,28 @@ import wicket.protocol.http.WebResponse;
  */
 public abstract class WebResource extends Resource
 {
+	
+	/**
+	 * Construct.
+	 */
+	public WebResource()
+	{
+		super();
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * Sets the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @param value
+	 *            The idle duration timeout
+	 */
+	public WebResource(Duration value)
+	{
+		super(value);
+	}	
+	
 	/**
 	 * @see wicket.Resource#configureResponse(wicket.Response)
 	 */
