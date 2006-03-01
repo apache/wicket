@@ -29,6 +29,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
@@ -223,6 +224,16 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				throw new WicketRuntimeException(
 						"Calling listener methods on components that are not visible is not allowed: "
 								+ componentPath);
+			}
+			if (!component.isEnabled())
+			{
+				throw new WicketRuntimeException(
+						"Calling listener methods on components that are not enabled is not allowed: "
+								+ componentPath);
+			}
+			if (!component.isActionAuthorized(Component.ENABLE))
+			{
+				throw new UnauthorizedActionException(component,Component.ENABLE);
 			}
 			
 			// Ask the request listener interface object to create a request target
