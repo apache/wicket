@@ -95,7 +95,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		StringBuffer url = new StringBuffer();
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		url.append("/").append(Classes.name(target.getPageClass()));
+		url.append("/").append(Classes.simpleName(target.getPageClass()));
 		appendPageParameters(url, target.getPageParameters());
 		return url.toString();
 	}

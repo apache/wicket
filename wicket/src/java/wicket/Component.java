@@ -1991,13 +1991,13 @@ public abstract class Component implements Serializable
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(
 						", page = <No Page>, path = ").append(getPath()).append(".").append(
-						Classes.name(getClass())).append("]").toString();
+						Classes.simpleName(getClass())).append("]").toString();
 			}
 			else
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
 						.append(getPage().getClass().getName()).append(", path = ").append(
-								getPath()).append(".").append(Classes.name(getClass())).append(
+								getPath()).append(".").append(Classes.simpleName(getClass())).append(
 								", isVisible = ").append((isRenderAllowed() && isVisible()))
 						.append(", isVersioned = ").append(isVersioned()).append("]").toString();
 			}

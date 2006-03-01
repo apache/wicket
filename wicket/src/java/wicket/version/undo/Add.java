@@ -59,7 +59,7 @@ class Add extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD ADD: added " + component.getPath() + " ("
-					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
 					+ ") to parent");
 		}
 
@@ -74,7 +74,7 @@ class Add extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO ADD: removing " + component.getPath() + " ("
-					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
 					+ ") from parent");
 		}
 

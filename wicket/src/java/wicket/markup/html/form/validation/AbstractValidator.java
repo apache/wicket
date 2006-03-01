@@ -148,7 +148,7 @@ public abstract class AbstractValidator implements IValidator
 			// to getString() throw either MissingResourceException or to to 
 			// return a default string like "[Warning: String ..." in case the
 			// property could not be found.
-			String key = Classes.name(getClass());
+			String key = Classes.simpleName(getClass());
 			message = localizer.getString(key, formComponent.getParent(), resourceModel);
 		}
 		formComponent.error(message);

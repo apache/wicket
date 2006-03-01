@@ -145,7 +145,7 @@ public class TypeValidator extends StringValidator
 	protected Map messageModel(FormComponent formComponent, final ConversionException e)
 	{
 		final Map model = super.messageModel(formComponent);
-		model.put("type", Classes.name(type));
+		model.put("type", Classes.simpleName(type));
 		final Locale locale = e.getLocale();
 		if (locale != null)
 		{

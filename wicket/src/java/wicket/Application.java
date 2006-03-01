@@ -184,7 +184,7 @@ public abstract class Application
 	public Application()
 	{
 		// Create name from subclass
-		this.name = Classes.name(getClass());
+		this.name = Classes.simpleName(getClass());
 
 		// Construct markup cache for this application
 		this.markupCache = new MarkupCache(this);

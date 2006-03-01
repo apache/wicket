@@ -122,7 +122,7 @@ public class RequestListenerInterface
 		}
 
 		// Save short class name
-		this.name = Classes.name(listenerInterfaceClass);
+		this.name = Classes.simpleName(listenerInterfaceClass);
 
 		// Register this listener
 		register();

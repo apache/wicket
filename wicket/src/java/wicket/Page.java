@@ -619,7 +619,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath()
-						+ ":" + Classes.name(component.getClass()));
+						+ ":" + Classes.simpleName(component.getClass()));
 				return null;
 			}
 		});
