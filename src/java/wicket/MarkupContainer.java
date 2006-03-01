@@ -530,6 +530,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer replace(final Component child)
 	{
+		if (child == null)
+		{
+			throw new IllegalArgumentException("argument child must be not null");
+		}
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("Replacing " + child.getId() + " in " + this);
