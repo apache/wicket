@@ -18,12 +18,15 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import wicket.AttributeModifier;
@@ -36,7 +39,9 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Classes;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
@@ -500,9 +505,22 @@ public abstract class FormComponent extends WebMarkupContainer
 			{
 				convertedInput = converter.convert(getInput(), type);
 			}
-			catch (Exception e)
+			catch (ConversionException e)
 			{
-				error(Collections.singleton("TypeValidator"), new HashMap());
+				Map args=new HashMap();
+				args.put("type", Classes.simpleName(type));
+				final Locale locale = e.getLocale();
+				if (locale != null)
+				{
+					args.put("locale", locale);
+				}
+				args.put("exception", e);
+				Format format = e.getFormat();
+				if (format instanceof SimpleDateFormat)
+				{
+					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+				}
+				error(Collections.singleton("TypeValidator"), args);
 			}
 		}
 	}
