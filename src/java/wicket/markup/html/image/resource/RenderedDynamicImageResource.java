@@ -38,6 +38,7 @@ import wicket.util.time.Time;
  * @see wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
  * @author Jonathan Locke
  * @author Gili Tzabari
+ * @author Johan Compagner
  */
 public abstract class RenderedDynamicImageResource extends DynamicImageResource
 {
@@ -63,14 +64,32 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	public RenderedDynamicImageResource(final int width, final int height)
 	{
+		super();
 		this.width = width;
 		this.height = height;
 	}
 
 	/**
+	 * Constructor.
+	 *
+	 * @param width
+	 *            Width of image
+	 * @param height
+	 *            Height of image
+	 * @param format
+	 *            The format of the image (jpg, png or gif)
+	 */
+	public RenderedDynamicImageResource(final int width, final int height, String format)
+	{
+		super(format);
+		this.width = width;
+		this.height = height;
+	}
+	
+	/**
 	 * @return Returns the height.
 	 */
-	public int getHeight()
+	public synchronized int getHeight()
 	{
 		return height;
 	}
@@ -78,7 +97,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/**
 	 * @return Returns the type (one of BufferedImage.TYPE_*).
 	 */
-	public int getType()
+	public synchronized int getType()
 	{
 		return type;
 	}
@@ -86,7 +105,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/**
 	 * @return Returns the width.
 	 */
-	public int getWidth()
+	public synchronized int getWidth()
 	{
 		return width;
 	}
@@ -94,40 +113,39 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/**
 	 * Causes the image to be redrawn the next time its requested.
 	 */
-	public void invalidate()
+	public synchronized void invalidate()
 	{
-		super.invalidate();
-		synchronized (this)
-		{
-			imageData = null;
-		}
+		imageData = null;
 	}
 
 	/**
 	 * @param height
 	 *            The height to set.
 	 */
-	public void setHeight(int height)
+	public synchronized void setHeight(int height)
 	{
 		this.height = height;
+		invalidate();
 	}
 
 	/**
 	 * @param type
 	 *            The type to set (one of BufferedImage.TYPE_*).
 	 */
-	public void setType(int type)
+	public synchronized void setType(int type)
 	{
 		this.type = type;
+		invalidate();
 	}
 
 	/**
 	 * @param width
 	 *            The width to set.
 	 */
-	public void setWidth(int width)
+	public synchronized void setWidth(int width)
 	{
 		this.width = width;
+		invalidate();
 	}
 
 	/**
@@ -135,26 +153,16 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		// Prevent image data from getting flushed while we access it
-		byte[] data;
-		synchronized (this)
+		// get image data is always called in sync block
+		byte[] data = null;
+		if (imageData!=null)
 		{
-			if (imageData!=null)
-			{
-				data = (byte[]) imageData.get();
-			}
-			else
-			{
-				data = null;
-			}
+			data = (byte[]) imageData.get();
 		}
 		if (data == null)
 		{
 			data = render();
-			synchronized (this)
-			{
-				imageData = new SoftReference(data);
-			}
+			imageData = new SoftReference(data);
 			setLastModifiedTime(Time.now());
 		}
 		return data;

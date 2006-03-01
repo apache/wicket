@@ -20,12 +20,15 @@ package wicket.markup.html.image.resource;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
 import wicket.resource.DynamicByteArrayResource;
+import wicket.util.time.Duration;
+import wicket.util.time.Time;
 
 /**
  * An ImageResource subclass for dynamic images (images created
@@ -53,58 +56,153 @@ import wicket.resource.DynamicByteArrayResource;
  *
  * @author Jonathan Locke
  * @author Gili Tzabari
+ * @author Johan Compagner
  */
 public abstract class DynamicImageResource extends DynamicByteArrayResource
 {
 	/** The image type */
 	private String format = "png";
-
+	
+	/** The last modified time of this resource */
+	private Time lastModifiedTime;
 
 	/**
 	 * default constructor
 	 */
 	public DynamicImageResource()
 	{
-		super();
 	}
 
-	
 	/**
-	 * @return Returns the image format.
-	 */
-	public final String getFormat()
-	{
-		return format;
-	}
-
-	
-	/**
-	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
+	 * Constructor with the format
 	 *
 	 * @param format
 	 *            The image format to set.
 	 */
-	public void setFormat(String format)
+	public DynamicImageResource(String format)
+	{
+		this.format = format;
+	}
+
+	/**
+	 * Creates a dynamic image resource
+	 * 
+	 * @param format 
+	 * 			The format of this resource (like jpg/png) 
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *            The idle duration timeout
+	 * @param cacheTimeout
+	 *            The cache duration timeout
+	 */
+	public DynamicImageResource(String format,Locale locale, Duration idle, Duration cacheTimeout)
+	{
+		super(locale,idle,cacheTimeout);
+		this.format=format;
+	}
+
+	/**
+	 * Creates a dynamic image resource
+	 *  
+	 * @param format 
+	 * 			The format of this resource (like jpg/png) 
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *          The idle duration timeout
+	 * 
+	 */
+	public DynamicImageResource(String format,Locale locale, Duration idle)
+	{
+		super(locale,idle);
+		this.format = format;
+	}
+
+
+	/**
+	 * Creates a dynamic image resource
+	 *  
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *          The idle duration timeout
+	 * 
+	 */
+	public DynamicImageResource(Locale locale, Duration idle)
+	{
+		super(locale,idle);
+	}
+
+
+	/**
+	 * Creates a dynamic image resource
+	 *  
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *            The idle duration timeout
+	 * @param cacheTimeout
+	 *            The cache duration timeout
+	 */
+	public DynamicImageResource(Locale locale, Duration idle, Duration cacheTimeout)
+	{
+		super(locale,idle,cacheTimeout);
+	}
+	
+	
+	/**
+	 * @return Returns the image format.
+	 */
+	public synchronized final String getFormat()
+	{
+		return format;
+	}
+
+	/**
+	 *  Sets the format of this resource
+	 *  
+	 * @param format 
+	 *  			The format (jpg, png or gif..)
+	 */
+	public synchronized final void setFormat(String format)
 	{
 		this.format = format;
 	}
 	
 	/**
-	 * @see wicket.resource.DynamicByteArrayResource#getData()
+	 * @see wicket.resource.DynamicByteArrayResource#getResourceState()
 	 */
-	protected byte[] getData()
+	protected synchronized ResourceState getResourceState()
 	{
-		return getImageData();
+		return new ResourceState()
+		{
+			byte[] imageData = getImageData();
+			Time lastModifiedTime = DynamicImageResource.this.lastModifiedTime;
+			String contentType = "image/" + format;
+			
+			public Time lastModifiedTime()
+			{
+				return lastModifiedTime != null?lastModifiedTime:Time.now();
+			}
+		
+			public int getLength()
+			{
+				return imageData.length;
+			}
+		
+			public byte[] getData()
+			{
+				return imageData;
+			}
+		
+			public String getContentType()
+			{
+				return contentType;
+			}
+		};
 	}
 	
-	/**
-	 * @see wicket.resource.DynamicByteArrayResource#getContentType()
-	 */
-	public String getContentType()
-	{
-		return "image/" + format;
-	}
-
 	/**
 	 * Get image data for our dynamic image resource. If the subclass
 	 * regenerates the data, it should set the lastModifiedTime when it does so.
@@ -113,6 +211,16 @@ public abstract class DynamicImageResource extends DynamicByteArrayResource
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
+
+	/**
+	 * set the last modified time for this resource.
+	 * 
+	 * @param time
+	 */
+	protected synchronized void setLastModifiedTime(Time time)
+	{
+		lastModifiedTime = time;
+	}
 	
 	/**
 	 * @param image

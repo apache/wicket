@@ -87,13 +87,28 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * Sets the maximum time the resource may be idle before it is removed.
+	 * 
+	 * @param value
+	 *            The idle duration timeout
+	 */
+	public Resource(Duration value)
+	{
+		this();
+		idleTimeout = value;
+	}
+	
 
 	/**
 	 * Returns the maximum time the resource may be idle before it is removed.
 	 * 
 	 * @return The idle duration timeout
 	 */
-	public synchronized Duration getIdleTimeout()
+	public Duration getIdleTimeout()
 	{
 		return idleTimeout;
 	}
@@ -167,19 +182,6 @@ public abstract class Resource implements IResourceListener
 	public final Resource setCacheable(boolean cacheable)
 	{
 		this.cacheable = cacheable;
-		return this;
-	}
-
-	/**
-	 * Sets the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @param value
-	 *            The idle duration timeout
-	 * @return this
-	 */
-	public synchronized Resource setIdleTimeout(Duration value)
-	{
-		idleTimeout = value;
 		return this;
 	}
 

@@ -21,9 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
+import wicket.util.time.Duration;
 
 /**
  * An ImageResource subclass for dynamic images that come from database BLOB
@@ -35,6 +37,59 @@ import wicket.util.io.Streams;
  */
 public abstract class BlobImageResource extends DynamicImageResource
 {
+	/**
+	 * Construct.
+	 * @param locale
+	 * @param idle
+	 * @param cacheTimeout
+	 */
+	public BlobImageResource(Locale locale, Duration idle, Duration cacheTimeout)
+	{
+		super(locale, idle, cacheTimeout);
+	}
+
+	/**
+	 * Construct.
+	 * @param locale
+	 * @param idle
+	 */
+	public BlobImageResource(Locale locale, Duration idle)
+	{
+		super(locale, idle);
+	}
+
+	/**
+	 * Construct.
+	 * @param format
+	 * @param locale
+	 * @param idle
+	 * @param cacheTimeout
+	 */
+	public BlobImageResource(String format, Locale locale, Duration idle, Duration cacheTimeout)
+	{
+		super(format, locale, idle, cacheTimeout);
+	}
+
+	/**
+	 * Construct.
+	 * @param format
+	 * @param locale
+	 * @param idle
+	 */
+	public BlobImageResource(String format, Locale locale, Duration idle)
+	{
+		super(format, locale, idle);
+	}
+
+	/**
+	 * Construct.
+	 * @param format
+	 */
+	public BlobImageResource(String format)
+	{
+		super(format);
+	}
+
 	/**
 	 * Construct.
 	 */
@@ -58,7 +113,7 @@ public abstract class BlobImageResource extends DynamicImageResource
 				Streams.copy(in, out);
 				return out.toByteArray();
 			}
-			return new byte[] {};
+			return new byte[0];
 		}
 		catch (SQLException e)
 		{
