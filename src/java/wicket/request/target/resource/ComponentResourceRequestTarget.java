@@ -23,7 +23,6 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
-import wicket.authorization.UnauthorizedActionException;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener
@@ -57,12 +56,6 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		// Check authorization
-		if (!component.isActionAuthorized(Component.ENABLE))
-		{
-			throw new UnauthorizedActionException(component, Component.ENABLE);
-		}
-
 		page.beforeCallComponent(component, listener);
 
 		try
