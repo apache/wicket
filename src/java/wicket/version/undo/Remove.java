@@ -66,7 +66,7 @@ class Remove extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD REMOVE: removed " + component.getPath() + " ("
-					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
 					+ ") from parent");
 		}
 	}
@@ -79,7 +79,7 @@ class Remove extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO REMOVE: re-adding " + component.getPath() + " ("
-					+ Classes.name(component.getClass()) + "@" + component.hashCode()
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
 					+ ") to parent");
 		}
 

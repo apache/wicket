@@ -375,7 +375,7 @@ public class WicketTester extends MockWebApplication
 		if (component == null)
 		{
 			Assert.fail("path: '" + path + "' does no exist for page: "
-					+ Classes.name(getLastRenderedPage().getClass()));
+					+ Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		if (component.isVisibleInHierarchy())
 		{
@@ -441,8 +441,8 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("component '" + Classes.name(component.getClass()) + "' is not type:"
-				+ Classes.name(expectedComponentClass), expectedComponentClass
+		Assert.assertTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:"
+				+ Classes.simpleName(expectedComponentClass), expectedComponentClass
 				.isAssignableFrom(component.getClass()));
 	}
 
@@ -597,8 +597,8 @@ public class WicketTester extends MockWebApplication
 	{
 		if (!getLastRenderedPage().getClass().isAssignableFrom(expectedReneredPageClass))
 		{
-			Assert.assertEquals(Classes.name(expectedReneredPageClass), Classes
-					.name(getLastRenderedPage().getClass()));
+			Assert.assertEquals(Classes.simpleName(expectedReneredPageClass), Classes
+					.simpleName(getLastRenderedPage().getClass()));
 		}
 	}
 

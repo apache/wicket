@@ -110,7 +110,7 @@ class ModelChange extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD MODEL CHANGE: changed model of " + " ("
-					+ Classes.name(component.getClass()) + "@" + component.hashCode() + ")");
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode() + ")");
 		}
 	}
 

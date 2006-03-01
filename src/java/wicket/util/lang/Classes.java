@@ -47,7 +47,7 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class c)
+	public static String simpleName(final Class c)
 	{
 		return Strings.lastPathComponent(c.getName(), '.');
 	}

@@ -215,7 +215,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 					// found <wicket:head>
 					// create a unique id for the HtmlHeaderContainer to be
 					// created
-					final String headerId = "_" + Classes.name(this.getClass())
+					final String headerId = "_" + Classes.simpleName(this.getClass())
 							+ this.getVariation() + "Header";
 
 					// Create the header container and associate the markup with

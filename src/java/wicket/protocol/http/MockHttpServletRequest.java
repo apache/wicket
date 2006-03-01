@@ -973,7 +973,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 				clazz = IOnChangeListener.class;
 			}
 
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.name(clazz));
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.simpleName(clazz));
 		}
 	}
 

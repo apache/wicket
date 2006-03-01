@@ -17,6 +17,6 @@ public class DefaultValidatorResourceKeyFactory implements IValidatorResourceKey
 	 */
 	public String newKey(IValidator validator, FormComponent formComponent)
 	{
-		return formComponent.getId() + "." + Classes.name(validator.getClass());
+		return formComponent.getId() + "." + Classes.simpleName(validator.getClass());
 	}
 }
