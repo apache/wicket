@@ -79,7 +79,7 @@ public class InterceptTest extends TestCase
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
-		assertEquals(application.getApplicationSettings().getAccessDeniedPage(), application.getLastRenderedPage());
+		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -94,6 +94,7 @@ public class InterceptTest extends TestCase
 		assertEquals(application.getLoginPage(), loginPage.getClass());
 		
 		// bypass form completely to login but continue to intercept page
+		application.setupRequestAndResponse();
 		WebRequestCycle requestCycle = application.createRequestCycle();
 		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
 		application.processRequestCycle(requestCycle);
