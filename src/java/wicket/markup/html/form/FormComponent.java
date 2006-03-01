@@ -816,7 +816,7 @@ public abstract class FormComponent extends WebMarkupContainer
 
 
 	/**
-	 * Builds and reports an error message
+	 * Builds and reports an error message. Typically called from a validator. This 
 	 * 
 	 * @param resourceKeys
 	 *            list of resource keys to try
