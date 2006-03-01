@@ -24,7 +24,9 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.authorization.AuthorizationException;
 import wicket.markup.html.pages.ExceptionErrorPage;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
 
@@ -63,6 +65,13 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		if (override != null)
 		{
 			requestCycle.setResponsePage(override);
+		}
+		else if(e instanceof AuthorizationException)
+		{
+			// are authorization exceptions always thrown before the real render?
+			// else we need to make a page (see below) or set it hard to a redirect.
+			Class accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+			requestCycle.setRequestTarget(new BookmarkablePageRequestTarget(accessDeniedPageClass));
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
