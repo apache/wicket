@@ -274,7 +274,7 @@ public class MockWebApplication extends WebApplication
 	 * 
 	 * @param cycle
 	 */
-	public void processRequestCycle(final WebRequestCycle cycle)
+	public void processRequestCycle(WebRequestCycle cycle)
 	{
 		cycle.request();
 
@@ -292,9 +292,13 @@ public class MockWebApplication extends WebApplication
 			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)cycle
 					.getWebRequest().getHttpServletRequest();
 
-			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this, servletSession, context);
+			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+			wicketRequest = newWebRequest(newHttpRequest);
 			wicketSession = getSession(wicketRequest);
-			new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
+			
+			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+			cycle.request();
 		}
 		generateLastRenderedPage(cycle);
 
