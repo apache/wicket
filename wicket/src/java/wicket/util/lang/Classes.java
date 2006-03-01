@@ -41,7 +41,7 @@ public final class Classes
 	}
 
 	/**
-	 * Gets the name of a given class
+	 * Gets the name of a given class without the prefixed package path
 	 * 
 	 * @param c
 	 *            The class
