@@ -162,9 +162,17 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * Sets hint(s) for the scale operation.
 	 * @param scaleHints hint(s) for the scale operation
 	 */
-	public final void setScaleHints(int scaleHints)
+	public synchronized final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
+		invalidate();
+	}
+	
+	/**
+	 * @see wicket.resource.DynamicByteArrayResource#invalidate()
+	 */
+	public synchronized void invalidate()
+	{
 		thumbnail = null;
 	}
 }

@@ -34,8 +34,50 @@ import wicket.util.time.Time;
  */
 public abstract class DynamicByteArrayResource extends WebResource implements ICachingResource
 {
-	/** The time this image resource was last modified */
-	private Time lastModifiedTime;
+	/**
+	 * This is a ResourceState subclasses should return in the getResourceState method.
+	 * This resource state should be thread safe. So it shouldn't be altered after construction.
+	 * Even with syncronize blocks this is still not safe because the call getContentType()
+	 * can not be sync together with the call getData() they will happen after each other.
+	 *  
+	 * @author jcompagner
+	 */
+	public class ResourceState
+	{
+
+		/**
+		 * @return The Byte array for this resource
+		 */
+		public byte[] getData()
+		{
+			return null;
+		}
+
+		/**
+		 * @return The content type of this resource
+		 */
+		public String getContentType()
+		{
+			return null;
+		}
+
+		/**
+		 * @return The last modified time of this resource
+		 */
+		public Time lastModifiedTime()
+		{
+			return Time.now();
+		}
+
+		/**
+		 * @return The length of the data
+		 */
+		public int getLength()
+		{
+			return 0;
+		}
+
+	}
 
 	/** The maximum duration a resource can be idle before its cache is flushed */
 	private Duration cacheTimeout = Duration.NONE;
@@ -48,6 +90,8 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 */
 	public DynamicByteArrayResource()
 	{
+		super();
+		setCacheable(false);
 	}
 
 	/**
@@ -58,26 +102,90 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
+		this();
 		this.locale = locale;
 	}
 
 	/**
+	 * Creates a dynamic resource
+	 *  
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *          The idle duration timeout
+	 * 
+	 */
+	public DynamicByteArrayResource(Locale locale, Duration idle)
+	{
+		this(idle);
+		this.locale = locale;
+	}
+
+
+	/**
+	 * Creates a dynamic resource
+	 *  
+	 * @param locale
+	 * 			The locale of this resource 
+	 * @param idle
+	 *            The idle duration timeout
+	 * @param cacheTimeout
+	 *            The cache duration timeout
+	 */
+	public DynamicByteArrayResource(Locale locale, Duration idle, Duration cacheTimeout)
+	{
+		this(idle);
+		this.locale = locale;
+		this.cacheTimeout = cacheTimeout;
+	}
+
+	/**
+	 * Creates a dynamic resource
+	 *  
+	 * @param idle
+	 *          The idle duration timeout
+	 * 
+	 */
+	public DynamicByteArrayResource(Duration idle)
+	{
+		super(idle);
+		setCacheable(false);
+	}
+
+
+	/**
+	 * Creates a dynamic resource
+	 *  
+	 * @param idle
+	 *            The idle duration timeout
+	 * @param cacheTimeout
+	 *            The cache duration timeout
+	 */
+	public DynamicByteArrayResource(Duration idle, Duration cacheTimeout)
+	{
+		this(idle);
+		this.cacheTimeout = cacheTimeout;
+	}
+	
+	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
-	public IResourceStream getResourceStream()
+	public final IResourceStream getResourceStream()
 	{
 		return new IResourceStream()
 		{
 			private static final long serialVersionUID = 1L;
 
+			private Locale locale = DynamicByteArrayResource.this.locale;
+			
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
 
 			/**
-			 * Transient byte array of the resources, will always be deleted in
+			 * Transient ResourceState of the resources, will always be deleted in
 			 * the close
 			 */
-			private transient byte[] data = null;
+			private transient ResourceState data = null;
 
 			/**
 			 * @see wicket.util.resource.IResourceStream#close()
@@ -98,7 +206,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			public String getContentType()
 			{
 				checkLoadData();
-				return DynamicByteArrayResource.this.getContentType();
+				return data.getContentType();
 			}
 
 			/**
@@ -109,7 +217,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 				checkLoadData();
 				if (inputStream == null)
 				{
-					inputStream = new ByteArrayInputStream(data);
+					inputStream = new ByteArrayInputStream(data.getData());
 				}
 				return inputStream;
 			}
@@ -120,7 +228,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			public Time lastModifiedTime()
 			{
 				checkLoadData();
-				return DynamicByteArrayResource.this.lastModifiedTime();
+				return data.lastModifiedTime();
 			}
 
 			/**
@@ -129,7 +237,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			public long length()
 			{
 				checkLoadData();
-				return (data != null) ? data.length : 0;
+				return (data != null) ? data.getLength() : 0;
 			}
 
 			/**
@@ -145,7 +253,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			 */
 			public void setLocale(Locale loc)
 			{
-				DynamicByteArrayResource.this.locale = loc;
+				locale = loc;
 			}
 
 			/**
@@ -155,49 +263,10 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			{
 				if (data == null)
 				{
-					data = getData();
+					data = getResourceState();
 				}
 			}
 		};
-	}
-
-	/**
-	 * Gets the last time this resource was modified.
-	 * @return The last time this resource was modified
-	 */
-	public final Time lastModifiedTime()
-	{
-		return lastModifiedTime;
-	}
-
-	/**
-	 * Sets the last time this resource was modified.
-	 *
-	 * @param lastModifiedTime the last time this resource was modified
-	 */
-	public final void setLastModifiedTime(Time lastModifiedTime)
-	{
-		this.lastModifiedTime = lastModifiedTime;
-	}
-
-
-	/**
-	 * Gets the content type.
-	 * 
-	 * @return The content type of the byte array
-	 */
-	public abstract String getContentType();
-
-	/**
-	 * Set the maximum duration the resource can be idle before its cache is
-	 * flushed. The cache might get flushed sooner if the JVM is low on memory.
-	 * 
-	 * @param value
-	 *            The cache timout
-	 */
-	public final void setCacheTimeout(Duration value)
-	{
-		cacheTimeout = value;
 	}
 
 	/**
@@ -218,13 +287,15 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 * 
 	 * @return The byte array for this dynamic resource.
 	 */
-	protected abstract byte[] getData();
+	protected abstract ResourceState getResourceState();
+	
 	
 	/**
-	 * @see wicket.Resource#invalidate()
+	 * @see ICachingResource#invalidate()
 	 */
 	public void invalidate()
 	{
 		super.invalidate();
 	}
+
 }

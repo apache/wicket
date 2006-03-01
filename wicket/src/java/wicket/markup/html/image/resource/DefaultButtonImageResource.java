@@ -88,11 +88,10 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public DefaultButtonImageResource(int width, int height, final String label)
 	{
-		super(width, height);
+		super(width, height,"png");
 		this.label = label;
 		setWidth(width == -1 ? defaultWidth : width);
 		setHeight(height == -1 ? defaultHeight : height);
-		setFormat("png");
 	}
 
 	/**
@@ -107,7 +106,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the arcHeight.
 	 */
-	public int getArcHeight()
+	public synchronized  int getArcHeight()
 	{
 		return arcHeight;
 	}
@@ -115,7 +114,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the arcWidth.
 	 */
-	public int getArcWidth()
+	public synchronized int getArcWidth()
 	{
 		return arcWidth;
 	}
@@ -123,7 +122,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the backgroundColor.
 	 */
-	public Color getBackgroundColor()
+	public synchronized Color getBackgroundColor()
 	{
 		return backgroundColor;
 	}
@@ -131,7 +130,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the color.
 	 */
-	public Color getColor()
+	public synchronized Color getColor()
 	{
 		return color;
 	}
@@ -139,7 +138,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the font.
 	 */
-	public Font getFont()
+	public synchronized Font getFont()
 	{
 		return font;
 	}
@@ -147,7 +146,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the textColor.
 	 */
-	public Color getTextColor()
+	public synchronized Color getTextColor()
 	{
 		return textColor;
 	}
@@ -156,7 +155,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param arcHeight
 	 *            The arcHeight to set.
 	 */
-	public void setArcHeight(int arcHeight)
+	public synchronized void setArcHeight(int arcHeight)
 	{
 		this.arcHeight = arcHeight;
 		invalidate();
@@ -166,7 +165,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param arcWidth
 	 *            The arcWidth to set.
 	 */
-	public void setArcWidth(int arcWidth)
+	public synchronized void setArcWidth(int arcWidth)
 	{
 		this.arcWidth = arcWidth;
 		invalidate();
@@ -176,7 +175,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param backgroundColor
 	 *            The backgroundColor to set.
 	 */
-	public void setBackgroundColor(Color backgroundColor)
+	public synchronized void setBackgroundColor(Color backgroundColor)
 	{
 		this.backgroundColor = backgroundColor;
 		invalidate();
@@ -186,7 +185,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param color
 	 *            The color to set.
 	 */
-	public void setColor(Color color)
+	public synchronized void setColor(Color color)
 	{
 		this.color = color;
 		invalidate();
@@ -196,7 +195,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param font
 	 *            The font to set.
 	 */
-	public void setFont(Font font)
+	public synchronized void setFont(Font font)
 	{
 		this.font = font;
 		invalidate();
@@ -206,7 +205,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param textColor
 	 *            The textColor to set.
 	 */
-	public void setTextColor(Color textColor)
+	public synchronized void setTextColor(Color textColor)
 	{
 		this.textColor = textColor;
 		invalidate();

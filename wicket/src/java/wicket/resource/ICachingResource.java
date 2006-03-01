@@ -26,15 +26,6 @@ import wicket.util.time.Duration;
 public interface ICachingResource
 {
   /**
-   * Set the maximum duration the resource can be idle before its cache is
-   * flushed. The cache might get flushed sooner if the JVM is low on memory.
-   *
-   * @param value
-   *            The cache timout
-   */
-  void setCacheTimeout(Duration value);
-
-  /**
    * Gets the maximum duration the resource can be idle before its cache is
    * flushed.
    *
