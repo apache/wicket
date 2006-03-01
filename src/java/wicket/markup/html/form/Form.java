@@ -140,7 +140,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public void formComponent(FormComponent formComponent)
 		{
-			if (formComponent.isVisibleInHierarchy() && formComponent.isValid())
+			// FIXME Form: check if it is ok to only validate if is enabled
+			if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
+					&& formComponent.isEnabled())
 			{
 				validate(formComponent);
 			}
