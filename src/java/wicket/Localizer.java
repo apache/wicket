@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.model.IModel;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.settings.IResourceSettings;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
@@ -225,7 +226,13 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			throw new MissingResourceException("Unable to find resource: " + key,
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " + key);
+			if(component != null)
+			{
+				message.append(" for component: ");
+				message.append(component.getPageRelativePath());
+			}
+			throw new MissingResourceException( message.toString() ,
 					(component != null ? component.getClass().getName() : ""), key);
 		}
 		else
@@ -264,7 +271,7 @@ public class Localizer
 
 		// The top element
 		Class componentClass = null;
-		if ((searchStack != null) && (searchStack.size() > 0))
+		if (searchStack.size() > 0)
 		{
 			componentClass = (Class)searchStack.get(0);
 		}
