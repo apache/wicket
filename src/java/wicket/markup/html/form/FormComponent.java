@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -520,7 +521,13 @@ public abstract class FormComponent extends WebMarkupContainer
 				{
 					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
-				error(Collections.singleton("TypeValidator"), args);
+				
+				
+				final String typedResourceKey="TypeValidator"+"."+Classes.simpleName(type);
+				
+				String[] resourceKeys=new String[] { typedResourceKey, "TypeValidator" };
+				
+				error(Arrays.asList(resourceKeys), args);
 			}
 		}
 	}
