@@ -823,7 +823,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @param args
 	 *            argument substituion map
 	 */
-	public void error(Collection/* <String> */resourceKeys, Map/* <String,String> */args)
+	public final void error(Collection/* <String> */resourceKeys, Map/* <String,String> */args)
 	{
 		final Map fullArgs = new HashMap(args.size() + 4);
 		fullArgs.putAll(args);
