@@ -17,7 +17,9 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import wicket.Application;
@@ -126,32 +128,13 @@ public abstract class AbstractValidator implements IValidator
 	public void error(final FormComponent formComponent, final String resourceKey,
 			final IModel resourceModel)
 	{
-		// Return formatted error message
-		Localizer localizer = formComponent.getLocalizer();
-
-		// Get the property value associated with the key.
+		List keys=new ArrayList(2);
+		keys.add(resourceKey);
+		keys.add(Classes.simpleName(getClass()));
 		
-		// Note: It is important that the default value of "" is provided
-		// to getString() not to throw a MissingResourceException or to 
-		// return a default string like "[Warning: String ..." 
-		String message = localizer.getString(resourceKey, formComponent.getParent(), 
-				resourceModel, "");
+		Map map=(Map)resourceModel.getObject(formComponent);
 		
-		// If not found, than ..
-		if (Strings.isEmpty(message))
-		{
-			// Have a 2nd try with the class name as the key. This makes for
-			// keys like "RequiredValidator" in any of the properties files
-			// along the path.
-			
-			// Note: It is important that the default value of "" is NOT provided
-			// to getString() throw either MissingResourceException or to to 
-			// return a default string like "[Warning: String ..." in case the
-			// property could not be found.
-			String key = Classes.simpleName(getClass());
-			message = localizer.getString(key, formComponent.getParent(), resourceModel);
-		}
-		formComponent.error(message);
+		formComponent.error(keys, map);
 	}
 
 	/**

@@ -17,12 +17,18 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.Localizer;
 import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -68,7 +74,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		 */
 		public void formComponent(FormComponent formComponent);
 	}
-	
+
 	/**
 	 * Change object to capture the required flag change
 	 * 
@@ -453,15 +459,34 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		if (isRequired())
 		{
-			// FIXME General: move the validator logic into here? also see fixme
+			// FIXME Form: move the validator logic into here? also see fixme
 			// in convertAndValidate regarding validation keys.
-			RequiredValidator.getInstance().validate(this);
+
+			final String input = getInput();
+
+			// when null, check whether this is natural for that component, or
+			// whether - as is the case with text fields - this can only happen
+			// when the component was disabled
+			if (input == null && (!isInputNullable()))
+			{
+				// this value must have come from a disabled field
+				// do not perform validation
+				return;
+			}
+
+			// peform validation by looking whether the value is null or empty
+			if (Strings.isEmpty(input))
+			{
+				error(Collections.singleton("RequiredValidator"), new HashMap());
+			}
+
 		}
 	}
 
 	/**
 	 * Converts raw input string into the object specified by
-	 * {@link FormComponent#setType(Class)} and records any errors
+	 * {@link FormComponent#setType(Class)} and records any errors. Converted
+	 * value is available thorugh {@link FormComponent#getConvertedInput()}
 	 */
 	public final void convertAndValidate()
 	{
@@ -471,8 +496,6 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		else if (!Strings.isEmpty(getInput()))
 		{
-			// FIXME General: how and where do we set conversion locale?
-			// Check value by attempting to convert it
 			final IConverter converter = getConverter();
 			try
 			{
@@ -480,11 +503,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 			catch (Exception e)
 			{
-				// FIXME General: for now we do conversion twice because its
-				// easier.
-				// need to figure out a way to generate error message outside of
-				// validators. maybe a static util class?
-				new TypeValidator(type).validate(this);
+				error(Collections.singleton("TypeValidator"), new HashMap());
 			}
 		}
 	}
@@ -498,6 +517,8 @@ public abstract class FormComponent extends WebMarkupContainer
 		for (int i = 0; i < size; i++)
 		{
 			validators_get(i).validate(this);
+			if (!isValid())
+				break;
 		}
 	}
 
@@ -793,6 +814,105 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final void setType(Class type)
 	{
 		this.type = type;
+	}
+
+
+	/**
+	 * Builds and reports an error message
+	 * 
+	 * @param resourceKeys
+	 *            list of resource keys to try
+	 * @param args
+	 *            argument substituion map
+	 */
+	public void error(Collection/* <String> */resourceKeys, Map/* <String,String> */args)
+	{
+		final Map fullArgs = new HashMap(args.size() + 4);
+		fullArgs.putAll(args);
+		if (!fullArgs.containsKey("input"))
+		{
+			fullArgs.put("input", getInput());
+		}
+		if (!fullArgs.containsKey("name"))
+		{
+			fullArgs.put("name", getId());
+		}
+		if (!fullArgs.containsKey("label"))
+		{
+			Object label = null;
+			if (getLabel() != null)
+			{
+				label = getLabel().getObject(this);
+			}
+			if (label != null)
+			{
+				fullArgs.put("label", label);
+			}
+			else
+			{
+				// apply default value (component id) if key/value can not be
+				// found
+				fullArgs.put("label", getLocalizer().getString(getId(), getParent(), getId()));
+			}
+		}
+
+		final IModel argsModel = new Model((Serializable)fullArgs);
+
+		final Localizer localizer = getLocalizer();
+
+		final Iterator keys = resourceKeys.iterator();
+
+		String message = null;
+
+		while (keys.hasNext())
+		{
+			final String key = (String)keys.next();
+
+			String resource = getId() + "." + key;
+
+			System.out.println("trying key: " + resource);
+
+			// Note: It is important that the default value of "" is provided
+			// to getString() not to throw a MissingResourceException or to
+			// return a default string like "[Warning: String ..."
+			message = localizer.getString(resource, getParent(), argsModel, "");
+
+			// If not found, than ..
+			if (Strings.isEmpty(message))
+			{
+				// Have a 2nd try with the class name as the key. This makes for
+				// keys like "RequiredValidator" in any of the properties files
+				// along the path.
+
+				// Note: It is important that the default value of "" is NOT
+				// provided
+				// to getString() throw either MissingResourceException or to to
+				// return a default string like "[Warning: String ..." in case
+				// the
+				// property could not be found.
+
+				resource = key;
+
+				System.out.println("trying key: " + resource);
+
+				if (keys.hasNext())
+				{
+					message = localizer.getString(resource, getParent(), argsModel, "");
+				}
+				else
+				{
+					message = localizer.getString(resource, getParent(), argsModel);
+				}
+			}
+
+			if (!Strings.isEmpty(message))
+			{
+				break;
+			}
+
+		}
+
+		error(message);
 	}
 
 
