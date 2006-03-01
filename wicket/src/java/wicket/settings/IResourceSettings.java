@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import wicket.IResourceFactory;
 import wicket.Localizer;
-import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
@@ -167,11 +166,6 @@ public interface IResourceSettings
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * @return factory used to generate resource keys for validator messages
-	 */
-	IValidatorResourceKeyFactory getValidatorResourceKeyFactory();
-
-	/**
 	 * @param defaultLocale
 	 *            The defaultLocale to set.
 	 */
@@ -228,11 +222,4 @@ public interface IResourceSettings
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
-	/**
-	 * Sets the factory that will be used to generate resource keys for
-	 * validator messages
-	 * 
-	 * @param factory
-	 */
-	void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory);
 }

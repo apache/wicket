@@ -40,8 +40,6 @@ import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
-import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
-import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.protocol.http.HttpSessionStore;
@@ -264,9 +262,6 @@ public final class Settings
 
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
-
-	/** Factory for producing validator error message resource keys */
-	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
@@ -725,15 +720,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#getValidatorResourceKeyFactory()
-	 */
-	public IValidatorResourceKeyFactory getValidatorResourceKeyFactory()
-	{
-		return validatorResourceKeyFactory;
-	}
-
-
-	/**
 	 * @see wicket.settings.IPageSettings#getVersionPagesByDefault()
 	 */
 	public boolean getVersionPagesByDefault()
@@ -1083,18 +1069,6 @@ public final class Settings
 	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#setValidatorResourceKeyFactory(wicket.markup.html.form.validation.IValidatorResourceKeyFactory)
-	 */
-	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
-		}
-		this.validatorResourceKeyFactory = factory;
 	}
 
 	/**
