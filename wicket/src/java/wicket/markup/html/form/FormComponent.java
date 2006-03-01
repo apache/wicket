@@ -34,8 +34,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
-import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.IConverter;
