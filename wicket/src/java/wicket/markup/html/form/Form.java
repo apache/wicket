@@ -824,7 +824,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public void validate(final FormComponent formComponent)
 			{
-				formComponent.convertAndValidate();
+				formComponent.validateTypeConversion();
 			}
 		});
 

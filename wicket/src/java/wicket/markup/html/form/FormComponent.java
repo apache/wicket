@@ -482,11 +482,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Converts raw input string into the object specified by
-	 * {@link FormComponent#setType(Class)} and records any errors. Converted
-	 * value is available thorugh {@link FormComponent#getConvertedInput()}
+	 * Converts and validates the conversion of the raw input string into the
+	 * object specified by {@link FormComponent#getType(Class)} and records any
+	 * errors. Converted value is available thorugh
+	 * {@link FormComponent#getConvertedInput()}
 	 */
-	public final void convertAndValidate()
+	public final void validateTypeConversion()
 	{
 		if (type == null)
 		{
@@ -507,7 +508,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates this component using the component's validator.
+	 * Validates this component using the component's validators.
 	 */
 	public final void validate()
 	{
@@ -816,7 +817,8 @@ public abstract class FormComponent extends WebMarkupContainer
 
 
 	/**
-	 * Builds and reports an error message. Typically called from a validator. This 
+	 * Builds and reports an error message. Typically called from a validator.
+	 * This
 	 * 
 	 * @param resourceKeys
 	 *            list of resource keys to try
