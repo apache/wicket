@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
@@ -335,8 +336,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			{
 				log.debug("Page not allowed to render: " + this);
 			}
-			throw new RestartResponseException(getApplication().getApplicationSettings()
-					.getAccessDeniedPage());
+			throw new UnauthorizedActionException(this,Component.RENDER);
 		}
 
 		// Visit all this page's children to reset markup streams and check
