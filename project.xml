@@ -391,6 +391,9 @@
       <includes>
         <include>**/*Test.java</include>
       </includes>
+      <excludes>
+        <exclude>**/Abstract*Test.java</exclude>
+      </excludes>
       <resources>
         <resource>
           <directory>${basedir}/src/test</directory>
