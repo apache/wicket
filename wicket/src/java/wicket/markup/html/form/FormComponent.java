@@ -392,7 +392,6 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return True if this component's input can be null. Returns true by
 	 *         default.
-	 * @see wicket.markup.html.form.validation.RequiredValidator
 	 */
 	public boolean isInputNullable()
 	{
@@ -488,7 +487,7 @@ public abstract class FormComponent extends WebMarkupContainer
 
 	/**
 	 * Converts and validates the conversion of the raw input string into the
-	 * object specified by {@link FormComponent#getType(Class)} and records any
+	 * object specified by {@link FormComponent#getType()} and records any
 	 * errors. Converted value is available thorugh
 	 * {@link FormComponent#getConvertedInput()}
 	 */
