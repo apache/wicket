@@ -67,6 +67,8 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
+		String id = getId();
+		((WebApplication)getApplication()).clearBufferedResponses(id);
 		getSessionStore().invalidate();
 	}
 
