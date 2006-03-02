@@ -9,6 +9,7 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development"></release>
+      <action type="fix" dev="Igor Vaynberg">fixed multipart form bug which prevented multi-value components used on form with uploadfield component</action>
     <release version="1.1.1" date="2006-01-25" description="Wicket 1.1.1">
       <action type="add" dev="Igor Vaynberg">back ported wicket:message tag functionality from 1.2</action>
       <action type="update" dev="Igor Vaynberg" due-to="Frank Silbermann">clarified PropertyModel javadoc</action>
