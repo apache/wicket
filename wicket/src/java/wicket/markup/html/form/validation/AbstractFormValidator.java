@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,40 +23,50 @@ import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 
 /**
- * Base class for form validators
+ * Base class for {@link wicket.markup.html.form.validation.IFormValidator}s.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractFormValidator implements IFormValidator
 {
-
+	/**
+	 * Gets the default variables for interpolation. These are for every
+	 * component:
+	 * <ul>
+	 * <li>${input(n)}: the user's input</li>
+	 * <li>${name}: the name of the component</li>
+	 * <li>${label(n)}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @return a map with the variables for interpolation
+	 */
 	protected Map messageModel()
 	{
-		FormComponent[] fcs = getDependentFormComponents();
+		FormComponent[] formComponents = getDependentFormComponents();
 
-		if (fcs != null && fcs.length > 0)
+		if (formComponents != null && formComponents.length > 0)
 		{
-			Map args = new HashMap(fcs.length * 2);
-			for (int i = 0; i < fcs.length; i++)
+			Map args = new HashMap(formComponents.length * 3);
+			for (int i = 0; i < formComponents.length; i++)
 			{
-				final FormComponent fc = fcs[i];
+				final FormComponent formComponent = formComponents[i];
 
 				String arg = "label" + i;
-
-				IModel label = fc.getLabel();
-
+				IModel label = formComponent.getLabel();
 				if (label != null)
 				{
-					args.put(arg, label.getObject(fc));
+					args.put(arg, label.getObject(formComponent));
 				}
 				else
 				{
-					args.put(arg, fc.getLocalizer().getString(fc.getId(), fc.getParent(),
-							fc.getId()));
+					args.put(arg, formComponent.getLocalizer().getString(formComponent.getId(),
+							formComponent.getParent(), formComponent.getId()));
 				}
 
-				arg = "input" + i;
-				args.put(arg, fc.getInput());
+				args.put("input" + i, formComponent.getInput());
+				args.put("name" + i, formComponent.getId());
 			}
 			return args;
 		}
@@ -66,6 +75,4 @@ public abstract class AbstractFormValidator implements IFormValidator
 			return new HashMap(2);
 		}
 	}
-	
-
 }
