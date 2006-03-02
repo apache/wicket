@@ -142,9 +142,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public void formComponent(FormComponent formComponent)
 		{
-			// FIXME Form: check if it is ok to only validate if is enabled
 			if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
-					&& formComponent.isEnabled())
+					&& formComponent.isEnabled() && formComponent.isEnableAllowed())
 			{
 				validate(formComponent);
 			}
@@ -781,7 +780,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// Only update the component when it is visible and valid
 				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
-						&& formComponent.isValid() && formComponent.isEnabled())
+						&& formComponent.isValid() && formComponent.isEnabled()
+						&& formComponent.isEnableAllowed())
 				{
 					// Potentially update the model
 					formComponent.updateModel();
