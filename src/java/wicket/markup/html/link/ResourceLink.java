@@ -100,8 +100,12 @@ public class ResourceLink extends Link implements IResourceListener
 	{
 		if (resourceReference != null)
 		{
-			resourceReference.setLocale(getLocale());
-			resourceReference.setStyle(getStyle());
+			// TODO should we have support for locale changes when the 
+			// resource reference (or resource??) is set manually..
+			// We should get a new resource reference for the current locale then
+			// that points to the same resource but with another locale if it exists.
+			// something like SharedResource.getResourceReferenceForLocale(resourceReference);
+			
 			resourceReference.bind(getApplication());
 			return getRequestCycle().urlFor(resourceReference);
 		}

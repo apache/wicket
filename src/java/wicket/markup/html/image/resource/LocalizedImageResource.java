@@ -234,6 +234,14 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			this.resourceReference = null;
 			this.resource = null;
 		}
+		else
+		{
+			// TODO should we have support for locale changes when the 
+			// resource reference (or resource??) is set manually..
+			// We should get a new resource reference for the current locale then
+			// that points to the same resource but with another locale if it exists.
+			// something like SharedResource.getResourceReferenceForLocale(resourceReference);
+		}
 
 		// Need to load image resource for this component?
 		if (resource == null && resourceReference == null)
