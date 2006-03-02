@@ -63,7 +63,6 @@ public abstract class AbstractTextComponent extends FormComponent
 	 * false.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
-	 * @see wicket.markup.html.form.validation.RequiredValidator
 	 */
 	public boolean isInputNullable()
 	{

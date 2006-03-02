@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.20 $ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,22 +16,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket.util.string;
 
 import java.io.IOException;
 
 /**
- * This is a copy or combination of <code>java.lang.StringBuffer</code> and <code>java.lang.String</code>
- * It has a special method getValue() which returns the internal char array. 
+ * This is a copy or combination of <code>java.lang.StringBuffer</code> and
+ * <code>java.lang.String</code> It has a special method getValue() which
+ * returns the internal char array.
  * 
  * Hashcode and equals methods are also implemented.
  * 
- * This AppendingStringBuffer is not synchronized. 
+ * This AppendingStringBuffer is not synchronized.
  * 
  * @author Johan Compagner
- * @author Sun
- * @see java.lang.StringBuffer 
+ * @see java.lang.StringBuffer
  */
 
 public final class AppendingStringBuffer implements java.io.Serializable, CharSequence
@@ -348,7 +348,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 */
 	public AppendingStringBuffer append(Object obj)
 	{
-		if(obj instanceof AppendingStringBuffer)
+		if (obj instanceof AppendingStringBuffer)
 		{
 			return append((AppendingStringBuffer)obj);
 		}
@@ -398,24 +398,26 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * Appends the specified <tt>AppendingStringBuffer</tt> to this
 	 * <tt>AppendingStringBuffer</tt>.
 	 * <p>
-	 * The characters of the <tt>AppendingStringBuffer</tt> argument are appended, in
-	 * order, to the contents of this <tt>AppendingStringBuffer</tt>, increasing the
-	 * length of this <tt>AppendingStringBuffer</tt> by the length of the argument. If
+	 * The characters of the <tt>AppendingStringBuffer</tt> argument are
+	 * appended, in order, to the contents of this
+	 * <tt>AppendingStringBuffer</tt>, increasing the length of this
+	 * <tt>AppendingStringBuffer</tt> by the length of the argument. If
 	 * <tt>sb</tt> is <tt>null</tt>, then the four characters
 	 * <tt>"null"</tt> are appended to this <tt>AppendingStringBuffer</tt>.
 	 * <p>
 	 * Let <i>n</i> be the length of the old character sequence, the one
-	 * contained in the <tt>AppendingStringBuffer</tt> just prior to execution of the
-	 * <tt>append</tt> method. Then the character at index <i>k</i> in the
-	 * new character sequence is equal to the character at index <i>k</i> in
-	 * the old character sequence, if <i>k</i> is less than <i>n</i>;
+	 * contained in the <tt>AppendingStringBuffer</tt> just prior to execution
+	 * of the <tt>append</tt> method. Then the character at index <i>k</i> in
+	 * the new character sequence is equal to the character at index <i>k</i>
+	 * in the old character sequence, if <i>k</i> is less than <i>n</i>;
 	 * otherwise, it is equal to the character at index <i>k-n</i> in the
 	 * argument <code>sb</code>.
 	 * <p>
 	 * The method <tt>ensureCapacity</tt> is first called on this
-	 * <tt>AppendingStringBuffer</tt> with the new buffer length as its argument. (This
-	 * ensures that the storage of this <tt>AppendingStringBuffer</tt> is adequate to
-	 * contain the additional characters being appended.)
+	 * <tt>AppendingStringBuffer</tt> with the new buffer length as its
+	 * argument. (This ensures that the storage of this
+	 * <tt>AppendingStringBuffer</tt> is adequate to contain the additional
+	 * characters being appended.)
 	 * 
 	 * @param sb
 	 *            the <tt>AppendingStringBuffer</tt> to append.
@@ -654,9 +656,10 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Removes the characters in a substring of this <code>AppendingStringBuffer</code>.
-	 * The substring begins at the specified <code>start</code> and extends to
-	 * the character at index <code>end - 1</code> or to the end of the
+	 * Removes the characters in a substring of this
+	 * <code>AppendingStringBuffer</code>. The substring begins at the
+	 * specified <code>start</code> and extends to the character at index
+	 * <code>end - 1</code> or to the end of the
 	 * <code>AppendingStringBuffer</code> if no such character exists. If
 	 * <code>start</code> is equal to <code>end</code>, no changes are
 	 * made.
@@ -697,8 +700,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 
 	/**
 	 * Removes the character at the specified position in this
-	 * <code>AppendingStringBuffer</code> (shortening the <code>AppendingStringBuffer</code>
-	 * by one character).
+	 * <code>AppendingStringBuffer</code> (shortening the
+	 * <code>AppendingStringBuffer</code> by one character).
 	 * 
 	 * @param index
 	 *            Index of character to remove
@@ -720,15 +723,16 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Replaces the characters in a substring of this <code>AppendingStringBuffer</code>
-	 * with characters in the specified <code>String</code>. The substring
-	 * begins at the specified <code>start</code> and extends to the character
-	 * at index <code>end - 1</code> or to the end of the
-	 * <code>AppendingStringBuffer</code> if no such character exists. First the
-	 * characters in the substring are removed and then the specified
+	 * Replaces the characters in a substring of this
+	 * <code>AppendingStringBuffer</code> with characters in the specified
+	 * <code>String</code>. The substring begins at the specified
+	 * <code>start</code> and extends to the character at index
+	 * <code>end - 1</code> or to the end of the
+	 * <code>AppendingStringBuffer</code> if no such character exists. First
+	 * the characters in the substring are removed and then the specified
 	 * <code>String</code> is inserted at <code>start</code>. (The
-	 * <code>AppendingStringBuffer</code> will be lengthened to accommodate the
-	 * specified String if necessary.)
+	 * <code>AppendingStringBuffer</code> will be lengthened to accommodate
+	 * the specified String if necessary.)
 	 * 
 	 * @param start
 	 *            The beginning index, inclusive.
@@ -813,8 +817,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * </blockquote>
 	 * 
-	 * This method is provided so that the <tt>AppendingStringBuffer</tt> class can
-	 * implement the {@link CharSequence} interface.
+	 * This method is provided so that the <tt>AppendingStringBuffer</tt>
+	 * class can implement the {@link CharSequence} interface.
 	 * </p>
 	 * 
 	 * @param start
@@ -838,9 +842,9 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 
 	/**
 	 * Returns a new <code>String</code> that contains a subsequence of
-	 * characters currently contained in this <code>AppendingStringBuffer</code>. The
-	 * substring begins at the specified <code>start</code> and extends to the
-	 * character at index <code>end - 1</code>. An exception is thrown if
+	 * characters currently contained in this <code>AppendingStringBuffer</code>.
+	 * The substring begins at the specified <code>start</code> and extends to
+	 * the character at index <code>end - 1</code>. An exception is thrown if
 	 * 
 	 * @param start
 	 *            The beginning index, inclusive.
@@ -946,7 +950,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 */
 	public AppendingStringBuffer insert(int offset, Object obj)
 	{
-		if(obj instanceof AppendingStringBuffer)
+		if (obj instanceof AppendingStringBuffer)
 		{
 			AppendingStringBuffer asb = (AppendingStringBuffer)obj;
 			return insert(offset, asb.value, 0, asb.count);
@@ -1233,7 +1237,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * such that: <blockquote>
 	 * 
 	 * <pre>
-	 *     this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
+	 *      this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
 	 * </pre>
 	 * 
 	 * </blockquote> is <code>true</code>.
@@ -1458,7 +1462,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * This method returns the internal char array. So it is not 
+	 * This method returns the internal char array. So it is not
+	 * 
 	 * @return The internal char array
 	 */
 	public final char[] getValue()
@@ -1468,8 +1473,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 
 
 	/**
-	 * readObject is called to restore the state of the AppendingStringBuffer from a
-	 * stream.
+	 * readObject is called to restore the state of the AppendingStringBuffer
+	 * from a stream.
 	 * 
 	 * @param s
 	 * @throws ClassNotFoundException
@@ -1482,16 +1487,16 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Compares this AppendingStringBuffer to the specified object. The result is
-	 * <code>true</code> if and only if the argument is not <code>null</code>
-	 * and is a <code>AppendingStringBuffer</code> object that represents the same
-	 * sequence of characters as this object.
+	 * Compares this AppendingStringBuffer to the specified object. The result
+	 * is <code>true</code> if and only if the argument is not
+	 * <code>null</code> and is a <code>AppendingStringBuffer</code> object
+	 * that represents the same sequence of characters as this object.
 	 * 
 	 * @param anObject
 	 *            the object to compare this <code>AppendingStringBuffer</code>
 	 *            against.
-	 * @return <code>true</code> if the <code>AppendingStringBuffer</code>are equal;
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if the <code>AppendingStringBuffer</code>are
+	 *         equal; <code>false</code> otherwise.
 	 */
 	public boolean equals(Object anObject)
 	{
@@ -1527,14 +1532,14 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * <code>AppendingStringBuffer</code> object is computed as <blockquote>
 	 * 
 	 * <pre>
-	 *  s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
+	 *   s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
 	 * </pre>
 	 * 
 	 * </blockquote> using <code>int</code> arithmetic, where
-	 * <code>s[i]</code> is the <i>i</i>th character of the AppendingStringBuffer,
-	 * <code>n</code> is the length of the AppendingStringBuffer, and <code>^</code>
-	 * indicates exponentiation. (The hash value of the empty AppendingStringBuffer is
-	 * zero.)
+	 * <code>s[i]</code> is the <i>i</i>th character of the
+	 * AppendingStringBuffer, <code>n</code> is the length of the
+	 * AppendingStringBuffer, and <code>^</code> indicates exponentiation.
+	 * (The hash value of the empty AppendingStringBuffer is zero.)
 	 * 
 	 * @return a hash code value for this object.
 	 */
@@ -1554,11 +1559,12 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		}
 		return h;
 	}
-	
+
 	/**
 	 * Clears the buffer contents, but leaves the allocated size intact
 	 */
-	public void clear() {
-		count=0;
+	public void clear()
+	{
+		count = 0;
 	}
 }

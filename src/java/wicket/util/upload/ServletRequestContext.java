@@ -1,17 +1,20 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$
+ * $Revision$
+ * $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.upload;
 
@@ -22,75 +25,79 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * <p>Provides access to the request information needed for a request made to
- * an HTTP servlet.</p>
- *
+ * <p>
+ * Provides access to the request information needed for a request made to an
+ * HTTP servlet.
+ * </p>
+ * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
- *
- * @since FileUpload 1.1
- *
- * @version $Id$
  */
-public class ServletRequestContext implements RequestContext {
+public class ServletRequestContext implements RequestContext
+{
 
-    // ----------------------------------------------------- Instance Variables
+	// ----------------------------------------------------- Instance Variables
 
-    /**
-     * The request for which the context is being provided.
-     */
-    private HttpServletRequest request;
-
-
-    // ----------------------------------------------------------- Constructors
-
-    /**
-     * Construct a context for this request.
-     *
-     * @param request The request to which this context applies.
-     */
-    public ServletRequestContext(HttpServletRequest request) {
-        this.request = request;
-    }
+	/**
+	 * The request for which the context is being provided.
+	 */
+	private HttpServletRequest request;
 
 
-    // --------------------------------------------------------- Public Methods
+	// ----------------------------------------------------------- Constructors
 
-    /**
-     * Retrieve the content type of the request.
-     *
-     * @return The content type of the request.
-     */
-    public String getContentType() {
-        return request.getContentType();
-    }
+	/**
+	 * Construct a context for this request.
+	 * 
+	 * @param request
+	 *            The request to which this context applies.
+	 */
+	public ServletRequestContext(HttpServletRequest request)
+	{
+		this.request = request;
+	}
 
-    /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     */
-    public int getContentLength() {
-        return request.getContentLength();
-    }
 
-    /**
-     * Retrieve the input stream for the request.
-     *
-     * @return The input stream for the request.
-     *
-     * @throws IOException if a problem occurs.
-     */
-    public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
-    }
-    
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-    	return "ContentLength=" 
-			+ this.getContentLength()
-			+ ", ContentType="
-			+ this.getContentType();
-    }
+	// --------------------------------------------------------- Public Methods
+
+	/**
+	 * Retrieve the content type of the request.
+	 * 
+	 * @return The content type of the request.
+	 */
+	public String getContentType()
+	{
+		return request.getContentType();
+	}
+
+	/**
+	 * Retrieve the content length of the request.
+	 * 
+	 * @return The content length of the request.
+	 */
+	public int getContentLength()
+	{
+		return request.getContentLength();
+	}
+
+	/**
+	 * Retrieve the input stream for the request.
+	 * 
+	 * @return The input stream for the request.
+	 * 
+	 * @throws IOException
+	 *             if a problem occurs.
+	 */
+	public InputStream getInputStream() throws IOException
+	{
+		return request.getInputStream();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "ContentLength=" + this.getContentLength() + ", ContentType="
+				+ this.getContentType();
+	}
 }

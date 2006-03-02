@@ -1,6 +1,9 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
+ * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -31,7 +34,6 @@ import wicket.WicketRuntimeException;
 import wicket.util.file.FileCleaner;
 import wicket.util.io.DeferredFileOutputStream;
 
-
 /**
  * <p>
  * The default implementation of the
@@ -50,10 +52,6 @@ import wicket.util.io.DeferredFileOutputStream;
  * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
- * 
- * @since FileUpload 1.1
- * 
- * @version $Id$
  */
 public class DiskFileItem implements FileItem
 {
@@ -688,5 +686,4 @@ public class DiskFileItem implements FileItem
 				+ String.valueOf(this.getStoreLocation()) + ", size=" + this.getSize() + "bytes, "
 				+ "isFormField=" + isFormField() + ", FieldName=" + this.getFieldName();
 	}
-
 }

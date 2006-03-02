@@ -38,7 +38,7 @@ import wicket.util.io.ByteCountingOutputStream;
  * 
  * @author Jonathan Locke
  */
-public abstract class Objects implements NumericTypes
+public abstract class Objects
 {
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
@@ -87,6 +87,50 @@ public abstract class Objects implements NumericTypes
 		}
 	}
 
+	/** Type tag meaning boolean. */
+	private static final int BOOL = 0;
+
+	/** Type tag meaning byte. */
+	private static final int BYTE = 1;
+
+	/** Type tag meaning char. */
+	private static final int CHAR = 2;
+
+	/** Type tag meaning short. */
+	private static final int SHORT = 3;
+
+	/** Type tag meaning int. */
+	private static final int INT = 4;
+
+	/** Type tag meaning long. */
+	private static final int LONG = 5;
+
+	/** Type tag meaning java.math.BigInteger. */
+	private static final int BIGINT = 6;
+
+	/** Type tag meaning float. */
+	private static final int FLOAT = 7;
+
+	/** Type tag meaning double. */
+	private static final int DOUBLE = 8;
+
+	/** Type tag meaning java.math.BigDecimal. */
+	private static final int BIGDEC = 9;
+
+	/** Type tag meaning something other than a number. */
+	private static final int NONNUMERIC = 10;
+
+	/**
+	 * The smallest type tag that represents reals as opposed to integers. You
+	 * can see whether a type tag represents reals or integers by comparing the
+	 * tag to this constant: all tags less than this constant represent
+	 * integers, and all tags greater than or equal to this constant represent
+	 * reals. Of course, you must also check for NONNUMERIC, which means it is
+	 * not a number at all.
+	 */
+	private static final int MIN_REAL_TYPE = FLOAT;
+
+	/** defaults for primitives. */
 	static HashMap primitiveDefaults = new HashMap();
 
 	static
