@@ -33,26 +33,28 @@ import wicket.util.lang.Objects;
  */
 public class EqualInputValidator extends AbstractFormValidator
 {
-	private final FormComponent[] comps;
-
+	/** form components to be checked. */
+	private final FormComponent[] components;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param fc1
-	 * @param fc2
+	 * @param formComponent1
+	 *            a form component
+	 * @param formComponent2
+	 *            a form component
 	 */
-	public EqualInputValidator(FormComponent fc1, FormComponent fc2)
+	public EqualInputValidator(FormComponent formComponent1, FormComponent formComponent2)
 	{
-		if (fc1 == null)
+		if (formComponent1 == null)
 		{
-			throw new IllegalArgumentException("fc1 cannot be null");
+			throw new IllegalArgumentException("argument formComponent1 cannot be null");
 		}
-		if (fc2 == null)
+		if (formComponent2 == null)
 		{
-			throw new IllegalArgumentException("fc2 cannot be null");
+			throw new IllegalArgumentException("argument formComponent2 cannot be null");
 		}
-		comps = new FormComponent[] { fc1, fc2 };
+		components = new FormComponent[] { formComponent1, formComponent2 };
 	}
 
 	/**
@@ -60,7 +62,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	 */
 	public FormComponent[] getDependentFormComponents()
 	{
-		return comps;
+		return components;
 	}
 
 	/**
@@ -70,15 +72,13 @@ public class EqualInputValidator extends AbstractFormValidator
 	{
 		// we have a choice to validate the type converted values or the raw
 		// input values, we validate the raw input
+		final FormComponent formComponent1 = components[0];
+		final FormComponent formComponent2 = components[1];
 
-		final FormComponent fc0 = comps[0];
-		final FormComponent fc1 = comps[1];
-
-		if (!Objects.equal(fc0.getInput(), fc1.getInput()))
+		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{
-			final String key=Classes.simpleName(getClass());
-			fc1.error(Collections.singletonList(key), messageModel());
+			final String key = Classes.simpleName(getClass());
+			formComponent2.error(Collections.singletonList(key), messageModel());
 		}
 	}
-
 }
