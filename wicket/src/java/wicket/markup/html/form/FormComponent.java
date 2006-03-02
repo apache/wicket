@@ -531,9 +531,22 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates this component using the component's validators.
+	 * Performs full validation of the form component, which consists of calling
+	 * validateRequired(), validateTypeConversion(), and validateValidators().
+	 * This method should only be used if the form component needs to be fully
+	 * validated outside the form process.
 	 */
 	public final void validate()
+	{
+		validateRequired();
+		validateTypeConversion();
+		validateValidators();
+	}
+
+	/**
+	 * Validates this component using the component's validators.
+	 */
+	public final void validateValidators()
 	{
 		final int size = validators_size();
 		for (int i = 0; i < size; i++)

@@ -781,7 +781,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// Only update the component when it is visible and valid
 				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
-						&& formComponent.isValid())
+						&& formComponent.isValid() && formComponent.isEnabled())
 				{
 					// Potentially update the model
 					formComponent.updateModel();
@@ -864,7 +864,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public void validate(final FormComponent formComponent)
 			{
-				formComponent.validate();
+				formComponent.validateValidators();
 			}
 		});
 	}
@@ -1242,9 +1242,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * @param validator
-	 *            The form validator to add to the formValidators Object
-	 *            (which may be an array of IFormValidators or a single
-	 *            instance, for efficiency)
+	 *            The form validator to add to the formValidators Object (which
+	 *            may be an array of IFormValidators or a single instance, for
+	 *            efficiency)
 	 */
 	private void formValidators_add(final IFormValidator validator)
 	{
@@ -1275,9 +1275,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets form validator from formValidators Object (which may be an array
-	 * of IFormValidators or a single instance, for efficiency) at the given
-	 * index
+	 * Gets form validator from formValidators Object (which may be an array of
+	 * IFormValidators or a single instance, for efficiency) at the given index
 	 * 
 	 * @param index
 	 *            The index of the validator to get
@@ -1297,9 +1296,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @return The number of form validators in the formValidators Object
-	 *         (which may be an array of IFormValidators or a single instance,
-	 *         for efficiency)
+	 * @return The number of form validators in the formValidators Object (which
+	 *         may be an array of IFormValidators or a single instance, for
+	 *         efficiency)
 	 */
 	private int formValidators_size()
 	{
