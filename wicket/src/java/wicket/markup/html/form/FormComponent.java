@@ -895,8 +895,6 @@ public abstract class FormComponent extends WebMarkupContainer
 
 			String resource = getId() + "." + key;
 
-			System.out.println("trying key: " + resource);
-
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
@@ -917,8 +915,6 @@ public abstract class FormComponent extends WebMarkupContainer
 				// property could not be found.
 
 				resource = key;
-
-				System.out.println("trying key: " + resource);
 
 				if (keys.hasNext())
 				{
