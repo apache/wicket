@@ -231,7 +231,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						"Calling listener methods on components that are not enabled is not allowed: "
 								+ componentPath);
 			}
-			if (!component.isActionAuthorized(Component.ENABLE))
+			if (!component.isEnableAllowed())
 			{
 				throw new UnauthorizedActionException(component,Component.ENABLE);
 			}
