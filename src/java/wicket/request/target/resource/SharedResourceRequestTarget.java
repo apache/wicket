@@ -17,10 +17,14 @@
  */
 package wicket.request.target.resource;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.RequestCycle;
 import wicket.Resource;
+import wicket.Response;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebResponse;
 import wicket.request.RequestParameters;
 
 /**
@@ -79,7 +83,16 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		Resource resource = sharedResources.get(resourceKey);
 		if (resource == null)
 		{
-			throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+			Response response = requestCycle.getResponse();
+			if(response instanceof WebResponse)
+			{
+				((WebResponse)response).getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
+			else
+			{
+				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+			}
 		}
 		sharedResources.onResourceRequested(resourceKey);
 
