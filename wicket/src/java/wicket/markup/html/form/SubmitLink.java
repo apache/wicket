@@ -132,4 +132,3 @@ public class SubmitLink extends Button
 		return form;
 	}
 }
-
