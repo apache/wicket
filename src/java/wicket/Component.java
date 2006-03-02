@@ -1514,7 +1514,7 @@ public abstract class Component implements Serializable
 			{
 				// Call implementation to render component
 				onRender(markupStream);
-	
+
 				// Component has been rendered
 				rendered();
 			}
@@ -1997,8 +1997,8 @@ public abstract class Component implements Serializable
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
 						.append(getPage().getClass().getName()).append(", path = ").append(
-								getPath()).append(".").append(Classes.simpleName(getClass())).append(
-								", isVisible = ").append((isRenderAllowed() && isVisible()))
+								getPath()).append(".").append(Classes.simpleName(getClass()))
+						.append(", isVisible = ").append((isRenderAllowed() && isVisible()))
 						.append(", isVersioned = ").append(isVersioned()).append("]").toString();
 			}
 		}
@@ -2780,6 +2780,15 @@ public abstract class Component implements Serializable
 	final boolean isRenderAllowed()
 	{
 		return getFlag(FLAG_IS_RENDER_ALLOWED);
+	}
+
+	/**
+	 * @return true if this component is authorized to be enabled, false
+	 *         otherwise
+	 */
+	public final boolean isEnableAllowed()
+	{
+		return isActionAuthorized(ENABLE);
 	}
 
 	/**
