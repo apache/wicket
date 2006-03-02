@@ -18,7 +18,6 @@
 package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 
 /**
@@ -47,7 +46,7 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, final Class type)
 	{
 		super(id);
-		add(new TypeValidator(type));
+		setType(type);
 	}
 
 	/**
