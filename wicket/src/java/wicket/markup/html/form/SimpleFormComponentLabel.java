@@ -28,11 +28,7 @@ import wicket.markup.MarkupStream;
  */
 public class SimpleFormComponentLabel extends FormComponentLabel
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * Construct.
@@ -56,6 +52,4 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
-
-
 }

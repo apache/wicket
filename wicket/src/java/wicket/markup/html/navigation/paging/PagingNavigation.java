@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,11 +32,11 @@ import wicket.version.undo.Change;
  * 
  * <pre>
  *  
- * 				 &lt;td wicket:id=&quot;navigation&quot;&gt;
- * 					 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- * 						&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
- * 					 &lt;/a&gt;
- * 				 &lt;/td&gt;
+ * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ * 		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
+ * 		&lt;/a&gt;
+ * 	&lt;/td&gt;
  * 	
  * </pre>
  * 
@@ -43,7 +44,7 @@ import wicket.version.undo.Change;
  * 
  * <pre>
  *  
- * 				 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
+ * 	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
  * 	
  * </pre>
  * 
@@ -422,6 +423,12 @@ public class PagingNavigation extends Loop
 		}
 	}
 
+	/**
+	 * Set the number of iterations.
+	 * 
+	 * @param i
+	 *            the number of iterations
+	 */
 	private void setIterations(int i)
 	{
 		setModelObject(new Integer(i));

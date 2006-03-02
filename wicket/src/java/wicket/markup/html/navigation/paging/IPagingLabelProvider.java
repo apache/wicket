@@ -1,28 +1,25 @@
-/**
+/*
+ * $Id$ $Revision$ $Date$
  * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.navigation.paging;
 
 /**
  * This interface is used by the PagingNavigator components to get the label of
  * the pages there are for a IPageable component. By default this is only the
- * page number.<br>
- * <br>
- * This interface can be used to override this for example into
- * 1-10,11-20,20-24:<br>
- * <br>
- * final int pageSize = 10; final PageableListView listview = new
- * PageableListView("listview",data,pageSize);<br>
- * IPagingLableProvider labelProvider = new IPagingLabelProvider(){<br>
- * public String getPageLabel(int page)<br> {<br>
- * int size = listview.getList().size();<br>
- * int current = page*pageSize;<br>
- * int end = current+pageSize;<br>
- * if(end > size) end = size;<br>
- * current++; // page start at 0.<br>
- * return current + "-" + end;<br> }<br> }<br>
- * PagingNavigator navigator = new PagingNavigator("navigator",
- * listview,labelProvider);<br>
+ * page number.
  * 
  * @author jcompagner
  */

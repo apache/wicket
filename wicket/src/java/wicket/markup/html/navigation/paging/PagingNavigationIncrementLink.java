@@ -1,6 +1,7 @@
 /*
- * $Id: PagingNavigationIncrementLink.java,v 1.3 2005/02/17 06:15:27
- * jonathanlocke Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

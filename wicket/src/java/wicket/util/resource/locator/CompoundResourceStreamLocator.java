@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,7 +52,9 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class, java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
+	 * @see wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
+	 *      java.lang.String, java.lang.String, java.util.Locale,
+	 *      java.lang.String)
 	 */
 	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
 			String extension)
@@ -59,8 +62,8 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 		Iterator iter = locators.iterator();
 		while (iter.hasNext())
 		{
-			IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz,
-					path, style, locale, extension);
+			IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz, path,
+					style, locale, extension);
 			if (resource != null)
 			{
 				return resource;
@@ -68,7 +71,7 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Add a resource stream locator
 	 * 

@@ -1,6 +1,7 @@
 /*
- * $Id: PagingNavigationLink.java,v 1.2 2005/02/12 22:02:48
- * jonathanlocke Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

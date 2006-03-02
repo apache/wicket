@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,18 +30,20 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * Byte array resource class that supports dynamic (database or on the fly generated) data.
+ * Byte array resource class that supports dynamic (database or on the fly
+ * generated) data.
  * 
  * @author Johan Compagner
  */
 public abstract class DynamicByteArrayResource extends WebResource implements ICachingResource
 {
 	/**
-	 * This is a ResourceState subclasses should return in the getResourceState method.
-	 * This resource state should be thread safe. So it shouldn't be altered after construction.
-	 * Even with syncronize blocks this is still not safe because the call getContentType()
-	 * can not be sync together with the call getData() they will happen after each other.
-	 *  
+	 * This is a ResourceState subclasses should return in the getResourceState
+	 * method. This resource state should be thread safe. So it shouldn't be
+	 * altered after construction. Even with syncronize blocks this is still not
+	 * safe because the call getContentType() can not be sync together with the
+	 * call getData() they will happen after each other.
+	 * 
 	 * @author jcompagner
 	 */
 	public class ResourceState
@@ -86,7 +90,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	private Locale locale;
 
 	/**
-	 * Creates a dynamic resource 
+	 * Creates a dynamic resource
 	 */
 	public DynamicByteArrayResource()
 	{
@@ -98,7 +102,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 * Creates a dynamic resource from for the given locale
 	 * 
 	 * @param locale
-	 * 			The locale of this resource 
+	 *            The locale of this resource
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
@@ -108,11 +112,11 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 
 	/**
 	 * Creates a dynamic resource
-	 *  
+	 * 
 	 * @param locale
-	 * 			The locale of this resource 
+	 *            The locale of this resource
 	 * @param idle
-	 *          The idle duration timeout
+	 *            The idle duration timeout
 	 * 
 	 */
 	public DynamicByteArrayResource(Locale locale, Duration idle)
@@ -124,9 +128,9 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 
 	/**
 	 * Creates a dynamic resource
-	 *  
+	 * 
 	 * @param locale
-	 * 			The locale of this resource 
+	 *            The locale of this resource
 	 * @param idle
 	 *            The idle duration timeout
 	 * @param cacheTimeout
@@ -141,9 +145,9 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 
 	/**
 	 * Creates a dynamic resource
-	 *  
+	 * 
 	 * @param idle
-	 *          The idle duration timeout
+	 *            The idle duration timeout
 	 * 
 	 */
 	public DynamicByteArrayResource(Duration idle)
@@ -155,7 +159,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 
 	/**
 	 * Creates a dynamic resource
-	 *  
+	 * 
 	 * @param idle
 	 *            The idle duration timeout
 	 * @param cacheTimeout
@@ -166,7 +170,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 		this(idle);
 		this.cacheTimeout = cacheTimeout;
 	}
-	
+
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
@@ -177,13 +181,13 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 			private static final long serialVersionUID = 1L;
 
 			private Locale locale = DynamicByteArrayResource.this.locale;
-			
+
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
 
 			/**
-			 * Transient ResourceState of the resources, will always be deleted in
-			 * the close
+			 * Transient ResourceState of the resources, will always be deleted
+			 * in the close
 			 */
 			private transient ResourceState data = null;
 
@@ -281,16 +285,6 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	}
 
 	/**
-	 * Gets the byte array for our dynamic resource. If the subclass regenerates
-	 * the data, it should set the lastModifiedTime too. This ensures that image
-	 * caching works correctly.
-	 * 
-	 * @return The byte array for this dynamic resource.
-	 */
-	protected abstract ResourceState getResourceState();
-	
-	
-	/**
 	 * @see ICachingResource#invalidate()
 	 */
 	public void invalidate()
@@ -298,4 +292,12 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 		super.invalidate();
 	}
 
+	/**
+	 * Gets the byte array for our dynamic resource. If the subclass regenerates
+	 * the data, it should set the lastModifiedTime too. This ensures that image
+	 * caching works correctly.
+	 * 
+	 * @return The byte array for this dynamic resource.
+	 */
+	protected abstract ResourceState getResourceState();
 }
