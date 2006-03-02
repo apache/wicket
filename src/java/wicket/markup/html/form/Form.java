@@ -780,8 +780,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// Only update the component when it is visible and valid
 				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
-						&& formComponent.isValid() && formComponent.isEnabled()
-						&& formComponent.isEnableAllowed())
+						&& formComponent.isValid() && formComponent.isEnableAllowed())
 				{
 					// Potentially update the model
 					formComponent.updateModel();
