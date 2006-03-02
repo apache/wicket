@@ -73,7 +73,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public String getId()
 	{
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
 			return httpSession.getId();
@@ -86,7 +86,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public void invalidate()
 	{
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
 			try
@@ -127,7 +127,7 @@ public class HttpSessionStore implements ISessionStore
 			}
 		}
 
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(true);
 		if (httpSession != null)
 		{
 			httpSession.setAttribute(getSessionAttributePrefix() + name, value);
@@ -139,7 +139,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public Object getAttribute(String name)
 	{
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
 			return httpSession.getAttribute(getSessionAttributePrefix() + name);
@@ -152,7 +152,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public void removeAttribute(String name)
 	{
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
 			httpSession.removeAttribute(getSessionAttributePrefix() + name);
@@ -181,7 +181,7 @@ public class HttpSessionStore implements ISessionStore
 	public List getAttributeNames()
 	{
 		List list = new ArrayList();
-		HttpSession httpSession = getHttpSession();
+		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
 			final Enumeration names = httpSession.getAttributeNames();
@@ -208,13 +208,16 @@ public class HttpSessionStore implements ISessionStore
 	 * this directly.
 	 * </p>
 	 * 
+	 * @param createWhenNeeded 
+	 * 					Create the session when there is not one yet. 
+	 * 
 	 * @return The underlying HttpSession object (null if not created yet).
 	 */
-	protected final HttpSession getHttpSession()
+	protected final HttpSession getHttpSession(boolean createWhenNeeded)
 	{
 		if (httpSession == null)
 		{
-			httpSession = createHttpSession();
+			httpSession = createHttpSession(createWhenNeeded);
 		}
 		return httpSession;
 	}
@@ -236,9 +239,12 @@ public class HttpSessionStore implements ISessionStore
 	/**
 	 * Create the http session.
 	 * 
+	 * @param createWhenNeeded 
+	 * 					Create the session when there is not one yet. 
+	 * 
 	 * @return The http session
 	 */
-	private final HttpSession createHttpSession()
+	private final HttpSession createHttpSession(boolean createWhenNeeded)
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle != null)
@@ -247,10 +253,7 @@ public class HttpSessionStore implements ISessionStore
 			if (request instanceof WebRequest)
 			{
 				WebRequest webRequest = (WebRequest)request;
-				if (webRequest != null)
-				{
-					return webRequest.getHttpServletRequest().getSession(true);
-				}
+				return webRequest.getHttpServletRequest().getSession(createWhenNeeded);
 			}
 		}
 		return null;
