@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
@@ -125,12 +125,18 @@ public abstract class AbstractValidator implements IValidator
 	public void error(final FormComponent formComponent, final String resourceKey,
 			final IModel resourceModel)
 	{
-		Set keys=new HashSet(2);
+
+		final List keys = new ArrayList(2);
 		keys.add(resourceKey);
-		keys.add(Classes.simpleName(getClass()));
-		
-		Map map=(Map)resourceModel.getObject(formComponent);
-		
+
+		final String defaultKey = Classes.simpleName(getClass());
+		if (!keys.contains(defaultKey))
+		{
+			keys.add(defaultKey);
+		}
+
+		Map map = (Map)resourceModel.getObject(formComponent);
+
 		formComponent.error(keys, map);
 	}
 

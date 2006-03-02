@@ -21,7 +21,6 @@ import java.util.MissingResourceException;
 
 import junit.framework.TestCase;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.tester.WicketTester;
 
@@ -44,20 +43,31 @@ public class ValidatorPropertiesTest extends TestCase
 		Form form = (Form)page.get("form1");
 		assertNotNull(form);
 		
-		RequiredValidator validator = RequiredValidator.getInstance();
+		page.getText1().setInput(null);
+		page.getText1().validateRequired();
+		page.getText2().setInput(null);
+		page.getText2().validateRequired();
+		page.getText3().setInput(null);
+		page.getText3().validateRequired();
+		page.getText4().setInput(null);
+		page.getText4().validateRequired();
+		page.getText5().setInput(null);
+		page.getText5().validateRequired();
+		page.getText6().setInput(null);
+		page.getText6().validateRequired();
+		page.getText7().setInput(null);
+		page.getText7().validateRequired();
+		page.getText8().setInput(null);
+		page.getText8().validateRequired();
+		page.getText9().setInput(null);
+		page.getText9().validateRequired();
+		page.getText10().setInput(null);
+		page.getText10().validateRequired();
+		page.getText11().setInput(null);
+		page.getText11().validateRequired();
+		page.getText12().setInput(null);
+		page.getText12().validateRequired();
 		
-		validator.error(page.getText1());
-		validator.error(page.getText2());
-		validator.error(page.getText3());
-		validator.error(page.getText4());
-		validator.error(page.getText5());
-		validator.error(page.getText6());
-		validator.error(page.getText7());
-		validator.error(page.getText8());
-		validator.error(page.getText9());
-		validator.error(page.getText10());
-		validator.error(page.getText11());
-		validator.error(page.getText12());
 		
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
 		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());

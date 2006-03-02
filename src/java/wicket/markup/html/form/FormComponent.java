@@ -22,7 +22,6 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -471,7 +470,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			// when null, check whether this is natural for that component, or
 			// whether - as is the case with text fields - this can only happen
 			// when the component was disabled
-			if (input == null && (!isInputNullable()))
+			if (input == null && (isInputNullable()))
 			{
 				// this value must have come from a disabled field
 				// do not perform validation
@@ -481,7 +480,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			// peform validation by looking whether the value is null or empty
 			if (Strings.isEmpty(input))
 			{
-				error(Collections.singleton("RequiredValidator"), new HashMap());
+				error(Collections.singletonList("RequiredValidator"), new HashMap());
 			}
 
 		}
@@ -508,7 +507,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 			catch (ConversionException e)
 			{
-				Map args=new HashMap();
+				Map args = new HashMap();
 				args.put("type", Classes.simpleName(type));
 				final Locale locale = e.getLocale();
 				if (locale != null)
@@ -521,12 +520,12 @@ public abstract class FormComponent extends WebMarkupContainer
 				{
 					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
-				
-				
-				final String typedResourceKey="TypeValidator"+"."+Classes.simpleName(type);
-				
-				String[] resourceKeys=new String[] { typedResourceKey, "TypeValidator" };
-				
+
+
+				final String typedResourceKey = "TypeValidator" + "." + Classes.simpleName(type);
+
+				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
+
 				error(Arrays.asList(resourceKeys), args);
 			}
 		}
@@ -840,18 +839,35 @@ public abstract class FormComponent extends WebMarkupContainer
 		this.type = type;
 	}
 
+	/**
+	 * @see Form#getValidatorKeyPrefix()
+	 * @return prefix used when constructing validator key messages
+	 */
+	public String getValidatorKeyPrefix()
+	{
+		return getForm().getValidatorKeyPrefix();
+	}
 
 	/**
 	 * Builds and reports an error message. Typically called from a validator.
-	 * This
+	 * 
+	 * TODO Form: Javadoc this more
 	 * 
 	 * @param resourceKeys
 	 *            list of resource keys to try
 	 * @param args
 	 *            argument substituion map
 	 */
-	public final void error(Collection/* <String> */resourceKeys, Map/* <String,String> */args)
+	public final void error(List/* <String> */resourceKeys, Map/* <String,String> */args)
 	{
+		String prefix = getValidatorKeyPrefix();
+		if (Strings.isEmpty(prefix))
+		{
+			prefix = "";
+		}
+
+		// prepare the arguments map by adding default arguments such as input,
+		// name, and label
 		final Map fullArgs = new HashMap(args.size() + 4);
 		fullArgs.putAll(args);
 		if (!fullArgs.containsKey("input"))
@@ -883,15 +899,16 @@ public abstract class FormComponent extends WebMarkupContainer
 
 		final IModel argsModel = new Model((Serializable)fullArgs);
 
-		final Localizer localizer = getLocalizer();
+		// iterate through keys in order they were provided
 
+		final Localizer localizer = getLocalizer();
 		final Iterator keys = resourceKeys.iterator();
 
 		String message = null;
 
 		while (keys.hasNext())
 		{
-			final String key = (String)keys.next();
+			final String key = prefix + (String)keys.next();
 
 			String resource = getId() + "." + key;
 
@@ -907,14 +924,7 @@ public abstract class FormComponent extends WebMarkupContainer
 				// keys like "RequiredValidator" in any of the properties files
 				// along the path.
 
-				// Note: It is important that the default value of "" is NOT
-				// provided
-				// to getString() throw either MissingResourceException or to to
-				// return a default string like "[Warning: String ..." in case
-				// the
-				// property could not be found.
-
-				resource = key;
+				resource = prefix + key;
 
 				if (keys.hasNext())
 				{
@@ -922,6 +932,13 @@ public abstract class FormComponent extends WebMarkupContainer
 				}
 				else
 				{
+					/*
+					 * Note: This is the last key we are going to try. It is
+					 * important that the default value of "" is NOT provided to
+					 * getString() throw either MissingResourceException or to
+					 * to return a default string like "[Warning: String ..." in
+					 * case the property could not be found.
+					 */
 					message = localizer.getString(resource, getParent(), argsModel);
 				}
 			}
@@ -935,6 +952,5 @@ public abstract class FormComponent extends WebMarkupContainer
 
 		error(message);
 	}
-
 
 }

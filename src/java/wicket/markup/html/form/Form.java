@@ -39,6 +39,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
@@ -48,6 +49,7 @@ import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
+import wicket.util.string.interpolator.MapVariableInterpolator;
 import wicket.util.upload.FileUploadException;
 import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 
@@ -173,6 +175,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private boolean multiPart = false;
 
 	private String javascriptId;
+
+	/** multi-validators assigned to this form */
+	private Object formValidators = null;
+
 
 	/**
 	 * Constructs a form with no validation.
@@ -807,10 +813,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Validates the form's nested children of type {@link FormComponent}. This
-	 * method is typically called before updating any models.
+	 * Validates the form. This method is typically called before updating any
+	 * models.
 	 */
 	protected void validate()
+	{
+		validateRequired();
+
+		validateConversion();
+
+		validateValidators();
+
+		validateMultiValidators();
+	}
+
+	/**
+	 * Triggers input required attribute validation on all form components
+	 */
+	private void validateRequired()
 	{
 		visitFormComponents(new ValidationVisitor()
 		{
@@ -819,7 +839,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				formComponent.validateRequired();
 			}
 		});
+	}
 
+	/**
+	 * Triggers type conversion on form components
+	 */
+	private void validateConversion()
+	{
 		visitFormComponents(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
@@ -827,7 +853,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				formComponent.validateTypeConversion();
 			}
 		});
+	}
 
+	/**
+	 * Triggers all IValidator validators added to the form components
+	 */
+	private void validateValidators()
+	{
 		visitFormComponents(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
@@ -835,6 +867,40 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				formComponent.validate();
 			}
 		});
+	}
+
+	/**
+	 * Triggers any added IMultiValidator validators
+	 */
+	private void validateMultiValidators()
+	{
+		// execute any added IMultiValidators
+		final int multiCount = formValidators_size();
+		for (int i = 0; i < multiCount; i++)
+		{
+			final IFormValidator validator = formValidators_get(i);
+			final FormComponent[] dependents = validator.getDependentFormComponents();
+
+			boolean validate = true;
+
+			if (dependents != null)
+			{
+				for (int j = 0; j < dependents.length; j++)
+				{
+					final FormComponent dependent = dependents[j];
+					if (!dependent.isValid())
+					{
+						validate = false;
+						break;
+					}
+				}
+			}
+
+			if (validate)
+			{
+				validator.validate(this);
+			}
+		}
 	}
 
 	/**
@@ -1131,5 +1197,135 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			return url;
 		}
 	}
+
+	/**
+	 * Returns the prefix used when building validator keys. This allows a form
+	 * to use a separate "set" of keys. For example if prefix "short" is
+	 * returned, validator key short.RequiredValidator will be tried instead of
+	 * RequiredValidator key.
+	 * <p>
+	 * This can be useful when different designs are used for a form. In a form
+	 * where error messages are displayed next to their respective form
+	 * components as opposed to at the top of the form, the ${label} attribute
+	 * is of little use and only causes redundant information to appear in the
+	 * message. Forms like these can return the "short" (or any other string)
+	 * validator prefix and declare key: short.RequiredValidator=required to
+	 * override the longer message which is usually declared like this:
+	 * RequiredValidator=${label} is a required field
+	 * <p>
+	 * Returned prefix will be used for all form components. The prefix can also
+	 * be overridden on form component level by overriding
+	 * {@link FormComponent#getValidatorKeyPrefix()}
+	 * 
+	 * @return prefix prepended to validator keys
+	 */
+	public String getValidatorKeyPrefix()
+	{
+		return null;
+	}
+
+	/**
+	 * Adds a multi-component validator to the form.
+	 * 
+	 * @see IFormValidator
+	 * @param validator
+	 *            validator
+	 */
+	public void add(IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+		formValidators_add(validator);
+	}
+
+	/**
+	 * @param validator
+	 *            The form validator to add to the formValidators Object
+	 *            (which may be an array of IFormValidators or a single
+	 *            instance, for efficiency)
+	 */
+	private void formValidators_add(final IFormValidator validator)
+	{
+		if (this.formValidators == null)
+		{
+			this.formValidators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = formValidators_size();
+
+			// Create array that holds size + 1 elements
+			final IFormValidator[] validators = new IFormValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
+			{
+				validators[i] = formValidators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.formValidators = validators;
+		}
+	}
+
+	/**
+	 * Gets form validator from formValidators Object (which may be an array
+	 * of IFormValidators or a single instance, for efficiency) at the given
+	 * index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The form validator
+	 */
+	private IFormValidator formValidators_get(int index)
+	{
+		if (this.formValidators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators)[index];
+		}
+		return (IFormValidator)formValidators;
+	}
+
+	/**
+	 * @return The number of form validators in the formValidators Object
+	 *         (which may be an array of IFormValidators or a single instance,
+	 *         for efficiency)
+	 */
+	private int formValidators_size()
+	{
+		if (this.formValidators == null)
+		{
+			return 0;
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators).length;
+		}
+		return 1;
+	}
+
+	/**
+	 * /** Registers an error feedback message for this component
+	 * 
+	 * @param error
+	 *            error message
+	 * @param args
+	 *            argument replacement map for ${key} variables
+	 */
+	public final void error(String error, Map args)
+	{
+		error(new MapVariableInterpolator(error, args).toString());
+	}
+
 
 }
