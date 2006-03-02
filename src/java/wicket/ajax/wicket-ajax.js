@@ -5,14 +5,6 @@ function wicketShow(id) {
 function wicketHide(id) {
     document.getElementById(id).style.display = "none";
 }
-function wicketGetValue(comp) {
-    var type = comp.type;
-    if (type == "checkbox" || type == "radio") {
-        return comp.checked;
-    } else {
-        return comp.value;
-    }
-}
 
  
 // AJAX FUNCTIONS
