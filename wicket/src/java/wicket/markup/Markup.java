@@ -418,15 +418,19 @@ public class Markup
 		}
 		else if (tag.isClose() && (this.currentPath != null))
 		{
-			// Remove the last element from the component path
-			int index = this.currentPath.lastIndexOf(":");
-			if (index != -1)
+			// For example <wicket:message> does not have an id
+			if ((tag.getOpenTag() == null) || tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
-				this.currentPath.setLength(index);
-			}
-			else
-			{
-				this.currentPath.setLength(0);
+				// Remove the last element from the component path
+				int index = this.currentPath.lastIndexOf(":");
+				if (index != -1)
+				{
+					this.currentPath.setLength(index);
+				}
+				else
+				{
+					this.currentPath.setLength(0);
+				}
 			}
 		}
 		
