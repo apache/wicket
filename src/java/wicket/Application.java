@@ -582,11 +582,6 @@ public abstract class Application
 	 */
 	protected void internalInit()
 	{
-		// We initialize components here rather than in the constructor because
-		// the Application constructor is run before the Application subclass'
-		// constructor and that subclass constructor may add class aliases that
-		// would be used in installing resources in the component.
-		initializeComponents();
 	}
 
 	/**
@@ -640,9 +635,11 @@ public abstract class Application
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
 	 * Initializes wicket components.
 	 */
-	private final void initializeComponents()
+	public final void initializeComponents()
 	{
 		// Load any wicket components we can find
 		try
