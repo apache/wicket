@@ -33,7 +33,7 @@ import wicket.injection.web.InjectorHolder;
  * </pre>
  * 
  * @see wicket.application.IComponentInstantiationListener
- * @see wicket.Application#add(IComponentInstantiationListener)
+ * @see wicket.Application#addComponentInstantiationListener(wicket.application.IComponentInstantiationListener)
  * @author Eelco Hillenius
  */
 public class ComponentInjector implements IComponentInstantiationListener
