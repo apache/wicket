@@ -49,6 +49,32 @@ public class MergedMarkup extends Markup
 		
 		initialize();
 	}
+
+	/**
+	 * Return the body onLoad attribute of the markup
+	 * 
+	 * @param markup
+	 * @return onLoad attribute
+	 */
+	private String getBodyOnLoadString(final Markup markup)
+	{
+		for (int i=0; i < markup.size(); i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag) elem;
+				
+				if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+				{
+					String onLoad = tag.getAttributes().getString("onLoad");
+					return onLoad;
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Merge inherited and base markup.
@@ -62,6 +88,9 @@ public class MergedMarkup extends Markup
 	 */
 	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
+		// Get the body onLoad attribute from the markup extension
+		final String onLoad = getBodyOnLoadString(markup);
+		
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
 		boolean headProcessed = false;
@@ -209,6 +238,34 @@ public class MergedMarkup extends Markup
 			    }
 			}
 
+			// Make sure the body onLoad attribute from the extended markup is copied 
+			// to the new markup
+			if (element instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag) element;
+				if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+				{
+					String onLoadBase = tag.getAttributes().getString("onLoad");
+					if (onLoadBase == null)
+					{
+						if (onLoad != null)
+						{
+							tag = tag.mutable();
+							tag.getAttributes().put("onLoad", onLoad);
+							element = tag;
+						}
+					}
+					else if (onLoad != null)
+					{
+						onLoadBase += onLoad;
+						tag = tag.mutable();
+						tag.getAttributes().put("onLoad", onLoadBase);
+						element = tag;
+					}
+				}
+			}
+			
+			// Add the element to the merged list
 			addMarkupElement(element);
 		}
 

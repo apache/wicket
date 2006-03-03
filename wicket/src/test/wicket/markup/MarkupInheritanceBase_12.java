@@ -18,21 +18,52 @@
  */
 package wicket.markup;
 
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
+import wicket.model.PropertyModel;
 
 
 /**
  */
-public class MarkupInheritanceExtension_5 extends MarkupInheritanceBase_5 
+public class MarkupInheritanceBase_12 extends WebPage 
 {
 	private static final long serialVersionUID = 1L;
 	
+	private int counter = 0;
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceExtension_5() 
+	public MarkupInheritanceBase_12()
 	{
-	    add(new Label("label3", "extension label"));
-    }
+		add(new Label("label1", new PropertyModel(this, "counter")));
+		add(new Link("link")
+		{
+			private static final long serialVersionUID = 1L;
+			public void onClick()
+			{
+				counter++;
+			}
+		});
+	}
+
+	/**
+	 * Gets the counter.
+	 * @return counter
+	 */
+	public int getCounter()
+	{
+		return counter;
+	}
+
+	/**
+	 * Sets the counter.
+	 * @param counter counter
+	 */
+	public void setCounter(int counter)
+	{
+		this.counter = counter;
+	}
 }
