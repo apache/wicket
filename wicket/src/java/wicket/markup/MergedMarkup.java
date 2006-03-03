@@ -58,10 +58,20 @@ public class MergedMarkup extends Markup
 	 */
 	private String getBodyOnLoadString(final Markup markup)
 	{
+		boolean foundWicketHead = false;
+		
 		for (int i=0; i < markup.size(); i++)
 		{
 			MarkupElement elem = markup.get(i);
-			if (elem instanceof ComponentTag)
+			if (elem instanceof WicketTag)
+			{
+				WicketTag tag = (WicketTag) elem;
+				if (tag.isClose() && tag.isHeadTag() && tag.getNamespace() != null)
+				{
+					foundWicketHead = true;
+				}
+			}
+			else if ((foundWicketHead == true) && (elem instanceof ComponentTag))
 			{
 				ComponentTag tag = (ComponentTag) elem;
 				
