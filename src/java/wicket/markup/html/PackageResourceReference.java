@@ -95,7 +95,8 @@ public class PackageResourceReference extends ResourceReference
 	 * Package resources should be added by a IInitializer implementation
 	 * So that all needed packaged resources are there on startup of the application. 
 	 *
-	 * The scope of this constructor will be the Application class itself.
+	 * The scope of this constructor will be the wicket.Application.class itself.
+	 * so the shared resources key wil be "wicket.Application/name"
 	 * 
 	 * @param application
 	 *            The application to bind to
