@@ -940,7 +940,7 @@ public abstract class FormComponent extends WebMarkupContainer
 
 				if (keys.hasNext())
 				{
-					message = localizer.getString(resource, getParent(), argsModel, "");
+					message = localizer.getString(resource, this, argsModel, "");
 				}
 				else
 				{
@@ -951,7 +951,7 @@ public abstract class FormComponent extends WebMarkupContainer
 					 * to return a default string like "[Warning: String ..." in
 					 * case the property could not be found.
 					 */
-					message = localizer.getString(resource, getParent(), argsModel);
+					message = localizer.getString(resource, this, argsModel);
 				}
 			}
 
