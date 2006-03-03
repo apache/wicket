@@ -19,6 +19,9 @@ package wicket.request.target.resource;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
@@ -35,6 +38,9 @@ import wicket.request.RequestParameters;
  */
 public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 {
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(SharedResourceRequestTarget.class);
+	
 	/** the key of the resource. */
 	private final String resourceKey;
 
@@ -87,6 +93,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			if(response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+				log.error("shared resource " + resourceKey + " not found");
 				return;
 			}
 			else
