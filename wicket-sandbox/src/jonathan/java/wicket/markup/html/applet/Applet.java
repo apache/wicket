@@ -172,6 +172,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 				final Object model = new ObjectInputStream(in).readObject();
 				System.out.println("Setting model to " + model);
 				setAppletModel(model);
+				setRedirect(false);
 			}
 			finally
 			{

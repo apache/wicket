@@ -57,20 +57,27 @@ public abstract class AbstractClassClosure
 	{
 		final Set visited = new HashSet();
 		final ArrayListStack stack = new ArrayListStack();
-
+		ClassLoader classloader = null;
 		for (final Iterator iterator = classes.iterator(); iterator.hasNext();)
 		{
 			final Class c = (Class)iterator.next();
+			if(classloader == null) classloader = c.getClassLoader(); 
 			final ClassName classname = ClassName.getClassName(c.getName().replace('.', '/'));
 			stack.push(classname);
 			visited.add(classname.getExternalName());
 		}
 
+		if(classloader == null)
+		{
+			classloader = getClass().getClassLoader();
+			if(classloader == null) classloader = ClassLoader.getSystemClassLoader();
+		}
+		
 		while (!stack.empty())
 		{
 			// Add class to closure.
 			final ClassName classname = (ClassName)stack.pop();
-			final InputStream in = inputStreamForClassName(classname.getType());
+			final InputStream in = inputStreamForClassName(classloader, classname.getType());
 			try
 			{
 				final ClassFile classfile = new ClassFile(in);
@@ -107,7 +114,7 @@ public abstract class AbstractClassClosure
 				}
 
 				// Get the input stream a second time to add to JAR
-				final InputStream in2 = inputStreamForClassName(classname.getType());
+				final InputStream in2 = inputStreamForClassName(classloader,classname.getType());
 				try
 				{
 					addClass(classfile.getName().getInternalName(), in2);
@@ -160,9 +167,9 @@ public abstract class AbstractClassClosure
 	 *            The class name
 	 * @return Class contents as a stream
 	 */
-	protected InputStream inputStreamForClassName(String classname)
+	protected InputStream inputStreamForClassName(ClassLoader loader, String classname)
 	{
-		InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(
+		InputStream in = loader.getResourceAsStream(
 				classname + ".class");
 		if (in == null)
 		{

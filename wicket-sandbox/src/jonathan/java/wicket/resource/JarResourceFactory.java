@@ -153,7 +153,7 @@ public class JarResourceFactory
 		}
 		System.out.println("JAR: Size is " + Bytes.bytes(out.size()));
 		resource = new ByteArrayResource("application/x-compressed", out.toByteArray());
-		resource.setCacheable(false);
+		resource.setCacheable(true);
 	}
 
 	/**

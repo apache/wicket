@@ -18,6 +18,7 @@
 package examples.applet.simple;
 
 import wicket.protocol.http.WebApplication;
+import wicket.settings.IRequestCycleSettings;
 
 /**
  * Simple applet application.
@@ -39,5 +40,14 @@ public final class SimpleAppletApplication extends WebApplication
 	public Class getHomePage()
 	{
 		return Home.class;
+	}
+	
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 	}
 }

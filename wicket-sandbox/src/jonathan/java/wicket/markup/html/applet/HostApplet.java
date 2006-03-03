@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -31,12 +32,16 @@ import wicket.util.upload.MultiPartFormOutputStream;
 public class HostApplet extends JApplet implements IAppletServer
 {
 	IApplet applet;
+	private URL savedDocumentBase;
 
 	public void init()
 	{
 		try
 		{
 			final String appletClassName = getParameter("appletClassName");
+			savedDocumentBase = getDocumentBase();
+			savedDocumentBase = new URL(savedDocumentBase.getProtocol(),savedDocumentBase.getHost(),savedDocumentBase.getPort(),"");
+			System.out.println("document base: " + savedDocumentBase);
 			Container container = getContentPane();
 			Class c = Class.forName(appletClassName);
 			if (c != null)
@@ -47,18 +52,28 @@ public class HostApplet extends JApplet implements IAppletServer
 		}
 		catch (ClassNotFoundException e)
 		{
-			System.out.println("** Unable to initialize.");
+			System.err.println("** Unable to initialize.");
 			e.printStackTrace();
 		}
 		catch (IllegalAccessException e)
 		{
-			System.out.println("** Unable to initialize.");
+			System.err.println("** Unable to initialize.");
 			e.printStackTrace();
 		}
 		catch (InstantiationException e)
 		{
-			System.out.println("** Unable to initialize.");
+			System.err.println("** Unable to initialize.");
 			e.printStackTrace();
+		}
+		catch(RuntimeException re)
+		{
+			System.err.println("** Unable to initialize.");
+			re.printStackTrace();
+		}
+		catch (MalformedURLException ex)
+		{
+			System.err.println("** Unable to initialize.");
+			ex.printStackTrace();
 		}
 	}
 
@@ -71,8 +86,9 @@ public class HostApplet extends JApplet implements IAppletServer
 	{
 		try
 		{
-			final URL url = new URL(getDocumentBase() + getParameter("setModelUrl"));
+			final URL url = new URL(savedDocumentBase + getParameter("setModelUrl"));
 
+			System.out.println("setting model on " + url);
 			// Create a boundary string
 			final String boundary = MultiPartFormOutputStream.createBoundary();
 			URLConnection connection = MultiPartFormOutputStream.createConnection(url);
@@ -115,7 +131,7 @@ public class HostApplet extends JApplet implements IAppletServer
 		}
 		catch (Exception e)
 		{
-			System.out.println("** Unable to set model.");
+			System.err.println("** Unable to set model.");
 			e.printStackTrace();
 		}
 	}
@@ -124,7 +140,8 @@ public class HostApplet extends JApplet implements IAppletServer
 	{
 		try
 		{
-			final String url = getDocumentBase() + getParameter("getModelUrl");
+			final String url = savedDocumentBase + getParameter("getModelUrl");
+			System.out.println("getting model on " + url);
 			final InputStream in = new URL(url).openStream();
 			try
 			{

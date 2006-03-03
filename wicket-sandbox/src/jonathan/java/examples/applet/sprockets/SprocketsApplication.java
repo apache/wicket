@@ -18,6 +18,7 @@
 package examples.applet.sprockets;
 
 import wicket.protocol.http.WebApplication;
+import wicket.settings.IRequestCycleSettings;
 
 /**
  * Sprocket web application demonstrating Swing integration with Wicket.
@@ -39,5 +40,14 @@ public final class SprocketsApplication extends WebApplication
 	public Class getHomePage()
 	{
 		return Home.class;
+	}
+	
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_BUFFER);
 	}
 }
