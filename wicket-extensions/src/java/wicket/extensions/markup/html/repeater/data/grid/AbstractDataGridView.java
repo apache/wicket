@@ -122,7 +122,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 				{
 					throw new WicketRuntimeException(populator.getClass().getName()
 							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
-							+ "] to the provided [cellItem] argument");
+							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 				}
 
 			}
