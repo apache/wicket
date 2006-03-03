@@ -86,7 +86,8 @@ public class ResourceReference implements Serializable
 	/**
 	 * Contructs a resource reference with Application.class scope and the given
 	 * name. All resource references constructed with this constructor must have
-	 * unique names since they all have the same Application-wide scope.
+	 * unique names since they all have the same Application-wide scope that is the 
+	 * wicket.Application.class
 	 * 
 	 * @param name
 	 *            The name of the resource
