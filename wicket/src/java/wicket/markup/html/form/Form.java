@@ -823,7 +823,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		validateValidators();
 
-		validateMultiValidators();
+		validateFormValidators();
 	}
 
 	/**
@@ -869,11 +869,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Triggers any added IMultiValidator validators
+	 * Triggers any added {@link IFormValidator}s.
 	 */
-	private void validateMultiValidators()
+	private void validateFormValidators()
 	{
-		// execute any added IMultiValidators
 		final int multiCount = formValidators_size();
 		for (int i = 0; i < multiCount; i++)
 		{
@@ -1224,7 +1223,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Adds a multi-component validator to the form.
+	 * Adds a form validator to the form.
 	 * 
 	 * @see IFormValidator
 	 * @param validator
