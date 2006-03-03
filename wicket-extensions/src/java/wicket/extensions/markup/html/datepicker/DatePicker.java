@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,8 +45,8 @@ import wicket.model.Model;
  * (html)
  * 
  * <pre>
- *       &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *       &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *        &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *        &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -287,6 +285,11 @@ public class DatePicker extends Panel
 		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
 		b.append(settings.toScript(getLocale()));
+		int last = b.length() - 1;
+		if (',' == b.charAt(last))
+		{
+			b.deleteCharAt(last);
+		}
 		b.append("\n});");
 		return b.toString();
 	}
