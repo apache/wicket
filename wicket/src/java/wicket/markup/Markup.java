@@ -45,7 +45,7 @@ public class Markup
 	public static final Markup NO_MARKUP = new Markup();
 
 	/** The list of markup elements */
-	private MarkupFragments markup;
+	private MarkupFragment markup;
 
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;
@@ -88,7 +88,7 @@ public class Markup
 	 */
 	Markup()
 	{
-		this.markup = new MarkupFragments(this);
+		this.markup = new MarkupFragment(this);
 		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	}
 
@@ -460,7 +460,7 @@ public class Markup
 	 */
 	final void reset()
 	{
-		this.markup = new MarkupFragments(this);
+		this.markup = new MarkupFragment(this);
 		this.resource = null;
 		this.xmlDeclaration = null;
 		this.encoding = null;
