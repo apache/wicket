@@ -88,7 +88,7 @@ import wicket.version.undo.Change;
 public abstract class MarkupContainer extends Component
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log for reporting. */
 	private static final Log log = LogFactory.getLog(MarkupContainer.class);
 
@@ -120,6 +120,10 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Adds a child component to this container.
+	 * <p>
+	 * Be careful when overriding this method, if not implemented properly it
+	 * may lead to a java component hierarchy which no longer matches the
+	 * template hierarchy, which in turn will lead to an error.
 	 * 
 	 * @param child
 	 *            The child
@@ -237,7 +241,7 @@ public abstract class MarkupContainer extends Component
 
 		// Get child by id
 		Component child = children_get(id);
-		
+
 		// If the container is transparent, than ask its parent
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
 		{
@@ -674,7 +678,7 @@ public abstract class MarkupContainer extends Component
 			// Get next child component
 			final Component child = children_get(i);
 			Object value = null;
-			
+
 			// Is the child of the correct class (or was no class specified)?
 			if (clazz == null || clazz.isInstance(child))
 			{
@@ -682,23 +686,23 @@ public abstract class MarkupContainer extends Component
 				value = visitor.component(child);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL) && 
-						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
 			}
 
 			// If child is a container
-			if ((child instanceof MarkupContainer) && 
-					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+			if ((child instanceof MarkupContainer)
+					&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
 				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL) && 
-						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
