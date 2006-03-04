@@ -188,7 +188,7 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 	{
 	    if (parameters != null)
 	    {
-	        return (String[])parameters.keySet().toArray();
+	        return new String[] {getParameter(key)};
 	    }
         return super.getParameters(key);
 	    
