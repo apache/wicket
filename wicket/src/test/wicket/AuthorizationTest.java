@@ -202,7 +202,8 @@ public class AuthorizationTest extends TestCase
 		try
 		{
 			app.submitForm("form");
-			fail("model update should not have been allowed"); // bad
+			Component component = app.getComponentFromLastRenderedPage("form:stringInput");
+			assertEquals("", component.getModelObjectAsString());
 		}
 		catch (WicketRuntimeException e)
 		{
