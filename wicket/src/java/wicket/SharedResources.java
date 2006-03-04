@@ -35,7 +35,7 @@ import wicket.util.time.Duration;
  * Class which holds shared resources. Resources can be shared by name. An
  * optional scope can be given to prevent naming conflicts and a locale and/or
  * style can be given as well.
- * 
+ *
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
@@ -67,7 +67,7 @@ public class SharedResources
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param key
 		 *            The resource key
 		 * @param resource
@@ -84,12 +84,12 @@ public class SharedResources
 		{
 			if (resource instanceof ICachingResource)
 			{
-				ICachingResource dynamicResource = (ICachingResource)resource;
-				Duration cacheTimeout = dynamicResource.getCacheTimeout();
+				ICachingResource cachingResource = (ICachingResource)resource;
+				Duration cacheTimeout = cachingResource.getCacheTimeout();
 				long milliseconds = cacheTimeout.getMilliseconds();
 				if (milliseconds != 0)
 				{
-					this.cacheTask = getDynamicImageFlushTask(key,
+					this.cacheTask = getCachingResourceFlushTask(key,
 							(ICachingResource)resource);
 					idleTimer.schedule(cacheTask, milliseconds);
 				}
@@ -126,7 +126,7 @@ public class SharedResources
 
 		/**
 		 * Touch this resource, update timer task (if any)
-		 * 
+		 *
 		 * @param key
 		 *            They key of the resource
 		 */
@@ -156,7 +156,7 @@ public class SharedResources
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 */
@@ -168,7 +168,7 @@ public class SharedResources
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
 	 * _[locale] and _[style] into path just before any extension that might
 	 * exist.
-	 * 
+	 *
 	 * @param path
 	 *            The resource path
 	 * @param locale
@@ -217,7 +217,7 @@ public class SharedResources
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
+	 *
 	 * @param scope
 	 *            The scope of the resource
 	 * @param path
@@ -243,7 +243,7 @@ public class SharedResources
 	 * Sets an alias for a class so that a resource url can look like:
 	 * resources/images/Image.jpg instead of
 	 * resources/wicket.resources.ResourceClass/Image.jpg
-	 * 
+	 *
 	 * @param clz
 	 *            The class that has to be aliased.
 	 * @param alias
@@ -322,7 +322,7 @@ public class SharedResources
 	 * @param exact
 	 *            If true then only return the resource that is registered for
 	 *            the given locale and style.
-	 * 
+	 *
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
@@ -380,7 +380,7 @@ public class SharedResources
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
+	 *
 	 * @param key
 	 *            Shared resource key
 	 * @return The resource
@@ -403,7 +403,7 @@ public class SharedResources
 
 	/**
 	 * Removes a shared resource.
-	 * 
+	 *
 	 * @param key
 	 *            Shared resource key
 	 */
@@ -425,7 +425,7 @@ public class SharedResources
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Called
 	 * when a resource is requested.
-	 * 
+	 *
 	 * @param key
 	 *            Shared resource key
 	 */
@@ -450,7 +450,7 @@ public class SharedResources
 
 	/**
 	 * Returns a task which removes idle resources.
-	 * 
+	 *
 	 * @param key
 	 *            The key for which a TimerTaks must be made
 	 * @return The TimerTask for the given key
@@ -471,15 +471,15 @@ public class SharedResources
 	}
 
 	/**
-	 * Returns a task which flushes a DynamicImageResource.
-	 * 
+	 * Returns a task which flushes a ICachingResource.
+	 *
 	 * @param key
 	 *            The key of the resource
 	 * @param resource
-	 *            The DynamicImageResource where a TimerTaks must be made for.
-	 * @return The TimerTaks for that Dymamic Image
+	 *            The ICachingResource where a TimerTask must be made for.
+	 * @return The TimerTasks for that Dymamic Image
 	 */
-	private TimerTask getDynamicImageFlushTask(final String key,
+	private TimerTask getCachingResourceFlushTask(final String key,
 			final ICachingResource resource)
 	{
 		return new TimerTask()
