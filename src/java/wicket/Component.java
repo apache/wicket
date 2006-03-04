@@ -39,6 +39,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.border.Border;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
@@ -2831,24 +2832,47 @@ public abstract class Component implements Serializable
 
 		// Get the parent's associated markup stream.
 		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
-		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
-
-		// Make sure the markup stream is positioned at the correct element
-		String componentPath = parent.getPageRelativePath();
-		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
-		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-		if (relativePath.startsWith(":"))
+		MarkupStream markupStream = null;
+		while (markupStream == null)
 		{
-			relativePath = relativePath.substring(1);
-		}
+			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
+	
+			// Make sure the markup stream is positioned at the correct element
+			String componentPath = parent.getPageRelativePath();
+			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+			if (relativePath.startsWith(":"))
+			{
+				relativePath = relativePath.substring(1);
+			}
 
-		int index = markupStream.findComponentIndex(relativePath, getId());
-		if (index == -1)
+			// If the component is defined in the markup
+			int index = markupStream.findComponentIndex(relativePath, getId());
+			if (index != -1)
+			{
+				// than position the stream at the beginning of the component
+				markupStream.setCurrentIndex(index);
+			}
+			else
+			{
+				// Not found, reset the stream
+				markupStream = null;
+				
+				// Yet another exception for Border in the code base.
+				// However if the container with the markup is a Border, than ...
+				if (parentWithAssociatedMarkup instanceof Border)
+				{
+					parentWithAssociatedMarkup = parentWithAssociatedMarkup.findParentWithAssociatedMarkup();
+				}
+			}
+		}
+		
+		if (markupStream == null)
 		{
 			throw new WicketRuntimeException("Unable to determine markup for component: "
 					+ this.toString());
 		}
-		markupStream.setCurrentIndex(index);
+		
 		return markupStream;
 	}
 }

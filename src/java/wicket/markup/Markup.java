@@ -271,6 +271,12 @@ public class Markup
 		completePath = matcher.replaceAll("");
 
 		// All component tags are registered with the cache
+		if (this.componentMap == null)
+		{
+			// not found
+			return -1;
+		}
+		
 		final Integer value = (Integer)this.componentMap.get(completePath);
 		if (value == null)
 		{
