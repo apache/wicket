@@ -38,12 +38,12 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupFragments
+public class MarkupFragment
 {
-	private static final Log log = LogFactory.getLog(MarkupFragments.class);
+	private static final Log log = LogFactory.getLog(MarkupFragment.class);
 
 	/** Placeholder that indicates no markup */
-	public static final MarkupFragments NO_MARKUP_FRAGMENT = new MarkupFragments(Markup.NO_MARKUP);
+	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(Markup.NO_MARKUP);
 
 	/** The list of markup elements */
 	private/* final */List markupElements;
@@ -57,7 +57,7 @@ public class MarkupFragments
 	 * @param markup
 	 *            The associated Markup
 	 */
-	MarkupFragments(final Markup markup)
+	MarkupFragment(final Markup markup)
 	{
 		this.markup = markup;
 		this.markupElements = new ArrayList();
