@@ -126,8 +126,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
-				.getMarkupStream(this, false);
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(false);
 
 		// No associated markup => no body tag
 		if (associatedMarkupStream == null)
@@ -179,8 +178,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
-				.getMarkupStream(this, false);
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(false);
 
 		// No associated markup => no header section
 		if (associatedMarkupStream == null)

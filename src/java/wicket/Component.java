@@ -2835,7 +2835,7 @@ public abstract class Component implements Serializable
 		MarkupStream markupStream = null;
 		while (markupStream == null)
 		{
-			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
+			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream(true);
 	
 			// Make sure the markup stream is positioned at the correct element
 			String componentPath = parent.getPageRelativePath();

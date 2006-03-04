@@ -833,7 +833,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Set page's associated markup stream
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
 		setMarkupStream(associatedMarkupStream);
 
 		// Configure response object with locale and content type
