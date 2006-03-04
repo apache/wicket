@@ -500,7 +500,7 @@ public abstract class MarkupContainer extends Component
 	{
 		// Get markup associated with Border or Panel component
 		final MarkupStream originalMarkupStream = getMarkupStream();
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
 
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
@@ -758,13 +758,15 @@ public abstract class MarkupContainer extends Component
 	 * Gets a fresh markup stream that contains the (immutable) markup resource
 	 * for this class.
 	 * 
+	 * @param throwException
+	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	protected final MarkupStream getAssociatedMarkupStream()
+	protected final MarkupStream getAssociatedMarkupStream(final boolean throwException)
 	{
 		try
 		{
-			return getApplication().getMarkupCache().getMarkupStream(this);
+			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
 		}
 		catch (MarkupException ex)
 		{

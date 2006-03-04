@@ -180,7 +180,7 @@ public class WebPage extends Page
 	{
 		// Add a Body container if the associated markup contains a <body> tag
 		// get markup stream gracefully
-		MarkupStream markupStream = getApplication().getMarkupCache().getMarkupStream(this, false);
+		MarkupStream markupStream = getAssociatedMarkupStream(false);
 		if (markupStream != null)
 		{
 			// The default <body> container. It can be accessed, replaced
