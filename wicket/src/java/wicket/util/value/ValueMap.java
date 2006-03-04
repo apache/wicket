@@ -18,6 +18,7 @@
 package wicket.util.value;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -379,15 +380,7 @@ public class ValueMap extends HashMap
 		return super.remove(key);
 	}
 
-	/**
-	 * @return Debug string representation of this map
-	 */
-	public final String toDebugString()
-	{
-		return "[" + toString() + "]";
-	}
-
-	/**
+    /**
 	 * Gets a string representation of this object
 	 * 
 	 * @return String representation of map consistent with tag attribute style
@@ -398,8 +391,24 @@ public class ValueMap extends HashMap
 		final StringBuffer buffer = new StringBuffer();
 		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
 		{
-			Map.Entry entry = (Map.Entry)iterator.next();
-			buffer.append(entry.getKey() + " = \"" + entry.getValue() + "\"");
+			final Map.Entry entry = (Map.Entry)iterator.next();
+			buffer.append(entry.getKey());
+			buffer.append(" = \"");
+			final Object value = entry.getValue();
+			if (value == null)
+			{
+				buffer.append("null");
+			}
+			else if (value.getClass().isArray())
+			{
+				buffer.append(Arrays.asList((Object[])value));
+			}
+			else
+			{
+				buffer.append(value);
+			}
+
+			buffer.append("\"");
 			if (iterator.hasNext())
 			{
 				buffer.append(' ');
