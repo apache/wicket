@@ -449,6 +449,13 @@ public abstract class MarkupContainer extends Component
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
+					int size = children_size();
+					for (int i = 0; i < size; i++)
+					{
+						// Get next child
+						final Component child = children_get(i);
+						child.setParent(MarkupContainer.this);
+					}
 				}
 
 				public String toString()
