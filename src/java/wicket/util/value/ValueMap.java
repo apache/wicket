@@ -17,6 +17,7 @@
  */
 package wicket.util.value;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -248,10 +249,62 @@ public class ValueMap extends HashMap
 		{
 			return null;
 		}
+		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		{
+			// if it is an array just get the first value
+			final Object arrayValue = Array.get(o, 0);
+			if(arrayValue == null)
+			{
+				return null;
+			}
+			else
+			{
+				return arrayValue.toString();
+			}
+			
+		}
 		else
 		{
 			return o.toString();
 		}
+	}
+	
+	/**
+	 * Gets a String array by key.
+	 * If the value was a String[] it will be returned directly.
+	 * If it was a String it will be converted to a String array of one.
+	 * If it was an array of another type a String array will be made and
+	 * the elements will be converted to a string.
+	 * 
+	 * @param key
+	 * @return The String array of that key
+	 */
+	public String[] getStringArray(final String key)
+	{
+		final Object o = get(key);
+		if(o == null)
+		{
+			return null;
+		}
+		else if(o instanceof String[])
+		{
+			return (String[])o;
+		}
+		else if(o.getClass().isArray())
+		{
+			int length = Array.getLength(o);
+			String[] array = new String[length];
+			for (int i = 0; i < length; i++)
+			{
+				final Object arrayValue = Array.get(o, i);
+				if(arrayValue != null)
+				{
+					array[i] = arrayValue.toString();
+				}
+			}
+			return array;
+		}
+		return new String[] {o.toString()};
 	}
 
 	/**
