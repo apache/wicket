@@ -17,11 +17,8 @@
  */
 package wicket.markup;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,7 +45,7 @@ public class Markup
 	public static final Markup NO_MARKUP = new Markup();
 
 	/** The list of markup elements */
-	private/* final */List markup;
+	private MarkupFragments markup;
 
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;
@@ -91,7 +88,7 @@ public class Markup
 	 */
 	Markup()
 	{
-		this.markup = new ArrayList();
+		this.markup = new MarkupFragments(this);
 		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	}
 
@@ -346,7 +343,7 @@ public class Markup
 	 */
 	final void addMarkupElement(final MarkupElement markupElement)
 	{
-		this.markup.add(markupElement);
+		this.markup.addMarkupElement(markupElement);
 	}
 
 	/**
@@ -448,17 +445,7 @@ public class Markup
 	 */
 	final void makeImmutable()
 	{
-		for (int i = 0; i < this.markup.size(); i++)
-		{
-			MarkupElement elem = (MarkupElement)this.markup.get(i);
-			if (elem instanceof ComponentTag)
-			{
-				// Make the tag immutable
-				((ComponentTag)elem).makeImmutable();
-			}
-		}
-
-		this.markup = Collections.unmodifiableList(this.markup);
+		this.markup.makeImmutable();
 
 		// We assume all markup elements have now been added. It is 
 		// now time to initialize all remaining variables based
@@ -473,7 +460,7 @@ public class Markup
 	 */
 	final void reset()
 	{
-		this.markup = new ArrayList();
+		this.markup = new MarkupFragments(this);
 		this.resource = null;
 		this.xmlDeclaration = null;
 		this.encoding = null;
@@ -492,32 +479,6 @@ public class Markup
 	 */
 	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
 	{
-		return new Iterator()
-		{
-			int index = startIndex - 1;
-
-			public boolean hasNext()
-			{
-				while (++index < size())
-				{
-					MarkupElement element = get(index);
-					if (matchClass.isInstance(element))
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-
-			public Object next()
-			{
-				return get(index);
-			}
-
-			public void remove()
-			{
-				throw new IllegalArgumentException("remove() is not supported");
-			}
-		};
+		return this.markup.iterator(startIndex, matchClass);
 	}
 }
