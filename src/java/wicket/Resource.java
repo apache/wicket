@@ -220,7 +220,7 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected ValueMap getParameters()
 	{
-		if (parameters == null)
+		if (parameters.get() == null)
 		{
 			setParameters(RequestCycle.get().getRequest().getParameterMap());
 		}
