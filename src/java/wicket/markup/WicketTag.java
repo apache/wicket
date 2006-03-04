@@ -127,6 +127,14 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:panel'
+	 */
+	public final boolean isPanelTag()
+	{
+		return "panel".equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * 
 	 * @param wicketNamespace The wicket namespace defined by the markup
 	 * @return True if &lt;wicket:fragment&gt;
