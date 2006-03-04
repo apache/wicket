@@ -128,7 +128,7 @@ public abstract class MarkupContainer extends Component
 	 *             operation.
 	 * @return This
 	 */
-	public final MarkupContainer add(final Component child)
+	public MarkupContainer add(final Component child)
 	{
 		if (log.isDebugEnabled())
 		{
