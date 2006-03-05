@@ -689,6 +689,8 @@ public abstract class Component implements Serializable
 		 * 
 		 */
 
+		// TODO we should probably replace : by something like _ because otherwise
+		// javascript will have trouble with it
 		return getPageRelativePath();
 	}
 
