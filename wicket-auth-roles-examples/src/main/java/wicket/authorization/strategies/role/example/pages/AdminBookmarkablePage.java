@@ -27,7 +27,7 @@ import wicket.markup.html.WebPage;
 public class AdminBookmarkablePage extends WebPage
 {
 	/*
-	 * See for configuration of this class the {@link MyAuthenticatedWebApplication#init)
+	 * See for configuration of this class the {@link RolesApplication#init)
 	 * MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
 	 */
 	

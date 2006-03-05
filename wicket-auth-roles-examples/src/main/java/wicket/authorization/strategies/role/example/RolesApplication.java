@@ -23,6 +23,9 @@ import java.util.List;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
+import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
+import wicket.authorization.strategies.role.example.pages.AdminInternalPage;
+import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -65,4 +68,12 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	{
 		return new RolesSession(this);
 	}
+	
+	@Override
+	protected void init()
+	{
+		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
+		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
+	}
+	
 }

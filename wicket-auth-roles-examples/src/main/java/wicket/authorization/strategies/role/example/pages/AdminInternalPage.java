@@ -28,7 +28,7 @@ import wicket.markup.html.WebPage;
 public class AdminInternalPage extends WebPage
 {
 	/*
-	 * See for configuration of this class the {@link MyAuthenticatedWebApplication#init)
+	 * See for configuration of this class the {@link RolesApplication#init)
 	 * MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	 */
 
