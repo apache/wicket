@@ -2,6 +2,9 @@ package wicket.authentication.example;
 
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
+import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
+import wicket.authorization.strategies.role.example.pages.AdminInternalPage;
+import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.markup.html.WebPage;
 
 /**
@@ -30,5 +33,12 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	public Class getHomePage()
 	{
 		return HomePage.class;
+	}
+	
+	@Override
+	protected void init()
+	{
+		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
+		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	}
 }
