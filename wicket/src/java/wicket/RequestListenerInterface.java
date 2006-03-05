@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import wicket.authorization.AuthorizationException;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Classes;
@@ -164,7 +165,8 @@ public class RequestListenerInterface
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException)
+			if (e.getTargetException() instanceof AbstractRestartResponseException || 
+					e.getTargetException() instanceof AuthorizationException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
