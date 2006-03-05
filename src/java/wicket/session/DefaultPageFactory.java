@@ -26,6 +26,7 @@ import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.authorization.AuthorizationException;
 import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -164,7 +165,8 @@ public final class DefaultPageFactory implements IPageFactory
 		catch (InvocationTargetException e)
 		{
 			// honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException)
+			if (e.getTargetException() instanceof AbstractRestartResponseException || 
+					e.getTargetException() instanceof AuthorizationException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
