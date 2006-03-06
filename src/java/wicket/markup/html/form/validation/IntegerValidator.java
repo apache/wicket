@@ -30,6 +30,7 @@ import wicket.util.string.Strings;
  * numbers.
  * 
  * @author Jonathan Locke
+ * @deprecated @see {@link RangeValidator} {@link MaximumValidator} {@link MinimumValidator}
  */
 public class IntegerValidator extends StringValidator
 {
