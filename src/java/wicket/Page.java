@@ -399,7 +399,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		finally
 		{
 			// The request is over
-			internalEndRequest();
+			// TODO check this internal end request is removed because that call will happen 
+			// in the clean up of the request cycle.
+			// internalEndRequest();
 		}
 	}
 
