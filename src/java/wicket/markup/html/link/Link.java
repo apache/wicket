@@ -19,6 +19,7 @@ package wicket.markup.html.link;
 
 import wicket.Application;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -160,7 +161,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		return popupSettings;
 	}
-
+	
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
@@ -192,6 +193,13 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
+		// if there are popupsettings and this link is clicked.
+		// set the popup page map in the request parameters, so that pages that
+		// are created in the onClick are made in the wanted pagemap
+		if(popupSettings != null)
+		{
+			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(popupSettings.getPageMap().getName());
+		}
 		// Invoke subclass handler
 		onClick();
 	}
