@@ -51,11 +51,14 @@ public class RadioGroupPage extends WicketExamplePage
 	protected void explain()
 	{
 		String html="<form wicket:id=\"form\">\n"
+			+"<span wicket:id=\"group\">\n"
 			+"<tr wicket:id=\"persons\">\n"
 			+"<td><input type=\"radio\" wicket:id=\"radio\"/></td>\n"
 			+"<td><span wicket:id=\"name\">[this is where name will be]</span></td>\n"
 			+"<td><span wicket:id=\"lastName\">[this is where lastname will be]</span></td>\n"
-			+"</tr>\n</form>";
+			+"</tr>\n" 
+			+"</span>"
+			+"</form>";
 		String code="&nbsp;&nbsp;&nbsp;&nbsp;Form f=new Form(\"form\");<br/>"
 				+"&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
 				+"&nbsp;&nbsp;&nbsp;&nbsp;RadioGroup group=new RadioGroup(\"group\");<br/>"
