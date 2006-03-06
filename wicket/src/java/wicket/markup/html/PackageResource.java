@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.18 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,10 +45,13 @@ import wicket.util.string.Strings;
  * </pre>
  * 
  * where the static resource references image 'questionmark.gif' from the the
- * package that EditPage is in.
+ * package that EditPage is in to get a package resource. Register package
+ * resources with one of the 'bind' methods to make them available as shared/
+ * bookmarkable resources.
  * </p>
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class PackageResource extends WebResource
 {
@@ -67,7 +70,7 @@ public class PackageResource extends WebResource
 	final Class scope;
 
 	/**
-	 * Binds a the resource to the given application object Will create the
+	 * Binds a the resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
 	 * object.
 	 * 
@@ -76,7 +79,11 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource.
+	 *            The name of the resource (like &quot;myfile.js&quot;), or a
+	 *            regular expression to match against the contents of the
+	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
+	 *            will add all the files with extension &quot;js&quot; from that
+	 *            package).
 	 */
 	public static void bind(Application application, Class scope, String name)
 	{
@@ -93,7 +100,11 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource.
+	 *            The name of the resource (like &quot;myfile.js&quot;), or a
+	 *            regular expression to match against the contents of the
+	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
+	 *            will add all the files with extension &quot;js&quot; from that
+	 *            package).
 	 * @param locale
 	 *            The locale of the resource.
 	 */
@@ -112,7 +123,11 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource.
+	 *            The name of the resource (like &quot;myfile.js&quot;), or a
+	 *            regular expression to match against the contents of the
+	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
+	 *            will add all the files with extension &quot;js&quot; from that
+	 *            package).
 	 * @param locale
 	 *            The locale of the resource.
 	 * @param style
