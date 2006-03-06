@@ -14,11 +14,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form;
+package wicket;
 
 import wicket.IRedirectListener;
 import wicket.RequestCycle;
-import wicket.WicketTestCase;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.IOnChangeListener;
 import wicket.protocol.http.MockPage;
 
 /**
@@ -26,6 +28,29 @@ import wicket.protocol.http.MockPage;
  */
 public class FormDispatchEventTest extends WicketTestCase
 {
+	private final class MyForm extends Form
+	{
+		private static final long serialVersionUID = 1L;
+
+		private MyForm(String id)
+		{
+			super(id);
+		}
+
+		protected void onSubmit()
+		{
+			submit= true;
+		}
+		
+		/**
+		 * @return The hidden field id of the form
+		 */
+		public String getHiddenField()
+		{
+			return getHiddenFieldId();
+		}
+	}
+
 	private boolean selection;
 	private boolean submit;
 
@@ -44,15 +69,7 @@ public class FormDispatchEventTest extends WicketTestCase
 	 */
 	public void testDropDownEvent() throws Exception
 	{
-		Form form = new Form("form")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onSubmit()
-			{
-				submit= true;
-			}
-		};
+		MyForm form = new MyForm("form");
 
 		DropDownChoice dropDown = new DropDownChoice("dropdown")
 		{
@@ -83,11 +100,12 @@ public class FormDispatchEventTest extends WicketTestCase
 
 		page.urlFor(IRedirectListener.INTERFACE);
 		cycle.getSession().touch(page);
+		cycle.getSession().update();
 
 		form.onFormSubmitted();
 		assertTrue("form should should set value ", submit);
 
-		application.getServletRequest().setParameter(form.getHiddenFieldId(),
+		application.getServletRequest().setParameter(form.getHiddenField(),
 				dropDown.urlFor(IOnChangeListener.INTERFACE));
 
 		form.onFormSubmitted();
