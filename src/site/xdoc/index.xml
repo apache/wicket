@@ -44,8 +44,10 @@
 					Finally we have released our first beta of the Wicket 1.2 product. Wicket 1.2
 					has many improvements and features over Wicket 1.1, including:
 					<ul>
-					<li>Native Ajax support: use ajax without having to write a single line of JavaScript</li>
-					<li>Render multiple components in one Ajax call, where each component can occupy any part of the page</li>
+					<li>Native, cross-platform AJAX support: use AJAX without having to write a single line of JavaScript. 
+						Wicket's AJAX cross-platform capabilities 
+						<a href="http://www.musingsfrommars.org/2006/03/ajax-dhtml-library-scorecard.html">have been rated 'A'</a></li>
+					<li>Render multiple components in one AJAX call, where each component can occupy any part of the page</li>
 					<li>Improved markup inheritance: panels, pages, header contributions</li>
 					<li>Improved and simplified internationalization (i18n) support, using &lt;wicket:message&gt;, 
 					    better resource bundle lookup strategy</li>
@@ -58,8 +60,8 @@
 					<li>Reloading of resource bundles in development mode</li>
 					<li>Improved unit test support for your Wicket components and pages through the WicketTester, 
 					    create unittests that run outside the container.</li>
-					<li>Out-of-the-box Ajax components: paging navigator, link with fallback, auto-updater, 
-					    ajax form, ajax submit buttons, etc.</li>
+					<li>Out-of-the-box AJAX components: paging navigator, link with fallback, auto-updater, 
+					    AJAX form, AJAX submit buttons, etc.</li>
 					<li>Improved authorization and authentication support, giving you the power to specify
 					    authorization at the component level. An example project featuring a
 					    role based, annotation framework is now part of the standard distribution.</li>
@@ -67,6 +69,7 @@
 						non-intrusive manner, while still being able to use the convenient Wicket 
 						idiom for creating pages (using the Java <tt>new</tt> operator).</li>
 					<li>Improved settings system: settings are now partitioned into logical groupings to make them easier to find</li>
+					<li>Numerous bug fixes and minor improvements</li>
 					</ul>
 					The upcoming final Wicket 1.2 release will be a major landmark in the history of
 					Wicket and is highly anticipated.
