@@ -21,7 +21,9 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
+import wicket.Component;
 import wicket.Page;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
@@ -98,6 +100,18 @@ public class AnnotationsRoleTest extends TestCase
 		WicketTester tester = new WicketTester();
 		tester.getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("USER")));
+		final class Listener implements IUnauthorizedComponentInstantiationListener
+		{
+			private boolean eventReceived = false;
+
+			public void onUnauthorizedInstantiation(Component component)
+			{
+				eventReceived = true;
+			}
+		}
+		Listener listener = new Listener();
+		tester.getSecuritySettings().setUnauthorizedComponentInstantiationListener(listener);
+
 		try
 		{
 			tester.startPage(new ITestPageSource()
@@ -107,7 +121,8 @@ public class AnnotationsRoleTest extends TestCase
 					return new AdminPage();
 				}
 			});
-			fail("an authorization exception should have been thrown");
+			assertTrue("an authorization exception event should have been received",
+					listener.eventReceived);
 		}
 		catch (Exception e)
 		{
