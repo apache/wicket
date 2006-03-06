@@ -738,6 +738,7 @@ public abstract class Session implements Serializable
 				if (object instanceof Page)
 				{
 					final Page page = (Page)object;
+					if(page.isStateless()) continue;
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
 					object = page.getPageMapEntry();
 				}
@@ -746,14 +747,7 @@ public abstract class Session implements Serializable
 					attribute = attributeForPageMapName(((PageMap)object).getName());
 				}
 
-				// only replicate if the object was really already in the map.
-				// for example stateless pages will not be in the map so they
-				// shouldn't be added
-				Object previous = getAttribute(attribute);
-				if (previous != null)
-				{
-					setAttribute(attribute, object);
-				}
+				setAttribute(attribute, object);
 			}
 			Session.dirtyObjects.set(null);
 		}
