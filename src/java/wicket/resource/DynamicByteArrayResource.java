@@ -78,7 +78,8 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 		 */
 		public int getLength()
 		{
-			return 0;
+			byte[] data = getData();
+			return data != null?data.length:0;
 		}
 
 	}
