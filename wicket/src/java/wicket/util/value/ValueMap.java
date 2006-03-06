@@ -361,6 +361,45 @@ public class ValueMap extends HashMap
 		checkMutability();
 		return super.put(key, value);
 	}
+	
+	/**
+	 * This methods adds the value to this map under the given key
+	 * If the key already is in the map it will combine the values 
+	 * into a String array else it will just store the value itself
+	 * 
+	 * @param key The key to store the value under.
+	 * @param value The value that must be added/merged to the map
+	 * @return The value itself if there was no previous value or a string array with the combined values.
+	 */
+	public final Object add(final String key, final String value)
+	{
+		checkMutability();
+		final Object o = get(key);
+		if (o == null)
+		{
+			return put(key, value);
+		}
+		else if (o.getClass().isArray())
+		{
+			int length = Array.getLength(o);
+			String destArray[] = new String[length + 1];
+			for (int i = 0; i < length; i++)
+			{
+				final Object arrayValue = Array.get(o, i);
+				if(arrayValue != null)
+				{
+					destArray[i] = arrayValue.toString();
+				}
+			}
+			destArray[length] = value;
+
+			return put(key, destArray);
+		}
+		else
+		{
+			return put(key, new String[] { o.toString(), value });
+		}
+	}	
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
