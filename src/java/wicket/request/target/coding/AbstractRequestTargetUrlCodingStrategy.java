@@ -107,26 +107,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		PageParameters parameters = new PageParameters();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
-			Object previous = parameters.get(pairs[i]);
-			if(previous != null)
-			{
-				if(previous instanceof String)
-				{
-					parameters.put(pairs[i], new String[] {(String)previous,pairs[i+1]});
-				}
-				else if(previous instanceof String[])
-				{
-					int previousLength = ((String[])previous).length;
-					String[] array = new String[previousLength+1];
-					System.arraycopy(previous, 0, array, 0, previousLength);
-					array[previousLength] = pairs[i+1];
-					parameters.put(pairs[i], array);
-				}
-			}
-			else
-			{
-				parameters.put(pairs[i], pairs[i + 1]);
-			}
+			parameters.add(pairs[i], pairs[i + 1]);
 		}
 		return parameters;
 	}
