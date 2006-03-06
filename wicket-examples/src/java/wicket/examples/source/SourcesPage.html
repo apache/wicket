@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket>
+<head>
+    <title>Wicket Examples - sourcecode</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+	<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
+	<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
+	<script language="JavaScript" type="text/javascript" src="effects.js"></script>
+	<style type="text/css">
+		#content {
+		    width : 800px;
+			height : 600px;
+		}
+		.col1 {
+			width : 220px;
+			float : left;
+			border-right : 1px solid #bbb;
+		}
+		.col2 {
+			width : auto;
+			float : right;
+		}
+		.header {
+			background-color:#999;
+			color:white;
+			border : none;
+		}
+		.files ul {
+			margin-left : 0;
+			padding-left : 0;
+			
+		}
+		.body {
+			vertical-align:top;
+			font-size : 10px;
+		}
+		table {
+			width:100%;
+			padding:0;
+			margin:0;
+		}
+		pre {
+			font-family : Lucida Console, Courier New, Courier, fixed;
+			font-size : 10px;
+			line-height : 12px;
+			color : black;
+		}
+	</style>
+</head>
+<body>
+<div id="content">
+<table cellpadding="0" cellspacing="0">
+	<thead>
+		<tr class="header"><td class="header col1">Files</td><td class="header col2">Source</td></tr>
+	</thead>
+	<tbody>
+		<tr class="body">
+			<td class="col1 files" wicket:id="filespanel">
+				<div style="overflow:scroll; height:480px; width:220px;">
+				<ul>
+					<li wicket:id="file">
+						<a href="#" wicket:id="link"><span wicket:id="name"></span></a>
+					</li>
+				</ul>
+				</div>
+			</td>
+			<td class="col2 code" wicket:id="codepanel">
+				<div style="overflow:scroll; height:480px; width:525px;padding-left:10px;">
+					<pre wicket:id="code"></pre>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr style="vertical-align:bottom; height:50px;">
+			<td colspan="2" style="text-align:center"><a href="#" wicket:id="close">[close]</a></td>
+		</tr>
+	</tfoot>
+</table>
+</div>
+
+</body>
+</html>
