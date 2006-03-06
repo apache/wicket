@@ -73,17 +73,18 @@ public class Check extends WebMarkupContainer
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
+		String path = getPath();
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Check component ["
-							+ getPath()
+							+ path
 							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", getPath());
+		tag.put("value", path);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
@@ -94,7 +95,15 @@ public class Check extends WebMarkupContainer
 			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
 		}
 		
-		if (collection.contains(getModelObject()))
+		String rawInput = group.getRawInput();
+		if(rawInput != null)
+		{
+			if(rawInput.equals(path))
+			{
+				tag.put("checked", "checked");
+			}
+		}
+		else if (collection.contains(getModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
