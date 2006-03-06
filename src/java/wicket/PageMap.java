@@ -502,7 +502,9 @@ public final class PageMap implements Serializable
 			final String attribute = attributeForId(entry.getNumericId());
 
 			// Set attribute
-			session.setAttribute(attribute, entry);
+			//session.setAttribute(attribute, entry);
+			// Don't set it directly but add to the dirty map
+			session.dirtyPage(page);
 
 			// Evict any page(s) as need be
 			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);
@@ -573,7 +575,7 @@ public final class PageMap implements Serializable
 		// See if the version being accessed is already in the stack
 		boolean add = true;
 		int id = entry.getNumericId();
-		for (int i = 0; i < accessStack.size(); i++)
+		for (int i = accessStack.size()-1; i >=0 ; i--)
 		{
 			final Access access = (Access)accessStack.get(i);
 
@@ -600,8 +602,8 @@ public final class PageMap implements Serializable
 						Page topPage = (Page)top;
 						if (topPage.getVersions() > 1)
 						{
-							// Remove versions
-							topPage.getVersion(topAccess.getVersion());
+							// Remove version the top access version (-1)
+							topPage.getVersion(topAccess.getVersion()-1);
 						}
 						else
 						{
@@ -615,6 +617,7 @@ public final class PageMap implements Serializable
 						removeEntry(top);
 					}
 				}
+				break;
 			}
 		}
 
@@ -672,14 +675,17 @@ public final class PageMap implements Serializable
 		final Access access = new Access();
 		access.id = entry.getNumericId();
 		access.version = versionOf(entry);
-		int index = accessStack.indexOf(access);
-		if (index == 0)
+		if(accessStack.size() > 0)
 		{
-			return;
-		}
-		else if (index > 0)
-		{
-			accessStack.remove(index);
+			if(peekAccess().equals(access))
+			{
+				return;
+			}
+			int index = accessStack.indexOf(access);
+			if (index > 0)
+			{
+				accessStack.remove(index);
+			}
 		}
 		accessStack.push(access);
 		session.dirtyPageMap(this);
