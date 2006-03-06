@@ -73,21 +73,30 @@ public class Radio extends WebMarkupContainer
 		checkComponentTagAttribute(tag, "type", "radio");
 
 		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
+		String path = getPath();
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Radio component ["
-							+ getPath()
+							+ path
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", getPath());
+		tag.put("value", path);
 
 		// compare the model objects of the group and self, if the same add the
-		// checked attribute
-		if (Objects.equal(group.getModelObject(), getModelObject()))
+		// checked attribute, first check if there was a raw input on the group.
+		String rawInput = group.getRawInput();
+		if(rawInput != null)
+		{
+			if(rawInput.equals(path))
+			{
+				tag.put("checked", "checked");
+			}
+		}
+		else if (Objects.equal(group.getModelObject(), getModelObject()))
 		{
 			tag.put("checked", "checked");
 		}

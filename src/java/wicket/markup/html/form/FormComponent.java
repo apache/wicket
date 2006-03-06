@@ -333,6 +333,14 @@ public abstract class FormComponent extends WebMarkupContainer
 			return rawInput;
 		}
 	}
+	
+	/**
+	 * @return The raw form input that is stored for this formcomponent 
+	 */
+	public final String getRawInput()
+	{
+		return rawInput == NO_RAW_INPUT?null:rawInput;
+	}
 
 	/**
 	 * Called to indicate that
