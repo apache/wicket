@@ -681,4 +681,20 @@ public abstract class Application
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));
 	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * @param target
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * @param requestTarget
+	 */
+	public void logResponseTarget(IRequestTarget requestTarget)
+	{
+	}
 }
