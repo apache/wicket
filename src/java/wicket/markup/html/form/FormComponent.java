@@ -928,9 +928,9 @@ public abstract class FormComponent extends WebMarkupContainer
 
 		while (keys.hasNext())
 		{
-			final String key = prefix + (String)keys.next();
+			final String key = (String)keys.next();
 
-			String resource = getId() + "." + key;
+			String resource = prefix+getId() + "." + key;
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
