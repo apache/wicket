@@ -1,14 +1,14 @@
 /*
  * $Id: RenderedDynamicImageResource.java,v 1.4 2005/03/08 21:12:40
  * jonathanlocke Exp $ $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import wicket.util.time.Time;
  * <p>
  * The extension/format of the image resource can be specified with
  * setFormat(String).
- *
+ * 
  * @see wicket.markup.html.image.resource.DefaultButtonImageResource
  * @see wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
  * @author Jonathan Locke
@@ -56,7 +56,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param width
 	 *            Width of image
 	 * @param height
@@ -71,7 +71,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param width
 	 *            Width of image
 	 * @param height
@@ -85,7 +85,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	/**
 	 * @return Returns the height.
 	 */
@@ -112,6 +112,8 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Causes the image to be redrawn the next time its requested.
+	 * 
+	 * @see wicket.Resource#invalidate()
 	 */
 	public synchronized void invalidate()
 	{
@@ -155,9 +157,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	{
 		// get image data is always called in sync block
 		byte[] data = null;
-		if (imageData!=null)
+		if (imageData != null)
 		{
-			data = (byte[]) imageData.get();
+			data = (byte[])imageData.get();
 		}
 		if (data == null)
 		{
@@ -170,7 +172,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Renders this image
-	 *
+	 * 
 	 * @return The image data
 	 */
 	protected byte[] render()
@@ -187,7 +189,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Override this method to provide your rendering code
-	 *
+	 * 
 	 * @param graphics
 	 *            The graphics context to render on
 	 * @return True if the image was rendered. False if the image size was
