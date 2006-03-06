@@ -130,7 +130,21 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(true);
 		if (httpSession != null)
 		{
-			httpSession.setAttribute(getSessionAttributePrefix() + name, value);
+			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
+			String attributeName = getSessionAttributePrefix() + name;
+			if(logger != null)
+			{
+				if(httpSession.getAttribute(attributeName) == null)
+				{
+					logger.objectCreated(value);
+				}
+				else
+				{
+					logger.objectUpdated(value);
+				}
+			}
+			
+			httpSession.setAttribute(attributeName, value);
 		}
 	}
 
@@ -155,7 +169,17 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(false);
 		if (httpSession != null)
 		{
-			httpSession.removeAttribute(getSessionAttributePrefix() + name);
+			String attributeName = getSessionAttributePrefix() + name;
+			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
+			if(logger != null)
+			{
+				Object value = httpSession.getAttribute(attributeName);
+				if(value != null)
+				{
+					logger.objectRemoved(value);
+				}
+			}
+			httpSession.removeAttribute(attributeName);
 		}
 	}
 

@@ -17,6 +17,10 @@
  */
 package wicket.protocol.http;
 
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+
+import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.Session;
 
@@ -25,7 +29,7 @@ import wicket.Session;
  * 
  * @author Jonathan Locke
  */
-public class WebSession extends Session
+public class WebSession extends Session implements HttpSessionBindingListener
 {
 	/** log. careful, this log is used to trigger profiling too! */
 	// private static Log log = LogFactory.getLog(WebSession.class);
@@ -67,8 +71,6 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
-		String id = getId();
-		((WebApplication)getApplication()).clearBufferedResponses(id);
 		getSessionStore().invalidate();
 	}
 
@@ -124,5 +126,31 @@ public class WebSession extends Session
 		set(this);
 
 		attach();
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+	 */
+	public void valueBound(HttpSessionBindingEvent event)
+	{
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+	 */
+	public void valueUnbound(HttpSessionBindingEvent event)
+	{
+		// will happen when the session gets invalidated or a timeout.
+		String id = event.getSession().getId();
+		Application application = getApplication();
+		if(application instanceof WebApplication)
+		{
+			((WebApplication)application).sessionDestroyed(id);
+		}
+		else
+		{
+			// couldn't clean up the sessions because application not found for this session.
+			// TODO we could try to get it through the servletcontext, but how to get the context key?
+		}
 	}
 }

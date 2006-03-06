@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
+import wicket.IRequestTarget;
 import wicket.ISessionFactory;
 import wicket.PageMap;
 import wicket.Request;
@@ -121,6 +122,8 @@ public abstract class WebApplication extends Application
 
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
+
+	private RequestLogger requestLogger;
 
 	/**
 	 * Constructor. Do not override this constructor to configure youre
@@ -484,22 +487,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Cleans up any buffered response map for the client with the provided
-	 * session id.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 */
-	final void clearBufferedResponses(String sessionId)
-	{
-		bufferedResponses.remove(sessionId);
-
-		// TODO General: Implement call to this method: probably have to
-		// register a session listener? or take a cleaner thread instead of this
-		// method
-	}
-
-	/**
 	 * Gets a WebSession object from the HttpServletRequest, creating a new one
 	 * if it doesn't already exist.
 	 * 
@@ -627,6 +614,62 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("servletName cannot be empty");
 		}
 		return "wicket:" + wicketServletName;
+	}
+
+	/**
+	 * @param sessionId The session id that was destroyed
+	 */
+	void sessionDestroyed(String sessionId)
+	{
+		bufferedResponses.remove(sessionId);
+		
+		RequestLogger logger = getRequestLogger();
+		if(logger != null)
+		{
+			logger.sessionDestroyed(sessionId);
+		}
+	}
+	
+	/**
+	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+		super.logEventTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if(rl != null)
+		{
+			rl.logEventTarget(target);
+		}
+	}
+	
+	/**
+	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
+	 */
+	public void logResponseTarget(IRequestTarget target)
+	{
+		super.logResponseTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if(rl != null)
+		{
+			rl.logResponseTarget(target);
+		}
+	}
+
+	/**
+	 * @return The RequestLogger
+	 */
+	public RequestLogger getRequestLogger()
+	{
+		return requestLogger;
+	}
+
+	/**
+	 * @param logger
+	 */
+	public void setRequestLogger(RequestLogger logger)
+	{
+		requestLogger = logger;
 	}
 
 }
