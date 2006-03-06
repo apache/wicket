@@ -26,6 +26,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 
@@ -54,8 +55,24 @@ public final class SessionView extends Panel
 		add(new Label("id", session.getId()));
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label("size", "" + Bytes.bytes(Objects.sizeof(session))));
-		add(new Label("totalSize", "" + Bytes.bytes(session.getSizeInBytes())));
+		add(new Label("size", new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component) 
+			{
+				return Bytes.bytes(Objects.sizeof(session));
+			}
+		}));
+		add(new Label("totalSize", new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component) 
+			{
+				return Bytes.bytes(session.getSizeInBytes());
+			}
+		}));
 
 		// Get pagemaps
 		final List pagemaps = session.getPageMaps();

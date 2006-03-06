@@ -22,6 +22,7 @@ import wicket.PageParameters;
 import wicket.Session;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.string.StringValueConversionException;
 
@@ -56,6 +57,7 @@ public final class InspectorPage extends WebPage
 		}
 		add(new PageView("page", entry == null ? null : entry.getPage()));
 		add(new Image("bug"));
+		add(new BookmarkablePageLink("allsessions",LiveSessionsPage.class));
 	}
 	
 	/**
