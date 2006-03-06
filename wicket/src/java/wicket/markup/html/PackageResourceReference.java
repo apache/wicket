@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,15 +31,16 @@ import wicket.ResourceReference;
 public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * It will bind itself directly to the given application object, so
-	 * that the resource will be created if it did not exist and added to 
-	 * the application shared resources.
+	 * Constuctor to get a resource reference to a packaged resource. It will
+	 * bind itself directly to the given application object, so that the
+	 * resource will be created if it did not exist and added to the application
+	 * shared resources.
 	 * 
-	 * Package resources should be added by a IInitializer implementation
-	 * So that all needed packaged resources are there on startup of the application. 
+	 * Package resources should be added by a IInitializer implementation So
+	 * that all needed packaged resources are there on startup of the
+	 * application.
 	 * 
 	 * @param application
 	 *            The application to bind to
@@ -49,28 +49,34 @@ public class PackageResourceReference extends ResourceReference
 	 * @param name
 	 *            The name of the resource
 	 * @param locale
-	 *			  The Locale from which the search for the PackageResource must start 			 
-	 * @param style 
-	 * 			  The Style of the PackageResource
+	 *            The Locale from which the search for the PackageResource must
+	 *            start
+	 * @param style
+	 *            The Style of the PackageResource
+	 * @throws IllegalArgumentException
+	 *             when no corresponding resource is found
 	 * 
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
-	public PackageResourceReference(Application application, Class scope, String name, Locale locale, String style)
+	public PackageResourceReference(Application application, Class scope, String name,
+			Locale locale, String style)
 	{
 		super(scope, name);
+		checkExists(scope, name, locale, style);
 		setLocale(locale);
 		setStyle(style);
 		bind(application);
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * It will bind itself directly to the given application object, so
-	 * that the resource will be created if it did not exist and added to 
-	 * the application shared resources.
+	 * Constuctor to get a resource reference to a packaged resource. It will
+	 * bind itself directly to the given application object, so that the
+	 * resource will be created if it did not exist and added to the application
+	 * shared resources.
 	 * 
-	 * Package resources should be added by a IInitializer implementation
-	 * So that all needed packaged resources are there on startup of the application. 
+	 * Package resources should be added by a IInitializer implementation So
+	 * that all needed packaged resources are there on startup of the
+	 * application.
 	 * 
 	 * @param application
 	 *            The application to bind to
@@ -78,64 +84,97 @@ public class PackageResourceReference extends ResourceReference
 	 *            The scope of the binding
 	 * @param name
 	 *            The name of the resource
+	 * @throws IllegalArgumentException
+	 *             when no corresponding resource is found
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Application application, Class scope, String name)
 	{
 		super(scope, name);
+		checkExists(scope, name, null, null);
 		bind(application);
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * It will bind itself directly to the given application object, so
-	 * that the resource will be created if it did not exist and added to 
-	 * the application shared resources.
+	 * Constuctor to get a resource reference to a packaged resource. It will
+	 * bind itself directly to the given application object, so that the
+	 * resource will be created if it did not exist and added to the application
+	 * shared resources.
 	 * 
-	 * Package resources should be added by a IInitializer implementation
-	 * So that all needed packaged resources are there on startup of the application. 
-	 *
-	 * The scope of this constructor will be the wicket.Application.class itself.
-	 * so the shared resources key wil be "wicket.Application/name"
+	 * Package resources should be added by a IInitializer implementation So
+	 * that all needed packaged resources are there on startup of the
+	 * application.
+	 * 
+	 * The scope of this constructor will be the wicket.Application.class
+	 * itself. so the shared resources key wil be "wicket.Application/name"
 	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param name
 	 *            The name of the resource
+	 * @throws IllegalArgumentException
+	 *             when no corresponding resource is found
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Application application, String name)
 	{
 		super(name);
+		checkExists(application.getClass(), name, null, null);
 		bind(application);
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource that
-	 * is already bindend to the current applicaiton. 
+	 * Constuctor to get a resource reference to a packaged resource that is
+	 * already bindend to the current applicaiton.
 	 * 
-	 * It will not bind a resource to the current application object, 
-	 * so the resource must be created by a IInitializer implementation.
-	 * So that it is already binded at startup. 
-	 *
+	 * It will not bind a resource to the current application object, so the
+	 * resource must be created by a IInitializer implementation. So that it is
+	 * already binded at startup.
+	 * 
 	 * @param scope
 	 *            The scope of the binding
 	 * @param name
 	 *            The name of the resource
+	 * @throws IllegalArgumentException
+	 *             when no corresponding resource is found
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Class scope, String name)
 	{
 		super(scope, name);
 	}
-	
+
 	/**
 	 * @see wicket.ResourceReference#newResource()
 	 */
 	protected Resource newResource()
 	{
-		PackageResource pr = PackageResource.get(getScope(), getName(), getLocale(), getStyle());
-		locale = pr.getLocale();
-		return pr;
+		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
+				getStyle());
+		locale = packageResource.getLocale();
+		return packageResource;
+	}
+
+	/**
+	 * Checks whether the packaged resource can be found. If it can't be found,
+	 * an {@link IllegalArgumentException} will be thrown. If it was found, this
+	 * method just returns.
+	 * 
+	 * @param scope
+	 *            the scope of the resource
+	 * @param name
+	 *            the name of the resource
+	 * @param locale
+	 *            the optional locale for the resource
+	 * @param style
+	 *            the optional style for the resource
+	 */
+	private void checkExists(Class scope, String name, Locale locale, String style)
+	{
+		if (!PackageResource.exists(scope, name, locale, style))
+		{
+			throw new IllegalArgumentException("package resource [scope=" + scope + ",name=" + name
+					+ ",locale=" + locale + "style=" + style + "] not found");
+		}
 	}
 }
