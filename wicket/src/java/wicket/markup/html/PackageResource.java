@@ -17,13 +17,22 @@
  */
 package wicket.markup.html;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import wicket.Application;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.util.io.IOUtils;
+import wicket.util.lang.PackageName;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
+import wicket.util.string.Strings;
 
 /**
  * Represents a localizable static resource.
@@ -73,7 +82,7 @@ public class PackageResource extends WebResource
 	{
 		bind(application, scope, name, null, null);
 	}
-	
+
 	/**
 	 * Binds a the resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
@@ -90,7 +99,7 @@ public class PackageResource extends WebResource
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale)
 	{
-		get(scope, name, locale, null);
+		bind(application, scope, name, locale, null);
 	}
 
 	/**
@@ -112,7 +121,65 @@ public class PackageResource extends WebResource
 	public static void bind(Application application, Class scope, String name, Locale locale,
 			String style)
 	{
-		get(scope, name, locale, style);
+		if (scope == null)
+		{
+			throw new IllegalArgumentException("argument scope may not be null");
+		}
+		if (name == null)
+		{
+			throw new IllegalArgumentException("argument name may not be null");
+		}
+
+		// first check on a direct hit for efficiency
+		if (exists(scope, name, locale, style))
+		{
+			// we have got a hit, so we may safely assume the name
+			// argument is not a regular expression, and can thus
+			// just add the resource and return
+			get(scope, name, locale, style);
+		}
+		else
+		{
+			// interpret the name argument as a regexp; loop through
+			// the resources in the package of the provided scope, and
+			// add anything that matches
+			Pattern pattern = Pattern.compile(name);
+			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/");
+			ClassLoader loader = scope.getClassLoader();
+			try
+			{
+				// loop through the resources of the package
+				Enumeration packageResources = loader.getResources(packageRef);
+				while (packageResources.hasMoreElements())
+				{
+					URL resource = (URL)packageResources.nextElement();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(resource
+							.openStream()));
+					String entry = null;
+					try
+					{
+						while ((entry = reader.readLine()) != null)
+						{
+							// if the current entry matches the provided regexp
+							if (pattern.matcher(entry).matches())
+							{
+								// we add the entry as a package resource
+								get(scope, entry, locale, style);
+							}
+						}
+					}
+					finally
+					{
+						IOUtils.closeQuietly(reader);
+					}
+
+				}
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
 	}
 
 	/**
@@ -161,6 +228,29 @@ public class PackageResource extends WebResource
 			sharedResources.add(scope, path, locale, style, resource);
 		}
 		return resource;
+	}
+
+	/**
+	 * Gets whether a resource for a given set of criteria exists.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the class in which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link wicket.Session})
+	 * @return true if a resource could be loaded, false otherwise
+	 */
+	public static boolean exists(final Class scope, final String path, final Locale locale,
+			final String style)
+	{
+		String absolutePath = Packages.absolutePath(scope, path);
+		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
+				absolutePath, style, locale, null) != null;
 	}
 
 	/**
