@@ -10,7 +10,7 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+    <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
       <action type="add" dev="Martijn Dashorst" issue="1427691">Added source browsing capability in examples project</action>
       <action type="add" dev="Igor Vaynberg">IFormValidator for checking form or multiple form components</action>
       <action type="update" dev="Igor Vaynberg">More flexible validator resource key search order that allows for multiple user defined keys to be searched for error messages</action>
