@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,7 +39,7 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	 * User DB.
 	 */
 	public static List<User> USERS = Arrays.asList(new User[] { new User("jon", "ADMIN"),
-			new User("pam", ""), new User("kay", "USER") });
+			new User("kay", "USER"), new User("pam", "") });
 
 	/**
 	 * Construct.
@@ -68,12 +68,12 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	{
 		return new RolesSession(this);
 	}
-	
+
 	@Override
 	protected void init()
 	{
 		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
 		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	}
-	
+
 }
