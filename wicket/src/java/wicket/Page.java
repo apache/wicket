@@ -360,7 +360,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Make sure it is really empty
 		renderedComponents = null;
 
-		// Reset it to stateless is false so that
+		// Reset it to stateless so that it can be tested again
 		this.stateless = true;
 
 		// Set form component values from cookies
