@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.8 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,6 +30,7 @@ import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -233,7 +234,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					try
 					{
 						// Create the component implementing the link
-						return new CssLink(autoId, clazz, href);
+						return new AutoLink(autoId, clazz, href);
 					}
 					catch (WicketRuntimeException ex)
 					{
@@ -327,7 +328,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
 	 */
-	private final static class CssLink extends WebMarkupContainer
+	private final static class AutoLink extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -339,13 +340,23 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param clazz
 		 * @param href
 		 */
-		public CssLink(final String id, final Class clazz, final String href)
+		public AutoLink(final String id, final Class clazz, final String href)
 		{
 			super(id);
 
-			// Create the component implementing the link
-			resourceReference = new PackageResourceReference(getApplication(), clazz, href,
-					getLocale(), getStyle());
+			// Check whether it is a valid resource reference
+			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
+			{
+				// Create the component implementing the link
+				resourceReference = new PackageResourceReference(getApplication(), clazz, href,
+						getLocale(), getStyle());
+			}
+			else
+			{
+				// The resource does not exist. Set to null and ignore when
+				// rendering.
+				resourceReference = null;
+			}
 		}
 
 		/**
@@ -360,11 +371,15 @@ public final class AutoLinkResolver implements IComponentResolver
 			// Default handling for tag
 			super.onComponentTag(tag);
 
-			// Set href to link to this link's linkClicked method
-			String url = getRequestCycle().urlFor(resourceReference);
+			// only set the href attribute when the resource exists
+			if (resourceReference != null)
+			{
+				// Set href to link to this link's linkClicked method
+				String url = getRequestCycle().urlFor(resourceReference);
 
-			// generate the href attribute
-			tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+				// generate the href attribute
+				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+			}
 		}
 
 		/**
