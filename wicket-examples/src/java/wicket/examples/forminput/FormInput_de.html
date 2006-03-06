@@ -18,11 +18,9 @@
 	<p>
       <fieldset>
         <legend>Input Form</legend>
-
-       <table id="inputFormTable">
+       	 <table id="inputFormTable">
           <tr>
           <td valign="top">
-
 			  <label for="stringProperty">String</label>
 			  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
 			  <label for="integerProperty">Integer</label>
@@ -32,9 +30,12 @@
 			  <label wicket:id="dateLabel" for="dateProperty">Date</label>
 			  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
 			  <span wicket:id="datePicker"></span>
-			  <label for="booleanProperty">Boolean</label>
-			  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-
+			  <label>Listview in ein Form</label>
+			  <ul>
+			   <li wicket:id="lines">
+			    <input type="text" wicket:id="lineEdit" /> 
+			   </li>
+			  </ul>
 	      </td>
 	      <td valign="top">
 
@@ -42,31 +43,33 @@
 			  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
 	          <label for="urlProperty">URL (muss eine gültige URL sein)</label>
 	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
-			  <label for="numberRadioChoice">Bitte eine Zahl auswählen</label>
+			  <label for="numberRadioChoice">Bitte eine Zahl auswählen (RadioChoice)</label>
 			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
 	    		<input type="radio">foo</input>
 				<input type="radio">bar</input>
+			  </span>
+			  <span wicket:id="numbersGroup">
+			  <label>Bitte eine Zahl auswählen (RadioGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="radio" wicket:id="radio"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
 			  </span>
 			  <label for="siteSelection">Deine bevorzugten Seiten</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
 			  	<option>foo</option>
 			  	<option>bar</option>
 			  </select>
-			  <ul>
-			   <li wicket:id="lines">
-			    <input type="text" wicket:id="lineEdit" /> 
-			   </li>
-			  </ul>
+			  <label for="booleanProperty">Boolean</label>
+			  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 		  </td>
 		  </tr>
 		  <tr>
 		  <td colspan="2">
-
 			  <input wicket:id="saveButton" type="image" value="buttonFactory:save:Sichern"/>
 			  <a wicket:id="resetButtonLink" src="">
 			      <img wicket:id="resetButtonImage" value="buttonFactory:reset:Zurücksetzen"/> 
 			  </a>
-
 		  </td>
 		  </tr>
 		 </table>

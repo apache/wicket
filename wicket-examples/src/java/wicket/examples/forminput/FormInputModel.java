@@ -91,6 +91,7 @@ public final class FormInputModel implements Serializable
 	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
 	private Set siteSelection = new HashSet();
 	private List lines = new ArrayList();
+	private String numbersGroup;
 
 	/**
 	 * Construct.
@@ -270,6 +271,24 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Sets the number.
+	 * @param group number
+	 */
+	public void setNumbersGroup(String group)
+	{
+		this.numbersGroup = group;
+	}
+	
+	/**
+	 * @return the group number
+	 */
+	public String getNumbersGroup()
+	{
+		return this.numbersGroup;
+	}
+
+	
+	/**
 	 * Gets the selectedSites.
 	 * @return selectedSites
 	 */
@@ -318,7 +337,8 @@ public final class FormInputModel implements Serializable
 		 .append(", booleanProperty = ").append(booleanProperty)
 		 .append(", integerInRangeProperty = ").append(integerInRangeProperty)
 		 .append(", urlProperty = ").append(urlProperty)
-		 .append(", numberRadioChoice = ").append(numberRadioChoice);
+		 .append(", numberRadioChoice = ").append(numberRadioChoice)
+		 .append(", numberRadioGroup= ").append(numbersGroup);
 		b.append(", selected sites {");
 		for (Iterator i = siteSelection.iterator(); i.hasNext();)
 		{

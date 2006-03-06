@@ -1,4 +1,5 @@
-<html>
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - forminput</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
@@ -29,9 +30,12 @@
 	          <label wicket:id="dateLabel" for="dateProperty">Datum</label>
 	          <input wicket:id="dateProperty" type="text" size="40"/>
 	          <span wicket:id="datePicker" id="dateProperty"></span>
-	          <label for="booleanProperty">Booleaans</label>
-	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-
+	          <label>Listview in een Form</label>
+			  <ul>
+			   <li wicket:id="lines">
+			    <input type="text" wicket:id="lineEdit" /> 
+			   </li>
+			  </ul>
 	      </td>
 	      <td valign="top">
 
@@ -39,21 +43,25 @@
 	          <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
 	          <label for="urlProperty">URL (moet een geldig url zijn)</label>
 	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
-			  <label for="numberRadioChoice">selecteer een nummer</label>
+			  <label for="numberRadioChoice">selecteer een nummer (RadioChoice)</label>
 			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
 	    		<input type="radio">foo</input>
 				<input type="radio">bar</input>
+			  </span>
+			  <span wicket:id="numbersGroup">
+			  <label>selecteer een nummer (RadioGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="radio" wicket:id="radio"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
 			  </span>
 			  <label for="siteSelection">jouw favorite sites</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
 			  	<option>foo</option>
 			  	<option>bar</option>
 			  </select>
-			  <ul>
-			   <li wicket:id="lines">
-			    <input type="text" wicket:id="lineEdit" /> 
-			   </li>
-			  </ul>
+	          <label for="booleanProperty">Booleaans</label>
+	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 		  </td>
 		  </tr>
 		  <tr>
@@ -71,6 +79,5 @@
 	<div id="feedbackPanel">
 		<span wicket:id="feedback"/>
     </div>
-
 </body>
 </html>
