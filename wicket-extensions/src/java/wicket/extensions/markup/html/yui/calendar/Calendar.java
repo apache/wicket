@@ -56,7 +56,6 @@ public class Calendar extends Panel
 			PackageResource.bind(application, Calendar.class, "dom.js");
 			PackageResource.bind(application, Calendar.class, "event.js");
 			PackageResource.bind(application, Calendar.class, "calendar.js");
-			PackageResource.bind(application, Calendar.class, "config.js");
 			PackageResource.bind(application, Calendar.class, "callt.gif");
 			PackageResource.bind(application, Calendar.class, "calrt.gif");
 		}
