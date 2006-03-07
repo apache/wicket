@@ -75,7 +75,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 
 	/** Marker value to have an attribute without a value removed. */
 	public static final String VALUELESS_ATTRIBUTE_REMOVE = "VA_REMOVE";
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/** Whether to add the attribute if it is not an attribute in the markup. */
@@ -176,9 +176,13 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 
 	/**
 	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
-	 * be called from the outside
+	 * be called from the outside. If the attribute modifier is shared, the
+	 * detach method will be called multiple times.
+	 * 
+	 * @param component
+	 *            the model that initiates the detachement
 	 */
-	public final void detachModel()
+	public final void detachModel(Component component)
 	{
 		if (replaceModel != null)
 		{
@@ -275,8 +279,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 */
 	public String toString()
 	{
-		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled() + ", pattern="
-				+ pattern + ", replacementModel=" + replaceModel + "]";
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled()
+				+ ", pattern=" + pattern + ", replacementModel=" + replaceModel + "]";
 	}
 
 	/**

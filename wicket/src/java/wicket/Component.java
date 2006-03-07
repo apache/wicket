@@ -634,7 +634,7 @@ public abstract class Component implements Serializable
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
 				IBehavior behavior = (IBehavior)i.next();
-				behavior.detachModel();
+				behavior.detachModel(this);
 			}
 		}
 	}
@@ -1532,7 +1532,7 @@ public abstract class Component implements Serializable
 						IBehavior behavior = (IBehavior)i.next();
 						try
 						{
-							behavior.onException();
+							behavior.exception(this, ex);
 						}
 						catch (Throwable ex2)
 						{
