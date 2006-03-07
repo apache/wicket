@@ -23,10 +23,11 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
- * A stream of MarkupElements, subclases of which are ComponentTag and
- * RawMarkup. A markup stream has a current index in the list of markup
- * elements. The next markup element can be retrieved and the index advanced by
- * calling next(). If the index hits the end, hasMore() will return false.
+ * A stream of {@link wicket.markup.MarkupElement}s, subclases of which are
+ * {@link wicket.markup.ComponentTag} and {@link wicket.markup.RawMarkup}. A
+ * markup stream has a current index in the list of markup elements. The next
+ * markup element can be retrieved and the index advanced by calling next(). If
+ * the index hits the end, hasMore() will return false.
  * <p>
  * The current markup element can be accessed with get() and as a ComponentTag
  * with getTag().
@@ -215,12 +216,12 @@ public final class MarkupStream
 		if (startTag.isOpen())
 		{
 			// With HTML not all tags require a close tag which
-			// must have been detected by the HtmlHandler earlier on. 
+			// must have been detected by the HtmlHandler earlier on.
 			if (startTag.hasNoCloseTag() == false)
 			{
 				// Skip <tag>
 				next();
-	
+
 				// Skip nested components
 				skipToMatchingCloseTag(startTag);
 			}
