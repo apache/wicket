@@ -37,6 +37,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
@@ -211,7 +212,15 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
-		validators_add(validator);
+		// keep this in until we remove TypeValidator
+		if(validator instanceof TypeValidator)
+		{
+			setType(((TypeValidator)validator).getType());
+		}
+		else
+		{
+			validators_add(validator);
+		}
 		return this;
 	}
 
