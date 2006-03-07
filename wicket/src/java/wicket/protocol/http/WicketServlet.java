@@ -149,21 +149,17 @@ public class WicketServlet extends HttpServlet
 		{
 			String sessionId = httpSession.getId();
 			String queryString = servletRequest.getQueryString();
-			String requestUri = servletRequest.getRequestURI();
-			String bufferId = requestUri;
 			if (queryString != null)
 			{
-				bufferId = new StringBuffer(requestUri.length() + queryString.length() + 1).append(
-						requestUri).append("?").append(queryString).toString();
-			}
-			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
-					sessionId, bufferId);
-
-			if (bufferedResponse != null)
-			{
-				bufferedResponse.writeTo(servletResponse);
-				// redirect responses are ignored for the request logger...
-				return;
+				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+						sessionId, queryString);
+				
+				if (bufferedResponse != null)
+				{
+					bufferedResponse.writeTo(servletResponse);
+					// redirect responses are ignored for the request logger...
+					return;
+				}
 			}
 		}
 
