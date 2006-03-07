@@ -57,6 +57,7 @@ import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
+ * TODO DOCME!
  * @author jcompagner
  */
 public class RequestLogger
@@ -108,7 +109,6 @@ public class RequestLogger
 	}
 
 	/**
-	 * @param session
 	 * @param timeTaken
 	 */
 	public void requestTime(long timeTaken)
@@ -118,7 +118,6 @@ public class RequestLogger
 	}
 	
 	/**
-	 * @param session
 	 * @param value
 	 */
 	public void objectRemoved(Object value)
@@ -143,7 +142,6 @@ public class RequestLogger
 	}
 
 	/**
-	 * @param session
 	 * @param value
 	 */
 	public void objectUpdated(Object value)
@@ -169,7 +167,6 @@ public class RequestLogger
 	}
 
 	/**
-	 * @param session
 	 * @param value
 	 */
 	public void objectCreated(Object value)
@@ -195,7 +192,6 @@ public class RequestLogger
 	}
 
 	/**
-	 * @param session 
 	 * @param target
 	 */
 	public void logResponseTarget(IRequestTarget target)
@@ -204,7 +200,6 @@ public class RequestLogger
 	}
 
 	/**
-	 * @param session 
 	 * @param target
 	 */
 	public void logEventTarget(IRequestTarget target)
