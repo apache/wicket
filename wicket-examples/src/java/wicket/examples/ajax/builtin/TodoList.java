@@ -123,9 +123,6 @@ public class TodoList extends WebPage
 					{
 						protected void onUpdate(AjaxRequestTarget target)
 						{
-							TodoItem item = (TodoItem)getModelObject();
-							item.setChecked(!item.isChecked());
-							target.addComponent(this);
 						}
 					});
 					// display the text of the todo item
