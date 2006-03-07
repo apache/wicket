@@ -24,6 +24,9 @@ import wicket.markup.html.form.FormComponent;
  * onValidate() to validate the component and its string value.
  * 
  * @author Jonathan Locke
+ * 
+ * @deprecated Users shouldn't use {@link StringValidator} subclasses anymore. 
+ *             But subclass {@link AbstractValidator} and use {@link FormComponent#getConvertedInput()}
  */
 public abstract class StringValidator extends AbstractValidator
 {

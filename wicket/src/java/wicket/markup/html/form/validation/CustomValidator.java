@@ -17,11 +17,16 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.FormComponent;
+
 /**
  * A validator for strings designed for subclassing. A subclass implements
  * onValidate() to validate the component and its string value.
  * 
  * @author Jonathan Locke
+ * 
+ * @deprecated Users shouldn't use {@link StringValidator} subclasses anymore. 
+ *             But subclass {@link AbstractValidator} and use {@link FormComponent#getConvertedInput()}
  */
 public abstract class CustomValidator extends StringValidator
 {
