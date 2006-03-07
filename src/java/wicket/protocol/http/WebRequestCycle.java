@@ -170,8 +170,9 @@ public class WebRequestCycle extends RequestCycle
 					servletResponse.close();
 
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
+					int index = redirectUrl.indexOf("?");
 					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
-					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl, servletResponse);
+					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl.substring(index+1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
