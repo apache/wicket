@@ -93,7 +93,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	private Class appletClass;
 
 	/** Extra root classes for applet JAR to handle dynamic loading */
-	private List/* <Class> */classes = new ArrayList(2);
+	private List<Class> classes = new ArrayList<Class>(2);
 
 	/**
 	 * Construct.

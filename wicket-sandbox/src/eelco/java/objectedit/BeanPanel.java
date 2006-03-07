@@ -35,7 +35,7 @@ import wicket.model.Model;
 public class BeanPanel extends Panel
 {
 	/** cache for editors. */
-	private static Map cachedEditors = new HashMap();
+	private static Map<Class, PropertyEditor> cachedEditors = new HashMap<Class, PropertyEditor>();
 
 	/** edit mode. */
 	private EditMode editMode = new EditMode(EditMode.MODE_READ_ONLY);

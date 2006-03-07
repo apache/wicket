@@ -43,7 +43,7 @@ import wicket.util.collections.ArrayListStack;
 public abstract class AbstractClassClosure
 {
 	/** Closure of classes referenced by the class passed to the constructor */
-	final Set/* <String> */closure = new HashSet();
+	final Set<String> closure = new HashSet<String>();
 
 	/**
 	 * Construct.
@@ -55,7 +55,7 @@ public abstract class AbstractClassClosure
 	 */
 	public AbstractClassClosure(final List/* <Class> */classes, final boolean includeJDK)
 	{
-		final Set visited = new HashSet();
+		final Set<String> visited = new HashSet<String>();
 		final ArrayListStack stack = new ArrayListStack();
 		ClassLoader classloader = null;
 		for (final Iterator iterator = classes.iterator(); iterator.hasNext();)
