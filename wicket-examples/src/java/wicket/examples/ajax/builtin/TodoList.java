@@ -123,6 +123,10 @@ public class TodoList extends WebPage
 					{
 						protected void onUpdate(AjaxRequestTarget target)
 						{
+							// no need to do anything, the model is updated by
+							// itself, and we don't have to re-render a
+							// component (the client already has the correct
+							// state).
 						}
 					});
 					// display the text of the todo item
