@@ -19,6 +19,7 @@ package wicket.examples;
 
 import wicket.PageMap;
 import wicket.examples.source.SourcesPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.debug.InspectorBug;
 import wicket.markup.html.link.Link;
@@ -42,7 +43,7 @@ public final class WicketExampleHeader extends Panel
 	 * @param page
 	 *            The example page
 	 */
-	public WicketExampleHeader(String id, String exampleTitle, WicketExamplePage page)
+	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
 	{
 		super(id);
 		add(new InspectorBug("inspector", page));
