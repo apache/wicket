@@ -27,10 +27,14 @@ import wicket.ResourceReference;
  * A convenience class for creating resource references to static resources.
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
+
+	/** pre-calculated has code for this immutable object. */
+	private int hash;
 
 	/**
 	 * Constuctor to get a resource reference to a packaged resource. It will
@@ -63,6 +67,7 @@ public class PackageResourceReference extends ResourceReference
 	{
 		super(scope, name);
 		checkExists(scope, name, locale, style);
+		setHash(scope, name, locale, style);
 		setLocale(locale);
 		setStyle(style);
 		bind(application);
@@ -90,9 +95,7 @@ public class PackageResourceReference extends ResourceReference
 	 */
 	public PackageResourceReference(Application application, Class scope, String name)
 	{
-		super(scope, name);
-		checkExists(scope, name, null, null);
-		bind(application);
+		this(application, scope, name, null, null);
 	}
 
 	/**
@@ -118,9 +121,7 @@ public class PackageResourceReference extends ResourceReference
 	 */
 	public PackageResourceReference(Application application, String name)
 	{
-		super(name);
-		checkExists(application.getClass(), name, null, null);
-		bind(application);
+		this(application, null, name);
 	}
 
 	/**
@@ -142,6 +143,32 @@ public class PackageResourceReference extends ResourceReference
 	public PackageResourceReference(Class scope, String name)
 	{
 		super(scope, name);
+		checkExists(scope, name, null, null);
+		setHash(scope, name, null, null);
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return hash;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof PackageResourceReference)
+		{
+			PackageResourceReference that = (PackageResourceReference)obj;
+			return checkEquals(this.getScope(), that.getScope())
+					&& checkEquals(this.getName(), that.getName())
+					&& checkEquals(this.getLocale(), that.getLocale())
+					&& checkEquals(this.getStyle(), that.getStyle());
+		}
+		return false;
 	}
 
 	/**
@@ -176,5 +203,31 @@ public class PackageResourceReference extends ResourceReference
 			throw new IllegalArgumentException("package resource [scope=" + scope + ",name=" + name
 					+ ",locale=" + locale + "style=" + style + "] not found");
 		}
+	}
+
+	private final boolean checkEquals(Object o1, Object o2)
+	{
+		if (o1 == null)
+		{
+			return o2 == null;
+		}
+		else if (o2 == null)
+		{
+			return false;
+		}
+		else
+		{
+			return o1.equals(o2);
+		}
+	}
+
+	private final void setHash(Class scope, String name, Locale locale, String style)
+	{
+		int result = 17;
+		result = 37 * result + (scope != null ? scope.hashCode() : 0);
+		result = 37 * result + (name != null ? name.hashCode() : 0);
+		result = 37 * result + (locale != null ? locale.hashCode() : 0);
+		result = 37 * result + (style != null ? style.hashCode() : 0);
+		hash = result;
 	}
 }
