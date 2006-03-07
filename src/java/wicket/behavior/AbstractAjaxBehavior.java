@@ -38,9 +38,8 @@ import wicket.protocol.http.request.WebRequestCodingStrategy;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior
+public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		implements
-			IBehavior,
 			IBehaviorListener,
 			IHeaderContributor
 {
@@ -82,13 +81,6 @@ public abstract class AbstractAjaxBehavior
 
 		// call the calback
 		onBind();
-	}
-
-	/**
-	 * @see wicket.behavior.IBehavior#detachModel()
-	 */
-	public void detachModel()
-	{
 	}
 
 	/**
@@ -162,24 +154,19 @@ public abstract class AbstractAjaxBehavior
 	}
 
 	/**
-	 * Called any time a component that has this handler registered is rendering
-	 * the component tag. Use this method e.g. to bind to javascript event
-	 * handlers of the tag
-	 * 
-	 * @param tag
-	 *            the tag that is rendered
+	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
-	protected void onComponentTag(final ComponentTag tag)
+	public final void onRendered(final Component hostComponent)
 	{
+		onComponentRendered();
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 * @see wicket.behavior.AbstractBehavior#cleanup()
 	 */
-	public final void rendered(final Component hostComponent)
+	public void cleanup()
 	{
 		headContribHolder.set(null);
-		onComponentRendered();
 	}
 
 	/**
@@ -248,6 +235,18 @@ public abstract class AbstractAjaxBehavior
 	protected abstract String getImplementationId();
 
 	/**
+	 * Called any time a component that has this handler registered is rendering
+	 * the component tag. Use this method e.g. to bind to javascript event
+	 * handlers of the tag
+	 * 
+	 * @param tag
+	 *            the tag that is rendered
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+	}
+
+	/**
 	 * Called when the component was bound to it's host component. You can get
 	 * the bound host component by calling getComponent.
 	 */
@@ -284,14 +283,6 @@ public abstract class AbstractAjaxBehavior
 	 *            head container
 	 */
 	protected void onRenderHeadInitContribution(final Response response)
-	{
-	}
-	
-	/**
-	 * 
-	 * @see wicket.behavior.IBehavior#onException()
-	 */
-	public void onException()
 	{
 	}
 }

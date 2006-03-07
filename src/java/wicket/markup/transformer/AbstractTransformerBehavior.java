@@ -82,9 +82,9 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
-	public void rendered(final Component component)
+	public void onRendered(final Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
@@ -104,14 +104,21 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 		{
 			// Restore the original response object
 			requestCycle.setResponse(this.webResponse);
-			this.webResponse = null;
 		}
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#onException()
+	 * @see wicket.behavior.AbstractBehavior#cleanup()
 	 */
-	public void onException()
+	public void cleanup()
+	{
+		this.webResponse = null;
+	}
+
+	/**
+	 * @see wicket.behavior.AbstractBehavior#onException(wicket.Component, java.lang.RuntimeException)
+	 */
+	public void onException(Component component, RuntimeException exception)
 	{
 		if (this.webResponse != null)
 		{
