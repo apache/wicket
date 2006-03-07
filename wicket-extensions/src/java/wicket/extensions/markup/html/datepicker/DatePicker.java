@@ -66,9 +66,6 @@ import wicket.model.Model;
  * @see wicket.extensions.markup.html.datepicker.DatePickerSettings
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
- * 
- * @deprecated As JSCalendar does not seem to be actively supported anymore,
- *             this component will not be supported in the future by us either.
  */
 public class DatePicker extends Panel
 {
