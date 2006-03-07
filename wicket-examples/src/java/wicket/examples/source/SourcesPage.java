@@ -20,6 +20,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IDetachable;
+import wicket.model.PropertyModel;
 import wicket.util.io.IOUtils;
 import wicket.util.lang.PackageName;
 import wicket.util.string.Strings;
@@ -203,6 +204,7 @@ public class SourcesPage extends WebPage
 						{
 							setName(getModelObjectAsString());
 							target.addComponent(codePanel);
+							target.addComponent(filename);
 						}
 					};
 					link.add(new Label("name", item.getModelObjectAsString()));
@@ -250,6 +252,8 @@ public class SourcesPage extends WebPage
 	 */
 	private Component codePanel;
 
+	private Label filename;
+
 	/**
 	 * Sets the name.
 	 * 
@@ -289,9 +293,12 @@ public class SourcesPage extends WebPage
 	{
 		this.page = page;
 
-		add(new FilesBrowser("filespanel"));
+		filename = new Label("filename", new PropertyModel(this, "name"));
+		filename.setOutputMarkupId(true);
+		add(filename);
 		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
 		add(codePanel);
+		add(new FilesBrowser("filespanel"));
 		add(new PopupCloseLink("close"));
 	}
 }
