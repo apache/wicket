@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,6 +46,9 @@ import wicket.model.Model;
  * 
  * @see wicket.markup.html.form.Check
  * @see wicket.markup.html.form.CheckGroupSelector
+ * 
+ * <p>
+ * Note: This component does not support cookie persistence
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
@@ -154,5 +157,10 @@ public class CheckGroup extends FormComponent
 		}
 
 		modelChanged();
+	}
+	
+	protected boolean supportsPersistence()
+	{
+		return false;
 	}
 }
