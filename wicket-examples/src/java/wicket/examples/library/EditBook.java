@@ -31,7 +31,7 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.FormComponentFeedbackBorder;
-import wicket.markup.html.form.validation.LengthValidator;
+import wicket.markup.html.form.validation.StringValidator;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -112,7 +112,7 @@ public final class EditBook extends AuthenticatedWebPage
 			// that edits the book's title
 			final TextField title = new TextField("title");
 			title.setRequired(true);
-			title.add(LengthValidator.max(30));
+			title.add(StringValidator.maximum(30));
 			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
 					"titleFeedback");
 			add(titleFeedback);

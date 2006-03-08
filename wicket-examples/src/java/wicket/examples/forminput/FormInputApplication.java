@@ -19,16 +19,9 @@ package wicket.examples.forminput;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestWithCryptedUrl;
-import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.WebResponseWithCryptedUrl;
 
 /**
  * Application class for form input example.
@@ -56,23 +49,25 @@ public class FormInputApplication extends WicketExampleApplication
 				new DefaultButtonImageResource("\u4E4B\u5916"));
 		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
+		
+		getApplicationSettings().setContextPath("http://localhost:8080/wicket");
 	}
 
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
-	 */
 	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
 	{
 		return new WebRequestWithCryptedUrl(servletRequest);
 	}
+	 */
 
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	 */
 	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 	{
 		return new WebResponseWithCryptedUrl(servletResponse);
 	}
+	 */
 
 	/**
 	 * @see wicket.Application#getHomePage()

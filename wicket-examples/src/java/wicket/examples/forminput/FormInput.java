@@ -38,8 +38,7 @@ import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.MinimumValidator;
-import wicket.markup.html.form.validation.RangeValidator;
+import wicket.markup.html.form.validation.NumberValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -131,7 +130,7 @@ public class FormInput extends WicketExamplePage
 			add(stringTextField);
 			RequiredTextField integerTextField = new RequiredTextField("integerProperty",
 					Integer.class);
-			add(integerTextField.add(MinimumValidator.POSITIVE));
+			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty", Double.class));
 			// we have a component attached to the label here, as we want to
 			// synchronize the
@@ -143,7 +142,7 @@ public class FormInput extends WicketExamplePage
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
 			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(RangeValidator.range(0, 100)));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
