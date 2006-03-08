@@ -21,7 +21,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -58,19 +60,22 @@ public class PackageResource extends WebResource
 	private static final long serialVersionUID = 1L;
 
 	/** The path to the resource */
-	public final String absolutePath;
+	private final String absolutePath;
 
 	/** The resource's locale */
 	private Locale locale;
 
 	/** The resource's style */
-	final String style;
+	private final String style;
 
 	/** The scoping class, used for class loading and to determine the package. */
-	final Class scope;
+	private final Class scope;
+
+	/** The path this resource was created with. */
+	private final String path;
 
 	/**
-	 * Binds a the resource to the given application object. Will create the
+	 * Binds a resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
 	 * object.
 	 * 
@@ -79,11 +84,9 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource (like &quot;myfile.js&quot;), or a
-	 *            regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
+	 *            The name of the resource (like &quot;myfile.js&quot;)
+	 * @throw IllegalArgumentException when the requested package resource was
+	 *        not found
 	 */
 	public static void bind(Application application, Class scope, String name)
 	{
@@ -91,7 +94,7 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Binds a the resource to the given application object. Will create the
+	 * Binds a resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
 	 * object.
 	 * 
@@ -100,13 +103,11 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource (like &quot;myfile.js&quot;), or a
-	 *            regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
+	 *            The name of the resource (like &quot;myfile.js&quot;)
 	 * @param locale
 	 *            The locale of the resource.
+	 * @throw IllegalArgumentException when the requested package resource was
+	 *        not found
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale)
 	{
@@ -114,7 +115,7 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Binds a the resource to the given application object. Will create the
+	 * Binds a resource to the given application object. Will create the
 	 * resource if not already in the shared resources of the application
 	 * object.
 	 * 
@@ -123,23 +124,17 @@ public class PackageResource extends WebResource
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param name
-	 *            The name of the resource (like &quot;myfile.js&quot;), or a
-	 *            regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
+	 *            The name of the resource (like &quot;myfile.js&quot;)
 	 * @param locale
 	 *            The locale of the resource.
 	 * @param style
 	 *            The style of the resource.
+	 * @throw IllegalArgumentException when the requested package resource was
+	 *        not found
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale,
 			String style)
 	{
-		if (scope == null)
-		{
-			throw new IllegalArgumentException("argument scope may not be null");
-		}
 		if (name == null)
 		{
 			throw new IllegalArgumentException("argument name may not be null");
@@ -155,46 +150,30 @@ public class PackageResource extends WebResource
 		}
 		else
 		{
-			// interpret the name argument as a regexp; loop through
-			// the resources in the package of the provided scope, and
-			// add anything that matches
-			Pattern pattern = Pattern.compile(name);
-			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/");
-			ClassLoader loader = scope.getClassLoader();
-			try
-			{
-				// loop through the resources of the package
-				Enumeration packageResources = loader.getResources(packageRef);
-				while (packageResources.hasMoreElements())
-				{
-					URL resource = (URL)packageResources.nextElement();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(resource
-							.openStream()));
-					String entry = null;
-					try
-					{
-						while ((entry = reader.readLine()) != null)
-						{
-							// if the current entry matches the provided regexp
-							if (pattern.matcher(entry).matches())
-							{
-								// we add the entry as a package resource
-								get(scope, entry, locale, style);
-							}
-						}
-					}
-					finally
-					{
-						IOUtils.closeQuietly(reader);
-					}
-
-				}
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
+			throw new IllegalArgumentException("no package resource was found for scope " + scope
+					+ ", name " + name + ", locale " + locale + ", style " + style);
 		}
+	}
+
+	/**
+	 * Binds the resources that match the provided pattern to the given
+	 * application object. Will create any resources if not already in the
+	 * shared resources of the application object.
+	 * 
+	 * @param application
+	 *            The application to bind to.
+	 * @param scope
+	 *            The scope of the resource.
+	 * @param pattern
+	 *            A regular expression to match against the contents of the
+	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
+	 *            will add all the files with extension &quot;js&quot; from that
+	 *            package).
+	 */
+	public static void bind(Application application, Class scope, Pattern pattern)
+	{
+		// bind using the pattern
+		get(scope, pattern);
 	}
 
 	/**
@@ -246,6 +225,67 @@ public class PackageResource extends WebResource
 	}
 
 	/**
+	 * Gets non-localized resources for a given set of criteria. Multiple
+	 * resource can be loaded for the same criteria if they match the pattern.
+	 * If no resources were found, this method returns null.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
+	 * @param pattern
+	 *            Regexp pattern to match resources
+	 * @return The resources or null if none were found
+	 */
+	public static PackageResource[] get(Class scope, Pattern pattern)
+	{
+		List resources = null;
+		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/");
+		ClassLoader loader = scope.getClassLoader();
+		try
+		{
+			// loop through the resources of the package
+			Enumeration packageResources = loader.getResources(packageRef);
+			while (packageResources.hasMoreElements())
+			{
+				URL resource = (URL)packageResources.nextElement();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(resource
+						.openStream()));
+				String entry = null;
+				try
+				{
+					while ((entry = reader.readLine()) != null)
+					{
+						// if the current entry matches the provided regexp
+						if (pattern.matcher(entry).matches())
+						{
+							if (resources == null)
+							{
+								resources = new ArrayList();
+							}
+							// we add the entry as a package resource
+							resources.add(get(scope, entry, null, null));
+						}
+					}
+				}
+				finally
+				{
+					IOUtils.closeQuietly(reader);
+				}
+
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+
+		return (resources != null) ? (PackageResource[])resources
+				.toArray(new PackageResource[resources.size()]) : null;
+	}
+
+	/**
 	 * Gets whether a resource for a given set of criteria exists.
 	 * 
 	 * @param scope
@@ -287,6 +327,7 @@ public class PackageResource extends WebResource
 		// Convert resource path to absolute path relative to base package
 		this.absolutePath = Packages.absolutePath(scope, path);
 		this.scope = scope;
+		this.path = path;
 		this.locale = locale;
 		this.style = style;
 
@@ -321,20 +362,53 @@ public class PackageResource extends WebResource
 	}
 
 	/**
+	 * Gets the locale.
+	 * 
 	 * @return The Locale of this package resource
 	 */
-	public Locale getLocale()
+	public final Locale getLocale()
 	{
 		return locale;
 	}
 
 	/**
-	 * Get the absolute path of the resource
+	 * Gets the absolute path of the resource.
 	 * 
-	 * @return the resource path
+	 * @return the absolute resource path
 	 */
-	public String getAbsolutePath()
+	public final String getAbsolutePath()
 	{
 		return absolutePath;
+	}
+
+	/**
+	 * Gets the path this resource was created with.
+	 * 
+	 * @return the path
+	 */
+	public final String getPath()
+	{
+		return path;
+	}
+
+	/**
+	 * Gets the scoping class, used for class loading and to determine the
+	 * package.
+	 * 
+	 * @return the scoping class
+	 */
+	public final Class getScope()
+	{
+		return scope;
+	}
+
+	/**
+	 * Gets the style.
+	 * 
+	 * @return the style
+	 */
+	public final String getStyle()
+	{
+		return style;
 	}
 }

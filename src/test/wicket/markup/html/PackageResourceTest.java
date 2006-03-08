@@ -17,6 +17,8 @@
  */
 package wicket.markup.html;
 
+import java.util.regex.Pattern;
+
 import junit.framework.TestCase;
 import wicket.Application;
 import wicket.SharedResources;
@@ -81,7 +83,7 @@ public class PackageResourceTest extends TestCase
 	public void testBindGlobPackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource.bind(application, PackageResourceTest.class, ".*\\.js");
+		PackageResource.bind(application, PackageResourceTest.class, Pattern.compile(".*\\.js"));
 		assertNotNull("resource packaged3.js should be available as a packaged resource",
 				sharedResources.get(PackageResourceTest.class, "packaged3.js", null, null, true));
 		assertNotNull("resource packaged4.js should be available as a packaged resource",

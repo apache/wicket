@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,10 +19,12 @@ package wicket.behavior;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 
 /**
@@ -222,6 +223,63 @@ public class HeaderContributor extends AbstractHeaderContributor
 	public static final HeaderContributor forCssReference(final Class scope, final String path)
 	{
 		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path));
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a set of header
+	 * contributors that references a java script files that live in a package.
+	 * 
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the
+	 *            caller, or a class that lives in the package where the
+	 *            resource lives).
+	 * @param pattern
+	 *            The regexp pattern to match resources on
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forJavaScriptReference(final Class scope,
+			final Pattern pattern)
+	{
+		PackageResource[] resources = PackageResource.get(scope, pattern);
+		HeaderContributor contributor = new HeaderContributor();
+		if (resources != null)
+		{
+			int len = resources.length;
+			for (int i = 0; i < len; i++)
+			{
+				contributor.addContributor(new JavaScriptReferenceHeaderContributor(scope,
+						resources[i].getPath()));
+			}
+		}
+		return contributor;
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a set of header
+	 * contributors that reference CSS files that live in a package.
+	 * 
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the
+	 *            caller, or a class that lives in the package where the
+	 *            resource lives).
+	 * @param pattern
+	 *            The regexp pattern to match resources on
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCssReference(final Class scope, final Pattern pattern)
+	{
+		PackageResource[] resources = PackageResource.get(scope, pattern);
+		HeaderContributor contributor = new HeaderContributor();
+		if (resources != null)
+		{
+			int len = resources.length;
+			for (int i = 0; i < len; i++)
+			{
+				contributor.addContributor(new CSSReferenceHeaderContributor(scope, resources[i]
+						.getPath()));
+			}
+		}
+		return contributor;
 	}
 
 	/**
