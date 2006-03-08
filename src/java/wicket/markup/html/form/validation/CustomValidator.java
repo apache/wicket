@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.form.FormComponent;
 
 /**
  * A validator for strings designed for subclassing. A subclass implements
@@ -25,8 +24,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  * 
- * @deprecated Users shouldn't use {@link StringValidator} subclasses anymore. 
- *             But subclass {@link AbstractValidator} and use {@link FormComponent#getConvertedInput()}
+ * @deprecated Users should use {@link StringValidator} directly 
  */
 public abstract class CustomValidator extends StringValidator
 {
