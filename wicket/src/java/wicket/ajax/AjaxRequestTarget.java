@@ -87,7 +87,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
-		addComponent(component.getId(), component);
+		addComponent(component.getMarkupId(), component);
 	}
 
 	/**
