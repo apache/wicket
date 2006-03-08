@@ -113,11 +113,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup impl
 	 */
 	public boolean isTransparentResolver()
 	{
-		if (getMarkupStream() == null)
-		{
-			return true;
-		}
-		
 		return transparentResolver;
 	}
 	
