@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.19 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -49,7 +49,7 @@ public class ContainerInfo
 		this.containerClass = container.getClass();
 		this.locale = container.getLocale();
 		this.style = container.getStyle();
-		this.variation = container.getVariation();
+		this.variation = null;
 		this.fileExtension = container.getMarkupType();
 	}
 
@@ -104,7 +104,6 @@ public class ContainerInfo
 	 */
 	public String toString()
 	{
-		return "[" + containerClass.getName() + ",locale=" + locale + ",style=" + style
-				+ ",variation=" + variation + ",extension=" + fileExtension + "]";
+		return containerClass.getName() + ":" + locale + ":" + style + ":" + fileExtension;
 	}
 }
