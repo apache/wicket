@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ======================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ========================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -18,6 +18,7 @@
 package wicket.markup.html.border;
 
 import wicket.WicketTestCase;
+import wicket.markup.MarkupException;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.protocol.http.MockHttpServletRequest;
@@ -41,48 +42,79 @@ public class BoxBorderTest extends WicketTestCase
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * Test a simply page containing the debug component
+	 * 
 	 * @throws Exception
 	 */
 	public void test1() throws Exception
 	{
 		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_1.html");
 	}
-	
+
 	/**
 	 * Test a simply page containing the debug component
+	 * 
 	 * @throws Exception
 	 */
 	public void test2() throws Exception
 	{
 		executeTest(BoxBorderTestPage_2.class, "BoxBorderTestPage_ExpectedResult_2.html");
 	}
-	
+
 	/**
 	 * Test a simply page containing the debug component
+	 * 
 	 * @throws Exception
 	 */
 	public void test3() throws Exception
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
-        Border border = (Border) application.getLastRenderedPage().get("border");
-        Form form = (Form) application.getLastRenderedPage().get("border:myForm");
-        
-        TextField input = (TextField) application.getLastRenderedPage().get("border:name");
-        assertEquals("", input.getModelObjectAsString());
-        
-        application.setupRequestAndResponse();
+		Border border = (Border)application.getLastRenderedPage().get("border");
+		Form form = (Form)application.getLastRenderedPage().get("border:myForm");
 
-        MockHttpServletRequest mockRequest = application.getServletRequest();
-        mockRequest.setRequestToComponent(form);
-        mockRequest.setParameter(input.getInputName(), "jdo");
+		TextField input = (TextField)application.getLastRenderedPage().get("border:name");
+		assertEquals("", input.getModelObjectAsString());
 
-        application.processRequestCycle();      
+		application.setupRequestAndResponse();
 
-        input = (TextField) application.getLastRenderedPage().get("border:name");
-        assertEquals("jdo", input.getModelObjectAsString());
+		MockHttpServletRequest mockRequest = application.getServletRequest();
+		mockRequest.setRequestToComponent(form);
+		mockRequest.setParameter(input.getInputName(), "jdo");
+
+		application.processRequestCycle();
+
+		input = (TextField)application.getLastRenderedPage().get("border:name");
+		assertEquals("jdo", input.getModelObjectAsString());
+	}
+
+	/**
+	 * Test to ensure MarkupException is thrown when Markup and Object hierarchy
+	 * does not match with a Border involved.
+	 * 
+	 * @throws Exception
+	 */
+	public void test4() throws Exception
+	{
+		Class pageClass = BorderTestHierarchyPage_4.class;
+
+		System.out.println("=== " + pageClass.getName() + " ===");
+		application.setHomePage(pageClass);
+		application.setupRequestAndResponse();
+
+		MarkupException markupException = null;
+		try
+		{
+			application.processRequestCycle();
+		}
+		catch (MarkupException e)
+		{
+			markupException = e;
+		}
+
+		assertNotNull("Markup does not match component hierarchy, but exception not thrown.",
+				markupException);
 	}
 }
