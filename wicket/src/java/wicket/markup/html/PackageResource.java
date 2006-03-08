@@ -59,6 +59,12 @@ public class PackageResource extends WebResource
 {
 	private static final long serialVersionUID = 1L;
 
+	/** common extension pattern for javascript files; matches all files with extension 'js'. */
+	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
+
+	/** common extension pattern for css files; matches all files with extension 'css'. */
+	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
+
 	/** The path to the resource */
 	private final String absolutePath;
 

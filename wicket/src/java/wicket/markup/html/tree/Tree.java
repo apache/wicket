@@ -409,7 +409,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		add(treePathsListView = createTreePathsListView());
 
 		PackageResourceReference css = getCss();
-		add(HeaderContributor.forCssReference(css.getScope(), css.getName()));
+		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
 	/**
@@ -428,7 +428,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		add(treePathsListView = createTreePathsListView());
 
 		PackageResourceReference css = getCss();
-		add(HeaderContributor.forCssReference(css.getScope(), css.getName()));
+		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
 	/**
