@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.9 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,6 +39,10 @@ import wicket.model.IModel;
  * </span>
  * </code>
  * 
+ * <p>
+ * Note: This component does not support cookie persistence
+ * 
+ * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * @author Sven Meier (svenmeier)
  * 
@@ -72,7 +76,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see FormComponent#updateModel()
 	 */
@@ -100,18 +104,18 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 			{
 				throw new WicketRuntimeException(
 						"submitted http post value ["
-						+ path
-						+ "] for RadioGroup component ["
-						+ getPath()
-						+ "] is illegal because it does not contain relative path to a Radio componnet. "
-						+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+								+ path
+								+ "] for RadioGroup component ["
+								+ getPath()
+								+ "] is illegal because it does not contain relative path to a Radio componnet. "
+								+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 			}
 
-			
+
 			// assign the value of the group's model
 			setModelObject(choice.getModelObject());
-		} 
-		else 
+		}
+		else
 		{
 			// no choice selected - set model object to null
 			setModelObject(null);
@@ -137,11 +141,16 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *			  The newly selected object of the backing model NOTE this is
-	 *			  the same as you would get by calling getModelObject() if the
-	 *			  new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
+	}
+	
+	protected final boolean supportsPersistence()
+	{
+		return false;
 	}
 }
