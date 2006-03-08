@@ -15,12 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.properties;
+package wicket.markup.html.form;
 
 import java.util.MissingResourceException;
 
 import junit.framework.TestCase;
 import wicket.markup.html.form.Form;
+import wicket.properties.MyTesterApplication;
+import wicket.properties.TestPage;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.tester.WicketTester;
 
@@ -44,29 +46,29 @@ public class ValidatorPropertiesTest extends TestCase
 		assertNotNull(form);
 		
 		page.getText1().setInput(null);
-		page.getText1().validateRequired();
+		page.getText1().checkRequired();
 		page.getText2().setInput(null);
-		page.getText2().validateRequired();
+		page.getText2().checkRequired();
 		page.getText3().setInput(null);
-		page.getText3().validateRequired();
+		page.getText3().checkRequired();
 		page.getText4().setInput(null);
-		page.getText4().validateRequired();
+		page.getText4().checkRequired();
 		page.getText5().setInput(null);
-		page.getText5().validateRequired();
+		page.getText5().checkRequired();
 		page.getText6().setInput(null);
-		page.getText6().validateRequired();
+		page.getText6().checkRequired();
 		page.getText7().setInput(null);
-		page.getText7().validateRequired();
+		page.getText7().checkRequired();
 		page.getText8().setInput(null);
-		page.getText8().validateRequired();
+		page.getText8().checkRequired();
 		page.getText9().setInput(null);
-		page.getText9().validateRequired();
+		page.getText9().checkRequired();
 		page.getText10().setInput(null);
-		page.getText10().validateRequired();
+		page.getText10().checkRequired();
 		page.getText11().setInput(null);
-		page.getText11().validateRequired();
+		page.getText11().checkRequired();
 		page.getText12().setInput(null);
-		page.getText12().validateRequired();
+		page.getText12().checkRequired();
 		
 		
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
