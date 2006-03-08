@@ -801,7 +801,8 @@ public final class Settings
 	{
 		if(contextPath != null)
 		{
-			if(!contextPath.startsWith("/") && !contextPath.startsWith("http:"))
+			if(!contextPath.startsWith("/") && !contextPath.startsWith("http:")
+					&& !contextPath.startsWith("https:"))
 			{
 				this.contextPath = "/" + contextPath;
 			}
