@@ -19,8 +19,11 @@ package wicket.ajax;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import wicket.Application;
 import wicket.Component;
@@ -30,6 +33,7 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.protocol.http.WebResponse;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 
 /**
  * A request target that produces ajax response envelopes used on the client
@@ -57,7 +61,7 @@ import wicket.util.string.AppendingStringBuffer;
 public class AjaxRequestTarget implements IRequestTarget
 {
 	/** the component instances that will be rendered */
-	private final List/* <Component> */components = new ArrayList();
+	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
 
 	private final List/* <String> */javascripts = new ArrayList();
 
@@ -83,6 +87,24 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
+		addComponent(component.getId(), component);
+	}
+
+	/**
+	 * Adds a component to the list of components to be rendered
+	 * 
+	 * @param markupId
+	 *            id of client-side dom element that will be updated
+	 * 
+	 * @param component
+	 *            component to be rendered
+	 */
+	public final void addComponent(String markupId, Component component)
+	{
+		if (Strings.isEmpty(markupId))
+		{
+			throw new IllegalArgumentException("markupId cannot be empty");
+		}
 		if (component == null)
 		{
 			throw new IllegalArgumentException("component cannot be null");
@@ -92,8 +114,9 @@ public class AjaxRequestTarget implements IRequestTarget
 			throw new IllegalArgumentException("component cannot be a page");
 		}
 
-		components.add(component);
+		markupIdToComponent.put(markupId, component);
 	}
+
 
 	/**
 	 * Adds javascript that will be evaluated on the client side
@@ -137,11 +160,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
 		response.write("<ajax-response>");
 
-		Iterator it = components.iterator();
+		Iterator it = markupIdToComponent.entrySet().iterator();
 		while (it.hasNext())
 		{
-			Component c = (Component)it.next();
-			respondComponent(response, c);
+			final Map.Entry entry = (Entry)it.next();
+			final Component component = (Component)entry.getValue();
+			final String markupId = (String)entry.getKey();
+			respondComponent(response, markupId, component);
 		}
 
 		it = javascripts.iterator();
@@ -191,12 +216,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	/**
 	 * 
 	 * @param response
+	 * @param markupId
+	 *            id of client-side dom element
 	 * @param component
+	 *            component to render
 	 */
-	private void respondComponent(final Response response, final Component component)
+	private void respondComponent(final Response response, final String markupId,
+			final Component component)
 	{
-		String id = component.getMarkupId();
-
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		final Response originalResponse = response;
@@ -227,7 +254,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		RequestCycle.get().setResponse(originalResponse);
 
 
-		response.write("<component id=\"" + id + "\" ");
+		response.write("<component id=\"" + markupId + "\" ");
 		if (encodingResponse.isContentsEncoded())
 		{
 			response.write(" encoding=\"");
@@ -267,7 +294,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (obj instanceof AjaxRequestTarget)
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
-			return components.equals(that.components) && javascripts.equals(that.javascripts);
+			return markupIdToComponent.equals(that.markupIdToComponent)
+					&& javascripts.equals(that.javascripts);
 		}
 		return false;
 	}
@@ -278,7 +306,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	public int hashCode()
 	{
 		int result = "AjaxRequestTarget".hashCode();
-		result += components.hashCode() * 17;
+		result += markupIdToComponent.hashCode() * 17;
 		result += javascripts.hashCode() * 17;
 		return result;
 	}
@@ -288,7 +316,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[AjaxRequestTarget@" + hashCode() + " components [" + components
+		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
 				+ "], javascript [" + javascripts + "]";
 	}
 
@@ -309,7 +337,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected String encode(String str)
 	{
-		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for more efficient
+		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
+		// more efficient
 		// replacement
 		return str.replaceAll("]", "]^");
 	}
@@ -321,6 +350,10 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected boolean needsEncoding(String str)
 	{
+		// TODO Ajax: we can improve this by keeping a buffer of at least 3
+		// characters and checking that buffer so that we can narrow down
+		// escaping occuring only for ']]>' sequence, or at least for ]] if ] is
+		// the last char in this buffer
 		return str.indexOf(']') >= 0;
 	}
 
