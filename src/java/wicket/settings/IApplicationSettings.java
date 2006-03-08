@@ -2,7 +2,10 @@ package wicket.settings;
 
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.application.IClassResolver;
+import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebRequest;
 import wicket.util.convert.IConverterFactory;
 
 /**
@@ -48,6 +51,8 @@ public interface IApplicationSettings
 	 * </pre>
 	 * 
 	 * @return The context path
+	 * 
+	 * @see IApplicationSettings#setContextPath(String) what the possible values can be.
 	 */
 	String getContextPath();
 
@@ -104,6 +109,12 @@ public interface IApplicationSettings
 	 * <pre>
 	 *    appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
+	 * 
+	 * This method can be called in the init phase of the application 
+	 * with the servlet init parameter {@link Application#CONTEXTPATH} if it is specified
+	 * or by the developer itself in the {@link WebApplication#init()}
+	 * If it is not set in the init phase of the application it will be 
+	 * set automatically on the context path of the request {@link WebRequest#getContextPath()}
 	 * 
 	 * @param contextPath The context path to use. 
 	 * 
