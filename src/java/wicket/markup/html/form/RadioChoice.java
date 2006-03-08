@@ -24,6 +24,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -296,6 +297,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -391,11 +393,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		// Buffer to hold generated body
-		final StringBuffer buffer = new StringBuffer();
-
 		// Iterate through choices
 		final List choices = getChoices();
+		
+		// Buffer to hold generated body
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size()+1) * 70);
 
 		// The selected value
 		final String selected = getValue();

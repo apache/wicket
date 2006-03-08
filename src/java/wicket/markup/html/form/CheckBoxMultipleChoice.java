@@ -22,6 +22,7 @@ import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -344,11 +345,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		// Buffer to hold generated body
-		final StringBuffer buffer = new StringBuffer();
-
 		// Iterate through choices
 		final List choices = getChoices();
+
+		// Buffer to hold generated body
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(70*(choices.size()+1));
 
 		// Value of this choice
 		final String selected = getValue();

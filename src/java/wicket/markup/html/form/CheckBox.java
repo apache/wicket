@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -63,25 +64,11 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
-	 */
-	public final void setModelValue(String value)
-	{
-		try
-		{
-			setModelObject(Strings.toBoolean(value));
-		}
-		catch (StringValueConversionException e)
-		{
-			throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
-		}
-	}
-
-	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	public void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -181,20 +168,19 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		return true;
 	}
 
+	
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String)
 	 */
-	public void updateModel()
+	protected Object convertValue(String value)
 	{
 		try
 		{
-			setModelObject(Strings.toBoolean(getInput()));
+			return Strings.toBoolean(getInput());
 		}
 		catch (StringValueConversionException e)
 		{
-			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+			throw new ConversionException("Invalid boolean input value posted \"" + getInput() + "\"", e).setTargetType(Boolean.class);
 		}
 	}
 }

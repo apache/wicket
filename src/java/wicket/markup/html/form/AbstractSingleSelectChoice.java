@@ -20,7 +20,6 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.model.IModel;
-import wicket.util.string.Strings;
 
 /**
  * Abstract base class for single-select choices.
@@ -165,9 +164,9 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
 	 */
-	public final void setModelValue(final String value)
+	protected final Object convertValue(final String value)
 	{
 		List choices = getChoices();
 		for (int index = 0; index < choices.size(); index++)
@@ -176,11 +175,10 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			final Object choice = choices.get(index);
 			if (getChoiceRenderer().getIdValue(choice, index).equals(value))
 			{
-				setModelObject(choice);
-				return;
+				return choice;
 			}
 		}
-		setModelObject(null);
+		return null;
 	}
 
 	/**
@@ -237,29 +235,5 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	protected boolean isSelected(final Object object, int index, String selected)
 	{
 		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * 
-	 * ee wicket.markup.html.form.AbstractChoice#updateModel()
-	 */
-	public final void updateModel()
-	{
-		final String id = getInput();
-		// if input was null then value was not submitted (disabled field),
-		// ignore it
-		if (id != null)
-		{
-			if (Strings.isEmpty(id))
-			{
-				setModelObject(null);
-			}
-			else
-			{
-				setModelValue(id);
-			}
-		}
 	}
 }

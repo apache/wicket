@@ -137,6 +137,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 */
 	public final void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}

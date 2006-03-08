@@ -18,12 +18,15 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.ConversionException;
 
 /**
  * Component used to connect instances of Check components into a group.
@@ -55,9 +58,6 @@ import wicket.model.Model;
  */
 public class CheckGroup extends FormComponent
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -95,23 +95,20 @@ public class CheckGroup extends FormComponent
 		super(id, model);
 		setRenderBodyOnly(true);
 	}
-
+	
 	/**
-	 * @see FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
 	 */
-	public void updateModel()
+	protected Object convertValue(String value) throws ConversionException
 	{
-		modelChanging();
-
-		Collection collection = (Collection)getModelObject();
-		collection.clear();
-
 		/*
 		 * the input contains an array of full path of the checcked checkbox
 		 * components unless nothing was selected in which case the input
 		 * contains null
 		 */
 		String[] paths = inputAsStringArray();
+		
+		List collection = new ArrayList();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -155,11 +152,36 @@ public class CheckGroup extends FormComponent
 				}
 			}
 		}
+		return collection;
+	}
+
+	/**
+	 * @see FormComponent#updateModel()
+	 */
+	public void updateModel()
+	{
+		modelChanging();
+
+		Collection collection = (Collection)getModelObject();
+		if(collection == null)
+		{
+			collection = (Collection)getConvertedInput();
+			setModelObject(collection);
+		}
+		else
+		{
+			collection.clear();
+			collection.addAll((Collection)getConvertedInput());
+		}
 
 		modelChanged();
 	}
 	
-	protected boolean supportsPersistence()
+	/**
+	 * Check group does not support persistence through cookies
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
 	{
 		return false;
 	}
