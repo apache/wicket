@@ -43,7 +43,7 @@ import wicket.util.string.Strings;
  * @see wicket.util.parse.metapattern.MetaPattern
  * @author Jonathan Locke
  */
-public class PatternValidator extends AbstractValidator
+public class PatternValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -99,11 +99,10 @@ public class PatternValidator extends AbstractValidator
 	/**
 	 * Validates the set pattern.
 	 *
-	 * @see AbstractValidator#validate(wicket.markup.html.form.FormComponent)
+	 * @see StringValidator#onValidate(wicket.markup.html.form.FormComponent,String)
 	 */
-	public void validate(FormComponent formComponent)
+	public void onValidate(FormComponent formComponent, String value)
 	{
-		String value = (String)formComponent.getConvertedInput();
 		if (!Strings.isEmpty(value))
 		{
 			// Check value against pattern

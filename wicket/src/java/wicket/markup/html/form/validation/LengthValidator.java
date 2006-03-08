@@ -40,6 +40,8 @@ import wicket.util.string.Strings;
  * </ul>
  * 
  * @author Jonathan Locke
+ * 
+ * @deprecated see {@link StringValidator#range}
  */
 public class LengthValidator extends AbstractValidator
 {
