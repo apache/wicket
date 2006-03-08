@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.Strings;
 
 /**
@@ -241,14 +242,11 @@ public class ListMultipleChoice extends AbstractChoice
 	 */
 	protected final boolean isSelected(Object choice, int index, String selected)
 	{
-		// Get value of the form "id1;id2;id3"
-		final String value = getValue();
-
 		// Have a value at all?
-		if (value != null)
+		if (selected != null)
 		{
 			// Loop through ids
-			for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+			for (final StringTokenizer tokenizer = new StringTokenizer(selected, ";"); tokenizer
 					.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
@@ -272,27 +270,17 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String)
 	 */
-	public final void updateModel()
+	protected Object convertValue(String value) throws ConversionException
 	{
+		// ignore value, get the input as a string array.
 		final String[] ids = inputAsStringArray();
-
-		// Get the list of selected values
-		Collection selectedValues = (Collection)getModelObject();
-		if (selectedValues != null)
-		{
-			selectedValues.clear();
-		}
+		ArrayList selectedValues = new ArrayList();
 
 		// If one or more ids is selected
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
-			if (selectedValues == null)
-			{
-				selectedValues = new ArrayList();
-			}
-			
 			// Get values that could be selected
 			final List choices = getChoices();
 
@@ -310,6 +298,24 @@ public class ListMultipleChoice extends AbstractChoice
 					}
 				}
 			}
+		}
+		return selectedValues;
+	}
+	
+	/**
+	 * @see FormComponent#updateModel()
+	 */
+	public final void updateModel()
+	{
+		Collection selectedValues = (Collection)getModelObject();
+		if (selectedValues != null)
+		{
+			selectedValues.clear();
+			selectedValues.addAll((Collection)getConvertedInput());
+		}
+		else
+		{
+			selectedValues = (Collection)getConvertedInput();
 		}
 		setModelObject(selectedValues);
 	}

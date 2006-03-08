@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.Strings;
 
 /**
@@ -90,25 +91,16 @@ public abstract class AbstractTextComponent extends FormComponent
 	{
 		return true;
 	}
-
+	
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
 	 */
-	public void updateModel()
+	protected Object convertValue(String value) throws ConversionException
 	{
-		String input = getInput();
-		// if input was null then value was not submitted (disabled field),
-		// ignore it
-		if (input != null)
+		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(value))
 		{
-			if (getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
-			{
-				setModelObject(null);
-			} else {
-				setModelObject(getConvertedInput());
-			}
+			return null;
 		}
+		return value;
 	}
 }

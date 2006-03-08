@@ -65,6 +65,8 @@ import wicket.version.undo.Change;
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
@@ -423,7 +425,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public void setModelValue(final String value)
 	{
-		setModelObject(value);
+		setModelObject(convertValue(value));
 	}
 
 	/**
@@ -446,13 +448,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Implemented by form component subclass to update the form component's
-	 * model. DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE
+	 * Updates this components' model from the request, it expect that the object 
+	 * is already converted through the convert() call. By default it just does this:
+	 * 
+	 * <pre>
+	 * setModelObject(getConvertedInput());
+	 * </pre>
+	 * 
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE
 	 * DOING. USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY
 	 * BY YOU.
 	 */
-	public abstract void updateModel();
-
+	public void updateModel()
+	{
+		setModelObject(getConvertedInput());
+	}
 	/**
 	 * Called to indicate that the user input is valid.
 	 */
@@ -474,13 +484,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Checks if the raw input value is not null if this component is required
 	 */
-	public final void validateRequired()
+	protected final void checkRequired()
 	{
 		if (isRequired())
 		{
-			// FIXME Form: move the validator logic into here? also see fixme
-			// in convertAndValidate regarding validation keys.
-
 			final String input = getInput();
 
 			// when null, check whether this is natural for that component, or
@@ -508,11 +515,34 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * errors. Converted value is available thorugh
 	 * {@link FormComponent#getConvertedInput()}
 	 */
-	public final void validateTypeConversion()
+	protected final void convert()
 	{
 		if (type == null)
 		{
-			convertedInput = getInput();
+			try
+			{	
+				convertedInput = convertValue(getInput());
+			}
+			catch (ConversionException e)
+			{
+				Map args = new HashMap();
+				final Locale locale = e.getLocale();
+				if (locale != null)
+				{
+					args.put("locale", locale);
+				}
+				args.put("exception", e);
+				Format format = e.getFormat();
+				if (format instanceof SimpleDateFormat)
+				{
+					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+				}
+
+				String typedResourceKey = "ConversionError." + e.getTargetType();
+				String[] resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+
+				error(Arrays.asList(resourceKeys), args);
+			}			
 		}
 		else if (!Strings.isEmpty(getInput()))
 		{
@@ -546,6 +576,21 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 		}
 	}
+	/**
+	 * Subclasses should overwrite this if the conversion is not done 
+	 * through the type field and the IConverter.
+	 * 
+	 * If conversion fails then a ConversionException should be thrown
+	 * 
+	 * @param value The value can be the getInput() or through a cookie 
+	 * 
+	 * @return The converted value. default returns just the given value
+	 * @throws ConversionException If input can't be converted
+	 */
+	protected Object convertValue(String value) throws ConversionException
+	{
+		return value;
+	}
 
 	/**
 	 * Performs full validation of the form component, which consists of calling
@@ -555,15 +600,15 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final void validate()
 	{
-		validateRequired();
-		validateTypeConversion();
-		validateValidators();
+		checkRequired();
+		convert();
+		checkValidators();
 	}
 
 	/**
 	 * Validates this component using the component's validators.
 	 */
-	public final void validateValidators()
+	protected final void checkValidators()
 	{
 		final int size = validators_size();
 		for (int i = 0; i < size; i++)

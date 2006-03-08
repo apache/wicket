@@ -18,12 +18,14 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -51,7 +53,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id)
 	{
-		super(id);
+		this(id, new Model(new ArrayList()), new ChoiceRenderer());
 	}
 
 	/**
@@ -295,7 +297,7 @@ abstract class AbstractChoice extends FormComponent
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		List choices = getChoices();
-		final StringBuffer buffer = new StringBuffer((choices.size() * 50) + 16);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() * 50) + 16);
 		final String selected = getValue();
 
 		// Append default option
@@ -323,7 +325,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @param selected
 	 *            The currently selected string value
 	 */
-	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index, String selected)
+	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index, String selected)
 	{
 		final String displayValue = (String)getConverter().convert(
 				renderer.getDisplayValue(choice), String.class);
@@ -364,12 +366,4 @@ abstract class AbstractChoice extends FormComponent
 	{
 		return false;
 	}
-
-	/**
-	 * Updates the model of this component from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public abstract void updateModel();
-
 }
