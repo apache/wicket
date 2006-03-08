@@ -87,7 +87,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
-		addComponent(component.getMarkupId(), component);
+		addComponent(component, component.getMarkupId());
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public final void addComponent(String markupId, Component component)
+	public final void addComponent(Component component, String markupId)
 	{
 		if (Strings.isEmpty(markupId))
 		{
