@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.19 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,6 +39,12 @@ public class ExternalLink extends WebMarkupContainer
 
 	/** this links' label. */
 	private final IModel label;
+
+	/**
+	 * The popup specification. If not-null, a javascript on-click event handler
+	 * will be generated that opens a new window using the popup properties.
+	 */
+	private PopupSettings popupSettings = null;
 
 	/**
 	 * Constructor.
@@ -103,6 +109,33 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
+	 * 
+	 * @return the popup specification.
+	 */
+	public final PopupSettings getPopupSettings()
+	{
+		return popupSettings;
+	}
+
+	/**
+	 * Sets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
+	 * 
+	 * @param popupSettings
+	 *            the popup specification.
+	 * @return This
+	 */
+	public final ExternalLink setPopupSettings(final PopupSettings popupSettings)
+	{
+		this.popupSettings = popupSettings;
+		return this;
+	}
+
+	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -111,9 +144,24 @@ public class ExternalLink extends WebMarkupContainer
 	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
-		if ((href != null) && (href.getObject(this) != null))
+		if (href != null)
 		{
-			tag.put("href", Strings.replaceAll(href.getObject(this).toString(), "&", "&amp;"));
+			Object hrefValue = href.getObject(this);
+			if (hrefValue != null)
+			{
+				// generate a popup script by asking popup settings for one
+				if (popupSettings != null)
+				{
+					popupSettings.setTarget("'" + hrefValue.toString() + "'");
+					String popupScript = popupSettings.getPopupJavaScript();
+					tag.put("onclick", popupScript);
+				}
+				else
+				{
+					// or generate an onclick JS handler directly
+					tag.put("href", Strings.replaceAll(hrefValue.toString(), "&", "&amp;"));
+				}
+			}
 		}
 	}
 
