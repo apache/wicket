@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,7 +21,9 @@ import wicket.Application;
 import wicket.IInitializer;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
+import wicket.extensions.markup.html.yui.AbstractYuiPanel;
 import wicket.extensions.markup.html.yui.calendar.Calendar;
+import wicket.extensions.markup.html.yui.slider.Slider;
 
 /**
  * Initializer for the extensions package.
@@ -36,6 +39,8 @@ public class Initializer implements IInitializer
 	{
 		new DatePickerComponentInitializer().init(application);
 		new PaletteInitializer().init(application);
+		new AbstractYuiPanel.ComponentInitializer().init(application);
 		new Calendar.ComponentInitializer().init(application);
+		new Slider.ComponentInitializer().init(application);
 	}
 }

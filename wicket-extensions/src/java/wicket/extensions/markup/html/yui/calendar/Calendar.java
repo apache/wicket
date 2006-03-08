@@ -16,20 +16,21 @@
  */
 package wicket.extensions.markup.html.yui.calendar;
 
+import java.util.regex.Pattern;
+
 import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IInitializer;
 import wicket.RequestCycle;
+import wicket.behavior.HeaderContributor;
+import wicket.extensions.markup.html.yui.AbstractYuiPanel;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.resources.JavaScriptReference;
-import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
@@ -37,7 +38,7 @@ import wicket.model.AbstractReadOnlyModel;
  * 
  * @author Eelco Hillenius
  */
-public class Calendar extends Panel
+public class Calendar extends AbstractYuiPanel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,20 +52,16 @@ public class Calendar extends Panel
 		 */
 		public void init(Application application)
 		{
-			PackageResource.bind(application, Calendar.class, "calendar.css");
-			PackageResource.bind(application, Calendar.class, "YAHOO.js");
-			PackageResource.bind(application, Calendar.class, "dom.js");
-			PackageResource.bind(application, Calendar.class, "event.js");
-			PackageResource.bind(application, Calendar.class, "calendar.js");
-			PackageResource.bind(application, Calendar.class, "callt.gif");
-			PackageResource.bind(application, Calendar.class, "calrt.gif");
+			// register all .js, .css, and .gif package resources
+			PackageResource.bind(application, Calendar.class, Pattern
+					.compile(".*\\.js|.*\\.css|.*\\.gif"));
 		}
 	}
 
 	/**
 	 * The container/ receiver of the javascript component.
 	 */
-	public static final class CalendarContainer extends FormComponent
+	private final class CalendarElement extends FormComponent
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -73,7 +70,7 @@ public class Calendar extends Panel
 		 * 
 		 * @param id
 		 */
-		public CalendarContainer(String id)
+		public CalendarElement(String id)
 		{
 			super(id);
 			add(new AttributeModifier("id", true, new AbstractReadOnlyModel()
@@ -82,7 +79,7 @@ public class Calendar extends Panel
 
 				public Object getObject(Component component)
 				{
-					return CalendarContainer.this.getPath().replace(':', '_');
+					return elementId;
 				}
 			}));
 		}
@@ -92,21 +89,22 @@ public class Calendar extends Panel
 		 */
 		public void updateModel()
 		{
+			Calendar.this.updateModel();
 		}
 	}
 
 	/** the receiving component. */
-	private CalendarContainer calendarContainer;
+	private CalendarElement calendarElement;
 
 	/**
 	 * The DOM id of the element that hosts the javascript component.
 	 */
-	private String containerDomId;
+	private String elementId;
 
 	/**
 	 * The JavaScript variable name of the calendar component.
 	 */
-	private String javaScriptComponentName;
+	private String javaScriptId;
 
 	/**
 	 * Construct.
@@ -117,11 +115,9 @@ public class Calendar extends Panel
 	public Calendar(String id)
 	{
 		super(id);
-		add(new StyleSheetReference("calendarCSS", Calendar.class, "calendar.css"));
-		add(new JavaScriptReference("YAHOO", Calendar.class, "YAHOO.js"));
-		add(new JavaScriptReference("dom", Calendar.class, "dom.js"));
-		add(new JavaScriptReference("event", Calendar.class, "event.js"));
-		add(new JavaScriptReference("calendar", Calendar.class, "calendar.js"));
+		add(HeaderContributor.forJavaScript(Calendar.class));
+		add(HeaderContributor.forCss(Calendar.class));
+
 		Label initialization = new Label("initialization", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
@@ -136,7 +132,23 @@ public class Calendar extends Panel
 		});
 		initialization.setEscapeModelStrings(false);
 		add(initialization);
-		add(calendarContainer = new CalendarContainer("calendarContainer"));
+		add(calendarElement = new CalendarElement("calendarContainer"));
+	}
+
+	/**
+	 * TODO implement
+	 */
+	public void updateModel()
+	{
+	}
+
+	/**
+	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	public void renderHead(HtmlHeaderContainer container)
+	{
+		((WebPage)getPage()).getBodyContainer().addOnLoadModifier("init" + javaScriptId + "();");
+		super.renderHead(container);
 	}
 
 	/**
@@ -145,19 +157,20 @@ public class Calendar extends Panel
 	protected void onBeginRequest()
 	{
 		super.onBeginRequest();
-		// rather do this in the constructor, but we can't safely until 1.3
-		containerDomId = calendarContainer.getPath().replace(':', '_');
-		javaScriptComponentName = "JsComp" + containerDomId;
-	}
-
-	/**
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		((WebPage)getPage()).getBodyContainer().addOnLoadModifier(
-				"init" + javaScriptComponentName + "();");
-		super.renderHead(container);
+		// initialize lazily
+		if (elementId == null)
+		{
+			// assign the markup id
+			String id = getMarkupId();
+			if (id == null)
+			{
+				// the component (tag) doesn't have an id attribute
+				// in 1.3. we can do this in the constructor instead
+				id = getPath().replace(':', '_');
+			}
+			elementId = id + "Element";
+			javaScriptId = elementId + "JS";
+		}
 	}
 
 	/**
@@ -172,15 +185,15 @@ public class Calendar extends Panel
 		String rightImage = RequestCycle.get().urlFor(
 				new PackageResourceReference(Calendar.class, "calrt.gif"));
 
-		StringBuffer b = new StringBuffer("\nvar ").append(javaScriptComponentName).append(";\n");
-		b.append("function init").append(javaScriptComponentName).append("() {\n\t");
-		b.append(javaScriptComponentName).append(" = new YAHOO.widget.Calendar(\"").append(
-				javaScriptComponentName).append("\",\"").append(containerDomId).append("\");\n\t");
-		b.append(javaScriptComponentName).append(".Options.NAV_ARROW_LEFT = \"").append(leftImage)
-				.append("\";\n\t");
-		b.append(javaScriptComponentName).append(".Options.NAV_ARROW_RIGHT = \"")
-				.append(rightImage).append("\";\n\t");
-		b.append(javaScriptComponentName).append(".render();\n");
+		StringBuffer b = new StringBuffer("\nvar ").append(javaScriptId).append(";\n");
+		b.append("function init").append(javaScriptId).append("() {\n\t");
+		b.append(javaScriptId).append(" = new YAHOO.widget.Calendar(\"").append(javaScriptId)
+				.append("\",\"").append(elementId).append("\");\n\t");
+		b.append(javaScriptId).append(".Options.NAV_ARROW_LEFT = \"").append(leftImage).append(
+				"\";\n\t");
+		b.append(javaScriptId).append(".Options.NAV_ARROW_RIGHT = \"").append(rightImage).append(
+				"\";\n\t");
+		b.append(javaScriptId).append(".render();\n");
 		b.append("}\n");
 		return b.toString();
 	}

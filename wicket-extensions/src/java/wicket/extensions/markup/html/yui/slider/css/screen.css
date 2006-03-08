@@ -1,0 +1,280 @@
+html, body { padding: 0px 0px 10px 0px; border: 0; margin: 0; }
+body { font: normal 11px verdana, sans-serif; color: #333; line-height: 19px; margin: 0; }
+#container { clear: both; text-align: left; padding: 0 0; margin: 0 0; }
+#containerTop { height:48px; }
+#pad {  padding: 0px 20px 0px 20px; }
+a { text-decoration: underline; color: #46546C; }
+a:hover { text-decoration: underline; color: #4d77c3; }
+h1, h2, h3, h4, h5, h6 { font-family: palatino, georgia, "Times New Roman", serif; }
+h2 { font-size:16px; font-weight: bold; margin: 0 0 11px 0; }
+img { padding: 0; margin: 0; border: 0; }
+form { padding: 0; margin: 0; }
+.input { width: 85px; font-size: 9px; }
+.submit { font-size: 9px; }
+#pageTitle { position:absolute;top:0px;left:90px; }
+#pageTitle H3 {	font-size:14pt; color:#666666 }
+#header h1 { float:left; margin-top: 19px; margin-left: 50px; border: 0px solid Green; }
+#header h1 a { display: block; height: 19px; text-decoration: none; }
+#header { height:  60px; border: 0px solid #CFFB00; margin-bottom:0px; padding: 4px; }
+#header h4 { position: relative; float: right; font-size:11px; letter-spacing: 1px; top: 10px; right: 30px; line-height: 15px; padding: 0 0 0 13px; margin: 0px; }
+#content { float: left; width: 500px; padding:10px 0px; border: 0px solid #C13B00; margin-left: 50px; top:0px; }
+#content h1 { font-size:18px; margin:0px;      }
+.newsItem { padding-bottom:25px; margin-bottom:25px; overflow: hidden; }
+.newsItem h3 { font-size:18px; margin:0px; }
+.newsItem h3 a { text-decoration:none; color:#6A7981; }
+.newsItem h3 a:hover { text-decoration:underline; color:#000; }
+.newsItemFooter, .newsItemFooter a { font-size:9px; color:#999; font-weight:normal; }
+.newsItemFooter a:hover { color:#222; }
+#footer { padding: 0px 0px 20px 0px; clear: both; color: #999; border-top:0px #CCC solid; margin:0px 26px 0px 30px }
+#footer a { color: #999; }
+#footer a:hover { color: #222; }
+#footerContainer { clear: both; }
+#rightbar {
+    float: right;
+    padding: 5px 5px 5px 5px;
+    width: 304px; /* for IE5-Win */
+    width: 300px;
+    border: 1px solid #333333;
+    position:relative;
+    right:48px;
+    top:0px;
+    background-color:#eeeeee;
+    }
+#rightbar h2, #rightbar h3 {
+    font-size:12px;
+    text-align:center;
+    color:#FFF;
+    
+    border-bottom:#848B8F solid 1px;
+    border-right:#949B9F solid 1px;
+    border-top:#eee solid 1px;
+    padding:1px;
+    margin:0px 0px 0px 0px;
+    background-color:#383e45;
+    width:100%;
+    }
+#rightbar h2 a, #rightbar h3 a {
+    font-size:12px;
+    color:#FFF;
+    text-decoration:none;
+    display:block;
+    }
+#rightBarPad {
+    margin:0px;
+    }
+#sidenav {
+    margin: 0px 0;
+    border-bottom: 1px solid #ddd;
+    }
+#sidenav ul {
+    margin: 0; 
+    padding: 0; 
+    border: 0;
+    
+    }
+#sidenav ul li {
+    list-style: none; 
+    list-style-image: none !important;
+    margin: 0; 
+    padding:0;
+    }
+#sidenav ul li a {
+    text-decoration: none;
+    padding: 5px 0px 5px 0px;
+    color: #4C5250;
+    display: block;
+    width: 187px;
+    font-size: 11px !important;   
+    font-weight: bold;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #aaa;
+    border-left: 1px solid #C7CBD0;
+    text-shadow: -2px -2px 0px #FFF;
+}
+
+#sidenav ul li a:hover {
+
+    /* background: url(../img/navHover2.png) top no-repeat; */
+    border-top: 1px solid #A1AAAF;
+    border-bottom: 1px solid #CCC;
+    border-right: 0px solid #C3C7CA;
+    border-left: 1px solid #C3C7CA;
+    text-shadow: 4px 4px 0px #C3C7CA;
+    }
+ 
+
+/* slider */
+
+.dragPanel { 
+    position: relative;
+    background-color: #eeeeee;
+    margin: 4px;
+    /*
+    top: 10px;
+    left: 20px;
+    */
+    width: 260px;
+    height: 180px;
+}
+
+.dragPanel h4 { 
+    background-color: #bbbbbb;
+    height: 10px;
+    margin: 0px;
+    cursor: move;
+}
+
+
+input { font-size: .85em }
+.thumb { 
+    cursor:default;
+    width:18px; 
+    height:18px; 
+    z-index: 9;
+    position:absolute; 
+}
+
+.bg {
+    position:absolute; 
+    left:10px; 
+    height:18px; 
+    width:146px; 
+    border: 0px solid #aaaaaa;
+}
+
+.bg span, .bg p {
+    cursor:default;
+    position: relative;
+    font-size: 2px;
+    overflow: hidden;
+    color: #aaaaaa;
+    top: 4px;
+    height: 10px;
+    width: 4px;
+    display: block;
+    float:left;
+}
+
+.bg span {
+    border-top:1px solid #cccccc;
+    border-bottom:1px solid #cccccc;
+}
+
+.bg .lb {
+    border-left:1px solid #cccccc;
+}
+
+.bg .rb {
+    border-right:1px solid #cccccc;
+}
+#valdiv { position:absolute; top: 100px; left:10px; } 
+
+#rBG {top:30px}
+#gBG {top:50px}
+#bBG {top:70px}
+
+#rgbSwatch {
+    position:absolute; 
+    left:160px; 
+    top:34px;
+    height:50px; 
+    width:50px; 
+    border:1px solid #aaaaaa;
+}
+
+#rgbPanel {
+/*
+top: 400px;
+left: 20px;
+*/
+width: 360px;
+height: 240px;
+}
+
+/* picker */
+
+#hueThumb { 
+    cursor:default;
+    width:18px; 
+    height:18px; 
+    z-index: 9;
+    position:absolute; 
+}
+
+#hueBg {
+    position:absolute; 
+    left:216px; 
+    height:198px; 
+    width:18px; 
+    background:url(../img/hue.png) no-repeat;
+    top:18px;
+}
+
+#pickerDiv {
+    position:absolute; 
+    left:10px; 
+    height:187px; 
+    width:188px; 
+    /*
+    background:url(../img/pickerbg.png) no-repeat;
+    */
+    top:20px;
+}
+
+#pickerbg { 
+    position:absolute; 
+    z-index: 1;
+    top:0px;
+    left:0px;
+}
+#selector { 
+    cursor:default;
+    width:11px; 
+    height:11px; 
+    z-index: 9;
+    position:absolute; 
+    top:0px;
+    left:0px;
+}
+
+#pickerSwatch {
+    position:absolute; 
+    left:260px; 
+    top:30px;
+    height:60px; 
+    width:60px; 
+    border:2px solid #aaaaaa;
+}
+
+#pickervaldiv { text-align:right; position:absolute; top: 86px; left:246px; } 
+
+#pickerPanel {
+/*
+top: 200px;
+left: 20px;
+*/
+width: 360px;
+height: 240px;
+}
+
+/* standard horizontal and vertical sliders */
+#horizHandleDiv { 
+    position:absolute; 
+    left: 100px; /* the default position is the center of the bg */
+    top: 8px;  /* force the image down a bit */
+    cursor:default;
+    width:18px; 
+    height:18px; 
+}
+
+#horizWrapper {position:relative; margin-left:60px;width:218px;float:left;}
+#horizBGDiv {position:relative; top:60px; background:url(../img/horizBg.png) no-repeat; height:26px; width:218px;zindex:5 }
+#horizValueDiv { position:relative; top: 70px; left:66px; } 
+
+#vertWrapper {position:relative; width:90px;float:left}
+#vertHandleDiv { cursor:default; width:20px; height:18px; position:absolute; }
+#vertBGDiv {position:relative;top:0px; float:left; width:26px; left:10px;background:url(../img/vertBg.png) no-repeat;height:218px; }
+#vertValueDiv { position:relative; top: 100px; left:40px; }
+
+
+
