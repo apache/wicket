@@ -16,11 +16,14 @@
  */
 package wicket;
 
+import java.util.ArrayList;
+
 import wicket.IRedirectListener;
 import wicket.RequestCycle;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IOnChangeListener;
+import wicket.model.Model;
 import wicket.protocol.http.MockPage;
 
 /**
@@ -71,7 +74,7 @@ public class FormDispatchEventTest extends WicketTestCase
 	{
 		MyForm form = new MyForm("form");
 
-		DropDownChoice dropDown = new DropDownChoice("dropdown")
+		DropDownChoice dropDown = new DropDownChoice("dropdown",new Model(), new ArrayList())
 		{
 			private static final long serialVersionUID = 1L;
 
