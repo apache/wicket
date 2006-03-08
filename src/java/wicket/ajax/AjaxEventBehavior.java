@@ -29,7 +29,7 @@ import wicket.util.string.Strings;
  * <pre>
  *        DropDownChoice choice=new DropDownChoice(...);
  *        choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *           protected onEvent(AjaxRequestTarget target) {
+ *           protected void onEvent(AjaxRequestTarget target) {
  *              System.out.println(&quot;ajax here!&quot;);
  *           }
  *        }
