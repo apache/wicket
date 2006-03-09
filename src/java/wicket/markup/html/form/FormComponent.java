@@ -66,7 +66,7 @@ import wicket.version.undo.Change;
 public abstract class FormComponent extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
@@ -215,7 +215,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final FormComponent add(final IValidator validator)
 	{
 		// keep this in until we remove TypeValidator
-		if(validator instanceof TypeValidator)
+		if (validator instanceof TypeValidator)
 		{
 			setType(((TypeValidator)validator).getType());
 		}
@@ -344,13 +344,13 @@ public abstract class FormComponent extends WebMarkupContainer
 			return rawInput;
 		}
 	}
-	
+
 	/**
-	 * @return The raw form input that is stored for this formcomponent 
+	 * @return The raw form input that is stored for this formcomponent
 	 */
 	public final String getRawInput()
 	{
-		return rawInput == NO_RAW_INPUT?null:rawInput;
+		return rawInput == NO_RAW_INPUT ? null : rawInput;
 	}
 
 	/**
@@ -448,21 +448,22 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Updates this components' model from the request, it expect that the object 
-	 * is already converted through the convert() call. By default it just does this:
+	 * Updates this components' model from the request, it expect that the
+	 * object is already converted through the convert() call. By default it
+	 * just does this:
 	 * 
 	 * <pre>
 	 * setModelObject(getConvertedInput());
 	 * </pre>
 	 * 
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE
-	 * DOING. USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY
-	 * BY YOU.
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
+	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
 	 */
 	public void updateModel()
 	{
 		setModelObject(getConvertedInput());
 	}
+
 	/**
 	 * Called to indicate that the user input is valid.
 	 */
@@ -520,7 +521,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		if (type == null)
 		{
 			try
-			{	
+			{
 				convertedInput = convertValue(getInput());
 			}
 			catch (ConversionException e)
@@ -542,7 +543,7 @@ public abstract class FormComponent extends WebMarkupContainer
 				String[] resourceKeys = new String[] { typedResourceKey, "ConversionError" };
 
 				error(Arrays.asList(resourceKeys), args);
-			}			
+			}
 		}
 		else if (!Strings.isEmpty(getInput()))
 		{
@@ -576,16 +577,19 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 		}
 	}
+
 	/**
-	 * Subclasses should overwrite this if the conversion is not done 
-	 * through the type field and the IConverter.
+	 * Subclasses should overwrite this if the conversion is not done through
+	 * the type field and the IConverter.
 	 * 
 	 * If conversion fails then a ConversionException should be thrown
 	 * 
-	 * @param value The value can be the getInput() or through a cookie 
+	 * @param value
+	 *            The value can be the getInput() or through a cookie
 	 * 
 	 * @return The converted value. default returns just the given value
-	 * @throws ConversionException If input can't be converted
+	 * @throws ConversionException
+	 *             If input can't be converted
 	 */
 	protected Object convertValue(String value) throws ConversionException
 	{
@@ -897,10 +901,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * component. If no type is specified String type is assumed.
 	 * 
 	 * @param type
+	 * @return this for chaining
 	 */
-	public final void setType(Class type)
+	public final FormComponent setType(Class type)
 	{
 		this.type = type;
+		return this;
 	}
 
 	/**
@@ -974,7 +980,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		{
 			final String key = (String)keys.next();
 
-			String resource = prefix+getId() + "." + key;
+			String resource = prefix + getId() + "." + key;
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
