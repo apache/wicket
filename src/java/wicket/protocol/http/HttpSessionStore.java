@@ -54,6 +54,9 @@ public class HttpSessionStore implements ISessionStore
 	/** cached http session object. */
 	private HttpSession httpSession = null;
 
+	/** cached id because you can't access the id after session unbound */
+	private String id = null;
+	
 	/**
 	 * Construct.
 	 */
@@ -73,12 +76,17 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public String getId()
 	{
-		HttpSession httpSession = getHttpSession(false);
-		if (httpSession != null)
+		if(id == null)
 		{
-			return httpSession.getId();
+			HttpSession httpSession = getHttpSession(false);
+			if (httpSession != null)
+			{
+				id = httpSession.getId();
+				return id;
+			}
+			return String.valueOf(hashCode());
 		}
-		return String.valueOf(hashCode());
+		return id;
 	}
 
 	/**

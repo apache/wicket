@@ -141,7 +141,7 @@ public class WebSession extends Session implements HttpSessionBindingListener
 	public void valueUnbound(HttpSessionBindingEvent event)
 	{
 		// will happen when the session gets invalidated or a timeout.
-		String id = event.getSession().getId();
+		String id = getSessionStore().getId();
 		Application application = getApplication();
 		if(application instanceof WebApplication)
 		{
