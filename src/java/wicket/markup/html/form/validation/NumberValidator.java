@@ -184,8 +184,6 @@ public abstract class NumberValidator extends AbstractValidator
 	 */
 	public abstract void onValidate(FormComponent formComponent, Number value);
     
-    
-    
     private static class RangeValidator extends NumberValidator
     {
 		private static final long serialVersionUID = 1L;
