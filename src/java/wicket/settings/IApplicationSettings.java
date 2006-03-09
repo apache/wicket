@@ -112,7 +112,7 @@ public interface IApplicationSettings
 	 * 
 	 * This method can be called in the init phase of the application 
 	 * with the servlet init parameter {@link Application#CONTEXTPATH} if it is specified
-	 * or by the developer itself in the {@link WebApplication#init()}
+	 * or by the developer itself in the {@link WebApplication} init() method.
 	 * If it is not set in the init phase of the application it will be 
 	 * set automatically on the context path of the request {@link WebRequest#getContextPath()}
 	 * 
