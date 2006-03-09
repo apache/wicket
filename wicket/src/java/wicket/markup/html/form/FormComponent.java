@@ -494,7 +494,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			// when null, check whether this is natural for that component, or
 			// whether - as is the case with text fields - this can only happen
 			// when the component was disabled
-			if (input == null && (isInputNullable()))
+			if (input == null && !isInputNullable())
 			{
 				// this value must have come from a disabled field
 				// do not perform validation
