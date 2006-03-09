@@ -117,7 +117,6 @@ public interface IApplicationSettings
 	 * set automatically on the context path of the request {@link WebRequest#getContextPath()}
 	 * 
 	 * @param contextPath The context path to use. 
-	 * 
 	 */
 	void setContextPath(String contextPath);
 
