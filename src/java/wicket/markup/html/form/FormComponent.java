@@ -825,35 +825,25 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Used by Form to tell the FormComponent that a new user input is available
 	 */
-	public final void registerNewUserInput()
+	public final void inputChanged()
 	{
 		if (isVisibleInHierarchy())
 		{
-			rawInput = getUserInput();
-		}
-	}
+			// Get input as String array
+			final String[] input = inputAsStringArray();
 
-	/**
-	 * @return The value of the user input for this form component
-	 */
-	private String getUserInput()
-	{
-		String rawInput;
-		// Get input as String array
-		final String[] input = inputAsStringArray();
-
-		// If there is any input
-		if (input != null)
-		{
-			// join the values together with ";", for example, "id1;id2;id3"
-			rawInput = StringList.valueOf(input).join(";");
+			// If there is any input
+			if (input != null)
+			{
+				// join the values together with ";", for example, "id1;id2;id3"
+				rawInput = StringList.valueOf(input).join(";");
+			}
+			else
+			{
+				// no input
+				rawInput = null;
+			}
 		}
-		else
-		{
-			// no input
-			rawInput = null;
-		}
-		return rawInput;
 	}
 
 	/**
