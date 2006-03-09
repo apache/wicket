@@ -61,7 +61,7 @@ public class FormPage extends BasePage
 		// add form components to the form as usual
 
 		fc = new RequiredTextField("name");
-		fc.add(StringValidator.minimum(4));
+		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
 		
 		form.add(fc);

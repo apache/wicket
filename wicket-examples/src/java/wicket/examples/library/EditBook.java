@@ -112,7 +112,7 @@ public final class EditBook extends AuthenticatedWebPage
 			// that edits the book's title
 			final TextField title = new TextField("title");
 			title.setRequired(true);
-			title.add(StringValidator.maximum(30));
+			title.add(StringValidator.maximumLength(30));
 			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
 					"titleFeedback");
 			add(titleFeedback);
