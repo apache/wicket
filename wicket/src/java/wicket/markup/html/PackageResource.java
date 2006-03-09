@@ -19,6 +19,7 @@ package wicket.markup.html;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.SharedResources;
@@ -59,10 +63,19 @@ public class PackageResource extends WebResource
 {
 	private static final long serialVersionUID = 1L;
 
-	/** common extension pattern for javascript files; matches all files with extension 'js'. */
+	/** log. */
+	private static final Log log = LogFactory.getLog(PackageResource.class);
+
+	/**
+	 * common extension pattern for javascript files; matches all files with
+	 * extension 'js'.
+	 */
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
 
-	/** common extension pattern for css files; matches all files with extension 'css'. */
+	/**
+	 * common extension pattern for css files; matches all files with extension
+	 * 'css'.
+	 */
 	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
 
 	/** The path to the resource */
@@ -256,30 +269,37 @@ public class PackageResource extends WebResource
 			while (packageResources.hasMoreElements())
 			{
 				URL resource = (URL)packageResources.nextElement();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(resource
-						.openStream()));
-				String entry = null;
-				try
+				InputStream inputStream = resource.openStream();
+				if (inputStream != null)
 				{
-					while ((entry = reader.readLine()) != null)
+					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+					String entry = null;
+					try
 					{
-						// if the current entry matches the provided regexp
-						if (pattern.matcher(entry).matches())
+						while ((entry = reader.readLine()) != null)
 						{
-							if (resources == null)
+							// if the current entry matches the provided regexp
+							if (pattern.matcher(entry).matches())
 							{
-								resources = new ArrayList();
+								if (resources == null)
+								{
+									resources = new ArrayList();
+								}
+								// we add the entry as a package resource
+								resources.add(get(scope, entry, null, null));
 							}
-							// we add the entry as a package resource
-							resources.add(get(scope, entry, null, null));
 						}
 					}
+					finally
+					{
+						IOUtils.closeQuietly(reader);
+					}
 				}
-				finally
+				else
 				{
-					IOUtils.closeQuietly(reader);
+					log.error("though " + resource + " was listed as a resource by " + packageRef
+							+ ", it did not return an imput stream and can thus not be read");
 				}
-
 			}
 		}
 		catch (IOException e)
