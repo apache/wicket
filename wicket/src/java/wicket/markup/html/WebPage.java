@@ -193,7 +193,7 @@ public class WebPage extends Page
 				if (element instanceof ComponentTag)
 				{
 					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && "body".equals(tag.getName())
+					if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName())
 							&& (tag.getNamespace() == null))
 					{
 						// Add a default container if the tag has the default
