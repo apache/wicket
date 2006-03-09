@@ -87,7 +87,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();
-		formComponent.registerNewUserInput();
+		formComponent.inputChanged();
 		formComponent.validate();
 		if (formComponent.hasErrorMessage())
 		{

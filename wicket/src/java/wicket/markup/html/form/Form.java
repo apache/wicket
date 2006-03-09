@@ -256,7 +256,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
-			registerNewUserInput();
+			inputChanged();
 
 			String url = getRequest().getParameter(getHiddenFieldId());
 			if (!Strings.isEmpty(url))
@@ -1067,7 +1067,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * Visits the form's children FormComponents and inform them that a new user
 	 * input is available in the Request
 	 */
-	private void registerNewUserInput()
+	private void inputChanged()
 	{
 		visitFormComponents(new FormComponent.IVisitor()
 		{
@@ -1075,7 +1075,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
-					formComponent.registerNewUserInput();
+					formComponent.inputChanged();
 				}
 			}
 		});
