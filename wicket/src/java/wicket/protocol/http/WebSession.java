@@ -140,17 +140,18 @@ public class WebSession extends Session implements HttpSessionBindingListener
 	 */
 	public void valueUnbound(HttpSessionBindingEvent event)
 	{
-		// will happen when the session gets invalidated or a timeout.
-		String id = getSessionStore().getId();
+		// if application == null then it was serialized/deserialized and then invalidated without being touched anymore.
+		// Don't know an easy way to get the application object back so can't call destroy on it except maybe:
+		// TODO we could try to get it through the servletcontext, but how to get the context key?
 		Application application = getApplication();
-		if(application instanceof WebApplication)
+		if(application != null)
 		{
-			((WebApplication)application).sessionDestroyed(id);
-		}
-		else
-		{
-			// couldn't clean up the sessions because application not found for this session.
-			// TODO we could try to get it through the servletcontext, but how to get the context key?
+			// will happen when the session gets invalidated or a timeout.
+			String id = getSessionStore().getId();
+			if(application instanceof WebApplication)
+			{
+				((WebApplication)application).sessionDestroyed(id);
+			}
 		}
 	}
 }
