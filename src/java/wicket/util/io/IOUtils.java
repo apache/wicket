@@ -104,7 +104,7 @@ public class IOUtils
 				input.close();
 			}
 		}
-		catch (IOException ioe)
+		catch (Exception ioe)
 		{
 			// ignore
 		}
@@ -128,7 +128,7 @@ public class IOUtils
 				output.close();
 			}
 		}
-		catch (IOException ioe)
+		catch (Exception ioe)
 		{
 			// ignore
 		}
@@ -152,7 +152,7 @@ public class IOUtils
 				input.close();
 			}
 		}
-		catch (IOException ioe)
+		catch (Exception ioe)
 		{
 			// ignore
 		}
@@ -176,7 +176,7 @@ public class IOUtils
 				output.close();
 			}
 		}
-		catch (IOException ioe)
+		catch (Exception ioe)
 		{
 			// ignore
 		}
