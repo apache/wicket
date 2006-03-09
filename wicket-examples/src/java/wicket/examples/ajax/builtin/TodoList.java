@@ -1,5 +1,6 @@
 package wicket.examples.ajax.builtin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,7 @@ public class TodoList extends WebPage
 	/**
 	 * The todo object.
 	 */
-	public static class TodoItem
+	public static class TodoItem implements Serializable
 	{
 		/** Is the item done? */
 		private boolean checked;
