@@ -89,7 +89,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (Exception ex)
 			{
-				log.info("cannot convert url: " + url + " to file (" + ex.getMessage()
+				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage()
 						+ "), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
@@ -166,7 +166,8 @@ public class UrlResourceStream extends AbstractResourceStream
 			Application application = Application.get();
 			if (application instanceof WebApplication)
 			{
-				// TODO Post 1.2: General: For non webapplication another method should be
+				// TODO Post 1.2: General: For non webapplication another method
+				// should be
 				// implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getWicketServlet().getServletContext()
 						.getMimeType(url.getFile());
