@@ -117,7 +117,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 	}
 
-	/** prints a javascript resource reference. */
+	/** 
+	 * prints a javascript resource reference. 
+	 */
 	public static final class JavaScriptReferenceHeaderContributor
 			extends
 				PackageResourceReferenceHeaderContributor
@@ -142,14 +144,17 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public void renderHead(Response response)
 		{
-			String url = RequestCycle.get().urlFor(getPackageResourceReference());
-			StringBuffer b = new StringBuffer();
-			b.append("<script type=\"text/javascript\" " + "src=\"").append(url).append("\"></script>\n");
-			response.write(b.toString());
+			final String url = RequestCycle.get().urlFor(getPackageResourceReference());
+			
+			response.write("<script type=\"text/javascript\" src=\"");
+			response.write(url);
+			response.println("\"></script>");
 		}
 	}
 
-	/** prints a css resource reference. */
+	/** 
+	 * prints a css resource reference. 
+	 */
 	public static final class CSSReferenceHeaderContributor
 			extends
 				PackageResourceReferenceHeaderContributor
@@ -174,15 +179,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public void renderHead(Response response)
 		{
-			String url = RequestCycle.get().urlFor(getPackageResourceReference());
-			StringBuffer b = new StringBuffer();
-			b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"").append(url).append(
-					"\"></link>\n");
-			response.write(b.toString());
+			final String url = RequestCycle.get().urlFor(getPackageResourceReference());
+			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+			response.write(url);
+			response.println("\"></link>");
 		}
 	}
 
-	/** set of resource references to contribute. */
+	/** 
+	 * set of resource references to contribute. 
+	 */
 	private Set headerContributors = null;
 
 	/**
