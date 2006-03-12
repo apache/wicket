@@ -36,6 +36,7 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IExceptionSettings;
@@ -438,6 +439,15 @@ public abstract class Application
 		return getSettings();
 	}
 
+	/**
+	 * @return Application's ajax related settings
+	 * @see IAjaxSettings
+	 * @since 1.2
+	 */
+	public final IAjaxSettings getAjaxSettings() {
+		return getSettings();
+	}
+	
 	/**
 	 * @return Application's resources related settings
 	 * @see IResourceSettings

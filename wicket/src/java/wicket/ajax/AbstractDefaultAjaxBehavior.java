@@ -17,10 +17,12 @@
  */
 package wicket.ajax;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
+import wicket.settings.IAjaxSettings;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -35,6 +37,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
+	/** reference to the default ajax debug support javascript file. */
+	private static final PackageResourceReference JAVASCRIPT_DEBUG_DRAG = new PackageResourceReference(
+			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
+
+	/** reference to the default ajax debug support javascript file. */
+	private static final PackageResourceReference JAVASCRIPT_DEBUG = new PackageResourceReference(
+			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
+
+	
+	
 	/**
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
@@ -50,7 +62,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected void onRenderHeadInitContribution(final Response response)
 	{
+		final IAjaxSettings settings=Application.get().getAjaxSettings();
+		
 		writeJsReference(response, JAVASCRIPT);
+		
+		if (settings.isAjaxDebugModeEnabled()) {
+			response.write("<script>wicketAjaxDebugEnable=true;</script>");
+			writeJsReference(response, JAVASCRIPT_DEBUG_DRAG);
+			writeJsReference(response, JAVASCRIPT_DEBUG);
+		}
+		
+		
+		
 	}
 
 	/**

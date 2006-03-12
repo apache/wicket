@@ -24,4 +24,22 @@ public interface IDebugSettings
 	 * @param check
 	 */
 	void setComponentUseCheck(boolean check);
+
+	/**
+	 * Enables or disables ajax debug mode. See {@link IAjaxSettings} for
+	 * details
+	 * 
+	 * @param enable
+	 * 
+	 */
+	void setAjaxDebugModeEnabled(boolean enable);
+
+	/**
+	 * Returns status of ajax debug mode. See {@link IAjaxSettings} for details
+	 * 
+	 * @return true if ajax debug mode is enabled, false otherwise
+	 * 
+	 */
+	boolean isAjaxDebugModeEnabled();
+
 }
