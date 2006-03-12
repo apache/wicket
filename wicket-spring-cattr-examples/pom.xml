@@ -5,16 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wicket</groupId>
 	<artifactId>wicket-spring-cattr-examples</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>1.2-SNAPSHOT</version>
-	<name>Wicket Spring CAttr Examples</name>
-	<description>
-		Examples project for using commons attributes based Spring integration in Wicket
-		applications.
-	</description>
-	<url>http://wicket.sourceforge.net/spring</url>
-	<inceptionYear>2005</inceptionYear>
-
+	<name>Examples of Wicket Spring Integration through Commons Attributes</name>
+	<description>Examples of Spring integration in your Wicket web applications using commons attributes.</description>
 	<organization>
 		<name>Wicket developers</name>
 		<url>http://wicket.sourceforge.net</url>
@@ -34,12 +28,12 @@
 
 	<scm>
 		<connection>
-			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-examples
+			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-cattr-examples
 		</connection>
 		<developerConnection>
-			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-examples
+			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-cattr-examples
 		</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-spring-examples</url>
+		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-spring-cattr-examples</url>
 	</scm>
 
 	<mailingLists>
@@ -162,40 +156,12 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-            <plugin>
-              <groupId>commons-attributes</groupId>
-              <artifactId>commons-attributes-plugin</artifactId>
-              <version>2.1</version>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>compile</goal>
-                    <goal>test-compile</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptor>src/assembly/bin.xml</descriptor>
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<warSourceDirectory>src/main/webapp</warSourceDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -216,17 +182,32 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<testFailureIgnore>true</testFailureIgnore>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
+			<!-- this plugin doesn't work on my box ?! -->
+            <plugin>
+              <groupId>commons-attributes</groupId>
+              <artifactId>commons-attributes-plugin</artifactId>
+              <version>2.1</version>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>compile</goal>
+                    <goal>test-compile</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>surefire-report-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -235,6 +216,30 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependencies</report>
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
