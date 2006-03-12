@@ -28,12 +28,12 @@
 
 	<scm>
 		<connection>
-			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-annot
+			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-cattr
 		</connection>
 		<developerConnection>
-			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-annot
+			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-cattr
 		</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-spring-annot</url>
+		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-spring-cattr</url>
 	</scm>
 
 	<mailingLists>
@@ -87,13 +87,6 @@
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
 			<version>1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-attributes</groupId>
