@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: TabbedPanel.java 4079 2006-02-02 10:18:54 -0800 (Thu, 02 Feb 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-02-02 10:18:54 -0800 (Thu, 02 Feb
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,8 +20,9 @@ package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
-import wicket.AttributeModifier;
 import wicket.WicketRuntimeException;
+import wicket.behavior.AttributeAppender;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
@@ -34,32 +36,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
+ *                 
+ *                 List tabs=new ArrayList();
+ *                 
+ *                 tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
  *                
- *                List tabs=new ArrayList();
+ *                 public Panel getPanel(String panelId)
+ *                 {
+ *                 return new TabPanel1(panelId);
+ *                 }
+ *                 
+ *                 });
  *                
- *                tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *               
- *                public Panel getPanel(String panelId)
- *                {
- *                return new TabPanel1(panelId);
- *                }
+ *                 tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
  *                
- *                });
- *               
- *                tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *               
- *                public Panel getPanel(String panelId)
- *                {
- *                return new TabPanel2(panelId);
- *                }
+ *                 public Panel getPanel(String panelId)
+ *                 {
+ *                 return new TabPanel2(panelId);
+ *                 }
+ *                 
+ *                 });
  *                
- *                });
- *               
- *                add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *            
- *                
- *                &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *            
+ *                 add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *             
+ *                 
+ *                 &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *             
  * </pre>
  * 
  * </p>
@@ -127,7 +129,7 @@ public class TabbedPanel extends Panel
 				titleLink.add(new Label("title", tab.getTitle()));
 				item.add(titleLink);
 
-				item.add(new AttributeModifier("class", true, new Model("selected"))
+				item.add(new SimpleAttributeModifier("class", "selected")
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -137,6 +139,11 @@ public class TabbedPanel extends Panel
 					}
 
 				});
+				if (item.getIteration() == getIterations() - 1)
+				{
+					item.add(new AttributeAppender("class", true, new Model("last"), " "));
+				}
+
 			}
 
 		});
