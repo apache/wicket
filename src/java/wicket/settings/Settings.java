@@ -84,8 +84,12 @@ public final class Settings
 			IRequestCycleSettings,
 			IResourceSettings,
 			ISecuritySettings,
-			ISessionSettings
+			ISessionSettings,
+			IAjaxSettings
 {
+	/** ajax debug mode status */
+	boolean ajaxDebugModeEnabled=false;
+	
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
@@ -1099,5 +1103,21 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * @see wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
+	 */
+	public void setAjaxDebugModeEnabled(boolean enable)
+	{
+		ajaxDebugModeEnabled=enable;
+	}
+
+	/**
+	 * @see wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
+	 */
+	public boolean isAjaxDebugModeEnabled()
+	{
+		return ajaxDebugModeEnabled;
 	}
 }

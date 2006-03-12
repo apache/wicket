@@ -1,9 +1,22 @@
+// DEBUG FUNCTIONS
+function wicketAjaxDebugEnabled() {
+    if (typeof(wicketAjaxDebugEnable)=="undefined") {
+        return false;
+    } else {
+        return wicketAjaxDebugEnable==true;
+    }
+}
+
 // MISC FUNCTIONS
+function wicketGet(id) {
+    return document.getElementById(id);
+}
+
 function wicketShow(id) {
-    document.getElementById(id).style.display = "";
+    wicketGet(id).style.display = "";
 }
 function wicketHide(id) {
-    document.getElementById(id).style.display = "none";
+    wicketGet(id).style.display = "none";
 }
 
  
@@ -17,9 +30,22 @@ function wicketAjaxGetTransport() {
             transport = new ActiveXObject("Microsoft.XMLHTTP");
         }
     }
+    
+    if (transport==null&&wicketAjaxDebugEnabled()) {
+        var log=WicketAjaxDebug.logError;
+        log("Could not locate ajax transport. Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
+    }    
     return transport;
 }
 function wicketAjaxGet(url, successHandler) {
+    if (wicketAjaxDebugEnabled()) {
+        var log=WicketAjaxDebug.logInfo;
+        log("");
+        log("initiating ajax GET request with...");
+        log("url: "+url);
+        log("successHandler:"+successHandler);
+    }
+   
     var transport = wicketAjaxGetTransport();
     if (transport == null) {
         return false;
@@ -32,6 +58,15 @@ function wicketAjaxGet(url, successHandler) {
     return true;
 }
 function wicketAjaxPost(url, body, successHandler) {
+    if (wicketAjaxDebugEnabled()) {
+        var log=WicketAjaxDebug.logInfo;
+        log("");
+        log("initiating ajax POST request with...");
+        log("url: "+url);
+        log("body: "+body);
+        log("successHandler:"+successHandler);
+    }
+   
     var transport = wicketAjaxGetTransport();
     if (transport == null) {
         return false;
@@ -58,15 +93,29 @@ function wicketSubmitFormById(formId, url, submitButton, successHandler) {
 function wicketAjaxOnStateChange(transport, successHandler) {
     if (transport.readyState == 4) {
         if (transport.status == 200) {
+            if (wicketAjaxDebugEnabled()) {
+                var log=WicketAjaxDebug.logInfo;
+                log("received ajax response. "+transport.responseText.length+" characters, envelope following...");
+                log("");
+                log(transport.responseText);
+            }
             wicketAjaxProcess(transport.responseXML, successHandler);
-        }
+        } else {
+            if (wicketAjaxDebugEnabled()) {
+                var log=WicketAjaxDebug.logError;
+                log("received ajax response with code: "+transport.status);
+            }
+        }        
     }
 }
 function wicketAjaxProcess(envelope, successHandler) {
     var root = envelope.getElementsByTagName("ajax-response");
     root = root[0];
     if (root == null || root.tagName != "ajax-response") {
-        //TODO handle error properly
+        if (wicketAjaxDebugEnabled()) {
+            var log=WicketAjaxDebug.logError;
+            log("malformed response envelope: could not find root <ajax-response> element");
+        }
         alert("error, ajax-response element not found");
     }
     for (var i = 0; i < root.childNodes.length; i++) {
@@ -79,9 +128,26 @@ function wicketAjaxProcess(envelope, successHandler) {
             }
         }
     }
-    if (successHandler != null) {
-        successHandler();
+    
+    if (wicketAjaxDebugEnabled()) {
+        var log=WicketAjaxDebug.logInfo;
+        log("response envelope successfully processed");
     }
+    
+    
+    if (successHandler != null) {
+        if (wicketAjaxDebugEnabled()) {
+            var log=WicketAjaxDebug.logInfo;
+            log("invoking success handler...");
+        }
+        successHandler();
+    } 
+
+    if (wicketAjaxDebugEnabled()) {
+        var log=WicketAjaxDebug.logInfo;
+        log("request successfully processed");
+    }
+    
 }
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
