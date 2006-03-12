@@ -40,6 +40,7 @@ public class AjaxApplication extends WicketExampleApplication
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+		getAjaxSettings().setAjaxDebugModeEnabled(true);
 	}
 
 	/**
