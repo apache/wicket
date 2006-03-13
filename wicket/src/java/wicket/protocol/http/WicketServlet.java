@@ -360,7 +360,6 @@ public class WicketServlet extends HttpServlet
 		if ((pathInfo != null) && pathInfo.startsWith(RESOURCES_PATH_PREFIX))
 		{
 			final String resourceReferenceKey = pathInfo.substring(RESOURCES_PATH_PREFIX.length());
-			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
@@ -371,6 +370,8 @@ public class WicketServlet extends HttpServlet
 				try
 				{
 					Application.set(webApplication);
+
+					final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
 
 					// Set parameters from servlet request
 					resource.setParameters(webRequest.getParameterMap());
