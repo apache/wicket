@@ -18,6 +18,7 @@
 package wicket.request.target.coding;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -104,10 +105,20 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		}
 
 		// Loop through pairs
+		
 		PageParameters parameters = new PageParameters();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
-			parameters.add(pairs[i], pairs[i + 1]);
+			String value = pairs[i + 1];
+			try
+			{
+				value = URLDecoder.decode(value, Application.get() .getRequestCycleSettings().getResponseRequestEncoding());
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				log.error("error decoding parameter", ex);
+			}
+			parameters.add(pairs[i], value);
 		}
 		return parameters;
 	}
