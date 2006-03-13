@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.114 $ $Date$
+ * $Id: Application.java 4893 2006-03-13 12:27:09 -0800 (Mon, 13 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-13 12:27:09 -0800 (Mon, 13 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -110,7 +111,10 @@ public abstract class Application
 	/** Configuration type constant for development */
 	public static final String DEVELOPMENT = "development";
 
-	/** Configuration type constant for getting the context path out of the web.xml*/
+	/**
+	 * Configuration type constant for getting the context path out of the
+	 * web.xml
+	 */
 	public static final String CONTEXTPATH = "contextpath";
 
 	/** Thread local holder of the application object. */
@@ -163,13 +167,13 @@ public abstract class Application
 	 */
 	public static void set(Application application)
 	{
-		if(application == null)
+		if (application == null)
 		{
 			throw new IllegalArgumentException("Argument application can not be null");
 		}
 		current.set(application);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 */
@@ -179,8 +183,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
-	 * overriding the constructor.</strong>
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your
+	 * application instead of overriding the constructor.</strong>
 	 */
 	public Application()
 	{
@@ -218,7 +222,8 @@ public abstract class Application
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
 						component.getClass()))
 				{
-					// then call any unauthorized component instantiation listener
+					// then call any unauthorized component instantiation
+					// listener
 					getSecuritySettings().getUnauthorizedComponentInstantiationListener()
 							.onUnauthorizedInstantiation(component);
 				}
@@ -294,7 +299,7 @@ public abstract class Application
 		{
 			getResourceSettings().setResourceFinder(resourceFinder);
 		}
-		// As long as this is public api the developermenat and deployment mode 
+		// As long as this is public api the developermenat and deployment mode
 		// should counter act each other for all properties.
 		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
@@ -444,10 +449,11 @@ public abstract class Application
 	 * @see IAjaxSettings
 	 * @since 1.2
 	 */
-	public final IAjaxSettings getAjaxSettings() {
+	public final IAjaxSettings getAjaxSettings()
+	{
 		return getSettings();
 	}
-	
+
 	/**
 	 * @return Application's resources related settings
 	 * @see IResourceSettings
@@ -578,7 +584,8 @@ public abstract class Application
 	protected abstract ISessionFactory getSessionFactory();
 
 	/**
-	 * Allows for initialization of the application by a subclass.
+	 * Allows for initialization of the application by a subclass. <strong>Use
+	 * this method for any application setup instead of the constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -694,6 +701,7 @@ public abstract class Application
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
 	 * @param target
 	 */
 	public void logEventTarget(IRequestTarget target)
@@ -702,6 +710,7 @@ public abstract class Application
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
 	 * @param requestTarget
 	 */
 	public void logResponseTarget(IRequestTarget requestTarget)
