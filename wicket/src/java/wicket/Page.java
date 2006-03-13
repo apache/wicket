@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.209 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -336,7 +336,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			{
 				log.debug("Page not allowed to render: " + this);
 			}
-			throw new UnauthorizedActionException(this,Component.RENDER);
+			throw new UnauthorizedActionException(this, Component.RENDER);
 		}
 
 		// Visit all this page's children to reset markup streams and check
@@ -399,7 +399,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		finally
 		{
 			// The request is over
-			// TODO check this internal end request is removed because that call will happen 
+			// TODO check this internal end request is removed because that call
+			// will happen
 			// in the clean up of the request cycle.
 			// internalEndRequest();
 		}
@@ -922,7 +923,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException(
-						"The component " + component + " has the same wicket:id as another component already added at the same level");
+						"The component "
+								+ component
+								+ " has the same wicket:id as another component already added at the same level");
 			}
 			if (log.isDebugEnabled())
 			{
@@ -1065,8 +1068,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				renderedComponents = null;
 
 				// Throw exception
-				throw new WicketRuntimeException("The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
-						+ buffer.toString());
+				throw new WicketRuntimeException(
+						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
+								+ buffer.toString());
 			}
 		}
 
