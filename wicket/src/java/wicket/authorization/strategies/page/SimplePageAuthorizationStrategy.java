@@ -43,6 +43,10 @@ package wicket.authorization.strategies.page;
  * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
  * </pre>
  * 
+ * FIXME: General: Javadoc is out of date, we no longer have anywhere to set the
+ * the login page, without that is this class even useful?
+ * 
+ * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
