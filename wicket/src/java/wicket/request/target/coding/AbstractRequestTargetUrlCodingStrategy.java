@@ -110,17 +110,28 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		for (int i = 0; i < pairs.length; i += 2)
 		{
 			String value = pairs[i + 1];
-			try
-			{
-				value = URLDecoder.decode(value, Application.get() .getRequestCycleSettings().getResponseRequestEncoding());
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				log.error("error decoding parameter", ex);
-			}
+			value = urlDecode(value);
 			parameters.add(pairs[i], value);
 		}
 		return parameters;
+	}
+
+	/**
+	 * Returns a decoded value of the given value
+	 * @param value
+	 * @return Decodes the value
+	 */
+	protected String urlDecode(String value)
+	{
+		try
+		{
+			value = URLDecoder.decode(value, Application.get().getRequestCycleSettings().getResponseRequestEncoding());
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			log.error("error decoding parameter", ex);
+		}
+		return value;
 	}
 
 	/**

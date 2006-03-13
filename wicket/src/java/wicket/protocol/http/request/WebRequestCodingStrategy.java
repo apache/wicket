@@ -166,7 +166,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (encoder != null)
 		{
 			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
-			return prefix.append(pathForTarget(requestTarget)).toString();
+			return requestCycle.getResponse().encodeURL(prefix.append(pathForTarget(requestTarget)).toString());
 		}
 
 		// no mount found; go on with default processing
