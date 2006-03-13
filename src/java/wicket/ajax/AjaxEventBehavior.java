@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxEventBehavior.java 4838 2006-03-08 15:59:03 -0800 (Wed, 08 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-08 15:59:03 -0800 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,12 +28,12 @@ import wicket.util.string.Strings;
  * Example:
  * 
  * <pre>
- *        DropDownChoice choice=new DropDownChoice(...);
- *        choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *           protected void onEvent(AjaxRequestTarget target) {
- *              System.out.println(&quot;ajax here!&quot;);
- *           }
- *        }
+ *             DropDownChoice choice=new DropDownChoice(...);
+ *             choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *                protected void onEvent(AjaxRequestTarget target) {
+ *                   System.out.println(&quot;ajax here!&quot;);
+ *                }
+ *             }
  * </pre>
  * 
  * This behavior will be linked to the onChange javascript event of the select
@@ -50,6 +51,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @param event
 	 *            event this behavior will be attached to
+	 * @param callDecorator
+	 *            call decorator
 	 */
 	public AjaxEventBehavior(final String event)
 	{
@@ -70,17 +73,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		String handler = getEventHandler();
-
-		if (event.equalsIgnoreCase("href"))
-		{
-			// if we are using the href attr we need to prefix with
-			// 'javascript:' and also make sure we catch any return value
-			// otherwise the browser will display it
-			handler = "javascript:var wicket=" + handler;
-		}
-
-		tag.put(event, handler);
+		tag.put(event, getEventHandler());
 	}
 
 	/**
@@ -89,8 +82,14 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	protected String getEventHandler()
 	{
-		return "wicketAjaxGet('" + getCallbackUrl() + "');";
+		String handler = getCallbackScript();
+		if (event.equalsIgnoreCase("href"))
+		{
+			handler = "javascript:" + handler;
+		}
+		return handler;
 	}
+
 
 	/**
 	 * 

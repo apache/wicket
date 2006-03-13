@@ -1,6 +1,7 @@
 /*
  * $Id: AjaxFormComponentUpdatingBehavior.java,v 1.4 2006/02/02 18:49:46
- * ivaynberg Exp $ $Revision$ $Date$
+ * ivaynberg Exp $ $Revision$ $Date: 2006-03-09 01:08:00 -0800 (Thu, 09
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +22,6 @@ import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.FormComponent;
-import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A behavior that updates the hosting FormComponent via ajax when an event it
@@ -64,21 +64,25 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	}
 
 	/**
-	 * 
 	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
 	 */
 	protected final String getEventHandler()
 	{
-		FormComponent fc = getFormComponent();
-
-		String url = getCallbackUrl();
-		AppendingStringBuffer buff = new AppendingStringBuffer(url.length() + 128);
-		buff.append("wicketAjaxGet('");
-		buff.append(url);
-		buff.append("&'+wicketSerialize(this))");
-
-		return buff.toString();
+		return getCallbackScript("wicketAjaxPost('"+getCallbackUrl()+"', wicketSerialize(this)");
 	}
+
+	/**
+	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
+	 */
+	protected void onCheckEvent(String event)
+	{
+		if ("href".equalsIgnoreCase(event))
+		{
+			throw new IllegalArgumentException(
+					"this behavior cannot be attached to an 'href' event");
+		}
+	}
+
 
 	/**
 	 * 

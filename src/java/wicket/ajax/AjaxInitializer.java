@@ -36,5 +36,7 @@ public class AjaxInitializer implements IInitializer
 	public void init(Application application)
 	{
 		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
+		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
+		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 	}
 }

@@ -35,6 +35,10 @@ var WicketAjaxDebug = {
         WicketAjaxDebug.log(" INFO: "+msg);
     },
 
+    clearLog : function() {
+        var ta=wicketGet(WicketAjaxDebug.debugWindowLogId);
+        ta.value=null;
+    },
 
 	init : function() {
         if ( wicketAjaxDebugEnabled() ) {
@@ -57,6 +61,7 @@ var WicketAjaxDebug = {
         	+"        Wicket Ajax Debug Window (drag me here)"
         	+"    </div>"
         	+"    <div style='float:right;'>"
+        	+"        <a href='javascript:WicketAjaxDebug.clearLog()'>clear</a> | "
         	+"        <a href='javascript:WicketAjaxDebug.hideDebugWindow()'>close</a>"
         	+"     </div> <div style='float:reset'></div>"
         	    

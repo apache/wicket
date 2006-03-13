@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxPagingNavigationBehavior.java 4635 2006-02-25 16:24:23 -0800 (Sat,
+ * 25 Feb 2006) dashorst $ $Revision$ $Date: 2006-02-25 16:24:23 -0800
+ * (Sat, 25 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,14 +21,16 @@ package wicket.ajax.markup.html.navigation.paging;
 import wicket.Component;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.markup.html.IAjaxLink;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 
 /**
- * Ajax behavior for the paging navigation links. This behavior can only
- * have one parent: the link it is attached to.
- *
+ * Ajax behavior for the paging navigation links. This behavior can only have
+ * one parent: the link it is attached to.
+ * 
  * @author Martijn Dashorst
  */
 public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
@@ -39,18 +42,22 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * The ajaxian link that should recieve the event.
 	 */
 	private final IAjaxLink owner;
-	
+
 	/**
 	 * The pageable component to update.
 	 */
 	private final IPageable pageable;
 
 	/**
-	 * Attaches the navigation behavior to the owner link and drives the pageable component.
-	 * The behavior is attached to the markup event.
-	 * @param owner the owner ajax link
-	 * @param pageable the pageable to update
-	 * @param event the javascript event to bind to (e.g. onclick)
+	 * Attaches the navigation behavior to the owner link and drives the
+	 * pageable component. The behavior is attached to the markup event.
+	 * 
+	 * @param owner
+	 *            the owner ajax link
+	 * @param pageable
+	 *            the pageable to update
+	 * @param event
+	 *            the javascript event to bind to (e.g. onclick)
 	 */
 	public AjaxPagingNavigationBehavior(IAjaxLink owner, IPageable pageable, String event)
 	{
@@ -60,11 +67,12 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * The ajax event handler. This will execute the event, and update the following components,
-	 * when present: the navigator the owner link is part of, or when the link is a stand alone
-	 * component, the link itself. Also the pageable's parent markup container is updated, so
-	 * its contents can be replaced with the newly generated pageable.
-	 *
+	 * The ajax event handler. This will execute the event, and update the
+	 * following components, when present: the navigator the owner link is part
+	 * of, or when the link is a stand alone component, the link itself. Also
+	 * the pageable's parent markup container is updated, so its contents can be
+	 * replaced with the newly generated pageable.
+	 * 
 	 * @see wicket.ajax.AjaxEventBehavior#onEvent(wicket.ajax.AjaxRequestTarget)
 	 */
 	protected void onEvent(AjaxRequestTarget target)
@@ -96,11 +104,13 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * Returns the javascript event handler.
-	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
+	 * 
+	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
 	 */
-	protected String getEventHandler()
+	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
-		return "return !" + super.getEventHandler();
+		return new AjaxCallDecorator().setAfterScript("return !"
+				+ IAjaxCallDecorator.WICKET_CALL_MADE_VAR);
 	}
+
 }

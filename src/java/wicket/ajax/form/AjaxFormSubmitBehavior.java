@@ -60,7 +60,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		final String formId = form.getMarkupId();
 		final String url = getCallbackUrl();
-		return "wicketSubmitFormById('" + formId + "', '" + url + "'); return true;";
+
+		return getCallbackScript("wicketSubmitFormById('" + formId + "', '" + url + "' ")+"; return true;";
 	}
 
 	protected void onEvent(AjaxRequestTarget target)

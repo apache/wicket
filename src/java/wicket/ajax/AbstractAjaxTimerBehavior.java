@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractAjaxTimerBehavior.java 4673 2006-02-27 20:35:43 -0800 (Mon, 27
+ * Feb 2006) ivaynberg $ $Revision$ $Date: 2006-02-27 20:35:43 -0800
+ * (Mon, 27 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,6 +31,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private final Duration updateInterval;
 
 	private boolean attachedBodyOnLoadModifier = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -40,7 +42,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		this.updateInterval = updateInterval;
 	}
-	
+
 	protected void onBind()
 	{
 		getComponent().setOutputMarkupId(true);
@@ -52,11 +54,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected void onRenderHeadContribution(final Response response)
 	{
 		super.onRenderHeadContribution(response);
-		
+
 		if (this.attachedBodyOnLoadModifier == false)
 		{
 			this.attachedBodyOnLoadModifier = true;
-			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(getJsTimeoutCall(updateInterval));
+			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(
+					getJsTimeoutCall(updateInterval));
 		}
 	}
 
@@ -67,7 +70,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		return "setTimeout(function() { wicketAjaxGet('" + getCallbackUrl() + "'); }, "
+		return "setTimeout(function() { " + getCallbackScript() + " }, "
 				+ updateInterval.getMilliseconds() + ");";
 	}
 
