@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.86 $ $Date$
+ * $Id: WebApplication.java 4771 2006-03-05 17:07:48 -0800 (Sun, 05 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-05 17:07:48 -0800 (Sun, 05 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -68,11 +69,11 @@ import wicket.util.string.Strings;
  * init() method. For example:
  * 
  * <pre>
- *         public void init()
- *         {
- *             String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *             URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *             ...
+ *           public void init()
+ *           {
+ *               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *               ...
  * </pre>
  * 
  * @see WicketServlet
@@ -126,9 +127,8 @@ public abstract class WebApplication extends Application
 	private RequestLogger requestLogger;
 
 	/**
-	 * Constructor. Do not override this constructor to configure youre
-	 * application in it. Use the init method for that so that the default
-	 * behaviour is initialized first.
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your
+	 * application instead of overriding the constructor.</strong>
 	 */
 	public WebApplication()
 	{
@@ -362,7 +362,8 @@ public abstract class WebApplication extends Application
 	 * read a resource from the servlet's context path, you can override this
 	 * method and provide custom initialization. This method is called right
 	 * after this application class is constructed, and the wicket servlet is
-	 * set.
+	 * set. <strong>Use this method for any application setup instead of the
+	 * constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -384,10 +385,11 @@ public abstract class WebApplication extends Application
 	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>).
 	 * If not found check the servlet context init paramert
 	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>).
-	 * If the parameter is "development" (which is default), settings appropriate for development
-	 * are set. If it's "deployment" , deployment settings are
-	 * used. If development is specified and a "sourceFolder" init parameter is
-	 * also set, then resources in that folder will be polled for changes.
+	 * If the parameter is "development" (which is default), settings
+	 * appropriate for development are set. If it's "deployment" , deployment
+	 * settings are used. If development is specified and a "sourceFolder" init
+	 * parameter is also set, then resources in that folder will be polled for
+	 * changes.
 	 */
 	protected void internalInit()
 	{
@@ -398,11 +400,11 @@ public abstract class WebApplication extends Application
 				new WebApplicationPath(getWicketServlet().getServletContext()));
 
 		String contextPath = wicketServlet.getInitParameter(Application.CONTEXTPATH);
-		if(contextPath != null)
+		if (contextPath != null)
 		{
 			getApplicationSettings().setContextPath(contextPath);
 		}
-		
+
 		// Check if system property -Dwicket.configuration exists
 		String configuration = null;
 		try
@@ -535,12 +537,13 @@ public abstract class WebApplication extends Application
 				// Save this session in the HttpSession using the attribute name
 				httpSession.setAttribute(sessionAttribute, webSession);
 			}
-			
-			// Set the default context path if the context path is not already set
+
+			// Set the default context path if the context path is not already
+			// set
 			// (previous time or by the developer itself)
-			// This all to do missing api in the servlet spec.. You can't get a 
+			// This all to do missing api in the servlet spec.. You can't get a
 			// context path from the servlet context, which is just stupid.
-			if(getApplicationSettings().getContextPath() == null)
+			if (getApplicationSettings().getContextPath() == null)
 			{
 				getApplicationSettings().setContextPath(request.getContextPath());
 			}
@@ -617,19 +620,20 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @param sessionId The session id that was destroyed
+	 * @param sessionId
+	 *            The session id that was destroyed
 	 */
 	void sessionDestroyed(String sessionId)
 	{
 		bufferedResponses.remove(sessionId);
-		
+
 		RequestLogger logger = getRequestLogger();
-		if(logger != null)
+		if (logger != null)
 		{
 			logger.sessionDestroyed(sessionId);
 		}
 	}
-	
+
 	/**
 	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
 	 */
@@ -637,12 +641,12 @@ public abstract class WebApplication extends Application
 	{
 		super.logEventTarget(target);
 		RequestLogger rl = getRequestLogger();
-		if(rl != null)
+		if (rl != null)
 		{
 			rl.logEventTarget(target);
 		}
 	}
-	
+
 	/**
 	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
 	 */
@@ -650,7 +654,7 @@ public abstract class WebApplication extends Application
 	{
 		super.logResponseTarget(target);
 		RequestLogger rl = getRequestLogger();
-		if(rl != null)
+		if (rl != null)
 		{
 			rl.logResponseTarget(target);
 		}
