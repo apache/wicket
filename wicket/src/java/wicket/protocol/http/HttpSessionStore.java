@@ -250,6 +250,7 @@ public class HttpSessionStore implements ISessionStore
 		if (httpSession == null)
 		{
 			httpSession = createHttpSession(createWhenNeeded);
+			if(httpSession != null) id = httpSession.getId();
 		}
 		return httpSession;
 	}
