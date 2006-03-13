@@ -37,6 +37,7 @@ function wicketAjaxGetTransport() {
     }    
     return transport;
 }
+
 function wicketAjaxGet(url, successHandler) {
     if (wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logInfo;
