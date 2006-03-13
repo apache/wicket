@@ -94,6 +94,17 @@ public class Button extends FormComponent
 		super(id, model);
 	}
 
+	/**
+	 * Override of the default initModel behaviour. This component <strong>will
+	 * not</strong> use any compound model a parent, but only a model that is
+	 * explicitly set.
+	 * 
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return null;
+	}
 
 	/**
 	 * Gets the defaultFormProcessing property. When false (default is true),

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.315 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -664,9 +664,14 @@ public abstract class Component implements Serializable
 	 * such as javascript or an xslt transform.
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a
-	 * container with an associated markup file (Page, Panel or Border).
+	 * container with an associated markup file (Page, Panel or Border). This
+	 * TODO this restriction will be implicitly met after implementing 1.3's
+	 * constructor change
 	 * 
-	 * @return markup id of this component
+	 * @return markup id of this component, which is the result of the call to
+	 *         {@link #getPageRelativePath()} where the ':' character (the
+	 *         internal path seperator of Wicket) are replaced by the '_'
+	 *         character.
 	 */
 	public final String getMarkupId()
 	{
@@ -689,9 +694,7 @@ public abstract class Component implements Serializable
 		 * 
 		 */
 
-		// TODO we should probably replace : by something like _ because otherwise
-		// javascript will have trouble with it
-		return getPageRelativePath();
+		return getPageRelativePath().replace(':', '_');
 	}
 
 	/**
@@ -2838,10 +2841,11 @@ public abstract class Component implements Serializable
 		while (markupStream == null)
 		{
 			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream(true);
-	
+
 			// Make sure the markup stream is positioned at the correct element
 			String componentPath = parent.getPageRelativePath();
-			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
+			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
+					.getPageRelativePath();
 			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
 			if (relativePath.startsWith(":"))
 			{
@@ -2859,22 +2863,24 @@ public abstract class Component implements Serializable
 			{
 				// Not found, reset the stream
 				markupStream = null;
-				
+
 				// Yet another exception for Border in the code base.
-				// However if the container with the markup is a Border, than ...
+				// However if the container with the markup is a Border, than
+				// ...
 				if (parentWithAssociatedMarkup instanceof Border)
 				{
-					parentWithAssociatedMarkup = parentWithAssociatedMarkup.findParentWithAssociatedMarkup();
+					parentWithAssociatedMarkup = parentWithAssociatedMarkup
+							.findParentWithAssociatedMarkup();
 				}
 			}
 		}
-		
+
 		if (markupStream == null)
 		{
 			throw new WicketRuntimeException("Unable to determine markup for component: "
 					+ this.toString());
 		}
-		
+
 		return markupStream;
 	}
 }
