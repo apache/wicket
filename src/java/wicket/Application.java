@@ -179,8 +179,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Constructor, do not override this constructor for configuring youre
-	 * application. Use the init() method for that.
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
+	 * overriding the constructor.</strong>
 	 */
 	public Application()
 	{
