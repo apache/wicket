@@ -126,7 +126,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			buff.append(before);
 			if (!before.endsWith(";"))
 			{
-				buff.append(";");
+				buff.append("; ");
 			}
 		}
 
