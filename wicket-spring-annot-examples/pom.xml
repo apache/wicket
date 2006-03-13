@@ -28,13 +28,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>
-			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-examples
-		</connection>
-		<developerConnection>
-			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-spring-examples
-		</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-spring-examples</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-annot-examples</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-annot-examples</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-spring-annot-examples</url>
 	</scm>
 
 	<mailingLists>
