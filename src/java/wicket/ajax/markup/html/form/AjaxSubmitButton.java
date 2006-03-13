@@ -19,6 +19,7 @@ package wicket.ajax.markup.html.form;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
@@ -58,6 +59,13 @@ public abstract class AjaxSubmitButton extends WebComponent
 
 	}
 
+	protected void onComponentTag(ComponentTag tag)
+	{
+		checkComponentTag(tag, "input");
+		checkComponentTagAttribute(tag, "type", "button");
+		super.onComponentTag(tag);
+	}
+	
 	/**
 	 * Listener method invoked on form submit
 	 * 
