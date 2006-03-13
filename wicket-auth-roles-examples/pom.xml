@@ -32,9 +32,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-auth-roles</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles-examples</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles-exampls</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-auth-roles-examples</url>
 	</scm>
 
 	<mailingLists>
