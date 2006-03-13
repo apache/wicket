@@ -21,11 +21,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -269,36 +273,63 @@ public class PackageResource extends WebResource
 			while (packageResources.hasMoreElements())
 			{
 				URL resource = (URL)packageResources.nextElement();
-				InputStream inputStream = resource.openStream();
-				if (inputStream != null)
+				URLConnection connection = resource.openConnection();
+				if(connection instanceof JarURLConnection)
 				{
-					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-					String entry = null;
-					try
+					JarFile jf = ((JarURLConnection)connection).getJarFile();
+					Enumeration enumeration = jf.entries();
+					while(enumeration.hasMoreElements())
 					{
-						while ((entry = reader.readLine()) != null)
+						JarEntry je = (JarEntry)enumeration.nextElement();
+						String name = je.getName();
+						if(name.startsWith(packageRef))
 						{
-							// if the current entry matches the provided regexp
-							if (pattern.matcher(entry).matches())
+							name = name.substring(packageRef.length()+1);
+							if (pattern.matcher(name).matches())
 							{
 								if (resources == null)
 								{
 									resources = new ArrayList();
 								}
 								// we add the entry as a package resource
-								resources.add(get(scope, entry, null, null));
+								resources.add(get(scope, name, null, null));
 							}
 						}
 					}
-					finally
-					{
-						IOUtils.closeQuietly(reader);
-					}
 				}
-				else
+				else 
 				{
-					log.error("though " + resource + " was listed as a resource by " + packageRef
-							+ ", it did not return an imput stream and can thus not be read");
+					InputStream inputStream = connection.getInputStream();
+					if (inputStream != null)
+					{
+						BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+						String entry = null;
+						try
+						{
+							while ((entry = reader.readLine()) != null)
+							{
+								// if the current entry matches the provided regexp
+								if (pattern.matcher(entry).matches())
+								{
+									if (resources == null)
+									{
+										resources = new ArrayList();
+									}
+									// we add the entry as a package resource
+									resources.add(get(scope, entry, null, null));
+								}
+							}
+						}
+						finally
+						{
+							IOUtils.closeQuietly(reader);
+						}
+					}
+					else
+					{
+						log.error("though " + resource + " was listed as a resource by " + packageRef
+								+ ", it did not return an imput stream and can thus not be read");
+					}
 				}
 			}
 		}
