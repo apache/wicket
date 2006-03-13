@@ -32,13 +32,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>
-			scm:cvs:pserver:${maven.scm.anonymous}@cvs.sourceforge.net:/cvsroot/wicket:wicket-auth-roles-examples
-		</connection>
-		<developerConnection>
-			scm:cvs:ext:${maven.scm.user}@cvs.sourceforge.net:/cvsroot/wicket:wicket-auth-roles-examples
-		</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-auth-roles-examples</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-auth-roles</url>
 	</scm>
 
 	<mailingLists>
