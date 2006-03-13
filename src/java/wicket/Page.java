@@ -1065,7 +1065,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				renderedComponents = null;
 
 				// Throw exception
-				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
+				throw new WicketRuntimeException("The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
 						+ buffer.toString());
 			}
 		}
