@@ -35,6 +35,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
+	/** reference to the default indicator gif file. */
+	public static final PackageResourceReference INDICATOR = new PackageResourceReference(
+			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
+
+	
 	/** reference to the default ajax support javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
