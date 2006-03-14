@@ -126,8 +126,28 @@ public class MockWebApplication extends WebApplication
 	public MockWebApplication(final String path)
 	{
 		Application.set(this);
-
+		
 		context = new MockServletContext(this, path);
+		
+		setWicketServlet(new WicketServlet()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public ServletContext getServletContext() 
+			{
+				return context;
+			};
+			
+			/**
+			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
+			 */
+			public String getInitParameter(String name)
+			{
+				return null;
+			}
+		});
+		internalInit();
+
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
 		servletResponse = new MockHttpServletResponse();
