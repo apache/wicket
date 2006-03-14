@@ -762,7 +762,7 @@ public abstract class MarkupContainer extends Component
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	protected final MarkupStream getAssociatedMarkupStream(final boolean throwException)
+	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
 	{
 		try
 		{
