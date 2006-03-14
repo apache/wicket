@@ -11,6 +11,8 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="add" dev="Igor Vaynberg">Added ability to easily decorate default ajax callbacks. See IAjaxCallDecorator and friends.</action>
+      <action type="add" dev="Igor Vaynberg">Added ability to easily create ajax busy indicators. See IAjaxIndicatorAware and wicket-examples/ajax/links.</action>
       <action type="add" dev="Martijn Dashorst" issue="1427691">Added source browsing capability in examples project</action>
       <action type="add" dev="Igor Vaynberg">IFormValidator for checking form or multiple form components</action>
       <action type="update" dev="Igor Vaynberg">More flexible validator resource key search order that allows for multiple user defined keys to be searched for error messages</action>
