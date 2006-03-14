@@ -140,7 +140,9 @@ public abstract class Application
 	/** Settings for this application. */
 	private Settings settings;
 	
-	/** can the settings object bu*/
+	/** 
+	 * can the settings object be set/used. 
+	 */
 	private boolean settingsAccessible;
 
 	/** Shared resources for this application */
