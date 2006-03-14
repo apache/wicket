@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractChoice.java 4827 2006-03-08 12:45:16 -0800 (Wed, 08 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-08 12:45:16 -0800 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -199,6 +200,25 @@ abstract class AbstractChoice extends FormComponent
 		return (List)choices.getObject(this);
 	}
 
+
+	/**
+	 * Sets the list of choices
+	 * 
+	 * @param choices
+	 *            model representing the list of choices
+	 */
+	public final void SetChoices(IModel choices)
+	{
+		if (this.choices != null && this.choices != choices)
+		{
+			if (isVersioned())
+			{
+				addStateChange(new ChoicesListChange());
+			}
+		}
+		this.choices = choices;
+	}
+
 	/**
 	 * Sets the list of choices.
 	 * 
@@ -207,27 +227,11 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public final void setChoices(List choices)
 	{
-		if ((this.choices != null) && (this.choices != choices))
+		if ((this.choices != null))
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					final IModel oldList = AbstractChoice.this.choices;
-
-					public void undo()
-					{
-						AbstractChoice.this.choices = oldList;
-					}
-
-					public String toString()
-					{
-						return "ChoiceListChange[component: " + getPath() + ", old choices: "
-								+ oldList + "]";
-					}
-				});
+				addStateChange(new ChoicesListChange());
 			}
 		}
 		this.choices = new Model((Serializable)choices);
@@ -325,7 +329,8 @@ abstract class AbstractChoice extends FormComponent
 	 * @param selected
 	 *            The currently selected string value
 	 */
-	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index, String selected)
+	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index,
+			String selected)
 	{
 		final String displayValue = (String)getConverter().convert(
 				renderer.getDisplayValue(choice), String.class);
@@ -337,9 +342,9 @@ abstract class AbstractChoice extends FormComponent
 		buffer.append("value=\"");
 		buffer.append(renderer.getIdValue(choice, index));
 		buffer.append("\">");
-		
+
 		String display = displayValue;
-		if(localizeDisplayValues())
+		if (localizeDisplayValues())
 		{
 			display = getLocalizer().getString(displayValue, this, displayValue);
 		}
@@ -355,10 +360,11 @@ abstract class AbstractChoice extends FormComponent
 	{
 		return true;
 	}
-	
+
 	/**
-	 * Override this method if you want to localize the display values of the generated options.
-	 * By default false is returned so that the display values of options are not tested if they have a i18n key.
+	 * Override this method if you want to localize the display values of the
+	 * generated options. By default false is returned so that the display
+	 * values of options are not tested if they have a i18n key.
 	 * 
 	 * @return true If you want to localize the display values, default == false
 	 */
@@ -366,4 +372,46 @@ abstract class AbstractChoice extends FormComponent
 	{
 		return false;
 	}
+
+	/**
+	 * Change object to represent the change of the choices property
+	 * 
+	 * @author ivaynberg
+	 */
+	private class ChoicesListChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final IModel oldChoices;
+
+		/**
+		 * Construct.
+		 */
+		public ChoicesListChange()
+		{
+			oldChoices = choices;
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			choices = oldChoices;
+		}
+
+		/**
+		 * Make debugging easier
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices
+					+ "]";
+		}
+
+
+	}
+
 }
