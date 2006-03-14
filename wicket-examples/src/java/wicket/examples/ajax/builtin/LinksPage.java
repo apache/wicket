@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: LinksPage.java 4633 2006-02-25 16:22:21 -0800 (Sat, 25 Feb 2006)
+ * dashorst $ $Revision$ $Date: 2006-02-25 16:22:21 -0800 (Sat, 25 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,11 +18,20 @@
  */
 package wicket.examples.ajax.builtin;
 
+import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.behavior.AbstractBehavior;
+import wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
+import wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -33,6 +43,7 @@ public class LinksPage extends BasePage
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
+	private int counter3 = 0;
 
 	/**
 	 * @return Value of counter1
@@ -40,15 +51,6 @@ public class LinksPage extends BasePage
 	public int getCounter1()
 	{
 		return counter1;
-	}
-
-	/**
-	 * @param counter1
-	 *            New value for counter1
-	 */
-	public void setCounter1(int counter1)
-	{
-		this.counter1 = counter1;
 	}
 
 	/**
@@ -60,12 +62,11 @@ public class LinksPage extends BasePage
 	}
 
 	/**
-	 * @param counter2
-	 *            New value for counter2
+	 * @return Value of counter3
 	 */
-	public void setCounter2(int counter2)
+	public int getCounter3()
 	{
-		this.counter2 = counter2;
+		return counter3;
 	}
 
 	/**
@@ -81,13 +82,26 @@ public class LinksPage extends BasePage
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		add(new AjaxLink("c1-link")
+		final Label c3 = new Label("c3", new PropertyModel(this, "counter3"));
+		c3.setOutputMarkupId(true);
+		add(c3);
+
+		add(new IndicatingAjaxLink("c1-link")
 		{
 
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
+				try
+				{
+					Thread.sleep(3000);
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		});
@@ -98,6 +112,10 @@ public class LinksPage extends BasePage
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;
+				// notice that for a fallback link we need to makesure the
+				// target is not null. if the target is null ajax failed and the
+				// fallback was used, so there is no need to do any ajax-related
+				// processing.
 				if (target != null)
 				{
 					target.addComponent(c2);
@@ -106,14 +124,26 @@ public class LinksPage extends BasePage
 
 		});
 
-		add(new Link("c3-link")
+
+		add(new IndicatingAjaxLink("c3-link")
 		{
 
-			public void onClick()
+			public void onClick(AjaxRequestTarget target)
 			{
-				System.out.println("hello");
+				counter3++;
+				target.addComponent(c3);
+				try
+				{
+					Thread.sleep(5000);
+				}
+				catch (InterruptedException e)
+				{
+					// noop
+				}
 
 			}
 		});
 	}
+
+
 }
