@@ -132,13 +132,6 @@ public abstract class WebApplication extends Application
 	 */
 	public WebApplication()
 	{
-		// Set default error pages for HTML markup
-		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
-		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
-		getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
-
-		// Add resolver for automatically resolving HTML links
-		getPageSettings().addComponentResolver(new AutoLinkResolver());
 	}
 
 	/**
@@ -395,6 +388,14 @@ public abstract class WebApplication extends Application
 	{
 		super.internalInit();
 
+		// Set default error pages for HTML markup
+		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
+		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
+		getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
+
+		// Add resolver for automatically resolving HTML links
+		getPageSettings().addComponentResolver(new AutoLinkResolver());
+		
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(getWicketServlet().getServletContext()));
