@@ -18,20 +18,10 @@
  */
 package wicket.examples.ajax.builtin;
 
-import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.IAjaxCallDecorator;
-import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.ajax.markup.html.AjaxLink;
-import wicket.behavior.AbstractBehavior;
-import wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
-import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
 /**
