@@ -51,8 +51,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @param event
 	 *            event this behavior will be attached to
-	 * @param callDecorator
-	 *            call decorator
 	 */
 	public AjaxEventBehavior(final String event)
 	{
