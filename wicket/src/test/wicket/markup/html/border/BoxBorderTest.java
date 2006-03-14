@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BoxBorderTest.java 4831 2006-03-08 13:32:22 -0800 (Wed, 08 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-08 13:32:22 -0800 (Wed, 08 Mar
+ * 2006) $
  * 
  * ========================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -116,5 +117,16 @@ public class BoxBorderTest extends WicketTestCase
 
 		assertNotNull("Markup does not match component hierarchy, but exception not thrown.",
 				markupException);
+	}
+
+	/**
+	 * Test to ensure border render wrapped settings functions properly.
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderWrapped() throws Exception
+	{
+		executeTest(BorderRenderWrappedTestPage_1.class,
+				"BorderRenderWrappedTestPage_ExpectedResult_1.html");
 	}
 }
