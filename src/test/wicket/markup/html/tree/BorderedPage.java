@@ -38,38 +38,4 @@ public abstract class BorderedPage extends WebPage
 		border.setTransparentResolver(true);
 		super.add(border);
 	}
-//
-//	/**
-//	 * @see wicket.MarkupContainer#add(wicket.Component)
-//	 */
-//	public MarkupContainer add(final Component child)
-//	{
-//		// Add children of the page to the page's border component
-//		border.add(child);
-//		return this;
-//	}
-//
-//	/**
-//	 * @see wicket.MarkupContainer#removeAll()
-//	 */
-//	public void removeAll()
-//	{
-//		border.removeAll();
-//	}
-//
-//	/**
-//	 * @see wicket.MarkupContainer#replace(wicket.Component)
-//	 */
-//	public MarkupContainer replace(Component child)
-//	{
-//		return border.replace(child);
-//	}
-//	
-//	/**
-//	 * @see wicket.MarkupContainer#autoAdd(Component)
-//	 */
-//	public boolean autoAdd(final Component component)
-//	{
-//	    return border.autoAdd(component);
-//	}
 }
