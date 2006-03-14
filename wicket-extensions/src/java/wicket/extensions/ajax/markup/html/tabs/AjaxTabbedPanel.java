@@ -1,9 +1,10 @@
-package wicket.extensions.markup.html.tabs;
+package wicket.extensions.ajax.markup.html.tabs;
 
 import java.util.List;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.extensions.markup.html.tabs.TabbedPanel;
 import wicket.markup.html.link.Link;
 
 /**
