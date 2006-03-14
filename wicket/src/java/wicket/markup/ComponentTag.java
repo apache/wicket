@@ -502,12 +502,6 @@ public class ComponentTag extends MarkupElement
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
 			final String namespace)
 	{
-		String attributeToBeIgnored = null;
-		if (stripWicketAttributes == true)
-		{
-			attributeToBeIgnored = namespace + ":id";
-		}
-
 		response.write("<");
 
 		if (getType() == XmlTag.CLOSE)
@@ -522,16 +516,25 @@ public class ComponentTag extends MarkupElement
 		}
 
 		response.write(getName());
+		
+		String namespacePrefix = null;
+		if (stripWicketAttributes == true)
+		{
+			namespacePrefix = namespace + ":";
+		}
 
 		if (getAttributes().size() > 0)
 		{
 			final Iterator iterator = getAttributes().keySet().iterator();
-			for (; iterator.hasNext();)
+			while (iterator.hasNext())
 			{
 				final String key = (String)iterator.next();
-				if ((key != null)
-						&& ((attributeToBeIgnored == null) || !key
-								.equalsIgnoreCase(attributeToBeIgnored)))
+				if (key == null)
+				{
+					continue;
+				}
+				
+				if ((namespacePrefix == null) || (key.startsWith(namespacePrefix) == false))
 				{
 					response.write(" ");
 					response.write(key);
