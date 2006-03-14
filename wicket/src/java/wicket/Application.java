@@ -129,9 +129,7 @@ public abstract class Application
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
 
-	/**
-	 * Application level meta data.
-	 */
+	/** Application level meta data. */
 	private MetaDataEntry[] metaData;
 
 	/** Name of application subclass. */
@@ -140,9 +138,7 @@ public abstract class Application
 	/** Settings for this application. */
 	private Settings settings;
 	
-	/** 
-	 * can the settings object be set/used. 
-	 */
+	/**  can the settings object be set/used. */
 	private boolean settingsAccessible;
 
 	/** Shared resources for this application */
@@ -155,7 +151,7 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		Application application = (Application)current.get();
+		final Application application = (Application)current.get();
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread "
@@ -170,7 +166,7 @@ public abstract class Application
 	 * @param application
 	 *            The current application or null for this thread
 	 */
-	public static void set(Application application)
+	public static void set(final Application application)
 	{
 		if (application == null)
 		{
@@ -498,7 +494,12 @@ public abstract class Application
 	// TODO Post 1.2: Make private
 	public Settings getSettings()
 	{
-		if(!settingsAccessible) throw new WicketRuntimeException("Use Application.init() method for configuring youre application object");
+		if (!settingsAccessible) 
+		{
+			throw new WicketRuntimeException(
+					"Use Application.init() method for configuring youre application object");
+		}
+		
 		if (settings == null)
 		{
 			settings = new Settings(this);
