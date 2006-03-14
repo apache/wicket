@@ -38,41 +38,4 @@ public abstract class AbstractTest14WebPage extends WebPage
 		border.setTransparentResolver(true);
 		super.add(border);
 	}
-//	
-//	/**
-//	 * @param child
-//	 * @return xxx
-//	 */
-//	public MarkupContainer add(final Component child)
-//	{
-//		border.add(child);
-//		return this;
-//	}
-//
-//	/**
-//	 * 
-//	 */
-//	public void removeAll()
-//	{
-//		border.removeAll();
-//	}
-//
-//	/**
-//	 * @param child
-//	 * @return xxx 
-//	 */
-//	public MarkupContainer replace(final Component child)
-//	{
-//		return border.replace(child);
-//	}
-//
-//	/**
-//	 * @param component
-//	 * @return xxx
-//	 */
-//	public boolean autoAdd(Component component)
-//	{
-//		return border.autoAdd(component);
-//	}
-//
 }
