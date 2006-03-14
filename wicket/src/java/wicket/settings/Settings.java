@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.19 $ $Date$
+ * $Id: Settings.java 4858 2006-03-12 00:26:31 -0800 (Sun, 12 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-12 00:26:31 -0800 (Sun, 12 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -65,7 +66,8 @@ import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Contains settings exposed via IXXXSettings interfaces.
+ * Contains settings exposed via IXXXSettings interfaces. It is not a good idea
+ * to use this class directly, instead use the provided IXXXSettings interfaces.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -88,8 +90,8 @@ public final class Settings
 			IAjaxSettings
 {
 	/** ajax debug mode status */
-	boolean ajaxDebugModeEnabled=false;
-	
+	boolean ajaxDebugModeEnabled = false;
+
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
@@ -803,9 +805,9 @@ public final class Settings
 	 */
 	public void setContextPath(String contextPath)
 	{
-		if(contextPath != null)
+		if (contextPath != null)
 		{
-			if(!contextPath.startsWith("/") && !contextPath.startsWith("http:")
+			if (!contextPath.startsWith("/") && !contextPath.startsWith("http:")
 					&& !contextPath.startsWith("https:"))
 			{
 				this.contextPath = "/" + contextPath;
@@ -1110,7 +1112,7 @@ public final class Settings
 	 */
 	public void setAjaxDebugModeEnabled(boolean enable)
 	{
-		ajaxDebugModeEnabled=enable;
+		ajaxDebugModeEnabled = enable;
 	}
 
 	/**
