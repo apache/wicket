@@ -207,7 +207,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @param choices
 	 *            model representing the list of choices
 	 */
-	public final void SetChoices(IModel choices)
+	public final void setChoices(IModel choices)
 	{
 		if (this.choices != null && this.choices != choices)
 		{
