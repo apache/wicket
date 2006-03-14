@@ -18,7 +18,9 @@
  */
 package wicket.examples.ajax.builtin;
 
+import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormValidatingBehavior;
+import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RequiredTextField;
@@ -77,6 +79,16 @@ public class FormPage extends BasePage
 		// components
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onblur");
 
+		
+		form.add(new AjaxSubmitButton("ajax-submit-button", form) {
+
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				target.addComponent(feedback);
+			}
+			
+		});
+		
 	}
 
 	/** simple java bean. */
