@@ -22,11 +22,9 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
 
-
 /**
  * Mock page for testing.
  * 
- * @author Chris Turner
  */
 public class BorderRenderWrappedTestPage_1 extends WebPage
 {
@@ -40,10 +38,9 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 	public BorderRenderWrappedTestPage_1()
 	{
 		 BoxBorder border = new BoxBorder("box");
-		 add(border);
+		 border.setBorderBodyVisible(false);
 
-		 
-		 border.setRenderWrapped(false);
+		 add(border);
 		 
 	     border.add(new TextField("text"));
 	     border.add(new Image("img"));	

@@ -19,6 +19,7 @@
 package wicket.markup.html.border;
 
 import wicket.MarkupContainer;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
@@ -28,6 +29,7 @@ import wicket.markup.parser.XmlTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.markup.resolver.IComponentResolverMarker;
 import wicket.model.IModel;
+import wicket.response.NullResponse;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -98,9 +100,11 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	private transient ComponentTag openTag;
 
 	/** Should be true for bordered pages */
-	// FIXME: General: Any reason why this hasnt been folded into a flag?
 	private boolean transparentResolver = false;
 
+	/** If false, the content of <wicket:body> will not be printed */
+	private boolean bodyVisible = true;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -121,12 +125,12 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * When this method is called with a false value the components and raw
 	 * markup that this border wraps will not be rendered.
 	 * 
-	 * @param renderWrapped
+	 * @param bodyVisible
 	 * @return this for chaining
 	 */
-	public Border setRenderWrapped(boolean renderWrapped)
+	public Border setBorderBodyVisible(boolean bodyVisible)
 	{
-		// FIXME: General: Implement this new feature
+		this.bodyVisible = bodyVisible;
 		return this;
 	}
 
@@ -175,11 +179,10 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 *            The current component tag while parsing the markup
 	 * @return True if componentId was handled by the resolver, false otherwise.
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
-		// If we're being asked to resolve a component for a <wicket:body> tag
 		if (!(tag instanceof WicketTag))
 		{
 			return false;
@@ -191,78 +194,27 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return false;
 		}
 
-		// Ok, it is a wicket:body tag. Now render its body
-		ComponentTag bodyTag = tag;
-		if (tag.isOpen())
+		final Response originalResponse;
+		if (this.bodyVisible == true)
 		{
-			// It is open-preview-close already.
-			// Only RawMarkup is allowed within the preview region, which
-			// gets stripped from output
-			markupStream.next();
-			markupStream.skipRawMarkup();
-		}
-		else if (tag.isOpenClose())
-		{
-			// Automatically expand <wicket:body/> to
-			// <wicket:body>...</wicket:body>
-			// in order for the html to look right: insert the body in between
-			// the
-			// wicket tags instead of behind the open-close tag.
-			bodyTag = tag.mutable();
-			bodyTag.setType(XmlTag.OPEN);
+			originalResponse = null;
 		}
 		else
 		{
-			markupStream
-					.throwMarkupException("A <wicket:body> tag must be an open or open-close tag.");
+			originalResponse = getRequestCycle().setResponse(NullResponse.getInstance());
 		}
-
-		// Render the body tag
-		renderComponentTag(bodyTag);
-
-		// If markup stream is null, that indicates we already recursed into
-		// this block of log and set it to null (below). If we did that,
-		// then we want to go up another level of border nesting.
-		Border border = this;
-		if (border.getMarkupStream() == null)
+		
+		try
 		{
-			// Find Border at or above parent of this border
-			final MarkupContainer borderParent = border.getParent();
-			border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
-					.findParent(Border.class));
+			renderBodyComponent(markupStream, wtag);
 		}
-
-		// Get the border's markup
-		final MarkupStream borderMarkup = border.findMarkupStream();
-
-		// Set markup of border to null. This allows us to find the border's
-		// parent's markup. It also indicates that we've been here in the
-		// log just above.
-		border.setMarkupStream(null);
-
-		// Draw the children of the border component using its original
-		// in-line markup stream (not the border's associated markup stream)
-		border.renderComponentTagBody(border.findMarkupStream(), border.openTag);
-
-		// Restore border markup so it can continue rendering
-		border.setMarkupStream(borderMarkup);
-
-		// Render body close tag: </wicket:body>
-		if (tag.isOpenClose())
+		finally
 		{
-			markupStream.next();
-			bodyTag.setType(XmlTag.CLOSE);
-			renderComponentTag(bodyTag);
+			if (originalResponse != null)
+			{
+				getRequestCycle().setResponse(originalResponse);
+			}
 		}
-
-		// There shall exactly only one body tag per border
-		if (border.haveSeenBodyTag == true)
-		{
-			markupStream
-					.throwMarkupException("There must be exactly one <wicket:body> tag for each border compoment.");
-		}
-
-		border.haveSeenBodyTag = true;
 
 		return true;
 	}
@@ -304,5 +256,100 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	{
 		this.renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);
+	}
+
+	/**
+	 * Render the wicket:body and all what is in it. 
+	 * 
+	 * @param markupStream The associated markup stream
+	 * @param wtag The wicket:body tag
+	 */
+	protected void renderBodyComponent(final MarkupStream markupStream, final WicketTag wtag)
+	{
+		// Ok, it is a wicket:body tag. Now render its body
+		final ComponentTag bodyTag = renderBodyComponentTag(wtag, markupStream);
+
+		// Get the border's markup
+		final MarkupStream borderMarkup = findMarkupStream();
+
+		// Set markup of border to null. This allows us to find the border's
+		// parent's markup. It also indicates that we've been here in the
+		// log just above.
+		setMarkupStream(null);
+
+		// Draw the children of the border component using its original
+		// in-line markup stream (not the border's associated markup stream)
+		renderBodyComponentTagBody(findMarkupStream(), openTag);
+
+		// Restore border markup so it can continue rendering
+		setMarkupStream(borderMarkup);
+
+		// Render body close tag: </wicket:body>
+		if (wtag.isOpenClose())
+		{
+			markupStream.next();
+			bodyTag.setType(XmlTag.CLOSE);
+			renderComponentTag(bodyTag);
+		}
+
+		// There shall exactly only one body tag per border
+		if (haveSeenBodyTag == true)
+		{
+			markupStream
+					.throwMarkupException("There must be exactly one <wicket:body> tag for each border compoment.");
+		}
+
+		haveSeenBodyTag = true;
+	}
+
+	/**
+	 * Render the wicket:body tag
+	 * 
+	 * @param markupStream The associated markup stream
+	 * @param tag The wicket:body tag
+	 */
+	public void renderBodyComponentTagBody(final MarkupStream markupStream, final ComponentTag tag)
+	{
+		renderComponentTagBody(markupStream, openTag);
+	}
+
+	/**
+	 * Render the wicket:body tag
+	 * 
+	 * @param tag The wicket:body tag
+	 * @param markupStream The associated markup stream
+	 * @return the body tag. May be its type has been changed
+	 */
+	protected ComponentTag renderBodyComponentTag(final ComponentTag tag, final MarkupStream markupStream)
+	{
+		ComponentTag bodyTag = tag;
+		
+		// Ok, it is a wicket:body tag. Now render its body
+		if (tag.isOpen())
+		{
+			// It is open-preview-close already.
+			// Only RawMarkup is allowed within the preview region, which
+			// gets stripped from output
+			markupStream.next();
+			markupStream.skipRawMarkup();
+		}
+		else if (tag.isOpenClose())
+		{
+			// Automatically expand <wicket:body/> to
+			// <wicket:body>...</wicket:body>
+			// in order for the html to look right: insert the body in between
+			// the
+			// wicket tags instead of behind the open-close tag.
+			bodyTag = tag.mutable();
+			bodyTag.setType(XmlTag.OPEN);
+		}
+		else
+		{
+			markupStream.throwMarkupException(
+					"A <wicket:body> tag must be an open or open-close tag.");
+		}
+		
+		renderComponentTag(bodyTag);
+		return bodyTag;
 	}
 }

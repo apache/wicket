@@ -576,10 +576,13 @@ public abstract class RequestCycle
 	 * 
 	 * @param response
 	 *            The response
+	 * @return the original response
 	 */
-	public final void setResponse(final Response response)
+	public final Response setResponse(final Response response)
 	{
+		final Response orig = this.response;
 		this.response = response;
+		return orig;
 	}
 
 	/**
