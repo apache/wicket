@@ -24,6 +24,7 @@ import wicket.Response;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 import wicket.settings.IAjaxSettings;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -125,7 +126,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		String indicatorId = findIndicatorId();
 
-		StringBuilder buff = new StringBuilder(128);
+		AppendingStringBuffer buff = new AppendingStringBuffer(128);
 
 		if (!Strings.isEmpty(indicatorId))
 		{
