@@ -1,7 +1,7 @@
 /*
  * $Id: AbstractDefaultAjaxBehavior.java 4858 2006-03-12 00:26:31 -0800 (Sun, 12
- * Mar 2006) ivaynberg $ $Revision$ $Date: 2006-03-12 00:26:31 -0800 (Sun,
- * 12 Mar 2006) $
+ * Mar 2006) ivaynberg $ $Revision$ $Date: 2006-03-12 00:26:31 -0800
+ * (Sun, 12 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,7 +39,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static final PackageResourceReference INDICATOR = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
-	
+
 	/** reference to the default ajax support javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
@@ -123,8 +123,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		final String success = (callDecorator == null) ? null : callDecorator.getOnSuccessScript();
 		final String failure = (callDecorator == null) ? null : callDecorator.getOnFailureScript();
 
+		String indicatorId = findIndicatorId();
 
 		StringBuilder buff = new StringBuilder(128);
+
+		if (!Strings.isEmpty(indicatorId))
+		{
+			buff.append("wicketShow('").append(indicatorId).append("');");
+		}
 
 		if (!Strings.isEmpty(before))
 		{
@@ -139,9 +145,20 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		buff.append(partialCall);
 
-		if (!Strings.isEmpty(success))
+		if (!Strings.isEmpty(success)||!Strings.isEmpty(indicatorId))
 		{
-			buff.append(", function() { ").append(success).append("}");
+			buff.append(", function() { ");
+			if (!Strings.isEmpty(indicatorId))
+			{
+				buff.append("wicketHide('").append(indicatorId).append("');");
+			}
+			if (!Strings.isEmpty(success)) {
+				buff.append(success);
+				if (!success.endsWith(";")) {
+					buff.append(";");
+				}
+			}
+			buff.append("}");
 		}
 
 		buff.append(");");
@@ -156,6 +173,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 
 		return buff.toString();
+	}
+
+
+	private String findIndicatorId()
+	{
+		if (getComponent() instanceof IAjaxIndicatorAware)
+		{
+			return ((IAjaxIndicatorAware)getComponent()).getAjaxIndicatorMarkupId();
+		}
+		
+		if (this instanceof IAjaxIndicatorAware) {
+			return ((IAjaxIndicatorAware)this).getAjaxIndicatorMarkupId();
+		}
+		
+		return null;
 	}
 
 	/**
