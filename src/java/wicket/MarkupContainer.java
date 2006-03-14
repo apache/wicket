@@ -337,11 +337,11 @@ public abstract class MarkupContainer extends Component
 		super.internalEndRequest();
 
 		// Loop through child components
-		final int size = children_size();
-		for (int i = 0; i < size; i++)
+		final Iterator iter = iterator();
+		while (iter.hasNext())
 		{
 			// Get next child
-			final Component child = children_get(i);
+			final Component child = (Component)iter.next();
 
 			// Call end request on the child
 			child.internalEndRequest();
