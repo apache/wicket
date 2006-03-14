@@ -36,9 +36,15 @@ public class RepeaterApplication extends WebApplication
 	 */
 	public RepeaterApplication()
 	{
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
+		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+	}
 
 	/**
 	 * @return contacts database

@@ -58,8 +58,8 @@ public class Page2 extends WicketExamplePage
 		String newP2 = String.valueOf(random.nextInt());
 
 		PageParameters params = new PageParameters();
-		params.put("param1", newP1);
-		params.put("param2", newP2);
+		params.put("param1", newP1 + " " + newP2);
+		params.put("param2", newP2 + " " + newP1);
 
 		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page2.class, params);
 		add(link);
