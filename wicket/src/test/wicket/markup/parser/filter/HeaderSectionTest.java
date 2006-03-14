@@ -197,4 +197,12 @@ public class HeaderSectionTest extends WicketTestCase
 	{
 	    executeTest(HeaderSectionPage_16.class, "HeaderSectionPageExpectedResult_16.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_17() throws Exception
+	{
+	    executeTest(HeaderSectionPage_17.class, "HeaderSectionPageExpectedResult_17.html");
+	}
 }

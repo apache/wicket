@@ -40,13 +40,16 @@ public class MergedMarkup extends Markup
 	 */
 	MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
+		// Copy setting from derived markup
 		setResource(markup.getResource());
 		setXmlDeclaration(markup.getXmlDeclaration());
 		setEncoding(markup.getEncoding());
 		setWicketNamespace(markup.getWicketNamespace());
 
+		// Merge derived and base markup
 		merge(markup, baseMarkup, extendIndex);
 		
+		// Initialize internals based on new markup
 		initialize();
 	}
 
@@ -58,24 +61,48 @@ public class MergedMarkup extends Markup
 	 */
 	private String getBodyOnLoadString(final Markup markup)
 	{
-		boolean foundWicketHead = false;
+		int i = 0;
 		
-		for (int i=0; i < markup.size(); i++)
+		// The markup must have a <wicket:head> region, else copying the
+		// body onLoad attributes doesn't make sense
+		for (; i < markup.size(); i++)
 		{
 			MarkupElement elem = markup.get(i);
 			if (elem instanceof WicketTag)
 			{
 				WicketTag tag = (WicketTag) elem;
-				if (tag.isClose() && tag.isHeadTag() && tag.getNamespace() != null)
+				if (tag.isClose() && tag.isHeadTag())
 				{
-					foundWicketHead = true;
+					// Ok, we found <wicket:head>
+					break;
+				}
+				else if (tag.isPanelTag() || tag.isBorderTag())
+				{
+					// Short cut: We found <wicket:panel> or <wicket:border>.
+					// There certainly will be no <wicket:head> later on.
+					return null;
 				}
 			}
-			else if ((foundWicketHead == true) && (elem instanceof ComponentTag))
+			else if (elem instanceof ComponentTag)
 			{
 				ComponentTag tag = (ComponentTag) elem;
-				
-				if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+				if (TagUtils.isBodyTag(tag))
+				{
+					// Short cut: We found <body> but no <wicket:head>.
+					// There certainly will be no <wicket:head> later on.
+					return null;
+				}
+			}
+		}
+
+		// Found </wicket:head> => get body onLoad
+		for (; i < markup.size(); i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag) elem;
+				if (tag.isOpen() && TagUtils.isBodyTag(tag))
 				{
 					String onLoad = tag.getAttributes().getString("onLoad");
 					return onLoad;
@@ -98,7 +125,7 @@ public class MergedMarkup extends Markup
 	 */
 	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
-		// Get the body onLoad attribute from the markup extension
+		// Get the body onLoad attribute from derived markup
 		final String onLoad = getBodyOnLoadString(markup);
 		
 		// True if either <wicket:head> or <head> has been processed
