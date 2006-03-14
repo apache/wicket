@@ -104,18 +104,20 @@
 <!--=================== Generic Attributes ===============================-->
 
 <!-- core attributes common to most elements
-  id         document-wide unique id
-  class      space separated list of classes
-  style      associated style info
-  title      advisory title/amplification
-  wicket:id  the id for the Wicket framework
+  id               document-wide unique id
+  class            space separated list of classes
+  style            associated style info
+  title            advisory title/amplification
+  wicket:id        the id for the Wicket framework
+  wicket:preview   the preview attribute for the Wicket framework
 -->
 <!ENTITY % coreattrs
- "id          ID             #IMPLIED
-  class       CDATA          #IMPLIED
-  style       %StyleSheet;   #IMPLIED
-  title       %Text;         #IMPLIED
-  wicket:id   %Text;         #IMPLIED"
+ "id             ID             #IMPLIED
+  class          CDATA          #IMPLIED
+  style          %StyleSheet;   #IMPLIED
+  title          %Text;         #IMPLIED
+  wicket:id      %Text;         #IMPLIED
+  wicket:preview %Text;         #IMPLIED"
   >
 
 <!-- internationalization attributes
