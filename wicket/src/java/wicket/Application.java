@@ -139,6 +139,9 @@ public abstract class Application
 
 	/** Settings for this application. */
 	private Settings settings;
+	
+	/** can the settings object bu*/
+	private boolean settingsAccessible;
 
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
@@ -196,18 +199,6 @@ public abstract class Application
 
 		// Create shared resources repository
 		this.sharedResources = new SharedResources(this);
-
-		// Install default component resolvers
-		getPageSettings().addComponentResolver(new ParentResolver());
-		getPageSettings().addComponentResolver(new AutoComponentResolver());
-		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
-		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
-		getPageSettings().addComponentResolver(new WicketLinkResolver());
-		getPageSettings().addComponentResolver(new WicketMessageResolver());
-
-		// Install button image resource factory
-		getResourceSettings().addResourceFactory("buttonFactory",
-				new DefaultButtonImageResourceFactory());
 
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
@@ -505,6 +496,7 @@ public abstract class Application
 	// TODO Post 1.2: Make private
 	public Settings getSettings()
 	{
+		if(!settingsAccessible) throw new WicketRuntimeException("Use Application.init() method for configuring youre application object");
 		if (settings == null)
 		{
 			settings = new Settings(this);
@@ -599,6 +591,18 @@ public abstract class Application
 	 */
 	protected void internalInit()
 	{
+		settingsAccessible = true;
+		// Install default component resolvers
+		getPageSettings().addComponentResolver(new ParentResolver());
+		getPageSettings().addComponentResolver(new AutoComponentResolver());
+		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
+		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
+		getPageSettings().addComponentResolver(new WicketLinkResolver());
+		getPageSettings().addComponentResolver(new WicketMessageResolver());
+
+		// Install button image resource factory
+		getResourceSettings().addResourceFactory("buttonFactory",
+				new DefaultButtonImageResourceFactory());
 	}
 
 	/**
