@@ -21,8 +21,8 @@ package wicket.examples.ajax.builtin;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
-import wicket.extensions.markup.html.tabs.AjaxTabbedPanel;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
