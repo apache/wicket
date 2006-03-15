@@ -227,7 +227,8 @@ public class WebPage extends Page
 		// This code can not go into HtmlHeaderContainer as header.onEndRequest()
 		// is executed inside an iterator and you can only call container.remove()
 		// which is != iter.remove(). And the iterator is not available inside 
-		// onEndRequest().
+		// onEndRequest(). Obviously WebPage.onEndRequest() is invoked outside
+		// the iterator loop.
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{
