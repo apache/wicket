@@ -730,10 +730,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 	}
 
+	
 	/**
-	 * @see wicket.Component#onModelChanged()
+	 * @see wicket.Component#internalOnModelChanged()
 	 */
-	protected void onModelChanged()
+	protected void internalOnModelChanged()
 	{
 		// If the model for this form component changed, we should make it
 		// valid again because there can't be any invalid input for it anymore.
