@@ -14,6 +14,8 @@ import wicket.markup.html.PackageResourceReference;
  * used. Direct implementation of this class should only be used when total
  * control is required.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractAutoAssistBehavior extends AbstractAjaxBehavior
