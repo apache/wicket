@@ -18,9 +18,7 @@
  */
 package wicket.examples.helloworld;
 
-import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
-import wicket.extensions.ajax.markup.html.AjaxCollapsableBorder;
 import wicket.markup.html.basic.Label;
 
 /**
