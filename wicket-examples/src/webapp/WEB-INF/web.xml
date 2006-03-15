@@ -63,6 +63,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>EchoApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.echo.EchoApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>HelloBrowserApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -358,6 +368,11 @@
 	<servlet-mapping>
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<url-pattern>/helloworld/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>EchoApplication</servlet-name>
+		<url-pattern>/echo/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
