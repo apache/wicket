@@ -6,6 +6,8 @@ import wicket.Response;
  * An renderer that assumes that assist objects are {@link String}s. Great for
  * quickly generating a list of assists.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */

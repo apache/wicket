@@ -13,6 +13,8 @@ import wicket.Response;
  * 
  * @see IAutoAssistRenderer
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */

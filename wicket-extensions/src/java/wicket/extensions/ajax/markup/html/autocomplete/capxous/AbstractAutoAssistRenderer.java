@@ -7,6 +7,8 @@ import wicket.Response;
  * to only render the visual part of the assist instead of having to also render
  * the necessary autoassist javascript hooks.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */

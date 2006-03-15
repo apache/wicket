@@ -13,7 +13,9 @@ import wicket.model.IModel;
  * @see AutoAssistBehavior
  * @see IAutoAssistRenderer
  * 
- * @author ivaynberg
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public abstract class AutoAssistTextField extends TextField

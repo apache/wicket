@@ -11,6 +11,8 @@ import wicket.Response;
  * details. Direct implementations of this interface should only be used when
  * total control is required.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
