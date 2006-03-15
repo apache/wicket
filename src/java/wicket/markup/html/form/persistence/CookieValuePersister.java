@@ -83,8 +83,14 @@ public class CookieValuePersister implements IValuePersister
 		final String value = component.getValue();
 
 		Cookie cookie = getCookie(component);
-		if(cookie == null) cookie = new Cookie(name, value == null ? "" : value);
-		else cookie.setValue(value);
+		if (cookie == null) 
+		{
+			cookie = new Cookie(name, value == null ? "" : value);
+		}
+		else 
+		{
+			cookie.setValue(value);
+		}
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
 		
