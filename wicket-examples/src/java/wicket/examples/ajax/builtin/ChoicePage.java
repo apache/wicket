@@ -67,8 +67,7 @@ public class ChoicePage extends BasePage
 
 
 	/**
-	 * Constructor
-	 * 
+	 * Constructor.
 	 */
 	public ChoicePage()
 	{
@@ -80,12 +79,10 @@ public class ChoicePage extends BasePage
 
 		IModel makeChoices = new AbstractReadOnlyModel()
 		{
-
 			public Object getObject(Component component)
 			{
 				Set keys = modelsMap.keySet();
-				List list = new ArrayList(keys.size());
-				list.addAll(keys);
+				List list = new ArrayList(keys);
 				return list;
 			}
 
@@ -93,7 +90,6 @@ public class ChoicePage extends BasePage
 
 		IModel modelChoices = new AbstractReadOnlyModel()
 		{
-
 			public Object getObject(Component component)
 			{
 				List models = (List)modelsMap.get(selectedMake);
@@ -130,14 +126,12 @@ public class ChoicePage extends BasePage
 		form.add(modelsContainer);
 		modelsContainer.add(models);
 
-
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{
 
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				target.addComponent(modelsContainer);
-
 			}
 		});
 	}
