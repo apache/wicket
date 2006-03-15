@@ -23,8 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Response;
-import wicket.extensions.ajax.markup.html.autocomplete.capxous.HtmlResponseAutoAssistBehavior;
-import wicket.extensions.ajax.markup.html.autocomplete.capxous.StringResponseAutoAssistBehavior;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.AbstractAutoAssistRenderer;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.AutoAssistBehavior;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.IAutoAssistRenderer;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.StringAutoAssistRenderer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
@@ -48,49 +50,52 @@ public class AutoCompletePage extends BasePage
 		TextField tf1=new TextField("tf1", new Model());
 		form.add(tf1);
 		
-		tf1.add(new StringResponseAutoAssistBehavior() {
+		tf1.add(new AutoAssistBehavior(new StringAutoAssistRenderer()) {
 
-			protected Iterator getCompletionsForPrefix(String prefix)
+			protected Iterator getCompletions(String val)
 			{
 				List completions=new ArrayList();
-				completions.add(prefix+"1");
-				completions.add(prefix+"2");
-				completions.add(prefix+"3");
+				completions.add(val+"1");
+				completions.add(val+"2");
+				completions.add(val+"3");
 				return completions.iterator();
 			}
 			
 		});
 		
 		
+		IAutoAssistRenderer randomRenderer=new AbstractAutoAssistRenderer() {
+
+			protected void renderAssist(Object object, Response r)
+			{
+				String val=object.toString();
+				r.write("<div style='float:left; color:red; '>");
+				r.write(val);
+				r.write("</div><div style='text-align:right; width:100%;'>");
+				r.write(""+Math.random());
+				r.write("</div>");
+			}
+
+			protected String getTextValue(Object object)
+			{
+				return object.toString();
+			}
+			
+		};
+		
 		TextField tf2=new TextField("tf2", new Model());
 		form.add(tf2);
 		
-		tf2.add(new HtmlResponseAutoAssistBehavior() {
+		tf2.add(new AutoAssistBehavior(randomRenderer) {
 
-			protected Iterator getCompletionsForPrefix(String prefix)
+			protected Iterator getCompletions(String input)
 			{
 				List completions=new ArrayList();
-				completions.add(prefix+"1");
-				completions.add(prefix+"2");
-				completions.add(prefix+"3");
+				completions.add(input+"1");
+				completions.add(input+"2");
+				completions.add(input+"3");
 				return completions.iterator();
 			}
-
-			protected String getCompletionText(Object o)
-			{
-				return o.toString();
-			}
-
-			protected void renderCompletion(Object o, Response r)
-			{
-				r.write("<div style=\"float:left; color:red;\">");
-				r.write(o.toString());
-				r.write("</div><div style=\"text-align:right; width:100%;\">");
-				r.write(""+o.toString().length());
-				r.write("</div>");
-				
-			}
-			
 		});
 		
 		
