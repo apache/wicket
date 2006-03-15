@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.Component;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -26,6 +27,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
@@ -214,5 +216,23 @@ public class WebPage extends Page
 		// container the same way instead of using a resolver. The advantages
 		// would be that the header container be available at build time already
 		// and not only at render time.
+	}
+	
+	/**
+	 * 
+	 * @see wicket.Component#onEndRequest()
+	 */
+	protected void onEndRequest()
+	{
+		// This code can not go into HtmlHeaderContainer as header.onEndRequest()
+		// is executed inside an iterator and you can only call container.remove()
+		// which is != iter.remove(). And the iterator is not available inside 
+		// onEndRequest().
+		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
+		if (header != null)
+		{
+			this.remove(header);
+		}
+		super.onEndRequest();
 	}
 }
