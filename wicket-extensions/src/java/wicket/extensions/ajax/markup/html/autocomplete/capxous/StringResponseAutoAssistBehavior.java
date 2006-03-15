@@ -1,13 +1,12 @@
 package wicket.extensions.ajax.markup.html.autocomplete.capxous;
 
-import java.io.OutputStream;
 import java.util.Iterator;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.Response;
 
-public abstract class AutoAssistBehavior extends AbstractAutoAssistBehavior
+public abstract class StringResponseAutoAssistBehavior extends AbstractAutoAssistBehavior
 {
 
 	/**
@@ -17,22 +16,23 @@ public abstract class AutoAssistBehavior extends AbstractAutoAssistBehavior
 
 	protected void onRequest(final String val, RequestCycle requestCycle)
 	{
-		IRequestTarget target=new IRequestTarget() {
+		final Response response=requestCycle.getResponse();
+		
+		final IRequestTarget target=new IRequestTarget() {
 
 			public void respond(RequestCycle requestCycle)
 			{
-				Response r=requestCycle.getResponse();
-				Iterator completions=getCompletionsForPrefix(val);
-				while (completions.hasNext()) {
-					final Object completion=completions.next();
-					final String text=getCompletionText(completion);
+				final Response r=requestCycle.getResponse();
+				final Iterator it=getCompletionsForPrefix(val);
+				while (it.hasNext()) {
+					
+					final String option=it.next().toString();
 					
 					r.write("<div onSelect=\"this.txtBox.value='");
-					r.write(text);
+					r.write(option);
 					r.write("';\")>");
-					renderCompletion(completion, r);
+					r.write(option);
 					r.write("</div>");
-					
 				}
 			}
 
@@ -46,13 +46,11 @@ public abstract class AutoAssistBehavior extends AbstractAutoAssistBehavior
 			}
 			
 		};
-	
+		
+		requestCycle.setRequestTarget(target);
 	}
 	
 	protected abstract Iterator getCompletionsForPrefix(String prefix);
-	
-	protected abstract String getCompletionText(Object o);
-	
-	protected abstract void renderCompletion(Object o, Response r);
 
+	
 }
