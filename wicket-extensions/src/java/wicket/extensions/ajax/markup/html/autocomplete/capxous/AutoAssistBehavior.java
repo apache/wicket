@@ -7,7 +7,7 @@ import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.Response;
 
-public abstract class SimpleRawAutoAssistBehavior extends AbstractAutoAssistBehavior
+public abstract class AutoAssistBehavior extends AbstractAutoAssistBehavior
 {
 
 	/**
