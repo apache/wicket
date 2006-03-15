@@ -83,15 +83,6 @@ public class LinksPage extends BasePage
 			{
 				counter1++;
 				target.addComponent(c1);
-				try
-				{
-					Thread.sleep(3000);
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 
 		});
@@ -122,6 +113,7 @@ public class LinksPage extends BasePage
 			{
 				counter3++;
 				target.addComponent(c3);
+				// sleep for 5 seconds to show off the busy indicator
 				try
 				{
 					Thread.sleep(5000);
