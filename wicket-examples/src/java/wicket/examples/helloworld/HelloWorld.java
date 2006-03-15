@@ -35,8 +35,6 @@ public class HelloWorld extends WicketExamplePage
      */
     public HelloWorld()
     {
-        MarkupContainer border=new AjaxCollapsableBorder("border");
-        add(border);
-    	border.add(new Label("message", "Hello World!"));
+    	new Label("message", "Hello World!");
     }
 }
