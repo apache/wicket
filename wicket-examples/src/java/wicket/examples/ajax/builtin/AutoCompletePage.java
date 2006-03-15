@@ -1,7 +1,7 @@
 /*
- * $Id: FormPage.java 4916 2006-03-13 23:15:39 -0800 (Mon, 13 Mar 2006) ivaynberg $
- * $Revision: 4916 $
- * $Date: 2006-03-13 23:15:39 -0800 (Mon, 13 Mar 2006) $
+ * $Id: FormPage.java 4916 2006-03-13 23:15:39 -0800 (Mon, 13 Mar 2006)
+ * ivaynberg $ $Revision: 4916 $ $Date: 2006-03-13 23:15:39 -0800 (Mon, 13 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,16 +24,14 @@ import java.util.List;
 
 import wicket.Response;
 import wicket.extensions.ajax.markup.html.autocomplete.capxous.AbstractAutoAssistRenderer;
-import wicket.extensions.ajax.markup.html.autocomplete.capxous.AutoAssistBehavior;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.AutoAssistTextField;
 import wicket.extensions.ajax.markup.html.autocomplete.capxous.IAutoAssistRenderer;
-import wicket.extensions.ajax.markup.html.autocomplete.capxous.StringAutoAssistRenderer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
 
 /**
- * Page to demonstrate instant ajax validaion feedback. Validation is trigger in
- * onblur javascript event handler in every form input.
+ * Page to demonstrate wicket's ajax autocompletion components.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -44,35 +42,34 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
-		Form form=new Form("form");
+		Form form = new Form("form");
 		add(form);
-		
-		TextField tf1=new TextField("tf1", new Model());
-		form.add(tf1);
-		
-		tf1.add(new AutoAssistBehavior(new StringAutoAssistRenderer()) {
 
-			protected Iterator getCompletions(String val)
+		TextField tf1 = new AutoAssistTextField("tf1", new Model())
+		{
+
+			protected Iterator getAssists(String input)
 			{
-				List completions=new ArrayList();
-				completions.add(val+"1");
-				completions.add(val+"2");
-				completions.add(val+"3");
+				List completions = new ArrayList();
+				completions.add(input + "1");
+				completions.add(input + "2");
+				completions.add(input + "3");
 				return completions.iterator();
 			}
-			
-		});
-		
-		
-		IAutoAssistRenderer randomRenderer=new AbstractAutoAssistRenderer() {
+
+		};
+		form.add(tf1);
+
+		IAutoAssistRenderer randomRenderer = new AbstractAutoAssistRenderer()
+		{
 
 			protected void renderAssist(Object object, Response r)
 			{
-				String val=object.toString();
+				String val = object.toString();
 				r.write("<div style='float:left; color:red; '>");
 				r.write(val);
 				r.write("</div><div style='text-align:right; width:100%;'>");
-				r.write(""+Math.random());
+				r.write("" + Math.random());
 				r.write("</div>");
 			}
 
@@ -80,26 +77,26 @@ public class AutoCompletePage extends BasePage
 			{
 				return object.toString();
 			}
-			
-		};
-		
-		TextField tf2=new TextField("tf2", new Model());
-		form.add(tf2);
-		
-		tf2.add(new AutoAssistBehavior(randomRenderer) {
 
-			protected Iterator getCompletions(String input)
+		};
+
+		TextField tf2 = new AutoAssistTextField("tf2", new Model(), randomRenderer)
+		{
+
+			protected Iterator getAssists(String input)
 			{
-				List completions=new ArrayList();
-				completions.add(input+"1");
-				completions.add(input+"2");
-				completions.add(input+"3");
+				List completions = new ArrayList();
+				completions.add(input + "1");
+				completions.add(input + "2");
+				completions.add(input + "3");
 				return completions.iterator();
 			}
-		});
-		
-		
+
+		};
+		form.add(tf2);
+
+
 	}
-	
+
 
 }
