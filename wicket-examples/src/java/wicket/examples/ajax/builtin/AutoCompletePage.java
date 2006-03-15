@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.extensions.ajax.markup.html.autocomplete.capxous.SimpleAutoAssistBehavior;
+import wicket.Response;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.HtmlResponseAutoAssistBehavior;
+import wicket.extensions.ajax.markup.html.autocomplete.capxous.StringResponseAutoAssistBehavior;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
@@ -46,7 +48,7 @@ public class AutoCompletePage extends BasePage
 		TextField tf1=new TextField("tf1", new Model());
 		form.add(tf1);
 		
-		tf1.add(new SimpleAutoAssistBehavior() {
+		tf1.add(new StringResponseAutoAssistBehavior() {
 
 			protected Iterator getCompletionsForPrefix(String prefix)
 			{
@@ -55,6 +57,38 @@ public class AutoCompletePage extends BasePage
 				completions.add(prefix+"2");
 				completions.add(prefix+"3");
 				return completions.iterator();
+			}
+			
+		});
+		
+		
+		TextField tf2=new TextField("tf2", new Model());
+		form.add(tf2);
+		
+		tf2.add(new HtmlResponseAutoAssistBehavior() {
+
+			protected Iterator getCompletionsForPrefix(String prefix)
+			{
+				List completions=new ArrayList();
+				completions.add(prefix+"1");
+				completions.add(prefix+"2");
+				completions.add(prefix+"3");
+				return completions.iterator();
+			}
+
+			protected String getCompletionText(Object o)
+			{
+				return o.toString();
+			}
+
+			protected void renderCompletion(Object o, Response r)
+			{
+				r.write("<div style=\"float:left; color:red;\">");
+				r.write(o.toString());
+				r.write("</div><div style=\"text-align:right; width:100%;\">");
+				r.write(""+o.toString().length());
+				r.write("</div>");
+				
 			}
 			
 		});
