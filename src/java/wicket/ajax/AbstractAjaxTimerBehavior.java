@@ -43,9 +43,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		this.updateInterval = updateInterval;
 	}
 
+	/**
+	 * Subclasses should call super.onBind()
+	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
+	 */
 	protected void onBind()
 	{
-		getComponent().setOutputMarkupId(true);
+		super.onBind();
 	}
 
 	/**

@@ -62,6 +62,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		return "wicket-default";
 	}
+	
+	/**
+	 * Subclasses should call super.onBind()
+	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
+	 */
+	protected void onBind()
+	{
+		getComponent().setOutputMarkupId(true);
+	}
 
 	/**
 	 * 
