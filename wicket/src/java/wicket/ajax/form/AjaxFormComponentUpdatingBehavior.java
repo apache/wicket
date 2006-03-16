@@ -46,6 +46,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected void onBind()
 	{
+		super.onBind();
+		
 		if (!(getComponent() instanceof FormComponent))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName()
