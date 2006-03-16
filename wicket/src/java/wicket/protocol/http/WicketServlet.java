@@ -396,9 +396,6 @@ public class WicketServlet extends HttpServlet
 					
 					return time != null ? time.getMilliseconds() : -1;
 				}
-				catch (Exception e) {
-					log.error("Error occured while calculating lastModDate of a resource, -1 will be returned to indicate unknown date", e);
-				}
 				finally
 				{
 					resource.setParameters(null);
