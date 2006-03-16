@@ -23,43 +23,51 @@ import wicket.protocol.http.WebResponse;
 import wicket.request.target.basic.EmptyRequestTarget;
 
 /**
- * Causes Wicket to interrupt current request processing and immediately return
- * the specified HTTP status code. Nothing further will be output to the
- * browser.
+ * Causes Wicket to abort processing and set the specified HTTP status code.
+ * This exception can be thrown from a page or a resource.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Gili Tzabari
  * @see HttpServletResponse
  */
-public class RespondWithHttpStatusException extends AbstractRestartResponseException
+public class AbortWithHttpStatusException extends AbortException
 {
 	private static final long serialVersionUID = 1L;
 	private final int status;
 
 	/**
-	 * Responds with the specified http code
+	 * Default constructor. Users 500 (Internal Error) status code.
+	 */
+	public AbortWithHttpStatusException()
+	{
+		this(500);
+	}
+
+
+	/**
+	 * Constructor
 	 * 
 	 * @param status
 	 *            The http response status code
 	 */
-	public RespondWithHttpStatusException(int status)
+	public AbortWithHttpStatusException(int status)
 	{
 		this.status = status;
-		
+
 		RequestCycle rc = RequestCycle.get();
 		if (rc == null)
 		{
 			throw new IllegalStateException(
 					"This exception can only be thrown from within request processing cycle");
 		}
-		
+
 		Response r = rc.getResponse();
 		if (!(r instanceof WebResponse))
 		{
 			throw new IllegalStateException(
 					"This exception can only be thrown when wicket is processing an http request");
 		}
-		
+
 		WebResponse wr = (WebResponse)r;
 		wr.getHttpServletResponse().setStatus(status);
 

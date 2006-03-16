@@ -29,11 +29,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
@@ -204,8 +206,12 @@ public class WicketServlet extends HttpServlet
 			// Create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
-			// Process request
-			cycle.request();
+			try {
+				// Process request
+				cycle.request();
+			} catch (AbortException e) {
+				// noop
+			}
 		}
 		finally
 		{
@@ -395,6 +401,8 @@ public class WicketServlet extends HttpServlet
 					}
 					
 					return time != null ? time.getMilliseconds() : -1;
+				} catch (AbortException e) {
+					return -1;
 				}
 				finally
 				{
