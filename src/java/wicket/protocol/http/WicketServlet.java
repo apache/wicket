@@ -35,7 +35,6 @@ import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
