@@ -45,23 +45,25 @@ public class RespondWithHttpStatusException extends AbstractRestartResponseExcep
 	public RespondWithHttpStatusException(int status)
 	{
 		this.status = status;
+		
 		RequestCycle rc = RequestCycle.get();
 		if (rc == null)
 		{
 			throw new IllegalStateException(
 					"This exception can only be thrown from within request processing cycle");
 		}
+		
 		Response r = rc.getResponse();
 		if (!(r instanceof WebResponse))
 		{
 			throw new IllegalStateException(
 					"This exception can only be thrown when wicket is processing an http request");
 		}
+		
 		WebResponse wr = (WebResponse)r;
+		wr.getHttpServletResponse().setStatus(status);
 
-		HttpServletResponse httpResponse = wr.getHttpServletResponse();
-		httpResponse.setStatus(status);
-
+		// abort any further response processing
 		rc.setRequestTarget(EmptyRequestTarget.getInstance());
 	}
 
