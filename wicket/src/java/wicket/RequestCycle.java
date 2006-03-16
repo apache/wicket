@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.159 $ $Date$
+ * $Id: RequestCycle.java 4930 2006-03-14 12:45:59 -0800 (Tue, 14 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-14 12:45:59 -0800 (Tue, 14
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -914,7 +915,8 @@ public abstract class RequestCycle
 				case RESOLVE_TARGET : {
 					// resolve the target of the request using the request
 					// parameters
-					final IRequestTarget target = processor.resolve(this, request.getRequestParameters());
+					final IRequestTarget target = processor.resolve(this, request
+							.getRequestParameters());
 
 					// has to result in a request target
 					if (target == null)
@@ -954,7 +956,7 @@ public abstract class RequestCycle
 				}
 			}
 		}
-		catch (AbstractRestartResponseException e)
+		catch (AbortException e)
 		{
 			throw e;
 		}

@@ -24,6 +24,6 @@ package wicket;
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke
  */
-public abstract class AbstractRestartResponseException extends RuntimeException
+public abstract class AbstractRestartResponseException extends AbortException
 {
 }
