@@ -101,6 +101,6 @@ public abstract class AbstractTextComponent extends FormComponent
 		{
 			return null;
 		}
-		return value;
+		return super.convertValue(value);
 	}
 }
