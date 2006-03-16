@@ -1188,9 +1188,31 @@ public abstract class MarkupContainer extends Component
 			page.componentRemoved(component);
 		}
 
-		// Detach model
-		component.detachModel();
+		// detach children models
+		if (component instanceof MarkupContainer)
+		{
+			System.out.println("detaching all chilcren");
+			((MarkupContainer)component).visitChildren(new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					try
+					{
+						// detach any models of the component
+						component.detachModels();
+					}
+					catch (Exception e) // catch anything; we MUST detach all
+										// models
+					{
+						log.error("detaching models of component " + component + " failed:", e);
+					}
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+		}
 
+		// Detach model
+		component.detachModels();
 		// Component is removed
 		component.setParent(null);
 	}
