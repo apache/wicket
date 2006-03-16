@@ -1048,6 +1048,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
 									+ component + "\n");
 						}
+						else
+						{
+							// if the component is not visible in hierarchy we
+							// should not visit its children since they are also
+							// not visible
+							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+						}
 					}
 					return CONTINUE_TRAVERSAL;
 				}
