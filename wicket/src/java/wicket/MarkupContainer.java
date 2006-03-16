@@ -1191,7 +1191,6 @@ public abstract class MarkupContainer extends Component
 		// detach children models
 		if (component instanceof MarkupContainer)
 		{
-			System.out.println("detaching all chilcren");
 			((MarkupContainer)component).visitChildren(new IVisitor()
 			{
 				public Object component(Component component)
