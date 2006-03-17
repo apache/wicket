@@ -46,7 +46,7 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 * 
 	 * @author jcompagner
 	 */
-	public class ResourceState
+	public static class ResourceState
 	{
 
 		/**
