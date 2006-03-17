@@ -347,8 +347,8 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final wicket.util.string.AppendingStringBuffer markupKey(
-			final ContainerInfo containerInfo, final Class clazz)
+	private final AppendingStringBuffer markupKey(final ContainerInfo containerInfo,
+			final Class clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = containerInfo.getLocale();
@@ -368,7 +368,7 @@ public class MarkupCache
 			if (c || (l && v))
 			{
 				buffer.append('_').append(locale.getCountry()); // This may just
-																// append '_'
+				// append '_'
 			}
 			if (v && (l || c))
 			{
