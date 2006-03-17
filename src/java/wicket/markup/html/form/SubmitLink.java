@@ -96,8 +96,10 @@ public class SubmitLink extends Button
      */
     protected void onComponentTag(ComponentTag tag)
     {
-        checkComponentTag(tag, "a");
-        tag.put("href","#");
+        if(tag.getName().equalsIgnoreCase("a"))
+        {
+        	tag.put("href","#");
+        }
         tag.put("onclick",getTriggerJavaScript());
     }
     
