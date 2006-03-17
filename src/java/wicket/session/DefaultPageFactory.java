@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import wicket.AbortException;
 import wicket.AbstractRestartResponseException;
 import wicket.IPageFactory;
 import wicket.Page;
@@ -165,7 +166,7 @@ public final class DefaultPageFactory implements IPageFactory
 		catch (InvocationTargetException e)
 		{
 			// honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException || 
+			if (e.getTargetException() instanceof AbortException || 
 					e.getTargetException() instanceof AuthorizationException)
 			{
 				throw (RuntimeException)e.getTargetException();
