@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MarkupContainer.java 4965 2006-03-16 11:21:07 -0800 (Thu, 16 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-16 11:21:07 -0800 (Thu, 16 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -37,6 +39,8 @@ import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
+import wicket.settings.IResourceSettings;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -789,6 +793,30 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Gets the markup resource stream for this container. For <strong>very
+	 * specific situations</strong>, you may override this method to load from
+	 * a different location, e.g. if this particular component loads it's markup
+	 * from a database or some other alternative location. However, the prefered
+	 * way of doing things when you need customized resource loading, is to
+	 * provide an application specific override by setting your custom loader in
+	 * {@link Application#init()} with method
+	 * {@link IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamLocator)}.
+	 * 
+	 * @return The the markup resource stream for this container
+	 */
+	public IResourceStream getMarkupResourceStream()
+	{
+		// creating this container info object as there currently is some
+		// hackery going on regarding style and variants
+		ContainerInfo containerInfo = new ContainerInfo(this);
+		IResourceStream markupResource = Application.get().getResourceSettings()
+				.getResourceStreamLocator().locate(getClass(),
+						getClass().getName().replace('.', '/'), containerInfo.getStyle(),
+						containerInfo.getLocale(), containerInfo.getFileExtension());
+		return markupResource;
+	}
+
+	/**
 	 * Get the markup stream set on this container.
 	 * 
 	 * @return Returns the markup stream set on this container.
@@ -1201,7 +1229,7 @@ public abstract class MarkupContainer extends Component
 						component.detachModels();
 					}
 					catch (Exception e) // catch anything; we MUST detach all
-										// models
+					// models
 					{
 						log.error("detaching models of component " + component + " failed:", e);
 					}

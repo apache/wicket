@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - custom resource loading</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    <p>
+	    This page was loaded by a component specific override. You can use that - with care - if you have
+	    to implement custom loading strategies that are very local to the component. For instance, a custom
+	    component that loads it's template from a database and for which you don't want the application
+	    to have to know about it's differing loading resource.
+    </p>
+    <p>
+	    Note that while it is great to have this flexiblity, the further away you step from Wicket's default
+	    way of doing things the harder it will get to figure out what your application is doing.
+    </p>
+</body>
+</html>
