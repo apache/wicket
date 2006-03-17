@@ -11,6 +11,14 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Johan Compagner" issue="1452553" due-to="Andrew Berman">PageParameters/ValueMap getLong and getInt defaults</action>
+      <action type="fix" dev="Johan Compagner" issue="1448945" due-to="Gili Tzabari">niceurl decoder does not remove +</action>
+      <action type="add" dev="Johan Compagner">Refactored the Validators a bit, Depricated Length/IntegerValidators added String/Number/DateValdiator all havind method like min/max or range, See the docs what kind of message key they have like: 'NumberValidator.range'</action>
+      <action type="update" dev="Johan Compagner">DynamicByteArrayResource made thread safe. instead of getData() now getResourceState() must be implemented by subclasses</action>
+	  <action type="fix" dev="Johan Compagner" issue="1446617" due-to="Yuuki">CAPITAL body tag</action>
+	  <action type="fix" dev="Johan Compagner" issue="1442528" due-to="Maurice Marrink">userinput of radiobuttons and checkboxes forgotten</action>
+      <action type="fix" dev="Johan Compagner" issue="1441999" due-to="Gili Tzabari">Trying to hit missing resources should return HTTP 404</action>
+      <action type="fix" dev="Johan Compagner" issue="1441469" due-to="Gili Tzabari">SharesResources.get() does not check for aliasing</action>
       <action type="add" dev="Igor Vaynberg">Added AutoAssistTextField to extensions based on http://capxous.com/autoassist/</action>
       <action type="add" dev="Igor Vaynberg">Added ability to easily decorate default ajax callbacks. See IAjaxCallDecorator and friends.</action>
       <action type="add" dev="Igor Vaynberg">Added ability to easily create ajax busy indicators. See IAjaxIndicatorAware and wicket-examples/ajax/links.</action>
