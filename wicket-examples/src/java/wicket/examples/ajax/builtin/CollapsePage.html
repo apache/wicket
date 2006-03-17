@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/"
+    xml:lang="en" lang="en">
+    <wicket:extend>
+		<br/><br/>
+	
+<style>
+
+.AutoAssist {
+	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+	font-size:12px;
+	background-color: white;
+	border-width: 2px;
+	border-color: #cccccc;
+	border-style: solid;
+	padding: 2px;
+	margin-top: 1px;	
+}
+
+.Highlight {
+	background-color:#FFFF00;
+	color:#000000;
+}
+
+div {
+  padding: 3px;
+  text-align: left;
+}
+
+</style>
+		<span wicket:id="border">
+        <br/><br/>
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td style="align:right;">Los Angeles:</td>
+	<td><span wicket:id="la">[la clock]</span></td>
+</tr>
+<tr>
+	<td style="align:right;">New York:</td>
+	<td><span wicket:id="ny">[ny clock]</span></td>
+</tr>
+<tr>
+	<td style="align:right;">London:</td>
+	<td><span wicket:id="london">[london clock]</span></td>
+</tr>
+<tr>
+	<td style="align:right;">Prague:</td>
+	<td><span wicket:id="prague">[prague clock]</span></td>
+</tr>
+<tr>
+	<td style="align:right;">Moscow:</td>
+	<td><span wicket:id="moscow">[moscow clock]</span></td>
+</tr>
+</table>
+		</span>
+		
+    </wicket:extend>
+</html>
