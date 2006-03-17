@@ -27,6 +27,7 @@ public class EditableLabelPage extends BasePage
 	{
 		add(new AjaxEditableLabel("text1", new PropertyModel(this, "text1")));
 		add(new AjaxEditableLabel("text2", new PropertyModel(this, "text2")));
+		
 		add(new Label("refresh-counter", new AbstractReadOnlyModel()
 		{
 
