@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import wicket.AbortException;
-import wicket.AbstractRestartResponseException;
 import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
