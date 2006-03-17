@@ -23,7 +23,10 @@ import wicket.protocol.http.WebResponse;
 import wicket.request.target.basic.EmptyRequestTarget;
 
 /**
- * Causes Wicket to abort processing and set the specified HTTP status code.
+ * Causes Wicket to abort processing and set the specified HTTP status code. An
+ * {@link IllegalStateException} will be thrown if HTTP status code could not be
+ * set and the optional parameter is specified as false.
+ * 
  * This exception can be thrown from a page or a resource.
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -36,43 +39,42 @@ public class AbortWithHttpStatusException extends AbortException
 	private final int status;
 
 	/**
-	 * Default constructor. Users 500 (Internal Error) status code.
-	 */
-	public AbortWithHttpStatusException()
-	{
-		this(500);
-	}
-
-
-	/**
 	 * Constructor
 	 * 
 	 * @param status
 	 *            The http response status code
+	 * @param statusCodeOptional
+	 *            If true and http status could not be set, an
+	 *            IllegalStateException will be thrown
 	 */
-	public AbortWithHttpStatusException(int status)
+	public AbortWithHttpStatusException(int status, boolean statusCodeOptional)
 	{
 		this.status = status;
 
 		RequestCycle rc = RequestCycle.get();
 		if (rc == null)
 		{
-			throw new IllegalStateException(
-					"This exception can only be thrown from within request processing cycle");
+			if (!statusCodeOptional)
+			{
+				throw new IllegalStateException(
+						"This exception can only be thrown from within request processing cycle");
+			}
 		}
-
-		Response r = rc.getResponse();
-		if (!(r instanceof WebResponse))
+		else
 		{
-			throw new IllegalStateException(
-					"This exception can only be thrown when wicket is processing an http request");
+			Response r = rc.getResponse();
+			if (!(r instanceof WebResponse))
+			{
+				throw new IllegalStateException(
+						"This exception can only be thrown when wicket is processing an http request");
+			}
+
+			WebResponse wr = (WebResponse)r;
+			wr.getHttpServletResponse().setStatus(status);
+
+			// abort any further response processing
+			rc.setRequestTarget(EmptyRequestTarget.getInstance());
 		}
-
-		WebResponse wr = (WebResponse)r;
-		wr.getHttpServletResponse().setStatus(status);
-
-		// abort any further response processing
-		rc.setRequestTarget(EmptyRequestTarget.getInstance());
 	}
 
 	/**
