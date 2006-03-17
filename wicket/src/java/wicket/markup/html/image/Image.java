@@ -47,7 +47,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * This constructor can be used if you have a img tag that has a src that points to a 
 	 * PackageResource  (which will be created and bind to the shared resources)
-	 * Or if you have a value attribute in youre tag for which the image factory can make an image.
+	 * Or if you have a value attribute in your tag for which the image factory can make an image.
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
