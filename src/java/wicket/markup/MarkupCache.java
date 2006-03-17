@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.20 $ $Date$
+ * $Id: MarkupCache.java 4639 2006-02-26 01:44:07 -0800 (Sun, 26 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-26 01:44:07 -0800 (Sun, 26 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -146,7 +147,8 @@ public class MarkupCache
 			final ContainerInfo containerInfo)
 	{
 		IResourceStream markupResource = application.getResourceSettings()
-				.getResourceStreamLocator().locate(containerClass, containerClass.getName().replace('.', '/'),containerInfo.getStyle(),
+				.getResourceStreamLocator().locate(containerClass,
+						containerClass.getName().replace('.', '/'), containerInfo.getStyle(),
 						containerInfo.getLocale(), containerInfo.getFileExtension());
 
 		if (markupResource == null)
@@ -194,7 +196,7 @@ public class MarkupCache
 			synchronized (markupCache)
 			{
 				markup = (Markup)markupCache.get(key);
-	
+
 				// If no markup in the cache
 				if (markup == null)
 				{
@@ -204,10 +206,10 @@ public class MarkupCache
 					{
 						// Look for markup resource for containerClass
 						markupResource = newMarkupResourceStream(containerClass, containerInfo);
-	
+
 						containerClass = containerClass.getSuperclass();
 					}
-	
+
 					// Found markup?
 					if (markupResource != null)
 					{
@@ -216,11 +218,14 @@ public class MarkupCache
 					}
 					else
 					{
-						// flag markup as non-existent (as opposed to null, which
-						// might mean that it's simply not loaded into the cache)
+						// flag markup as non-existent (as opposed to null,
+						// which
+						// might mean that it's simply not loaded into the
+						// cache)
 						markup = Markup.NO_MARKUP;
-	
-						// Save any markup list (or absence of one) for next time
+
+						// Save any markup list (or absence of one) for next
+						// time
 						markupCache.put(key, markup);
 					}
 				}
@@ -231,16 +236,17 @@ public class MarkupCache
 
 	/**
 	 * Remove the markup from the cache and trigger all associated listeners
-	 *  
-	 * @param key 
-	 *         The cache key
-	 * @param markupResourceStream 
-	 *         The resource stream
+	 * 
+	 * @param key
+	 *            The cache key
+	 * @param markupResourceStream
+	 *            The resource stream
 	 */
-	private void removeMarkup(final AppendingStringBuffer key, final MarkupResourceStream markupResourceStream)
+	private void removeMarkup(final AppendingStringBuffer key,
+			final MarkupResourceStream markupResourceStream)
 	{
 		markupCache.remove(key);
-		
+
 		// trigger all listeners registered on the markup that is removed
 		afterLoadListeners.notifyListeners(markupResourceStream);
 		afterLoadListeners.remove(markupResourceStream);
@@ -297,7 +303,8 @@ public class MarkupCache
 	/**
 	 * Load markup from an IResourceStream and add an {@link IChangeListener}to
 	 * the {@link ModificationWatcher} so that if the resource changes, we can
-	 * remove it from the cache automatically and subsequently reload when needed.
+	 * remove it from the cache automatically and subsequently reload when
+	 * needed.
 	 * 
 	 * @param key
 	 *            The key for the resource
@@ -340,14 +347,16 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final wicket.util.string.AppendingStringBuffer markupKey(final ContainerInfo containerInfo, final Class clazz)
+	private final wicket.util.string.AppendingStringBuffer markupKey(
+			final ContainerInfo containerInfo, final Class clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = containerInfo.getLocale();
 		final String style = containerInfo.getStyle();
 		final String markupType = containerInfo.getFileExtension();
 
-		final wicket.util.string.AppendingStringBuffer buffer = new wicket.util.string.AppendingStringBuffer(classname.length() + 32);
+		final wicket.util.string.AppendingStringBuffer buffer = new wicket.util.string.AppendingStringBuffer(
+				classname.length() + 32);
 		buffer.append(classname);
 
 		if (locale != null)
@@ -356,12 +365,15 @@ public class MarkupCache
 			boolean c = locale.getCountry().length() != 0;
 			boolean v = locale.getVariant().length() != 0;
 			buffer.append(locale.getLanguage());
-			if (c||(l&&v)) {
-				buffer.append('_').append(locale.getCountry()); // This may just append '_'
+			if (c || (l && v))
+			{
+				buffer.append('_').append(locale.getCountry()); // This may just
+																// append '_'
 			}
-			if (v&&(l||c)) {
+			if (v && (l || c))
+			{
 				buffer.append('_').append(locale.getVariant());
-			}			
+			}
 		}
 		if (style != null)
 		{
