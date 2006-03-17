@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.78 $ $Date$
+ * $Id: FormComponent.java 4952 2006-03-15 05:21:36 -0800 (Wed, 15 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-15 05:21:36 -0800 (Wed, 15 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -593,7 +594,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected Object convertValue(String value) throws ConversionException
 	{
-		return value != null?value.trim():null;
+		return value != null ? value.trim() : null;
 	}
 
 	/**
@@ -730,7 +731,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 	}
 
-	
+
 	/**
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
@@ -1024,4 +1025,27 @@ public abstract class FormComponent extends WebMarkupContainer
 		error(message);
 	}
 
+
+	/**
+	 * This method will retrieve the request parameter, validate it, and if
+	 * valid update the model. These are the same steps as would be performed by
+	 * the form.
+	 * 
+	 * This is useful when a formcomponent is used outside a form.
+	 * 
+	 */
+	public final void processInput()
+	{
+		inputChanged();
+		validate();
+		if (hasErrorMessage())
+		{
+			invalid();
+		}
+		else
+		{
+			valid();
+			updateModel();
+		}
+	}
 }

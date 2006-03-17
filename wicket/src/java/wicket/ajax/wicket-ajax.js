@@ -8,6 +8,14 @@ function wicketAjaxDebugEnabled() {
 }
 
 // MISC FUNCTIONS
+function wicketKeyCode(event) {
+    if (typeof(event.keyCode)=="undefined") {
+        return event.which;
+    } else {
+        return event.keyCode;
+    }
+}
+
 function wicketGet(id) {
     return document.getElementById(id);
 }
