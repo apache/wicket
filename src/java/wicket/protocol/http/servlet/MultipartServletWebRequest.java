@@ -314,7 +314,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		public int read(byte[] b) throws IOException
 		{
 			int read = in.read(b);
-			bytesUploaded += (read < 0) ? 0 : 1;
+			bytesUploaded += (read < 0) ? 0 : read;
 			onUploadUpdate(bytesUploaded, totalBytes);
 			return read;
 		}
@@ -325,7 +325,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		public int read(byte[] b, int off, int len) throws IOException
 		{
 			int read = in.read(b, off, len);
-			bytesUploaded += (read < 0) ? 0 : 1;
+			bytesUploaded += (read < 0) ? 0 : read;
 			onUploadUpdate(bytesUploaded, totalBytes);
 			return read;
 		}
