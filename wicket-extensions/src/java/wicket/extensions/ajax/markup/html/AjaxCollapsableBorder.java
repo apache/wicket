@@ -7,6 +7,13 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.model.Model;
 
+
+/**
+ * DO NOT USE YET, WORK IN PROGRESS
+ * @author ivaynberg
+ *
+ */
+
 public class AjaxCollapsableBorder extends Border
 {
 	/**
