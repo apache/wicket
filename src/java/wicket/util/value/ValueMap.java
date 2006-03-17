@@ -202,8 +202,7 @@ public class ValueMap extends HashMap
 	public final int getInt(final String key, final int defaultValue)
 			throws StringValueConversionException
 	{
-		final StringValue value = getStringValue(key);
-		return (value != null) ? value.toInt() : defaultValue;
+		return getStringValue(key).toInt(defaultValue);
 	}
 
 	/**
@@ -232,8 +231,7 @@ public class ValueMap extends HashMap
 	public final long getLong(final String key, final long defaultValue)
 			throws StringValueConversionException
 	{
-		final StringValue value = getStringValue(key);
-		return (value != null) ? value.toLong() : defaultValue;
+		return getStringValue(key).toLong(defaultValue);
 	}
 
 	/**
