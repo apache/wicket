@@ -80,8 +80,6 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	 * This is the id of the span that should be hidden or show to hide or show
 	 * the indicator.
 	 * 
-	 * @param c
-	 *            component that this behavior is attached to
 	 * @return markup id of outer most span
 	 */
 	public String getMarkupId()

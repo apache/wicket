@@ -1,6 +1,5 @@
 package wicket.extensions.ajax.markup.html;
 
-import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.WebMarkupContainer;
@@ -23,6 +22,11 @@ public class AjaxCollapsableBorder extends Border
 
 	private final WebMarkupContainer header;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param id Component id
+	 */
 	public AjaxCollapsableBorder(String id)
 	{
 		super(id, new Model());
@@ -46,14 +50,18 @@ public class AjaxCollapsableBorder extends Border
 		});
 	}
 
-
+	/**
+	 * @param collapsed True if collapsed
+	 */
 	public final void setCollapsed(boolean collapsed)
 	{
 		setModelObject(Boolean.valueOf(collapsed));
 		setBorderBodyVisible(!collapsed);
 	}
 
-
+	/**
+	 * @return True if collapsed
+	 */
 	public final boolean isCollapsed()
 	{
 		return Boolean.TRUE.equals(getModelObject());
@@ -67,10 +75,14 @@ public class AjaxCollapsableBorder extends Border
 	 */
 	public class AjaxCollapsableDiv extends WebMarkupContainer {
 
+		/**
+		 * Constructor.
+		 * 
+		 * @param id Component id
+		 */
 		public AjaxCollapsableDiv(String id)
 		{
 			super(id);
-			// TODO Auto-generated constructor stub
 		}
 
 		/**

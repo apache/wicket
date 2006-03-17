@@ -106,8 +106,6 @@ public class AjaxEditableLabel extends Panel
 
 		/**
 		 * Constructor
-		 * 
-		 * @param event
 		 */
 		public EditorAjaxBehavior()
 		{
