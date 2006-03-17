@@ -497,7 +497,7 @@ public abstract class Application
 		if (!settingsAccessible) 
 		{
 			throw new WicketRuntimeException(
-					"Use Application.init() method for configuring youre application object");
+					"Use Application.init() method for configuring your application object");
 		}
 		
 		if (settings == null)

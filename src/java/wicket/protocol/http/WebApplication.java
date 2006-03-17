@@ -62,7 +62,7 @@ import wicket.util.string.Strings;
  * application settings by overriding the init() method and then by calling
  * getXXXSettings() to retrieve an interface to a mutable Settings object. Do
  * not do this in the constructor itself because the defaults will then override
- * youre settings.
+ * your settings.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the

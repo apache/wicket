@@ -31,7 +31,7 @@ import wicket.util.time.Time;
 
 /**
  * This class can be used to easy make a Resource from a predefined byte array.
- * If youre data comes from a database then a DynamicByteArrayResource is a
+ * If your data comes from a database then a DynamicByteArrayResource is a
  * better choice. Only use this class if you have to have the byte array in
  * memory. Like a pdf that is generated on the fly.
  * 
