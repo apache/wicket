@@ -19,6 +19,9 @@ package wicket.request.compound;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.IRedirectListener;
@@ -54,6 +57,9 @@ import wicket.util.string.Strings;
  */
 public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
+	
 	/**
 	 * Construct.
 	 */
@@ -214,22 +220,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						+ ", a component must be provided");
 			}
 			final Component component = page.get(pageRelativeComponentPath);
-			if (component == null)
+			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
 			{
-				throw new WicketRuntimeException(
-						"Attempt to call listener method on non-existant component: " + componentPath);
-			}
-			if (!component.isVisibleInHierarchy())
-			{
-				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed: "
-								+ componentPath);
-			}
-			if (!component.isEnabled())
-			{
-				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not enabled is not allowed: "
-								+ componentPath);
+				log.info("component not enabled or visible, redirecting to calling page, component: " + component);
+				return new RedirectPageRequestTarget(page);
 			}
 			if (!component.isEnableAllowed())
 			{
