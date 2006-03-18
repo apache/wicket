@@ -18,12 +18,15 @@
  */
 package wicket.settings;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import wicket.Application;
 import wicket.Component;
@@ -60,6 +63,7 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
+import wicket.util.io.IOUtils;
 import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.time.Duration;
@@ -75,6 +79,7 @@ import wicket.util.watch.ModificationWatcher;
  * @author Juergen Donnerstag
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @author Martijn Dashorst
  */
 public final class Settings
 		implements
@@ -87,7 +92,8 @@ public final class Settings
 			IResourceSettings,
 			ISecuritySettings,
 			ISessionSettings,
-			IAjaxSettings
+			IAjaxSettings,
+			IFrameworkSettings
 {
 	/** ajax debug mode status */
 	boolean ajaxDebugModeEnabled = false;
@@ -1121,5 +1127,28 @@ public final class Settings
 	public boolean isAjaxDebugModeEnabled()
 	{
 		return ajaxDebugModeEnabled;
+	}
+
+	/**
+	 * @see wicket.settings.IFrameworkSettings#getVersion()
+	 */
+	public String getVersion()
+	{
+		Properties properties = new Properties();
+		InputStream is = null;
+		try
+		{
+			is = Settings.class.getResourceAsStream("/wicket.properties");
+			properties.load(is);
+		}
+		catch (IOException e)
+		{
+			// ignore the exception
+		}
+		finally
+		{
+			IOUtils.closeQuietly(is);
+		}
+		return properties.getProperty("wicket.version", "n/a");
 	}
 }
