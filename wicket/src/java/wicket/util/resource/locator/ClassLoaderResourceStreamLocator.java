@@ -48,7 +48,7 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
 	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(final Class clazz, final String path)
+	public IResourceStream locate(final Class clazz, final String path)
 	{
 		ClassLoader classLoader = null;
 		if (clazz != null)
