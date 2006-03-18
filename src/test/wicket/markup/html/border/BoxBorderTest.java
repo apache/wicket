@@ -129,4 +129,24 @@ public class BoxBorderTest extends WicketTestCase
 		executeTest(BorderRenderWrappedTestPage_1.class,
 				"BorderRenderWrappedTestPage_ExpectedResult_1.html");
 	}
+
+	/**
+	 * Test a simply page containing the debug component
+	 * 
+	 * @throws Exception
+	 */
+	public void test5() throws Exception
+	{
+		executeTest(BoxBorderTestPage_5.class, "BoxBorderTestPage_ExpectedResult_5.html");
+	}
+
+	/**
+	 * Test a simply page containing the debug component
+	 * 
+	 * @throws Exception
+	 */
+	public void test6() throws Exception
+	{
+		executeTest(BoxBorderTestPage_6.class, "BoxBorderTestPage_ExpectedResult_6.html");
+	}
 }
