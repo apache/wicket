@@ -287,8 +287,16 @@
 					<include>**</include>
 				</includes>
 				<excludes>
+					<exclude>wicket.properties</exclude>
 					<exclude>**/*.java</exclude>
 				</excludes>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/java</directory>
+				<includes>
+					<include>wicket.properties</include>
+				</includes>
 			</resource>
 		</resources>
 
@@ -339,7 +347,6 @@
 					<includes>
 						<include>**/*Test.java</include>
 					</includes>
-					<testFailureIgnore>true</testFailureIgnore>
 				</configuration>
 			</plugin>
 			<plugin>
