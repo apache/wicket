@@ -20,7 +20,6 @@ package wicket.examples.customresourceloading;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +29,7 @@ import wicket.examples.WicketExampleApplication;
 import wicket.protocol.http.WebApplication;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
+import wicket.util.resource.locator.AbstractResourceStreamLocator;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.Strings;
@@ -47,7 +47,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	/**
 	 * Custom implementation of {@link IResourceStreamLocator}.
 	 */
-	private final class CustomResourceStreamLocator implements IResourceStreamLocator
+	private final class CustomResourceStreamLocator extends AbstractResourceStreamLocator
 	{
 		/**
 		 * Locator to fallback on. Always a good idea to do this, because
@@ -57,12 +57,10 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 		private ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
 
 		/**
-		 * @see wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
-		 *      java.lang.String, java.lang.String, java.util.Locale,
+		 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
-		public IResourceStream locate(Class clazz, String path, String style, Locale locale,
-				String extension)
+		protected IResourceStream locate(Class clazz, String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())
@@ -76,15 +74,15 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 			{
 				// this custom case disregards the path and tries it's own
 				// scheme
-				location = "/WEB-INF/templates/"
-						+ Strings.lastPathComponent(AlternativePageFromWebContext.class.getName(),
-								'.') + "." + extension;
+				String extension = path.substring(path.lastIndexOf('.') + 1);
+				String simpleFileName = Strings.lastPathComponent(clazz.getName(), '.');
+				location = "/WEB-INF/templates/" + simpleFileName + "." + extension;
 			}
 			else
 			{
 				// use the normal package to path conversion of the passed in
 				// path variable
-				location = "/WEB-INF/templates/" + path + "." + extension;
+				location = "/WEB-INF/templates/" + path;
 			}
 			URL url;
 			try
@@ -102,7 +100,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 			}
 
 			// resource not found; fall back on class loading
-			return classLoaderLocator.locate(clazz, path, style, locale, extension);
+			return classLoaderLocator.locate(clazz, path);
 		}
 
 	}
