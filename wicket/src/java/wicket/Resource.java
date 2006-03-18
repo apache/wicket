@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.55 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -87,7 +87,7 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -101,7 +101,7 @@ public abstract class Resource implements IResourceListener
 		this();
 		idleTimeout = value;
 	}
-	
+
 
 	/**
 	 * Returns the maximum time the resource may be idle before it is removed.
@@ -290,16 +290,16 @@ public abstract class Resource implements IResourceListener
 				else
 				{
 					ignoreException = throwable.getClass().getName()
-							.indexOf("ClientAbortException") != 0;
-				}
-				if (ignoreException)
-				{
-					if (log.isDebugEnabled())
+							.indexOf("ClientAbortException") >= 0;
+					if (ignoreException)
 					{
-						log.debug("Socket exception ignored for sending Resource "
-								+ "response to client (ClientAbort)", e);
+						if (log.isDebugEnabled())
+						{
+							log.debug("Socket exception ignored for sending Resource "
+									+ "response to client (ClientAbort)", e);
+						}
+						break;
 					}
-					break;
 				}
 				throwable = throwable.getCause();
 			}
