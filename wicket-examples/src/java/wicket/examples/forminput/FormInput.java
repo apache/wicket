@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.20 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.examples.forminput;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,7 +49,9 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.WebRequest;
+import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.convert.SimpleConverterAdapter;
 
 /**
  * Example for form input.
@@ -142,7 +145,8 @@ public class FormInput extends WicketExamplePage
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
 			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0, 100)));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
+					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
@@ -168,7 +172,25 @@ public class FormInput extends WicketExamplePage
 			{
 				public IConverter getConverter()
 				{
-					return new URLConverter();
+					return new SimpleConverterAdapter()
+					{
+						public String toString(Object value)
+						{
+							return value != null ? value.toString() : null;
+						}
+
+						public Object toObject(String value)
+						{
+							try
+							{
+								return new URL(value.toString());
+							}
+							catch (MalformedURLException e)
+							{
+								throw new ConversionException("'" + value + "' is not a valid URL");
+							}
+						}
+					};
 				}
 			});
 
