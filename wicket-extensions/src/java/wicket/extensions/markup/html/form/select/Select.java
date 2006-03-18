@@ -69,8 +69,6 @@ public class Select extends FormComponent
 	 */
 	public void updateModel()
 	{
-		modelChanging();
-
 		Object object = getModelObject();
 		boolean isModelCollection = object instanceof Collection;
 
@@ -79,6 +77,8 @@ public class Select extends FormComponent
 		 */
 		if (isModelCollection)
 		{
+			modelChanging();
+
 			((Collection)object).clear();
 		}
 		else
@@ -150,6 +150,9 @@ public class Select extends FormComponent
 			}
 		}
 
-		modelChanged();
+		if (isModelCollection)
+		{
+			modelChanged();
+		}
 	}
 }

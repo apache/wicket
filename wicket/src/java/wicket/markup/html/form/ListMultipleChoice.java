@@ -310,13 +310,15 @@ public class ListMultipleChoice extends AbstractChoice
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues != null)
 		{
+			modelChanging();
 			selectedValues.clear();
 			selectedValues.addAll((Collection)getConvertedInput());
+			modelChanged();
 		}
 		else
 		{
 			selectedValues = (Collection)getConvertedInput();
+			setModelObject(selectedValues);
 		}
-		setModelObject(selectedValues);
 	}
 }

@@ -160,8 +160,6 @@ public class CheckGroup extends FormComponent
 	 */
 	public void updateModel()
 	{
-		modelChanging();
-
 		Collection collection = (Collection)getModelObject();
 		if(collection == null)
 		{
@@ -170,11 +168,11 @@ public class CheckGroup extends FormComponent
 		}
 		else
 		{
+			modelChanging();
 			collection.clear();
 			collection.addAll((Collection)getConvertedInput());
+			modelChanged();
 		}
-
-		modelChanged();
 	}
 	
 	/**
