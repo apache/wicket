@@ -166,7 +166,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (encoder != null)
 		{
 			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
-			return requestCycle.getResponse().encodeURL(prefix.append(pathForTarget(requestTarget)).toString());
+			return requestCycle.getResponse().encodeURL(
+					prefix.append(pathForTarget(requestTarget)).toString());
 		}
 
 		// no mount found; go on with default processing
@@ -439,12 +440,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		// Begin encoding URL
 		final StringBuffer url = new StringBuffer(64);
 		url.append(urlPrefix(requestCycle));
-		url.append('?');
-		url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
-		url.append('=');
 
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
+		final Application application = Application.get();
 
 		// Find pagemap name
 		String pageMapName = requestTarget.getPageMapName();
@@ -470,8 +469,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			}
 		}
 
-		// Add <page-map-name>:<bookmarkable-page-class>
-		url.append(pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+		boolean firstParameter = true;
+		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
+		{
+			firstParameter = false;
+			url.append('?');
+			url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+			url.append('=');
+
+
+			// Add <page-map-name>:<bookmarkable-page-class>
+			url.append(pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+		}
 
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
@@ -486,14 +495,20 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					String escapedValue = value;
 					try
 					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get()
+						escapedValue = URLEncoder.encode(escapedValue, application
 								.getRequestCycleSettings().getResponseRequestEncoding());
 					}
 					catch (UnsupportedEncodingException ex)
 					{
 						log.error(ex.getMessage(), ex);
 					}
-					url.append('&');
+					if (!firstParameter)
+						url.append('&');
+					else
+					{
+						firstParameter = false;
+						url.append('?');
+					}
 					url.append(key);
 					url.append('=');
 					url.append(escapedValue);
@@ -680,13 +695,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				String contextPath = Application.get().getApplicationSettings().getContextPath();
 				if (contextPath == null)
 				{
-					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest().getContextPath();
+					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+							.getContextPath();
 					if (contextPath == null)
 					{
 						contextPath = "";
 					}
 				}
-				if(!contextPath.equals("/"))
+				if (!contextPath.equals("/"))
 				{
 					buffer.append(contextPath);
 				}
