@@ -11,6 +11,11 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="add" dev="Eelco Hillenius">MarkupContainers may now override template loading per instance instead of only per application. This is useful in situations where the loading differs from the rest of the components - e.g. it has to be loaded from a database - without imposing additional need to configure the application for it (and thus in the process breaking it's encapsulation). Also added custom resource loading example to wicket-examples which shows three different ways.</action>
+      <action type="update" dev="Eelco Hillenius">Improved packaged resources. They can now be registered by using regular expressions instead of one at a time (not recursively at this time). Furthermore, single registrations are now fail early in that they throw an exception when they could not be found - which is now checked at construction time. And lastely, implemented a method to check without failing whether a package resource exists.</action>
+	  <action type="add" dev="Eelco Hillenius">Added HeaderContributor behavior that allows for an easy alternative for doing header contributions, specifically for components that do not have their own markup.</action>	
+	  <action type="add" dev="Eelco Hillenius">Made PopupSettings more generally useful by adding a default constructor, tweaked the internals a bit and implemented popup support for external links.</action>
+	  <action type="add" dev="Eelco Hillenius">Changed the internals of autolinks so that img and script tags are supported now too, and that it more easy to extend behavior in general, and some minor internal tweaks.</action>
       <action type="fix" dev="Johan Compagner" issue="1452553" due-to="Andrew Berman">PageParameters/ValueMap getLong and getInt defaults</action>
       <action type="fix" dev="Johan Compagner" issue="1448945" due-to="Gili Tzabari">niceurl decoder does not remove +</action>
       <action type="add" dev="Johan Compagner">Refactored the Validators a bit, Depricated Length/IntegerValidators added String/Number/DateValdiator all havind method like min/max or range, See the docs what kind of message key they have like: 'NumberValidator.range'</action>
