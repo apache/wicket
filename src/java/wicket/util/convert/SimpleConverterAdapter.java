@@ -17,6 +17,8 @@
  */
 package wicket.util.convert;
 
+import wicket.Component;
+
 /**
  * Adapter class to simplify implementing custom {@link IConverter}s. If the
  * requested type to convert to is a string type (or more precice, assignable
@@ -25,6 +27,44 @@ package wicket.util.convert;
  * {@link #toObject(String)} using the object's {@link Object#toString()} value
  * to convert it to a string first (or passing in null in case the value is
  * null).
+ * <p>
+ * Note, this class is specifically meant for providing custom converters per
+ * component by overriding {@link Component#getConverter()}. It is less usefull
+ * for application scoped converters; registering {@link ITypeConverter}s with
+ * an instance of {@link Converter} is a better choice for that.
+ * </p>
+ * <p>
+ * An example of the use of this class is the following:
+ * 
+ * <pre>
+ * add(new TextField(&quot;urlProperty&quot;, URL.class)
+ * {
+ * 	public IConverter getConverter()
+ * 	{
+ * 		return new SimpleConverterAdapter()
+ * 		{
+ * 			public String toString(Object value)
+ * 			{
+ * 				return value != null ? value.toString() : null;
+ * 			}
+ * 
+ * 			public Object toObject(String value)
+ * 			{
+ * 				try
+ * 				{
+ * 					return new URL(value.toString());
+ * 				}
+ * 				catch (MalformedURLException e)
+ * 				{
+ * 					throw new ConversionException(&quot;'&quot; + value + &quot;' is not a valid URL&quot;);
+ * 				}
+ * 			}
+ * 		};
+ * 	}
+ * });
+ * </pre>
+ * 
+ * </p>
  * 
  * @author Eelco Hillenius
  */
