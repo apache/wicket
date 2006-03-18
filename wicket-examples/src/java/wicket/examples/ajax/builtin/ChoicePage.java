@@ -29,7 +29,6 @@ import java.util.Set;
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.model.AbstractReadOnlyModel;
@@ -108,30 +107,18 @@ public class ChoicePage extends BasePage
 		final DropDownChoice makes = new DropDownChoice("makes", new PropertyModel(this,
 				"selectedMake"), makeChoices);
 
-		/*
-		 * we put the second drop down into a simple webmarkup container which
-		 * will be represented as a span. we do this because internet explorer
-		 * does not allow us to call selectbox.innerHtml='foo' to update the
-		 * componnet, so instead we update the span that contains the select
-		 * box.
-		 * 
-		 * same trick can be used when a listview needs to be rerendered.
-		 */
-		final WebMarkupContainer modelsContainer = new WebMarkupContainer("modelsContainer");
-		modelsContainer.setOutputMarkupId(true);
-
 		final DropDownChoice models = new DropDownChoice("models", new Model(), modelChoices);
+		models.setOutputMarkupId(true);
 
 		form.add(makes);
-		form.add(modelsContainer);
-		modelsContainer.add(models);
+		form.add(models);
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{
 
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				target.addComponent(modelsContainer);
+				target.addComponent(models);
 			}
 		});
 	}
