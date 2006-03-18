@@ -11,6 +11,8 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="update" dev="Igor Vaynberg">Introduced new AbortWithHttpStatusException exception.</action>
+      <action type="update" dev="Igor Vaynberg">Improved ajax partial rerender support. Rerender support is no longer limited just to the body of the component.</action>
       <action type="add" dev="Martijn Dashorst" issue="1447146">Add wicket release version querying to core</action>
 	  <action type="add" dev="Eelco Hillenius">Introduced two adapter classes to simplify providing custom converters and adjusted the FormInputExample to use that instead of the more complicated UrlConverter.</action>
       <action type="add" dev="Eelco Hillenius">MarkupContainers may now override template loading per instance instead of only per application. This is useful in situations where the loading differs from the rest of the components - e.g. it has to be loaded from a database - without imposing additional need to configure the application for it (and thus in the process breaking it's encapsulation). Also added custom resource loading example to wicket-examples which shows three different ways.</action>
