@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Johan Compagner" issue="1449120" due-to="Gili Tzabari">Ensure the homepage has a stable URL</action>
       <action type="update" dev="Igor Vaynberg">Introduced new AbortWithHttpStatusException exception.</action>
       <action type="update" dev="Igor Vaynberg">Improved ajax partial rerender support. Rerender support is no longer limited just to the body of the component.</action>
       <action type="add" dev="Martijn Dashorst" issue="1447146">Add wicket release version querying to core</action>

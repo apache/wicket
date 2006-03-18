@@ -134,10 +134,12 @@ public class BookmarkablePageLink extends Link
 	/**
 	 * @param pageMap
 	 *            The pagemap for this link's destination
+	 * @return This
 	 */
-	public final void setPageMap(final PageMap pageMap)
+	public final BookmarkablePageLink setPageMap(final PageMap pageMap)
 	{
 		this.pageMapName = pageMap.getName();
+		return this;
 	}
 
 	/**
