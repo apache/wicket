@@ -45,9 +45,9 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * template from a database without any other component or the application
 	 * having to know about it.
 	 * 
-	 * @see wicket.MarkupContainer#getMarkupResourceStream()
+	 * @see wicket.MarkupContainer#getMarkupResourceStreamOverride()
 	 */
-	public IResourceStream getMarkupResourceStream()
+	public IResourceStream getMarkupResourceStreamOverride()
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader
