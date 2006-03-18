@@ -48,22 +48,22 @@ var WicketAjaxDebug = {
         	
             document.write(
         	
-        	 "<div id='"+dwid+"' "
+        	 "<table id='"+dwid+"' cellspacing='0' cellpadding='2'"
         	+"    style='display:none; position: absolute; left:300px; top:300px; width: 600px; "
-        	+"    padding: 5px; background-color: white; border: 2px solid #333;' "
-        	+"    >"
+        	+"    background-color: white; border: 2px solid #333; padding: 5px;' "
+        	+"    ><tr>"
         	
-        	+"    <div id='"+dwdhid+"' "
-        	+"        style='padding: 2px 10px 2px 10px; cursor:move; float:left;"
+        	+"    <td id='"+dwdhid+"' "
+        	+"        style='cursor:move;"
         	+"        color: white; background-color: navy;'"
         	+"        >"
         	
         	+"        Wicket Ajax Debug Window (drag me here)"
-        	+"    </div>"
-        	+"    <div style='float:right;'>"
+        	+"    </td>"
+        	+"    <td style='text-align: right;'>"
         	+"        <a href='javascript:WicketAjaxDebug.clearLog()'>clear</a> | "
         	+"        <a href='javascript:WicketAjaxDebug.hideDebugWindow()'>close</a>"
-        	+"     </div> <div style='float:reset'></div>"
+        	+"     </td> </tr><td colspan='2'>"
         	    
         	+"    <form>"
         	    
@@ -73,7 +73,7 @@ var WicketAjaxDebug = {
         	+"        ></textarea>"
         	    
         	+"    </form>"
-        	+"</div>");
+        	+"</td></tr></table>");
             
             WicketDrag.init(wicketGet(dwdhid), wicketGet(dwid));
             

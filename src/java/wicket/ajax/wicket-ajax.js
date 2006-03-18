@@ -165,7 +165,16 @@ function wicketAjaxProcessComponent(node) {
     if (encoding != null) {
         text = wicketDecode(encoding, text);
     }
-    document.getElementById(compId).innerHTML = text;
+    var element=document.getElementById(compId);
+    if (element.outerHTML) {
+        element.outerHTML = text;
+    } else {
+        var range = element.ownerDocument.createRange();
+        range.selectNodeContents(element);
+        element.parentNode.replaceChild(
+        range.createContextualFragment(text), element);
+    }
+    
 }
 function wicketAjaxProcessEvaluation(node) {
     var text = node.firstChild.nodeValue;
