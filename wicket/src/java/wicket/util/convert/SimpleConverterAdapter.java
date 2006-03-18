@@ -34,6 +34,14 @@ import wicket.Component;
  * an instance of {@link Converter} is a better choice for that.
  * </p>
  * <p>
+ * <strong>WARNING. Due to a current limitation as a result of how
+ * {@link IConverter} works, classes that extend this adapter will not be much
+ * use with string values. If you want to use a custom converter for string
+ * values, consider wrapping the values in another class so that conversion will
+ * be triggered. See the form input example of wicket-examples for how this can
+ * be done. </strong>
+ * </p>
+ * <p>
  * An example of the use of this class is the following:
  * 
  * <pre>
@@ -73,7 +81,7 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * If class c is a string type (or more precice, assignable from
+	 * If class c is a string type (or more precise, assignable from
 	 * {@link CharSequence}), this method will delegate type conversion to
 	 * {@link #toString(Object)}. Otherwise, it will delegate type conversion
 	 * to {@link #toObject(String)} using the object's {@link Object#toString()}

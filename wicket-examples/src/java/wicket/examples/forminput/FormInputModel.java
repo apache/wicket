@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FormInputModel.java 4776 2006-03-05 17:10:05 -0800 (Sun, 05 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-05 17:10:05 -0800 (Sun, 05 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -92,6 +93,9 @@ public final class FormInputModel implements Serializable
 	private Set siteSelection = new HashSet();
 	private List lines = new ArrayList();
 	private String numbersGroup;
+
+	/** US phone number with mask '(###) ###-####'. */
+	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
 
 	/**
 	 * Construct.
@@ -218,16 +222,19 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Gets the booleanProperty.
+	 * 
 	 * @return booleanProperty
 	 */
 	public Boolean getBooleanProperty()
 	{
 		return booleanProperty;
 	}
-	
+
 	/**
 	 * Sets the booleanProperty.
-	 * @param booleanProperty booleanProperty
+	 * 
+	 * @param booleanProperty
+	 *            booleanProperty
 	 */
 	public void setBooleanProperty(Boolean booleanProperty)
 	{
@@ -236,6 +243,7 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Gets the urlProperty.
+	 * 
 	 * @return urlProperty
 	 */
 	public URL getUrlProperty()
@@ -245,7 +253,9 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Sets the urlProperty.
-	 * @param urlProperty urlProperty
+	 * 
+	 * @param urlProperty
+	 *            urlProperty
 	 */
 	public void setUrlProperty(URL urlProperty)
 	{
@@ -254,6 +264,7 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Gets the favoriteColor.
+	 * 
 	 * @return favoriteColor
 	 */
 	public String getNumberRadioChoice()
@@ -263,7 +274,9 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Sets the favoriteColor.
-	 * @param favoriteColor favoriteColor
+	 * 
+	 * @param favoriteColor
+	 *            favoriteColor
 	 */
 	public void setNumberRadioChoice(String favoriteColor)
 	{
@@ -272,13 +285,15 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Sets the number.
-	 * @param group number
+	 * 
+	 * @param group
+	 *            number
 	 */
 	public void setNumbersGroup(String group)
 	{
 		this.numbersGroup = group;
 	}
-	
+
 	/**
 	 * @return the group number
 	 */
@@ -287,9 +302,10 @@ public final class FormInputModel implements Serializable
 		return this.numbersGroup;
 	}
 
-	
+
 	/**
 	 * Gets the selectedSites.
+	 * 
 	 * @return selectedSites
 	 */
 	public Set getSiteSelection()
@@ -299,7 +315,9 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Sets the selectedSites.
-	 * @param selectedSites selectedSites
+	 * 
+	 * @param selectedSites
+	 *            selectedSites
 	 */
 	public void setSiteSelection(Set selectedSites)
 	{
@@ -308,6 +326,7 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Gets lines.
+	 * 
 	 * @return lines
 	 */
 	public List getLines()
@@ -317,11 +336,30 @@ public final class FormInputModel implements Serializable
 
 	/**
 	 * Sets lines.
-	 * @param lines lines
+	 * 
+	 * @param lines
+	 *            lines
 	 */
 	public void setLines(List lines)
 	{
 		this.lines = lines;
+	}
+
+	/**
+	 * @return the phoneNumberUS
+	 */
+	public UsPhoneNumber getPhoneNumberUS()
+	{
+		return phoneNumberUS;
+	}
+
+	/**
+	 * @param phoneNumberUS
+	 *            the phoneNumberUS to set
+	 */
+	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS)
+	{
+		this.phoneNumberUS = phoneNumberUS;
 	}
 
 	/**
@@ -330,20 +368,19 @@ public final class FormInputModel implements Serializable
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();
-		b.append("[TestInputObject stringProperty = '").append(stringProperty)
-		 .append("', integerProperty = ").append(integerProperty)
-		 .append(", doubleProperty = ").append(doubleProperty)
-		 .append(", dateProperty = ").append(dateProperty)
-		 .append(", booleanProperty = ").append(booleanProperty)
-		 .append(", integerInRangeProperty = ").append(integerInRangeProperty)
-		 .append(", urlProperty = ").append(urlProperty)
-		 .append(", numberRadioChoice = ").append(numberRadioChoice)
-		 .append(", numberRadioGroup= ").append(numbersGroup);
+		b.append("[TestInputObject stringProperty = '").append(stringProperty).append(
+				"', integerProperty = ").append(integerProperty).append(", doubleProperty = ")
+				.append(doubleProperty).append(", dateProperty = ").append(dateProperty).append(
+						", booleanProperty = ").append(booleanProperty).append(
+						", integerInRangeProperty = ").append(integerInRangeProperty).append(
+						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
+				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
+				.append(", numberRadioGroup= ").append(numbersGroup);
 		b.append(", selected sites {");
 		for (Iterator i = siteSelection.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
-			if (i.hasNext()) 
+			if (i.hasNext())
 			{
 				b.append(",");
 			}
@@ -353,7 +390,7 @@ public final class FormInputModel implements Serializable
 		for (Iterator i = lines.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
-			if (i.hasNext()) 
+			if (i.hasNext())
 			{
 				b.append(", ");
 			}

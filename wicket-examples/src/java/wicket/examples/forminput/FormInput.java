@@ -51,6 +51,7 @@ import wicket.model.PropertyModel;
 import wicket.protocol.http.WebRequest;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.convert.MaskConverter;
 import wicket.util.convert.SimpleConverterAdapter;
 
 /**
@@ -167,7 +168,7 @@ public class FormInput extends WicketExamplePage
 
 			add(new ListMultipleChoice("siteSelection", SITES));
 
-			// as an example, we use a custom converter here.
+			// TextField using a custom converter.
 			add(new TextField("urlProperty", URL.class)
 			{
 				public IConverter getConverter()
@@ -191,6 +192,16 @@ public class FormInput extends WicketExamplePage
 							}
 						}
 					};
+				}
+			});
+
+			// TextField using a mask converter
+			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
+			{
+				public IConverter getConverter()
+				{
+					// US telephone number mask
+					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 
