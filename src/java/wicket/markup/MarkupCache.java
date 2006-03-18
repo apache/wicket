@@ -102,7 +102,7 @@ public class MarkupCache
 		}
 
 		// Look for associated markup
-		Markup markup = getMarkup(container, container.getClass());
+		Markup markup = getMarkup(container, new ContainerInfo(container), container.getClass());
 
 		// If we found markup for this container
 		if (markup != Markup.NO_MARKUP)
@@ -131,14 +131,14 @@ public class MarkupCache
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, container.getClass()) != Markup.NO_MARKUP;
+		return getMarkup(container, new ContainerInfo(container), container.getClass()) != Markup.NO_MARKUP;
 	}
 
 	/**
 	 * Create a new markup resource stream
 	 * 
 	 * @param container
-	 *            The original requesting container
+	 *            The original requesting markup container
 	 * @param containerClass
 	 *            The container the markup should be associated with
 	 * @param containerInfo
@@ -148,10 +148,30 @@ public class MarkupCache
 	private MarkupResourceStream newMarkupResourceStream(final MarkupContainer container,
 			final Class containerClass, final ContainerInfo containerInfo)
 	{
-		IResourceStream markupResource = container.getMarkupResourceStream();
+		IResourceStream markupResource = null;
+
+		// If the original requestee is the same as the container class we are
+		// trying to load from, see whether there is an override, meaning that
+		// the component wants to load the markup resource stream in it's own
+		// fashion
+		if (container.getClass() == containerClass)
+		{
+			markupResource = container.getMarkupResourceStreamOverride();
+		}
 
 		if (markupResource == null)
 		{
+			// The container didn't return an override, so we are dealing with
+			// markup inheritance
+			markupResource = application.getResourceSettings().getResourceStreamLocator().locate(
+					containerClass, containerClass.getName().replace('.', '/'),
+					containerInfo.getStyle(), containerInfo.getLocale(),
+					containerInfo.getFileExtension());
+		}
+
+		if (markupResource == null)
+		{
+			// nothing was found, let the caller handle any the error stuff
 			return null;
 		}
 
@@ -163,6 +183,8 @@ public class MarkupCache
 	 * parent classes (markup inheritance)
 	 * 
 	 * @param container
+	 *            The original requesting markup container
+	 * @param containerInfo
 	 *            The container the markup should be associated with
 	 * @param clazz
 	 *            The class to get the associated markup for. If null, the
@@ -170,9 +192,9 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container, final Class clazz)
+	private final Markup getMarkup(final MarkupContainer container,
+			final ContainerInfo containerInfo, final Class clazz)
 	{
-		final ContainerInfo containerInfo = new ContainerInfo(container);
 		Class containerClass = clazz;
 		if (clazz == null)
 		{
@@ -257,8 +279,7 @@ public class MarkupCache
 	 * Loads markup from a resource stream.
 	 * 
 	 * @param container
-	 *            The original markup container for which the markup is to be
-	 *            loaded
+	 *            The original requesting markup container
 	 * @param key
 	 *            Key under which markup should be cached
 	 * @param markupResourceStream
@@ -311,8 +332,7 @@ public class MarkupCache
 	 * needed.
 	 * 
 	 * @param container
-	 *            The original markup container for which the markup is to be
-	 *            loaded
+	 *            The original requesting markup container
 	 * @param key
 	 *            The key for the resource
 	 * @param markupResourceStream
@@ -407,8 +427,7 @@ public class MarkupCache
 	 * (merged) list of markup elements.
 	 * 
 	 * @param container
-	 *            The original markup container for which the markup is to be
-	 *            loaded
+	 *            The original requesting markup container
 	 * @param key
 	 *            Key under which markup should be cached
 	 * @param markup
@@ -428,10 +447,8 @@ public class MarkupCache
 		}
 
 		// get the base markup
-		// NOTE: we can still use the original container to pass in, as
-		// even with markup inheritance, it is the same instance
-		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
-				.getSuperclass());
+		final Markup baseMarkup = getMarkup(container, markup.getResource().getContainerInfo(),
+				markup.getResource().getMarkupClass().getSuperclass());
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
