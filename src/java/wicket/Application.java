@@ -41,6 +41,7 @@ import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IExceptionSettings;
+import wicket.settings.IFrameworkSettings;
 import wicket.settings.IMarkupSettings;
 import wicket.settings.IPageSettings;
 import wicket.settings.IRequestCycleSettings;
@@ -358,6 +359,16 @@ public abstract class Application
 	 * @since 1.2
 	 */
 	public final IExceptionSettings getExceptionSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Wicket framework settings
+	 * @see IFrameworkSettings
+	 * @since 1.2
+	 */
+	public final IFrameworkSettings getFrameworkSettings()
 	{
 		return getSettings();
 	}

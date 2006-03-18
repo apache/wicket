@@ -44,6 +44,11 @@ public class ApplicationSettingsTest extends TestCase
 		super(message);
 	}
 
+	public void testFrameworkVersion() {
+		Settings settings = new Settings(new DummyApplication());
+		assertFalse("n/a".equalsIgnoreCase(settings.getVersion()));
+	}
+
 	/**
 	 * @throws Exception
 	 */
