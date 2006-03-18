@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="add" dev="Martijn Dashorst" issue="1447146">Add wicket release version querying to core</action>
 	  <action type="add" dev="Eelco Hillenius">Introduced two adapter classes to simplify providing custom converters and adjusted the FormInputExample to use that instead of the more complicated UrlConverter.</action>
       <action type="add" dev="Eelco Hillenius">MarkupContainers may now override template loading per instance instead of only per application. This is useful in situations where the loading differs from the rest of the components - e.g. it has to be loaded from a database - without imposing additional need to configure the application for it (and thus in the process breaking it's encapsulation). Also added custom resource loading example to wicket-examples which shows three different ways.</action>
       <action type="update" dev="Eelco Hillenius">Improved packaged resources. They can now be registered by using regular expressions instead of one at a time (not recursively at this time). Furthermore, single registrations are now fail early in that they throw an exception when they could not be found - which is now checked at construction time. And lastely, implemented a method to check without failing whether a package resource exists.</action>
