@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxRequestTarget.java 4837 2006-03-08 14:46:58 -0800 (Wed, 08 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-08 14:46:58 -0800 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -224,6 +225,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	private void respondComponent(final Response response, final String markupId,
 			final Component component)
 	{
+		if (component.getRenderBodyOnly() == true)
+		{
+			throw new IllegalStateException(
+					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
+							+ component.toString());
+		}
+
+		
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		final Response originalResponse = response;
@@ -237,13 +246,8 @@ public class AjaxRequestTarget implements IRequestTarget
 			page.startComponentRender(component);
 		}
 
-		boolean old = component.getRenderBodyOnly();
-		component.setRenderBodyOnly(true);
-
 		// Render the component
 		component.doRender();
-
-		component.setRenderBodyOnly(old);
 
 		if (page != null)
 		{
