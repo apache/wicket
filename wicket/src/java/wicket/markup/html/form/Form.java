@@ -1128,9 +1128,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				String param = paramsSt.nextToken();
 				int equalsSign = param.indexOf("=");
-				String paramName = param.substring(0, equalsSign);
-				String value = param.substring(equalsSign + 1);
-				params.put(paramName, value);
+				if(equalsSign >= 0)
+				{
+					String paramName = param.substring(0, equalsSign);
+					String value = param.substring(equalsSign + 1);
+					params.put(paramName, value);
+				}
+				else
+				{
+					params.put(param,"");
+				}
 			}
 		}
 
