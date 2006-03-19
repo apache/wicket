@@ -23,18 +23,21 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.model.StringResourceModel;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
+import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Holds information about a user session, including some fixed number of most
@@ -621,7 +624,34 @@ public abstract class Session implements Serializable
 
 
 	/**
-	 * Adds a flash message to the session store.
+	 * Interpolates the message with the arguments and adds the session flash
+	 * store
+	 * 
+	 * @see #getFlashMessages()
+	 * @see #clearFlashMessages()
+	 * @since 1.2
+	 * 
+	 * @param message
+	 *            message that contains variables in the form ${varname}
+	 * @param args
+	 *            a map:string->object that contains variable names and values
+	 */
+	public final void addFlashMessage(String message, Map/* <String,Object> */args)
+	{
+		if (Strings.isEmpty(message))
+		{
+			throw new IllegalArgumentException("message cannot be null or empty");
+		}
+		if (args == null)
+		{
+			throw new IllegalArgumentException("args cannot be null");
+		}
+		addFlashMessage(new MapVariableInterpolator(message, args).toString());
+	}
+
+
+	/**
+	 * Adds a message to the session flash store
 	 * 
 	 * @see #getFlashMessages()
 	 * @see #clearFlashMessages()
