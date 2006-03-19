@@ -119,8 +119,6 @@ public class MaskConverter extends SimpleConverterAdapter
 	 *            argument. That constructor will be used by
 	 *            {@link MaskFormatter} to construct instances.
 	 * @see MaskFormatter
-	 * @throws ParseException
-	 *             If the mask does not contain valid mask characters
 	 */
 	public MaskConverter(String mask, Class type)
 	{

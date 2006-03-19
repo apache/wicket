@@ -30,7 +30,7 @@ import wicket.model.IModel;
  * overridden to return false, this panel will clear any flash messages after it
  * displays them.
  * 
- * @see Session
+ * @see wicket.Session
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

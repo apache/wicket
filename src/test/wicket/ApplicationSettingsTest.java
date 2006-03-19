@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
@@ -44,7 +43,11 @@ public class ApplicationSettingsTest extends TestCase
 		super(message);
 	}
 
-	public void testFrameworkVersion() {
+	/**
+	 * 
+	 */
+	public void testFrameworkVersion()
+	{
 		Settings settings = new Settings(new DummyApplication());
 		assertFalse("n/a".equalsIgnoreCase(settings.getVersion()));
 	}
@@ -55,8 +58,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(new DummyApplication());
-		Assert.assertTrue("exceptionOnMissingResource should default to true", 
-		        settings.getThrowExceptionOnMissingResource());
+		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -66,8 +69,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertFalse("exceptionOnMissingResource should have been set to false", 
-		        settings.getThrowExceptionOnMissingResource());
+		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -76,8 +79,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(new DummyApplication());
-		Assert.assertTrue("useDefaultOnMissingResource should default to true", 
-		        settings.getUseDefaultOnMissingResource());
+		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -87,8 +90,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		settings.setUseDefaultOnMissingResource(false);
-		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", 
-		        settings.getUseDefaultOnMissingResource());
+		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -129,6 +132,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testLocalizer()
 	{
 		Application dummy = new DummyApplication();
-		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings().getLocalizer());
+		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings()
+				.getLocalizer());
 	}
 }
