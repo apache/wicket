@@ -21,7 +21,6 @@ package wicket.examples.customresourceloading;
 import java.net.URL;
 
 import wicket.examples.WicketExamplePage;
-import wicket.markup.ContainerInfo;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
@@ -46,16 +45,13 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * template from a database without any other component or the application
 	 * having to know about it.
 	 * 
-	 * @see wicket.MarkupContainer#newMarkupResourceStream(Class, ContainerInfo)
+	 * @see wicket.MarkupContainer#newMarkupResourceStream(Class)
 	 * 
 	 * @param containerClass
 	 *            The container the markup should be associated with
-	 * @param containerInfo
-	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream newMarkupResourceStream(final Class containerClass, 
-			final ContainerInfo containerInfo)
+	public IResourceStream newMarkupResourceStream(final Class containerClass)
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader
