@@ -326,7 +326,7 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final AppendingStringBuffer markupKey(final ContainerInfo containerInfo,
+	private final CharSequence markupKey(final ContainerInfo containerInfo,
 			final Class clazz)
 	{
 		final String classname = clazz.getName();
@@ -334,8 +334,7 @@ public class MarkupCache
 		final String style = containerInfo.getStyle();
 		final String markupType = containerInfo.getFileExtension();
 
-		final wicket.util.string.AppendingStringBuffer buffer = new wicket.util.string.AppendingStringBuffer(
-				classname.length() + 32);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 32);
 		buffer.append(classname);
 
 		if (locale != null)

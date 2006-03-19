@@ -63,7 +63,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
-	public final String encode(final IRequestTarget requestTarget)
+	public final CharSequence encode(final IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
@@ -84,7 +84,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 			pageParameters.put("wicket:pageMapName", pageMapName);
 		}
 		appendPageParameters(url, pageParameters);
-		return url.toString();
+		return url;
 	}
 
 	/**
