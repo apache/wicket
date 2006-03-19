@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.PageParameters;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -144,7 +145,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * @param parameters
 	 *            PageParameters object to be encoded
 	 */
-	protected void appendPageParameters(StringBuffer url, PageParameters parameters)
+	protected void appendPageParameters(AppendingStringBuffer url, PageParameters parameters)
 	{
 		if (parameters != null)
 		{
