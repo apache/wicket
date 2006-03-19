@@ -102,8 +102,7 @@ public class MarkupCache
 		}
 
 		// Look for associated markup
-		final Markup markup = getMarkup(container, new ContainerInfo(container), container
-				.getClass());
+		final Markup markup = getMarkup(container, container.getClass());
 
 		// If we found markup for this container
 		if (markup != Markup.NO_MARKUP)
@@ -132,7 +131,7 @@ public class MarkupCache
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, new ContainerInfo(container), container.getClass()) != Markup.NO_MARKUP;
+		return getMarkup(container, container.getClass()) != Markup.NO_MARKUP;
 	}
 
 	/**
@@ -141,32 +140,29 @@ public class MarkupCache
 	 * 
 	 * @param container
 	 *            The original requesting markup container
-	 * @param containerInfo
-	 *            The container the markup should be associated with
 	 * @param clazz
 	 *            The class to get the associated markup for. If null, the
 	 *            container's class is used, but it can be a parent class of the
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container,
-			final ContainerInfo containerInfo, final Class clazz)
+	private final Markup getMarkup(final MarkupContainer container, final Class clazz)
 	{
 		Class containerClass = clazz;
 		if (clazz == null)
 		{
-			containerClass = containerInfo.getContainerClass();
+			containerClass = container.getClass();
 		}
 		else
 		{
-			if (!clazz.isAssignableFrom(containerInfo.getContainerClass()))
+			if (!clazz.isAssignableFrom(container.getClass()))
 			{
 				throw new WicketRuntimeException("Parameter clazz must be instance of container");
 			}
 		}
 
 		// Look up markup tag list by class, locale, style and markup type
-		final CharSequence key = markupKey(containerInfo, clazz);
+		final CharSequence key = markupKey(container, clazz);
 		Markup markup = (Markup)markupCache.get(key);
 
 		// If no markup in the cache
@@ -180,14 +176,14 @@ public class MarkupCache
 				if (markup == null)
 				{
 					// Ask the container to locate its associated markup
-					IResourceStream resourceStream = container.newMarkupResourceStream(
-							containerClass, containerInfo);
+					final IResourceStream resourceStream = container
+							.newMarkupResourceStream(containerClass);
 
 					// Found markup?
 					if (resourceStream != null)
 					{
 						final MarkupResourceStream markupResource = new MarkupResourceStream(
-								resourceStream, containerInfo, containerClass);
+								resourceStream, new ContainerInfo(container), containerClass);
 
 						// load the markup and watch for changes
 						markup = loadMarkupAndWatchForChanges(container, key, markupResource);
@@ -319,20 +315,19 @@ public class MarkupCache
 	/**
 	 * Construct a proper key value for the cache
 	 * 
-	 * @param containerInfo
+	 * @param container
 	 *            The container requesting the markup
 	 * @param clazz
 	 *            The clazz to get the key for
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final CharSequence markupKey(final ContainerInfo containerInfo,
-			final Class clazz)
+	private final CharSequence markupKey(final MarkupContainer container, final Class clazz)
 	{
 		final String classname = clazz.getName();
-		final Locale locale = containerInfo.getLocale();
-		final String style = containerInfo.getStyle();
-		final String markupType = containerInfo.getFileExtension();
+		final Locale locale = container.getLocale();
+		final String style = container.getStyle();
+		final String markupType = container.getMarkupType();
 
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 32);
 		buffer.append(classname);
@@ -398,8 +393,8 @@ public class MarkupCache
 		}
 
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container, markup.getResource().getContainerInfo(),
-				markup.getResource().getMarkupClass().getSuperclass());
+		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
+				.getSuperclass());
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{

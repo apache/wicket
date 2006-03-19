@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
-import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -795,20 +794,21 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * Create a new markup resource stream for the container. 
 	 * <p>
+	 * Note: it will only called once, the IResourceStream will be
+	 * cached by MarkupCache.
+	 * <p>
 	 * Note: IResourceStreamLocators should be used in case the strategy
 	 * to find a markup resource should be extended for ALL components
 	 * of your application.
 	 * 
 	 * @see wicket.util.resource.locator.IResourceStreamLocator
+	 * @see wicket.markup.MarkupCache
 	 * 
 	 * @param containerClass
 	 *            The container the markup should be associated with
-	 * @param containerInfo
-	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream newMarkupResourceStream(Class containerClass, 
-			final ContainerInfo containerInfo)
+	public IResourceStream newMarkupResourceStream(Class containerClass)
 	{
 		// Get locator to search for the resource 
 		final IResourceStreamLocator locator = getApplication().getResourceSettings().getResourceStreamLocator();
@@ -819,8 +819,7 @@ public abstract class MarkupContainer extends Component
 		{
 			final IResourceStream resourceStream = locator.locate(
 					containerClass, containerClass.getName().replace('.', '/'),
-					containerInfo.getStyle(), containerInfo.getLocale(),
-					containerInfo.getFileExtension());
+					getStyle(), getLocale(), getMarkupType());
 			
 			// Did we find it already?
 			if (resourceStream != null)
