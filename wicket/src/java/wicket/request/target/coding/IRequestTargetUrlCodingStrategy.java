@@ -38,7 +38,7 @@ public interface IRequestTargetUrlCodingStrategy
 	 * 
 	 * @return the encoded url
 	 */
-	String encode(IRequestTarget requestTarget);
+	CharSequence encode(IRequestTarget requestTarget);
 
 	/**
 	 * Gets the decoded request target.

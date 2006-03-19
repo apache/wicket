@@ -61,7 +61,7 @@ public interface IRequestTargetMounter
 	 *            the request target
 	 * @return The path that the provided request target conforms to
 	 */
-	String pathForTarget(IRequestTarget requestTarget);
+	CharSequence pathForTarget(IRequestTarget requestTarget);
 
 	/**
 	 * Gets the request target that conforms to the given path.

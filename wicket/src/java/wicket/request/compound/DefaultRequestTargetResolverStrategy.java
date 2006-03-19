@@ -300,7 +300,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 					homePageClass, parameters);
 			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 					.getRequestCodingStrategy();
-			String path = requestCodingStrategy.pathForTarget(homepageTarget);
+			CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
 
 			if (path != null)
 			{

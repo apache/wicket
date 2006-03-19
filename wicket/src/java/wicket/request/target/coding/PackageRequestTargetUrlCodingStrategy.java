@@ -86,7 +86,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
-	public final String encode(IRequestTarget requestTarget)
+	public final CharSequence encode(IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
@@ -98,7 +98,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
 		appendPageParameters(url, target.getPageParameters());
-		return url.toString();
+		return url;
 	}
 
 	/**

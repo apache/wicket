@@ -121,7 +121,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			lengthComparator);
 
 	/** cached url prefix. */
-	private String urlPrefix;
+	private CharSequence urlPrefix;
 
 	/**
 	 * Construct.
@@ -165,8 +165,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
-			String prefix = urlPrefix(requestCycle);
-			String path = pathForTarget(requestTarget);
+			CharSequence prefix = urlPrefix(requestCycle);
+			CharSequence path = pathForTarget(requestTarget);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
 			buffer.append(prefix);
 			buffer.append(path);
@@ -263,7 +263,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
 	 */
-	public final String pathForTarget(IRequestTarget requestTarget)
+	public final CharSequence pathForTarget(IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
@@ -533,11 +533,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected String encode(RequestCycle requestCycle, ISharedResourceRequestTarget requestTarget)
 	{
-		final String prefix = urlPrefix(requestCycle);
+		final CharSequence prefix = urlPrefix(requestCycle);
 		final String sharedResourceKey = requestTarget.getResourceKey();
 		if ((sharedResourceKey == null) || (sharedResourceKey.trim().length() == 0))
 		{
-			return prefix;
+			return prefix.toString();
 		}
 		else
 		{
@@ -545,7 +545,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					.length()
 					+ prefix.length() + 11);
 			buffer.append(prefix);
-			if (prefix.endsWith("/"))
+			if (buffer.charAt(buffer.length()-1) == '/')
 			{
 				buffer.append("resources/");
 			}
@@ -687,7 +687,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * 
 	 * @return prefix
 	 */
-	protected final String urlPrefix(RequestCycle requestCycle)
+	protected final CharSequence urlPrefix(RequestCycle requestCycle)
 	{
 		if (urlPrefix == null)
 		{
@@ -716,7 +716,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				}
 				buffer.append(path);
 			}
-			urlPrefix = buffer.toString();
+			urlPrefix = buffer;
 		}
 		return urlPrefix;
 	}
