@@ -1272,6 +1272,18 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Registers a flash message
+	 * 
+	 * @param message
+	 *            The flash message
+	 */
+	public final void flash(final String message)
+	{
+		getSession().addFlashMessage(message);
+	}
+
+	
+	/**
 	 * Authorizes an action for a component.
 	 * 
 	 * @param action

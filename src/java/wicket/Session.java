@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.133 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,7 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -102,8 +103,13 @@ import wicket.util.string.Strings;
  * calling remove(Page) or removeAll(), although such an action should rarely be
  * necessary.
  * 
+ * <li><b>Flash Messages</b>- Flash messages are messages that are stored in
+ * session and are removed after they are displayed to the user. Session acts as
+ * a store for these messages because they can last across requests.
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class Session implements Serializable
 {
@@ -157,6 +163,10 @@ public abstract class Session implements Serializable
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
+	/** Flash messages */
+	private List/* <String> */flashMessages;
+
+
 	/**
 	 * Visitor interface for visiting page maps
 	 * 
@@ -203,7 +213,7 @@ public abstract class Session implements Serializable
 		}
 		current.set(session);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -609,6 +619,60 @@ public abstract class Session implements Serializable
 		}
 	}
 
+
+	/**
+	 * Adds a flash message to the session store.
+	 * 
+	 * @see #getFlashMessages()
+	 * @see #clearFlashMessages()
+	 * @since 1.2
+	 * 
+	 * @param message
+	 */
+	public final void addFlashMessage(String message)
+	{
+		if (Strings.isEmpty(message))
+		{
+			throw new IllegalArgumentException("message cannot be null or empty");
+		}
+		if (flashMessages == null)
+		{
+			flashMessages = new ArrayList(1);
+		}
+		flashMessages.add(message);
+		dirty();
+	}
+
+	/**
+	 * Returns an unmodifiable list of any flash messages available
+	 * 
+	 * @see #addFlashMessage(String)
+	 * @see #clearFlashMessages()
+	 * @since 1.2
+	 * @return an unmodifiable list of any flash messages available
+	 */
+	public final List/* <String> */getFlashMessages()
+	{
+		List msgs = (flashMessages == null) ? Collections.EMPTY_LIST : flashMessages;
+		return Collections.unmodifiableList(msgs);
+	}
+
+	/**
+	 * Clears any flash messages present.
+	 * 
+	 * @see #addFlashMessage(String)
+	 * @see #getFlashMessages()
+	 * @since 1.2
+	 */
+	public final void clearFlashMessages()
+	{
+		if (flashMessages != null)
+		{
+			flashMessages = null;
+			dirty();
+		}
+	}
+
 	/**
 	 * Any detach logic for session subclasses.
 	 */
@@ -738,7 +802,8 @@ public abstract class Session implements Serializable
 				if (object instanceof Page)
 				{
 					final Page page = (Page)object;
-					if(page.isStateless()) continue;
+					if (page.isStateless())
+						continue;
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
 					object = page.getPageMapEntry();
 				}
@@ -818,4 +883,5 @@ public abstract class Session implements Serializable
 		}
 		return list;
 	}
+
 }
