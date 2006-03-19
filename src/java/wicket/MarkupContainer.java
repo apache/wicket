@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -38,7 +39,6 @@ import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
-import wicket.settings.IResourceSettings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.Strings;
@@ -793,26 +793,46 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Gets the overriding markup resource stream for this container. For
-	 * <strong>very specific situations</strong>, you may override this method
-	 * to load from a different location, e.g. if this particular component
-	 * loads it's markup from a database or some other alternative location.
-	 * However, the prefered way of doing things when you need customized
-	 * resource loading, is to provide an application specific override by
-	 * setting your custom loader in {@link Application#init()} with method
-	 * {@link IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamLocator)}.
+	 * Create a new markup resource stream for the container. 
 	 * <p>
-	 * If this method returns null, which is the default, it will be ignored and
-	 * Wicket will use the application's {@link IResourceStreamLocator} locator
-	 * instead.
-	 * </p>
+	 * Note: IResourceStreamLocators should be used in case the strategy
+	 * to find a markup resource should be extended for ALL components
+	 * of your application.
 	 * 
-	 * @return The any overriding markup resource stream for this container.
-	 *         This implementation returns null.
+	 * @see wicket.util.resource.locator.IResourceStreamLocator
+	 * 
+	 * @param containerClass
+	 *            The container the markup should be associated with
+	 * @param containerInfo
+	 *            The container the markup should be associated with
+	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream getMarkupResourceStreamOverride()
+	public IResourceStream newMarkupResourceStream(Class containerClass, 
+			final ContainerInfo containerInfo)
 	{
-		// by default, use the application's locator
+		// Get locator to search for the resource 
+		final IResourceStreamLocator locator = getApplication().getResourceSettings().getResourceStreamLocator();
+		
+		// Markup is associated with the containers class. Walk up the class 
+		// hierarchy up to MarkupContainer to find the containers markup resource. 
+		while (containerClass != MarkupContainer.class)
+		{
+			final IResourceStream resourceStream = locator.locate(
+					containerClass, containerClass.getName().replace('.', '/'),
+					containerInfo.getStyle(), containerInfo.getLocale(),
+					containerInfo.getFileExtension());
+			
+			// Did we find it already?
+			if (resourceStream != null)
+			{
+				return resourceStream;
+			}
+
+			// Walk up the class hierarchy one level, if markup has not 
+			// yet been found
+			containerClass = containerClass.getSuperclass();
+		}
+		
 		return null;
 	}
 

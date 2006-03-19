@@ -102,7 +102,8 @@ public class MarkupCache
 		}
 
 		// Look for associated markup
-		Markup markup = getMarkup(container, new ContainerInfo(container), container.getClass());
+		final Markup markup = getMarkup(container, new ContainerInfo(container), container
+				.getClass());
 
 		// If we found markup for this container
 		if (markup != Markup.NO_MARKUP)
@@ -132,50 +133,6 @@ public class MarkupCache
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
 		return getMarkup(container, new ContainerInfo(container), container.getClass()) != Markup.NO_MARKUP;
-	}
-
-	/**
-	 * Create a new markup resource stream
-	 * 
-	 * @param container
-	 *            The original requesting markup container
-	 * @param containerClass
-	 *            The container the markup should be associated with
-	 * @param containerInfo
-	 *            The container the markup should be associated with
-	 * @return A IResourceStream if the resource was found
-	 */
-	private MarkupResourceStream newMarkupResourceStream(final MarkupContainer container,
-			final Class containerClass, final ContainerInfo containerInfo)
-	{
-		IResourceStream markupResource = null;
-
-		// If the original requestee is the same as the container class we are
-		// trying to load from, see whether there is an override, meaning that
-		// the component wants to load the markup resource stream in it's own
-		// fashion
-		if (container.getClass() == containerClass)
-		{
-			markupResource = container.getMarkupResourceStreamOverride();
-		}
-
-		if (markupResource == null)
-		{
-			// The container didn't return an override, so we are dealing with
-			// markup inheritance
-			markupResource = application.getResourceSettings().getResourceStreamLocator().locate(
-					containerClass, containerClass.getName().replace('.', '/'),
-					containerInfo.getStyle(), containerInfo.getLocale(),
-					containerInfo.getFileExtension());
-		}
-
-		if (markupResource == null)
-		{
-			// nothing was found, let the caller handle any the error stuff
-			return null;
-		}
-
-		return new MarkupResourceStream(markupResource, containerInfo, containerClass);
 	}
 
 	/**
@@ -209,7 +166,7 @@ public class MarkupCache
 		}
 
 		// Look up markup tag list by class, locale, style and markup type
-		final AppendingStringBuffer key = markupKey(containerInfo, clazz);
+		final CharSequence key = markupKey(containerInfo, clazz);
 		Markup markup = (Markup)markupCache.get(key);
 
 		// If no markup in the cache
@@ -219,32 +176,27 @@ public class MarkupCache
 			{
 				markup = (Markup)markupCache.get(key);
 
-				// If no markup in the cache
+				// If no markup is in the cache
 				if (markup == null)
 				{
-					// Locate markup resource, searching up class hierarchy
-					MarkupResourceStream markupResource = null;
-					while ((markupResource == null) && (containerClass != MarkupContainer.class))
-					{
-						// Look for markup resource for containerClass
-						markupResource = newMarkupResourceStream(container, containerClass,
-								containerInfo);
-
-						containerClass = containerClass.getSuperclass();
-					}
+					// Ask the container to locate its associated markup
+					IResourceStream resourceStream = container.newMarkupResourceStream(
+							containerClass, containerInfo);
 
 					// Found markup?
-					if (markupResource != null)
+					if (resourceStream != null)
 					{
+						final MarkupResourceStream markupResource = new MarkupResourceStream(
+								resourceStream, containerInfo, containerClass);
+
 						// load the markup and watch for changes
 						markup = loadMarkupAndWatchForChanges(container, key, markupResource);
 					}
 					else
 					{
 						// flag markup as non-existent (as opposed to null,
-						// which
-						// might mean that it's simply not loaded into the
-						// cache)
+						// which might mean that it's simply not loaded into
+						// the cache)
 						markup = Markup.NO_MARKUP;
 
 						// Save any markup list (or absence of one) for next
@@ -265,7 +217,7 @@ public class MarkupCache
 	 * @param markupResourceStream
 	 *            The resource stream
 	 */
-	private void removeMarkup(final AppendingStringBuffer key,
+	private void removeMarkup(final CharSequence key,
 			final MarkupResourceStream markupResourceStream)
 	{
 		markupCache.remove(key);
@@ -286,8 +238,8 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private final Markup loadMarkup(final MarkupContainer container,
-			final AppendingStringBuffer key, final MarkupResourceStream markupResourceStream)
+	private final Markup loadMarkup(final MarkupContainer container, final CharSequence key,
+			final MarkupResourceStream markupResourceStream)
 	{
 		try
 		{
@@ -340,7 +292,7 @@ public class MarkupCache
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
-			final AppendingStringBuffer key, final MarkupResourceStream markupResourceStream)
+			final CharSequence key, final MarkupResourceStream markupResourceStream)
 	{
 		// Watch file in the future
 		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher();
@@ -435,7 +387,7 @@ public class MarkupCache
 	 * @return A markup object with the the base markup elements resolved.
 	 */
 	private Markup checkForMarkupInheritance(final MarkupContainer container,
-			final AppendingStringBuffer key, final Markup markup)
+			final CharSequence key, final Markup markup)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
