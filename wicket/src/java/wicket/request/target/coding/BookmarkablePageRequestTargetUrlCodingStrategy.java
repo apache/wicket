@@ -21,6 +21,7 @@ import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class.
@@ -69,7 +70,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 			throw new IllegalArgumentException("This encoder can only be used with instances of "
 					+ IBookmarkablePageRequestTarget.class.getName());
 		}
-		final StringBuffer url = new StringBuffer();
+		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 

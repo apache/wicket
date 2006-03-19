@@ -165,9 +165,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
 		if (encoder != null)
 		{
-			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
-			return requestCycle.getResponse().encodeURL(
-					prefix.append(pathForTarget(requestTarget)).toString());
+			String prefix = urlPrefix(requestCycle);
+			String path = pathForTarget(requestTarget);
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
+			buffer.append(prefix);
+			buffer.append(path);
+			return requestCycle.getResponse().encodeURL(buffer.toString());
 		}
 
 		// no mount found; go on with default processing
@@ -688,7 +691,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		if (urlPrefix == null)
 		{
-			final StringBuffer buffer = new StringBuffer();
+			final AppendingStringBuffer buffer = new AppendingStringBuffer();
 			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
 			if (request != null)
 			{

@@ -24,6 +24,7 @@ import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Classes;
 import wicket.util.lang.PackageName;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Encodes and decodes mounts for a whole package.
@@ -92,7 +93,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 			throw new IllegalArgumentException("this encoder can only be used with instances of "
 					+ IBookmarkablePageRequestTarget.class.getName());
 		}
-		StringBuffer url = new StringBuffer();
+		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
