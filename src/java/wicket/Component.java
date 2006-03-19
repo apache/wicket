@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Component.java 5023 2006-03-18 18:58:40 -0800 (Sat, 18 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-18 18:58:40 -0800 (Sat, 18 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1274,6 +1276,8 @@ public abstract class Component implements Serializable
 	/**
 	 * Registers a flash message
 	 * 
+	 * @since 1.2
+	 * 
 	 * @param message
 	 *            The flash message
 	 */
@@ -1282,7 +1286,21 @@ public abstract class Component implements Serializable
 		getSession().addFlashMessage(message);
 	}
 
-	
+	/**
+	 * Interpolates the flash message with the arguments and registers it
+	 * 
+	 * @since 1.2
+	 * 
+	 * @param message
+	 *            message that contains variables in the form ${varname}
+	 * @param args
+	 *            a map:string->object that contains variable names and values
+	 */
+	public final void flash(final String message, Map/* <String,Object */args)
+	{
+		getSession().addFlashMessage(message, args);
+	}
+
 	/**
 	 * Authorizes an action for a component.
 	 * 
