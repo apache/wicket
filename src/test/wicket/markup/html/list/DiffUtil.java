@@ -59,7 +59,7 @@ public final class DiffUtil
 	 * @return true, if equal
 	 * @throws IOException
 	 */
-	public static final boolean validatePage(final String document, final Class clazz,
+	public static final boolean validatePage(String document, final Class clazz,
 			final String file) throws IOException
 	{
 		String filename = clazz.getPackage().getName();
@@ -73,6 +73,14 @@ public final class DiffUtil
 		}
 
 		String reference = Streams.readString(in);
+
+		// replace all line endings with unix style line ending
+		reference = reference.replaceAll("\n\r", "\n");
+		reference = reference.replaceAll("\r\n", "\n");
+		
+		// replace all line endings with unix style line ending
+		document = document.replaceAll("\n\r", "\n");
+		document = document.replaceAll("\r\n", "\n");
 
 		boolean equals = document.equals(reference);
 		if (equals == false)
