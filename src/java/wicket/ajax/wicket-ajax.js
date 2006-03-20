@@ -170,7 +170,7 @@ function wicketAjaxProcessComponent(node) {
         element.outerHTML = text;
     } else {
         var range = element.ownerDocument.createRange();
-        range.selectNodeContents(element);
+        range.selectNode(element);
         element.parentNode.replaceChild(
         range.createContextualFragment(text), element);
     }
