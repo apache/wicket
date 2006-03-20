@@ -183,6 +183,7 @@ public final class MarkupStream
 	}
 
 	/**
+	 * Note: 
 	 * @return The next markup element in the stream
 	 */
 	public MarkupElement next()
@@ -391,17 +392,6 @@ public final class MarkupStream
 	public Class getContainerClass()
 	{
 		return markup.getResource().getMarkupClass();
-	}
-
-	/**
-	 * Get the current index pointing to the start element of the header
-	 * section.
-	 * 
-	 * @return index
-	 */
-	public final int getHeaderIndex()
-	{
-		return markup.getHeaderIndex();
 	}
 
 	/**

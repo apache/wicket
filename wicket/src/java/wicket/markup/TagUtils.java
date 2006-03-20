@@ -23,7 +23,7 @@ package wicket.markup;
  * 
  * @author Juergen Donnerstag
  */
-class TagUtils
+public class TagUtils
 {
 	/**
 	 * Constructor

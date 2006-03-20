@@ -62,15 +62,6 @@ public class Markup
 	/** == wicketNamespace + ":id" */
 	private String wicketId;
 
-	/** Markup has been searched for the header, but it doesn't contain any */
-	public final static int NO_HEADER_FOUND = -1;
-
-	/**
-	 * If the markup contains a header section, the index will point to the
-	 * MarkupElement.
-	 */
-	private int headerIndex = NO_HEADER_FOUND;
-
 	/**
 	 * Used at markup load time to maintain the current component path (not id)
 	 * while adding markup elements to this Markup instance
@@ -102,21 +93,6 @@ public class Markup
 		
 		if (markup != null)
 		{
-			// Initialize the index where <wicket:extend> can be found.
-			for (int i = 0; i < markup.size(); i++)
-			{
-				MarkupElement elem = (MarkupElement)markup.get(i);
-				if (elem instanceof WicketTag)
-				{
-					WicketTag tag = (WicketTag)elem;
-					if ((tag.isHeadTag() == true) && (tag.getNamespace() != null))
-					{
-						headerIndex = i;
-						break;
-					}
-				}
-			}
-
 			// HTML tags like <img> may not have a close tag. But because that
 			// can only be detected until later on in the sequential markup 
 			// reading loop, we only can do it now.
@@ -213,17 +189,6 @@ public class Markup
 	public String getEncoding()
 	{
 		return encoding;
-	}
-
-	/**
-	 * Get the current index pointing to the start element of the header
-	 * section.
-	 * 
-	 * @return index
-	 */
-	public int getHeaderIndex()
-	{
-		return this.headerIndex;
 	}
 
 	/**
@@ -464,7 +429,6 @@ public class Markup
 		this.resource = null;
 		this.xmlDeclaration = null;
 		this.encoding = null;
-		this.headerIndex = NO_HEADER_FOUND;
 		this.currentPath = null;
 	}
 
