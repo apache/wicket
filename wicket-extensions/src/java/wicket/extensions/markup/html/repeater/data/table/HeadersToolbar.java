@@ -81,6 +81,7 @@ public class HeadersToolbar extends AbstractToolbar
 				header = new WebMarkupContainer("header");
 			}
 			item.add(header);
+			item.setRenderBodyOnly(true);
 			header.add(column.getHeader("label"));
 		}
 
