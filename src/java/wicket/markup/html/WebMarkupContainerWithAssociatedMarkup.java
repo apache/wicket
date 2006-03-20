@@ -29,6 +29,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
+	/** A utility class which implements the internals */
 	private ContainerWithAssociatedMarkupHelper markupHelper;
 	
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id: ContainerWithAssociatedMarkupHelper.java,v 1.1 2006/03/10 22:20:42 jdonnerstag Exp $
- * $Revision: 1.1 $ $Date: 2006/03/10 22:20:42 $
+ * $Id: ContainerWithAssociatedMarkupHelper.java,v 1.1 2006/03/10 22:20:42
+ * jdonnerstag Exp $ $Revision: 1.1 $ $Date: 2006/03/10 22:20:42 $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,11 +22,12 @@ import java.util.Iterator;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
+import wicket.markup.TagUtils;
 import wicket.markup.WicketTag;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.resolver.IComponentResolver;
@@ -45,8 +46,9 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	/** True if body onLoad attribute modifiers have been attached */
 	private boolean checkedBody = false;
 
+	/** The markup container the helper is associated with */
 	private final WebMarkupContainer container;
-	
+
 	/**
 	 * @param container
 	 */
@@ -70,50 +72,66 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 */
 	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
 	{
-		// Ask the Panel/Border if it has something to contribute to the header
-		final HeaderPartContainer headerPart = getHeaderPart();
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream associatedMarkupStream = container.getAssociatedMarkupStream(false);
 
-		// If the panel/border component has something to contribute to
-		// the header ...
-		if (headerPart != null)
+		// No associated markup => no header section
+		if (associatedMarkupStream == null)
 		{
-			// A component's header section must only be added once,
-			// no matter how often the same Component has been added
-			// to the page or any other container in the hierachy.
-			if (htmlContainer.get(headerPart.getId()) == null)
-			{
-				htmlContainer.autoAdd(headerPart);
+			return;
+		}
 
-				// Check if the Panel/Border requires some <body onload="..">
-				// attribute to be copied to the page's body tag.
-				if (checkedBody == false)
-				{
-					checkedBody = true;
-					checkBodyOnLoad();
-				}
-			}
-			else
+		// Position pointer at current (first) header
+		while (nextHeaderMarkup(associatedMarkupStream) != -1)
+		{
+			// Create a HeaderPartContainer and associate the markup
+			final HeaderPartContainer headerPart = getHeaderPart(associatedMarkupStream.getCurrentIndex());
+			if (headerPart != null)
 			{
-				// TODO Performance: I haven't found a more efficient solution yet
-				// Already added but all the components in this header part must
-				// be touched (that they are rendered)
-				Response response = container.getRequestCycle().getResponse();
-				try
+				// A component's header section must only be added once,
+				// no matter how often the same Component has been added
+				// to the page or any other container in the hierachy.
+				if (htmlContainer.get(headerPart.getId()) == null)
 				{
-					container.getRequestCycle().setResponse(NullResponse.getInstance());
 					htmlContainer.autoAdd(headerPart);
+
+					// Check if the Panel/Border requires some <body
+					// onload=".."> attribute to be copied to the page's body
+					// tag.
+					if (checkedBody == false)
+					{
+						checkedBody = true;
+						checkBodyOnLoad();
+					}
 				}
-				finally
+				else
 				{
-					container.getRequestCycle().setResponse(response);
+					// TODO Performance: I haven't found a more efficient
+					// solution yet.
+					// Already added but all the components in this header part
+					// must be touched (that they are rendered)
+					Response response = container.getRequestCycle().getResponse();
+					try
+					{
+						container.getRequestCycle().setResponse(NullResponse.getInstance());
+						htmlContainer.autoAdd(headerPart);
+					}
+					finally
+					{
+						container.getRequestCycle().setResponse(response);
+					}
 				}
 			}
+
+			// Position the stream after <wicket:head>
+			associatedMarkupStream.skipComponent();
 		}
 	}
 
 	/**
-	 * Check if the Panel/Border requires some <body onload=".."> attribute to be
-	 * copied to the page's body tag.
+	 * Check if the Panel/Border requires some <body onload=".."> attribute to
+	 * be copied to the page's body tag.
 	 */
 	private void checkBodyOnLoad()
 	{
@@ -137,7 +155,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			while (iter.hasNext())
 			{
 				final ComponentTag tag = (ComponentTag)iter.next();
-				if ("body".equalsIgnoreCase(tag.getName()))
+				if (TagUtils.isBodyTag(tag))
 				{
 					final String onLoad = tag.getAttributes().getString("onload");
 					if (onLoad != null)
@@ -161,71 +179,102 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	}
 
 	/**
-	 * Gets the header part of the Panel/Border. Returns null if it doesn't
-	 * have a header tag.
+	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
+	 * a header tag.
 	 * 
-	 * @return the header part for this panel/border or null if it doesn't
-	 *         have a wicket:head tag.
+	 * @param index
+	 * @return the header part for this panel/border or null if it doesn't have
+	 *         a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart()
+	private final HeaderPartContainer getHeaderPart(final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream associatedMarkupStream = container.getAssociatedMarkupStream(false);
 
-		// No associated markup => no header section
-		if (associatedMarkupStream == null)
-		{
-			return null;
-		}
+		// Position markup stream at beginning of header tag
+		associatedMarkupStream.setCurrentIndex(index);
 
-		// Lazy scan the markup for a header component tag, if necessary
-		// 'index' will be where <wicket:head> resides in the markup
-		int index = Markup.NO_HEADER_FOUND;
-		if (associatedMarkupStream.getHeaderIndex() != Markup.NO_HEADER_FOUND)
+		// Create a HtmlHeaderContainer for the header tag found
+		final MarkupElement element = associatedMarkupStream.get();
+		if (element instanceof WicketTag)
 		{
-			// The markup has been scanned already. Get the index where the
-			// header tag resides from the markup
-			index = associatedMarkupStream.getHeaderIndex();
-		}
-
-		// Ok, finished scanning the markup for header tag
-		// If markup contains a header section, handle it now.
-		if (index != Markup.NO_HEADER_FOUND)
-		{
-			// Position markup stream at beginning of header tag
-			associatedMarkupStream.setCurrentIndex(index);
-
-			// Create a HtmlHeaderContainer for the header tag found
-			final MarkupElement element = associatedMarkupStream.get();
-			if (element instanceof WicketTag)
+			final WicketTag wTag = (WicketTag)element;
+			if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
 			{
-				final WicketTag wTag = (WicketTag)element;
-				if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
-				{
-					// found <wicket:head>
-					// create a unique id for the HtmlHeaderContainer to be
-					// created
-					final String headerId = "_" + Classes.simpleName(container.getClass())
-							+ container.getVariation() + "Header";
+				// found <wicket:head>
+				// create a unique id for the HtmlHeaderContainer to be
+				// created
+				final String headerId = "_" + Classes.simpleName(container.getClass())
+						+ container.getVariation() + "Header" + index;
 
-					// Create the header container and associate the markup with
-					// it
-					HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, 
-							container, wTag.getAttributes().getString(
-									associatedMarkupStream.getWicketNamespace() + ":scope"));
-					headerContainer.setMyMarkupStream(associatedMarkupStream);
-					headerContainer.setRenderBodyOnly(true);
+				// Create the header container and associate the markup with
+				// it
+				HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, container,
+						wTag.getAttributes().getString(
+								associatedMarkupStream.getWicketNamespace() + ":scope"));
+				headerContainer.setMyMarkupStream(associatedMarkupStream);
+				headerContainer.setRenderBodyOnly(true);
 
-					// The container does have a header component
-					return headerContainer;
-				}
+				// The container does have a header component
+				return headerContainer;
 			}
 		}
 
-		// Though the container does have markup, it does not have a
-		// <wicket:head> region.
-		return null;
+		throw new WicketRuntimeException("Programming error: expected a WicketTag: "
+				+ associatedMarkupStream.toString());
+	}
+
+	/**
+	 * 
+	 * @param associatedMarkupStream
+	 * @return xxx
+	 */
+	private final int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
+	{
+		// No associated markup => no header section
+		if (associatedMarkupStream == null)
+		{
+			return -1;
+		}
+
+		// Scan the markup for <wicket:head>. 
+		MarkupElement elem = (MarkupElement)associatedMarkupStream.get();
+		while (elem != null)
+		{
+			if (elem instanceof WicketTag)
+			{
+				WicketTag tag = (WicketTag)elem;
+				if (tag.isOpen() && tag.isHeadTag())
+				{
+					return associatedMarkupStream.getCurrentIndex();
+				}
+				// wicket:head must be before border, panel or extend
+				else if (tag.isOpen()
+						&& (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
+				{
+					break;
+				}
+			}
+			else if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag)elem;
+				// wicket:head must be before </head>
+				if (tag.isClose() && TagUtils.isHeadTag(tag))
+				{
+					break;
+				}
+				// wicket:head must be before <body>
+				else if (tag.isOpen() && TagUtils.isBodyTag(tag))
+				{
+					break;
+				}
+			}
+			elem = (MarkupElement)associatedMarkupStream.next();
+		}
+
+		// No (more) wicket:head found
+		return -1;
 	}
 
 	/**
@@ -289,7 +338,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 			return false;
 		}
-		
+
 		/**
 		 * @see #setMarkupStream(MarkupStream)
 		 * 
