@@ -2438,7 +2438,12 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Called when a request begins.
+	 * 
+	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
+	 *             be replaced by onBeginRender or beforeRender with the same
+	 *             semantics.
 	 */
+	// TODO introduce onBeginRender or beforeRender
 	protected void onBeginRequest()
 	{
 	}
@@ -2471,7 +2476,17 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Called when a request ends.
+	 * 
+	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
+	 *             be replaced by onEndRender or afterRender with different
+	 *             semantics. Instead of calling it after a request is done like
+	 *             is currently the case, that new method will be called after
+	 *             this component is rendered, which is a more precise scope.
+	 *             This semantical change shouldn't have a noticable impact on
+	 *             it's use I believe.
 	 */
+	// TODO introduce onEndRender or afterRender which is called after rendering
+	// prefably by the component itself instead of by request targets
 	protected void onEndRequest()
 	{
 	}
