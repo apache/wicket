@@ -162,7 +162,7 @@ function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     var text = node.firstChild.nodeValue;
     var encoding = node.getAttribute("encoding");
-    if (encoding != null) {
+    if (encoding != null&&encoding!="") {
         text = wicketDecode(encoding, text);
     }
     var element=document.getElementById(compId);
