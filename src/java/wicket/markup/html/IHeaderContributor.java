@@ -17,6 +17,8 @@
  */
 package wicket.markup.html;
 
+import java.io.Serializable;
+
 import wicket.Response;
 
 /**
@@ -26,7 +28,7 @@ import wicket.Response;
  * 
  * @author Juergen Donnerstag
  */
-public interface IHeaderContributor
+public interface IHeaderContributor extends Serializable
 {
 	/**
 	 * Render to the web response whatever the component wants to contribute to
