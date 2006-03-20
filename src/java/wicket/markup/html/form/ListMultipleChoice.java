@@ -266,7 +266,11 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		super.onComponentTag(tag);
 		tag.put("multiple", "multiple");
-		tag.put("size", Math.min(maxRows, getChoices().size()));
+		
+		if (!tag.getAttributes().containsKey("size"))
+		{
+			tag.put("size", Math.min(maxRows, getChoices().size()));
+		}
 	}
 
 	/**
