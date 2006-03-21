@@ -187,7 +187,7 @@ public class WizardPanel extends Panel
 	{
 		addStateChange(new Change()
 		{
-			Node keep = (Node)Objects.clone(currentStep);
+			Node keep = (Node)Objects.cloneObject(currentStep);
 
 			public void undo()
 			{
