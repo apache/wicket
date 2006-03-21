@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.16 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,20 +20,26 @@ package wicket.markup;
 import wicket.markup.parser.XmlTag;
 
 /**
- * WicketTag extends ComponentTag and will be created by a MarkupParser
- * whenever it parses a tag in the wicket namespace. By default, this namespace
- * is "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
+ * WicketTag extends ComponentTag and will be created by a MarkupParser whenever
+ * it parses a tag in the wicket namespace. By default, this namespace is
+ * "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
- * Note 2: The namespace name is configurable. E.g.
- *    &lt;html xmlns:wcn="http://wicket.sourcefourge.net"&gt;
+ * Note 2: The namespace name is configurable. E.g. &lt;html
+ * xmlns:wcn="http://wicket.sourcefourge.net"&gt;
  * 
  * @author Juergen Donnerstag
  */
 public class WicketTag extends ComponentTag
 {
+	/**
+	 * In case of inherited markup, the base and the extended markups are
+	 * merged. For wicket:head however, we must not loose the information.
+	 */
+	private Class wicketHeaderClass;
+
 	/**
 	 * Constructor
 	 * 
@@ -47,6 +53,7 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
+	 * 
 	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()
@@ -144,15 +151,16 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * 
-	 * @param wicketNamespace The wicket namespace defined by the markup
+	 * @param wicketNamespace
+	 *            The wicket namespace defined by the markup
 	 * @return True if &lt;wicket:fragment&gt;
 	 */
 	public final boolean isFragementTag(final String wicketNamespace)
 	{
-		return ("fragment".equalsIgnoreCase(getName())
-				&& (getNamespace() != null) 
-				&& getNamespace().equals(wicketNamespace));
+		return ("fragment".equalsIgnoreCase(getName()) && (getNamespace() != null) && getNamespace()
+				.equals(wicketNamespace));
 	}
+
 	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
@@ -170,7 +178,29 @@ public class WicketTag extends ComponentTag
 		{
 			final WicketTag tag = new WicketTag(xmlTag.mutable());
 			tag.setId(getId());
+			tag.setWicketHeaderClass(this.wicketHeaderClass);
 			return tag;
 		}
+	}
+
+	/**
+	 * If wicket:head, get the class of the associated java container.
+	 * 
+	 * @return wicketHeaderClass
+	 */
+	public Class getWicketHeaderClass()
+	{
+		return wicketHeaderClass;
+	}
+
+	/**
+	 * Set the class of wicket component which contains the wicket:head tag.
+	 * 
+	 * @param wicketHeaderClass
+	 *            wicketHeaderClass
+	 */
+	public void setWicketHeaderClass(Class wicketHeaderClass)
+	{
+		this.wicketHeaderClass = wicketHeaderClass;
 	}
 }

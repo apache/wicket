@@ -74,19 +74,19 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream associatedMarkupStream = container.getAssociatedMarkupStream(false);
+		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
 
 		// No associated markup => no header section
-		if (associatedMarkupStream == null)
+		if (markupStream == null)
 		{
 			return;
 		}
 
 		// Position pointer at current (first) header
-		while (nextHeaderMarkup(associatedMarkupStream) != -1)
+		while (nextHeaderMarkup(markupStream) != -1)
 		{
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(associatedMarkupStream.getCurrentIndex());
+			final HeaderPartContainer headerPart = getHeaderPart(markupStream.getCurrentIndex());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
@@ -125,7 +125,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			}
 
 			// Position the stream after <wicket:head>
-			associatedMarkupStream.skipComponent();
+			markupStream.skipComponent();
 		}
 	}
 
@@ -190,13 +190,13 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream associatedMarkupStream = container.getAssociatedMarkupStream(false);
+		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
 
 		// Position markup stream at beginning of header tag
-		associatedMarkupStream.setCurrentIndex(index);
+		markupStream.setCurrentIndex(index);
 
 		// Create a HtmlHeaderContainer for the header tag found
-		final MarkupElement element = associatedMarkupStream.get();
+		final MarkupElement element = markupStream.get();
 		if (element instanceof WicketTag)
 		{
 			final WicketTag wTag = (WicketTag)element;
@@ -210,10 +210,11 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 				// Create the header container and associate the markup with
 				// it
-				HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, container,
-						wTag.getAttributes().getString(
-								associatedMarkupStream.getWicketNamespace() + ":scope"));
-				headerContainer.setMyMarkupStream(associatedMarkupStream);
+				final String scope = wTag.getAttributes().getString(
+						markupStream.getWicketNamespace() + ":scope");
+				final HeaderPartContainer headerContainer = new HeaderPartContainer(headerId,
+						container, scope);
+				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 
 				// The container does have a header component
@@ -222,7 +223,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		}
 
 		throw new WicketRuntimeException("Programming error: expected a WicketTag: "
-				+ associatedMarkupStream.toString());
+				+ markupStream.toString());
 	}
 
 	/**
@@ -238,7 +239,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			return -1;
 		}
 
-		// Scan the markup for <wicket:head>. 
+		// Scan the markup for <wicket:head>.
 		MarkupElement elem = (MarkupElement)associatedMarkupStream.get();
 		while (elem != null)
 		{
