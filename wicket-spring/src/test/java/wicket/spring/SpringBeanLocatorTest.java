@@ -64,7 +64,7 @@ public class SpringBeanLocatorTest extends TestCase
 		ctx.putBean("bean", bean);
 
 		SpringBeanLocator locator = (SpringBeanLocator) Objects
-				.clone(new SpringBeanLocator(Bean.class, ctxLocator));
+				.cloneObject(new SpringBeanLocator(Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -130,7 +130,7 @@ public class SpringBeanLocatorTest extends TestCase
 		ctx.putBean("bean", bean);
 
 		SpringBeanLocator locator = (SpringBeanLocator) Objects
-				.clone(new SpringBeanLocator("bean", Bean.class, ctxLocator));
+				.cloneObject(new SpringBeanLocator("bean", Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
