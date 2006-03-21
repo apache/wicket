@@ -4,13 +4,14 @@
   <properties>
     <title>Wicket changes</title>
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
-    <author email="jonl at muppetlabs.com">Jonathan Locke</author>
+    <author email="jonathanlocke at users.sourceforge.net">Jonathan Locke</author>
     <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
     <author email="joco01 at users.sourceforge.net">Johan Compagner</author>
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Jonathan Locke" issue="1455224">Added sign in page class to SimplePageAuthorizationStrategy to take care of page authentication in the event of failed authorization.  Updated Library example accordingly.</action> 
       <action type="fix" dev="Igor Vaynberg" issue="1455515" due-to="Andrew Berman">NullPointerException in AbstractValidator</action>
       <action type="fix" dev="Johan Compagner" issue="1455292" due-to="Sven Meier">Check forgets 'checked' on form error</action>
       <action type="fix" dev="Jonathan Locke" issue="1438486">New methods onAttach(), onDetach(), onBeginRender() and onEndRender() have been introduced.  onAttach() and onDetach() are called in internalOnBegin/EndRequest() so they should have the same semantics as the code that is currently doing attach/detach stuff in those places.  In Wicket 1.3, we can tighten that up further.  In order to guarantee that calls to onBeginRender() and onEndRender() occur in all cases, i renamed Component.doRender() -> Component.renderComponent() and Page.doRender() -> renderPage so that i could make each one final.  The renderComponent() method preserves the earlier doRender semantics exactly by checking for instanceof Page and calling Page.renderPage() in that case as if it were overridden.  The result is that we can deprecate Component.onBegin/EndRequest() now and provide alternatives for both former usages that will be easy to tighten up or modify in Wicket 1.3 or in the future.  I also changed all internal uses of doRender() and onBegin/EndRequest() to the appropriate method.</action>

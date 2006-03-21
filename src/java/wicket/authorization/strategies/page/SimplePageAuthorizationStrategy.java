@@ -17,13 +17,20 @@
  */
 package wicket.authorization.strategies.page;
 
+import wicket.Application;
+import wicket.Component;
+import wicket.Page;
+import wicket.RestartResponseAtInterceptPageException;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import wicket.authorization.UnauthorizedInstantiationException;
+
 /**
  * A very simple authorization strategy that takes a supertype (a base class or
  * tagging interface) and performs a simple authorization check by calling the
  * abstract method isAuthorized() whenever a Page class that extends or
  * implements the supertype is about to be instantiated. If that method returns
  * true, page instantiation proceeds normally. If it returns false, the user is
- * automatically directed to the application's sign-in page for authentication,
+ * automatically directed to the specified sign-in page for authentication,
  * which will presumably allow authorization to succeed once they have signed
  * in.
  * <p>
@@ -31,21 +38,17 @@ package wicket.authorization.strategies.page;
  * 
  * <pre>
  * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
- * 		MySecureWebPage.class)
+ * 		MySecureWebPage.class, MySignInPage.class)
  * {
- * 	protected boolean isAuthorized()
- * 	{
- * 		// Authorize access based on user authentication in the session
- * 		return (((MySession)Session.get()).isSignedIn());
- * 	}
+ *     protected boolean isAuthorized()
+ * 	   {
+ * 		   // Authorize access based on user authentication in the session
+ * 		   return (((MySession)Session.get()).isSignedIn());
+ * 	   }
  * };
  * 
  * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
  * </pre>
- * 
- * FIXME: General: Javadoc is out of date, we no longer have anywhere to set the
- * the login page, without that is this class even useful?
- * 
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -64,8 +67,11 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @param securePageSuperType
 	 *            The class or interface supertype that indicates that a given
 	 *            Page requires authorization
+	 * @param signInPageClass
+	 *            The sign in page class
 	 */
-	public SimplePageAuthorizationStrategy(final Class securePageSuperType)
+	public SimplePageAuthorizationStrategy(final Class securePageSuperType,
+			final Class signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{
@@ -73,6 +79,28 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 		}
 
 		this.securePageSuperType = securePageSuperType;
+
+		// Handle unauthorized access to pages
+		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
+				new IUnauthorizedComponentInstantiationListener()
+				{
+					public void onUnauthorizedInstantiation(final Component component)
+					{
+						// If there is a sign in page class declared, and the
+						// unauthorized component is a page, but it's not the
+						// sign in page
+						if (component instanceof Page)
+						{
+							// Redirect to page to let the user sign in
+							throw new RestartResponseAtInterceptPageException(signInPageClass);
+						}
+						else
+						{
+							// The component was not a page, so throw exception
+							throw new UnauthorizedInstantiationException(component.getClass());
+						}
+					}
+				});
 	}
 
 	/**
