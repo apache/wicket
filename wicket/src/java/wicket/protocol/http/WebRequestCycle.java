@@ -145,7 +145,7 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(redirectResponse);
 
 				// render the page into the buffer
-				page.doRender();
+				page.renderPage();
 
 				// re-assign the original response
 				setResponse(currentResponse);
@@ -191,7 +191,7 @@ public class WebRequestCycle extends RequestCycle
 			
 			// Redirect page can touch its models already (via for example the
 			// constructors)
-			page.internalEndRequest();
+			page.internalDetach();
 		}
 
 		if (redirectUrl == null)

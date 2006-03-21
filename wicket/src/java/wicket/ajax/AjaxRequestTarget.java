@@ -61,16 +61,86 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	/** the component instances that will be rendered */
-	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
+	/**
+	 * Response that uses an encoder to encode its contents
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private final class EncodingResponse extends Response
+	{
 
-	private final List/* <String> */javascripts = new ArrayList();
+		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
+		private boolean escaped = false;
+
+		/**
+		 * Construct.
+		 */
+		public EncodingResponse()
+		{
+		}
+
+		/**
+		 * @return contents of the response
+		 */
+		public String getContents()
+		{
+			return buffer.toString();
+		}
+
+		/**
+		 * NOTE: this method is not supported
+		 * 
+		 * @see wicket.Response#getOutputStream()
+		 */
+		public OutputStream getOutputStream()
+		{
+			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
+		}
+
+		/**
+		 * @return true if any escaping has been performed, false otherwise
+		 */
+		public boolean isContentsEncoded()
+		{
+			return escaped;
+		}
+
+		/**
+		 * Resets the response to a clean state so it can be reused to save on
+		 * garbage.
+		 */
+		public void reset()
+		{
+			buffer.clear();
+			escaped = false;
+
+		}
+
+		/**
+		 * @see wicket.Response#write(java.lang.String)
+		 */
+		public void write(String string)
+		{
+			if (needsEncoding(string))
+			{
+				string = encode(string);
+				escaped = true;
+			}
+			buffer.append(string);
+		}
+
+	}
 
 	/**
 	 * create a response that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
 	private final EncodingResponse encodingResponse = new EncodingResponse();
+
+	private final List/* <String> */javascripts = new ArrayList();
+
+	/** the component instances that will be rendered */
+	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
 
 	/**
 	 * Constructor
@@ -90,6 +160,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		addComponent(component, component.getMarkupId());
 	}
+
 
 	/**
 	 * Adds a component to the list of components to be rendered
@@ -118,7 +189,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		markupIdToComponent.put(markupId, component);
 	}
 
-
 	/**
 	 * Adds javascript that will be evaluated on the client side
 	 * 
@@ -132,6 +202,46 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		javascripts.add(javascript);
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
+	 */
+	public void detach(final RequestCycle requestCycle)
+	{
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(final Object obj)
+	{
+		if (obj instanceof AjaxRequestTarget)
+		{
+			AjaxRequestTarget that = (AjaxRequestTarget)obj;
+			return markupIdToComponent.equals(that.markupIdToComponent)
+					&& javascripts.equals(that.javascripts);
+		}
+		return false;
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
+	 */
+	public Object getLock(final RequestCycle requestCycle)
+	{
+		return requestCycle.getSession();
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = "AjaxRequestTarget".hashCode();
+		result += markupIdToComponent.hashCode() * 17;
+		result += javascripts.hashCode() * 17;
+		return result;
 	}
 
 	/**
@@ -183,6 +293,110 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
+				+ "], javascript [" + javascripts + "]";
+	}
+
+	/**
+	 * Encodes a string so it is safe to use inside CDATA blocks
+	 * 
+	 * @param str
+	 * @return encoded string
+	 */
+	protected String encode(String str)
+	{
+		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
+		// more efficient
+		// replacement
+		return str.replaceAll("]", "]^");
+	}
+
+	/**
+	 * @return name of encoding used to possibly encode the contents of the
+	 *         CDATA blocks
+	 */
+	protected String getEncodingName()
+	{
+		return "wicket1";
+	}
+
+	/**
+	 * 
+	 * @param str
+	 * @return true if string needs to be encoded, false otherwise
+	 */
+	protected boolean needsEncoding(String str)
+	{
+		// TODO Ajax: we can improve this by keeping a buffer of at least 3
+		// characters and checking that buffer so that we can narrow down
+		// escaping occuring only for ']]>' sequence, or at least for ]] if ] is
+		// the last char in this buffer
+		return str.indexOf(']') >= 0;
+	}
+
+	/**
+	 * 
+	 * @param response
+	 * @param markupId
+	 *            id of client-side dom element
+	 * @param component
+	 *            component to render
+	 */
+	private void respondComponent(final Response response, final String markupId,
+			final Component component)
+	{
+		if (component.getRenderBodyOnly() == true)
+		{
+			throw new IllegalStateException(
+					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
+							+ component.toString());
+		}
+
+
+		// substitute our encoding response for the real one so we can capture
+		// component's markup in a manner safe for transport inside CDATA block
+		final Response originalResponse = response;
+		encodingResponse.reset();
+		RequestCycle.get().setResponse(encodingResponse);
+
+		// Initialize temporary variables
+		Page page = component.getPage();
+		if (page != null)
+		{
+			page.startComponentRender(component);
+		}
+
+		// Render the component
+		component.renderComponent();
+
+		if (page != null)
+		{
+			page.endComponentRender(component);
+		}
+
+		// Restore original response
+		RequestCycle.get().setResponse(originalResponse);
+
+		response.write("<component id=\"" + markupId + "\" ");
+		if (encodingResponse.isContentsEncoded())
+		{
+			response.write(" encoding=\"");
+			response.write(getEncodingName());
+			response.write("\" ");
+		}
+		response.write("><![CDATA[");
+		response.write(encodingResponse.getContents());
+		response.write("]]></component>");
+
+		encodingResponse.reset();
+	}
+
+
+	/**
 	 * @param response
 	 * @param js
 	 */
@@ -212,223 +426,5 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("</evaluate>");
 
 		encodingResponse.reset();
-	}
-
-	/**
-	 * 
-	 * @param response
-	 * @param markupId
-	 *            id of client-side dom element
-	 * @param component
-	 *            component to render
-	 */
-	private void respondComponent(final Response response, final String markupId,
-			final Component component)
-	{
-		if (component.getRenderBodyOnly() == true)
-		{
-			throw new IllegalStateException(
-					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
-							+ component.toString());
-		}
-
-		
-		// substitute our encoding response for the real one so we can capture
-		// component's markup in a manner safe for transport inside CDATA block
-		final Response originalResponse = response;
-		encodingResponse.reset();
-		RequestCycle.get().setResponse(encodingResponse);
-
-		// Initialize temporary variables
-		Page page = component.getPage();
-		if (page != null)
-		{
-			page.startComponentRender(component);
-		}
-
-		// Render the component
-		component.doRender();
-
-		if (page != null)
-		{
-			page.endComponentRender(component);
-		}
-
-		// restore original response
-		RequestCycle.get().setResponse(originalResponse);
-
-
-		response.write("<component id=\"" + markupId + "\" ");
-		if (encodingResponse.isContentsEncoded())
-		{
-			response.write(" encoding=\"");
-			response.write(getEncodingName());
-			response.write("\" ");
-		}
-		response.write("><![CDATA[");
-
-
-		response.write(encodingResponse.getContents());
-
-		response.write("]]></component>");
-
-		encodingResponse.reset();
-	}
-
-	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
-	 */
-	public void cleanUp(final RequestCycle requestCycle)
-	{
-	}
-
-	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(final RequestCycle requestCycle)
-	{
-		return requestCycle.getSession();
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(final Object obj)
-	{
-		if (obj instanceof AjaxRequestTarget)
-		{
-			AjaxRequestTarget that = (AjaxRequestTarget)obj;
-			return markupIdToComponent.equals(that.markupIdToComponent)
-					&& javascripts.equals(that.javascripts);
-		}
-		return false;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode()
-	{
-		int result = "AjaxRequestTarget".hashCode();
-		result += markupIdToComponent.hashCode() * 17;
-		result += javascripts.hashCode() * 17;
-		return result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], javascript [" + javascripts + "]";
-	}
-
-	/**
-	 * @return name of encoding used to possibly encode the contents of the
-	 *         CDATA blocks
-	 */
-	protected String getEncodingName()
-	{
-		return "wicket1";
-	}
-
-	/**
-	 * Encodes a string so it is safe to use inside CDATA blocks
-	 * 
-	 * @param str
-	 * @return encoded string
-	 */
-	protected String encode(String str)
-	{
-		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
-		// more efficient
-		// replacement
-		return str.replaceAll("]", "]^");
-	}
-
-	/**
-	 * 
-	 * @param str
-	 * @return true if string needs to be encoded, false otherwise
-	 */
-	protected boolean needsEncoding(String str)
-	{
-		// TODO Ajax: we can improve this by keeping a buffer of at least 3
-		// characters and checking that buffer so that we can narrow down
-		// escaping occuring only for ']]>' sequence, or at least for ]] if ] is
-		// the last char in this buffer
-		return str.indexOf(']') >= 0;
-	}
-
-
-	/**
-	 * Response that uses an encoder to encode its contents
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class EncodingResponse extends Response
-	{
-
-		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
-		private boolean escaped = false;
-
-		/**
-		 * Construct.
-		 */
-		public EncodingResponse()
-		{
-		}
-
-		/**
-		 * @see wicket.Response#write(java.lang.String)
-		 */
-		public void write(String string)
-		{
-			if (needsEncoding(string))
-			{
-				string = encode(string);
-				escaped = true;
-			}
-			buffer.append(string);
-		}
-
-		/**
-		 * Resets the response to a clean state so it can be reused to save on
-		 * garbage.
-		 */
-		public void reset()
-		{
-			buffer.clear();
-			escaped = false;
-
-		}
-
-		/**
-		 * @return true if any escaping has been performed, false otherwise
-		 */
-		public boolean isContentsEncoded()
-		{
-			return escaped;
-		}
-
-		/**
-		 * @return contents of the response
-		 */
-		public String getContents()
-		{
-			return buffer.toString();
-		}
-
-		/**
-		 * NOTE: this method is not supported
-		 * 
-		 * @see wicket.Response#getOutputStream()
-		 */
-		public OutputStream getOutputStream()
-		{
-			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
-		}
-
 	}
 }

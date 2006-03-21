@@ -195,7 +195,7 @@ public abstract class RequestCycle
 	private static final int HANDLE_EXCEPTION = 5;
 
 	/** Cleaning up after responding to a request. */
-	private static final int CLEANUP_REQUEST = 6;
+	private static final int DETACH_REQUEST = 6;
 
 	/** Request cycle processing is done. */
 	private static final int DONE = 7;
@@ -766,9 +766,9 @@ public abstract class RequestCycle
 	/**
 	 * Clean up the request cycle.
 	 */
-	private void cleanUp()
+	private void detach()
 	{
-		// clean up target stack; calling cleanUp has effects like
+		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
 		// furthermore, the targets will be cg-ed with this cycle too
 		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
@@ -778,7 +778,7 @@ public abstract class RequestCycle
 			{
 				try
 				{
-					target.cleanUp(this);
+					target.detach(this);
 				}
 				catch (RuntimeException e)
 				{
@@ -1022,10 +1022,10 @@ public abstract class RequestCycle
 		finally
 		{
 			// set step manually to clean up
-			currentStep = CLEANUP_REQUEST;
+			currentStep = DETACH_REQUEST;
 
 			// clean up the request
-			cleanUp();
+			detach();
 
 			// set step manually to done
 			currentStep = DONE;

@@ -388,7 +388,7 @@ public final class PageMap implements Serializable
 			{
 				final String responseUrl = interceptContinuationURL;
 
-				public void cleanUp(RequestCycle requestCycle)
+				public void detach(RequestCycle requestCycle)
 				{
 				}
 

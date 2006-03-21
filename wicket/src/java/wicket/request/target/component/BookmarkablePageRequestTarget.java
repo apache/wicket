@@ -112,13 +112,13 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(RequestCycle requestCycle)
+	public void detach(RequestCycle requestCycle)
 	{
 		if(page != null)
 		{
-			page.internalEndRequest();
+			page.internalDetach();
 		}
 	}
 
@@ -220,8 +220,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			}
 			else
 			{
-				// let the page render itself
-				getPage(requestCycle).doRender();
+				// Let the page render itself
+				getPage(requestCycle).renderPage();
 			}
 		}
 	}

@@ -235,9 +235,9 @@ public abstract class ListView extends WebMarkupContainer
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see wicket.Component#onBeginRequest()
+			 * @see wicket.Component#onAttach()
 			 */
-			protected void onBeginRequest()
+			protected void onAttach()
 			{
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
@@ -290,9 +290,9 @@ public abstract class ListView extends WebMarkupContainer
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see wicket.Component#onBeginRequest()
+			 * @see wicket.Component#onAttach()
 			 */
-			protected void onBeginRequest()
+			protected void onAttach()
 			{
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == 0)
@@ -455,9 +455,9 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#internalOnBeginRequest()
+	 * @see wicket.MarkupContainer#internalOnAttach()
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 		// Get number of items to be displayed
 		final int size = getViewSize();

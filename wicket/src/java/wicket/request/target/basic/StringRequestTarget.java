@@ -85,9 +85,9 @@ public class StringRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(RequestCycle requestCycle)
+	public void detach(RequestCycle requestCycle)
 	{
 	}
 

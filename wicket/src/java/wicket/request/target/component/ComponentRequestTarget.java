@@ -69,7 +69,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 		else
 		{
 			// Render the component
-			component.doRender();
+			component.renderComponent();
 		}
 
 		if (page != null)
@@ -87,9 +87,9 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(final RequestCycle requestCycle)
+	public void detach(final RequestCycle requestCycle)
 	{
 	}
 

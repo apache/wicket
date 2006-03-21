@@ -561,9 +561,9 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnBeginRequest()
+	 * @see wicket.Component#internalOnAttach()
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 		// if we don't optimize, rebuild the paths on every request
 		if (!getOptimizeItemRemoval())
