@@ -25,7 +25,7 @@ import wicket.IRequestCycleFactory;
 import wicket.Session;
 
 /**
- * A session subclass for the HTTP protocol. 
+ * A session subclass for the HTTP protocol.
  * 
  * @author Jonathan Locke
  */
@@ -33,7 +33,6 @@ public class WebSession extends Session implements HttpSessionBindingListener
 {
 	/** log. careful, this log is used to trigger profiling too! */
 	// private static Log log = LogFactory.getLog(WebSession.class);
-
 	private static final long serialVersionUID = 1L;
 
 	/** The request cycle factory for the session */
@@ -72,6 +71,37 @@ public class WebSession extends Session implements HttpSessionBindingListener
 	public void invalidateNow()
 	{
 		getSessionStore().invalidate();
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+	 */
+	public void valueBound(HttpSessionBindingEvent event)
+	{
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+	 */
+	public void valueUnbound(HttpSessionBindingEvent event)
+	{
+		// if application == null then it was serialized/deserialized and then
+		// invalidated without being touched anymore.
+		// Don't know an easy way to get the application object back so can't
+		// call destroy on it except maybe:
+		// TODO we could try to get it through the servletcontext, but how to
+		// get the context key?  If the session was invalidated, couldn't the
+		// application be notified then?
+		Application application = getApplication();
+		if (application != null)
+		{
+			// will happen when the session gets invalidated or a timeout.
+			String id = getSessionStore().getId();
+			if (application instanceof WebApplication)
+			{
+				((WebApplication)application).sessionDestroyed(id);
+			}
+		}
 	}
 
 	/**
@@ -126,32 +156,5 @@ public class WebSession extends Session implements HttpSessionBindingListener
 		set(this);
 
 		attach();
-	}
-
-	/**
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
-	 */
-	public void valueBound(HttpSessionBindingEvent event)
-	{
-	}
-
-	/**
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
-	 */
-	public void valueUnbound(HttpSessionBindingEvent event)
-	{
-		// if application == null then it was serialized/deserialized and then invalidated without being touched anymore.
-		// Don't know an easy way to get the application object back so can't call destroy on it except maybe:
-		// TODO we could try to get it through the servletcontext, but how to get the context key?
-		Application application = getApplication();
-		if(application != null)
-		{
-			// will happen when the session gets invalidated or a timeout.
-			String id = getSessionStore().getId();
-			if(application instanceof WebApplication)
-			{
-				((WebApplication)application).sessionDestroyed(id);
-			}
-		}
 	}
 }
