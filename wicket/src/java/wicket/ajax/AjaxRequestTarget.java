@@ -334,7 +334,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		// TODO Ajax: we can improve this by keeping a buffer of at least 3
 		// characters and checking that buffer so that we can narrow down
 		// escaping occuring only for ']]>' sequence, or at least for ]] if ] is
-		// the last char in this buffer
+		// the last char in this buffer.  Can't we use contains()?
 		return str.indexOf(']') >= 0;
 	}
 
