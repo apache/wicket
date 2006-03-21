@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -156,9 +157,12 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Number of pagemaps in this session */
-	private int pageMaps = 0;
-
+	/** A number to generate names for auto create pagemaps */
+	private int autoCreatePageMapCounter = 0;
+	
+	/** A linked list for last used pagemap queue */
+	private LinkedList/* <PageMap> */ usedPageMaps = new LinkedList();
+	
 	/** The session store of this session. */
 	private transient ISessionStore sessionStore;
 
@@ -402,12 +406,27 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
-		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		PageMap pageMap =  (PageMap)getAttribute(attributeForPageMapName(pageMapName));
 		if (pageMap == null && autoCreate)
 		{
 			pageMap = newPageMap(pageMapName);
 		}
 		return pageMap;
+	}
+
+	/**
+	 * Gets a page map for the given name, automatically creating it if need be.
+	 * 
+	 * @param pageMapName
+	 *            Name of page map, or null for default page map
+	 * @param autoCreate
+	 *            True if the page map should be automatically created if it
+	 *            does not exist
+	 * @return PageMap for name
+	 */
+	public final PageMap createAutoPageMap()
+	{
+		return newPageMap("wicket-" + (autoCreatePageMapCounter++));
 	}
 
 	/**
@@ -489,15 +508,16 @@ public abstract class Session implements Serializable
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		if (++pageMaps > maxPageMaps)
+		if (usedPageMaps.size() >= maxPageMaps)		
 		{
-			throw new IllegalStateException("Session cannot contain more than " + maxPageMaps
-					+ " page maps");
+			PageMap pm = (PageMap)usedPageMaps.getFirst();
+			pm.remove();
 		}
 
 		// Create new page map
 		final PageMap pageMap = new PageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
+		dirty();
 		return pageMap;
 	}
 
@@ -524,11 +544,9 @@ public abstract class Session implements Serializable
 	 */
 	public final void removePageMap(final PageMap pageMap)
 	{
-		if (pageMaps > 0)
-		{
-			pageMaps--;
-		}
+		usedPageMaps.remove(pageMap);
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
+		dirty();
 	}
 
 	/**
@@ -866,6 +884,11 @@ public abstract class Session implements Serializable
 	 */
 	void dirtyPageMap(final PageMap map)
 	{
+		if(!map.isDefault())
+		{
+			usedPageMaps.remove(map);
+			usedPageMaps.addLast(map);
+		}
 		List dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(map))
 		{

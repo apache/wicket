@@ -170,7 +170,7 @@ public final class Settings
 	private IMarkupParserFactory markupParserFactory;
 
 	/** To help prevent denial of service attacks */
-	private int maxPageMaps = 20;
+	private int maxPageMaps = 5;
 
 	/** The maximum number of versions of a page to track */
 	private int maxPageVersions = Integer.MAX_VALUE;
