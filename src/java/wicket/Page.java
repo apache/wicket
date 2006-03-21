@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-03-16 11:34:01 -0800 (Thu, 16 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -327,7 +327,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
-	public final void doRender()
+	public final void renderPage()
 	{
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
@@ -366,44 +366,38 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
 
+		// First, give priority to IFeedback instances, as they have to
+		// collect their messages before components like ListViews
+		// remove any child components
+		visitChildren(IFeedback.class, new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				((IFeedback)component).updateFeedback();
+				component.internalAttach();
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		// Now, do the initialization for the other components
+		internalAttach();
+
+		// Handle request by rendering page
+		onBeforeRender();
 		try
 		{
-			// We have to initialize the page's request now
-
-			// First, give priority to IFeedback instances, as they have to
-			// collect their messages before components like ListViews
-			// remove any child components
-			visitChildren(IFeedback.class, new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					((IFeedback)component).updateFeedback();
-					component.internalBeginRequest();
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-
-			// Now, do the initialization for the other components
-			internalBeginRequest();
-
-			// Handle request by rendering page
 			render(null);
-
-			// Check rendering if it happened fully
-			checkRendering(this);
-
-			// Add/touch the response page in the session (its pagemap).
-			getSession().touch(this);
-
 		}
 		finally
 		{
-			// The request is over
-			// TODO check this internal end request is removed because that call
-			// will happen
-			// in the clean up of the request cycle.
-			// internalEndRequest();
+			onAfterRender();
 		}
+
+		// Check rendering if it happened fully
+		checkRendering(this);
+
+		// Add/touch the response page in the session (its pagemap).
+		getSession().touch(this);
 	}
 
 	/**
@@ -774,9 +768,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
-	 * @see wicket.Component#internalOnEndRequest()
+	 * @see wicket.Component#internalOnDetach()
 	 */
-	protected final void internalOnEndRequest()
+	protected final void internalOnDetach()
 	{
 		if (log.isDebugEnabled())
 		{

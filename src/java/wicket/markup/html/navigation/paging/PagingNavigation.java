@@ -278,9 +278,9 @@ public class PagingNavigation extends Loop
 	}
 
 	/**
-	 * @see wicket.Component#internalOnBeginRequest()
+	 * @see wicket.Component#internalOnAttach()
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
@@ -289,7 +289,7 @@ public class PagingNavigation extends Loop
 		// page currently printed.
 		this.setStartIndex();
 
-		super.internalOnBeginRequest();
+		super.internalOnAttach();
 	}
 
 	/**

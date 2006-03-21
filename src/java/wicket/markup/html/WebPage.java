@@ -220,9 +220,9 @@ public class WebPage extends Page
 	
 	/**
 	 * 
-	 * @see wicket.Component#onEndRequest()
+	 * @see wicket.Component#onDetach()
 	 */
-	protected void onEndRequest()
+	protected void onDetach()
 	{
 		// This code can not go into HtmlHeaderContainer as header.onEndRequest()
 		// is executed inside an iterator and you can only call container.remove()
@@ -234,6 +234,6 @@ public class WebPage extends Page
 		{
 			this.remove(header);
 		}
-		super.onEndRequest();
+		super.onDetach();
 	}
 }

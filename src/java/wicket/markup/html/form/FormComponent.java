@@ -884,9 +884,9 @@ public abstract class FormComponent extends WebMarkupContainer
 		return convertedInput;
 	}
 
-	protected void onEndRequest()
+	protected void onDetach()
 	{
-		super.onEndRequest();
+		super.onDetach();
 		convertedInput = null;
 	}
 

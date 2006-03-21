@@ -64,7 +64,7 @@ public class PageRequestTarget implements IPageRequestTarget
 			requestCycle.setUpdateSession(true);
 
 			// Let page render itself
-			page.doRender();
+			page.renderPage();
 		}
 	}
 
@@ -77,11 +77,11 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(RequestCycle requestCycle)
+	public void detach(RequestCycle requestCycle)
 	{
-		page.internalEndRequest();
+		page.internalDetach();
 	}
 
 	/**

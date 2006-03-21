@@ -53,7 +53,7 @@ public interface IRequestTarget
 	 * @param requestCycle
 	 *            the current request cycle
 	 */
-	void cleanUp(RequestCycle requestCycle);
+	void detach(RequestCycle requestCycle);
 
 	/**
 	 * Gets the lock to be used for synchronization.

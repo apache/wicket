@@ -289,9 +289,9 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnBeginRequest()
+	 * @see wicket.Component#internalOnAttach()
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 		// Set default for before/after link text
 		if (beforeDisabledLink == null)

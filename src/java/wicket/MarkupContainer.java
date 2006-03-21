@@ -180,7 +180,7 @@ public abstract class MarkupContainer extends Component
 		}
 		component.setAuto(true);
 		add(component);
-		component.internalBeginRequest();
+		component.internalAttach();
 		component.render();
 		return true;
 	}
@@ -307,10 +307,10 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * Called when a request begins.
 	 */
-	public void internalBeginRequest()
+	public void internalAttach()
 	{
 		// Handle begin request for the container itself
-		super.internalBeginRequest();
+		super.internalAttach();
 
 		// Loop through child components
 		final int size = children_size();
@@ -323,7 +323,7 @@ public abstract class MarkupContainer extends Component
 			if (!(child instanceof IFeedback))
 			{
 				// Call begin request on the child
-				child.internalBeginRequest();
+				child.internalAttach();
 			}
 		}
 	}
@@ -334,10 +334,10 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * Called when a request ends.
 	 */
-	public void internalEndRequest()
+	public void internalDetach()
 	{
 		// Handle end request for the container itself
-		super.internalEndRequest();
+		super.internalDetach();
 
 		// Loop through child components
 		final Iterator iter = iterator();
@@ -347,7 +347,7 @@ public abstract class MarkupContainer extends Component
 			final Component child = (Component)iter.next();
 
 			// Call end request on the child
-			child.internalEndRequest();
+			child.internalDetach();
 		}
 	}
 
