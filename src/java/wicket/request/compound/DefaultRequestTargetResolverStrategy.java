@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.INewBrowserWindowListener;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -197,6 +198,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
+		}
+		else if(interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
+		{
+			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,INewBrowserWindowListener.INTERFACE, requestParameters);
 		}
 		else
 		{

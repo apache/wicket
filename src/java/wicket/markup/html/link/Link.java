@@ -76,6 +76,8 @@ import wicket.util.string.Strings;
  */
 public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.

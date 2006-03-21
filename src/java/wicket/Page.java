@@ -984,6 +984,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Save name for restoring transient
 		this.pageMapName = pageMap.getName();
 	}
+	
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * @param map
+	 */
+	protected final void moveToPageMap(PageMap map)
+	{
+		setPageMap(map);
+		numericId = (short)map.nextId();
+	}
+
+	
 
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an
@@ -1190,4 +1204,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			return false;
 		}
 	}
+
 }
