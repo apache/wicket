@@ -122,9 +122,9 @@ public class InterfaceRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(final RequestCycle requestCycle)
+	public void detach(RequestCycle requestCycle)
 	{
 	}
 
