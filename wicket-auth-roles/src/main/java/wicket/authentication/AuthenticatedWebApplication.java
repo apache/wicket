@@ -51,6 +51,12 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		// Get web session class to instantiate
 		this.webSessionClass = getWebSessionClass();
+	}
+	
+	@Override
+	protected void init()
+	{
+		super.init();
 
 		// Set authorization strategy and unauthorized instantiation listener
 		getSecuritySettings().setAuthorizationStrategy(new RoleAuthorizationStrategy(this));
