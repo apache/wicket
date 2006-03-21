@@ -940,8 +940,17 @@ public abstract class FormComponent extends WebMarkupContainer
 
 		// prepare the arguments map by adding default arguments such as input,
 		// name, and label
-		final Map fullArgs = new HashMap(args.size() + 4);
-		fullArgs.putAll(args);
+		final Map fullArgs;
+		if (args == null)
+		{
+			fullArgs = new HashMap(4);
+		}
+		else
+		{
+			fullArgs = new HashMap(args.size() + 4);
+			fullArgs.putAll(args);
+		}
+
 		if (!fullArgs.containsKey("input"))
 		{
 			fullArgs.put("input", getInput());

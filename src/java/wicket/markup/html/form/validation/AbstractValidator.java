@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4703 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -92,7 +92,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final String resourceKey, final Map map)
 	{
-		error(formComponent, resourceKey, Model.valueOf(map));
+		error(formComponent, resourceKey, (map == null) ? new Model() : Model.valueOf(map));
 	}
 
 	/**
@@ -106,7 +106,8 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final Map map)
 	{
-		error(formComponent, resourceKey(formComponent), Model.valueOf(map));
+		error(formComponent, resourceKey(formComponent), (map == null) ? new Model() : Model
+				.valueOf(map));
 	}
 
 	/**
@@ -126,6 +127,15 @@ public abstract class AbstractValidator implements IValidator
 			final IModel resourceModel)
 	{
 
+		if (formComponent == null)
+		{
+			throw new IllegalArgumentException("formComponent cannot be null");
+		}
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("resourceKey cannot be null");
+		}
+
 		final List keys = new ArrayList(2);
 		keys.add(resourceKey);
 
@@ -135,9 +145,17 @@ public abstract class AbstractValidator implements IValidator
 			keys.add(defaultKey);
 		}
 
-		Map map = (Map)resourceModel.getObject(formComponent);
+		Map args;
+		if (resourceModel == null)
+		{
+			args = null;
+		}
+		else
+		{
+			args = (Map)resourceModel.getObject(formComponent);
+		}
 
-		formComponent.error(keys, map);
+		formComponent.error(keys, args);
 	}
 
 	/**
