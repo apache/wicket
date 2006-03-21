@@ -28,6 +28,7 @@ import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
+import wicket.markup.TagUtils;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
@@ -201,8 +202,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				if (element instanceof ComponentTag)
 				{
 					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName())
-							&& (tag.getNamespace() == null))
+					if (tag.isOpen() && TagUtils.isBodyTag(tag))
 					{
 						// Add a default container if the tag has the default
 						// _body name
@@ -251,45 +251,47 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	public void onNewBrowserWindow()
 	{
 		// this is called when the browser did report history size of 0
-		ArrayListStack accessStack = getPageMap().getAccessStack();
-		if(accessStack.size() > 1)
+		final ArrayListStack accessStack = getPageMap().getAccessStack();
+		if (accessStack.size() > 1)
 		{
-			Access access = (Access)accessStack.get(0);
+			final Access access = (Access)accessStack.get(0);
 			// if the browser history == 0 then this page must be the first in the access stack
 			// will this always work. Because if i go back with the browser back button to a page
 			// will then the javascript run?? If so will that last page in the browser always be \
 			// the last in the access stack?
-			if( !(access.getId() == getNumericId() && access.getVersion() == getCurrentVersionNumber()) )
+			if (!(access.getId() == getNumericId() && access.getVersion() == getCurrentVersionNumber()))
 			{
-				WebPage clonedPage = (WebPage)Objects.cloneObject(this);
-				PageMap map = getSession().createAutoPageMap();
+				final WebPage clonedPage = (WebPage)Objects.cloneObject(this);
+				final PageMap map = getSession().createAutoPageMap();
 				clonedPage.moveToPageMap(map);
 				setResponsePage(clonedPage);
 			}
 		}
 	}
 
+	/**
+	 * A behavior automatically added to all WebPages
+	 */
 	private class PageMapChecker extends AbstractBehavior implements IHeaderContributor
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public void renderHead(Response response)
+		public void renderHead(final Response response)
 		{
-			//if(!isStateless()) TODO this shouldn't be done for stateless pages.. This will make all pages statefull!
-			// but how do we know that if it stateless because that is only know after render.
+			// if(!isStateless()) TODO this shouldn't be done for stateless pages. 
+			// This will make all pages statefull. But how do we know that if 
+			// it is stateless because that is only know after render.
 			// Should we use a Response Filter??
-			ArrayListStack accessStack = getPageMap().getAccessStack();
-			if(accessStack.size() > 1)
+			final ArrayListStack accessStack = getPageMap().getAccessStack();
+			if (accessStack.size() > 1)
 			{
 				response.write("<script language=\"JavaScript\">if(history.length == 1){document.location.href = '");
 				response.write(urlFor(INewBrowserWindowListener.INTERFACE));
 				response.write("'}</script>");
 			}
 		}
-		
 	}
 }

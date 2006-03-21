@@ -85,14 +85,19 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		// Position pointer at current (first) header
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
+			Class markupClass = ((WicketTag)markupStream.getTag()).getWicketHeaderClass();
+			if (markupClass == null)
+			{
+				markupClass = markupStream.getContainerClass();
+			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupStream.getCurrentIndex());
+			final HeaderPartContainer headerPart = getHeaderPart(markupClass, markupStream.getCurrentIndex());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
 				// no matter how often the same Component has been added
 				// to the page or any other container in the hierachy.
-				if (htmlContainer.get(headerPart.getId()) == null)
+				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
 					htmlContainer.autoAdd(headerPart);
 
@@ -182,15 +187,16 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
 	 * a header tag.
 	 * 
-	 * @param index
+	 * @param index A unique index
+	 * @param markupClass The java class the wicket:head tag is directly associated with
 	 * @return the header part for this panel/border or null if it doesn't have
 	 *         a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final int index)
+	private final HeaderPartContainer getHeaderPart(final Class markupClass, final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
+		final MarkupStream markupStream = this.container.getAssociatedMarkupStream(false);
 
 		// Position markup stream at beginning of header tag
 		markupStream.setCurrentIndex(index);
@@ -205,15 +211,15 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
-				final String headerId = "_" + Classes.simpleName(container.getClass())
-						+ container.getVariation() + "Header" + index;
+				final String headerId = "_" + Classes.simpleName(markupClass)
+						+ this.container.getVariation() + "Header" + index;
 
 				// Create the header container and associate the markup with
 				// it
-				final String scope = wTag.getAttributes().getString(
+				String scope = wTag.getAttributes().getString(
 						markupStream.getWicketNamespace() + ":scope");
 				final HeaderPartContainer headerContainer = new HeaderPartContainer(headerId,
-						container, scope);
+						this.container, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 
