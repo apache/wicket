@@ -152,11 +152,12 @@ public class Calendar extends AbstractYuiPanel
 	}
 
 	/**
-	 * @see wicket.Component#onBeginRequest()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void onBeginRequest()
+	protected void onAttach()
 	{
-		super.onBeginRequest();
+		super.onAttach();
+		
 		// initialize lazily
 		if (elementId == null)
 		{

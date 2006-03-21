@@ -452,9 +452,9 @@ public class Palette extends Panel
 		return buildJSCall("paletteMoveDown");
 	}
 
-	protected void internalOnEndRequest()
+	protected void internalOnDetach()
 	{
-		super.internalOnEndRequest();
+		super.internalOnDetach();
 		// we need to manually detach the choices model since it is not attached
 		// to a component
 		// an alternative might be to attach it to one of the subcomponents

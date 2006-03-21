@@ -163,11 +163,12 @@ public class Slider extends AbstractYuiPanel
 	}
 
 	/**
-	 * @see wicket.Component#onBeginRequest()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void onBeginRequest()
+	protected void onAttach()
 	{
-		super.onBeginRequest();
+		super.onAttach();
+		
 		// initialize lazily
 		if (backgroundElementId == null)
 		{

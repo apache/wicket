@@ -56,7 +56,7 @@ public abstract class AutoAssistBehavior extends AbstractAutoAssistBehavior
 				}
 			}
 
-			public void cleanUp(RequestCycle requestCycle)
+			public void detach(RequestCycle requestCycle)
 			{
 			}
 
