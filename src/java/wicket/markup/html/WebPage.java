@@ -262,7 +262,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			if( !(access.getId() == getNumericId() && access.getVersion() == getCurrentVersionNumber()) )
 			{
 				WebPage clonedPage = (WebPage)Objects.cloneObject(this);
-				PageMap map = PageMap.forName(Long.toString(System.currentTimeMillis()));
+				PageMap map = getSession().createAutoPageMap();
 				clonedPage.moveToPageMap(map);
 				setResponsePage(clonedPage);
 			}
