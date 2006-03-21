@@ -908,7 +908,7 @@ public abstract class Component implements Serializable
 	 *         internal path seperator of Wicket) are replaced by the '_'
 	 *         character.
 	 */
-	public final String getMarkupId()
+	public String getMarkupId()
 	{
 		/*
 		 * TODO Post 1.2: Restore the code below after the constructor refactor,
