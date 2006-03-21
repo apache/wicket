@@ -417,11 +417,6 @@ public abstract class Session implements Serializable
 	/**
 	 * Gets a page map for the given name, automatically creating it if need be.
 	 * 
-	 * @param pageMapName
-	 *            Name of page map, or null for default page map
-	 * @param autoCreate
-	 *            True if the page map should be automatically created if it
-	 *            does not exist
 	 * @return PageMap for name
 	 */
 	public final PageMap createAutoPageMap()
