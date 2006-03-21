@@ -93,6 +93,19 @@ public class Markup
 		
 		if (markup != null)
 		{
+			for (int i = 0; i < this.markup.size(); i++)
+			{
+				MarkupElement elem = (MarkupElement)this.markup.get(i);
+				if (elem instanceof WicketTag)
+				{
+					WicketTag tag = (WicketTag) elem;
+					if (tag.isOpen() && tag.isHeadTag() && (tag.getWicketHeaderClass() == null))
+					{
+						tag.setWicketHeaderClass(getResource().getMarkupClass());
+					}
+				}
+			}
+			
 			// HTML tags like <img> may not have a close tag. But because that
 			// can only be detected until later on in the sequential markup 
 			// reading loop, we only can do it now.
