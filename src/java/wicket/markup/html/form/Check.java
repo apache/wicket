@@ -98,7 +98,7 @@ public class Check extends WebMarkupContainer
 		String rawInput = group.getRawInput();
 		if(rawInput != null)
 		{
-			if(rawInput.equals(path))
+			if(rawInput.indexOf(path) != -1)
 			{
 				tag.put("checked", "checked");
 			}
