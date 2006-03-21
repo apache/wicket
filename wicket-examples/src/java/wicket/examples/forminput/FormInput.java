@@ -28,7 +28,9 @@ import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Check;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -166,6 +168,18 @@ public class FormInput extends WicketExamplePage
 			};
 			group.add(persons);
 
+			CheckGroup checks = new CheckGroup("numbersCheckGroup");
+			add(checks);
+			ListView checksList = new ListView("numbers", NUMBERS)
+			{
+				protected void populateItem(ListItem item)
+				{
+					item.add(new Check("check", item.getModel()));
+					item.add(new Label("number", item.getModelObjectAsString()));
+				};
+			};
+			checks.add(checksList);
+			
 			add(new ListMultipleChoice("siteSelection", SITES));
 
 			// TextField using a custom converter.

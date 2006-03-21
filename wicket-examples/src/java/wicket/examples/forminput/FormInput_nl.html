@@ -36,6 +36,8 @@
 			    <input type="text" wicket:id="lineEdit" /> 
 			   </li>
 			  </ul>
+	          <label for="booleanProperty">Booleaans</label>
+	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 	      </td>
 	      <td valign="top">
 
@@ -57,13 +59,18 @@
 					<span wicket:id="number">[this is where number will be]</span>
 				</span>
 			  </span>
+			  <span wicket:id="numbersCheckGroup">
+			  <label>selecteer de nummers (CheckGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="checkbox" wicket:id="check"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
+			  </span>
 			  <label for="siteSelection">jouw favorite sites</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
 			  	<option>foo</option>
 			  	<option>bar</option>
 			  </select>
-	          <label for="booleanProperty">Booleaans</label>
-	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 		  </td>
 		  </tr>
 		  <tr>

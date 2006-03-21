@@ -96,6 +96,7 @@ public final class FormInputModel implements Serializable
 
 	/** US phone number with mask '(###) ###-####'. */
 	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
+	private List numbersCheckGroup = new ArrayList();
 
 	/**
 	 * Construct.
@@ -302,6 +303,13 @@ public final class FormInputModel implements Serializable
 		return this.numbersGroup;
 	}
 
+	/**
+	 * @return the numbers list
+	 */
+	public List getNumbersCheckGroup()
+	{
+		return numbersCheckGroup;
+	}
 
 	/**
 	 * Gets the selectedSites.
@@ -375,6 +383,7 @@ public final class FormInputModel implements Serializable
 						", integerInRangeProperty = ").append(integerInRangeProperty).append(
 						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
 				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
+				.append(", numbersCheckgroup ").append(numbersCheckGroup)
 				.append(", numberRadioGroup= ").append(numbersGroup);
 		b.append(", selected sites {");
 		for (Iterator i = siteSelection.iterator(); i.hasNext();)
