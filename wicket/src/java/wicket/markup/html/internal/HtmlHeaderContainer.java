@@ -213,6 +213,8 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				}
 			}
 		});
+		
+		page.renderHead(container);
 	}
 
 	/**

@@ -429,9 +429,6 @@ public final class PageMap implements Serializable
 		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
 		if (entry != null)
 		{
-			// Entry has been accessed
-			access(entry, versionNumber);
-
 			// Get page as dirty
 			Page page = entry.getPage();
 
@@ -447,6 +444,12 @@ public final class PageMap implements Serializable
 
 			// Get the version of the page requested from the page
 			final Page version = page.getVersion(versionNumber);
+
+			// Entry has been accessed
+			//pushAccess(entry);
+			// Entry has been accessed
+			access(entry, versionOf(entry));
+			
 
 			// Is the requested version available?
 			if (version != null)
@@ -682,7 +685,7 @@ public final class PageMap implements Serializable
 				return;
 			}
 			int index = accessStack.indexOf(access);
-			if (index > 0)
+			if (index >= 0)
 			{
 				accessStack.remove(index);
 			}

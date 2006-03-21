@@ -35,6 +35,7 @@ import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.Session;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
@@ -47,6 +48,7 @@ import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.protocol.http.HttpSessionStore;
+import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
@@ -186,8 +188,7 @@ public final class Settings
 	private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/** The eviction strategy. */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
-			5);
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(5);
 
 	/** The factory to be used for the property files */
 	private wicket.resource.IPropertiesFactory propertiesFactory;
@@ -431,6 +432,14 @@ public final class Settings
 	 */
 	public String getContextPath()
 	{
+		// Set the default context path if the context path is not already
+		// set (previous time or by the developer itself)
+		// This all to do missing api in the servlet spec.. You can't get a
+		// context path from the servlet context, which is just stupid.
+		if(contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
+		{
+			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
+		}
 		return contextPath;
 	}
 

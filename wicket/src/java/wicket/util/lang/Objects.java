@@ -292,12 +292,14 @@ public abstract class Objects
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned.
+	 * This method will not clone wicket Components, it will just reuse those instances
+	 * so that the complete component tree is not copied over only the model data.
 	 * 
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
 	 */
-	public static Object clone(final Object object)
+	public static Object cloneModel(final Object object)
 	{
 		if (object == null)
 		{
@@ -313,6 +315,43 @@ public abstract class Objects
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()), replacedObjects);
+				return ois.readObject();
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WicketRuntimeException("Internal error cloning object", e);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Internal error cloning object", e);
+			}
+		}
+	}
+
+	/**
+	 * Makes a deep clone of an object by serializing and deserializing it. The
+	 * object must be fully serializable to be cloned.
+	 * 
+	 * @param object
+	 *            The object to clone
+	 * @return A deep copy of the object
+	 */
+	public static Object cloneObject(final Object object)
+	{
+		if (object == null)
+		{
+			return null;
+		}
+		else
+		{
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
+				final HashMap replacedObjects = new HashMap();
+				ObjectOutputStream oos = new ObjectOutputStream(out);
+				oos.writeObject(object);
+				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
+						.toByteArray()));
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)

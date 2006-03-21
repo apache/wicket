@@ -128,6 +128,9 @@ public class IncrementalTableNavigationTest extends TestCase
 		Tag title = new Tag("title");
 		head.addExpectedChild(title);
 		title.addExpectedChild(new TextContent("Paged Table Page"));
+		Tag script = new Tag("script");
+		script.addExpectedChild(new TextContent("if(history.length == 1){document.location.href = '/MockWebApplication/MockWebApplication?wicket:interface=:0:2:INewBrowserWindowListener'}"));
+		head.addExpectedChild(script);
 		Tag body = new Tag("body");
 		html.addExpectedChild(body);
 

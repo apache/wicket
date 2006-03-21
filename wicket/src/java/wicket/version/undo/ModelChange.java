@@ -99,7 +99,7 @@ class ModelChange extends Change
 			if (cloneModel)
 			{
 				model.detach();
-				originalModel = (IModel)Objects.clone(model);
+				originalModel = (IModel)Objects.cloneModel(model);
 			}
 			else
 			{
