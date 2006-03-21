@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5046 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,11 @@
  */
 package wicket.markup.html.internal;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
@@ -30,7 +35,7 @@ import wicket.response.StringResponse;
 
 /**
  * The HtmlHeaderContainer is automatically created and added to the component
- * hierarchie by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
+ * hierarchy by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
  * handle/render the &gt;head&gt; tag and its body. However depending on the
  * parent component, the behavior must be different. E.g. if parent component is
  * a Page all components of the page's hierarchy must be asked if they have
@@ -65,6 +70,15 @@ import wicket.response.StringResponse;
 public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * wicket:head tags (components) must only be added once. To allow for a
+	 * little bit more control, each wicket:head has an associated scope which
+	 * by default is equal to the java class name directly associated with the
+	 * markup which contains the wicket:head. It can be modified by means of the
+	 * scope attribute.
+	 */
+	private Map renderedComponentsPerScope;
 
 	/**
 	 * Construct
@@ -223,5 +237,48 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	public boolean isTransparentResolver()
 	{
 		return true;
+	}
+
+	/**
+	 * Check if the header component is ok to render within the scope given.
+	 * 
+	 * @param scope
+	 *            The scope of the header component
+	 * @param id
+	 *            The component's id
+	 * @return true, if the component ok to render
+	 */
+	public final boolean okToRenderComponent(final String scope, final String id)
+	{
+		if (this.renderedComponentsPerScope == null)
+		{
+			this.renderedComponentsPerScope = new HashMap();
+		}
+
+//		if (scope == null)
+//		{
+//			scope = header.getMarkupStream().getContainerClass().getName();
+//		}
+		
+		List componentScope = (List)this.renderedComponentsPerScope.get(scope);
+		if (componentScope == null)
+		{
+			componentScope = new ArrayList();
+			this.renderedComponentsPerScope.put(scope, componentScope);
+		}
+
+		if (componentScope.contains(id))
+		{
+			return false;
+		}
+		componentScope.add(id);
+		return true;
+	}
+
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		this.renderedComponentsPerScope = null;
 	}
 }
