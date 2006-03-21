@@ -415,9 +415,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets a page map for the given name, automatically creating it if need be.
+	 * Automatically creates a page map, giving it a session unique name.
 	 * 
-	 * @return PageMap for name
+	 * @return Created PageMap
 	 */
 	public final PageMap createAutoPageMap()
 	{
