@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: FileUpload.java 5069 2006-03-21 17:50:48 -0800 (Tue, 21 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-21 17:50:48 -0800 (Tue, 21 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -75,11 +76,23 @@ public class FileUpload implements Serializable
 
 	/**
 	 * @return File object for client-side file that was uploaded.
+	 * @deprecated - this method was very counterintuitive. its been replaced by
+	 *             getClientFileName(). see bug 1372481.
 	 */
 	public File getFile()
 	{
 		return new File(item.getName());
 	}
+
+	/**
+	 * @since 1.2
+	 * @return name of uploaded client side file
+	 */
+	public String getClientFileName()
+	{
+		return item.getName();
+	}
+
 
 	/**
 	 * @return Input stream with file contents.
@@ -123,9 +136,11 @@ public class FileUpload implements Serializable
 	 * {@link #getInputStream()} into a temporary file.
 	 * <p>
 	 * Only use this if you actually need a {@link File} to work with, in all
-	 * other cases use {@link #getInputStream()}
+	 * other cases use {@link #getInputStream()} or {@link #getBytes()}
 	 * 
-	 * @return temporary file containing the contents of this file upload
+	 * @since 1.2
+	 * 
+	 * @return temporary file containing the contents of the uploaded file
 	 * @throws IOException
 	 */
 	public final File writeToTempFile() throws IOException
