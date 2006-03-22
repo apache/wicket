@@ -7,6 +7,12 @@
   </properties>
   <body>
     <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
+		<action type="add" dev="Igor Vaynberg">new ajax driven form upload progress bar (UploadProgressBar)</action>
+		<action type="add" dev="Igor Vaynberg">new ajax link variations with a busy indicator (IndicatingAjaxLink, IndicatingAjaxFallbackLink)</action>
+		<action type="add" dev="Igor Vaynberg">new AjaxEditableLabel</action>
+		<action type="add" dev="Igor Vaynberg">moved Palette form component from wicket-contrib-palette</action>
+		<action type="add" dev="Igor Vaynberg">new ajax enabled TabbedPanel variation with no-ajax fallback functionality</action>
+		<action type="add" dev="Igor Vaynberg">new ajax enabled autocomplete textfield based on capxous.com autoassist</action>
     	<action type="fix" dev="Martijn Dashorst" issue="1434895">Fixed date picker to work in IE again</action>
         <action type="add" dev="Igor Vaynberg">new RefreshingView</action>
         <action type="add" dev="Igor Vaynberg">data providers are no longer stored as a model of the data view, so it is safe to use an anonymous data provider</action>
