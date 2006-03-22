@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.channels.FileLockInterruptionException;
 
 import wicket.Session;
 import wicket.util.file.Files;
