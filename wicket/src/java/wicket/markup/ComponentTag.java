@@ -70,6 +70,13 @@ public class ComponentTag extends MarkupElement
 
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
+	
+	/**
+	 * In case of inherited markup, the base and the extended markups are merged
+	 * and the information about the tags origin is lost. In some cases like
+	 * wicket:head and wicket:link this information however is required.
+	 */
+	private Class markupClass;
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with
@@ -313,6 +320,7 @@ public class ComponentTag extends MarkupElement
 		{
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			tag.id = id;
+			tag.setMarkupClass(this.markupClass);
 			if (this.additionalAttributes != null)
 			{
 				tag.getAdditionalAttributes().putAll(this.additionalAttributes);
@@ -654,5 +662,28 @@ public class ComponentTag extends MarkupElement
 	public void setHasNoCloseTag(boolean hasNoCloseTag)
 	{
 		this.hasNoCloseTag = hasNoCloseTag;
+	}
+
+	/**
+	 * In case of inherited markup, the base and the extended markups are merged
+	 * and the information about the tags origin is lost. In some cases like
+	 * wicket:head and wicket:link this information however is required.
+	 * 
+	 * @return wicketHeaderClass
+	 */
+	public Class getMarkupClass()
+	{
+		return markupClass;
+	}
+
+	/**
+	 * Set the class of wicket component which contains the wicket:head tag.
+	 * 
+	 * @param wicketHeaderClass
+	 *            wicketHeaderClass
+	 */
+	public void setMarkupClass(Class wicketHeaderClass)
+	{
+		this.markupClass = wicketHeaderClass;
 	}
 }

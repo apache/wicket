@@ -378,7 +378,7 @@ public final class MarkupStream
 	 * 
 	 * @return The encoding, or null if not found
 	 */
-	public String getEncoding()
+	public final String getEncoding()
 	{
 		return markup.getEncoding();
 	}
@@ -389,7 +389,7 @@ public final class MarkupStream
 	 * 
 	 * @return The component's class
 	 */
-	public Class getContainerClass()
+	public final Class getContainerClass()
 	{
 		return markup.getResource().getMarkupClass();
 	}
@@ -399,7 +399,7 @@ public final class MarkupStream
 	 * 
 	 * @return wicket namespace
 	 */
-	public String getWicketNamespace()
+	public final String getWicketNamespace()
 	{
 		return this.markup.getWicketNamespace();
 	}
@@ -412,7 +412,7 @@ public final class MarkupStream
 	 *            The markup stream to compare with.
 	 * @return true, if markup has not changed
 	 */
-	public boolean equalMarkup(final MarkupStream markupStream)
+	public final boolean equalMarkup(final MarkupStream markupStream)
 	{
 		if (markupStream == null)
 		{
@@ -430,7 +430,7 @@ public final class MarkupStream
 	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
-	public int findComponentIndex(final String path, final String id)
+	public final int findComponentIndex(final String path, final String id)
 	{
 		return this.markup.findComponentIndex(path, id);
 	}
@@ -443,8 +443,17 @@ public final class MarkupStream
 	 * 
 	 * @return ComponentTagIterator
 	 */
-	public Iterator componentTagIterator()
+	public final Iterator componentTagIterator()
 	{
 		return markup.componentTagIterator(0, ComponentTag.class);
+	}
+	
+	/**
+	 *
+	 * @return true, if underlying markup has been merged (inheritance)
+	 */
+	public final boolean isMergedMarkup()
+	{
+		return this.markup instanceof MergedMarkup;
 	}
 }
