@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,7 +38,10 @@ import wicket.util.io.StringBufferWriter;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
- * TODO document
+ * Implementation of {@link HttpServletResponse} that saves the output in a
+ * string buffer. This is used in REDIRECT_TO_BUFFER render strategy to create
+ * the buffer of the output that can be held on to until the redirect part of
+ * the render strategy.
  * 
  * @author jcompagner
  */
