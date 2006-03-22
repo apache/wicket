@@ -103,7 +103,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			formComponent.valid();
 			formComponent.updateModel();
-			// TODO Ajax: Do we need to persist values for persistent components
 		}
 
 		onUpdate(target);

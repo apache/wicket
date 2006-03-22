@@ -3,7 +3,7 @@ package wicket.request.target.coding;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Url coding strategy for bookmarkable pages that encodes index based
@@ -49,7 +49,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		super(mountPath, bookmarkablePageClass, pageMapName);
 	}
 
-	protected void appendPageParameters(StringBuffer url, PageParameters parameters)
+	protected void appendPageParameters(AppendingStringBuffer url, PageParameters parameters)
 	{
 		int i = 0;
 		while (parameters.containsKey(String.valueOf(i)))
