@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Igor Vaynberg" issue="1372481">Fixed FileUpload getFile() return not existent files</action>
       <action type="fix" dev="Jonathan Locke" issue="1455224">Added sign in page class to SimplePageAuthorizationStrategy to take care of page authentication in the event of failed authorization.  Updated Library example accordingly.</action> 
       <action type="fix" dev="Igor Vaynberg" issue="1455515" due-to="Andrew Berman">NullPointerException in AbstractValidator</action>
       <action type="fix" dev="Johan Compagner" issue="1455292" due-to="Sven Meier">Check forgets 'checked' on form error</action>
