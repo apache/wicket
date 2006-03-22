@@ -60,7 +60,7 @@ function updateProgress() {
                     $('UploadStatus1').innerHTML=progressPercent + '% finished, '
                             + completed_upload_size + ' of '
                             + total_upload_size + ' at '
-                            + transferRate + 
+                            + transferRate  
                             + "; " + timeRemaining;
                 }
 
