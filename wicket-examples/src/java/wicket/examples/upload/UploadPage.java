@@ -157,7 +157,7 @@ public class UploadPage extends WicketExamplePage
 			if (upload != null)
 			{
 				// Create a new file
-				File newFile = new File(uploadFolder, upload.getFile().getName());
+				File newFile = new File(uploadFolder, upload.getClientFileName());
 
 				// Check new file, delete if it allready existed
 				checkFileExists(newFile);
@@ -167,7 +167,7 @@ public class UploadPage extends WicketExamplePage
 					newFile.createNewFile(); 
 					upload.writeTo(newFile);
 
-					UploadPage.this.info("saved file: " + upload.getFile());
+					UploadPage.this.info("saved file: " + upload.getClientFileName());
 				}
 				catch (Exception e)
 				{
