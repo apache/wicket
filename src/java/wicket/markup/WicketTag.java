@@ -35,17 +35,6 @@ import wicket.markup.parser.XmlTag;
 public class WicketTag extends ComponentTag
 {
 	/**
-	 * In case of inherited markup, the base and the extended markups are merged
-	 * and the information about the tags origin is lost. For wicket:head
-	 * however, we must not loose that information. Which is why MergedMarkup
-	 * (and only MergedMarkup) will set the class of the directly associated
-	 * java class. In all other circumstances the value is assumed to be null,
-	 * which means that the class can be retrieved through
-	 * markup.getResource().getMarkupClass()
-	 */
-	private Class wicketHeaderClass;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param tag
@@ -183,34 +172,7 @@ public class WicketTag extends ComponentTag
 		{
 			final WicketTag tag = new WicketTag(xmlTag.mutable());
 			tag.setId(getId());
-			tag.setWicketHeaderClass(this.wicketHeaderClass);
 			return tag;
 		}
-	}
-
-	/**
-	 * In case of inherited markup, the base and the extended markups are merged
-	 * and the information about the tags origin is lost. For wicket:head
-	 * however, we must not loose that information. Which is why MergedMarkup
-	 * will set the class of the directly associated java class. In all other
-	 * circumstances the value is assumed to be null, which means that the class
-	 * can be retrieved through markup.getResource().getMarkupClass()
-	 * 
-	 * @return wicketHeaderClass
-	 */
-	public Class getWicketHeaderClass()
-	{
-		return wicketHeaderClass;
-	}
-
-	/**
-	 * Set the class of wicket component which contains the wicket:head tag.
-	 * 
-	 * @param wicketHeaderClass
-	 *            wicketHeaderClass
-	 */
-	public void setWicketHeaderClass(Class wicketHeaderClass)
-	{
-		this.wicketHeaderClass = wicketHeaderClass;
 	}
 }

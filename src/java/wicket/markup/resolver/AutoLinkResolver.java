@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4802 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,7 +33,6 @@ import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
@@ -133,7 +132,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	/**
 	 * Interface to delegate the actual resolving of auto components to.
 	 */
-	private static interface IAutolinkResolverDelegate
+	public static interface IAutolinkResolverDelegate
 	{
 		/**
 		 * Returns a new auto component based on the pathInfo object. The auto
@@ -161,7 +160,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * <code>css</code>, is relative (absolute == true) and has no page
 	 * parameters.
 	 */
-	private static final class PathInfo
+	public static final class PathInfo
 	{
 		/** The original reference (e.g the full value of a href attribute). */
 		private final String reference;
@@ -217,6 +216,51 @@ public final class AutoLinkResolver implements IComponentResolver
 			this.path = infoPath;
 			this.extension = extension;
 		}
+
+		/**
+		 * Gets absolute.
+		 * @return absolute
+		 */
+		public final boolean isAbsolute()
+		{
+			return absolute;
+		}
+
+		/**
+		 * Gets extension.
+		 * @return extension
+		 */
+		public final String getExtension()
+		{
+			return extension;
+		}
+
+		/**
+		 * Gets pageParameters.
+		 * @return pageParameters
+		 */
+		public final PageParameters getPageParameters()
+		{
+			return pageParameters;
+		}
+
+		/**
+		 * Gets path.
+		 * @return path
+		 */
+		public final String getPath()
+		{
+			return path;
+		}
+
+		/**
+		 * Gets reference.
+		 * @return reference
+		 */
+		public final String getReference()
+		{
+			return reference;
+		}
 	}
 
 	/**
@@ -259,7 +303,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Abstract implementation that has a helper method for creating a resource
 	 * reference.
 	 */
-	private static abstract class AbstractAutolinkResolverDelegate
+	public static abstract class AbstractAutolinkResolverDelegate
 			implements
 				IAutolinkResolverDelegate
 	{
@@ -288,8 +332,16 @@ public final class AutoLinkResolver implements IComponentResolver
 				// header has been added to (e.g. the Page). What we need
 				// however, is the component (e.g. a Panel) which
 				// contributed it.
-				Class clazz = ((MarkupResourceStream)container.getMarkupStream().getResource())
-						.getMarkupClass();
+				Class clazz = container.getMarkupStream().getContainerClass();
+
+				// However if the markup stream is a merged markup stream
+				// (inheritance),
+				// than we need the class of the markup file which contained the
+				// tag.
+				if (container.getMarkupStream().getTag().getMarkupClass() != null)
+				{
+					clazz = container.getMarkupStream().getTag().getMarkupClass();
+				}
 
 				// Create the component implementing the link
 				PackageResourceReferenceAutolink autoLink = new PackageResourceReferenceAutolink(
@@ -421,7 +473,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
+	public final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -650,13 +702,44 @@ public final class AutoLinkResolver implements IComponentResolver
 		if (autoComponent == null)
 		{
 			// resolving didn't have the desired result or there was no delegate
-			// found;
-			// fallback on the default resolving which is a simple component
-			// that leaves
-			// the tag unchanged
+			// found; fallback on the default resolving which is a simple
+			// component that leaves the tag unchanged
 			autoComponent = new AutolinkExternalLink(autoId, pathInfo.reference);
 		}
 
 		return autoComponent;
+	}
+
+	/**
+	 * Register (add or replace) a new resolver with the tagName and
+	 * attributeName. The resolver will be invoked each time an appropriate tag
+	 * and attribute is found.
+	 * 
+	 * @param tagName
+	 *            The tag name
+	 * @param attributeName
+	 *            The attribute name
+	 * @param resolver
+	 *            Implements what to do based on the tag and the attribute
+	 */
+	public static final void addTagReferenceResolver(final String tagName, final String attributeName,
+			final IAutolinkResolverDelegate resolver)
+	{
+		TagReferenceResolver tagReferenceResolver = new TagReferenceResolver(attributeName);
+		tagNameToTagReferenceResolvers.put(tagName, tagReferenceResolver);
+
+		tagNameToAutolinkResolverDelegates.put(tagName, resolver);
+	}
+
+	/**
+	 * Get the resolver registered for 'tagName'
+	 * 
+	 * @param tagName
+	 *            The tag's name
+	 * @return The resolver found. Null, if none registered
+	 */
+	public static final IAutolinkResolverDelegate getAutolinkResolverDelegate(final String tagName)
+	{
+		return (IAutolinkResolverDelegate)tagNameToAutolinkResolverDelegates.get(tagName);
 	}
 }

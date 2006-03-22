@@ -83,7 +83,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		// Position pointer at current (first) header
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
-			Class markupClass = ((WicketTag)markupStream.getTag()).getWicketHeaderClass();
+			Class markupClass = ((WicketTag)markupStream.getTag()).getMarkupClass();
 			if (markupClass == null)
 			{
 				markupClass = markupStream.getContainerClass();

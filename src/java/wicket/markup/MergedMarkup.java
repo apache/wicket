@@ -141,6 +141,13 @@ public class MergedMarkup extends Markup
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
 
+			// Make sure all tags of the base markup remember where they are from
+			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
+			{
+				ComponentTag tag = (ComponentTag) element;
+				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+			}
+			
 			if (element instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)element;
@@ -340,6 +347,13 @@ public class MergedMarkup extends Markup
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
 			addMarkupElement(element);
+
+			// Make sure all tags of the base markup remember where they are from
+			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
+			{
+				ComponentTag tag = (ComponentTag) element;
+				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+			}
 		}
 	}
 }
