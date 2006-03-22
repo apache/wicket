@@ -11,6 +11,9 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="update" dev="Juergen Donnerstag">Multiple &lt;wicket:head&gt; per markup file are now allowed</action>
+      <action type="update" dev="Juergen Donnerstag">&lt;wicket:head&gt; now supports a wicket:scope attribute to allow for more flexibility</action>
+      <action type="fix" dev="Juergen Donnerstag">Autolink behavior can now easily be extended</action>
       <action type="fix" dev="Igor Vaynberg" issue="1372481">Fixed FileUpload getFile() return not existent files</action>
       <action type="fix" dev="Jonathan Locke" issue="1455224">Added sign in page class to SimplePageAuthorizationStrategy to take care of page authentication in the event of failed authorization.  Updated Library example accordingly.</action> 
       <action type="fix" dev="Igor Vaynberg" issue="1455515" due-to="Andrew Berman">NullPointerException in AbstractValidator</action>
