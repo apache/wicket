@@ -18,7 +18,11 @@
  */
 package wicket.examples.upload;
 
+import javax.servlet.http.HttpServletRequest;
+
 import wicket.examples.WicketExampleApplication;
+import wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
+import wicket.protocol.http.WebRequest;
 
 /**
  * WicketServlet class for wicket.examples.upload example.
@@ -50,6 +54,12 @@ public class UploadApplication extends WicketExampleApplication
 		return UploadPage.class;
 	}
 
+	 /**
+     * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
+     */
+    protected WebRequest newWebRequest(HttpServletRequest servletRequest) {
+        return new UploadWebRequest(servletRequest);
+    }
 }
 
 

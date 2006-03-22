@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: UploadPage.java 4619 2006-02-23 14:25:06 -0800 (Thu, 23 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-23 14:25:06 -0800 (Thu, 23 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.upload.FileUpload;
@@ -69,7 +71,7 @@ public class UploadPage extends WicketExamplePage
 		// Set upload folder to tempdir + 'wicket-uploads'.
 		this.uploadFolder = uploadFolder = new Folder(System.getProperty("java.io.tmpdir"),
 				"wicket-uploads");
-		
+
 		// Ensure folder exists
 		uploadFolder.mkdirs();
 
@@ -91,6 +93,13 @@ public class UploadPage extends WicketExamplePage
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 		fileListView = new FileListView("fileList", files);
 		add(fileListView);
+
+		// Add upload form with ajax progress bar
+		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
+		ajaxSimpleUploadForm.add(new FeedbackPanel("ajaxUploadFeedback"));
+		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
+		add(ajaxSimpleUploadForm);
+
 	}
 
 	/**
@@ -143,9 +152,10 @@ public class UploadPage extends WicketExamplePage
 
 			// Add one file input field
 			add(fileUploadField = new FileUploadField("fileInput"));
-			
+
 			// Set maximum size to 100K for demo purposes
-			setMaxSize(Bytes.kilobytes(100));
+			// setMaxSize(Bytes.kilobytes(100));
+			setMaxSize(Bytes.megabytes(800));
 		}
 
 		/**
@@ -164,7 +174,7 @@ public class UploadPage extends WicketExamplePage
 				try
 				{
 					// Save to new file
-					newFile.createNewFile(); 
+					newFile.createNewFile();
 					upload.writeTo(newFile);
 
 					UploadPage.this.info("saved file: " + upload.getClientFileName());
