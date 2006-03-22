@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +23,6 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Response;
-import wicket.PageMap.Access;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -36,6 +35,8 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.request.target.component.listener.RedirectPageRequestTarget;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 
@@ -63,7 +64,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 {
 	/** Log. */
 	// private static final Log log = LogFactory.getLog(WebPage.class);
-
 	private static final long serialVersionUID = 1L;
 
 	/** The body container */
@@ -159,7 +159,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 		final WebResponse response = getWebRequestCycle().getWebResponse();
 		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store 
+		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				}
 			}
 		}
-		
+
 		add(new PageMapChecker());
 
 		// TODO Post 1.2: If the concept proofs valuable we could add the header
@@ -225,16 +225,18 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		// would be that the header container be available at build time already
 		// and not only at render time.
 	}
-	
+
 	/**
 	 * 
 	 * @see wicket.Component#onDetach()
 	 */
 	protected void onDetach()
 	{
-		// This code can not go into HtmlHeaderContainer as header.onEndRequest()
-		// is executed inside an iterator and you can only call container.remove()
-		// which is != iter.remove(). And the iterator is not available inside 
+		// This code can not go into HtmlHeaderContainer as
+		// header.onEndRequest()
+		// is executed inside an iterator and you can only call
+		// container.remove()
+		// which is != iter.remove(). And the iterator is not available inside
 		// onEndRequest(). Obviously WebPage.onEndRequest() is invoked outside
 		// the iterator loop.
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
@@ -250,30 +252,16 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	public void onNewBrowserWindow()
 	{
-		// this is called when the browser did report history size of 0
-		final ArrayListStack accessStack = getPageMap().getAccessStack();
-		if (accessStack.size() > 1)
-		{
-			final Access access = (Access)accessStack.get(0);
-			// if the browser history == 0 then this page must be the first in the access stack
-			// will this always work. Because if i go back with the browser back button to a page
-			// will then the javascript run?? If so will that last page in the browser always be \
-			// the last in the access stack?
-			if (!(access.getId() == getNumericId() && access.getVersion() == getCurrentVersionNumber()))
-			{
-				final WebPage clonedPage = (WebPage)Objects.cloneObject(this);
-				final PageMap map = getSession().createAutoPageMap();
-				clonedPage.moveToPageMap(map);
-				setResponsePage(clonedPage);
-			}
-		}
+		// if the browser reports a history of 0 then make a new webpage
+		final WebPage clonedPage = (WebPage)Objects.cloneObject(this);
+		final PageMap map = getSession().createAutoPageMap();
+		clonedPage.moveToPageMap(map);
+		setResponsePage(clonedPage);
 	}
 
-	/**
-	 * A behavior automatically added to all WebPages
-	 */
 	private class PageMapChecker extends AbstractBehavior implements IHeaderContributor
 	{
+
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -281,17 +269,24 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		 */
 		public void renderHead(final Response response)
 		{
-			// if(!isStateless()) TODO this shouldn't be done for stateless pages. 
-			// This will make all pages statefull. But how do we know that if 
+			// if(!isStateless()) TODO this shouldn't be done for stateless pages.
+			// This will make all pages statefull. But how do we know that if
 			// it is stateless because that is only know after render.
 			// Should we use a Response Filter??
-			final ArrayListStack accessStack = getPageMap().getAccessStack();
-			if (accessStack.size() > 1)
+			int initialAccessStackSize = 0;
+			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
+					&& getRequestCycle().getRequestTarget() instanceof RedirectPageRequestTarget)
 			{
-				response.write("<script language=\"JavaScript\">if(history.length == 1){document.location.href = '");
+				initialAccessStackSize = 1;
+			}
+			final ArrayListStack accessStack = getPageMap().getAccessStack();
+			if (accessStack.size() > initialAccessStackSize)
+			{
+				response.write("<script language=\"JavaScript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
 				response.write(urlFor(INewBrowserWindowListener.INTERFACE));
 				response.write("'}</script>");
 			}
 		}
+
 	}
 }
