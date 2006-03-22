@@ -1,0 +1,44 @@
+<style type="text/css">
+    fieldset {
+        padding: 1em;
+        background-color: #eee;
+    }
+
+    fieldset legend {
+        color: #aaa;
+    }
+
+    .uploadStatus {
+        margin: 5px;
+        color: #aaa;
+    }
+
+    .progressBar {
+        margin: 5px;
+    }
+
+    .progressBar .border {
+        background: url( ${progressbarRemainder}) repeat-x;
+        border-left: 1px solid grey;
+        border-right: 1px solid grey;
+        width: 100%;
+    }
+
+    .progressBar .background {
+        background: url( ${progressbar} ) repeat-x;
+        height: 18px;
+        width: 0%;
+    }
+
+    #words dt {
+        margin-top: .5em;
+    }
+
+    #words dd {
+        margin-left: 2em;
+    }
+
+    #words {
+        padding-bottom: 2em;
+    }
+</style>

@@ -19,6 +19,7 @@ package wicket.extensions;
 
 import wicket.Application;
 import wicket.IInitializer;
+import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
 import wicket.extensions.markup.html.yui.AbstractYuiPanel;
@@ -42,5 +43,6 @@ public class Initializer implements IInitializer
 		new AbstractYuiPanel.ComponentInitializer().init(application);
 		new Calendar.ComponentInitializer().init(application);
 		new Slider.ComponentInitializer().init(application);
+		new UploadProgressBar.ComponentInitializer().init(application);
 	}
 }
