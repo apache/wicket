@@ -24,6 +24,8 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
+import wicket.util.lang.Objects;
+import wicket.version.undo.Change;
 
 /**
  * Usually you either have a markup file or a xml tag with
@@ -37,13 +39,13 @@ import wicket.model.IModel;
  * <p>
  * 
  * <pre>
- *         &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *        
- *         &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *         &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *           &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *          
+ *           &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *           &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *         add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *           add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -126,6 +128,11 @@ public class Fragment extends WebMarkupContainer
 	{
 		super(id, model);
 
+		if (markupId == null)
+		{
+			throw new IllegalArgumentException("markupId cannot be null");
+		}
+
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
 	}
@@ -137,7 +144,24 @@ public class Fragment extends WebMarkupContainer
 	 */
 	public final void setMarkupTagReferenceId(final String markupId)
 	{
-		// FIXME General: does this need to be versioned?
+		if (markupId == null)
+		{
+			throw new IllegalArgumentException("markupId cannot be null");
+		}
+		if (!Objects.equal(this.markupId, markupId))
+		{
+			addStateChange(new Change()
+			{
+				private static final long serialVersionUID = 1L;
+				private final String oldMarkupId = Fragment.this.markupId;
+
+				public void undo()
+				{
+					Fragment.this.markupId = oldMarkupId;
+				}
+
+			});
+		}
 		this.markupId = markupId;
 	}
 
