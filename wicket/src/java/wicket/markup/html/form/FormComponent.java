@@ -922,13 +922,29 @@ public abstract class FormComponent extends WebMarkupContainer
 
 	/**
 	 * Builds and reports an error message. Typically called from a validator.
+	 * <p>
+	 * This function will iterate over the list of resource keys and try to find
+	 * a resource message that matches. Each key is first tried verbatim, and
+	 * then a key of form prefix.key is tried; prefix comes from
+	 * {@link #getValidatorKeyPrefix()}.
+	 * <p>
+	 * If a message is found, any variables in it with form ${varname} will be
+	 * interpolated given the arguments in the args parameter.
+	 * <p>
+	 * This method will add a few default arguments to the args map if they are
+	 * not already present:
+	 * <ul>
+	 * <li>input - the raw string value entered by the user</li>
+	 * <li>name - the id of the this form component</li>
+	 * <li>label - string value of object returned from the {@link #getLabel()}
+	 * model</li>
+	 * </ul>
 	 * 
-	 * TODO Form: Javadoc this more
 	 * 
 	 * @param resourceKeys
 	 *            list of resource keys to try
 	 * @param args
-	 *            argument substituion map
+	 *            argument substituion map with format map:varname->varvalue
 	 */
 	public final void error(List/* <String> */resourceKeys, Map/* <String,String> */args)
 	{
