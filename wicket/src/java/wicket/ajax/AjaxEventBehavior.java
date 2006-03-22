@@ -19,21 +19,26 @@
 package wicket.ajax;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.util.string.Strings;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually
  * javascript) event, such as onClick, onChange, onKeyDown, etc.
  * <p>
+ * NOTE: This behavior does not support persisting form component values into
+ * cookie or other {@link IValuePersister}. If this is necessary please add a
+ * request for enhancement.
+ * <p>
  * Example:
  * 
  * <pre>
- *             DropDownChoice choice=new DropDownChoice(...);
- *             choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *                protected void onEvent(AjaxRequestTarget target) {
- *                   System.out.println(&quot;ajax here!&quot;);
- *                }
- *             }
+ *              DropDownChoice choice=new DropDownChoice(...);
+ *              choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *                 protected void onEvent(AjaxRequestTarget target) {
+ *                    System.out.println(&quot;ajax here!&quot;);
+ *                 }
+ *              }
  * </pre>
  * 
  * This behavior will be linked to the onChange javascript event of the select
