@@ -309,7 +309,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected String encode(String str)
 	{
-		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
+		// TODO Post 1.3: Java5: we can use str.replace(charseq, charseq) for
 		// more efficient
 		// replacement
 		return str.replaceAll("]", "]^");
@@ -331,10 +331,16 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected boolean needsEncoding(String str)
 	{
-		// TODO Ajax: we can improve this by keeping a buffer of at least 3
-		// characters and checking that buffer so that we can narrow down
-		// escaping occuring only for ']]>' sequence, or at least for ]] if ] is
-		// the last char in this buffer.  Can't we use contains()?
+		/*
+		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at
+		 * least 3 characters and checking that buffer so that we can narrow
+		 * down escaping occuring only for ']]>' sequence, or at least for ]] if ]
+		 * is the last char in this buffer.
+		 * 
+		 * but this improvement will only work if we write first and encode
+		 * later instead of working on fragments sent to write
+		 */
+
 		return str.indexOf(']') >= 0;
 	}
 
