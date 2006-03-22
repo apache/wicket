@@ -880,7 +880,6 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			{
 				paths.push(path);
 				path = path.getParentPath();
-				node = null;
 				while (path != null)
 				{
 					node = getMapping(path);

@@ -2972,12 +2972,6 @@ public abstract class Component implements Serializable
 			}
 		}
 
-		if (markupStream == null)
-		{
-			throw new WicketRuntimeException("Unable to determine markup for component: "
-					+ this.toString());
-		}
-
 		return markupStream;
 	}
 }
