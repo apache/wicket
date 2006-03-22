@@ -19,8 +19,6 @@ package wicket.markup.html;
 
 import java.util.Iterator;
 
-import wicket.Component;
-import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
@@ -29,8 +27,8 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.TagUtils;
 import wicket.markup.WicketTag;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup.HeaderPartContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.markup.resolver.IComponentResolver;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
 
@@ -47,12 +45,12 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	private boolean checkedBody = false;
 
 	/** The markup container the helper is associated with */
-	private final WebMarkupContainer container;
+	private final WebMarkupContainerWithAssociatedMarkup container;
 
 	/**
 	 * @param container
 	 */
-	ContainerWithAssociatedMarkupHelper(final WebMarkupContainer container)
+	ContainerWithAssociatedMarkupHelper(final WebMarkupContainerWithAssociatedMarkup container)
 	{
 		this.container = container;
 	}
@@ -91,7 +89,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				markupClass = markupStream.getContainerClass();
 			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupClass, markupStream.getCurrentIndex());
+			final HeaderPartContainer headerPart = getHeaderPart(markupClass, markupStream
+					.getCurrentIndex());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
@@ -187,8 +186,10 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
 	 * a header tag.
 	 * 
-	 * @param index A unique index
-	 * @param markupClass The java class the wicket:head tag is directly associated with
+	 * @param index
+	 *            A unique index
+	 * @param markupClass
+	 *            The java class the wicket:head tag is directly associated with
 	 * @return the header part for this panel/border or null if it doesn't have
 	 *         a wicket:head tag.
 	 */
@@ -218,8 +219,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// it
 				String scope = wTag.getAttributes().getString(
 						markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = new HeaderPartContainer(headerId,
-						this.container, scope);
+				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(
+						headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 
@@ -282,78 +283,5 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 		// No (more) wicket:head found
 		return -1;
-	}
-
-	/**
-	 * For each wicket:head tag a HeaderPartContainer is created and added to
-	 * the HtmlHeaderContainer which has been added to the Page.
-	 */
-	private static final class HeaderPartContainer extends WebMarkupContainer
-			implements
-				IComponentResolver
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** The panel or bordered page the header part is associated with */
-		private final MarkupContainer container;
-
-		/** <wicket:head scope="...">. A kind of namespace */
-		private final String scope;
-
-		/**
-		 * @param id
-		 *            The component id
-		 * @param container
-		 *            The Panel (or bordered page) the header part is associated
-		 *            with
-		 * @param scope
-		 *            The scope of the wicket:head tag
-		 */
-		public HeaderPartContainer(final String id, final MarkupContainer container,
-				final String scope)
-		{
-			super(id);
-			this.container = container;
-			this.scope = scope;
-		}
-
-		/**
-		 * Get the scope of the header part
-		 * 
-		 * @return The scope name
-		 */
-		public final String getScope()
-		{
-			return this.scope;
-		}
-
-		/**
-		 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream,
-		 *      ComponentTag)
-		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
-		{
-			// The tag must be resolved against the panel and not against the
-			// page
-			Component component = this.container.get(tag.getId());
-			if (component != null)
-			{
-				component.render(markupStream);
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * @see #setMarkupStream(MarkupStream)
-		 * 
-		 * @param markupStream
-		 */
-		private void setMyMarkupStream(final MarkupStream markupStream)
-		{
-			super.setMarkupStream(markupStream);
-		}
 	}
 }
