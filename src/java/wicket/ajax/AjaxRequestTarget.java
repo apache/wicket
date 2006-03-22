@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
@@ -61,6 +64,8 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
+	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
+
 	/**
 	 * Response that uses an encoder to encode its contents
 	 * 
@@ -249,47 +254,58 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
-		final Application app = Application.get();
-
-		// disable component use check since we want to ignore header contribs
-		final boolean oldUseCheck = app.getDebugSettings().getComponentUseCheck();
-		app.getDebugSettings().setComponentUseCheck(false);
-
-		// Determine encoding
-		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
-
-		// Set content type based on markup type for page
-		WebResponse response = (WebResponse)requestCycle.getResponse();
-		response.setCharacterEncoding(encoding);
-		response.setContentType("text/xml; charset=" + encoding);
-
-		// Make sure it is not cached by a
-		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
-		response.setHeader("Cache-Control", "no-cache, must-revalidate");
-		response.setHeader("Pragma", "no-cache");
-
-		response.write("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
-		response.write("<ajax-response>");
-
-		Iterator it = markupIdToComponent.entrySet().iterator();
-		while (it.hasNext())
+		try
 		{
-			final Map.Entry entry = (Entry)it.next();
-			final Component component = (Component)entry.getValue();
-			final String markupId = (String)entry.getKey();
-			respondComponent(response, markupId, component);
-		}
+			final Application app = Application.get();
 
-		it = javascripts.iterator();
-		while (it.hasNext())
+			// disable component use check since we want to ignore header
+			// contribs
+			final boolean oldUseCheck = app.getDebugSettings().getComponentUseCheck();
+			app.getDebugSettings().setComponentUseCheck(false);
+
+			// Determine encoding
+			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
+
+			// Set content type based on markup type for page
+			WebResponse response = (WebResponse)requestCycle.getResponse();
+			response.setCharacterEncoding(encoding);
+			response.setContentType("text/xml; charset=" + encoding);
+
+			// Make sure it is not cached by a
+			response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+			response.setHeader("Cache-Control", "no-cache, must-revalidate");
+			response.setHeader("Pragma", "no-cache");
+
+			response.write("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
+			response.write("<ajax-response>");
+
+			Iterator it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final Component component = (Component)entry.getValue();
+				final String markupId = (String)entry.getKey();
+				respondComponent(response, markupId, component);
+			}
+
+			it = javascripts.iterator();
+			while (it.hasNext())
+			{
+				String js = (String)it.next();
+				respondInvocation(response, js);
+			}
+			response.write("</ajax-response>");
+
+			// restore component use check
+			app.getDebugSettings().setComponentUseCheck(oldUseCheck);
+		}
+		catch (RuntimeException ex)
 		{
-			String js = (String)it.next();
-			respondInvocation(response, js);
-		}
-		response.write("</ajax-response>");
+			// FIXME Ajax: If an error occurs we want to send back a failure so
+			// the onFailure javascript callback is executed if there was one
+			LOG.error(ex);
 
-		// restore component use check
-		app.getDebugSettings().setComponentUseCheck(oldUseCheck);
+		}
 	}
 
 	/**
