@@ -337,7 +337,7 @@ abstract class AbstractChoice extends FormComponent
 		buffer.append("\n<option ");
 		if (isSelected(choice, index, selected))
 		{
-			buffer.append("selected=\"selected\"");
+			buffer.append("selected=\"selected\" ");
 		}
 		buffer.append("value=\"");
 		buffer.append(renderer.getIdValue(choice, index));
