@@ -63,19 +63,20 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * By default, the processing of a form works like this:
  * <li> The submitting button is looked up. A submitting button is a button that
  * is nested in this form (is a child component) and that was clicked by the
- * user. If a submitting button was found, and it has the immediate field true
- * (default is false), it's onSubmit method will be called right away, thus no
+ * user. If a submitting button was found, and it has the defaultFormProcessing field set to false
+ * (default is true), it's onSubmit method will be called right away, thus no
  * validition is done, and things like updating form component models that would
  * normally be done are skipped. In that respect, nesting a button with the
- * immediate field set to true has the same effect as nesting a normal link. If
+ * defaultFormProcessing field set to false has the same effect as nesting a normal link. If
  * you want you can call validate() to execute form validation, hasError() to
  * find out whether validate() resulted in validation errors, and
  * updateFormComponentModels() to update the models of nested form components.
  * </li>
- * <li> When no immediate submitting button was found, this form is validated
- * (method validate()). Now, two possible paths exist:
+ * <li> When no submitting button with defaultFormProcessing set to false was found, this form is processed
+ * (method process()). 
+ * Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked valid,
+ * <li> Form validation failed. All nested form components will be marked invalid,
  * and onError() is called to allow clients to provide custom error handling
  * code. </li>
  * <li> Form validation succeeded. The nested components will be asked to update
@@ -102,13 +103,6 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * 
  * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed
  * limit of 2Mb
- * 
- * <p>
- * Using multipart forms causes a runtime dependency on <a
- * href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>,
- * version 1.0.
- * </p>
- * 
  * 
  * <p>
  * If you want to have multiple buttons which submit the same form, simply put
