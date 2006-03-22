@@ -24,8 +24,6 @@ public abstract class AbstractAutoAssistBehavior extends AbstractAjaxBehavior
 			AbstractAutoAssistBehavior.class, "autoassist.js");
 	private final PackageResourceReference PROTOTYPE_JS = new PackageResourceReference(
 			AbstractAutoAssistBehavior.class, "prototype.js");
-	private final PackageResourceReference AUTOASSIST_HELPER_JS = new PackageResourceReference(
-			AbstractAutoAssistBehavior.class, "autoassist_helper.js");
 
 	/**
 	 * 
@@ -46,14 +44,16 @@ public abstract class AbstractAutoAssistBehavior extends AbstractAjaxBehavior
 	{
 		writeJsReference(response, PROTOTYPE_JS);
 		writeJsReference(response, AUTOASSIST_JS);
-		writeJsReference(response, AUTOASSIST_HELPER_JS);
 	}
 
-	protected void onRenderHeadContribution(Response response)
+	protected void onComponentRendered()
 	{
+		Response response=getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
-		response.write("<script>registerAutoassist(\"" + id + "\", \"" + getCallbackUrl()
-				+ "\");</script>");
+		response.write("<script>");
+		response.write("new AutoAssist(\""+id+"\", function() { return \""+getCallbackUrl()+"&val=\"+this.txtBox.value;});");
+		response.write("</script>");
+
 	}
 
 	/**
