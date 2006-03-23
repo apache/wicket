@@ -1117,15 +1117,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @return The shared resource for this component
-	 */
-	public final Resource getResource()
-	{
-		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(),
-				getStyle(), false);
-	}
-
-	/**
 	 * @return The response for this component's active request cycle
 	 */
 	public final Response getResponse()
@@ -1482,8 +1473,8 @@ public abstract class Component implements Serializable
 	 * process.
 	 * <p>
 	 * For component level re-render (e.g. AJAX) please call
-	 * Component.doRender(). Though render() does seem to work, it will fail for
-	 * panel children.
+	 * {@link #renderComponent()}. Though render() does seem to work, it will
+	 * fail for panel children.
 	 */
 	public final void render()
 	{
@@ -1574,9 +1565,9 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Page.renderPage() is used to render a whole page. With AJAX however it must
-	 * be possible to render any one component contained in a page. That is what
-	 * Component.doRender() is for.
+	 * Page.renderPage() is used to render a whole page. With AJAX however it
+	 * must be possible to render any one component contained in a page. That is
+	 * what this method is for.
 	 * <p>
 	 * Note: it is not necessary that the page has previously been rendered. But
 	 * the component must have been added (directly or indirectly) to a
