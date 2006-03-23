@@ -76,7 +76,6 @@ public class UploadPage extends WicketExamplePage
 		uploadFolder.mkdirs();
 
 		// Create feedback panels
-		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
 		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
 
 		// Add uploadFeedback to the page itself
@@ -85,7 +84,6 @@ public class UploadPage extends WicketExamplePage
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
 		final FileUploadForm simpleUploadForm = new FileUploadForm("simpleUpload");
-		simpleUploadForm.add(simpleUploadFeedback);
 		add(simpleUploadForm);
 
 		// Add folder view
@@ -96,7 +94,6 @@ public class UploadPage extends WicketExamplePage
 
 		// Add upload form with ajax progress bar
 		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
-		ajaxSimpleUploadForm.add(new FeedbackPanel("ajaxUploadFeedback"));
 		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
 		add(ajaxSimpleUploadForm);
 
