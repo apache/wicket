@@ -1493,8 +1493,8 @@ public abstract class Component implements Serializable
 	 * process.
 	 * <p>
 	 * For component level re-render (e.g. AJAX) please call
-	 * Component.doRender(). Though render() does seem to work, it will fail for
-	 * panel children.
+	 * {@link #renderComponent(MarkupStream)}. Though render() does seem to
+	 * work, it will fail for panel children.
 	 * 
 	 * @param markupStream
 	 */
