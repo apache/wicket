@@ -573,7 +573,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
 		// Start string buffer for url
-		final StringBuffer url = new StringBuffer(64);
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 		url.append(urlPrefix(requestCycle));
 		url.append('?');
 		url.append(INTERFACE_PARAMETER_NAME);

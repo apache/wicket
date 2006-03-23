@@ -114,19 +114,23 @@ public abstract class AbstractValidator implements IValidator
 	 * Returns a formatted validation error message for a given component. The
 	 * error message is retrieved from a message bundle associated with the page
 	 * in which this validator is contained using the given resource key. The
-	 * resourceModel is used for variable interpolation.
+	 * resourceModel is used for variable interpolation. If that one is null
+	 * the default one is created from messageModel(formComponent)
 	 * 
 	 * @param formComponent
 	 *            form component
 	 * @param resourceKey
 	 *            The resource key to use
 	 * @param resourceModel
-	 *            The model for variable interpolation
+	 *            The model for variable interpolation, it needs to have a map inside it.
 	 */
 	public void error(final FormComponent formComponent, final String resourceKey,
-			final IModel resourceModel)
+			IModel /* <Map>*/ resourceModel)
 	{
-
+		if(resourceModel == null)
+		{
+			resourceModel = Model.valueOf(messageModel(formComponent));
+		}
 		if (formComponent == null)
 		{
 			throw new IllegalArgumentException("formComponent cannot be null");
@@ -145,15 +149,7 @@ public abstract class AbstractValidator implements IValidator
 			keys.add(defaultKey);
 		}
 
-		Map args;
-		if (resourceModel == null)
-		{
-			args = null;
-		}
-		else
-		{
-			args = (Map)resourceModel.getObject(formComponent);
-		}
+		Map args = (Map)resourceModel.getObject(formComponent);
 
 		formComponent.error(keys, args);
 	}
