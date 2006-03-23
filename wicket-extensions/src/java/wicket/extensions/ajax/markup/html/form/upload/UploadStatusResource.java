@@ -7,12 +7,14 @@ import wicket.protocol.http.WebRequest;
 import wicket.resource.DynamicByteArrayResource;
 
 /**
- * UploadResourceStatus 
+ * A resource that prints out basic statistics about the current upload. This
+ * resource is used to feed the progress bar information by the progress bar
+ * javascript which requests this resource through ajax.
  * 
  * @author Andrew Lombardi
  * @author Igor Vaynberg (ivaynberg)
  */
-public class UploadStatusResource extends DynamicByteArrayResource
+class UploadStatusResource extends DynamicByteArrayResource
 {
 
 	/**
@@ -27,8 +29,16 @@ public class UploadStatusResource extends DynamicByteArrayResource
 
 	private static class UploadResourceState extends DynamicByteArrayResource.ResourceState
 	{
+		/**
+		 * status string that will be returned to javascript to be parsed
+		 * 
+		 * uploaded count|total count|transfer rate|time remaining
+		 */
 		private String status;
 
+		/**
+		 * 
+		 */
 		public UploadResourceState()
 		{
 
@@ -36,43 +46,37 @@ public class UploadStatusResource extends DynamicByteArrayResource
 			HttpServletRequest req = ((WebRequest)rc.getRequest()).getHttpServletRequest();
 			UploadInfo info = UploadWebRequest.getUploadInfo(req);
 
-			if (info == null)
+			if (info == null || info.getTotalBytes() < 1)
 			{
-
-				// status = "70.1 KB of 1.9 MB at 61.0 KB/s; half a minute
-				// remaining<script>if($('UploadProgressBar1')){$('UploadProgressBar1').firstChild.firstChild.style.width='3%'}</script>";
 				status = "0|0|0|0";
 			}
 			else
 			{
-				if (info.getTotalBytes() > 0)
-				{
-
-					// status = "70.1 KB of 1.9 MB at 61.0 KB/s; half a minute
-					// remaining<script>if($('UploadProgressBar1')){$('UploadProgressBar1').firstChild.firstChild.style.width='"+percentageComplete+"%'}</script>";
-					status = "" + info.getPercentageComplete() + "|"
-							+ info.getBytesUploadedString() + "|"
-							+ info.getTotalBytesString() + "|"
-							+ info.getTransferRateString() + "|"
-							+ info.getRemainingTimeString();
-				}
-				else
-				{
-					status = "0|0|0|0";
-				}
+				status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString()
+						+ "|" + info.getTotalBytesString() + "|" + info.getTransferRateString()
+						+ "|" + info.getRemainingTimeString();
 			}
 		}
 
+		/**
+		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getContentType()
+		 */
 		public String getContentType()
 		{
 			return "text/plain";
 		}
 
+		/**
+		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getLength()
+		 */
 		public int getLength()
 		{
 			return status.length();
 		}
 
+		/**
+		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getData()
+		 */
 		public byte[] getData()
 		{
 			return status.getBytes();

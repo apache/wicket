@@ -11,6 +11,23 @@ import wicket.util.lang.Bytes;
 import wicket.util.upload.FileUploadException;
 
 /**
+ * A request object that stores information about the current upload in session
+ * so it is accessible to the {@link UploadProgressBar}.
+ * <p>
+ * This request object is necessary for the UploadProgressBar to function
+ * properly. It is installed like so:
+ * 
+ * <code>
+ * class MyApplication extends WebApplication {
+ * ...
+ *     @Override
+ *     protected WebRequest newWebRequest(HttpServletRequest servletRequest) {
+ *         return new UploadWebRequest(servletRequest);
+ *     }
+ * ...
+ * }
+ * </code>
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class UploadWebRequest extends ServletWebRequest
@@ -45,7 +62,12 @@ public class UploadWebRequest extends ServletWebRequest
 		}
 	}
 
-
+	/**
+	 * Multipart request object that feeds the upload info into session
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 * 
+	 */
 	private static class MultipartRequest extends MultipartServletWebRequest
 	{
 		/**
@@ -102,6 +124,12 @@ public class UploadWebRequest extends ServletWebRequest
 	private static final String SESSION_KEY = UploadWebRequest.class.getName();
 
 
+	/**
+	 * Retrieves {@link UploadInfo} from session, null if not found
+	 * 
+	 * @param req
+	 * @return {@link UploadInfo} object from session, or null if not found
+	 */
 	static UploadInfo getUploadInfo(HttpServletRequest req)
 	{
 		if (req == null)
@@ -111,6 +139,12 @@ public class UploadWebRequest extends ServletWebRequest
 		return (UploadInfo)req.getSession().getAttribute(SESSION_KEY);
 	}
 
+	/**
+	 * Sets the {@link UploadInfo} object into session
+	 * 
+	 * @param req
+	 * @param uploadInfo
+	 */
 	static void setUploadInfo(HttpServletRequest req, UploadInfo uploadInfo)
 	{
 		if (req == null)
@@ -124,6 +158,11 @@ public class UploadWebRequest extends ServletWebRequest
 		req.getSession().setAttribute(SESSION_KEY, uploadInfo);
 	}
 
+	/**
+	 * Clears the {@link UploadInfo} object from session if one exists
+	 * 
+	 * @param req
+	 */
 	static void clearUploadInfo(HttpServletRequest req)
 	{
 		if (req == null)

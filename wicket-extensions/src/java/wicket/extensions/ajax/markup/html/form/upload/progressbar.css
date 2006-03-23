@@ -1,12 +1,5 @@
 <style type="text/css">
-    fieldset {
-        padding: 1em;
-        background-color: #eee;
-    }
-
-    fieldset legend {
-        color: #aaa;
-    }
+   
 
     .uploadStatus {
         margin: 5px;
@@ -30,15 +23,5 @@
         width: 0%;
     }
 
-    #words dt {
-        margin-top: .5em;
-    }
-
-    #words dd {
-        margin-left: 2em;
-    }
-
-    #words {
-        padding-bottom: 2em;
-    }
+ 
 </style>

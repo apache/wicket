@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
@@ -21,6 +19,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
+import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.collections.MiniMap;
 import wicket.util.io.Streams;
@@ -34,6 +33,8 @@ import wicket.util.string.interpolator.MapVariableInterpolator;
 public class UploadProgressBar extends Panel
 {
 
+	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -42,53 +43,30 @@ public class UploadProgressBar extends Panel
 	private static final PackageResourceReference JAVASCRIPT_PROTOTYPE = new PackageResourceReference(
 			UploadProgressBar.class, "prototype.js");
 
-	private static final PackageResourceReference JAVASCRIPT_PROGRESSBAR = new PackageResourceReference(
-			UploadProgressBar.class, "progressbar.js");
-
-	private static final PackageResourceReference CSS_PROGRESSBAR = new PackageResourceReference(
-			UploadProgressBar.class, "progressbar.css");
-
 	private static final PackageResourceReference GIF_PROGRESSBAR = new PackageResourceReference(
 			UploadProgressBar.class, "progress-bar.gif");
 
 	private static final PackageResourceReference GIF_PROGRESSBAR_REMAINDER = new PackageResourceReference(
 			UploadProgressBar.class, "progress-remainder.gif");
 
-	
+
 	private final Form form;
-	
+
+
 	/**
-	 * Initializer for this component; binds static resources.
+	 * @param id
+	 * @param form
 	 */
-	public final static class ComponentInitializer implements IInitializer
-	{
-		/**
-		 * @see wicket.IInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			PackageResource.bind(application, ComponentInitializer.class,
-					PackageResource.EXTENSION_JS);
-			PackageResource.bind(application, ComponentInitializer.class,
-					PackageResource.EXTENSION_CSS);
-			PackageResource.bind(application, ComponentInitializer.class, "progress-bar.gif");
-			PackageResource.bind(application, ComponentInitializer.class, "progress-remainder.gif");
-
-			// register the upload status resource
-			Application.get().getSharedResources()
-					.add("statusResource", new UploadStatusResource());
-		}
-	}
-
 	public UploadProgressBar(String id, Form form)
 	{
 		super(id);
-		this.form=form;
+		this.form = form;
+		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		
-		add(new ProgressbarAjaxBehavior());
+		add(new ProgressbarScriptIncluder());
 
-		Label progressBarCSS = new Label("progressBarCSS", new AbstractReadOnlyModel()
+		ScriptLabel progressBarCSS = new ScriptLabel("progressBarCSS", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -100,11 +78,9 @@ public class UploadProgressBar extends Panel
 				return getCSSComponentInitializationScript();
 			}
 		});
-		progressBarCSS.setEscapeModelStrings(false);
-		progressBarCSS.setRenderBodyOnly(true);
 		add(progressBarCSS);
 
-		Label progressBarJS = new Label("progressBarJS", new AbstractReadOnlyModel()
+		ScriptLabel progressBarJS = new ScriptLabel("progressBarJS", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -116,13 +92,32 @@ public class UploadProgressBar extends Panel
 				return getJavaScriptComponentInitializationScript();
 			}
 		});
-		progressBarJS.setEscapeModelStrings(false);
-		progressBarJS.setRenderBodyOnly(true);
 		add(progressBarJS);
 
 		form.add(new AttributeModifier("onsubmit", true, new Model("startupload();")));
 	}
 
+	/**
+	 * Label for outputting script contents
+	 * 
+	 * @author ivaynberg
+	 */
+	private static class ScriptLabel extends Label
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @param id
+		 * @param model
+		 */
+		public ScriptLabel(String id, IModel model)
+		{
+			super(id, model);
+			setEscapeModelStrings(false);
+			setRenderBodyOnly(true);
+		}
+
+	}
 
 	/**
 	 * Initializes the .css file with the correct images
@@ -153,7 +148,7 @@ public class UploadProgressBar extends Panel
 		String javascriptFile = getPackagedTextFileContents("progressbar.js");
 		Map variables = new MiniMap(2);
 
-		ResourceReference ref = new ResourceReference("statusResource");
+		ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 		String statusUrl = getPage().urlFor(ref);
 
 		variables.put("statusUrl", statusUrl);
@@ -183,24 +178,19 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	private static final class ProgressbarAjaxBehavior extends AbstractAjaxBehavior
+	/**
+	 * Javascript contributor
+	 * 
+	 * @author ivaynberg
+	 * 
+	 */
+	private static final class ProgressbarScriptIncluder extends AbstractAjaxBehavior
 	{
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
-
 		/**
-		 * Gets the unique id of an ajax implementation. This should be
-		 * implemented by base classes only - like the dojo or scriptaculous
-		 * implementation - to provide a means to differentiate between
-		 * implementations while not going to the level of concrete
-		 * implementations. It is used to ensure 'static' header contributions
-		 * are done only once per implementation.
-		 * 
-		 * @return unique id of an ajax implementation
+		 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
 		 */
 		protected String getImplementationId()
 		{
@@ -216,10 +206,32 @@ public class UploadProgressBar extends Panel
 		}
 
 
+		/**
+		 * @see wicket.behavior.IBehaviorListener#onRequest()
+		 */
 		public void onRequest()
 		{
 		}
 	}
-	
-	
+
+	/**
+	 * Initializer for this component; binds static resources.
+	 */
+	public final static class ComponentInitializer implements IInitializer
+	{
+		/**
+		 * @see wicket.IInitializer#init(wicket.Application)
+		 */
+		public void init(Application application)
+		{
+			PackageResource.bind(application, ComponentInitializer.class,
+					PackageResource.EXTENSION_JS);
+			PackageResource.bind(application, ComponentInitializer.class, "progress-bar.gif");
+			PackageResource.bind(application, ComponentInitializer.class, "progress-remainder.gif");
+
+			// register the upload status resource
+			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
+		}
+	}
+
 }
