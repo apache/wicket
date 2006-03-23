@@ -56,6 +56,7 @@ class UploadStatusResource extends DynamicByteArrayResource
 						+ "|" + info.getTotalBytesString() + "|" + info.getTransferRateString()
 						+ "|" + info.getRemainingTimeString();
 			}
+			status="<html>|"+status+"|</html>";
 		}
 
 		/**

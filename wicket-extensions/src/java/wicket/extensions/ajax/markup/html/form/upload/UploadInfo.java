@@ -93,7 +93,14 @@ public class UploadInfo implements Serializable
 	 */
 	public long getTransferRateBPS()
 	{
-		return bytesUploaded / getElapsedSeconds();
+		if (getElapsedSeconds() == 0)
+		{
+			return bytesUploaded;
+		}
+		else
+		{
+			return bytesUploaded / getElapsedSeconds();
+		}
 	}
 
 	/**

@@ -2,16 +2,16 @@
 <wicket:head>
     <span wicket:id="progressBarCSS"></span>
 
-    <span wicket:id="progressBarJS"></span>
+
+	<span wicket:id="progressBarJS"></span>
 </wicket:head>
 
 <wicket:panel>
 
-    <div id="status-win" style="display: none;">
+    <div class="wupb-container">
 
-        <div class="progressBar" id="UploadProgressBar1"><div class="border"><div class="background"><div
-                class="foreground"></div></div></div></div>
+        <div class="wupb-progressBar" wicket:id="bar" style="display:none;"><div class="wupb-border"><div class="wupb-background"><div class="wupb-foreground"></div></div></div></div>
 
-        <div class="uploadStatus" id="UploadStatus1"></div>
+        <div class="wupb-uploadStatus" wicket:id="status" style="display:none;"></div>
     </div>
 </wicket:panel>

@@ -2,6 +2,7 @@ package wicket.extensions.ajax.markup.html.form.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import wicket.Application;
@@ -15,6 +16,7 @@ import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -37,12 +39,6 @@ public class UploadProgressBar extends Panel
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * reference to the default ajax support javascript file.
-	 */
-	private static final PackageResourceReference JAVASCRIPT_PROTOTYPE = new PackageResourceReference(
-			UploadProgressBar.class, "prototype.js");
-
 	private static final PackageResourceReference GIF_PROGRESSBAR = new PackageResourceReference(
 			UploadProgressBar.class, "progress-bar.gif");
 
@@ -57,13 +53,22 @@ public class UploadProgressBar extends Panel
 	 * @param id
 	 * @param form
 	 */
-	public UploadProgressBar(String id, Form form)
+	public UploadProgressBar(String id, final Form form)
 	{
 		super(id);
-		this.form = form;
+		this.form = form; // ?still needed
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		
+
+		final WebMarkupContainer barDiv=new WebMarkupContainer("bar");
+		barDiv.setOutputMarkupId(true);
+		add(barDiv);
+
+		final WebMarkupContainer statusDiv=new WebMarkupContainer("status");
+		statusDiv.setOutputMarkupId(true);
+		add(statusDiv);
+
 		add(new ProgressbarScriptIncluder());
 
 		ScriptLabel progressBarCSS = new ScriptLabel("progressBarCSS", new AbstractReadOnlyModel()
@@ -89,12 +94,27 @@ public class UploadProgressBar extends Panel
 			 */
 			public Object getObject(Component component)
 			{
-				return getJavaScriptComponentInitializationScript();
+				String javascriptFile = getPackagedTextFileContents("progressbar.js");
+				Map variables = new HashMap();
+
+				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
+				String statusUrl = getPage().urlFor(ref);
+
+				variables.put("bar-id", barDiv.getMarkupId());
+				variables.put("status-id", statusDiv.getMarkupId());
+				
+				variables.put("statusUrl", statusUrl);
+				variables.put("formMarkupId", form.getMarkupId());
+				MapVariableInterpolator interpolator = new MapVariableInterpolator(javascriptFile,
+						variables);
+				return "<script>"+interpolator.toString()+"</script>";
 			}
 		});
 		add(progressBarJS);
 
-		form.add(new AttributeModifier("onsubmit", true, new Model("startupload();")));
+		
+		
+		form.add(new AttributeModifier("onsubmit", true, new Model("wupb.start();")));
 	}
 
 	/**
@@ -138,25 +158,6 @@ public class UploadProgressBar extends Panel
 		return interpolator.toString();
 	}
 
-	/**
-	 * Initializes the .css file with the correct images
-	 * 
-	 * @return the css file
-	 */
-	protected String getJavaScriptComponentInitializationScript()
-	{
-		String javascriptFile = getPackagedTextFileContents("progressbar.js");
-		Map variables = new MiniMap(2);
-
-		ResourceReference ref = new ResourceReference(RESOURCE_NAME);
-		String statusUrl = getPage().urlFor(ref);
-
-		variables.put("statusUrl", statusUrl);
-		variables.put("formMarkupId", form.getMarkupId());
-		MapVariableInterpolator interpolator = new MapVariableInterpolator(javascriptFile,
-				variables);
-		return interpolator.toString();
-	}
 
 
 	private String getPackagedTextFileContents(String fileName)
@@ -202,7 +203,7 @@ public class UploadProgressBar extends Panel
 		 */
 		protected void onRenderHeadInitContribution(final Response response)
 		{
-			writeJsReference(response, JAVASCRIPT_PROTOTYPE);
+			//FIXME add javascript?
 		}
 
 

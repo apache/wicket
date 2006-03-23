@@ -1,63 +1,73 @@
-<script language="JavaScript">
-var theRequest = false;
-var total_upload_size = 1;
+var wupb= {
+	get : function(id) {
+		return document.getElementById(id);
+	},
+	
+	start : function() {
+		wupb.get('${formMarkupId}').submit();
+		wupb.get('${status-id}').innerHTML='Upload starting...';
+	    wupb.get('${bar-id}').firstChild.firstChild.style.width='0%';
+	    
+		wupb.get('${status-id}').style.display='block';
+	    wupb.get('${bar-id}').style.display='block';
+	    
+	    window.setTimeout(function() { wupb.ajax('${statusUrl}'); }, 1000);
+	},
+	
+	ajax : function(url) {
+		transport = false;
 
-
-function goajax(page)
-{
-	theRequest = false;
-
-	if(window.XMLHttpRequest)
-	{
-		theRequest = new XMLHttpRequest();
-		if(theRequest.overrideMimeType)
+		if(window.XMLHttpRequest)
 		{
-			theRequest.overrideMimeType('text/xml');
+			transport = new XMLHttpRequest();
+			if(transport.overrideMimeType)
+			{
+				transport.overrideMimeType('text/xml');
+			}
 		}
-	}
-	else if(window.ActiveXObject)
-	{
-		try
+		else if(window.ActiveXObject)
 		{
-			theRequest = new ActiveXObject("Msxml2.XMLHTTP");
-		} catch (e) {
 			try
 			{
-				theRequest = new ActiveXObject("Microsoft.XMLHTTP");
-			} catch (e) {}
+				transport = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch (e) {
+				try
+				{
+					transport = new ActiveXObject("Microsoft.XMLHTTP");
+				} catch (e) {}
+			}
 		}
-	}
-	if(!theRequest)
-	{
-		alert('Error: could not create XMLHTTP object.');
-		return false;
-	}
+		if(!transport)
+		{
+			alert('Error: could not create XMLHTTP object.');
+			return false;
+		}
+	
+		transport.onreadystatechange = function() { wupb.update(transport, url); };
+		transport.open('GET', url, true);
+		transport.send(null);
+	},
+	
+	update: function(transport, url) {
+		if (transport.readyState == 4) {
 
-	theRequest.onreadystatechange = updateProgress;
-	theRequest.open('GET', page, true);
-	theRequest.send(null);
-}
+            if (transport.status == 200) {
 
-function updateProgress() {
-    if (theRequest) {
+                var update = transport.responseText.split('|');
 
-        if (theRequest.readyState == 4) {
 
-            if (theRequest.status == 200) {
+                var completed_upload_size = update[2];
+                var total_upload_size = update[3];
+                var progressPercent = update[1];
+                var transferRate = update[4];
+                var timeRemaining = update[5];
+                
 
-                var update = new Array();
-                update = theRequest.responseText.split('|');
-
-                var completed_upload_size = update[1];
-                total_upload_size = update[2];
-                var progressPercent = update[0];
-                var transferRate = update[3];
-                var timeRemaining = update[4];
 
                 if ((completed_upload_size != "") && (completed_upload_size != 0))
                 {
-                    $('UploadProgressBar1').firstChild.firstChild.style.width=progressPercent+'%';
-                    $('UploadStatus1').innerHTML=progressPercent + '% finished, '
+                    wupb.get('${bar-id}').firstChild.firstChild.style.width=progressPercent+'%';
+                    wupb.get('${status-id}').innerHTML=progressPercent + '% finished, '
                             + completed_upload_size + ' of '
                             + total_upload_size + ' at '
                             + transferRate  
@@ -67,30 +77,19 @@ function updateProgress() {
                 if (progressPercent == 100)
                 {
 
-                    $('UploadProgressBar1').firstChild.firstChild.style.width='100%';
-
-                    $('status-win').style.display = 'none';
+                    wupb.get('${bar-id}').firstChild.firstChild.style.width='100%';
+                    
+					wupb.get('${status-id}').style.display='none';
+				    wupb.get('${bar-id}').style.display='none';
 
                     return null;
                 }
 
 
-                window.setTimeout("goajax('${statusUrl}')", 700);
+                window.setTimeout(function() { wupb.ajax(url); }, 1000);
             } else {
                 alert('Error: got a not-OK status code...');
             }
         }
-    }
+	}
 }
-
-function startupload()
-{
-    document.getElementById('${formMarkupId}').submit();
-    $('UploadStatus1').innerHTML='Upload starting...';
-    if($('UploadProgressBar1')){$('UploadProgressBar1').firstChild.firstChild.style.width='0%'};
-    $('status-win').style.display = 'block';
-
-    window.setTimeout("goajax('${statusUrl}', updateProgress)", 1200);
-}
-
-</script>

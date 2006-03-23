@@ -1,23 +1,23 @@
 <style type="text/css">
    
 
-    .uploadStatus {
+    div.wupb-uploadStatus {
         margin: 5px;
         color: #aaa;
     }
 
-    .progressBar {
+    div.wupb-progressBar {
         margin: 5px;
     }
 
-    .progressBar .border {
+    div.wupb-progressBar .wupb-border {
         background: url( ${progressbarRemainder}) repeat-x;
         border-left: 1px solid grey;
         border-right: 1px solid grey;
         width: 100%;
     }
 
-    .progressBar .background {
+    div.wupb-progressBar .wupb-background {
         background: url( ${progressbar} ) repeat-x;
         height: 18px;
         width: 0%;
