@@ -1,5 +1,7 @@
 package wicket.extensions.ajax.markup.html.autocomplete.capxous;
 
+import java.io.Serializable;
+
 import wicket.Response;
 
 /**
@@ -16,7 +18,7 @@ import wicket.Response;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IAutoAssistRenderer
+public interface IAutoAssistRenderer extends Serializable
 {
 	/**
 	 * Render the html fragment for the given completion object. Usually the

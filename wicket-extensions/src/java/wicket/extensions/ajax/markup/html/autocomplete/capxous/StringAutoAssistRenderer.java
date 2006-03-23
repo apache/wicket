@@ -13,6 +13,8 @@ import wicket.Response;
  */
 public class StringAutoAssistRenderer extends AbstractAutoAssistRenderer
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * A singleton instance
 	 */
