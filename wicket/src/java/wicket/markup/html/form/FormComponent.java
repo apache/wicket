@@ -963,11 +963,11 @@ public abstract class FormComponent extends WebMarkupContainer
 		final Map fullArgs;
 		if (args == null)
 		{
-			fullArgs = new HashMap(4);
+			fullArgs = new HashMap(6);
 		}
 		else
 		{
-			fullArgs = new HashMap(args.size() + 4);
+			fullArgs = new HashMap(args.size() + 6);
 			fullArgs.putAll(args);
 		}
 
