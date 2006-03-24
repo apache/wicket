@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -710,34 +709,6 @@ public abstract class Component implements Serializable
 
 		// This should never happen since Page always has associated markup
 		throw new WicketRuntimeException("Unable to find parent with associated markup");
-	}
-
-	/**
-	 * Registers a flash message
-	 * 
-	 * @since 1.2
-	 * 
-	 * @param message
-	 *            The flash message
-	 */
-	public final void flash(final String message)
-	{
-		getSession().addFlashMessage(message);
-	}
-
-	/**
-	 * Interpolates the flash message with the arguments and registers it
-	 * 
-	 * @since 1.2
-	 * 
-	 * @param message
-	 *            message that contains variables in the form ${varname}
-	 * @param args
-	 *            a map:string->object that contains variable names and values
-	 */
-	public final void flash(final String message, Map/* <String,Object */args)
-	{
-		getSession().addFlashMessage(message, args);
 	}
 
 	/**

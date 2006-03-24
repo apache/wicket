@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FeedbackMessage.java 2913 2005-10-02 03:06:33 -0700 (Sun, 02 Oct 2005)
+ * joco01 $ $Revision$ $Date: 2005-10-02 03:06:33 -0700 (Sun, 02 Oct
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +31,7 @@ import wicket.Component;
 public final class FeedbackMessage implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Constant for debug level. */
 	public static final int DEBUG = 1;
 
@@ -70,6 +71,12 @@ public final class FeedbackMessage implements Serializable
 	/** The reporting component. */
 	private final Component reporter;
 
+	/** Whether or not this message will be stored in session */
+	private final boolean sessionStored;
+
+	/** Whether or not this message has been rendered */
+	private boolean rendered = false;
+
 	/**
 	 * Construct using fields.
 	 * 
@@ -79,8 +86,11 @@ public final class FeedbackMessage implements Serializable
 	 *            The actual message
 	 * @param level
 	 *            The level of the message
+	 * @param sessionStored
+	 *            Whether or not this message will be stored in session
 	 */
-	FeedbackMessage(final Component reporter, final String message, final int level)
+	FeedbackMessage(final Component reporter, final String message, final int level,
+			boolean sessionStored)
 	{
 		this.reporter = reporter;
 		this.message = message;
@@ -89,7 +99,41 @@ public final class FeedbackMessage implements Serializable
 		{
 			throw new IllegalArgumentException("Invalid level value");
 		}
+
+		this.sessionStored = sessionStored;
 	}
+
+
+	/**
+	 * Gets whether or not this message is stored in the session
+	 * 
+	 * @return true if this message is stored in session, false oterwise
+	 */
+	public final boolean isSessionStored()
+	{
+		return sessionStored;
+	}
+
+
+	/**
+	 * Gets whether or not this message has been rendered
+	 * 
+	 * @return true if this message has been rendered, false otherwise
+	 */
+	public final boolean isRendered()
+	{
+		return rendered;
+	}
+
+
+	/**
+	 * Marks this message as rendered.
+	 */
+	public final void markRendered()
+	{
+		this.rendered = true;
+	}
+
 
 	/**
 	 * Gets the message level; can be used by rendering components. Note that

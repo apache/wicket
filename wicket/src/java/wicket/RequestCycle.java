@@ -787,6 +787,10 @@ public abstract class RequestCycle
 			}
 		}
 
+		// remove any rendered feedback messages from the session
+		session.cleanupFeedbackMessages();
+		
+		
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
