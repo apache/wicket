@@ -20,6 +20,10 @@ package wicket.examples;
 
 import wicket.markup.html.WebPage;
 import wicket.model.IModel;
+import wicket.protocol.http.request.urlcompressing.ICompressingUrlPage;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.util.string.Strings;
 
 /**
@@ -27,8 +31,10 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class WicketExamplePage extends WebPage
+public class WicketExamplePage extends WebPage implements ICompressingUrlPage
 {
+	private UrlCompressor compressor;
+	
     /**
      * Constructor
      */
@@ -53,4 +59,19 @@ public class WicketExamplePage extends WebPage
 	 * Override base method to provide an explanation
 	 */
 	protected void explain() {}
+
+	/**
+	 * Special overwrite to have url compressing for examples that uses the url compressing 
+	 * coding strategy and resolver.
+	 * 
+	 * @see WebURLCompressingCodingStrategy
+	 * @see WebURLCompressingTargetResolverStrategy
+	 * @see UrlCompressor
+	 * @see wicket.protocol.http.request.urlcompressing.ICompressingUrlPage#getUrlCompressor()
+	 */
+	public UrlCompressor getUrlCompressor()
+	{
+		if(compressor == null) compressor = new UrlCompressor();
+		return compressor;
+	}
 }

@@ -22,6 +22,11 @@ import java.util.Locale;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Application class for form input example.
@@ -49,6 +54,17 @@ public class FormInputApplication extends WicketExampleApplication
 				new DefaultButtonImageResource("\u4E4B\u5916"));
 		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
 				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
+
+	}
+	
+	/**
+	 * Special overwrite to have url compressing for this example.
+	 * @see UrlCompressor
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
 	}
 
 	/**
