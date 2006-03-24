@@ -49,7 +49,7 @@ var WicketAjaxDebug = {
             document.write(
         	
         	 "<table id='"+dwid+"' cellspacing='0' cellpadding='2'"
-        	+"    style='display:none; position: absolute; left:300px; top:300px; width: 600px; "
+        	+"    style='display:none; position: absolute; left:300px; top:300px; width: 600px; z-index:100;"
         	+"    background-color: white; border: 2px solid #333; padding: 5px;' "
         	+"    ><tr>"
         	
@@ -79,7 +79,7 @@ var WicketAjaxDebug = {
             
             document.write(
             
-             "<div style='position:absolute; left:10px; top:95%;'>"
+             "<div style='position:absolute; left:10px; top:95%; z-index:100;'>"
             +"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"
             +"</div>");
         }
