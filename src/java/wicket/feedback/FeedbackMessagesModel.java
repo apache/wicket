@@ -17,6 +17,7 @@
  */
 package wicket.feedback;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -94,8 +95,14 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = component.getPage().getFeedbackMessages().messages(filter);
+			List pageMessages = component.getPage().getFeedbackMessages().messages(filter);
 
+			List sessionMessages=component.getSession().getFeedbackMessages().messages(filter);
+			
+			messages=new ArrayList(pageMessages.size()+sessionMessages.size());
+			messages.addAll(pageMessages);
+			messages.addAll(sessionMessages);
+			
 			// Sort the list before returning it
 			if (sortingComparator != null)
 			{

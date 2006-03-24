@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Session.java 5063 2006-03-21 11:21:19 -0800 (Tue, 21 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-21 11:21:19 -0800 (Tue, 21
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,25 +20,24 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.feedback.FeedbackMessage;
+import wicket.feedback.FeedbackMessages;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.session.ISessionStoreFactory;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
-import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Holds information about a user session, including some fixed number of most
@@ -159,18 +159,18 @@ public abstract class Session implements Serializable
 
 	/** A number to generate names for auto create pagemaps */
 	private int autoCreatePageMapCounter = 0;
-	
+
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <PageMap> */ usedPageMaps = new LinkedList();
-	
+	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
+
 	/** The session store of this session. */
 	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
-	/** Flash messages */
-	private List/* <String> */flashMessages;
+	/** feedback messages */
+	private FeedbackMessages feedbackMessages;
 
 
 	/**
@@ -406,7 +406,7 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
-		PageMap pageMap =  (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
 		if (pageMap == null && autoCreate)
 		{
 			pageMap = newPageMap(pageMapName);
@@ -503,7 +503,7 @@ public abstract class Session implements Serializable
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		if (usedPageMaps.size() >= maxPageMaps)		
+		if (usedPageMaps.size() >= maxPageMaps)
 		{
 			PageMap pm = (PageMap)usedPageMaps.getFirst();
 			pm.remove();
@@ -636,83 +636,81 @@ public abstract class Session implements Serializable
 
 
 	/**
-	 * Interpolates the message with the arguments and adds the session flash
-	 * store
-	 * 
-	 * @see #getFlashMessages()
-	 * @see #clearFlashMessages()
-	 * @since 1.2
+	 * Registers an informational feedback message for this session
 	 * 
 	 * @param message
-	 *            message that contains variables in the form ${varname}
-	 * @param args
-	 *            a map:string->object that contains variable names and values
+	 *            The feedback message
 	 */
-	public final void addFlashMessage(String message, Map/* <String,Object> */args)
+	public final void info(final String message)
 	{
-		if (Strings.isEmpty(message))
-		{
-			throw new IllegalArgumentException("message cannot be null or empty");
-		}
-		if (args == null)
-		{
-			throw new IllegalArgumentException("args cannot be null");
-		}
-		addFlashMessage(new MapVariableInterpolator(message, args).toString());
+		addFeedbackMessage(message, FeedbackMessage.INFO);
 	}
 
-
 	/**
-	 * Adds a message to the session flash store
-	 * 
-	 * @see #getFlashMessages()
-	 * @see #clearFlashMessages()
-	 * @since 1.2
+	 * Registers an error feedback message for this session
 	 * 
 	 * @param message
+	 *            The feedback message
 	 */
-	public final void addFlashMessage(String message)
+	public final void error(final String message)
 	{
-		if (Strings.isEmpty(message))
+		addFeedbackMessage(message, FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Gets feedback messages stored in session
+	 * 
+	 * @return unmodifiable list of feedback messages
+	 */
+	public final FeedbackMessages getFeedbackMessages()
+	{
+		if (feedbackMessages == null)
 		{
-			throw new IllegalArgumentException("message cannot be null or empty");
+			feedbackMessages = new FeedbackMessages(true);
 		}
-		if (flashMessages == null)
-		{
-			flashMessages = new ArrayList(1);
-		}
-		flashMessages.add(message);
+		return feedbackMessages;
+	}
+
+	/**
+	 * Adds a feedback message to the list of messages
+	 * 
+	 * @param message
+	 * @param level
+	 * 
+	 */
+	private void addFeedbackMessage(String message, int level)
+	{
+		getFeedbackMessages().add(null, message, level);
 		dirty();
 	}
 
 	/**
-	 * Returns an unmodifiable list of any flash messages available
-	 * 
-	 * @see #addFlashMessage(String)
-	 * @see #clearFlashMessages()
-	 * @since 1.2
-	 * @return an unmodifiable list of any flash messages available
+	 * Removes any rendered feedback messages as well as compacts memory. This
+	 * method is usually called at the end of the request cycle processing.
 	 */
-	public final List/* <String> */getFlashMessages()
+	final void cleanupFeedbackMessages()
 	{
-		List msgs = (flashMessages == null) ? Collections.EMPTY_LIST : flashMessages;
-		return Collections.unmodifiableList(msgs);
-	}
-
-	/**
-	 * Clears any flash messages present.
-	 * 
-	 * @see #addFlashMessage(String)
-	 * @see #getFlashMessages()
-	 * @since 1.2
-	 */
-	public final void clearFlashMessages()
-	{
-		if (flashMessages != null)
+		if (feedbackMessages != null)
 		{
-			flashMessages = null;
-			dirty();
+			Iterator msgs = feedbackMessages.iterator();
+			while (msgs.hasNext())
+			{
+				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
+				if (msg.isRendered())
+				{
+					msgs.remove();
+					dirty();
+				}
+			}
+			if (feedbackMessages.size() == 0)
+			{
+				feedbackMessages = null;
+				dirty();
+			} else {
+				feedbackMessages.trimToSize();
+			}
 		}
+
 	}
 
 	/**
@@ -879,7 +877,7 @@ public abstract class Session implements Serializable
 	 */
 	void dirtyPageMap(final PageMap map)
 	{
-		if(!map.isDefault())
+		if (!map.isDefault())
 		{
 			usedPageMaps.remove(map);
 			usedPageMaps.addLast(map);

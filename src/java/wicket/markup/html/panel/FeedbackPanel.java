@@ -77,6 +77,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
+			message.markRendered();
 			final IModel replacementModel = new Model()
 			{
 				private static final long serialVersionUID = 1L;
@@ -314,4 +315,5 @@ public class FeedbackPanel extends Panel implements IFeedback
 	{
 		return new FeedbackMessagesModel();
 	}
+	
 }
