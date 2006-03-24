@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 3618 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,13 +27,16 @@ import wicket.model.IModel;
  * A password text field component. As you type, characters show up as asterisks
  * or some other such character so that nobody can look over your shoulder and
  * read your password.
+ * <p>
+ * By default this text field is required. If it is not, call
+ * {@link #setRequired(boolean)} with value of <code>false</code>.
  * 
  * @author Jonathan Locke
  */
 public class PasswordTextField extends TextField
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PasswordTextField.class);
 
@@ -53,6 +56,7 @@ public class PasswordTextField extends TextField
 	public PasswordTextField(final String id)
 	{
 		super(id);
+		setRequired(true);
 	}
 
 	/**
@@ -61,6 +65,7 @@ public class PasswordTextField extends TextField
 	public PasswordTextField(final String id, IModel model)
 	{
 		super(id, model);
+		setRequired(true);
 	}
 
 	/**
@@ -86,7 +91,8 @@ public class PasswordTextField extends TextField
 		final String value = getModelObjectAsString();
 		try
 		{
-			return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(value);
+			return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
+					value);
 		}
 		catch (Exception ex)
 		{
@@ -122,7 +128,8 @@ public class PasswordTextField extends TextField
 		String decryptedValue;
 		try
 		{
-			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt().decrypt(value);
+			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
+					.decrypt(value);
 		}
 		catch (Exception ex)
 		{
