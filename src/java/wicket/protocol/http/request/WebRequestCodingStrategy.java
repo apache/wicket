@@ -307,6 +307,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * parameters). Any bookmarkable page alias mount will override this method;
 	 * hence if a mount is found, this method will not be called.
 	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be overridden
+	 * to by in sync with that behaviour.
+	 * 
 	 * @param request
 	 *            the incoming request
 	 * @param parameters
@@ -340,6 +344,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Adds page related parameters (path and pagemap and optionally version and
 	 * interface).
+	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be overridden
+	 * to by in sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -395,6 +403,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * resource key mount will override this method; hence if a mount is found,
 	 * this method will not be called.
 	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be overridden
+	 * to by in sync with that behaviour.
+	 * 
 	 * @param request
 	 *            the incomming request
 	 * @param parameters
@@ -431,13 +443,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Encode a page class target.
 	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden
+	 * to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle,
+	protected String encode(RequestCycle requestCycle,
 			IBookmarkablePageRequestTarget requestTarget)
 	{
 		// Begin encoding URL
@@ -525,6 +541,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Encode a shared resource target.
 	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden
+	 * to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
@@ -561,13 +581,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Encode a listener interface target.
 	 * 
+	 * If you override this method to behave different then also 
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden
+	 * to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle,
+	protected String encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
@@ -626,7 +650,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
+	protected String encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
 		// Get the page we want a url from:
 		Page page = requestTarget.getPage();
