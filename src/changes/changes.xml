@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="add" dev="Igor Vaynberg">Added flash-message functionality. Call Session.info/error/etc instead of Component.info/error.</action>
       <action type="update" dev="Juergen Donnerstag">Multiple &lt;wicket:head&gt; per markup file are now allowed</action>
       <action type="update" dev="Juergen Donnerstag">&lt;wicket:head&gt; now supports a wicket:scope attribute to allow for more flexibility</action>
       <action type="fix" dev="Juergen Donnerstag">Autolink behavior can now easily be extended</action>
