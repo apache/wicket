@@ -21,7 +21,8 @@ package wicket.ajax.markup.html;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
-import wicket.ajax.calldecorator.AjaxCallDecoratorMutator;
+import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 
@@ -65,8 +66,8 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
-				return new AjaxCallDecoratorMutator(AjaxFallbackLink.this.getAjaxCallDecorator())
-						.setPostAfterScript("return !" + IAjaxCallDecorator.WICKET_CALL_MADE_VAR);
+				return new CancelEventIfNoAjaxDecorator(AjaxFallbackLink.this
+						.getAjaxCallDecorator());
 			}
 
 		});

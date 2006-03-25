@@ -26,6 +26,7 @@ import wicket.markup.html.PackageResourceReference;
 import wicket.settings.IAjaxSettings;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
+import wicket.util.time.Duration;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -62,9 +63,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		return "wicket-default";
 	}
-	
+
 	/**
 	 * Subclasses should call super.onBind()
+	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
 	protected void onBind()
@@ -107,7 +109,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected String getCallbackScript()
 	{
-		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'");
+		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'", null, null);
 	}
 
 
@@ -125,64 +127,51 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @return script that peforms ajax callback to this behavior
 	 */
-	protected String getCallbackScript(String partialCall)
+	protected String getCallbackScript(final String partialCall, final String onSuccessScript,
+			final String onFailureScript)
 	{
-		final IAjaxCallDecorator callDecorator = getAjaxCallDecorator();
-		final String before = (callDecorator == null) ? null : callDecorator.getBeforeScript();
-		final String after = (callDecorator == null) ? null : callDecorator.getAfterScript();
-		final String success = (callDecorator == null) ? null : callDecorator.getOnSuccessScript();
-		final String failure = (callDecorator == null) ? null : callDecorator.getOnFailureScript();
+		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
 		String indicatorId = findIndicatorId();
 
-		AppendingStringBuffer buff = new AppendingStringBuffer(128);
+		String success = (onSuccessScript == null) ? "" : onSuccessScript;
+		String failure = (onFailureScript == null) ? "" : onFailureScript;
+
+		if (decorator != null)
+		{
+			success = decorator.decorateOnSuccessScript(success);
+		}
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			buff.append("wicketShow('").append(indicatorId).append("');");
+			success = success + ";wicketHide('" + indicatorId + "');";
 		}
 
-		if (!Strings.isEmpty(before))
+
+		if (decorator != null)
 		{
-			buff.append(before);
-			if (!before.endsWith(";"))
-			{
-				buff.append("; ");
-			}
+			failure = decorator.decorateOnFailureScript(failure);
 		}
 
-		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_MADE_VAR).append("=");
 
-		buff.append(partialCall);
+		AppendingStringBuffer buff = new AppendingStringBuffer(256);
+		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
+		buff.append(partialCall).append(", function() { ").append(success);
+		buff.append("}, function() { ").append(failure).append("});");
 
-		if (!Strings.isEmpty(success)||!Strings.isEmpty(indicatorId))
+		String call = buff.toString();
+
+		if (decorator != null)
 		{
-			buff.append(", function() { ");
-			if (!Strings.isEmpty(indicatorId))
-			{
-				buff.append("wicketHide('").append(indicatorId).append("');");
-			}
-			if (!Strings.isEmpty(success)) {
-				buff.append(success);
-				if (!success.endsWith(";")) {
-					buff.append(";");
-				}
-			}
-			buff.append("}");
+			call = decorator.decorateScript(call);
 		}
 
-		buff.append(");");
-
-		if (!Strings.isEmpty(after))
+		if (!Strings.isEmpty(indicatorId))
 		{
-			buff.append(after);
-			if (!after.endsWith(";"))
-			{
-				buff.append(";");
-			}
+			call = "wicketShow('" + indicatorId + "');" + call;
 		}
 
-		return buff.toString();
+		return call;
 	}
 
 
@@ -192,11 +181,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		{
 			return ((IAjaxIndicatorAware)getComponent()).getAjaxIndicatorMarkupId();
 		}
-		
-		if (this instanceof IAjaxIndicatorAware) {
+
+		if (this instanceof IAjaxIndicatorAware)
+		{
 			return ((IAjaxIndicatorAware)this).getAjaxIndicatorMarkupId();
 		}
-		
+
 		return null;
 	}
 
@@ -226,4 +216,27 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            The AJAX target
 	 */
 	protected abstract void respond(AjaxRequestTarget target);
+
+	public static final String throttleScript(String script, String throttleId,
+			Duration throttleDelay)
+	{
+		if (Strings.isEmpty(script))
+		{
+			throw new IllegalArgumentException("script cannot be empty");
+		}
+
+		if (Strings.isEmpty(throttleId))
+		{
+			throw new IllegalArgumentException("throttleId cannot be empty");
+		}
+
+		if (throttleDelay == null)
+		{
+			throw new IllegalArgumentException("throttleDelay cannot be null");
+		}
+
+		//XXX change to appending string buffer?
+		return "wicketThrottler.throttle( '" + throttleId + "', " + throttleDelay.getMilliseconds()
+				+ ", function() { " + script + "});";
+	}
 }

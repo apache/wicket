@@ -27,7 +27,54 @@ function wicketHide(id) {
     wicketGet(id).style.display = "none";
 }
 
- 
+// THROTTLE FUNCTIONS
+function WicketThrottlerEntry(func) {
+	this.func=func;
+	this.timestamp=new Date().getTime();
+}
+
+WicketThrottlerEntry.prototype.getTimestamp=function() {
+	return this.timestamp;
+}
+
+WicketThrottlerEntry.prototype.getFunc=function() {
+	return this.func;
+}
+
+WicketThrottlerEntry.prototype.setFunc=function(func) {
+	this.func=func;
+}
+
+
+function WicketThrottler() {
+	this.entries=new Array();
+}
+
+WicketThrottler.prototype.throttle=function(id, millis, func) {
+	var entry=this.entries[id];
+	var me=this;
+	if (entry==undefined) {
+		entry=new WicketThrottlerEntry(func);
+		this.entries[id]=entry;
+		window.setTimeout(function() { me.execute(id); }, millis);
+	} else {
+		entry.setFunc(func);
+	}
+}
+
+WicketThrottler.prototype.execute=function(id) {
+	var entry=this.entries[id];
+	if (entry!=undefined) {
+		var func=entry.getFunc();
+		var tmp=func();
+	}
+	
+	this.entries[id]=undefined;
+}
+
+var wicketThrottler=new WicketThrottler();
+
+
 // AJAX FUNCTIONS
 function wicketAjaxGetTransport() {
     var transport = null;
