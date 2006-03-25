@@ -30,6 +30,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
+import wicket.markup.html.WebPage;
 import wicket.protocol.http.request.urlcompressing.UrlCompressor.ComponentAndInterface;
 import wicket.request.RequestParameters;
 import wicket.request.compound.DefaultRequestTargetResolverStrategy;
@@ -67,9 +68,9 @@ public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTarge
 	{
 		String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath, Component.PATH_SEPARATOR);
 		Component component = null;
-		if (page instanceof ICompressingUrlPage && !"IResourceListener".equals(interfaceName))
+		if (page instanceof WebPage && !"IResourceListener".equals(interfaceName))
 		{
-			ComponentAndInterface cai = ((ICompressingUrlPage)page).getUrlCompressor().getComponentAndInterfaceForUID(pageRelativeComponentPath);
+			ComponentAndInterface cai = ((WebPage)page).getUrlCompressor().getComponentAndInterfaceForUID(pageRelativeComponentPath);
 			if(cai != null)
 			{
 				interfaceName = cai.getInterfaceName();
