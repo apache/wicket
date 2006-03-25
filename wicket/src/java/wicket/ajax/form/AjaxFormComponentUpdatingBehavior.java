@@ -26,6 +26,11 @@ import wicket.markup.html.form.FormComponent;
 /**
  * A behavior that updates the hosting FormComponent via ajax when an event it
  * is attached to is triggered.
+ * <p>
+ * NOTE: This behavior does not support persisting form component values into
+ * cookie or other {@link IValuePersister}. If this is necessary please add a
+ * request for enhancement.
+ * 
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
@@ -47,7 +52,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected void onBind()
 	{
 		super.onBind();
-		
+
 		if (!(getComponent() instanceof FormComponent))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName()
@@ -70,7 +75,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected final String getEventHandler()
 	{
-		return getCallbackScript("wicketAjaxPost('"+getCallbackUrl()+"', wicketSerialize(this)");
+		return getCallbackScript(
+				"wicketAjaxPost('" + getCallbackUrl() + "', wicketSerialize(this)", null, null);
 	}
 
 	/**

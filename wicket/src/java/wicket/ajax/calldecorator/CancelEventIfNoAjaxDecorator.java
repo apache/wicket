@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs,v 1.6 2006/02/06 08:27:03 ivaynberg Exp $
- * $Revision: 1.6 $
- * $Date: 2006/02/06 08:27:03 $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,43 +20,21 @@ package wicket.ajax.calldecorator;
 
 import wicket.ajax.IAjaxCallDecorator;
 
-/**
- * 
- * @author Igor Vaynberg (ivaynberg)
- */
-public class AjaxCallDecoratorAdapter implements IAjaxCallDecorator
+public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDecorator
 {
 
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getBeforeScript()
-	 */
-	public String getBeforeScript()
+	public CancelEventIfNoAjaxDecorator()
 	{
-		return null;
+		this((IAjaxCallDecorator)null);
 	}
 
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getAfterScript()
-	 */
-	public String getAfterScript()
+	public CancelEventIfNoAjaxDecorator(IAjaxCallDecorator delegate)
 	{
-		return null;
+		super(delegate);
 	}
 
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getOnSuccessScript()
-	 */
-	public String getOnSuccessScript()
+	public final String postDecorateScript(String script)
 	{
-		return null;
+		return script + "return !" + IAjaxCallDecorator.WICKET_CALL_RESULT_VAR + ";";
 	}
-
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getOnFailureScript()
-	 */
-	public String getOnFailureScript()
-	{
-		return null;
-	}
-
 }

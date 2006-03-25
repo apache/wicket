@@ -19,16 +19,12 @@
 package wicket.ajax;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.util.string.Strings;
+import wicket.util.time.Duration;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually
  * javascript) event, such as onClick, onChange, onKeyDown, etc.
- * <p>
- * NOTE: This behavior does not support persisting form component values into
- * cookie or other {@link IValuePersister}. If this is necessary please add a
- * request for enhancement.
  * <p>
  * Example:
  * 
@@ -47,9 +43,15 @@ import wicket.util.string.Strings;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static long sequence = 0;
+	
 	private static final long serialVersionUID = 1L;
 
 	private String event;
+
+
+	
+	private ThrottlingSettings throttlingSettings;
 
 	/**
 	 * Construct.
@@ -67,6 +69,11 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		onCheckEvent(event);
 
 		this.event = event;
+	}
+
+	public final AjaxEventBehavior setThrottleDelay(Duration throttleDelay) {
+		throttlingSettings=new ThrottlingSettings("th"+(++sequence), throttleDelay);
+		return this;
 	}
 
 	/**
@@ -93,7 +100,17 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-
+	protected String getCallbackScript(String partialCall, String onSuccessScript, String onFailureScript)
+	{
+		String script=super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		final ThrottlingSettings ts=throttlingSettings;
+		
+		if (ts!=null) {
+			script=AbstractAjaxTimerBehavior.throttleScript(script, ts.getId(), ts.getDuration());
+		}
+		return script;
+	}
+	
 	/**
 	 * 
 	 * @param event
@@ -126,4 +143,26 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param target
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+	
+	
+	private static class ThrottlingSettings {
+		private final Duration duration;
+		private final String id;
+		public ThrottlingSettings(final String id, final Duration duration)
+		{
+			super();
+			this.id = id;
+			this.duration = duration;
+		}
+		public Duration getDuration()
+		{
+			return duration;
+		}
+		public String getId()
+		{
+			return id;
+		}
+		
+		
+	}
 }

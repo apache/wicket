@@ -20,107 +20,35 @@ package wicket.ajax.calldecorator;
 import wicket.ajax.IAjaxCallDecorator;
 
 /**
- * Simple implementation of IAjaxCallDecorator
+ * An adapter for implementations of IAjaxCallDecorator.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class AjaxCallDecorator implements IAjaxCallDecorator
+public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 {
-	private String beforeScript;
-	private String afterScript;
-	private String onSuccessScript;
-	private String onFailureScript;
 
 	/**
-	 * Construct.
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(java.lang.String)
 	 */
-	public AjaxCallDecorator()
+	public String decorateScript(String script)
 	{
-
+		return script;
 	}
 
 	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getBeforeScript()
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
 	 */
-	public String getBeforeScript()
+	public String decorateOnSuccessScript(String script)
 	{
-		return beforeScript;
+		return script;
 	}
 
 	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getAfterScript()
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
 	 */
-	public String getAfterScript()
+	public String decorateOnFailureScript(String script)
 	{
-		return afterScript;
-	}
-
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getOnSuccessScript()
-	 */
-	public String getOnSuccessScript()
-	{
-		return onSuccessScript;
-	}
-
-	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#getOnFailureScript()
-	 */
-	public String getOnFailureScript()
-	{
-		return onFailureScript;
-	}
-
-	/**
-	 * Setter for after script
-	 * 
-	 * @param afterScript
-	 * @return this for chaining
-	 * @see IAjaxCallDecorator#getAfterScript()
-	 */
-	public AjaxCallDecorator setAfterScript(String afterScript)
-	{
-		this.afterScript = afterScript;
-		return this;
-	}
-
-	/**
-	 * Setter for before script
-	 * 
-	 * @param beforeScript
-	 * @return this for chaining
-	 * @see IAjaxCallDecorator#getBeforeScript()
-	 */
-	public AjaxCallDecorator setBeforeScript(String beforeScript)
-	{
-		this.beforeScript = beforeScript;
-		return this;
-	}
-
-	/**
-	 * Setter for failure script
-	 * 
-	 * @param failureHandler
-	 * @return this for chaining
-	 * @see IAjaxCallDecorator#getOnFailureScript()
-	 */
-	public AjaxCallDecorator setOnFailureScript(String failureHandler)
-	{
-		this.onFailureScript = failureHandler;
-		return this;
-	}
-
-	/**
-	 * Setter for success script
-	 * 
-	 * @param successHandler
-	 * @return this for chaining
-	 * @see IAjaxCallDecorator#getOnSuccessScript()
-	 */
-	public AjaxCallDecorator setOnSuccessScript(String successHandler)
-	{
-		this.onSuccessScript = successHandler;
-		return this;
+		return script;
 	}
 
 

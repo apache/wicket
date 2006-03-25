@@ -23,6 +23,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.util.time.Duration;
 
 /**
  * Ajax event behavior that submits the form and updates all form feedback
@@ -69,12 +70,28 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 */
 	public static void addToAllFormComponents(final Form form, final String event)
 	{
+		addToAllFormComponents(form, event, null);
+	}
+
+	/**
+	 * Adds this behavior to all form components of the specified form
+	 * 
+	 * @param form
+	 * @param event
+	 */
+	public static void addToAllFormComponents(final Form form, final String event,
+			final Duration throttleDelay)
+	{
 		form.visitChildren(FormComponent.class, new IVisitor()
 		{
-
 			public Object component(Component component)
 			{
-				component.add(new AjaxFormValidatingBehavior(form, event));
+				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);
+				if (throttleDelay != null)
+				{
+					behavior.setThrottleDelay(throttleDelay);
+				}
+				component.add(behavior);
 				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
 

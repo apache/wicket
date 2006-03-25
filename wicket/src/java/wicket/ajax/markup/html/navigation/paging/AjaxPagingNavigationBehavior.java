@@ -22,7 +22,7 @@ import wicket.Component;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
-import wicket.ajax.calldecorator.AjaxCallDecorator;
+import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.ajax.markup.html.IAjaxLink;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
@@ -109,8 +109,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
-		return new AjaxCallDecorator().setAfterScript("return !"
-				+ IAjaxCallDecorator.WICKET_CALL_MADE_VAR);
+		return new CancelEventIfNoAjaxDecorator();
 	}
 
 }

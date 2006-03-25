@@ -18,7 +18,7 @@
 package wicket.ajax;
 
 /**
- * Interface used to decorate a wicket generated javascript that initiates an
+ * Interface used to decorate a wicket generated javascript that performs an
  * ajax callback
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -29,25 +29,28 @@ public interface IAjaxCallDecorator
 	 * Name of javascript variable that will be true if ajax call was made,
 	 * false otherwise. This variable is available in the after script only.
 	 */
-	public static final String WICKET_CALL_MADE_VAR = "wicketAjaxCallMade";
+	public static final String WICKET_CALL_RESULT_VAR = "wcall";
 
 	/**
-	 * @return javascript evaluated before initiation of ajax callback
+	 * Decorates the script that performs the ajax call
+	 * 
+	 * @param script
+	 * @return decorated script
 	 */
-	String getBeforeScript();
+	String decorateScript(String script);
 
 	/**
-	 * @return javascript evaluated after initiation of ajax callback
+	 * Decorates the onSuccess handler script
+	 * @param script 
+	 * @return decorated onSuccess handler script
 	 */
-	String getAfterScript();
+	String decorateOnSuccessScript(String script);
 
 	/**
-	 * @return javascript evaluated when ajax request completes successfully
+	 * Decorates the onFailure handler script
+	 * @param script 
+	 * @return decorated onFailure handler script
 	 */
-	String getOnSuccessScript();
+	String decorateOnFailureScript(String script);
 
-	/**
-	 * @return javascript evaluated when ajax request fails
-	 */
-	String getOnFailureScript();
 }
