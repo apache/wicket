@@ -18,7 +18,7 @@
 package wicket.examples.images;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -49,7 +49,7 @@ public class ImagesApplication extends WicketExampleApplication
 	
 	/**
 	 * Special overwrite to have url compressing for this example.
-	 * @see UrlCompressor
+	 * @see URLCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()

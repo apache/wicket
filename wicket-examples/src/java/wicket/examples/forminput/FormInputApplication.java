@@ -22,7 +22,7 @@ import java.util.Locale;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -59,7 +59,7 @@ public class FormInputApplication extends WicketExampleApplication
 	
 	/**
 	 * Special overwrite to have url compressing for this example.
-	 * @see UrlCompressor
+	 * @see URLCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()

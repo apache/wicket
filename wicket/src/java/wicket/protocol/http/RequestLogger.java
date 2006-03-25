@@ -48,20 +48,39 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.Session;
+import wicket.markup.html.debug.InspectorBug;
+import wicket.markup.html.debug.InspectorPage;
+import wicket.markup.html.debug.LiveSessionsPage;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
+import wicket.session.ISessionStore;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
- * TODO DOCME!
+ * This is the logger class that can be set in the {@link WebApplication#setRequestLogger(RequestLogger)}
+ * method. If this class is set all request and live sessions will be recorded and displayed
+ * From the total created sessions, to the peak session count and the current livesessions.
+ * For the livesessions the request logger will record what request are happening
+ * what kind of {@link IRequestTarget} was the event target and what {@link IRequestTarget}
+ * was the response target. It also records what session data was touched for this and
+ * how long the request did take.
+ * 
+ * To view this information live see the {@link InspectorBug} that shows the {@link InspectorPage}
+ * with the {@link LiveSessionsPage}
+ * 
  * @author jcompagner
+ * 
+ * @since 1.2
  */
 public class RequestLogger
 {
+	// TODO for this class: saving to a log file, only holding a small part in mem.
+	
+	
 	private int totalCreatedSessions;
 	
 	private int peakSessions;
@@ -101,6 +120,9 @@ public class RequestLogger
 	}
 
 	/**
+	 * Method used to cleanup a livesession when the session was
+	 * invalidated by the webcontainer
+	 * 
 	 * @param sessionId
 	 */
 	public void sessionDestroyed(String sessionId)
@@ -109,6 +131,10 @@ public class RequestLogger
 	}
 
 	/**
+	 * This method is called when the request is over this will
+	 * set the total time a request takes and cleans up the current 
+	 * request data.
+	 * 
 	 * @param timeTaken
 	 */
 	public void requestTime(long timeTaken)
@@ -118,6 +144,8 @@ public class RequestLogger
 	}
 	
 	/**
+	 * Called to monitor removals of objects out of the {@link ISessionStore}
+	 * 
 	 * @param value
 	 */
 	public void objectRemoved(Object value)
@@ -142,6 +170,8 @@ public class RequestLogger
 	}
 
 	/**
+	 * Called to monitor updates of objects in the {@link ISessionStore}
+	 * 
 	 * @param value
 	 */
 	public void objectUpdated(Object value)
@@ -167,6 +197,8 @@ public class RequestLogger
 	}
 
 	/**
+	 * Called to monitor additions of objects in the {@link ISessionStore}
+	 * 
 	 * @param value
 	 */
 	public void objectCreated(Object value)
@@ -192,6 +224,8 @@ public class RequestLogger
 	}
 
 	/**
+	 * Sets the target that was the response target for the current request
+	 * 
 	 * @param target
 	 */
 	public void logResponseTarget(IRequestTarget target)
@@ -200,6 +234,8 @@ public class RequestLogger
 	}
 
 	/**
+	 * Sets the target that was the event target for the current request
+	 * 
 	 * @param target
 	 */
 	public void logEventTarget(IRequestTarget target)
@@ -225,6 +261,8 @@ public class RequestLogger
 	}
 
 	/**
+	 * This class hols the information one sessions has
+	 * 
 	 * @author jcompagner
 	 */
 	public static class SessionData implements Serializable
@@ -460,6 +498,8 @@ public class RequestLogger
 	}
 	
 	/**
+	 * This class hold the information one request of a session has.
+	 * 
 	 * @author jcompagner
 	 */
 	public static class RequestData implements Serializable
