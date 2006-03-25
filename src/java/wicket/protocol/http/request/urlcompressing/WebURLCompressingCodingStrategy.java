@@ -24,6 +24,7 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.markup.html.WebPage;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
@@ -69,11 +70,11 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 
 		String listenerName = rli.getName();
 		// Add path to component
-		if (page instanceof ICompressingUrlPage && !"IResourceListener".equals(listenerName))
+		if (page instanceof WebPage && !"IResourceListener".equals(listenerName))
 		{
 			url.append(page.getId());
 			url.append(Component.PATH_SEPARATOR);
-			url.append(((ICompressingUrlPage)page).getUrlCompressor().getUIDForComponentAndInterface(component,listenerName));
+			url.append(((WebPage)page).getUrlCompressor().getUIDForComponentAndInterface(component,listenerName));
 			listenerName = null;
 		}
 		else

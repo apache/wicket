@@ -35,6 +35,9 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.collections.ArrayListStack;
@@ -68,6 +71,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/** The body container */
 	private BodyContainer bodyContainer;
+
+	private UrlCompressor compressor;
 
 	/**
 	 * Constructor. Having this constructor public means that you page is
@@ -227,6 +232,27 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
+	 * This method is called when the compressing coding and response stategies are 
+	 * in configured in youre Application object like this:
+	 * 
+	 *  <pre>
+	 * protected IRequestCycleProcessor newRequestCycleProcessor()
+	 * {
+	 *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+	 * }
+	 *  </pre>
+	 * @return The UrlCompressor for this webpage. 
+	 * 
+	 * @see WebURLCompressingCodingStrategy
+	 * @see WebURLCompressingTargetResolverStrategy
+	 * @see UrlCompressor
+	 */
+	public UrlCompressor getUrlCompressor()
+	{
+		if(compressor == null) compressor = new UrlCompressor();
+		return compressor;
+	}	
+	/**
 	 * 
 	 * @see wicket.Component#onDetach()
 	 */
@@ -287,6 +313,5 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				response.write("'}</script>");
 			}
 		}
-
 	}
 }
