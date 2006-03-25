@@ -647,6 +647,17 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Registers a warning feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void warn(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.WARNING);
+	}
+
+	/**
 	 * Registers an error feedback message for this session
 	 * 
 	 * @param message
