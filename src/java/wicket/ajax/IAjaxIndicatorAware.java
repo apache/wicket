@@ -30,7 +30,10 @@ package wicket.ajax;
  * If both a component and a behavior implement this interface, the component
  * will take precedence.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public interface IAjaxIndicatorAware
 {

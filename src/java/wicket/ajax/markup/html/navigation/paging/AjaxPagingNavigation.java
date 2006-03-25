@@ -1,6 +1,6 @@
 /*
- * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,53 +22,64 @@ import wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import wicket.markup.html.navigation.paging.PagingNavigationLink;
 
 /**
- * An ajaxified navigation for a PageableListView that holds links to other pages of the
- * PageableListView.
+ * An ajaxified navigation for a PageableListView that holds links to other
+ * pages of the PageableListView.
  * <p>
- * Please @see wicket.markup.html.navigation.paging.PagingNavigation
+ * Please
+ * 
+ * @see wicket.markup.html.navigation.paging.PagingNavigation
+ * 
+ * @since 1.2
  * 
  * @author Martijn Dashorst
  */
 public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.PagingNavigation
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param pageable
-	 *			  The underlying pageable component to navigate
+	 *            The underlying pageable component to navigate
 	 */
 	public AjaxPagingNavigation(final String id, final IPageable pageable)
 	{
-		this(id,pageable,null);
+		this(id, pageable, null);
 	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param pageable
-	 *			  The underlying pageable component to navigate
-	 * @param labelProvider 
-	 * 			  The label provider for the text that the links should be displaying.
+	 *            The underlying pageable component to navigate
+	 * @param labelProvider
+	 *            The label provider for the text that the links should be
+	 *            displaying.
 	 */
-	public AjaxPagingNavigation(final String id, final IPageable pageable, final IPagingLabelProvider labelProvider)
+	public AjaxPagingNavigation(final String id, final IPageable pageable,
+			final IPagingLabelProvider labelProvider)
 	{
 		super(id, pageable, labelProvider);
 	}
 
 	/**
 	 * Factory method for creating ajaxian page number links.
-	 * @param id link id
-	 * @param pageable the pageable
-	 * @param pageIndex the index the link points to
+	 * 
+	 * @param id
+	 *            link id
+	 * @param pageable
+	 *            the pageable
+	 * @param pageIndex
+	 *            the index the link points to
 	 * @return the ajaxified page number link.
 	 */
-	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
+			int pageIndex)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
 	}

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,6 +25,11 @@ import wicket.model.IModel;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 {
@@ -58,7 +63,7 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 			{
 				onClick(target);
 			}
-			
+
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxLink.this.getAjaxCallDecorator();

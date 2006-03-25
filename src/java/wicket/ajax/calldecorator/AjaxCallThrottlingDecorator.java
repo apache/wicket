@@ -23,17 +23,50 @@ import wicket.ajax.IAjaxCallDecorator;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 
-public class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
+/**
+ * Adds throttling to the ajax call. Throttled behaviors only execute once
+ * within the given delay even though they can be triggered multiple times.
+ * <p>
+ * For example, this is useful when attaching an event behavior to the
+ * onkeypress event. It is not desirable to have an ajax call made every time
+ * the user types so we can throttle that call to a desirable delay, such as
+ * once per second. This gives us a near real time ability to provide feedback
+ * without overloading the server.
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
+public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
 {
 	private final Duration duration;
 	private final String id;
 
-	public AjaxCallThrottlingDecorator(String id, Duration duration)
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            throttle id
+	 * @param delay
+	 *            throttle delay
+	 */
+	public AjaxCallThrottlingDecorator(String id, Duration delay)
 	{
-		this(null, id, duration);
+		this(null, id, delay);
 	}
 
-	public AjaxCallThrottlingDecorator(IAjaxCallDecorator decorator, String id, Duration duration)
+	/**
+	 * Construct.
+	 * 
+	 * @param decorator
+	 *            wrapped decorator
+	 * @param id
+	 *            throttle id
+	 * @param delay
+	 *            throttle delay
+	 */
+	public AjaxCallThrottlingDecorator(IAjaxCallDecorator decorator, String id, Duration delay)
 	{
 		super(decorator);
 		if (Strings.isEmpty(id))
@@ -41,11 +74,14 @@ public class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
 			throw new IllegalArgumentException("id cannot be an empty string");
 		}
 		this.id = id;
-		this.duration = duration;
+		this.duration = delay;
 	}
 
 
-	public String postDecorateScript(String script)
+	/**
+	 * @see wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(java.lang.String)
+	 */
+	public final String postDecorateScript(String script)
 	{
 		return AbstractDefaultAjaxBehavior.throttleScript(script, id, duration);
 	}

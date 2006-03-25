@@ -22,13 +22,17 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
-import wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available
  * or javascript is disabled
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 {

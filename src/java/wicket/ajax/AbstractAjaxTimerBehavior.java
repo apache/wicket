@@ -24,6 +24,11 @@ import wicket.util.time.Duration;
 
 /**
  * A behavior that generates an AJAX update callback at a regular interval.
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehavior
 {
@@ -45,6 +50,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	/**
 	 * Subclasses should call super.onBind()
+	 * 
 	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
 	 */
 	protected void onBind()

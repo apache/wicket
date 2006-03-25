@@ -24,6 +24,10 @@ import wicket.model.IModel;
 
 /**
  * A CheckBox which is updated via ajax when the user changes its value
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AjaxCheckBox extends CheckBox
 {

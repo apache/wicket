@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4635 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,10 +30,11 @@ import wicket.markup.html.navigation.paging.PagingNavigator;
  * which supports paged navigation bars (@see
  * PageableListViewNavigationWithMargin).
  * <p>
- * <strong>NOTE</strong>
- * To use the, you <i>have</i> to put your listview in a webmarkupcontainer,
- * otherwise it is not possible to update the contents of the listview using
- * Ajax.
+ * <strong>NOTE</strong> To use the, you <i>have</i> to put your listview in a
+ * webmarkupcontainer, otherwise it is not possible to update the contents of
+ * the listview using Ajax.
+ * 
+ * @since 1.2
  * 
  * @author Martijn Dashorst
  */
@@ -83,8 +84,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable,
-			int increment)
+	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
 	}

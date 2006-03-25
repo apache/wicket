@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxFormValidatingBehavior.java 5113 2006-03-25 01:48:00 -0800 (Sat, 25
+ * Mar 2006) ivaynberg $ $Revision$ $Date: 2006-03-25 01:48:00 -0800
+ * (Sat, 25 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,7 +30,10 @@ import wicket.util.time.Duration;
  * Ajax event behavior that submits the form and updates all form feedback
  * panels on the page. Useful for providing instant feedback.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 {
@@ -78,6 +82,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * 
 	 * @param form
 	 * @param event
+	 * @param throttleDelay
 	 */
 	public static void addToAllFormComponents(final Form form, final String event,
 			final Duration throttleDelay)

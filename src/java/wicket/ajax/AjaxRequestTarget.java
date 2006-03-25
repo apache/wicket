@@ -60,7 +60,10 @@ import wicket.util.string.Strings;
  * be useful when it is desirable to link component update with some javascript
  * effects.
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public class AjaxRequestTarget implements IRequestTarget
 {

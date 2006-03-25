@@ -29,28 +29,31 @@ import wicket.util.time.Duration;
  * Example:
  * 
  * <pre>
- *              DropDownChoice choice=new DropDownChoice(...);
- *              choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *                 protected void onEvent(AjaxRequestTarget target) {
- *                    System.out.println(&quot;ajax here!&quot;);
- *                 }
- *              }
+ *       DropDownChoice choice=new DropDownChoice(...);
+ *       choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *           protected void onEvent(AjaxRequestTarget target) {
+ *               System.out.println(&quot;ajax here!&quot;);
+ *           }
+ *       }
  * </pre>
  * 
  * This behavior will be linked to the onChange javascript event of the select
  * box this DropDownChoice represents, and so anytime a new option is selected
  * we will get the System.out message
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static long sequence = 0;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private String event;
 
 
-	
 	private ThrottlingSettings throttlingSettings;
 
 	/**
@@ -71,8 +74,25 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		this.event = event;
 	}
 
-	public final AjaxEventBehavior setThrottleDelay(Duration throttleDelay) {
-		throttlingSettings=new ThrottlingSettings("th"+(++sequence), throttleDelay);
+	/**
+	 * Sets the throttle delay for this behavior. Throttled behaviors only
+	 * execute once withing the given delay even though they are triggered
+	 * multiple times.
+	 * <p>
+	 * For example, this is useful when attaching this behavior to the
+	 * onkeypress event. It is not desirable to have an ajax call made every
+	 * time the user types so we throttle that call to a desirable delay, such
+	 * as once per second. This gives us a near real time ability to provide
+	 * feedback without overloading the server with ajax calls.
+	 * 
+	 * 
+	 * @param throttleDelay
+	 *            throttle delay
+	 * @return this for chaining
+	 */
+	public final AjaxEventBehavior setThrottleDelay(Duration throttleDelay)
+	{
+		throttlingSettings = new ThrottlingSettings("th" + (++sequence), throttleDelay);
 		return this;
 	}
 
@@ -100,17 +120,19 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected String getCallbackScript(String partialCall, String onSuccessScript, String onFailureScript)
+	protected String getCallbackScript(String partialCall, String onSuccessScript,
+			String onFailureScript)
 	{
-		String script=super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
-		final ThrottlingSettings ts=throttlingSettings;
-		
-		if (ts!=null) {
-			script=AbstractAjaxTimerBehavior.throttleScript(script, ts.getId(), ts.getDuration());
+		String script = super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		final ThrottlingSettings ts = throttlingSettings;
+
+		if (ts != null)
+		{
+			script = AbstractAjaxTimerBehavior.throttleScript(script, ts.getId(), ts.getDelay());
 		}
 		return script;
 	}
-	
+
 	/**
 	 * 
 	 * @param event
@@ -143,26 +165,49 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param target
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
-	
-	
-	private static class ThrottlingSettings {
-		private final Duration duration;
+
+
+	/**
+	 * Class to keep track of throttling settings.
+	 * 
+	 * @author ivaynberg
+	 */
+	private static class ThrottlingSettings
+	{
+		private final Duration delay;
 		private final String id;
-		public ThrottlingSettings(final String id, final Duration duration)
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            throttle id
+		 * @param delay
+		 *            throttle delay
+		 */
+		public ThrottlingSettings(final String id, final Duration delay)
 		{
 			super();
 			this.id = id;
-			this.duration = duration;
+			this.delay = delay;
 		}
-		public Duration getDuration()
+
+		/**
+		 * @return throttle delay
+		 */
+		public Duration getDelay()
 		{
-			return duration;
+			return delay;
 		}
+
+		/**
+		 * @return throttle id
+		 */
 		public String getId()
 		{
 			return id;
 		}
-		
-		
+
+
 	}
 }

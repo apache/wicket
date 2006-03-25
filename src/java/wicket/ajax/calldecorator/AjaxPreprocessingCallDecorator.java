@@ -20,28 +20,50 @@ package wicket.ajax.calldecorator;
 
 import wicket.ajax.IAjaxCallDecorator;
 
+/**
+ * Ajax call decorator that decorates script before passing it to the delegate
+ * decorator
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ */
 public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 {
 	private final IAjaxCallDecorator delegate;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param delegate
+	 */
 	public AjaxPreprocessingCallDecorator(IAjaxCallDecorator delegate)
 	{
 		this.delegate = delegate;
 	}
 
 
+	/**
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(java.lang.String)
+	 */
 	public String decorateScript(String script)
 	{
 		String s = preDecorateScript(script);
 		return (delegate == null) ? s : delegate.decorateScript(script);
 	}
 
+	/**
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
+	 */
 	public String decorateOnSuccessScript(String script)
 	{
 		String s = preDecorateOnSuccessScript(script);
 		return (delegate == null) ? s : delegate.decorateOnSuccessScript(script);
 	}
 
+	/**
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
+	 */
 	public String decorateOnFailureScript(String script)
 	{
 		String s = preDecorateOnFailureScript(script);
@@ -49,16 +71,34 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	}
 
 
+	/**
+	 * Decorates ajax call script
+	 * 
+	 * @param script
+	 * @return decorated script
+	 */
 	public String preDecorateScript(String script)
 	{
 		return script;
 	}
 
+	/**
+	 * Decorates success handling script
+	 * 
+	 * @param script
+	 * @return decorated script
+	 */
 	public String preDecorateOnSuccessScript(String script)
 	{
 		return script;
 	}
 
+	/**
+	 * Decorates the failure handling script
+	 * 
+	 * @param script
+	 * @return decorated script
+	 */
 	public String preDecorateOnFailureScript(String script)
 	{
 		return script;

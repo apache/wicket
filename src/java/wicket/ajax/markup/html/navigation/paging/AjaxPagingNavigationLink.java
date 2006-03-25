@@ -25,6 +25,8 @@ import wicket.markup.html.navigation.paging.PagingNavigationLink;
 /**
  * An Ajax version of a link to a page of a PageableListView.
  * 
+ * @since 1.2
+ * 
  * @author Martijn Dashorst
  */
 public class AjaxPagingNavigationLink extends PagingNavigationLink implements IAjaxLink
@@ -51,7 +53,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 
 	/**
 	 * Fallback event listener, will redisplay the current page.
-	 *
+	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
 	public void onClick()

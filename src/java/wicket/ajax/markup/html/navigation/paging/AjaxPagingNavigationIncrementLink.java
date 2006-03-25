@@ -1,6 +1,7 @@
 /*
  * $Id: PagingNavigationIncrementLink.java,v 1.3 2005/02/17 06:15:27
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-02-25 16:24:23 -0800 (Sat,
+ * 25 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,9 +28,9 @@ import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
  * list view navigation looks like
  * 
  * <pre>
- *              
- *             	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *             	
+ *               
+ *              	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *              	
  * </pre>
  * 
  * <p>
@@ -39,6 +40,8 @@ import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
  * This link will update the pageable and itself or the navigator the link is
  * part of using Ajax techniques, or perform a full refresh when ajax is not
  * available.
+ * 
+ * @since 1.2
  * 
  * @author Martijn Dashorst
  */

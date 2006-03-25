@@ -31,7 +31,10 @@ import wicket.util.time.Duration;
 /**
  * The base class for Wicket's default AJAX implementation.
  * 
- * @author Igor Vaynberg
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
@@ -124,6 +127,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            <code>function(params,</code> with signature
 	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>.
 	 *            Example: <code>wicketAjaxGet('callbackurl'</code>
+	 * @param onSuccessScript
+	 *            javascript that will run when the ajax call finishes
+	 *            successfully
+	 * @param onFailureScript
+	 *            javascript that will run when the ajax call finishes with an
+	 *            error status
 	 * 
 	 * @return script that peforms ajax callback to this behavior
 	 */
@@ -217,6 +226,27 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected abstract void respond(AjaxRequestTarget target);
 
+	/**
+	 * Wraps the provided javascript with a throttled block. Throttled behaviors
+	 * only execute once within the given delay even though they are triggered
+	 * multiple times.
+	 * <p>
+	 * For example, this is useful when attaching an event behavior to the
+	 * onkeypress event. It is not desirable to have an ajax call made every
+	 * time the user types so we throttle that call to a desirable delay, such
+	 * as once per second. This gives us a near real time ability to provide
+	 * feedback without overloading the server with ajax calls.
+	 * 
+	 * @param script
+	 *            javascript to be throttled
+	 * @param throttleId
+	 *            the id of the throttle to be used. Usually this should remain
+	 *            constant for the same javascript block.
+	 * @param throttleDelay
+	 *            time span within which the javascript block will only execute
+	 *            once
+	 * @return wrapped javascript
+	 */
 	public static final String throttleScript(String script, String throttleId,
 			Duration throttleDelay)
 	{
@@ -235,7 +265,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			throw new IllegalArgumentException("throttleDelay cannot be null");
 		}
 
-		//XXX change to appending string buffer?
+		// XXX change to appending string buffer?
 		return "wicketThrottler.throttle( '" + throttleId + "', " + throttleDelay.getMilliseconds()
 				+ ", function() { " + script + "});";
 	}
