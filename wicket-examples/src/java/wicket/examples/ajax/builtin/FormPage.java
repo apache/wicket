@@ -21,8 +21,6 @@ package wicket.examples.ajax.builtin;
 import java.io.Serializable;
 
 import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.IAjaxCallDecorator;
-import wicket.ajax.calldecorator.AjaxCallThrottlingDecorator;
 import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
@@ -37,8 +35,9 @@ import wicket.model.ResourceModel;
 import wicket.util.time.Duration;
 
 /**
- * Page to demonstrate instant ajax validaion feedback. Validation is trigger in
- * onblur javascript event handler in every form input.
+ * Page to demonstrate instant ajax validaion feedback. Validation is triggered
+ * as the user is typing, but is throttled so that only one ajax call is made to
+ * the server per second.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -51,8 +50,7 @@ public class FormPage extends BasePage
 	 */
 	public FormPage()
 	{
-		// add feedback panel with a markup id setter so it can be updated via
-		// ajax
+		// create feedback panel to show errors
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		feedback.setOutputMarkupId(true);
 		add(feedback);
@@ -81,7 +79,13 @@ public class FormPage extends BasePage
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("email-label", fc));
 
+
+		// attach an ajax validation behavior to all form component's onkeypress
+		// event and throttle it down to once per second
+
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeypress", Duration.ONE_SECOND);
+
+		// add a button that can be used to submit the form via ajax
 
 		form.add(new AjaxSubmitButton("ajax-submit-button", form)
 		{
