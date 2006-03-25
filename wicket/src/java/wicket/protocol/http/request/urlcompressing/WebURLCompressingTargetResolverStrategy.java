@@ -39,7 +39,11 @@ import wicket.util.string.Strings;
 
 
 /**
+ * TODO jcompagner: javadoc
+ * 
  * @author jcompagner
+ * 
+ * @since 1.2
  */
 public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTargetResolverStrategy
 {

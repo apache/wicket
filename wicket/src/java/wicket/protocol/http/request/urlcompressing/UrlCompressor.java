@@ -58,9 +58,10 @@ import wicket.util.collections.IntHashMap.Entry;
  * }
  * </pre>
  * 
+ * @since 1.2
+ * 
  * @see WebURLCompressingCodingStrategy
  * @see WebURLCompressingTargetResolverStrategy
- * @see ICompressingUrlPage
  * 
  * @author jcompagner
  */
