@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -21,9 +20,12 @@ package wicket.ajax.markup.html;
 import wicket.ajax.AjaxRequestTarget;
 
 /**
- * Interface for Ajax callback links. 
+ * Interface for Ajax callback links.
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
  * @author Martijn Dashorst
- * @author Igor Vaynberg
  */
 public interface IAjaxLink
 {
@@ -31,7 +33,8 @@ public interface IAjaxLink
 	 * Listener method invoked on the ajax request generated when the user
 	 * clicks the link
 	 * 
-	 * @param target the request target.
+	 * @param target
+	 *            the request target.
 	 */
 	void onClick(final AjaxRequestTarget target);
 }

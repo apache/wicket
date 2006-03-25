@@ -31,6 +31,8 @@ import wicket.markup.html.navigation.paging.IPageable;
  * Ajax behavior for the paging navigation links. This behavior can only have
  * one parent: the link it is attached to.
  * 
+ * @since 1.2
+ * 
  * @author Martijn Dashorst
  */
 public class AjaxPagingNavigationBehavior extends AjaxEventBehavior

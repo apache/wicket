@@ -20,9 +20,12 @@ package wicket.ajax.calldecorator;
 import wicket.ajax.IAjaxCallDecorator;
 
 /**
- * An adapter for implementations of IAjaxCallDecorator.
+ * An adapter for implementations of {@link IAjaxCallDecorator}.
+ * 
+ * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 {

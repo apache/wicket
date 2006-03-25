@@ -31,6 +31,10 @@ import wicket.markup.html.form.FormComponent;
  * cookie or other {@link IValuePersister}. If this is necessary please add a
  * request for enhancement.
  * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {

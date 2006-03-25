@@ -21,7 +21,10 @@ package wicket.ajax;
  * Interface used to decorate a wicket generated javascript that performs an
  * ajax callback
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public interface IAjaxCallDecorator
 {
@@ -41,14 +44,16 @@ public interface IAjaxCallDecorator
 
 	/**
 	 * Decorates the onSuccess handler script
-	 * @param script 
+	 * 
+	 * @param script
 	 * @return decorated onSuccess handler script
 	 */
 	String decorateOnSuccessScript(String script);
 
 	/**
 	 * Decorates the onFailure handler script
-	 * @param script 
+	 * 
+	 * @param script
 	 * @return decorated onFailure handler script
 	 */
 	String decorateOnFailureScript(String script);

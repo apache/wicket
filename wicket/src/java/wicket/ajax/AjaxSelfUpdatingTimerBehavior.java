@@ -20,8 +20,13 @@ package wicket.ajax;
 import wicket.util.time.Duration;
 
 /**
- * Automatically re-renders the component it is attached to via AJAX at a regular
- * interval.
+ * Automatically re-renders the component it is attached to via AJAX at a
+ * regular interval.
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 {

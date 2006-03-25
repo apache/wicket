@@ -19,20 +19,47 @@
 package wicket.ajax.calldecorator;
 
 import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.markup.html.AjaxFallbackLink;
 
+/**
+ * Decorator that can be used to cancel the regular action if ajax call was
+ * performed. This allows us to, for example, cancel the default anchor behavior
+ * (requesting href url) if an ajax call was made in the onclick event handler.
+ * Ajax call cannot be performed if javascript has been turned off or no
+ * compatible XmlHttpRequest object can be found. This decorator will make
+ * javascript return true if the ajax call was made, and false otherwise.
+ * 
+ * @see AjaxFallbackLink
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
 public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDecorator
 {
 
+	/**
+	 * Construct.
+	 */
 	public CancelEventIfNoAjaxDecorator()
 	{
 		this((IAjaxCallDecorator)null);
 	}
 
+	/**
+	 * Constructors that allows chaining of another decorator
+	 * 
+	 * @param delegate
+	 */
 	public CancelEventIfNoAjaxDecorator(IAjaxCallDecorator delegate)
 	{
 		super(delegate);
 	}
 
+	/**
+	 * @see wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(java.lang.String)
+	 */
 	public final String postDecorateScript(String script)
 	{
 		return script + "return !" + IAjaxCallDecorator.WICKET_CALL_RESULT_VAR + ";";

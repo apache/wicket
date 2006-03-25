@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4871 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,6 +28,8 @@ import wicket.markup.html.form.Form;
  * A button that submits the form via ajax. Since this button takes the form as
  * a constructor argument it does not need to be added to it unlike the
  * {@link Button} component.
+ * 
+ * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -65,7 +67,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 		checkComponentTagAttribute(tag, "type", "button");
 		super.onComponentTag(tag);
 	}
-	
+
 	/**
 	 * Listener method invoked on form submit
 	 * 

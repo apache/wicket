@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4904 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +26,10 @@ import wicket.markup.html.PackageResource;
  * 
  * @see IInitializer
  * 
+ * @since 1.2
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
 public class AjaxInitializer implements IInitializer
 {
@@ -36,8 +39,10 @@ public class AjaxInitializer implements IInitializer
 	public void init(Application application)
 	{
 		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
-		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
-		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
+		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class,
+				"wicket-ajax-debug-drag.js");
+		PackageResource
+				.bind(application, AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 		PackageResource.bind(application, AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	}
