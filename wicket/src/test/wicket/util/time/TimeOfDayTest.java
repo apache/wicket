@@ -33,8 +33,8 @@ public final class TimeOfDayTest extends TestCase
      */
     public void test()
     {
-        Assert.assertTrue(TimeOfDay.MIDNIGHT.hour() == 0);
-        Assert.assertTrue(TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()).equals(TimeOfDay.MIDNIGHT));
+        Assert.assertEquals(0, TimeOfDay.MIDNIGHT.hour());
+        Assert.assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
 
         final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
         final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
