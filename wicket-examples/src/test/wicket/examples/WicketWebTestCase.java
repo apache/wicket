@@ -27,6 +27,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 
+import com.meterware.httpunit.HttpUnitOptions;
+
 /**
  * Add XPATH based validation
  * 
@@ -42,12 +44,18 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 */
 	public static Test suite(Class clazz)
 	{
+		// The javascript 'history' variable is not supported by
+		// httpunit and we don't want httpunit to throw an 
+		// exception just because they can not handle it.
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
+
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
 		deco.setContextPath("/wicket-examples");
+		
 		return deco;
 	}
 
