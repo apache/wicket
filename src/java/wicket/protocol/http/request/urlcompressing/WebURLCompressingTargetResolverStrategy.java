@@ -31,7 +31,8 @@ import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.html.WebPage;
-import wicket.protocol.http.request.urlcompressing.UrlCompressor.ComponentAndInterface;
+import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.request.urlcompressing.URLCompressor.ComponentAndInterface;
 import wicket.request.RequestParameters;
 import wicket.request.compound.DefaultRequestTargetResolverStrategy;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
@@ -39,7 +40,20 @@ import wicket.util.string.Strings;
 
 
 /**
- * TODO jcompagner: javadoc
+ * Use this ResolverStrategy with the {@link WebURLCompressingCodingStrategy} to 
+ * minimize the wicket:interface urls. The component path and the interface name
+ * will be removed from the url and only an uid will be inserted into the url.
+ * 
+ * To use this url compressing behaviour you must override the 
+ * {@link WebApplication#newRequestCycleProcessor()} method. To make a request cycle
+ * processor with this ResolverStrategy and the {@link WebURLCompressingCodingStrategy}
+ * 
+ * <pre>
+ * protected IRequestCycleProcessor newRequestCycleProcessor()
+ * {
+ *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+ * }
+ * </pre>
  * 
  * @author jcompagner
  * 

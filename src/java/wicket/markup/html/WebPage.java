@@ -35,7 +35,7 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.request.urlcompressing.UrlCompressor;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
@@ -72,7 +72,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/** The body container */
 	private BodyContainer bodyContainer;
 
-	private UrlCompressor compressor;
+	private URLCompressor compressor;
 
 	/**
 	 * Constructor. Having this constructor public means that you page is
@@ -241,17 +241,17 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
 	 * }
 	 *  </pre>
-	 * @return The UrlCompressor for this webpage. 
+	 * @return The URLCompressor for this webpage. 
 	 * 
 	 * @since 1.2
 	 * 
 	 * @see WebURLCompressingCodingStrategy
 	 * @see WebURLCompressingTargetResolverStrategy
-	 * @see UrlCompressor
+	 * @see URLCompressor
 	 */
-	public final UrlCompressor getUrlCompressor()
+	public final URLCompressor getUrlCompressor()
 	{
-		if(compressor == null) compressor = new UrlCompressor();
+		if(compressor == null) compressor = new URLCompressor();
 		return compressor;
 	}	
 	/**
