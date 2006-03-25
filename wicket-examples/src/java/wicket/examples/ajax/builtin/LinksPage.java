@@ -20,6 +20,7 @@ package wicket.examples.ajax.builtin;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
@@ -76,7 +77,7 @@ public class LinksPage extends BasePage
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new IndicatingAjaxLink("c1-link")
+		add(new AjaxLink("c1-link")
 		{
 
 			public void onClick(AjaxRequestTarget target)

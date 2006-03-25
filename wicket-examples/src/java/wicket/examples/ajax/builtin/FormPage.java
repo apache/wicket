@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: FormPage.java 4916 2006-03-13 23:15:39 -0800 (Mon, 13 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-13 23:15:39 -0800 (Mon, 13 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,11 @@
  */
 package wicket.examples.ajax.builtin;
 
+import java.io.Serializable;
+
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.calldecorator.AjaxCallThrottlingDecorator;
 import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
@@ -30,6 +34,7 @@ import wicket.markup.html.form.validation.StringValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ResourceModel;
+import wicket.util.time.Duration;
 
 /**
  * Page to demonstrate instant ajax validaion feedback. Validation is trigger in
@@ -46,7 +51,6 @@ public class FormPage extends BasePage
 	 */
 	public FormPage()
 	{
-
 		// add feedback panel with a markup id setter so it can be updated via
 		// ajax
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -65,34 +69,34 @@ public class FormPage extends BasePage
 		fc = new RequiredTextField("name");
 		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
-		
+
+
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("name-label", fc));
-		
+
 		fc = new RequiredTextField("email");
 		fc.add(EmailAddressPatternValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
+
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("email-label", fc));
-		
-		// add ajax form validating behavior to onblur event of all form
-		// components
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onblur");
 
-		
-		form.add(new AjaxSubmitButton("ajax-submit-button", form) {
+		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeypress", Duration.ONE_SECOND);
+
+		form.add(new AjaxSubmitButton("ajax-submit-button", form)
+		{
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				target.addComponent(feedback);
 			}
-			
+
 		});
-		
+
 	}
 
 	/** simple java bean. */
-	public static class Bean
+	public static class Bean implements Serializable
 	{
 		private String name, email;
 
