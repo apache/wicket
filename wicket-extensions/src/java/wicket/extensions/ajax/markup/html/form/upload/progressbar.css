@@ -11,17 +11,18 @@
     }
 
     div.wupb-progressBar .wupb-border {
-        background: url( ${progressbarRemainder}) repeat-x;
+	    background: url( ${progressbarRemainder}) repeat-x;
+		background-color: #eee;
         border-left: 1px solid grey;
         border-right: 1px solid grey;
         width: 100%;
     }
 
     div.wupb-progressBar .wupb-background {
-        background: url( ${progressbar} ) repeat-x;
+	    background: url( ${progressbar} ) repeat-x; 
+		background-color: #507090;
         height: 18px;
         width: 0%;
     }
 
- 
 </style>

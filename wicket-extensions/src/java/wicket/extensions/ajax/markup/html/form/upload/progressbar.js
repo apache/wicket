@@ -4,7 +4,7 @@ var wupb= {
 	},
 	
 	start : function() {
-		wupb.get('${formMarkupId}').submit();
+		wupb.get('${form-id}').submit();
 		wupb.get('${status-id}').innerHTML='Upload starting...';
 	    wupb.get('${bar-id}').firstChild.firstChild.style.width='0%';
 	    

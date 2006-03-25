@@ -59,7 +59,7 @@ public class UploadProgressBar extends Panel
 		this.form = form; // ?still needed
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
-		
+		setRenderBodyOnly(true);
 
 		final WebMarkupContainer barDiv=new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
@@ -104,7 +104,7 @@ public class UploadProgressBar extends Panel
 				variables.put("status-id", statusDiv.getMarkupId());
 				
 				variables.put("statusUrl", statusUrl);
-				variables.put("formMarkupId", form.getMarkupId());
+				variables.put("form-id", form.getMarkupId());
 				MapVariableInterpolator interpolator = new MapVariableInterpolator(javascriptFile,
 						variables);
 				return "<script>"+interpolator.toString()+"</script>";
