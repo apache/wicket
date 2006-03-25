@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
@@ -65,7 +66,7 @@ public class MockWebApplicationTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		Assert.assertTrue(validateDocument(document, 0));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult.html"));
 
 		// Inspect the page & model
 		MockPage p = (MockPage)application.getLastRenderedPage();
@@ -98,7 +99,7 @@ public class MockWebApplicationTest extends TestCase
 		 */
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		Assert.assertTrue(validateDocument(document, 1));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult2.html"));
 
 		// Inspect the page & model
 		p = (MockPage)application.getLastRenderedPage();
