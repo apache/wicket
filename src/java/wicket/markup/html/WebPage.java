@@ -243,11 +243,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 *  </pre>
 	 * @return The UrlCompressor for this webpage. 
 	 * 
+	 * @since 1.2
+	 * 
 	 * @see WebURLCompressingCodingStrategy
 	 * @see WebURLCompressingTargetResolverStrategy
 	 * @see UrlCompressor
 	 */
-	public UrlCompressor getUrlCompressor()
+	public final UrlCompressor getUrlCompressor()
 	{
 		if(compressor == null) compressor = new UrlCompressor();
 		return compressor;

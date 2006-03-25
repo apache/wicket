@@ -31,7 +31,10 @@ import wicket.util.string.AppendingStringBuffer;
 
 
 /**
+ * TODO jcompagner: javadoc
  * @author jcompagner
+ * 
+ * @since 1.2
  */
 public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 {
