@@ -321,6 +321,7 @@ public class ComponentTag extends MarkupElement
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
+			tag.setHasNoCloseTag(this.hasNoCloseTag);
 			if (this.additionalAttributes != null)
 			{
 				tag.getAdditionalAttributes().putAll(this.additionalAttributes);
