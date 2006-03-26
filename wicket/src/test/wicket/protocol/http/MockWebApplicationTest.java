@@ -21,10 +21,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
-import wicket.protocol.http.documentvalidation.Tag;
-import wicket.protocol.http.documentvalidation.TextContent;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
  * Simple application that demonstrates the mock http application code (and

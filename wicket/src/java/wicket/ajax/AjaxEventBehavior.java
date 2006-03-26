@@ -128,7 +128,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 		if (ts != null)
 		{
-			script = AbstractAjaxTimerBehavior.throttleScript(script, ts.getId(), ts.getDelay());
+			script = AbstractDefaultAjaxBehavior.throttleScript(script, ts.getId(), ts.getDelay());
 		}
 		return script;
 	}
