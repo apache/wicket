@@ -273,26 +273,6 @@ public final class MarkupParserTest extends WicketTestCase
 		parser.parse("<span wicket:id=\"test\"/><wicket:param key=value/>");
 		parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" />");
 
-		try
-		{
-			parser.parse("<span wicket:id=\"test\"/>whatever<wicket:param key=\"value\" />");
-			assertTrue("Should have thrown an exception", false);
-		}
-		catch (MarkupException ex)
-		{
-			// ignore
-		}
-
-		parser
-				.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
-		parser
-				.parse("<span wicket:id=\"test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
-		parser
-				.parse("<span wicket:id=\"test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
-
-		// parser.parse("<span wicket:id=\"test\"/><wicket:param
-		// name=myParam>value</wicket>", null);
-
 		parser.parse("<wicket:body/>");
 		parser.parse("<wicket:border/>");
 		parser.parse("<wicket:panel/>");

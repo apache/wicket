@@ -26,7 +26,6 @@ import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.AttributeMap;
 import wicket.util.value.ValueMap;
 
 /**
@@ -64,9 +63,6 @@ public class ComponentTag extends MarkupElement
 
 	/** The component's path in the markup */
 	private String path;
-
-	/** Additional attributes map. Attributes contributed by <wicket:param> */
-	private AttributeMap additionalAttributes;
 
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
@@ -322,10 +318,6 @@ public class ComponentTag extends MarkupElement
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);
-			if (this.additionalAttributes != null)
-			{
-				tag.getAdditionalAttributes().putAll(this.additionalAttributes);
-			}
 			return tag;
 		}
 	}
@@ -586,23 +578,6 @@ public class ComponentTag extends MarkupElement
 	final XmlTag getXmlTag()
 	{
 		return xmlTag;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Get additional attributes contributed by &lt;wicket:param&gt;
-	 * 
-	 * @return additional attributes
-	 */
-	public final AttributeMap getAdditionalAttributes()
-	{
-		if (this.additionalAttributes == null)
-		{
-			this.additionalAttributes = new AttributeMap();
-		}
-
-		return this.additionalAttributes;
 	}
 
 	/**

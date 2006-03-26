@@ -223,17 +223,6 @@ public final class AutoComponentResolver implements IComponentResolver
            	Classes.invokeSetter(component, key, value, container.getLocale());
         }
 
-        // Get all remaining attributes and invoke the component's setters
-        iter = tag.getAdditionalAttributes().entrySet().iterator();
-        while (iter.hasNext())
-        {
-            final Map.Entry entry = (Map.Entry)iter.next();
-            final String key = (String)entry.getKey();
-            final String value = (String)entry.getValue();
-
-           	Classes.invokeSetter(component, key, value, container.getLocale());
-        }
-
         return component;
     }
 }

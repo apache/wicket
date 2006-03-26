@@ -90,17 +90,7 @@ public class ComponentCreateTagTest extends TestCase
 	}
 
 	/**
-	 * <wicket:param> attached
 	 * 
-	 * @throws Exception
-	 */
-	public void testRenderHomePage_5() throws Exception
-	{
-	    executeTest(ComponentCreateTag_5.class, "ComponentCreateTagExpectedResult_5.html");
-	}
-
-	/**
-	 * <wicket:param> attached
 	 * 
 	 * @throws Exception
 	 */
