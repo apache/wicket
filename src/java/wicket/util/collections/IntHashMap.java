@@ -103,18 +103,26 @@ public class IntHashMap implements Cloneable, Serializable
 	public IntHashMap(int initialCapacity, float loadFactor)
 	{
 		if (initialCapacity < 0)
+		{
 			throw new IllegalArgumentException("Illegal initial capacity: " + //$NON-NLS-1$
 					initialCapacity);
+		}
 		if (initialCapacity > MAXIMUM_CAPACITY)
+		{
 			initialCapacity = MAXIMUM_CAPACITY;
+		}
 		if (loadFactor <= 0 || Float.isNaN(loadFactor))
+		{
 			throw new IllegalArgumentException("Illegal load factor: " + //$NON-NLS-1$
 					loadFactor);
+		}
 
 		// Find a power of 2 >= initialCapacity
 		int capacity = 1;
 		while (capacity < initialCapacity)
+		{
 			capacity <<= 1;
+		}
 
 		this.loadFactor = loadFactor;
 		threshold = (int)(capacity * loadFactor);
@@ -214,9 +222,13 @@ public class IntHashMap implements Cloneable, Serializable
 		while (true)
 		{
 			if (e == null)
+			{
 				return e;
+			}
 			if (key == e.key)
+			{
 				return e.value;
+			}
 			e = e.next;
 		}
 	}
@@ -237,7 +249,9 @@ public class IntHashMap implements Cloneable, Serializable
 		while (e != null)
 		{
 			if (key == e.key)
+			{
 				return true;
+			}
 			e = e.next;
 		}
 		return false;
@@ -254,7 +268,9 @@ public class IntHashMap implements Cloneable, Serializable
 		int i = indexFor(key, table.length);
 		Entry e = table[i];
 		while (e != null && !(key == e.key))
+		{
 			e = e.next;
+		}
 		return e;
 	}
 
@@ -399,7 +415,9 @@ public class IntHashMap implements Cloneable, Serializable
 	{
 		int numKeysToBeAdded = m.size();
 		if (numKeysToBeAdded == 0)
+		{
 			return;
+		}
 
 		/*
 		 * Expand the map if the map if the number of mappings to be added is
@@ -414,12 +432,18 @@ public class IntHashMap implements Cloneable, Serializable
 		{
 			int targetCapacity = (int)(numKeysToBeAdded / loadFactor + 1);
 			if (targetCapacity > MAXIMUM_CAPACITY)
+			{
 				targetCapacity = MAXIMUM_CAPACITY;
+			}
 			int newCapacity = table.length;
 			while (newCapacity < targetCapacity)
+			{
 				newCapacity <<= 1;
+			}
 			if (newCapacity > table.length)
+			{
 				resize(newCapacity);
+			}
 		}
 
 		for (Iterator i = m.entrySet().iterator(); i.hasNext();)
@@ -465,9 +489,13 @@ public class IntHashMap implements Cloneable, Serializable
 				modCount++;
 				size--;
 				if (prev == e)
+				{
 					table[i] = next;
+				}
 				else
+				{
 					prev.next = next;
+				}
 				return e;
 			}
 			prev = e;
@@ -485,7 +513,9 @@ public class IntHashMap implements Cloneable, Serializable
 	Entry removeMapping(Object o)
 	{
 		if (!(o instanceof Entry))
+		{
 			return null;
+		}
 
 		Entry entry = (Entry)o;
 		int key = entry.getKey();
@@ -501,9 +531,13 @@ public class IntHashMap implements Cloneable, Serializable
 				modCount++;
 				size--;
 				if (prev == e)
+				{
 					table[i] = next;
+				}
 				else
+				{
 					prev.next = next;
+				}
 				return e;
 			}
 			prev = e;
@@ -521,7 +555,9 @@ public class IntHashMap implements Cloneable, Serializable
 		modCount++;
 		Entry tab[] = table;
 		for (int i = 0; i < tab.length; i++)
+		{
 			tab[i] = null;
+		}
 		size = 0;
 	}
 
@@ -537,13 +573,21 @@ public class IntHashMap implements Cloneable, Serializable
 	public boolean containsValue(Object value)
 	{
 		if (value == null)
+		{
 			return containsNullValue();
+		}
 
 		Entry tab[] = table;
 		for (int i = 0; i < tab.length; i++)
+		{
 			for (Entry e = tab[i]; e != null; e = e.next)
+			{
 				if (value.equals(e.value))
+				{
 					return true;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -555,9 +599,15 @@ public class IntHashMap implements Cloneable, Serializable
 	{
 		Entry tab[] = table;
 		for (int i = 0; i < tab.length; i++)
+		{
 			for (Entry e = tab[i]; e != null; e = e.next)
+			{
 				if (e.value == null)
+				{
 					return true;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -644,7 +694,9 @@ public class IntHashMap implements Cloneable, Serializable
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Entry))
+			{
 				return false;
+			}
 			Entry e = (Entry)o;
 			int k1 = getKey();
 			int k2 = e.getKey();
@@ -653,7 +705,9 @@ public class IntHashMap implements Cloneable, Serializable
 				Object v1 = getValue();
 				Object v2 = e.getValue();
 				if (v1 == v2 || (v1 != null && v1.equals(v2)))
+				{
 					return true;
+				}
 			}
 			return false;
 		}
@@ -693,7 +747,9 @@ public class IntHashMap implements Cloneable, Serializable
 	{
 		table[bucketIndex] = new Entry(key, value, table[bucketIndex]);
 		if (size++ >= threshold)
+		{
 			resize(2 * table.length);
+		}
 	}
 
 	/**
@@ -731,7 +787,9 @@ public class IntHashMap implements Cloneable, Serializable
 			if (size != 0)
 			{ // advance to first entry
 				while (i > 0 && (n = t[--i]) == null)
+				{
 					;
+				}
 			}
 			next = n;
 			index = i;
@@ -748,16 +806,22 @@ public class IntHashMap implements Cloneable, Serializable
 		Entry nextEntry()
 		{
 			if (modCount != expectedModCount)
+			{
 				throw new ConcurrentModificationException();
+			}
 			Entry e = next;
 			if (e == null)
+			{
 				throw new NoSuchElementException();
+			}
 
 			Entry n = e.next;
 			Entry[] t = table;
 			int i = index;
 			while (n == null && i > 0)
+			{
 				n = t[--i];
+			}
 			index = i;
 			next = n;
 			return current = e;
@@ -769,9 +833,13 @@ public class IntHashMap implements Cloneable, Serializable
 		public void remove()
 		{
 			if (current == null)
+			{
 				throw new IllegalStateException();
+			}
 			if (modCount != expectedModCount)
+			{
 				throw new ConcurrentModificationException();
+			}
 			int k = current.key;
 			current = null;
 			IntHashMap.this.removeEntryForKey(k);
@@ -991,7 +1059,9 @@ public class IntHashMap implements Cloneable, Serializable
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Entry))
+			{
 				return false;
+			}
 			Entry e = (Entry)o;
 			Entry candidate = getEntry(e.getKey());
 			return candidate != null && candidate.equals(e);

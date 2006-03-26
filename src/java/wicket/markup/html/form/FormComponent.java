@@ -624,7 +624,9 @@ public abstract class FormComponent extends WebMarkupContainer
 		{
 			validators_get(i).validate(this);
 			if (!isValid())
+			{
 				break;
+			}
 		}
 	}
 

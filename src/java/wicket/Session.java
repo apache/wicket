@@ -854,7 +854,9 @@ public abstract class Session implements Serializable
 				{
 					final Page page = (Page)object;
 					if (page.isStateless())
+					{
 						continue;
+					}
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
 					object = page.getPageMapEntry();
 				}

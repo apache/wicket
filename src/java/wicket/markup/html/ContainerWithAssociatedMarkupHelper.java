@@ -247,7 +247,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		}
 
 		// Scan the markup for <wicket:head>.
-		MarkupElement elem = (MarkupElement)associatedMarkupStream.get();
+		MarkupElement elem = associatedMarkupStream.get();
 		while (elem != null)
 		{
 			if (elem instanceof WicketTag)
@@ -278,7 +278,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					break;
 				}
 			}
-			elem = (MarkupElement)associatedMarkupStream.next();
+			elem = associatedMarkupStream.next();
 		}
 
 		// No (more) wicket:head found

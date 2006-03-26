@@ -853,13 +853,13 @@ public abstract class Objects
 				return new Integer((int)value);
 
 			case FLOAT :
-				if ((long)value == value)
+				if (value == value)
 				{
 					return new Float(value);
 				}
 			// else fall through:
 			case DOUBLE :
-				if ((long)value == value)
+				if (value == value)
 				{
 					return new Double(value);
 				}
