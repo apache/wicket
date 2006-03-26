@@ -105,40 +105,4 @@ public class MockWebApplicationTest extends TestCase
 		p = (MockPage)application.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
 	}
-
-	/**
-	 * Helper method to validate the returned XML document.
-	 * 
-	 * @param document
-	 *            The document
-	 * @param expectedLinkClickCount
-	 *            The number of times the link should have been clicked
-	 * @return The validation result
-	 */
-	private boolean validateDocument(String document, int expectedLinkClickCount)
-	{
-		HtmlDocumentValidator validator = new HtmlDocumentValidator();
-		Tag html = new Tag("html");
-		Tag head = new Tag("head");
-		html.addExpectedChild(head);
-		Tag title = new Tag("title");
-		head.addExpectedChild(title);
-		title.addExpectedChild(new TextContent("Mock Page"));
-		Tag body = new Tag("body");
-		html.addExpectedChild(body);
-		Tag a = new Tag("a");
-		a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?"
-				+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME
-				+ "=:[0-9]+:actionLink:[0-9]*:ILinkListener");
-		a.addExpectedAttribute("wicket:id", "actionLink");
-		body.addExpectedChild(a);
-		a.addExpectedChild(new TextContent("Action link clicked "));
-		Tag span = new Tag("span");
-		span.addExpectedChild(new TextContent("" + expectedLinkClickCount));
-		a.addExpectedChild(span);
-		a.addExpectedChild(new TextContent(" times"));
-		validator.addRootElement(html);
-
-		return validator.isDocumentValid(document);
-	}
 }

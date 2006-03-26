@@ -522,7 +522,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 						log.error(ex.getMessage(), ex);
 					}
 					if (!firstParameter)
+					{
 						url.append('&');
+					}
 					else
 					{
 						firstParameter = false;

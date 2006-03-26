@@ -99,7 +99,7 @@ public class Markup
 			StringBuffer componentPath = null;
 			for (int i = 0; i < this.markup.size(); i++)
 			{
-				MarkupElement elem = (MarkupElement)this.markup.get(i);
+				MarkupElement elem = this.markup.get(i);
 				if (elem instanceof ComponentTag)
 				{
 					ComponentTag tag = (ComponentTag) elem;
@@ -144,7 +144,7 @@ public class Markup
 	 */
 	public MarkupElement get(final int index)
 	{
-		return (MarkupElement)markup.get(index);
+		return markup.get(index);
 	}
 
 	/**
