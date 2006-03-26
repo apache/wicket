@@ -21,19 +21,21 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * This is not a reader like e.g. a FileReader. It rather reads the whole data
- * till the end from a source reader into memory and besides that it maintains
+ * This is not a reader like e.g. FileReader. It rather reads the whole data
+ * untill the end from a source reader into memory and besides that it maintains
  * the current position (like a reader) it provides String like methods which
- * conviently let you navigate (usually forward) in the stream.
+ * conviniently let you navigate (usually forward) in the stream.
  * <p>
  * Because the source data are expected to be text, the line and column numbers
- * are maintained as well for location precise error messages.
+ * are maintained as well for location precise error messages. But it does NOT
+ * automatically update the line and column numbers. You must call
+ * {@link #countLinesTo(int)}
  * 
  * @author Juergen Donnerstag
  */
 public final class FullyBufferedReader
 {
-	/** All the data from the resouce */
+	/** All the chars from the resouce */
 	private String input;
 
 	/** Position in parse. */
@@ -48,7 +50,7 @@ public final class FullyBufferedReader
 	/** Last place we counted lines from. */
 	private int lastLineCountIndex;
 
-	/** A temporary variable to remember a certain position in the markup */
+	/** A variable to remember a certain position in the markup */
 	private int positionMarker;
 
 	/**
@@ -142,12 +144,13 @@ public final class FullyBufferedReader
 	{
 		for (int i = lastLineCountIndex; i < end; i++)
 		{
-			if (this.input.charAt(i) == '\n')
+			final char ch = this.input.charAt(i);
+			if (ch == '\n')
 			{
 				columnNumber = 1;
 				lineNumber++;
 			}
-			else
+			else if (ch != '\r')
 			{
 				columnNumber++;
 			}
