@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -63,22 +63,22 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * By default, the processing of a form works like this:
  * <li> The submitting button is looked up. A submitting button is a button that
  * is nested in this form (is a child component) and that was clicked by the
- * user. If a submitting button was found, and it has the defaultFormProcessing field set to false
- * (default is true), it's onSubmit method will be called right away, thus no
- * validition is done, and things like updating form component models that would
- * normally be done are skipped. In that respect, nesting a button with the
- * defaultFormProcessing field set to false has the same effect as nesting a normal link. If
- * you want you can call validate() to execute form validation, hasError() to
- * find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components.
- * </li>
- * <li> When no submitting button with defaultFormProcessing set to false was found, this form is processed
- * (method process()). 
- * Now, two possible paths exist:
+ * user. If a submitting button was found, and it has the defaultFormProcessing
+ * field set to false (default is true), it's onSubmit method will be called
+ * right away, thus no validition is done, and things like updating form
+ * component models that would normally be done are skipped. In that respect,
+ * nesting a button with the defaultFormProcessing field set to false has the
+ * same effect as nesting a normal link. If you want you can call validate() to
+ * execute form validation, hasError() to find out whether validate() resulted
+ * in validation errors, and updateFormComponentModels() to update the models of
+ * nested form components. </li>
+ * <li> When no submitting button with defaultFormProcessing set to false was
+ * found, this form is processed (method process()). Now, two possible paths
+ * exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked invalid,
- * and onError() is called to allow clients to provide custom error handling
- * code. </li>
+ * <li> Form validation failed. All nested form components will be marked
+ * invalid, and onError() is called to allow clients to provide custom error
+ * handling code. </li>
  * <li> Form validation succeeded. The nested components will be asked to update
  * their models and persist their data is applicable. After that, method
  * delegateSubmit with optionally the submitting button is called. The default
@@ -155,6 +155,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 
 	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
+
+	/** Flag that indicates this form has been submitted during this request */
+	private static final short FLAG_SUBMITTED = FLAG_RESERVED1;
 
 	private static final long serialVersionUID = 1L;
 
@@ -247,6 +250,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void onFormSubmitted()
 	{
+		setFlag(FLAG_SUBMITTED, true);
+
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
@@ -280,6 +285,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
+	}
+
+	/**
+	 * Checks if this form has been submitted during the current request
+	 * 
+	 * @return true if the form has been submitted during this request, false
+	 *         otherwise
+	 */
+	public final boolean isSubmitted()
+	{
+		return getFlag(FLAG_SUBMITTED);
+	}
+
+	/**
+	 * @see wicket.Component#internalOnDetach()
+	 */
+	protected void internalOnDetach()
+	{
+		super.internalOnDetach();
+		setFlag(FLAG_SUBMITTED, false);
 	}
 
 	/**
@@ -1122,7 +1147,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				String param = paramsSt.nextToken();
 				int equalsSign = param.indexOf("=");
-				if(equalsSign >= 0)
+				if (equalsSign >= 0)
 				{
 					String paramName = param.substring(0, equalsSign);
 					String value = param.substring(equalsSign + 1);
@@ -1130,7 +1155,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 				else
 				{
-					params.put(param,"");
+					params.put(param, "");
 				}
 			}
 		}
