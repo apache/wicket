@@ -251,7 +251,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	public final URLCompressor getUrlCompressor()
 	{
-		if(compressor == null) compressor = new URLCompressor();
+		if (compressor == null) 
+		{
+			compressor = new URLCompressor();
+		}
 		return compressor;
 	}	
 	/**
@@ -261,12 +264,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected void onDetach()
 	{
 		// This code can not go into HtmlHeaderContainer as
-		// header.onEndRequest()
-		// is executed inside an iterator and you can only call
-		// container.remove()
-		// which is != iter.remove(). And the iterator is not available inside
-		// onEndRequest(). Obviously WebPage.onEndRequest() is invoked outside
-		// the iterator loop.
+		// header.onEndRequest() is executed inside an iterator 
+		// and you can only call container.remove() which 
+		// is != iter.remove(). And the iterator is not available 
+		// inside onEndRequest(). Obviously WebPage.onEndRequest() 
+		// is invoked outside the iterator loop.
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{
@@ -287,9 +289,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		setResponsePage(clonedPage);
 	}
 
+	/**
+	 * 
+	 */
 	private class PageMapChecker extends AbstractBehavior implements IHeaderContributor
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -307,6 +311,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				initialAccessStackSize = 1;
 			}
+			
+			// Javascript: for the most part it is getting the same funtionality 
+			// for multiply browsers. What the end result is that a call back 
+			// to the server is made at the moment it detects that there is  
+			// no history. because that could mean that a page is opend in 
+			// a new tab/window without that page being in its own pagemap, 
+			// that redirect wil put that page in its own pagemap.
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			if (accessStack.size() > initialAccessStackSize)
 			{
