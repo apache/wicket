@@ -153,7 +153,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			success = success + ";wicketHide('" + indicatorId + "');";
+			String hide=";wicketHide('" + indicatorId + "');";
+			success = success + hide;
+			failure = failure + hide;
 		}
 
 
