@@ -39,6 +39,7 @@ import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 
 
@@ -49,6 +50,11 @@ import wicket.util.value.ValueMap;
  * <p>
  * The result will be an Markup object, which is basically a list, containing
  * Wicket relevant tags and RawMarkup.
+ * 
+ * @see IMarkupFilter
+ * @see IMarkupParserFactory
+ * @see IMarkupSettings
+ * @see Markup
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -83,7 +89,7 @@ public class MarkupParser
 	}
 
 	/**
-	 * In case you want to analyze markup which by default does not use "wicket"
+	 * In case you want to analyze markup which BY DEFAULT does not use "wicket"
 	 * to find relevant tags.
 	 * 
 	 * @param namespace
@@ -98,6 +104,8 @@ public class MarkupParser
 	 * required.
 	 * 
 	 * @param tagList
+	 *            A list which the handler may add new MarkupElement to which
+	 *            were not found in the markup file.
 	 * @return a preconfigured markup filter chain
 	 */
 	private final IMarkupFilter newFilterChain(final List tagList)
@@ -135,6 +143,8 @@ public class MarkupParser
 	/**
 	 * By default don't do anything. Subclasses may append additional markup
 	 * filters if required.
+	 * 
+	 * @see #appendMarkupFilter(IMarkupFilter)
 	 */
 	protected void initFilterChain()
 	{
@@ -142,7 +152,7 @@ public class MarkupParser
 
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters.
-	 * To be used by subclasses which implement initFilterChain().
+	 * To be used by subclasses which implement {@link #initFilterChain()}.
 	 * 
 	 * @param filter
 	 *            The filter to be appended
@@ -213,16 +223,22 @@ public class MarkupParser
 	}
 
 	/**
-	 * Scans the given markup string and extracts balancing tags.
+	 * Scans the given markup and extracts balancing tags.
 	 * 
 	 */
 	private void parseMarkup()
 	{
+		// Handlers may add MarkupElements which were not found in the markup
+		// file.
 		final List autoAddList = new ArrayList();
 
+		// Initialize the markup filter chain
 		this.markupFilterChain = newFilterChain(autoAddList);
+		
+		// Allow subclasses to extend the filter chain
 		initFilterChain();
 
+		// Get relevant settings from the Application
 		boolean stripComments = this.markupSettings.getStripComments();
 		boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
 
@@ -356,7 +372,7 @@ public class MarkupParser
 		int pos1 = rawMarkup.indexOf("<!--");
 		while (pos1 >= 0)
 		{
-			StringBuffer buf = new StringBuffer(rawMarkup.length());
+			AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
 			int pos2 = rawMarkup.indexOf("-->", pos1);
 
 			if (pos2 >= 0)

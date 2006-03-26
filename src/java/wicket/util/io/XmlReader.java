@@ -25,6 +25,8 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import wicket.util.string.AppendingStringBuffer;
+
 /**
  * This is a simple XmlReader. Its only purpose is to read the xml decl string
  * from the input and apply proper character encoding to all subsequent
@@ -53,9 +55,9 @@ public final class XmlReader extends Reader
 	/**
 	 * Construct.
 	 * 
-	 * @param inputStream
-	 * @param defaultEncoding
-	 * @throws IOException
+	 * @param inputStream The InputStream to read the xml data from
+	 * @param defaultEncoding Apply 'null' for JVM default
+	 * @throws IOException In case something went wrong while reading the data
 	 */
 	public XmlReader(final InputStream inputStream, final String defaultEncoding)
 			throws IOException
@@ -101,12 +103,9 @@ public final class XmlReader extends Reader
 	 */
 	public void init() throws IOException
 	{
-		// reset: Must come from markup
-		this.encoding = null;
-
 		if (!this.inputStream.markSupported())
 		{
-			throw new IOException("BufferedInputStream does not support mark/reset");
+			throw new IOException("The InputStream must support mark/reset");
 		}
 
 		// read ahead buffer required for the first line of the markup
@@ -117,7 +116,7 @@ public final class XmlReader extends Reader
 		// read-ahead the input stream if it starts with <?xml
 		// encoding=".."?>. If yes, set this.encoding.
 		// If no, return the whole line. determineEncoding will read-ahead
-		// at max. the very first line of the markup.
+		// at max the very first line of the markup.
 		final String encoding = determineEncoding(this.inputStream, readAheadSize);
 		if (encoding != null)
 		{
@@ -160,7 +159,7 @@ public final class XmlReader extends Reader
 			throws IOException
 	{
 		// Max one line
-		final StringBuffer pushBack = new StringBuffer(readAheadSize);
+		final AppendingStringBuffer pushBack = new AppendingStringBuffer(readAheadSize);
 
 		// The current char from the markup file
 		int value;
@@ -168,7 +167,7 @@ public final class XmlReader extends Reader
 		{
 			pushBack.append((char)value);
 
-			// Stop at end of the first tag or end of line. If it is HTML
+			// Stop at the end of the first tag or end of line. If it is HTML
 			// without newlines, stop after X bytes (= characters)
 			if ((value == '>') || (value == '\n') || (value == '\r')
 					|| (pushBack.length() >= (readAheadSize - 1)))
