@@ -38,8 +38,6 @@ public class Export extends Page
     final private static Log log = LogFactory.getLog(Export.class);
 
     private final BaseExportView exportView;
-    private final List data;
-
     /**
      * 
      * @param exportView
@@ -48,7 +46,6 @@ public class Export extends Page
     public Export(final BaseExportView exportView, final List data)
     {
     	this.exportView = exportView;
-    	this.data = data;
     }
 
     /**

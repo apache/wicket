@@ -159,14 +159,16 @@ public class SourcesPage extends WebPage
 			BufferedReader br = null;
 			try
 			{
-				br = new BufferedReader(new InputStreamReader((InputStream)packageListing.openStream()));
+				br = new BufferedReader(new InputStreamReader(packageListing.openStream()));
 
 				while (br.ready())
 				{
 					String listing = br.readLine();
 					String extension = Strings.afterLast(listing, '.');
 					if (!listing.endsWith("class"))
+					{
 						resources.add(listing);
+					}
 				}
 			}
 			catch (IOException e)
