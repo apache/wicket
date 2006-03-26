@@ -34,7 +34,6 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.TagTypeHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.WicketMessageTagHandler;
-import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.settings.IMarkupSettings;
@@ -61,6 +60,10 @@ import wicket.util.value.ValueMap;
  */
 public class MarkupParser
 {
+	/** Wicket URI */
+	private static final String WICKET_URI = "http://wicket.sourceforge.net";
+
+	/** namespace prefix: e.g. <html xmlns:wicket="http://wicket.sourceforge.net"> */ 
 	private static final String XMLNS = "xmlns:";
 
 	/** The XML parser to use */
@@ -115,7 +118,6 @@ public class MarkupParser
 
 		filter = new TagTypeHandler(filter);
 		filter = new HtmlHandler(filter);
-		filter = new WicketParamTagHandler(filter);
 		filter = new WicketRemoveTagHandler(filter);
 		filter = new WicketLinkTagHandler(filter);
 
@@ -412,7 +414,7 @@ public class MarkupParser
 
 				// If Wicket relevant ...
 				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0)
-						|| xmlnsUrl.toLowerCase().startsWith("http://wicket.sourceforge.net"))
+						|| xmlnsUrl.startsWith(WICKET_URI))
 				{
 					// Set the Wicket namespace for wicket tags (e.g.
 					// <eicket:panel>) and attributes (e.g. wicket:id)

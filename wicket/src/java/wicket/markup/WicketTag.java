@@ -72,14 +72,6 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'wicket:param'
-	 */
-	public final boolean isParamTag()
-	{
-		return "param".equalsIgnoreCase(getName());
-	}
-
-	/**
 	 * @return True, if tag name equals 'wicket:remove'
 	 */
 	public final boolean isRemoveTag()
