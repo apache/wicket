@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5136 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import wicket.Application;
 import wicket.Page;
@@ -54,6 +55,8 @@ import wicket.util.value.ValueMap;
  */
 public class MarkupParser
 {
+	private static final String XMLNS = "xmlns:";
+
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
 
@@ -63,6 +66,7 @@ public class MarkupParser
 	/** The markup created by reading the markup file */
 	private final Markup markup;
 
+	/** Temporary variable: Application.get().getMarkupSettings() */
 	private final IMarkupSettings markupSettings;
 
 	/**
@@ -168,7 +172,7 @@ public class MarkupParser
 		this.markup.setResource(resource);
 
 		// Initialize the xml parser
-		this.xmlParser.parse(resource, Application.get().getMarkupSettings().getDefaultMarkupEncoding());
+		this.xmlParser.parse(resource, this.markupSettings.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
@@ -338,32 +342,33 @@ public class MarkupParser
 		this.markup.makeImmutable();
 	}
 
-    /**
-     * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup.
-     * For reasons I don't understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
-     * causes a stack overflow in some circumstances (jdk 1.5) 
-     * 
-     * @param rawMarkup
-     * @return raw markup
-     */
-    private String removeComment(String rawMarkup)
-    {
-    	int pos1 = rawMarkup.indexOf("<!--");
-    	while (pos1 >= 0)
-    	{
-    		StringBuffer buf = new StringBuffer(rawMarkup.length());
-    		int pos2 = rawMarkup.indexOf("-->", pos1);
-    		
-    		if (pos2 >= 0)
-    		{
-    			buf.append(rawMarkup.substring(0, pos1 - 1));
-    			buf.append(rawMarkup.substring(pos2 + 4));
-    			rawMarkup = buf.toString();
-    		}
-        	pos1 = rawMarkup.indexOf("<!--");
-    	}
-    	return rawMarkup;
-    }
+	/**
+	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
+	 * reasons I don't understand, the following regex
+	 * <code>"<!--(.|\n|\r)*?-->"<code>
+	 * causes a stack overflow in some circumstances (jdk 1.5) 
+	 * 
+	 * @param rawMarkup
+	 * @return raw markup
+	 */
+	private String removeComment(String rawMarkup)
+	{
+		int pos1 = rawMarkup.indexOf("<!--");
+		while (pos1 >= 0)
+		{
+			StringBuffer buf = new StringBuffer(rawMarkup.length());
+			int pos2 = rawMarkup.indexOf("-->", pos1);
+
+			if (pos2 >= 0)
+			{
+				buf.append(rawMarkup.substring(0, pos1 - 1));
+				buf.append(rawMarkup.substring(pos2 + 4));
+				rawMarkup = buf.toString();
+			}
+			pos1 = rawMarkup.indexOf("<!--");
+		}
+		return rawMarkup;
+	}
 
 	/**
 	 * Determine wicket namespace from xmlns:wicket or
@@ -375,26 +380,35 @@ public class MarkupParser
 	private boolean determineWicketNamespace(final ComponentTag tag)
 	{
 		String attrValue = null;
+
+		// For all tags attributes
 		final ValueMap attributes = tag.getAttributes();
-		final Iterator it = attributes.keySet().iterator();
+		final Iterator it = attributes.entrySet().iterator();
 		while (it.hasNext())
 		{
-			final String attributeName = (String)it.next();
-			if (attributeName.startsWith("xmlns:"))
+			final Map.Entry entry = (Map.Entry)it.next();
+
+			// Find attributes with namespace "xmlns"
+			final String attributeName = (String)entry.getKey();
+			if (attributeName.startsWith(XMLNS))
 			{
-				final String xmlnsUrl = attributes.getString(attributeName);
+				final String xmlnsUrl = (String)entry.getValue();
+
+				// If Wicket relevant ...
 				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0)
 						|| xmlnsUrl.toLowerCase().startsWith("http://wicket.sourceforge.net"))
 				{
-					String namespace = attributeName.substring(6);
+					// Set the Wicket namespace for wicket tags (e.g.
+					// <eicket:panel>) and attributes (e.g. wicket:id)
+					String namespace = attributeName.substring(XMLNS.length());
 					markup.setWicketNamespace(namespace);
 					attrValue = attributeName;
 				}
 			}
 		}
 
-		// Note: <html ...> are usually no wicket tags and thus treated as raw
-		// markup and thus removing xmlns:wicket from markup does not have any
+		// Note: <html ...> tags usually have no wicket:id and hence are treated
+		// as raw markup and removing xmlns:wicket from markup does not have any
 		// effect. The solution approach does not work.
 		if ((attrValue != null) && this.markupSettings.getStripWicketTags())
 		{
