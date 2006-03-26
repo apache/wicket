@@ -320,7 +320,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @return a new auto component or null if the path was absolute
 		 */
 		protected final Component newPackageResourceReferenceAutoComponent(
-				final MarkupContainer container, final String autoId, PathInfo pathInfo)
+				final MarkupContainer container, final String autoId, final PathInfo pathInfo)
 		{
 			if (!pathInfo.absolute)
 			{
@@ -460,7 +460,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *      wicket.markup.resolver.AutoLinkResolver.PathInfo)
 		 */
 		public Component newAutoComponent(final MarkupContainer container, final String autoId,
-				PathInfo pathInfo)
+				final PathInfo pathInfo)
 		{
 			return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo);
 		}
