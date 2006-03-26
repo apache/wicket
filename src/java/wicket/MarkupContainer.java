@@ -912,22 +912,7 @@ public abstract class MarkupContainer extends Component
 		if (render == false)
 		{
 			// Tags like <p> do not require a close tag, but they may have.
-			// Because ComponentTag does not have the information, we analyze
-			// the remaining of the streams to find the close tag.
-			int pos = markupStream.getCurrentIndex();
-			while (markupStream.hasMore())
-			{
-				MarkupElement elem = markupStream.next();
-				if (elem instanceof ComponentTag)
-				{
-					if (elem.closes(openTag))
-					{
-						render = true;
-						break;
-					}
-				}
-			}
-			markupStream.setCurrentIndex(pos);
+			render = !openTag.hasNoCloseTag();
 		}
 		if (render == true)
 		{
