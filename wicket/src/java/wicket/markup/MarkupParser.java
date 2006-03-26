@@ -36,6 +36,7 @@ import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
+import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 
@@ -62,26 +63,19 @@ public class MarkupParser
 	/** The markup created by reading the markup file */
 	private final Markup markup;
 
-	/**
-	 * Markup settings are required by various markup filters. Note: We can not
-	 * use Application.get() as reading the markup happens in another java
-	 * thread due to the ModificationWatcher.
-	 */
-	private Application application;
+	private final IMarkupSettings markupSettings;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param application
-	 *            The wicket application object
 	 * @param xmlParser
 	 *            The streaming xml parser to read and parse the markup
 	 */
-	public MarkupParser(final Application application, final IXmlPullParser xmlParser)
+	public MarkupParser(final IXmlPullParser xmlParser)
 	{
-		this.application = application;
 		this.xmlParser = xmlParser;
 		this.markup = new Markup();
+		this.markupSettings = Application.get().getMarkupSettings();
 	}
 
 	/**
@@ -109,9 +103,9 @@ public class MarkupParser
 
 		filter = new TagTypeHandler(filter);
 		filter = new HtmlHandler(filter);
-		filter = new WicketParamTagHandler(filter, application.getMarkupSettings());
+		filter = new WicketParamTagHandler(filter);
 		filter = new WicketRemoveTagHandler(filter);
-		filter = new WicketLinkTagHandler(filter, application.getMarkupSettings());
+		filter = new WicketLinkTagHandler(filter);
 
 		// Provided the wicket component requesting the markup is known ...
 		MarkupResourceStream resource = markup.getResource();
@@ -119,8 +113,7 @@ public class MarkupParser
 		{
 			if (WicketMessageTagHandler.enable)
 			{
-				filter = new WicketMessageTagHandler(filter, resource.getContainerInfo(),
-						application.getResourceSettings());
+				filter = new WicketMessageTagHandler(filter, resource.getContainerInfo());
 			}
 
 			filter = new BodyOnLoadHandler(filter);
@@ -175,7 +168,7 @@ public class MarkupParser
 		this.markup.setResource(resource);
 
 		// Initialize the xml parser
-		this.xmlParser.parse(resource, this.application.getMarkupSettings().getDefaultMarkupEncoding());
+		this.xmlParser.parse(resource, Application.get().getMarkupSettings().getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
@@ -226,8 +219,8 @@ public class MarkupParser
 		this.markupFilterChain = newFilterChain(autoAddList);
 		initFilterChain();
 
-		boolean stripComments = application.getMarkupSettings().getStripComments();
-		boolean compressWhitespace = application.getMarkupSettings().getCompressWhitespace();
+		boolean stripComments = this.markupSettings.getStripComments();
+		boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
 
 		try
 		{
@@ -403,7 +396,7 @@ public class MarkupParser
 		// Note: <html ...> are usually no wicket tags and thus treated as raw
 		// markup and thus removing xmlns:wicket from markup does not have any
 		// effect. The solution approach does not work.
-		if ((attrValue != null) && this.application.getMarkupSettings().getStripWicketTags())
+		if ((attrValue != null) && this.markupSettings.getStripWicketTags())
 		{
 			attributes.remove(attrValue);
 			return true;

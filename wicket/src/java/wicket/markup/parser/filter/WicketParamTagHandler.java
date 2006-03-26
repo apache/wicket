@@ -22,13 +22,13 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
-import wicket.settings.IMarkupSettings;
 
 /**
  * THIS CODE IS CURRENTLY EXPERIMENTAL ONLY. IT IS LIKES TO CHANGE IN THE NEAR
@@ -71,7 +71,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	 * @param settings
 	 *            The application seetings
 	 */
-	public WicketParamTagHandler(final IMarkupFilter parent, final IMarkupSettings settings)
+	public WicketParamTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
 
@@ -83,7 +83,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 		this.xmlParser = (IXmlPullParser)parser;
 
-		setStripWicketTag(settings.getStripWicketTags());
+		this.setStripWicketTag(Application.get().getMarkupSettings().getStripWicketTags());
 	}
 
 	/**

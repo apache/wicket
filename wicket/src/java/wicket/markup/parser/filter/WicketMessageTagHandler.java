@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
@@ -79,13 +80,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * @param settings
 	 *            The application settings
 	 */
-	public WicketMessageTagHandler(final IMarkupFilter parent, final ContainerInfo containerInfo,
-			final IResourceSettings settings)
+	public WicketMessageTagHandler(final IMarkupFilter parent, final ContainerInfo containerInfo)
 	{
 		super(parent);
 
 		this.containerInfo = containerInfo;
-		this.settings = settings;
+		this.settings = Application.get().getResourceSettings();
 
 		this.searchStack = new ArrayList();
 		searchStack.add(containerInfo.getContainerClass());

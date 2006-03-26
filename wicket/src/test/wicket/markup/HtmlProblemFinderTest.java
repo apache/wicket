@@ -31,7 +31,7 @@ public class HtmlProblemFinderTest extends TestCase
      */
     public void testProblemFinder()
     {
-        final MarkupParser parser = new MarkupParser(null, new XmlPullParser())
+        final MarkupParser parser = new MarkupParser(new XmlPullParser())
         {
             public void initFilterChain()
             {
