@@ -304,10 +304,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 		catch (RuntimeException ex)
 		{
-			// FIXME Ajax: If an error occurs we want to send back a failure so
-			// the onFailure javascript callback is executed if there was one
+			// log the error but output nothing in the response, parse failure
+			// of response will cause any javascript failureHandler to be
+			// invoked
 			LOG.error(ex);
-
 		}
 	}
 

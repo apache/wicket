@@ -27,52 +27,6 @@ function wicketHide(id) {
     wicketGet(id).style.display = "none";
 }
 
-// THROTTLE FUNCTIONS
-function WicketThrottlerEntry(func) {
-	this.func=func;
-	this.timestamp=new Date().getTime();
-}
-
-WicketThrottlerEntry.prototype.getTimestamp=function() {
-	return this.timestamp;
-}
-
-WicketThrottlerEntry.prototype.getFunc=function() {
-	return this.func;
-}
-
-WicketThrottlerEntry.prototype.setFunc=function(func) {
-	this.func=func;
-}
-
-
-function WicketThrottler() {
-	this.entries=new Array();
-}
-
-WicketThrottler.prototype.throttle=function(id, millis, func) {
-	var entry=this.entries[id];
-	var me=this;
-	if (entry==undefined) {
-		entry=new WicketThrottlerEntry(func);
-		this.entries[id]=entry;
-		window.setTimeout(function() { me.execute(id); }, millis);
-	} else {
-		entry.setFunc(func);
-	}
-}
-
-WicketThrottler.prototype.execute=function(id) {
-	var entry=this.entries[id];
-	if (entry!=undefined) {
-		var func=entry.getFunc();
-		var tmp=func();
-	}
-	
-	this.entries[id]=undefined;
-}
-
-var wicketThrottler=new WicketThrottler();
 
 
 // AJAX FUNCTIONS
@@ -93,13 +47,14 @@ function wicketAjaxGetTransport() {
     return transport;
 }
 
-function wicketAjaxGet(url, successHandler) {
+function wicketAjaxGet(url, successHandler, failureHandler) {
     if (wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logInfo;
         log("");
         log("initiating ajax GET request with...");
         log("url: "+url);
         log("successHandler:"+successHandler);
+        log("failureHandler:"+failureHandler);
     }
    
     var transport = wicketAjaxGetTransport();
@@ -107,13 +62,13 @@ function wicketAjaxGet(url, successHandler) {
         return false;
     }
     transport.onreadystatechange = function () {
-        wicketAjaxOnStateChange(transport, successHandler);
+        wicketAjaxOnStateChange(transport, successHandler, failureHandler);
     };
     transport.open("GET", url + "&random=" + Math.random(), true);
     transport.send(null);
     return true;
 }
-function wicketAjaxPost(url, body, successHandler) {
+function wicketAjaxPost(url, body, successHandler, failureHandler) {
     if (wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logInfo;
         log("");
@@ -121,6 +76,7 @@ function wicketAjaxPost(url, body, successHandler) {
         log("url: "+url);
         log("body: "+body);
         log("successHandler:"+successHandler);
+        log("failureHandler:"+failureHandler);
     }
    
     var transport = wicketAjaxGetTransport();
@@ -128,25 +84,25 @@ function wicketAjaxPost(url, body, successHandler) {
         return false;
     }
     transport.onreadystatechange = function () {
-        wicketAjaxOnStateChange(transport, successHandler);
+        wicketAjaxOnStateChange(transport, successHandler, failureHandler);
     };
     transport.open("POST", url + "&random=" + Math.random(), true);
     transport.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     transport.send(body);
     return true;
 }
-function wicketSubmitForm(form, url, submitButton, successHandler) {
+function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler) {
     var body = wicketSerializeForm(form);
     if (submitButton != null) {
         body += wicketEncode(submitButton) + "=1";
     }
-    return wicketAjaxPost(url, body, successHandler);
+    return wicketAjaxPost(url, body, successHandler, failureHandler);
 }
-function wicketSubmitFormById(formId, url, submitButton, successHandler) {
+function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler) {
     var form = document.getElementById(formId);
-    return wicketSubmitForm(form, url, submitButton, successHandler);
+    return wicketSubmitForm(form, url, submitButton, successHandler, failureHandler);
 }
-function wicketAjaxOnStateChange(transport, successHandler) {
+function wicketAjaxOnStateChange(transport, successHandler, failureHandler) {
     if (transport.readyState == 4) {
         if (transport.status == 200) {
             if (wicketAjaxDebugEnabled()) {
@@ -155,56 +111,82 @@ function wicketAjaxOnStateChange(transport, successHandler) {
                 log("");
                 log(transport.responseText);
             }
-            wicketAjaxProcess(transport.responseXML, successHandler);
+            wicketAjaxProcess(transport.responseXML, successHandler, failureHandler);
         } else {
             if (wicketAjaxDebugEnabled()) {
                 var log=WicketAjaxDebug.logError;
                 log("received ajax response with code: "+transport.status);
             }
-        }        
+			wicketAjaxCallFailureHandler(failureHandler);
+		}        
     }
 }
-function wicketAjaxProcess(envelope, successHandler) {
-    var root = envelope.getElementsByTagName("ajax-response");
-    root = root[0];
-    if (root == null || root.tagName != "ajax-response") {
-        if (wicketAjaxDebugEnabled()) {
-            var log=WicketAjaxDebug.logError;
-            log("malformed response envelope: could not find root <ajax-response> element");
-        }
-        alert("error, ajax-response element not found");
-    }
-    for (var i = 0; i < root.childNodes.length; i++) {
-        var node = root.childNodes[i];
-        if (node.tagName == "component") {
-            wicketAjaxProcessComponent(node);
-        } else {
-            if (node.tagName == "evaluate") {
-                wicketAjaxProcessEvaluation(node);
-            }
-        }
-    }
-    
-    if (wicketAjaxDebugEnabled()) {
-        var log=WicketAjaxDebug.logInfo;
-        log("response envelope successfully processed");
-    }
-    
-    
-    if (successHandler != null) {
-        if (wicketAjaxDebugEnabled()) {
-            var log=WicketAjaxDebug.logInfo;
-            log("invoking success handler...");
-        }
-        successHandler();
-    } 
+function wicketAjaxProcess(envelope, successHandler, failureHandler) {
+	try {
+	    var root = envelope.getElementsByTagName("ajax-response");
+	    root = root[0];
+	    if (root == null || root.tagName != "ajax-response") {
+	        if (wicketAjaxDebugEnabled()) {
+	            var log=WicketAjaxDebug.logError;
+	            log("malformed response envelope: could not find root <ajax-response> element");
+	        }
+	       	wicketAjaxCallFailureHandler(failureHandler);
+	    }
+	    for (var i = 0; i < root.childNodes.length; i++) {
+	        var node = root.childNodes[i];
+	        if (node.tagName == "component") {
+	            wicketAjaxProcessComponent(node);
+	        } else if (node.tagName == "evaluate") {
+	                wicketAjaxProcessEvaluation(node);
+	        }
+	    }
+	    
+	    if (wicketAjaxDebugEnabled()) {
+	        var log=WicketAjaxDebug.logInfo;
+	        log("response envelope successfully processed");
+	    }
+	    
+	    
+	    if (successHandler!=undefined && successHandler != null) {
+	        if (wicketAjaxDebugEnabled()) {
+	            var log=WicketAjaxDebug.logInfo;
+	            log("invoking success handler...");
+	        }
+	        successHandler();
+	    } 
+	
+	    if (wicketAjaxDebugEnabled()) {
+	        var log=WicketAjaxDebug.logInfo;
+	        log("request successfully processed");
+	    }
+	} catch (e) {
+		if (wicketAjaxDebugEnabled()) {
+			var log=WicketAjaxDebug.logError;
+			log("error while processing response: "+e);
+		}
+		wicketAjaxCallFailureHandler(failureHandler);
+	}
+	    
+}
 
-    if (wicketAjaxDebugEnabled()) {
-        var log=WicketAjaxDebug.logInfo;
-        log("request successfully processed");
-    }
-    
+function wicketAjaxCallFailureHandler(failureHandler) {
+	if (failureHandler!=undefined && failureHandler!=null) {
+		if (wicketAjaxDebugEnabled()) {
+			var log=WicketAjaxDebug.logInfo;
+			log("invoking failure handler...");
+		}
+		failureHandler();
+	}
+	
+	if (wicketGlobalAjaxErrorHandler!=undefined&&wicketGlobalAjaxErrorHandler!=null) {
+		if (wicketAjaxDebugEnabled()) {
+			var log=WicketAjaxDebug.logInfo;
+			log("invoking wicketGlobalAjaxErrorHandler failure handler...");
+		}
+		wicketGlobalAjaxErrorHandler();
+	}
 }
+
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     var text = node.firstChild.nodeValue;
@@ -303,3 +285,50 @@ function wicketSerializeForm(form) {
     }
     return result;
 }
+
+// THROTTLE FUNCTIONS
+function WicketThrottlerEntry(func) {
+	this.func=func;
+	this.timestamp=new Date().getTime();
+}
+
+WicketThrottlerEntry.prototype.getTimestamp=function() {
+	return this.timestamp;
+}
+
+WicketThrottlerEntry.prototype.getFunc=function() {
+	return this.func;
+}
+
+WicketThrottlerEntry.prototype.setFunc=function(func) {
+	this.func=func;
+}
+
+
+function WicketThrottler() {
+	this.entries=new Array();
+}
+
+WicketThrottler.prototype.throttle=function(id, millis, func) {
+	var entry=this.entries[id];
+	var me=this;
+	if (entry==undefined) {
+		entry=new WicketThrottlerEntry(func);
+		this.entries[id]=entry;
+		window.setTimeout(function() { me.execute(id); }, millis);
+	} else {
+		entry.setFunc(func);
+	}
+}
+
+WicketThrottler.prototype.execute=function(id) {
+	var entry=this.entries[id];
+	if (entry!=undefined) {
+		var func=entry.getFunc();
+		var tmp=func();
+	}
+	
+	this.entries[id]=undefined;
+}
+
+var wicketThrottler=new WicketThrottler();
