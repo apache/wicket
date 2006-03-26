@@ -186,11 +186,6 @@ public class Slider extends AbstractYuiPanel
 		}
 	}
 
-	private void addPackageResources()
-	{
-
-	}
-
 	/**
 	 * Gets the initilization script for the javascript component.
 	 * 

@@ -46,9 +46,6 @@ public class UploadProgressBar extends Panel
 			UploadProgressBar.class, "progress-remainder.gif");
 
 
-	private final Form form;
-
-
 	/**
 	 * @param id
 	 * @param form
@@ -56,7 +53,6 @@ public class UploadProgressBar extends Panel
 	public UploadProgressBar(String id, final Form form)
 	{
 		super(id);
-		this.form = form; // ?still needed
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
