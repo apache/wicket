@@ -62,7 +62,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParser newMarkupParser()
 	{
-		final MarkupParser parser = new MarkupParser(application, new XmlPullParser())
+		final MarkupParser parser = new MarkupParser(new XmlPullParser())
 		{
 			public void initFilterChain()
 			{
