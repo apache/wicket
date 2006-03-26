@@ -1255,22 +1255,24 @@ public abstract class Component implements Serializable
 	 * @param component
 	 *            The component to check
 	 * @return True if the given component has this component as an ancestor
+	 * @deprecated use getParent().contains(component, false)
 	 */
 	public final boolean isAncestorOf(final Component component)
 	{
-		// Walk up containment hierarchy
-		for (MarkupContainer current = component.parent; current != null; current = current
-				.getParent())
-		{
-			// Is this an ancestor?
-			if (current == this)
-			{
-				return true;
-			}
-		}
-
-		// This component is not an ancestor of the given component
-		return false;
+		return getParent().contains(component, false);
+//		// Walk up containment hierarchy
+//		for (MarkupContainer current = component.parent; current != null; current = current
+//				.getParent())
+//		{
+//			// Is this an ancestor?
+//			if (current == this)
+//			{
+//				return true;
+//			}
+//		}
+//
+//		// This component is not an ancestor of the given component
+//		return false;
 	}
 
 	/**
