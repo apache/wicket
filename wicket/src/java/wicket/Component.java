@@ -34,6 +34,7 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
+import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -1567,9 +1568,28 @@ public abstract class Component implements Serializable
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
 	
+
+				if (this instanceof MarkupContainer) {
+					MarkupContainer container=(MarkupContainer)this;
+					// First, give priority to IFeedback instances, as they have to
+					// collect their messages before components like ListViews
+					// remove any child components
+					container.visitChildren(IFeedback.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							((IFeedback)component).updateFeedback();
+							component.internalAttach();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+
+				
 				// Render the component and all its children
 				internalAttach();
 				onBeforeRender();
+				
 				render(markupStream);
 			}
 			finally
