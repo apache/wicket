@@ -220,7 +220,7 @@ public class ModelToStringTest extends WicketTestCase
 				+ ":attached=false" + ":tempModelObject=[null]";
 		assertEquals(expected, model.toString());
 
-		model.attach();
+		model.getObject(null);
 		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=true"
 				+ ":tempModelObject=[foo]";
 		assertEquals(expected, model.toString());
