@@ -674,9 +674,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		String urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
 
 		// Touch the page once because it could be that it did go from stateless
-		// to statefull
-		// or it was a internally made page where just a url must be made for
-		// (frames)
+		// to statefull or it was a internally made page where just a url must 
+		// be made for (frames)
 		Session.get().touch(page);
 		return urlRedirect;
 	}
@@ -726,7 +725,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * 
 	 * @return prefix
 	 */
-	protected final CharSequence urlPrefix(RequestCycle requestCycle)
+	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
 	{
 		if (urlPrefix == null)
 		{

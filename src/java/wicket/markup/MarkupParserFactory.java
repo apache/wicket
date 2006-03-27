@@ -13,8 +13,6 @@ import wicket.markup.parser.filter.PrependContextPathHandler;
 public class MarkupParserFactory implements IMarkupParserFactory
 {
 	private IMarkupFilter[] filters;
-	private Application application;
-
 	/**
 	 * Construct.
 	 * 
@@ -23,7 +21,6 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application)
 	{
-		this.application = application;
 		this.filters = new IMarkupFilter[] { new PrependContextPathHandler(application) };
 	}
 
@@ -37,7 +34,6 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter[] filters)
 	{
-		this.application = application;
 		this.filters = new IMarkupFilter[filters.length+1];
 		System.arraycopy(filters, 0, this.filters, 0, filters.length);
 		this.filters[filters.length] = new PrependContextPathHandler(application);
@@ -53,7 +49,6 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter filter)
 	{
-		this.application = application;
 		this.filters = new IMarkupFilter[] { filter, new PrependContextPathHandler(application) };
 	}
 

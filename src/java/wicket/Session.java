@@ -116,6 +116,8 @@ import wicket.util.string.Strings;
  */
 public abstract class Session implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -133,8 +135,6 @@ public abstract class Session implements Serializable
 
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";
-
-	private static final long serialVersionUID = 1L;
 
 	/** Application that this is a session of. */
 	private transient Application application;
@@ -194,7 +194,7 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		Session session = (Session)current.get();
+		final Session session = (Session)current.get();
 		if (session == null)
 		{
 			throw new WicketRuntimeException("there is not session attached to current thread "
@@ -437,7 +437,7 @@ public abstract class Session implements Serializable
 	{
 		String name = "wicket-" + autoCreatePageMapCounter;
 		PageMap pm = pageMapForName(name, false);
-		while(pm != null)
+		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
 			name = "wicket-" + autoCreatePageMapCounter;
@@ -738,7 +738,9 @@ public abstract class Session implements Serializable
 			{
 				feedbackMessages = null;
 				dirty();
-			} else {
+			} 
+			else 
+			{
 				feedbackMessages.trimToSize();
 			}
 		}
@@ -962,5 +964,4 @@ public abstract class Session implements Serializable
 		}
 		return list;
 	}
-
 }
