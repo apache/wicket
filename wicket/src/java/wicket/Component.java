@@ -1567,10 +1567,11 @@ public abstract class Component implements Serializable
 			{
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
-	
 
-				if (this instanceof MarkupContainer) {
-					MarkupContainer container=(MarkupContainer)this;
+				if (this instanceof MarkupContainer) 
+				{
+					MarkupContainer container = (MarkupContainer)this;
+					
 					// First, give priority to IFeedback instances, as they have to
 					// collect their messages before components like ListViews
 					// remove any child components
@@ -1584,7 +1585,6 @@ public abstract class Component implements Serializable
 						}
 					});
 				}
-
 				
 				// Render the component and all its children
 				internalAttach();

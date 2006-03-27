@@ -19,9 +19,11 @@ package wicket.markup.html;
 
 import wicket.Component;
 import wicket.INewBrowserWindowListener;
+import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.Response;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
@@ -303,13 +305,16 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		 */
 		public void renderHead(final Response response)
 		{
+			final RequestCycle cycle = getRequestCycle();
+			final IRequestTarget target = cycle.getRequestTarget();
+			
 			// if(!isStateless()) TODO this shouldn't be done for stateless pages.
 			// This will make all pages statefull. But how do we know that if
 			// it is stateless because that is only know after render.
 			// Should we use a Response Filter??
 			int initialAccessStackSize = 0;
 			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
-					&& getRequestCycle().getRequestTarget() instanceof RedirectPageRequestTarget)
+					&& target instanceof RedirectPageRequestTarget)
 			{
 				initialAccessStackSize = 1;
 			}
@@ -324,12 +329,12 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			if (accessStack.size() > initialAccessStackSize)
 			{
 				response.write("<script language=\"JavaScript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
-				if(getRequestCycle().getRequestTarget() instanceof IBookmarkablePageRequestTarget)
+				if (target instanceof IBookmarkablePageRequestTarget)
 				{
-					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)getRequestCycle().getRequestTarget(); 
+					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target; 
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(getSession().createAutoPageMapName(),
 							current.getPageClass(), current.getPageParameters());
-					response.write(getRequestCycle().urlFor(redirect));
+					response.write(cycle.urlFor(redirect));
 				}
 				else
 				{
