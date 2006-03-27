@@ -80,10 +80,10 @@ public class FormPage extends BasePage
 		form.add(new SimpleFormComponentLabel("email-label", fc));
 
 
-		// attach an ajax validation behavior to all form component's onkeypress
+		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
 
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeypress", Duration.ONE_SECOND);
+		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeydown", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
 
