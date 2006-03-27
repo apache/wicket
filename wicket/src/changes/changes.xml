@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Johan Compagner" issue="1459110" due-to="Matej Knopp">WebRequestCodingStrategy duplicates wicket:* parameters</action>
       <action type="add" dev="Igor Vaynberg">Added time based throttling to ajax events. There is a AjaxCallThrottlingDecorator that can be used on any ajax behavior, as well as a shortcut AjaxEventBehavior.setThrottleDelay() method.</action>
       <action type="update" dev="Igor Vaynberg">made PasswordTextField required by default</action>
       <action type="add" dev="Igor Vaynberg">Added flash-message functionality. Call Session.info/error/etc instead of Component.info/error.</action>
