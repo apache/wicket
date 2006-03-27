@@ -44,6 +44,10 @@ import wicket.model.Model;
  */
 public class Palette extends Panel
 {
+	private static final String SELECTED_HEADER_ID = "selectedHeader";
+
+	private static final String AVAILABLE_HEADER_ID = "availableHeader";
+
 	private static final long serialVersionUID = 1L;
 
 	/** collection containing all available choices */
@@ -134,8 +138,8 @@ public class Palette extends Panel
 		add(newUpComponent().setVisible(allowOrder));
 		add(newDownComponent().setVisible(allowOrder));
 
-		add(newAvailableHeader());
-		add(newSelectedHeader());
+		add(newAvailableHeader(AVAILABLE_HEADER_ID));
+		add(newSelectedHeader(SELECTED_HEADER_ID));
 
 		addJavascript();
 	}
@@ -207,22 +211,24 @@ public class Palette extends Panel
 
 	/**
 	 * factory method for the available items header
+	 * @param componentId component id of the returned header component
 	 * 
 	 * @return available items component
 	 */
-	protected Component newAvailableHeader()
+	protected Component newAvailableHeader(String componentId)
 	{
-		return new Label("availableHeader", "Available");
+		return new Label(componentId, "Available");
 	}
 
 	/**
 	 * factory method for the selected items header
+	 * @param componentId component id of the returned header component
 	 * 
 	 * @return header component
 	 */
-	protected Component newSelectedHeader()
+	protected Component newSelectedHeader(String componentId)
 	{
-		return new Label("selectedHeader", "Selected");
+		return new Label(componentId, "Selected");
 	}
 
 	/**
