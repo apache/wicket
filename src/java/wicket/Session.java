@@ -419,11 +419,32 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return Created PageMap
 	 */
-	public final PageMap createAutoPageMap()
+	public synchronized final PageMap createAutoPageMap()
 	{
-		return newPageMap("wicket-" + (autoCreatePageMapCounter++));
+		return newPageMap(createAutoPageMapName());
 	}
 
+	/**
+	 * With this call you can create a pagemap name but not create the pagemap
+	 * itself already. It will give the first pagemap name where it couldn't 
+	 * find a current pagemap for.
+	 * 
+	 * It will return the same name if you call it 2 times in a row.
+	 * 
+	 * @return The created pagemap name
+	 */
+	public synchronized final String createAutoPageMapName()
+	{
+		String name = "wicket-" + autoCreatePageMapCounter;
+		PageMap pm = pageMapForName(name, false);
+		while(pm != null)
+		{
+			autoCreatePageMapCounter++;
+			name = "wicket-" + autoCreatePageMapCounter;
+			pm = pageMapForName(name, false);
+		}
+		return name;
+	}
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */

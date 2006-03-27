@@ -38,6 +38,8 @@ import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.collections.ArrayListStack;
@@ -322,7 +324,17 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			if (accessStack.size() > initialAccessStackSize)
 			{
 				response.write("<script language=\"JavaScript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
-				response.write(urlFor(INewBrowserWindowListener.INTERFACE));
+				if(getRequestCycle().getRequestTarget() instanceof IBookmarkablePageRequestTarget)
+				{
+					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)getRequestCycle().getRequestTarget(); 
+					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(getSession().createAutoPageMapName(),
+							current.getPageClass(), current.getPageParameters());
+					response.write(getRequestCycle().urlFor(redirect));
+				}
+				else
+				{
+					response.write(urlFor(INewBrowserWindowListener.INTERFACE));
+				}
 				response.write("'}</script>");
 			}
 		}
