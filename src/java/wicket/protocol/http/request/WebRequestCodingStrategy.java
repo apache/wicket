@@ -63,13 +63,16 @@ import wicket.util.string.Strings;
 public class WebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** Name of interface target query parameter */
-	public static final String INTERFACE_PARAMETER_NAME = "wicket:interface";
+	public static final String NAME_SPACE = "wicket:";
+
+	/** Name of interface target query parameter */
+	public static final String INTERFACE_PARAMETER_NAME = NAME_SPACE + "interface";
 
 	/** AJAX query parameter name */
-	public static final String BEHAVIOR_ID_PARAMETER_NAME = "wicket:behaviorId";
+	public static final String BEHAVIOR_ID_PARAMETER_NAME = NAME_SPACE + "behaviorId";
 
 	/** Parameter name used all over the place */
-	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = "wicket:bookmarkablePage";
+	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = NAME_SPACE + "bookmarkablePage";
 
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
@@ -142,7 +145,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
-		parameters.setParameters(request.getParameterMap());
+		Map map = request.getParameterMap();
+		Iterator iterator = map.keySet().iterator();
+		while (iterator.hasNext())
+		{
+			String key = (String)iterator.next();
+			if(key.startsWith(NAME_SPACE))
+			{
+				iterator.remove();
+			}
+		}
+		parameters.setParameters(map);
 		return parameters;
 	}
 
