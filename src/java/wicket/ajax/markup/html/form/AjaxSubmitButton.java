@@ -57,6 +57,11 @@ public abstract class AjaxSubmitButton extends WebComponent
 			{
 				AjaxSubmitButton.this.onSubmit(target);
 			}
+			
+			protected String getEventHandler()
+			{
+				return super.getEventHandler()+"; return false;";
+			}
 
 		});
 
@@ -67,11 +72,11 @@ public abstract class AjaxSubmitButton extends WebComponent
 		checkComponentTag(tag, "input");
 
 		final String type = tag.getAttributes().getString("type");
-		if (!"button".equals(type) && !"image".equals(type))
+		if (!"button".equals(type) && !"image".equals(type)&&!"submit".equals(type))
 		{
 			findMarkupStream().throwMarkupException(
 					"Component " + getId() + " must be applied to a tag with 'type'"
-							+ " attribute matching 'button' or 'image', not '" + type + "'");
+							+ " attribute matching 'submit', 'button' or 'image', not '" + type + "'");
 		}
 
 		super.onComponentTag(tag);
