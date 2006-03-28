@@ -593,7 +593,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
-	// TODO eveluate whether we really need this method in 1.3.
+	// TODO Post 1.2:evaluate whether we really need this method in 1.3.
 	// if we go ahead and refactor conversion, we don't want to
 	// leave this extra option open
 	protected Object convertValue(String value) throws ConversionException
