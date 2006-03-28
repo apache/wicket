@@ -177,7 +177,7 @@ public abstract class WebApplication extends Application
 	 * Mounts an encoder at the given path.
 	 * 
 	 * @param path
-	 *            the path to mount the bookmarkable page class on
+	 *            the path to mount the encoder on
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
