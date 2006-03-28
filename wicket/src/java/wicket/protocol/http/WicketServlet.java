@@ -385,7 +385,8 @@ public class WicketServlet extends HttpServlet
 					IResourceStream stream = resource.getResourceStream();
 
 					// First ask the length so the content is created/accessed
-					stream.length();
+					// TODO check this shouldn't be needed anymore with the new dynamic resource impl.
+					//stream.length();
 
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();

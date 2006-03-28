@@ -178,7 +178,8 @@ public class PackageResourceReference extends ResourceReference
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
 				getStyle());
-		locale = packageResource.getLocale();
+    if (packageResource!=null)
+      locale = packageResource.getLocale();
 		return packageResource;
 	}
 

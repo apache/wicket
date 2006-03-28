@@ -26,12 +26,11 @@ import java.util.Locale;
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
  * This class can be used to easy make a Resource from a predefined byte array.
- * If your data comes from a database then a DynamicByteArrayResource is a
+ * If your data comes from a database then a DynamicWebResource is a
  * better choice. Only use this class if you have to have the byte array in
  * memory. Like a pdf that is generated on the fly.
  * 
@@ -81,27 +80,6 @@ public class ByteArrayResource extends WebResource
 	 */
 	public ByteArrayResource(String contentType, byte[] array, Locale locale)
 	{
-		this.contentType = contentType;
-		this.array = array;
-		this.locale = locale;
-	}
-
-	/**
-	 * Creates a Resource from the given byte array with its content type and
-	 * the locale for which it is valid.
-	 * 
-	 * @param contentType
-	 *            The Content type of the array.
-	 * @param array
-	 *            The binary content.
-	 * @param locale
-	 *            The locale of this resource
-	 * @param duration
-	 *            The idle duration timeout
-	 */
-	public ByteArrayResource(String contentType, byte[] array, Locale locale, Duration duration)
-	{
-		super(duration);
 		this.contentType = contentType;
 		this.array = array;
 		this.locale = locale;

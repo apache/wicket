@@ -3,8 +3,8 @@ package wicket.extensions.ajax.markup.html.form.upload;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.RequestCycle;
+import wicket.markup.html.DynamicWebResource;
 import wicket.protocol.http.WebRequest;
-import wicket.resource.DynamicByteArrayResource;
 
 /**
  * A resource that prints out basic statistics about the current upload. This
@@ -14,7 +14,7 @@ import wicket.resource.DynamicByteArrayResource;
  * @author Andrew Lombardi
  * @author Igor Vaynberg (ivaynberg)
  */
-class UploadStatusResource extends DynamicByteArrayResource
+class UploadStatusResource extends DynamicWebResource
 {
 
 	/**
@@ -27,7 +27,7 @@ class UploadStatusResource extends DynamicByteArrayResource
 		return new UploadResourceState();
 	}
 
-	private static class UploadResourceState extends DynamicByteArrayResource.ResourceState
+	private static class UploadResourceState extends DynamicWebResource.ResourceState
 	{
 		/**
 		 * status string that will be returned to javascript to be parsed
@@ -60,7 +60,7 @@ class UploadStatusResource extends DynamicByteArrayResource
 		}
 
 		/**
-		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getContentType()
+		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getContentType()
 		 */
 		public String getContentType()
 		{
@@ -68,7 +68,7 @@ class UploadStatusResource extends DynamicByteArrayResource
 		}
 
 		/**
-		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getLength()
+		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getLength()
 		 */
 		public int getLength()
 		{
@@ -76,7 +76,7 @@ class UploadStatusResource extends DynamicByteArrayResource
 		}
 
 		/**
-		 * @see wicket.resource.DynamicByteArrayResource.ResourceState#getData()
+		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getData()
 		 */
 		public byte[] getData()
 		{

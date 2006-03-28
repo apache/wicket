@@ -20,16 +20,12 @@ package wicket;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.resource.ICachingResource;
 import wicket.util.file.Files;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.time.Duration;
 
 /**
  * Class which holds shared resources. Resources can be shared by name. An
@@ -45,114 +41,11 @@ public class SharedResources
 	/** Logger */
 	private static Log log = LogFactory.getLog(SharedResources.class);
 
-	/**
-	 * The state associated with each shared resource.
-	 */
-	private class ResourceState
-	{
-		/**
-		 * The resource of this ResourceState;
-		 */
-		private Resource resource;
-
-		/**
-		 * The idle Task for this resource (if any)
-		 */
-		private TimerTask idleTask;
-
-		/**
-		 * The cacheTimout Task for this resource (if any)
-		 */
-		private TimerTask cacheTask;
-
-		/**
-		 * Construct.
-		 *
-		 * @param key
-		 *            The resource key
-		 * @param resource
-		 *            The resource
-		 */
-		ResourceState(String key, Resource resource)
-		{
-			this.resource = resource;
-			makeIdleTask(key);
-			makeCacheTask(key);
-		}
-
-		private void makeCacheTask(String key)
-		{
-			if (resource instanceof ICachingResource)
-			{
-				ICachingResource cachingResource = (ICachingResource)resource;
-				Duration cacheTimeout = cachingResource.getCacheTimeout();
-				long milliseconds = cacheTimeout.getMilliseconds();
-				if (milliseconds != 0)
-				{
-					this.cacheTask = getCachingResourceFlushTask(key,
-							(ICachingResource)resource);
-					idleTimer.schedule(cacheTask, milliseconds);
-				}
-			}
-		}
-
-		private void makeIdleTask(String key)
-		{
-			Duration idleTimeout = resource.getIdleTimeout();
-			long milliseconds = idleTimeout.getMilliseconds();
-			if (milliseconds != 0)
-			{
-				this.idleTask = getResourceTimeoutTask(key);
-				idleTimer.schedule(idleTask, milliseconds);
-			}
-		}
-
-		/**
-		 * Cancel all timer task (if any)
-		 */
-		void cancel()
-		{
-			if (idleTask != null)
-			{
-				idleTask.cancel();
-				idleTask = null;
-			}
-			if (cacheTask != null)
-			{
-				cacheTask.cancel();
-				cacheTask = null;
-			}
-		}
-
-		/**
-		 * Touch this resource, update timer task (if any)
-		 *
-		 * @param key
-		 *            They key of the resource
-		 */
-		void touch(String key)
-		{
-			if (idleTask != null)
-			{
-				idleTask.cancel();
-				makeIdleTask(key);
-			}
-			if (cacheTask != null)
-			{
-				cacheTask.cancel();
-				makeCacheTask(key);
-			}
-		}
-	}
-
 	/** Map of Class to alias String */
 	private final Map classAliasMap = new HashMap();
 
 	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
-
-	/** Executes tasks when resources become idle */
-	private final Timer idleTimer = new Timer(true);
 
 	/**
 	 * Construct.
@@ -255,6 +148,8 @@ public class SharedResources
 	}
 
 	/**
+	 * Adds a resource.
+	 *
 	 * @param scope
 	 *            Scope of resource
 	 * @param name
@@ -270,23 +165,23 @@ public class SharedResources
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String resourceKey = resourceKey(scope, name, locale, style);
-		ResourceState resourceState;
+		final String key = resourceKey(scope, name, locale, style);
 		synchronized (resourceMap)
 		{
-			resourceState = (ResourceState)resourceMap.get(resourceKey);
-		}
-		if (resourceState == null)
-		{
-			resourceState = new ResourceState(resourceKey, resource);
-		}
-		synchronized (resourceMap)
-		{
-			resourceMap.put(resourceKey, resourceState);
+			Resource value = (Resource) resourceMap.get(key);
+			if (value == null)
+				resourceMap.put(key, resource);
+			else if (!value.equals(resource))
+      {
+				throw new IllegalArgumentException(key + " has a different resource " +
+          "already associated with it: " + value);
+      }
 		}
 	}
 
 	/**
+	 * Adds a resource.
+	 *
 	 * @param name
 	 *            Logical name of resource
 	 * @param locale
@@ -300,6 +195,8 @@ public class SharedResources
 	}
 
 	/**
+	 * Adds a resource.
+	 *
 	 * @param name
 	 *            Logical name of resource
 	 * @param resource
@@ -389,15 +286,7 @@ public class SharedResources
 	{
 		synchronized (resourceMap)
 		{
-			ResourceState resourceState = ((ResourceState)resourceMap.get(key));
-			if (resourceState != null)
-			{
-				return resourceState.resource;
-			}
-			else
-			{
-				return null;
-			}
+			return (Resource) resourceMap.get(key);
 		}
 	}
 
@@ -409,93 +298,9 @@ public class SharedResources
 	 */
 	public final void remove(final String key)
 	{
-		ResourceState state;
 		synchronized (resourceMap)
 		{
-			state = (ResourceState)resourceMap.get(key);
-			if (state == null)
-			{
-				return;
-			}
 			resourceMap.remove(key);
 		}
-		state.cancel();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Called
-	 * when a resource is requested.
-	 *
-	 * @param key
-	 *            Shared resource key
-	 */
-	public final void onResourceRequested(final String key)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Resource " + key + " requested");
-		}
-
-		final ResourceState resourceState;
-		synchronized (resourceMap)
-		{
-			resourceState = (ResourceState)resourceMap.get(key);
-		}
-		if (resourceState == null)
-		{
-			throw new IllegalArgumentException("No resource associated with key " + key);
-		}
-		resourceState.touch(key);
-	}
-
-	/**
-	 * Returns a task which removes idle resources.
-	 *
-	 * @param key
-	 *            The key for which a TimerTaks must be made
-	 * @return The TimerTask for the given key
-	 */
-	private TimerTask getResourceTimeoutTask(final String key)
-	{
-		return new TimerTask()
-		{
-			public void run()
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Resource " + key + " removed");
-				}
-				remove(key);
-			}
-		};
-	}
-
-	/**
-	 * Returns a task which flushes a ICachingResource.
-	 *
-	 * @param key
-	 *            The key of the resource
-	 * @param resource
-	 *            The ICachingResource where a TimerTask must be made for.
-	 * @return The TimerTasks for that Dymamic Image
-	 */
-	private TimerTask getCachingResourceFlushTask(final String key,
-			final ICachingResource resource)
-	{
-		return new TimerTask()
-		{
-			public void run()
-			{
-				// Someone might hit the image while we flush its cache
-				synchronized (resource)
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("Resource " + key + " flushed");
-					}
-					resource.invalidate();
-				}
-			}
-		};
 	}
 }

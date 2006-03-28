@@ -169,7 +169,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	}
 	
 	/**
-	 * @see wicket.resource.DynamicByteArrayResource#invalidate()
+	 * @see wicket.markup.html.DynamicWebResource#invalidate()
 	 */
 	public synchronized void invalidate()
 	{

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import wicket.markup.html.DynamicWebResource;
 import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -34,8 +35,10 @@ import wicket.util.time.Time;
  * generated) data.
  * 
  * @author Johan Compagner
+ * 
+ * @deprecated use {@link DynamicWebResource} now
  */
-public abstract class DynamicByteArrayResource extends WebResource implements ICachingResource
+public abstract class DynamicByteArrayResource extends WebResource
 {
 	/**
 	 * This is a ResourceState subclasses should return in the getResourceState
@@ -84,9 +87,6 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 
 	}
 
-	/** The maximum duration a resource can be idle before its cache is flushed */
-	private Duration cacheTimeout = Duration.NONE;
-
 	/** the locale. */
 	private Locale locale;
 
@@ -100,29 +100,16 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	}
 
 	/**
-	 * Creates a dynamic resource from for the given locale
+	 * Creates a dynamic resource
 	 * 
 	 * @param locale
 	 *            The locale of this resource
+	 * @param idle
+	 *            The idle duration timeout
+	 * 
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
-		this();
-		this.locale = locale;
-	}
-
-	/**
-	 * Creates a dynamic resource
-	 * 
-	 * @param locale
-	 *            The locale of this resource
-	 * @param idle
-	 *            The idle duration timeout
-	 * 
-	 */
-	public DynamicByteArrayResource(Locale locale, Duration idle)
-	{
-		this(idle);
 		this.locale = locale;
 	}
 
@@ -137,39 +124,9 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 	 * @param cacheTimeout
 	 *            The cache duration timeout
 	 */
-	public DynamicByteArrayResource(Locale locale, Duration idle, Duration cacheTimeout)
+	public DynamicByteArrayResource(Locale locale, Duration cacheTimeout)
 	{
-		this(idle);
 		this.locale = locale;
-		this.cacheTimeout = cacheTimeout;
-	}
-
-	/**
-	 * Creates a dynamic resource
-	 * 
-	 * @param idle
-	 *            The idle duration timeout
-	 * 
-	 */
-	public DynamicByteArrayResource(Duration idle)
-	{
-		super(idle);
-		setCacheable(false);
-	}
-
-
-	/**
-	 * Creates a dynamic resource
-	 * 
-	 * @param idle
-	 *            The idle duration timeout
-	 * @param cacheTimeout
-	 *            The cache duration timeout
-	 */
-	public DynamicByteArrayResource(Duration idle, Duration cacheTimeout)
-	{
-		this(idle);
-		this.cacheTimeout = cacheTimeout;
 	}
 
 	/**
@@ -272,17 +229,6 @@ public abstract class DynamicByteArrayResource extends WebResource implements IC
 				}
 			}
 		};
-	}
-
-	/**
-	 * Gets the maximum duration the resource can be idle before its cache is
-	 * flushed.
-	 * 
-	 * @return The cache timeout
-	 */
-	public final Duration getCacheTimeout()
-	{
-		return cacheTimeout;
 	}
 
 	/**

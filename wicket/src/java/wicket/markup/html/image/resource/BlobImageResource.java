@@ -25,7 +25,6 @@ import java.util.Locale;
 
 import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
-import wicket.util.time.Duration;
 
 /**
  * An ImageResource subclass for dynamic images that come from database BLOB
@@ -37,65 +36,39 @@ import wicket.util.time.Duration;
  */
 public abstract class BlobImageResource extends DynamicImageResource
 {
-	/**
-	 * Construct.
-	 * @param locale
-	 * @param idle
-	 * @param cacheTimeout
-	 */
-	public BlobImageResource(Locale locale, Duration idle, Duration cacheTimeout)
+  /**
+   * Construct.
+   * @param locale
+   */
+  public BlobImageResource(Locale locale)
+  {
+    super(locale);
+  }
+  
+  /**
+   * Construct.
+   * @param format
+   * @param locale
+   */
+  public BlobImageResource(String format, Locale locale)
+  {
+    super(format, locale);
+  }
+  
+  /**
+   * Construct.
+   * @param format
+   */
+  public BlobImageResource(String format)
+  {
+    super(format);
+  }
+  
+  /**
+   * Construct.
+   */
+  public BlobImageResource()
 	{
-		super(locale, idle, cacheTimeout);
-	}
-
-	/**
-	 * Construct.
-	 * @param locale
-	 * @param idle
-	 */
-	public BlobImageResource(Locale locale, Duration idle)
-	{
-		super(locale, idle);
-	}
-
-	/**
-	 * Construct.
-	 * @param format
-	 * @param locale
-	 * @param idle
-	 * @param cacheTimeout
-	 */
-	public BlobImageResource(String format, Locale locale, Duration idle, Duration cacheTimeout)
-	{
-		super(format, locale, idle, cacheTimeout);
-	}
-
-	/**
-	 * Construct.
-	 * @param format
-	 * @param locale
-	 * @param idle
-	 */
-	public BlobImageResource(String format, Locale locale, Duration idle)
-	{
-		super(format, locale, idle);
-	}
-
-	/**
-	 * Construct.
-	 * @param format
-	 */
-	public BlobImageResource(String format)
-	{
-		super(format);
-	}
-
-	/**
-	 * Construct.
-	 */
-	public BlobImageResource()
-	{
-		super();
 	}
 
 	/**
@@ -124,11 +97,11 @@ public abstract class BlobImageResource extends DynamicImageResource
 			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 	}
-
-	/**
-	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
-	 * 
-	 * @return the BLOB
-	 */
-	protected abstract Blob getBlob();
+    
+  /**
+   * Gets the BLOB (Binary Large OBject) that holds the raw image data.
+   *
+   * @return the BLOB
+   */
+  protected abstract Blob getBlob();
 }
