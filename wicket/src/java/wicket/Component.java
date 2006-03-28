@@ -860,7 +860,9 @@ public abstract class Component implements Serializable
 	 */
 	public final ValueMap getMarkupAttributes()
 	{
-		return new ValueMap(initializeMarkupStream().getTag().getAttributes());
+		ValueMap attrs=new ValueMap(initializeMarkupStream().getTag().getAttributes());
+		attrs.makeImmutable();
+		return attrs;
 	}
 
 	/**
