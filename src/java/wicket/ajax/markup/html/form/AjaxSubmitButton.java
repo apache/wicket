@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4871 $ $Date$
+ * $Id: AjaxSubmitButton.java 5125 2006-03-25 11:42:10 -0800 (Sat, 25 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-25 11:42:10 -0800 (Sat, 25 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -64,7 +65,15 @@ public abstract class AjaxSubmitButton extends WebComponent
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");
-		checkComponentTagAttribute(tag, "type", "button");
+
+		final String type = tag.getAttributes().getString("type");
+		if (!"button".equals(type) && !"image".equals(type))
+		{
+			findMarkupStream().throwMarkupException(
+					"Component " + getId() + " must be applied to a tag with 'type'"
+							+ " attribute matching 'button' or 'image', not '" + type + "'");
+		}
+
 		super.onComponentTag(tag);
 	}
 
