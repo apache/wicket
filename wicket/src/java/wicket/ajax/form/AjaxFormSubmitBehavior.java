@@ -67,7 +67,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 		return getCallbackScript("wicketSubmitFormById('" + formId + "', '" + url + "' ", null,
 				null)
-				+ "; return true;";
+				+ ";";
 	}
 
 	protected void onEvent(AjaxRequestTarget target)
