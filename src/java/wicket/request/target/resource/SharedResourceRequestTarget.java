@@ -101,7 +101,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
 			}
 		}
-		sharedResources.onResourceRequested(resourceKey);
 
 		if (requestParameters != null)
 		{

@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
-import wicket.util.time.Duration;
 import wicket.util.time.Time;
 import wicket.util.value.ValueMap;
 
@@ -70,9 +69,6 @@ public abstract class Resource implements IResourceListener
 	/** True if this resource can be cached */
 	private boolean cacheable;
 
-	/** The maximum duration a resource may be idle before it is removed */
-	private Duration idleTimeout = Duration.NONE;
-
 	/**
 	 * ThreadLocal to keep any parameters associated with the request for this
 	 * resource
@@ -87,32 +83,7 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * Sets the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @param value
-	 *            The idle duration timeout
-	 */
-	public Resource(Duration value)
-	{
-		this();
-		idleTimeout = value;
-	}
-
-
-	/**
-	 * Returns the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @return The idle duration timeout
-	 */
-	public Duration getIdleTimeout()
-	{
-		return idleTimeout;
-	}
-
+	
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
