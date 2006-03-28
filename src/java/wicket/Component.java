@@ -2018,6 +2018,40 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Traverses all parent components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param c
+	 *            Class
+	 * @param visitor
+	 *            The visitor to call at each parent of the given type
+	 * @return First non-null value returned by visitor callback
+	 */
+	public final Object visitParents(final Class c, final IVisitor visitor)
+	{
+		// Start here
+		Component current = this;
+
+		// Walk up containment hierarchy
+		while (current != null)
+		{
+			// Is current an instance of this class?
+			if (c.isInstance(current))
+			{
+				final Object object = visitor.component(current);
+				if (object != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return object;
+				}
+			}
+
+			// Check parent
+			current = current.getParent();
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the string representation of this component.
 	 * 
 	 * @return The path to this component
@@ -2707,39 +2741,6 @@ public abstract class Component implements Serializable
 	 */
 	protected void setMarkupStream(final MarkupStream markupStream)
 	{
-	}
-
-	/**
-	 * Visits the parents of this component.
-	 * 
-	 * @param c
-	 *            Class
-	 * @param visitor
-	 *            The visitor to call at each parent of the given type
-	 * @return First non-null value returned by visitor callback
-	 */
-	protected final Object visitParents(final Class c, final IVisitor visitor)
-	{
-		// Start here
-		Component current = this;
-
-		// Walk up containment hierarchy
-		while (current != null)
-		{
-			// Is current an instance of this class?
-			if (c.isInstance(current))
-			{
-				final Object object = visitor.component(current);
-				if (object != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return object;
-				}
-			}
-
-			// Check parent
-			current = current.getParent();
-		}
-		return null;
 	}
 
 	/**
