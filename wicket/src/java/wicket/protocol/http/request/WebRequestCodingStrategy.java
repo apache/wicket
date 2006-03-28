@@ -175,11 +175,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	public final String encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
-		if (encoder != null)
+		CharSequence path = pathForTarget(requestTarget);
+		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
-			CharSequence path = pathForTarget(requestTarget);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
 			buffer.append(prefix);
 			buffer.append(path);
