@@ -47,7 +47,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	{
 		super(id);
 
-		add(new AjaxFormSubmitBehavior(form, "href")
+		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -62,8 +62,9 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 
 	protected void onComponentTag(ComponentTag tag)
 	{
-		checkComponentTag(tag, "a");
 		super.onComponentTag(tag);
+		checkComponentTag(tag, "a");
+		tag.put("href", "#");
 	}
 
 	/**
