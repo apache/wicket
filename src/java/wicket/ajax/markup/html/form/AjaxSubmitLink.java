@@ -56,6 +56,11 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 			{
 				AjaxSubmitLink.this.onSubmit(target);
 			}
+			
+			protected String getEventHandler()
+			{
+				return super.getEventHandler()+"; return false;";
+			}
 		});
 
 	}
