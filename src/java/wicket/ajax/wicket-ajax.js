@@ -191,8 +191,10 @@ function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     
     var text="";
-    if (node.firstChild.nodeValue != undefined && node.firstChild.nodeValue != null) {
-        text = node.firstChild.nodeValue;
+    if (node.firstChild != undefined && node.firstChild != null ) {
+        if (node.firstChild.nodeValue != undefined && node.firstChild.nodeValue != null) {
+            text = node.firstChild.nodeValue;
+        }
     }
 
     var encoding = node.getAttribute("encoding");
