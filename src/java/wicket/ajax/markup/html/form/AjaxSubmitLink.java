@@ -21,7 +21,7 @@ package wicket.ajax.markup.html.form;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebComponent;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
 
 /**
@@ -33,7 +33,7 @@ import wicket.markup.html.form.Form;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitLink extends WebComponent
+public abstract class AjaxSubmitLink extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
