@@ -569,8 +569,11 @@ public abstract class MarkupContainer extends Component
 			}
 
 			removedComponent(replaced);
-		}
 
+			// The position of the associated markup remains the same
+			child.markupIndex = replaced.markupIndex;
+		}
+		
 		return this;
 	}
 

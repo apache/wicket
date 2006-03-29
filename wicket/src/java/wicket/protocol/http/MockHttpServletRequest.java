@@ -972,6 +972,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 			{
 				clazz = IOnChangeListener.class;
 			}
+			else
+			{
+				throw new IllegalArgumentException(
+						"The component class doesn't seem to implement any of the known *Listener Interfaces: " 
+						+ component.getClass());
+			}
 
 			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.simpleName(clazz));
 		}

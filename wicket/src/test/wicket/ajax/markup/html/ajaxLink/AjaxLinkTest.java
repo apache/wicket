@@ -17,7 +17,10 @@
  */
 package wicket.ajax.markup.html.ajaxLink;
 
+import wicket.Component;
+import wicket.Page;
 import wicket.WicketTestCase;
+import wicket.behavior.AbstractAjaxBehavior;
 
 /**
  * 
@@ -49,7 +52,27 @@ public class AjaxLinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-		// TODO Bordered pages are not yet working properly with ajax
-//		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
+		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
+
+		Page page = application.getLastRenderedPage();
+		Component ajaxLink = page.get("ajaxLink");
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior) ajaxLink.getBehaviors().get(0); 
+		
+		executedBehavior(AjaxPage2.class, behavior, "AjaxLinkWithBorderPage-1ExpectedResult.html");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage_2() throws Exception
+	{
+		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
+
+		Page page = application.getLastRenderedPage();
+		Component ajaxLink = page.get("ajaxLink");
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior) ajaxLink.getBehaviors().get(0); 
+		
+		executedBehavior(AjaxPage2.class, behavior, "AjaxPage2-1_ExpectedResult.html");
 	}
 }

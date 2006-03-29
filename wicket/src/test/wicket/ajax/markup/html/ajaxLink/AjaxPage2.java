@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxLinkPage.java 4633 2006-02-26 00:22:21Z dashorst $ $Revision$
+ * $Date: 2006-02-26 01:22:21 +0100 (So, 26 Feb 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,45 +21,47 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.model.PropertyModel;
+import wicket.markup.html.border.BoxBorder;
 
 /**
  * 
  */
-public class AjaxLinkWithBorderPage extends WebPage
+public class AjaxPage2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 	
-	private String labelText = "UpdateMe";
+	private Label ajaxLabel;
+	private BoxBorder myBorder;
 
 	/**
 	 * Construct.
 	 */
-	public AjaxLinkWithBorderPage()
+	public AjaxPage2()
 	{
-		add(new AjaxTestBorder("border").setTransparentResolver(true));
-		
-		final Label label = new Label("ajaxLabel", new PropertyModel(this, "labelText"));
-		label.setOutputMarkupId(true);
-		add(label);
+		super();
+
+		myBorder = new BoxBorder("pageLayout");
+		myBorder.setTransparentResolver(true);
+		add(myBorder);
+
+		ajaxLabel = new Label("ajaxLabel", "AAAAAAA");
+		ajaxLabel.setOutputMarkupId(true);
+		add(ajaxLabel);
+
 		add(new AjaxLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
-				labelText = "Updated!";
-				target.addComponent(label);
+				Label ajaxLabel2 = new Label("ajaxLabel", "BBBBBBB");
+				ajaxLabel2.setOutputMarkupId(true);
+				ajaxLabel.getParent().replace(ajaxLabel2);
+				if (target != null)
+				{
+					target.addComponent(ajaxLabel2, "ajaxLabel");
+				}
 			}
 		});
-	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getLabelText()
-	{
-		return labelText;
 	}
 }

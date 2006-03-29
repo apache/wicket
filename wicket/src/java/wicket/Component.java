@@ -41,7 +41,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.WebPage;
-import wicket.markup.html.border.Border;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
@@ -537,6 +536,13 @@ public abstract class Component implements Serializable
 	/** Any parent container. */
 	private MarkupContainer parent;
 
+	/** 
+	 * I really dislike it, but for now we need it. Reason: due to transparent
+	 * containers and IComponentResolver there is guaranteed 1:1 mapping 
+	 * between component and markup
+	 */ 
+	int markupIndex = -1;
+	
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
@@ -847,6 +853,8 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * 
 	 * Get a copy of the markup's attributes which are associated with the
 	 * component.
 	 * <p>
@@ -860,7 +868,8 @@ public abstract class Component implements Serializable
 	 */
 	public final ValueMap getMarkupAttributes()
 	{
-		ValueMap attrs=new ValueMap(initializeMarkupStream().getTag().getAttributes());
+		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
 	}
@@ -1562,8 +1571,7 @@ public abstract class Component implements Serializable
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-	
-			MarkupStream markupStream = initializeMarkupStream();
+			MarkupStream markupStream = new MarkupFragmentFinder().find(this);
 	
 			try
 			{
@@ -1616,6 +1624,8 @@ public abstract class Component implements Serializable
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
+		this.markupIndex = markupStream.getCurrentIndex();
+
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
 		final ComponentTag tag = openTag.mutable();
@@ -2906,59 +2916,5 @@ public abstract class Component implements Serializable
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
-	}
-
-	/**
-	 * Get the ComponentTag from the Markup which is associated with the
-	 * component.
-	 * 
-	 * @return An unmutable map with the attributes of the components tag
-	 */
-	private final MarkupStream initializeMarkupStream()
-	{
-		// Save the parent's markup stream to re-assign it at the end
-		MarkupContainer parent = getParent();
-
-		// Get the parent's associated markup stream.
-		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
-		MarkupStream markupStream = null;
-		while (markupStream == null)
-		{
-			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream(true);
-
-			// Make sure the markup stream is positioned at the correct element
-			String componentPath = parent.getPageRelativePath();
-			String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
-					.getPageRelativePath();
-			String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-			if (relativePath.startsWith(":"))
-			{
-				relativePath = relativePath.substring(1);
-			}
-
-			// If the component is defined in the markup
-			int index = markupStream.findComponentIndex(relativePath, getId());
-			if (index != -1)
-			{
-				// than position the stream at the beginning of the component
-				markupStream.setCurrentIndex(index);
-			}
-			else
-			{
-				// Not found, reset the stream
-				markupStream = null;
-
-				// Yet another exception for Border in the code base.
-				// However if the container with the markup is a Border, than
-				// ...
-				if (parentWithAssociatedMarkup instanceof Border)
-				{
-					parentWithAssociatedMarkup = parentWithAssociatedMarkup
-							.findParentWithAssociatedMarkup();
-				}
-			}
-		}
-
-		return markupStream;
 	}
 }
