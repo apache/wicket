@@ -1,5 +1,15 @@
 <html>
-<body>
-Unknown
+<head>	<script language="JavaScript" type="text/javascript" src="/MockWebApplication/MockWebApplication/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
+<script>wicketAjaxDebugEnable=true;</script>	<script language="JavaScript" type="text/javascript" src="/MockWebApplication/MockWebApplication/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/MockWebApplication/MockWebApplication/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+</head><body>
+  <span wicket:id="border"><wicket:border>
+    Border
+    <wicket:body>
+    <span wicket:id="ajaxLabel" id="ajaxLabel">UpdateMe</span>
+    <a href="javascript:var wcall=wicketAjaxGet('/MockWebApplication/MockWebApplication?wicket:interface=:0:ajaxLink:-1:IUnversionedBehaviorListener&wicket:behaviorId=0', function() { }, function() { });" wicket:id="ajaxLink" id="ajaxLink">Update</a>
+  </wicket:body>
+    Border
+  </wicket:border></span>
 </body>
 </html>

@@ -318,6 +318,7 @@ public class ComponentTag extends MarkupElement
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);
+			tag.setPath(this.path);
 			return tag;
 		}
 	}

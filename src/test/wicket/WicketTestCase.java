@@ -18,6 +18,7 @@
 package wicket;
 
 import junit.framework.TestCase;
+import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
@@ -85,16 +86,39 @@ public abstract class WicketTestCase extends TestCase
 	protected void executedListener(final Class pageClass, final Component component,
 			final String filename) throws Exception
 	{
+		assertNotNull(component);
+		
 		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
 				+ " ===");
-
-		assertNotNull(component);
 
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
 		application.getServletRequest().setRequestToComponent(component);
 		application.processRequestCycle(cycle);
 
+		String document = application.getServletResponse().getDocument();
+		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
+	}
+	
+	/**
+	 * 
+	 * @param pageClass
+	 * @param behavior
+	 * @param filename
+	 * @throws Exception
+	 */
+	protected void executedBehavior(final Class pageClass, final AbstractAjaxBehavior behavior,
+			final String filename) throws Exception
+	{
+		assertNotNull(behavior);
+		
+		System.out.println("=== " + pageClass.getName() + " : " + behavior.toString() + " ===");
+		
+		application.setupRequestAndResponse();
+		WebRequestCycle cycle = application.createRequestCycle();
+		application.getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false));
+		application.processRequestCycle(cycle);
+	
 		String document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}
