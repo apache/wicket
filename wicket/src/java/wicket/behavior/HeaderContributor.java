@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: HeaderContributor.java 4855 2006-03-11 12:57:08 -0800 (Sat, 11 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-11 12:57:08 -0800 (Sat, 11 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +18,8 @@
  */
 package wicket.behavior;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import wicket.RequestCycle;
@@ -117,8 +118,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 	}
 
-	/** 
-	 * prints a javascript resource reference. 
+	/**
+	 * prints a javascript resource reference.
 	 */
 	public static final class JavaScriptReferenceHeaderContributor
 			extends
@@ -145,15 +146,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 		public void renderHead(Response response)
 		{
 			final String url = RequestCycle.get().urlFor(getPackageResourceReference());
-			
+
 			response.write("<script type=\"text/javascript\" src=\"");
 			response.write(url);
 			response.println("\"></script>");
 		}
 	}
 
-	/** 
-	 * prints a css resource reference. 
+	/**
+	 * prints a css resource reference.
 	 */
 	public static final class CSSReferenceHeaderContributor
 			extends
@@ -186,10 +187,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 	}
 
-	/** 
-	 * set of resource references to contribute. 
+	/**
+	 * set of resource references to contribute.
 	 */
-	private Set headerContributors = null;
+	private List headerContributors = null;
 
 	/**
 	 * Construct.
@@ -206,7 +207,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public HeaderContributor(IHeaderContributor headerContributor)
 	{
-		headerContributors = new HashSet(1);
+		headerContributors = new ArrayList();
 		headerContributors.add(headerContributor);
 	}
 
@@ -348,6 +349,28 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
+	 * Adds a custom header contributor at the given position.
+	 * 
+	 * @param index
+	 *            the position where the contributor should be added (e.g. 0 to
+	 *            put it in front of the rest).
+	 * @param headerContributor
+	 *            instance of {@link IHeaderContributor}
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if the index is out of range (index &lt; 0 || index &gt;
+	 *             size()).
+	 */
+	public final void addContributor(final int index, final IHeaderContributor headerContributor)
+	{
+		checkHeaderContributors();
+		if (!headerContributors.contains(headerContributor))
+		{
+			headerContributors.add(index, headerContributor);
+		}
+	}
+
+	/**
 	 * Adds a custom header contributor.
 	 * 
 	 * @param headerContributor
@@ -356,7 +379,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 	public final void addContributor(final IHeaderContributor headerContributor)
 	{
 		checkHeaderContributors();
-		headerContributors.add(headerContributor);
+		if (!headerContributors.contains(headerContributor))
+		{
+			headerContributors.add(headerContributor);
+		}
 	}
 
 	/**
@@ -372,8 +398,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addCssReference(final Class scope, final String path)
 	{
-		checkHeaderContributors();
-		headerContributors.add(new CSSReferenceHeaderContributor(scope, path));
+		addContributor(new CSSReferenceHeaderContributor(scope, path));
 	}
 
 	/**
@@ -389,8 +414,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addJavaScriptReference(final Class scope, final String path)
 	{
-		checkHeaderContributors();
-		headerContributors.add(new JavaScriptReferenceHeaderContributor(scope, path));
+		addContributor(new JavaScriptReferenceHeaderContributor(scope, path));
 	}
 
 	/**
@@ -400,7 +424,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors == null)
 		{
-			headerContributors = new HashSet();
+			headerContributors = new ArrayList();
 		}
 	}
 }
