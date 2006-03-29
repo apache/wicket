@@ -190,10 +190,9 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     
-    if (node.firstChild.nodeValue == undefined || node.firstChild.nodeValue == null) {
-        text="";
-    } else {
-        var text = node.firstChild.nodeValue;
+    var text="";
+    if (node.firstChild.nodeValue != undefined && node.firstChild.nodeValue != null) {
+        text = node.firstChild.nodeValue;
     }
 
     var encoding = node.getAttribute("encoding");
