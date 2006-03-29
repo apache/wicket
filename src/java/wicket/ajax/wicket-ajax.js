@@ -21,7 +21,7 @@ function wicketGet(id) {
 }
 
 function wicketShow(id) {
-    wicketGet(id).style.display = "inline";
+    wicketGet(id).style.display = "";
 }
 function wicketHide(id) {
     wicketGet(id).style.display = "none";
