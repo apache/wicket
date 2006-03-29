@@ -189,9 +189,11 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
-    var text = node.firstChild.nodeValue;
+    
     if (node.firstChild.nodeValue == undefined || node.firstChild.nodeValue == null) {
         text="";
+    } else {
+        var text = node.firstChild.nodeValue;
     }
 
     var encoding = node.getAttribute("encoding");
