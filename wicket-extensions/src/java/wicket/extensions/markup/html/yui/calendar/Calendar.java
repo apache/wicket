@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: Calendar.java 5044 2006-03-20 16:46:35 -0800 (Mon, 20 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-20 16:46:35 -0800 (Mon, 20
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,6 +18,7 @@
  */
 package wicket.extensions.markup.html.yui.calendar;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import wicket.Application;
@@ -25,6 +28,7 @@ import wicket.IInitializer;
 import wicket.RequestCycle;
 import wicket.behavior.HeaderContributor;
 import wicket.extensions.markup.html.yui.AbstractYuiPanel;
+import wicket.extensions.util.resource.PackagedTextTemplate;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebPage;
@@ -32,6 +36,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.AbstractReadOnlyModel;
+import wicket.util.collections.MiniMap;
 
 /**
  * Calendar component based on the Calendar of Yahoo UI Library.
@@ -157,18 +162,12 @@ public class Calendar extends AbstractYuiPanel
 	protected void onAttach()
 	{
 		super.onAttach();
-		
+
 		// initialize lazily
 		if (elementId == null)
 		{
 			// assign the markup id
 			String id = getMarkupId();
-			if (id == null)
-			{
-				// the component (tag) doesn't have an id attribute
-				// in 1.3. we can do this in the constructor instead
-				id = getPath().replace(':', '_');
-			}
 			elementId = id + "Element";
 			javaScriptId = elementId + "JS";
 		}
@@ -186,16 +185,15 @@ public class Calendar extends AbstractYuiPanel
 		String rightImage = RequestCycle.get().urlFor(
 				new PackageResourceReference(Calendar.class, "calrt.gif"));
 
-		StringBuffer b = new StringBuffer("\nvar ").append(javaScriptId).append(";\n");
-		b.append("function init").append(javaScriptId).append("() {\n\t");
-		b.append(javaScriptId).append(" = new YAHOO.widget.Calendar(\"").append(javaScriptId)
-				.append("\",\"").append(elementId).append("\");\n\t");
-		b.append(javaScriptId).append(".Options.NAV_ARROW_LEFT = \"").append(leftImage).append(
-				"\";\n\t");
-		b.append(javaScriptId).append(".Options.NAV_ARROW_RIGHT = \"").append(rightImage).append(
-				"\";\n\t");
-		b.append(javaScriptId).append(".render();\n");
-		b.append("}\n");
-		return b.toString();
+		Map variables = new MiniMap(4);
+		variables.put("javaScriptId", javaScriptId);
+		variables.put("elementId", elementId);
+		variables.put("navigationArrowLeft", leftImage);
+		variables.put("navigationArrowRight", rightImage);
+
+		PackagedTextTemplate template = new PackagedTextTemplate(Calendar.class, "init.js");
+		template.interpolate(variables);
+
+		return template.toString();
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: Slider.java 5132 2006-03-26 02:13:41 -0800 (Sun, 26 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-26 02:13:41 -0800 (Sun, 26 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +18,6 @@
  */
 package wicket.extensions.markup.html.yui.slider;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -26,10 +25,9 @@ import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IInitializer;
-import wicket.WicketRuntimeException;
 import wicket.behavior.HeaderContributor;
 import wicket.extensions.markup.html.yui.AbstractYuiPanel;
-import wicket.extensions.markup.html.yui.slider.img.SliderImages;
+import wicket.extensions.util.resource.PackagedTextTemplate;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
@@ -39,8 +37,6 @@ import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 import wicket.util.collections.MiniMap;
-import wicket.util.io.Streams;
-import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Slider component based on the Slider of Yahoo UI Library.
@@ -64,7 +60,8 @@ public class Slider extends AbstractYuiPanel
 			// register all javascript files
 			PackageResource.bind(application, Slider.class, Pattern.compile(".*\\.js"));
 			// images
-			PackageResource.bind(application, SliderImages.class, Pattern.compile(".*\\.gif|.*\\.png"));
+			PackageResource.bind(application, Slider.class, Pattern.compile(".*\\.gif|.*\\.png"),
+					true);
 			// and a css
 			PackageResource.bind(application, Slider.class, "css/screen.css");
 		}
@@ -168,18 +165,12 @@ public class Slider extends AbstractYuiPanel
 	protected void onAttach()
 	{
 		super.onAttach();
-		
+
 		// initialize lazily
 		if (backgroundElementId == null)
 		{
 			// assign the markup id
 			String id = getMarkupId();
-			if (id == null)
-			{
-				// the component (tag) doesn't have an id attribute
-				// in 1.3. we can do this in the constructor instead
-				id = getPath().replace(':', '_');
-			}
 			backgroundElementId = id + "Bg";
 			imageElementId = id + "Img";
 			javaScriptId = backgroundElementId + "JS";
@@ -193,31 +184,14 @@ public class Slider extends AbstractYuiPanel
 	 */
 	protected String getJavaScriptComponentInitializationScript()
 	{
-		String script = getPackagedTextFileContents("init.js");
 		Map variables = new MiniMap(3);
 		variables.put("javaScriptId", javaScriptId);
 		variables.put("backGroundElementId", backgroundElementId);
 		variables.put("imageElementId", imageElementId);
-		MapVariableInterpolator interpolator = new MapVariableInterpolator(script, variables);
-		return interpolator.toString();
-	}
 
-	private String getPackagedTextFileContents(String fileName)
-	{
-		InputStream inputStream = getClass().getResourceAsStream(fileName);
-		if (inputStream == null)
-		{
-			throw new IllegalArgumentException("file " + fileName + " was not found; requested by "
-					+ getClass());
-		}
+		PackagedTextTemplate template = new PackagedTextTemplate(Slider.class, "init.js");
+		template.interpolate(variables);
 
-		try
-		{
-			return Streams.readString(inputStream);
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return template.toString();
 	}
 }

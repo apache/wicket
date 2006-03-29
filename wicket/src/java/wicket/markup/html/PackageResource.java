@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.18 $ $Date$
+ * $Id: PackageResource.java 4898 2006-03-13 13:44:52 -0800 (Mon, 13 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-13 13:44:52 -0800 (Mon, 13 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,10 +18,8 @@
  */
 package wicket.markup.html;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,7 +37,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.util.io.IOUtils;
 import wicket.util.lang.PackageName;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
@@ -192,11 +190,38 @@ public class PackageResource extends WebResource
 	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
 	 *            will add all the files with extension &quot;js&quot; from that
 	 *            package).
+	 * @param recurse
+	 *            Whether this method should recurse into sub packages
 	 */
 	public static void bind(Application application, Class scope, Pattern pattern)
 	{
+		// bind using the pattern without recursing
+		bind(application, scope, pattern, false);
+	}
+
+	/**
+	 * Binds the resources that match the provided pattern to the given
+	 * application object. Will create any resources if not already in the
+	 * shared resources of the application object and does that recursively when
+	 * the recurse parameter is true, or just for the scoped package if that
+	 * parameter is false
+	 * 
+	 * @param application
+	 *            The application to bind to.
+	 * @param scope
+	 *            The scope of the resource.
+	 * @param pattern
+	 *            A regular expression to match against the contents of the
+	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
+	 *            will add all the files with extension &quot;js&quot; from that
+	 *            package).
+	 * @param recurse
+	 *            Whether this method should recurse into sub packages
+	 */
+	public static void bind(Application application, Class scope, Pattern pattern, boolean recurse)
+	{
 		// bind using the pattern
-		get(scope, pattern);
+		get(scope, pattern, recurse);
 	}
 
 	/**
@@ -259,11 +284,32 @@ public class PackageResource extends WebResource
 	 *            call this method
 	 * @param pattern
 	 *            Regexp pattern to match resources
-	 * @return The resources or null if none were found
+	 * @return The resources, never null but may be empty
 	 */
 	public static PackageResource[] get(Class scope, Pattern pattern)
 	{
-		List resources = null;
+		return get(scope, pattern, false);
+	}
+
+	/**
+	 * Gets non-localized resources for a given set of criteria. Multiple
+	 * resource can be loaded for the same criteria if they match the pattern.
+	 * If no resources were found, this method returns null.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
+	 * @param pattern
+	 *            Regexp pattern to match resources
+	 * @param recurse
+	 *            Whether this method should recurse into sub packages
+	 * @return The resources, never null but may be empty
+	 */
+	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
+	{
+		final List resources = new ArrayList();
 		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/");
 		ClassLoader loader = scope.getClassLoader();
 		try
@@ -274,62 +320,36 @@ public class PackageResource extends WebResource
 			{
 				URL resource = (URL)packageResources.nextElement();
 				URLConnection connection = resource.openConnection();
-				if(connection instanceof JarURLConnection)
+				if (connection instanceof JarURLConnection)
 				{
 					JarFile jf = ((JarURLConnection)connection).getJarFile();
 					Enumeration enumeration = jf.entries();
-					while(enumeration.hasMoreElements())
+					while (enumeration.hasMoreElements())
 					{
 						JarEntry je = (JarEntry)enumeration.nextElement();
 						String name = je.getName();
-						if(name.startsWith(packageRef))
+						if (name.startsWith(packageRef))
 						{
-							name = name.substring(packageRef.length()+1);
-							if (pattern.matcher(name).matches())
+							name = name.substring(packageRef.length() + 1);
+							if (pattern.matcher(name).matches()
+									&& (recurse || (name.indexOf('/') == -1)))
 							{
-								if (resources == null)
-								{
-									resources = new ArrayList();
-								}
 								// we add the entry as a package resource
 								resources.add(get(scope, name, null, null));
 							}
 						}
 					}
 				}
-				else 
+				else
 				{
-					InputStream inputStream = connection.getInputStream();
-					if (inputStream != null)
+					String absolutePath = scope.getResource("").getPath();
+					File basedir = new File(absolutePath);
+					if (!basedir.isDirectory())
 					{
-						BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-						String entry = null;
-						try
-						{
-							while ((entry = reader.readLine()) != null)
-							{
-								// if the current entry matches the provided regexp
-								if (pattern.matcher(entry).matches())
-								{
-									if (resources == null)
-									{
-										resources = new ArrayList();
-									}
-									// we add the entry as a package resource
-									resources.add(get(scope, entry, null, null));
-								}
-							}
-						}
-						finally
-						{
-							IOUtils.closeQuietly(reader);
-						}
+						throw new IllegalStateException("unable to read resources from directory "
+								+ basedir);
 					}
-					else
-					{
-						log.error("though " + resource + " was listed as a resource by " + packageRef
-								+ ", it did not return an imput stream and can thus not be read");
-					}
+					addResources(scope, pattern, resources, new StringBuffer(""), basedir, recurse);
 				}
 			}
 		}
@@ -363,6 +383,50 @@ public class PackageResource extends WebResource
 		String absolutePath = Packages.absolutePath(scope, path);
 		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
 				absolutePath, style, locale, null) != null;
+	}
+
+	/**
+	 * Adds resources recursively.
+	 * 
+	 * @param scope
+	 *            the original scope used to get the base directory
+	 * @param pattern
+	 *            Regexp pattern to match resources
+	 * @param resources
+	 *            the current list of resources
+	 * @param relativePath
+	 *            The relative path that is to be prepended to the resource's
+	 *            name
+	 * @param dir
+	 *            the current directory
+	 * @param recurse
+	 *            Whether this method should recurse into sub packages
+	 */
+	private static final void addResources(final Class scope, final Pattern pattern,
+			final List resources, final StringBuffer relativePath, final File dir, boolean recurse)
+	{
+		File[] files = dir.listFiles();
+		for (int i = 0; i < files.length; i++)
+		{
+			File file = files[i];
+			if (file.isDirectory())
+			{
+				if (recurse)
+				{
+					addResources(scope, pattern, resources, relativePath.append(file.getName())
+							.append('/'), file, recurse);
+				}
+			}
+			else
+			{
+				String fileName = file.getName();
+				if (pattern.matcher(fileName).matches())
+				{
+					// we add the entry as a package resource
+					resources.add(get(scope, relativePath + fileName, null, null));
+				}
+			}
+		}
 	}
 
 	/**

@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: AbstractYuiPanel.java 4820 2006-03-08 00:21:01 -0800 (Wed, 08 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-08 00:21:01 -0800 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,8 +27,9 @@ import wicket.model.IModel;
 
 /**
  * Abstract panel for contributing common classes for YUI.
+ * 
  * @author Eelco Hillenius
- */ 
+ */
 public class AbstractYuiPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
@@ -42,7 +45,7 @@ public class AbstractYuiPanel extends Panel
 		public void init(Application application)
 		{
 			PackageResource.bind(application, ComponentInitializer.class,
-					PackageResource.EXTENSION_JS);
+					PackageResource.EXTENSION_JS, false);
 		}
 	}
 
@@ -54,7 +57,7 @@ public class AbstractYuiPanel extends Panel
 	public AbstractYuiPanel(String id)
 	{
 		super(id);
-		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class));
+		addHeaderContributions();
 	}
 
 	/**
@@ -66,7 +69,21 @@ public class AbstractYuiPanel extends Panel
 	public AbstractYuiPanel(String id, IModel model)
 	{
 		super(id, model);
-		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class));
+		addHeaderContributions();
 	}
 
+	/**
+	 * Adds the default header contributions for all YUI components.
+	 */
+	private void addHeaderContributions()
+	{
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "YAHOO.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "log.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "color.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "key.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "event.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "dom.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "animation.js"));
+		add(HeaderContributor.forJavaScript(AbstractYuiPanel.class, "dragdrop.js"));
+	}
 }
