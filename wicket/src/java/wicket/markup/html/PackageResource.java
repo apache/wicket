@@ -413,7 +413,7 @@ public class PackageResource extends WebResource
 			{
 				if (recurse)
 				{
-					addResources(scope, pattern, resources, relativePath.append(file.getName())
+					addResources(scope, pattern, resources, new StringBuffer(relativePath).append(file.getName())
 							.append('/'), file, recurse);
 				}
 			}
