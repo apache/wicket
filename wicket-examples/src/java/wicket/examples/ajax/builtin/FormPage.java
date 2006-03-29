@@ -90,7 +90,7 @@ public class FormPage extends BasePage
 		form.add(new AjaxSubmitButton("ajax-submit-button", form)
 		{
 
-			protected void onSubmit(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
 				target.addComponent(feedback);
 			}

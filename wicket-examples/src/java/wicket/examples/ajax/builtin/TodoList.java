@@ -234,7 +234,7 @@ public class TodoList extends WebPage
 				add(new TextField("text"));
 				add(new AjaxSubmitButton("add", this)
 				{
-					protected void onSubmit(AjaxRequestTarget target)
+					protected void onSubmit(AjaxRequestTarget target, Form form)
 					{
 						// retrieve the todo item
 						TodoItem item = (TodoItem)getParent().getModelObject();
@@ -245,7 +245,7 @@ public class TodoList extends WebPage
 				});
 				add(new AjaxSubmitButton("cancel", this)
 				{
-					public void onSubmit(AjaxRequestTarget target)
+					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
 						onCancelTodo(target);
 					}
