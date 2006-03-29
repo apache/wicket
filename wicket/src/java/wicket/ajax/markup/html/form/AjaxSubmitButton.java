@@ -44,7 +44,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitButton(String id, Form form)
+	public AjaxSubmitButton(String id, final Form form)
 	{
 		super(id);
 
@@ -55,7 +55,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitButton.this.onSubmit(target);
+				AjaxSubmitButton.this.onSubmit(target, form);
 			}
 			
 			protected String getEventHandler()
@@ -86,8 +86,9 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * Listener method invoked on form submit
 	 * 
 	 * @param target
+	 * @param form 
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target);
+	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 
 
 }
