@@ -5,7 +5,7 @@ import java.util.List;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.extensions.markup.html.tabs.TabbedPanel;
-import wicket.markup.html.link.Link;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * Ajaxified version of the tabbed panel. Uses AjaxFallbackLink instead of
@@ -20,6 +20,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param tabs
 	 */
@@ -28,21 +29,23 @@ public class AjaxTabbedPanel extends TabbedPanel
 		super(id, tabs);
 		setOutputMarkupId(true);
 	}
-	
-	protected Link newLink(String linkId, final int index)
+
+	protected WebMarkupContainer newLink(String linkId, final int index)
 	{
-		return new AjaxFallbackLink(linkId) {
+		return new AjaxFallbackLink(linkId)
+		{
 
 			private static final long serialVersionUID = 1L;
 
 			public void onClick(AjaxRequestTarget target)
 			{
 				setSelectedTab(index);
-				if (target!=null) {
+				if (target != null)
+				{
 					target.addComponent(AjaxTabbedPanel.this);
 				}
 			}
-			
+
 		};
 	}
 
