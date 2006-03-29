@@ -409,7 +409,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				final IClassResolver defaultClassResolver = page.getApplication()
 						.getApplicationSettings().getClassResolver();
 
-				final String className;
+				String className;
 				if (!infoPath.startsWith("."))
 				{
 					// Href is relative. Resolve the url given relative to the
@@ -432,6 +432,29 @@ public final class AutoLinkResolver implements IComponentResolver
 				{
 					log.warn("Did not find corresponding java class: " + className);
 					// fall through
+				}
+
+				// Make sure base markup pages (inheritance) are handled correct
+				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
+				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
+						&& page.getMarkupStream().isMergedMarkup())
+				{
+					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
+					
+					// Href is relative. Resolve the url given relative to the
+					// current page
+					className = Packages.extractPackageName(clazz) + "." + infoPath;
+	
+					try
+					{
+						clazz = defaultClassResolver.resolveClass(className);
+						return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters());
+					}
+					catch (WicketRuntimeException ex)
+					{
+						log.warn("Did not find corresponding java class: " + className);
+						// fall through
+					}
 				}
 			}
 			else
