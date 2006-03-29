@@ -190,6 +190,10 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     var text = node.firstChild.nodeValue;
+    if (text==undefined||text==null) {
+        text="";
+    }
+
     var encoding = node.getAttribute("encoding");
     if (encoding != null&&encoding!="") {
         text = wicketDecode(encoding, text);
