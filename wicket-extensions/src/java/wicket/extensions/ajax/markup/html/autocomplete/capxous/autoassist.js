@@ -1,14 +1,28 @@
-/*  AutoAssist JavaScript Widget, Version 0.6
- *  Written by Cheng Guangnan <chenggn@capxous.com>
+/*  AutoAssist JavaScript Widget, Version 0.6.5
+ *  Written by Cheng Guangnan <chenggn@capxous.com>, support provided by the Support Team <support@capxous.com>
  *  For details, see the AutoAssist web site: http://capxous.com/autoassist
 /*--------------------------------------------------------------------------*/
+
+Object.extend(Event, {
+  KEY_PAGE_UP:		33,
+  KEY_PAGE_DOWN:	34,
+  KEY_END:			35, 
+  KEY_HOME:			36, 
+  KEY_INSERT:		45,
+  KEY_SHIFT:		16,
+  KEY_CTRL:			17,
+  KEY_ALT:			18
+});
 
 var AutoAssist = Class.create();
 
 AutoAssist.prototype = {
 
-	version: "0.6",	
-	status: "none",
+	version: "0.6.5",	
+
+	requestNo: 0,
+	responseNo: 0,
+	visible: false,
 
 	cssSelector: {
 		main: "aa",
@@ -17,7 +31,8 @@ AutoAssist.prototype = {
 	},
 
 	defaultOptions: {
-		eventName: "onSelect"
+		eventName: "onSelect",
+		typing_timeout: 618
 	},
 	
 	initialize: function(txtBox, getURL, options) {
@@ -34,11 +49,14 @@ AutoAssist.prototype = {
 		Element.hide(this.floatDiv);
 		document.body.appendChild(this.floatDiv);
 		
+		this.bufferDiv = document.createElement("div");
+		Element.addClassName(this.bufferDiv, this.cssSelector.main);
+		
 		this.currentNodeIndex = -1;
 		this.size = -1;
 		this.setOptions(options);
 		
-		Event.observe(window, "click", this.hide.bindAsEventListener(this));
+		Event.observe(document, "click", this.hide.bindAsEventListener(this));
 		Event.observe(this.txtBox, "dblclick", this.doRequest.bindAsEventListener(this));
 	},
 	
@@ -49,6 +67,18 @@ AutoAssist.prototype = {
 
 	onkeydown: function(evt) {
 		switch (evt.keyCode) {
+			case Event.KEY_TAB:
+			case Event.KEY_LEFT:
+			case Event.KEY_RIGHT:
+			case Event.KEY_PAGE_UP:
+			case Event.KEY_PAGE_DOWN:
+			case Event.KEY_END:
+			case Event.KEY_HOME:
+			case Event.KEY_INSERT:
+			case Event.KEY_SHIFT:
+			case Event.KEY_CTRL:
+			case Event.KEY_ALT:
+				return;			
 			case Event.KEY_ESC:
 				this.hide();
 				return;
@@ -61,17 +91,16 @@ AutoAssist.prototype = {
 				this.show();
 				return;	
 			case Event.KEY_RETURN:
-				if (this.status != "none") {
+				if (this.visible) {
 					this.select();
 					return;
-				} else {
 				}
 			default:
+				this.log("evt.keyCode:" + evt.keyCode);
 				if (this.timeoutId != 0) {
 					clearTimeout(this.timeoutId);
 				}
-				var stat = "$('" + this.txtBox.id + "').autoassist.doRequest();";				
-				this.timeoutId = setTimeout(stat, 500);
+				this.timeoutId = setTimeout(this.doRequest.bind(this), this.options.typing_timeout);
 				this.hide();
 		}		
 	},
@@ -114,6 +143,7 @@ AutoAssist.prototype = {
 		this.size = 0;
 		this.currentNodeIndex = -1;
 		this.floatDiv.innerHTML = "";
+		this.bufferDiv.innerHTML = "";		
 	},
 		
 	isValidNode:function(n) {
@@ -131,18 +161,24 @@ AutoAssist.prototype = {
 	doRequest: function() {
 		if (this.preRequest()) {
 			this.onLoading();
-			
-			var defaultOptions = {
+			var updaterOptions = {
 				method: "get",
 				onComplete: this.onComplete.bindAsEventListener(this),
 				onFailure: this.onFailure.bindAsEventListener(this)
 			}
-
-			this.currentRequest = new Ajax.Updater(this.floatDiv, this.getURL(), defaultOptions);
+			var URL = this.getURL();			
+			this.currentRequest = new Ajax.Updater(this.bufferDiv, URL, updaterOptions);
+			this.requestNo++;
+			this.log(URL);
 		}
 	},
 	
+	onException: function() {
+		this.log("onException");
+	},
+	
 	onFailure: function() {
+		this.log("onFailure");	
 	},
 	
 	onLoading: function() {
@@ -152,7 +188,17 @@ AutoAssist.prototype = {
 	},
 	
 	onComplete: function() {
-		if (this.currentRequest.transport == arguments[0]) {
+		setTimeout(this.updateContent.bind(this, arguments[0]), 10);
+	},
+	
+	updateContent: function() {
+		this.responseNo++;		
+		this.log(this.requestNo + "/" + this.responseNo);
+		
+		var tx = ((this.currentRequest == null) || (this.currentRequest.transport == arguments[0]));
+		this.log(tx);
+		if (tx) {	
+			this.floatDiv.innerHTML = this.bufferDiv.innerHTML;
 			this.size = 0;
 			this.currentNodeIndex = -1;
 	
@@ -182,12 +228,18 @@ AutoAssist.prototype = {
 		this.floatDiv.style.top = p[1] + this.txtBox.offsetHeight + "px";
 		this.floatDiv.style.left = p[0]+ "px";
 
-		this.status = "show";
+		this.visible = true;
 		Element.show(this.floatDiv);
 	},
-
+	
 	hide: function() {
-		this.status = "none";
+		this.visible = false;
 		Element.hide(this.floatDiv);
+	},
+	
+	log: function(msg) {
+	try {
+		$("log").value = msg + "<br/>\n" + $("log").value;
+	} catch (e) {}
 	}
 }
