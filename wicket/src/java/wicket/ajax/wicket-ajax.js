@@ -190,7 +190,7 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
     var text = node.firstChild.nodeValue;
-    if (text==undefined||text==null) {
+    if (node.firstChild.nodeValue == undefined || node.firstChild.nodeValue == null) {
         text="";
     }
 
