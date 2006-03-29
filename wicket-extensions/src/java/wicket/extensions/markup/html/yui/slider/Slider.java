@@ -32,6 +32,7 @@ import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.image.Image;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
@@ -121,6 +122,10 @@ public class Slider extends AbstractYuiPanel
 		imageElement.add(new AttributeModifier("id", true,
 				new PropertyModel(this, "imageElementId")));
 		backgroundElement.add(imageElement);
+		
+		/* add the thumb img resoruce */
+		imageElement.add(new Image("thumb", PackageResource.get(Slider.class, "img/horizSlider.png")));
+				
 	}
 
 	/**
