@@ -38,6 +38,7 @@ import wicket.ajax.markup.html.AjaxFallbackLink;
  */
 public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDecorator
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
