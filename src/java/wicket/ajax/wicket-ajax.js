@@ -137,9 +137,9 @@ function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 	    for (var i = 0; i < root.childNodes.length; i++) {
 	        var node = root.childNodes[i];
 	        if (node.tagName == "component") {
-	            wicketAjaxProcessComponent(node);
+	           wicketAjaxProcessComponent(node);
 	        } else if (node.tagName == "evaluate") {
-	                wicketAjaxProcessEvaluation(node);
+	           wicketAjaxProcessEvaluation(node);
 	        }
 	    }
 	    
@@ -164,7 +164,7 @@ function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 	} catch (e) {
 		if (wicketAjaxDebugEnabled()) {
 			var log=WicketAjaxDebug.logError;
-			log("error while processing response: "+e);
+			log("error while processing response: "+e+"."+e.message);
 		}
 		wicketAjaxCallFailureHandler(failureHandler);
 	}
@@ -180,36 +180,42 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 		failureHandler();
 	}
 	
-	if (wicketGlobalAjaxErrorHandler!=undefined&&wicketGlobalAjaxErrorHandler!=null) {
-		if (wicketAjaxDebugEnabled()) {
-			var log=WicketAjaxDebug.logInfo;
-			log("invoking wicketGlobalAjaxErrorHandler failure handler...");
+    if (typeof(window.wicketGlobalAjaxErrorHandler) != "undefined") {
+	    var global=wicketGlobalAjaxErrorHandler;
+	    if (global!=null) {
+    		if (wicketAjaxDebugEnabled()) {
+    			var log=WicketAjaxDebug.logInfo;
+    			log("invoking window.wicketGlobalAjaxErrorHandler failure handler...");
+    		}
+    		global();
 		}
-		wicketGlobalAjaxErrorHandler();
 	}
 }
 
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
-    
+
     var text="";
     if (node.hasChildNodes()) {
        text = node.firstChild.nodeValue;
     }
-  
     var encoding = node.getAttribute("encoding");
     if (encoding != null&&encoding!="") {
         text = wicketDecode(encoding, text);
     }
+
     var element=document.getElementById(compId);
+    
     if (element.outerHTML) {
-        element.outerHTML = text;
+       element.outerHTML=text;
     } else {
         var range = element.ownerDocument.createRange();
         range.selectNode(element);
         element.parentNode.replaceChild(
-        range.createContextualFragment(text), element);
+            range.createContextualFragment(text), element);
     }
+    
+    
     
 }
 function wicketAjaxProcessEvaluation(node) {
