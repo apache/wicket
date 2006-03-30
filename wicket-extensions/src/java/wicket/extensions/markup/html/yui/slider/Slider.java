@@ -27,11 +27,10 @@ import wicket.Component;
 import wicket.IInitializer;
 import wicket.behavior.HeaderContributor;
 import wicket.extensions.markup.html.yui.AbstractYuiPanel;
-import wicket.extensions.util.resource.PackagedTextTemplate;
+import wicket.extensions.util.resource.TextTemplateHeaderContributor;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.AbstractReadOnlyModel;
@@ -98,20 +97,30 @@ public class Slider extends AbstractYuiPanel
 		add(HeaderContributor.forJavaScript(Slider.class, "slider.js"));
 		add(HeaderContributor.forCss(Slider.class, "css/screen.css"));
 
-		Label initialization = new Label("initialization", new AbstractReadOnlyModel()
+		IModel variablesModel = new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
 
+			/** cached variables; we only need to fill this once. */
+			private Map variables;
+
 			/**
-			 * @see wicket.model.IModel#getObject(wicket.Component)
+			 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
 			 */
 			public Object getObject(Component component)
 			{
-				return getJavaScriptComponentInitializationScript();
+				if (variables == null)
+				{
+					this.variables = new MiniMap(3);
+					variables.put("javaScriptId", javaScriptId);
+					variables.put("backGroundElementId", backgroundElementId);
+					variables.put("imageElementId", imageElementId);
+				}
+				return variables;
 			}
-		});
-		initialization.setEscapeModelStrings(false);
-		add(initialization);
+		};
+
+		add(TextTemplateHeaderContributor.forJavaScript(Slider.class, "init.js", variablesModel));
 
 		WebMarkupContainer backgroundElement = new WebMarkupContainer("backgroundElement");
 		backgroundElement.add(new AttributeModifier("id", true, new PropertyModel(this,
@@ -122,10 +131,11 @@ public class Slider extends AbstractYuiPanel
 		imageElement.add(new AttributeModifier("id", true,
 				new PropertyModel(this, "imageElementId")));
 		backgroundElement.add(imageElement);
-		
+
 		/* add the thumb img resoruce */
-		imageElement.add(new Image("thumb", PackageResource.get(Slider.class, "img/horizSlider.png")));
-				
+		imageElement.add(new Image("thumb", PackageResource
+				.get(Slider.class, "img/horizSlider.png")));
+
 	}
 
 	/**
@@ -180,23 +190,5 @@ public class Slider extends AbstractYuiPanel
 			imageElementId = id + "Img";
 			javaScriptId = backgroundElementId + "JS";
 		}
-	}
-
-	/**
-	 * Gets the initilization script for the javascript component.
-	 * 
-	 * @return the initilization script
-	 */
-	protected String getJavaScriptComponentInitializationScript()
-	{
-		Map variables = new MiniMap(3);
-		variables.put("javaScriptId", javaScriptId);
-		variables.put("backGroundElementId", backgroundElementId);
-		variables.put("imageElementId", imageElementId);
-
-		PackagedTextTemplate template = new PackagedTextTemplate(Slider.class, "init.js");
-		template.interpolate(variables);
-
-		return template.toString();
 	}
 }
