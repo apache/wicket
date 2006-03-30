@@ -40,6 +40,8 @@ import wicket.util.time.Duration;
  */
 public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
 {
+	private static final long serialVersionUID = 1L;
+	
 	private final Duration duration;
 	private final String id;
 

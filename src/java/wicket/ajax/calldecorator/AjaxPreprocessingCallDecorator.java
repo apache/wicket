@@ -30,6 +30,8 @@ import wicket.ajax.IAjaxCallDecorator;
  */
 public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 {
+	private static final long serialVersionUID = 1L;
+	
 	private final IAjaxCallDecorator delegate;
 
 	/**
