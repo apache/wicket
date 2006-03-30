@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebRequestCrawlerSave.java 4750 2006-03-04 04:30:15 -0800 (Sat, 04 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-04 04:30:15 -0800 (Sat, 04
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +18,6 @@
  */
 package wicket.protocol.http;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -33,11 +33,11 @@ import wicket.util.value.ValueMap;
 /**
  * EXPERIMENTAL AND PROBABLY NOT YET COMPLETE
  * <p>
- * It extends WebRequest and decodes URLs encoded by WebResponseCrawlerSave. 
- * Wicket's default URLs for static resources like Pages and Images
- * is like myApp?bookmarkable=wicket.test.MyPage. Many users however prefer
- * URLs like myApp/test/mypage. This is what we try to do here. Dynamically
- * generated URLs at runtime refering to listeners etc
+ * It extends WebRequest and decodes URLs encoded by WebResponseCrawlerSave.
+ * Wicket's default URLs for static resources like Pages and Images is like
+ * myApp?bookmarkable=wicket.test.MyPage. Many users however prefer URLs like
+ * myApp/test/mypage. This is what we try to do here. Dynamically generated URLs
+ * at runtime refering to listeners etc
  * 
  * @author Juergen Donnerstag
  */
@@ -45,13 +45,13 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 {
 	/** URL querystring decoded */
 	private final String queryString;
-	
+
 	/** URL query parameters decoded */
 	private ValueMap parameters;
 
 	/** decoded url path */
 	private String path;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -64,54 +64,55 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 
 		queryString = request.getQueryString();
 		this.path = request.getPathInfo();
-		
+
 		if (this.path == null)
 		{
-		    return;
+			return;
 		}
-		
+
 		if (this.path.startsWith("/") && this.path.endsWith(".wic"))
 		{
-		    String path = this.path.substring(1, this.path.length() - 4);
-			
+			String path = this.path.substring(1, this.path.length() - 4);
+
 			path = Strings.replaceAll(path, "/", ".");
 			this.parameters = new ValueMap();
 			this.parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, path);
-			
+
 			this.path = null;
 		}
-		
+
 		if (queryString != null)
 		{
-		    if (parameters == null)
-		    {
-		        parameters = new ValueMap();
-		    }
-		    
+			if (parameters == null)
+			{
+				parameters = new ValueMap();
+			}
+
 			// extract parameter key/value pairs from the query string
-		    this.parameters.putAll(analyzeQueryString(this.queryString));
+			this.parameters.putAll(analyzeQueryString(this.queryString));
 		}
-		
-		// If available, add POST parameters as well. 
-		// The parameters from HttpRequest 
+
+		// If available, add POST parameters as well.
+		// The parameters from HttpRequest
 		final Map params = super.getParameterMap();
 		if ((params != null) && !params.isEmpty())
 		{
-		    // For all parameters (POST + URL query string)
-		    final Iterator iter = params.entrySet().iterator();
-		    while (iter.hasNext())
-		    {
-		        final Map.Entry entry = (Map.Entry)iter.next();
-	            // add key/value to our parameter map
-	            this.parameters.put(entry.getKey(), entry.getValue());
-		    }
+			// For all parameters (POST + URL query string)
+			final Iterator iter = params.entrySet().iterator();
+			while (iter.hasNext())
+			{
+				final Map.Entry entry = (Map.Entry)iter.next();
+				// add key/value to our parameter map
+				this.parameters.put(entry.getKey(), entry.getValue());
+			}
 		}
 	}
 
 	/**
 	 * Extract key/value pairs from query string
 	 * 
-	 * @param queryString The query string
+	 * @param queryString
+	 *            The query string
 	 * @return A map of query string parameter keys and values
 	 */
 	private ValueMap analyzeQueryString(final String queryString)
@@ -120,7 +121,7 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 
 		// Get a list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(queryString, "&");
-	    
+
 		// Go through each string in the list
 		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
 		{
@@ -131,21 +132,21 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 			final int pos = pair.indexOf("=");
 			if (pos < 0)
 			{
-			    // Parameter without value
+				// Parameter without value
 				params.put(pair, null);
 			}
 			else
 			{
-			    final String key = pair.substring(0, pos);
-			    final String value = pair.substring(pos + 1);
-			    
+				final String key = pair.substring(0, pos);
+				final String value = pair.substring(pos + 1);
+
 				params.put(key, value);
 			}
 		}
-		
+
 		return params;
 	}
-	
+
 	/**
 	 * Gets the request parameter with the given key.
 	 * 
@@ -155,12 +156,12 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 	 */
 	public String getParameter(final String key)
 	{
-	    if (parameters != null)
-	    {
-	        return this.parameters.getString(key);
-	    }
-	    
-	    return super.getParameter(key);
+		if (parameters != null)
+		{
+			return this.parameters.getString(key);
+		}
+
+		return super.getParameter(key);
 	}
 
 	/**
@@ -170,11 +171,11 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 	 */
 	public Map getParameterMap()
 	{
-	    if (parameters != null)
-	    {
-	        return Collections.unmodifiableMap(parameters);
-	    }
-        return Collections.unmodifiableMap(super.getParameterMap());
+		if (parameters != null)
+		{
+			return parameters;
+		}
+		return super.getParameterMap();
 	}
 
 	/**
@@ -186,12 +187,12 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 	 */
 	public String[] getParameters(final String key)
 	{
-	    if (parameters != null)
-	    {
-	        return new String[] {getParameter(key)};
-	    }
-        return super.getParameters(key);
-	    
+		if (parameters != null)
+		{
+			return new String[] { getParameter(key) };
+		}
+		return super.getParameters(key);
+
 	}
 
 	/**
