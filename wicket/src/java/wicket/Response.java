@@ -18,13 +18,12 @@
 package wicket;
 
 import java.io.OutputStream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 import wicket.util.time.Time;
 
 /**
@@ -40,22 +39,6 @@ public abstract class Response
 {
     /** Default encoding of output stream */
     private String defaultEncoding;
-
-    private final String lineSeparator;
-    
-    /**
-     * Construct.
-     */
-    public Response()
-    {
-		lineSeparator = (String)AccessController.doPrivileged(new PrivilegedAction()
-		{
-			public Object run()
-			{
-				return System.getProperty("line.separator");
-			}
-		});
-    }
 
 	/**
 	 * Closes the response output stream
@@ -233,6 +216,6 @@ public abstract class Response
 	public final void println(final String string)
 	{
 		write(string);
-		write(lineSeparator);
+		write(Strings.LINE_SEPARATOR);
 	}
 }

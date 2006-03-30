@@ -17,6 +17,8 @@
  */
 package wicket.util.string;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -48,6 +50,22 @@ import java.util.regex.Pattern;
 public final class Strings
 {
 	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+
+	/**
+	 * The line seperator for the current platform.
+	 */
+	public static final String LINE_SEPARATOR;
+
+	static
+	{
+		LINE_SEPARATOR = (String)AccessController.doPrivileged(new PrivilegedAction()
+		{
+			public Object run()
+			{
+				return System.getProperty("line.separator");
+			}
+		});
+	}
 
 	/**
 	 * Returns everything after the first occurrence of the given character in
