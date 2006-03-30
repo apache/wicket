@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SharedResources.java 5151 2006-03-28 03:50:28 -0800 (Tue, 28 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-28 03:50:28 -0800 (Tue, 28 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +32,7 @@ import wicket.util.string.AppendingStringBuffer;
  * Class which holds shared resources. Resources can be shared by name. An
  * optional scope can be given to prevent naming conflicts and a locale and/or
  * style can be given as well.
- *
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
@@ -49,7 +50,7 @@ public class SharedResources
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param application
 	 *            The application
 	 */
@@ -61,7 +62,7 @@ public class SharedResources
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
 	 * _[locale] and _[style] into path just before any extension that might
 	 * exist.
-	 *
+	 * 
 	 * @param path
 	 *            The resource path
 	 * @param locale
@@ -110,7 +111,7 @@ public class SharedResources
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 *
+	 * 
 	 * @param scope
 	 *            The scope of the resource
 	 * @param path
@@ -136,7 +137,7 @@ public class SharedResources
 	 * Sets an alias for a class so that a resource url can look like:
 	 * resources/images/Image.jpg instead of
 	 * resources/wicket.resources.ResourceClass/Image.jpg
-	 *
+	 * 
 	 * @param clz
 	 *            The class that has to be aliased.
 	 * @param alias
@@ -149,7 +150,7 @@ public class SharedResources
 
 	/**
 	 * Adds a resource.
-	 *
+	 * 
 	 * @param scope
 	 *            Scope of resource
 	 * @param name
@@ -168,20 +169,23 @@ public class SharedResources
 		final String key = resourceKey(scope, name, locale, style);
 		synchronized (resourceMap)
 		{
-			Resource value = (Resource) resourceMap.get(key);
+			Resource value = (Resource)resourceMap.get(key);
 			if (value == null)
 				resourceMap.put(key, resource);
-			else if (!value.equals(resource))
-      {
-				throw new IllegalArgumentException(key + " has a different resource " +
-          "already associated with it: " + value);
-      }
+			
+			// FIXME IF this is important at all, it really only works when all resources implement
+			// their equals contracts properly, which is currently not the case
+//			else if (!value.equals(resource))
+//			{
+//				throw new IllegalArgumentException(key + " has a different resource "
+//						+ "already associated with it: " + value);
+//			}
 		}
 	}
 
 	/**
 	 * Adds a resource.
-	 *
+	 * 
 	 * @param name
 	 *            Logical name of resource
 	 * @param locale
@@ -196,7 +200,7 @@ public class SharedResources
 
 	/**
 	 * Adds a resource.
-	 *
+	 * 
 	 * @param name
 	 *            Logical name of resource
 	 * @param resource
@@ -219,7 +223,7 @@ public class SharedResources
 	 * @param exact
 	 *            If true then only return the resource that is registered for
 	 *            the given locale and style.
-	 *
+	 * 
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
@@ -277,7 +281,7 @@ public class SharedResources
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 *
+	 * 
 	 * @param key
 	 *            Shared resource key
 	 * @return The resource
@@ -286,13 +290,13 @@ public class SharedResources
 	{
 		synchronized (resourceMap)
 		{
-			return (Resource) resourceMap.get(key);
+			return (Resource)resourceMap.get(key);
 		}
 	}
 
 	/**
 	 * Removes a shared resource.
-	 *
+	 * 
 	 * @param key
 	 *            Shared resource key
 	 */
