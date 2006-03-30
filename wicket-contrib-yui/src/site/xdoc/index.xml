@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Wicket-extensions</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java, yui, yahoo, components"/>
+    <body>
+       	<section name="Welcome to Wicket-extensions">
+			<p>
+				This is an extensions project for the <a href="http://wicket.sourceforge.net">Wicket</a> framework
+				and the <a href="http://developer.yahoo.com/yui/index.html">Yahoo User Interface (YUI) library</a>.
+			</p>
+			<ul>
+				<li>Read <a href="apidocs/index.html">the javadocs</a> for more information.</li>
+			</ul>
+        </section>
+    </body>
+</document>

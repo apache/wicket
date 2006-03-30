@@ -1,0 +1,18 @@
+<wicket:panel>
+	
+	<div class="horizWrapper">
+		<div class="horizBGDiv" 
+		   tabindex="0"
+	         x2:role="role:slider"
+	         state:valuenow="0"
+	         state:valuemin="-100"
+	         state:valuemax="100"
+	         wicket:id="backgroundElement" id="sliderbg">
+	   		<div class="horizHandleDiv" wicket:id="imageElement" id="sliderthumb"
+		   		onkeypress="return handleHorizSliderKey(this, YAHOO.util.Event.getEvent(event))">
+				<img src="sliderthumbimg"  wicket:id="thumb" />
+			</div>
+		</div>
+	</div>
+	
+</wicket:panel>
