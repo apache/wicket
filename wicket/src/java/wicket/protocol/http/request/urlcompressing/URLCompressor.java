@@ -37,8 +37,8 @@ import wicket.util.collections.IntHashMap.Entry;
  * A page where you want to compress the urls on, should implement {@link ICompressingUrlPage} 
  * and return a instanceof of this class. This instances should be cached in the page.
  * 
- * To use the 2 strategies you have to create youre own {@link CompoundRequestCycleProcessor} in
- * youre {@link Application#newRequestCycleProcessor()} which should be overwritten and implemented
+ * To use the 2 strategies you have to create your own {@link CompoundRequestCycleProcessor} in
+ * your {@link Application#newRequestCycleProcessor()} which should be overwritten and implemented
  * like this:
  * 
  * <pre>
@@ -48,7 +48,7 @@ import wicket.util.collections.IntHashMap.Entry;
  * }
  * </pre>
  * 
- * And then in youre (Base)Page
+ * And then in your (Base)Page
  * 
  * <pre>
  * public URLCompressor getUrlCompressor()
