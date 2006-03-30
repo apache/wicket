@@ -31,7 +31,7 @@ function wicketShow(id) {
 }
 function wicketHide(id) {
     var e=wicketGet(id);
-    e.style.wicketPrevDisp=style.display;
+    e.style.wicketPrevDisp=e.style.display;
     e.style.display = "none";
 }
 
