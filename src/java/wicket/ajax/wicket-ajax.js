@@ -21,10 +21,18 @@ function wicketGet(id) {
 }
 
 function wicketShow(id) {
-    wicketGet(id).style.display = "";
+    var e=wicketGet(id);
+    var old=e.style.wicketPrevDisp;
+    if (old==undefined) {
+        e.style.display = "";
+    } else {
+        e.style.display=old;
+    }
 }
 function wicketHide(id) {
-    wicketGet(id).style.display = "none";
+    var e=wicketGet(id);
+    e.style.wicketPrevDisp=style.display;
+    e.style.display = "none";
 }
 
 
