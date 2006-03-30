@@ -22,16 +22,10 @@ function wicketGet(id) {
 
 function wicketShow(id) {
     var e=wicketGet(id);
-    var old=e.style.wicketPrevDisp;
-    if (old==undefined) {
-        e.style.display = "";
-    } else {
-        e.style.display=old;
-    }
+    e.style.display = "";
 }
 function wicketHide(id) {
     var e=wicketGet(id);
-    e.style.wicketPrevDisp=e.style.display;
     e.style.display = "none";
 }
 
