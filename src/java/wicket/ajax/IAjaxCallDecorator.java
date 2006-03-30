@@ -17,6 +17,8 @@
  */
 package wicket.ajax;
 
+import java.io.Serializable;
+
 /**
  * Interface used to decorate a wicket generated javascript that performs an
  * ajax callback
@@ -26,7 +28,7 @@ package wicket.ajax;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IAjaxCallDecorator
+public interface IAjaxCallDecorator extends Serializable
 {
 	/**
 	 * Name of javascript variable that will be true if ajax call was made,
