@@ -23,7 +23,6 @@ import java.util.Map;
 
 import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
-import wicket.util.resource.AbstractStringResourceStream;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
@@ -35,7 +34,7 @@ import wicket.util.string.interpolator.MapVariableInterpolator;
  * @author Eelco Hillenius
  */
 // TODO cache templates application scoped with a watch
-public class PackagedTextTemplate extends AbstractStringResourceStream
+public class PackagedTextTemplate extends TextTemplate
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +51,7 @@ public class PackagedTextTemplate extends AbstractStringResourceStream
 	 *            The class to be used for retrieving the classloader for
 	 *            loading the packaged template.
 	 * @param fileName
-	 *            the name of the file, relative to the clazz position
+	 *            The name of the file, relative to the clazz position
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName)
 	{
@@ -126,10 +125,16 @@ public class PackagedTextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * Interpolate the map of variables. Variables are denoted in this string by
-	 * the syntax ${variableName}. The contents will be altered by replacing
-	 * each variable of the form ${variableName} with the value returned by
+	 * Interpolate the map of variables with the content and replace the content
+	 * with the result. Variables are denoted in this string by the syntax
+	 * ${variableName}. The contents will be altered by replacing each variable
+	 * of the form ${variableName} with the value returned by
 	 * variables.getValue("variableName").
+	 * <p>
+	 * WARNING there is no going back to the original contents after the
+	 * interpolation is done. if you need to do different interpolations on the
+	 * same original contents, use method {@link #asString(Map)} instead.
+	 * </p>
 	 * 
 	 * @param variables
 	 *            The variables to interpolate
@@ -137,17 +142,13 @@ public class PackagedTextTemplate extends AbstractStringResourceStream
 	 */
 	public final PackagedTextTemplate interpolate(Map variables)
 	{
-		String result = new MapVariableInterpolator(buffer.toString(), variables).toString();
-		replaceContents(result);
+		if (variables != null)
+		{
+			String result = new MapVariableInterpolator(buffer.toString(), variables).toString();
+			buffer.delete(0, buffer.length());
+			buffer.append(result);
+		}
 		return this;
-	}
-
-	/**
-	 * @see wicket.util.resource.AbstractResourceStream#asString()
-	 */
-	public final String asString()
-	{
-		return getString();
 	}
 
 	/**
@@ -159,30 +160,10 @@ public class PackagedTextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * Replace the contents of this template.
-	 * 
-	 * @param result
-	 *            The new contents
-	 */
-	protected final void replaceContents(String result)
-	{
-		buffer.delete(0, buffer.length());
-		buffer.append(result);
-	}
-
-	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
-	protected final String getString()
+	public String getString()
 	{
 		return buffer.toString();
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return getString();
 	}
 }
