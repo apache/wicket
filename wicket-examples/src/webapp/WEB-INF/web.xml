@@ -284,16 +284,6 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
-	<servlet>
-		<servlet-name>YuiApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.yui.YuiApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
 	
 	<servlet>
 		<servlet-name>CustomResourceLoadingApplication</servlet-name>
@@ -428,11 +418,6 @@
 	<servlet-mapping>
 		<servlet-name>FramesApplication</servlet-name>
 		<url-pattern>/frames/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>YuiApplication</servlet-name>
-		<url-pattern>/yui/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
