@@ -79,7 +79,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private URLCompressor compressor;
 
 	/**
-	 * Constructor. Having this constructor public means that you page is
+	 * Constructor. Having this constructor public means that your page is
 	 * 'bookmarkable' and hence can be called/ created from anywhere.
 	 */
 	protected WebPage()
@@ -116,7 +116,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Constructor which receives wrapped query string parameters for a request.
-	 * Having this constructor public means that you page is 'bookmarkable' and
+	 * Having this constructor public means that your page is 'bookmarkable' and
 	 * hence can be called/ created from anywhere. For bookmarkable pages (as
 	 * opposed to when you construct page instances yourself, this constructor
 	 * will be used in preference to a no-arg constructor, if both exist. Note
@@ -237,7 +237,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * This method is called when the compressing coding and response stategies are 
-	 * in configured in youre Application object like this:
+	 * configured in your Application object like this:
 	 * 
 	 *  <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
@@ -319,12 +319,12 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				initialAccessStackSize = 1;
 			}
 			
-			// Javascript: for the most part it is getting the same funtionality 
-			// for multiply browsers. What the end result is that a call back 
+			// Javascript: for the most part it is getting the same functionality
+			// for multiple browsers. What the end result is, is that a call back
 			// to the server is made at the moment it detects that there is  
-			// no history. because that could mean that a page is opend in 
+			// no history. because that could mean that a page is opened in 
 			// a new tab/window without that page being in its own pagemap, 
-			// that redirect wil put that page in its own pagemap.
+			// that redirect will put that page in its own pagemap.
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			if (accessStack.size() > initialAccessStackSize)
 			{
