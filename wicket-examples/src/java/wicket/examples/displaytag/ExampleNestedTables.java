@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -45,7 +45,7 @@ public class ExampleNestedTables extends Displaytag
         List data = new TestList(6, false);
         
         // straight forward
-        add(new TableWithAlternatingRowStyle("rows", data)
+        add(new ListVieweWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -58,7 +58,7 @@ public class ExampleNestedTables extends Displaytag
                 List data2 = new TestList(3, false);
                 
                 // Just create a new table, which will be put into the current cell
-                listItem.add(new TableWithAlternatingRowStyle("rows", data2)
+                listItem.add(new ListVieweWithAlternatingRowStyle("rows", data2)
                 {
                     public void populateItem(final ListItem listItem)
                     {

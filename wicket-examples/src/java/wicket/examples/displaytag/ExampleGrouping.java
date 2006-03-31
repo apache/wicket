@@ -21,7 +21,7 @@ package wicket.examples.displaytag;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
@@ -43,7 +43,7 @@ public class ExampleGrouping extends Displaytag
         ReportList data = new ReportList();
 
         // Add table of existing comments
-        add(new TableWithAlternatingRowStyle("rows", data)
+        add(new ListVieweWithAlternatingRowStyle("rows", data)
         {
             // Remember the value from the previous row
             private ReportableListObject previousValue = null;

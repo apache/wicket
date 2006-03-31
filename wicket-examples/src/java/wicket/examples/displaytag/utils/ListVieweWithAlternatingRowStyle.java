@@ -23,15 +23,16 @@ import java.util.List;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.IModel;
 
 
 /**
- * This is a simple Table extension providing alternate row styles (colours). 
+ * This is a simple ListView extension providing alternate row styles (colours). 
  * The styles are named "even" and "odd".
  * 
  * @author Juergen Donnerstag
  */
-public abstract class TableWithAlternatingRowStyle extends ListView
+public abstract class ListVieweWithAlternatingRowStyle extends ListView
 {
     /**
      * Constructor
@@ -39,11 +40,22 @@ public abstract class TableWithAlternatingRowStyle extends ListView
      * @param id
      * @param data
      */
-    public TableWithAlternatingRowStyle(final String id, final List data)
+    public ListVieweWithAlternatingRowStyle(final String id, final List data)
     {
         super(id, data);
     }
 	
+    /**
+     * Constructor 
+     * 
+     * @param id
+     * @param model
+     */
+    public ListVieweWithAlternatingRowStyle(final String id, final IModel model)
+    {
+        super(id, model);
+    }
+    
     /**
      * Subclass Table's newCell() and return a ListItem which will add/modify its
      * class attribute and thus provide ListItems with alternating row colours.
@@ -55,15 +67,15 @@ public abstract class TableWithAlternatingRowStyle extends ListView
     protected ListItem newItem(final int index)
     {
 		return new ListItem(index, getListItemModel(getModel(), index))
-	        {
-	            protected void onComponentTag(final ComponentTag tag)
-	            {
-	                // add/modify the attribute controlling the CSS style
-	                tag.put("class", (getIndex() % 2) == 0 ? "even" : "odd");
-	                
-	                // continue with default behavior
-	                super.onComponentTag(tag);
-	            }
-	        };
+        {
+            protected void onComponentTag(final ComponentTag tag)
+            {
+                // add/modify the attribute controlling the CSS style
+                tag.put("class", (getIndex() % 2) == 0 ? "even" : "odd");
+                
+                // continue with default behavior
+                super.onComponentTag(tag);
+            }
+        };
     }
 }

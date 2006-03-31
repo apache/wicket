@@ -23,7 +23,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -48,7 +48,7 @@ public class ExampleDecorator extends Displaytag
         List data = new TestList(10, false);
         
         // Add table 
-        add(new TableWithAlternatingRowStyle("rows", data)
+        add(new ListVieweWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -65,7 +65,7 @@ public class ExampleDecorator extends Displaytag
         });
         
         // Add table 
-        add(new TableWithAlternatingRowStyle("rows2", data)
+        add(new ListVieweWithAlternatingRowStyle("rows2", data)
         {
             public void populateItem(final ListItem listItem)
             {

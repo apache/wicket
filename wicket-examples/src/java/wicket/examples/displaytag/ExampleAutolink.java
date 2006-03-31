@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.extensions.markup.html.basic.SmartLinkLabel;
 import wicket.markup.html.basic.Label;
@@ -46,7 +46,7 @@ public class ExampleAutolink extends Displaytag
         List data = new TestList(10, false);
         
         // Add table 
-        add(new TableWithAlternatingRowStyle("rows", data)
+        add(new ListVieweWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {

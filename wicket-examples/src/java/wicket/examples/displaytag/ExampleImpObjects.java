@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -45,7 +45,7 @@ public class ExampleImpObjects extends Displaytag
         List data = new TestList(10, false);
         
         // Add table of existing comments
-        add(new TableWithAlternatingRowStyle("rows", data)
+        add(new ListVieweWithAlternatingRowStyle("rows", data)
         {
             // Row number
             private int i=1;

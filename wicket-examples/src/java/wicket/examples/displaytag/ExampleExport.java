@@ -26,7 +26,7 @@ import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
 import wicket.examples.displaytag.export.XmlView;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -50,7 +50,7 @@ public class ExampleExport extends Displaytag
         final List data = new TestList(6, false);
         
         // Add the table
-        TableWithAlternatingRowStyle table = new TableWithAlternatingRowStyle("rows", data)
+        ListVieweWithAlternatingRowStyle table = new ListVieweWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {

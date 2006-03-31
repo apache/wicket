@@ -21,7 +21,7 @@ package wicket.examples.displaytag;
 import java.util.List;
 
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -47,7 +47,7 @@ public class SimpleDisplaytagTableComponent extends Panel
         super(id);
         
         // Add table with alternating row styles
-        table = new TableWithAlternatingRowStyle("rows", list)
+        table = new ListVieweWithAlternatingRowStyle("rows", list)
         {
             public void populateItem(final ListItem listItem)
             {

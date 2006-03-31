@@ -33,5 +33,4 @@ public class Displaytag extends WicketExamplePage
     public Displaytag()
     {
     }
-  
 }
