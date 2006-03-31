@@ -80,16 +80,16 @@ public class AjaxRequestTarget implements IRequestTarget
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 		private boolean escaped = false;
 
-		private final WebResponse webResponse;
+		private final Response originalResponse;
 
 		/**
 		 * Construct.
 		 * 
-		 * @param webResponse
+		 * @param originalResponse
 		 */
-		public EncodingResponse(WebResponse webResponse)
+		public EncodingResponse(Response originalResponse)
 		{
-			this.webResponse = webResponse;
+			this.originalResponse = originalResponse;
 		}
 
 		/**
@@ -97,7 +97,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 */
 		public String encodeURL(String url)
 		{
-			return webResponse.encodeURL(url);
+			return originalResponse.encodeURL(url);
 		}
 
 
@@ -169,8 +169,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public AjaxRequestTarget()
 	{
-		WebResponse webResponse = (WebResponse)RequestCycle.get().getResponse();
-		encodingResponse = new EncodingResponse(webResponse);
+		Response response = RequestCycle.get().getResponse();
+		encodingResponse = new EncodingResponse(response);
 	}
 
 	/**
