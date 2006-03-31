@@ -241,7 +241,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return whether there is any message for this panel of level ERROR or up
 	 */
-	protected final boolean anyErrorMessage()
+	public final boolean anyErrorMessage()
 	{
 		return anyMessage(FeedbackMessage.ERROR);
 	}
@@ -252,7 +252,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return whether there is any message for this panel
 	 */
-	protected final boolean anyMessage()
+	public final boolean anyMessage()
 	{
 		return anyMessage(FeedbackMessage.UNDEFINED);
 	}
@@ -265,7 +265,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 *            the level, see FeedbackMessage
 	 * @return whether there is any message for this panel of the given level
 	 */
-	protected final boolean anyMessage(int level)
+	public final boolean anyMessage(int level)
 	{
 		List msgs = getCurrentMessages();
 
