@@ -356,7 +356,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * markup, you should consider extending DefaultNodePanel
 	 * </p>
 	 */
-	protected abstract class NodePanel extends Panel
+	public abstract class NodePanel extends Panel
 	{
 		/**
 		 * Construct.
@@ -378,11 +378,16 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * components that are added, extend this class. If you want to use other
 	 * components than the default, extend NodePanel directly. instead.
 	 */
-	protected class DefaultNodePanel extends NodePanel
+	public class DefaultNodePanel extends NodePanel
 	{
 		private static final long serialVersionUID = 1L;
 
-		DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
+		/**
+		 * Construct.
+		 * @param panelId
+		 * @param node
+		 */
+		public DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
 		{
 			super(panelId, node);
 			// create a link for expanding and collapsing the node
