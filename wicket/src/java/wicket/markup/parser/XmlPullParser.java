@@ -205,18 +205,25 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
 		if (startText.toUpperCase().equals("![CDATA["))
 		{
-			// Get index of closing tag and advance past the tag
-			closeBracketIndex = findCloseBracket('>', openBracketIndex);
-
-			if (closeBracketIndex == -1)
+			int pos1 = openBracketIndex;
+			do
 			{
-				throw new ParseException("No matching close bracket at position "
-						+ openBracketIndex, this.input.getPosition());
+				// Get index of closing tag and advance past the tag
+				closeBracketIndex = findCloseBracket('>', pos1);
+	
+				if (closeBracketIndex == -1)
+				{
+					throw new ParseException("No matching close bracket at position "
+							+ openBracketIndex, this.input.getPosition());
+				}
+	
+				// Get the tagtext between open and close brackets
+				tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
+						.toString();
+				
+				pos1 = closeBracketIndex + 1;
 			}
-
-			// Get the tagtext between open and close brackets
-			tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-					.toString();
+			while (tagText.endsWith("]]") == false);
 		}
 
 		{
