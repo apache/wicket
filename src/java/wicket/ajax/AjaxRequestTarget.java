@@ -390,20 +390,25 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		// Initialize temporary variables
 		final Page page = component.getPage();
-		
-		if (page==null) {
-			throw new IllegalStateException("Ajax request attempted on a component that is not associated with a Page");
-		}
-		
-		final boolean versioned=page.isVersioned();
-		page.setVersioned(false);
-		
-		page.startComponentRender(component);
-		component.renderComponent();
-		page.endComponentRender(component);
 
-		page.setVersioned(versioned);
+
+		final boolean versioned=(page!=null)?page.isVersioned():false;
+
+		if (page != null)
+		{
+			page.setVersioned(false);
+			page.startComponentRender(component);
+		}
+
+		component.renderComponent();
 		
+
+		if (page != null)
+		{
+			page.endComponentRender(component);
+			page.setVersioned(versioned);
+		}
+
 		// Restore original response
 		RequestCycle.get().setResponse(originalResponse);
 
