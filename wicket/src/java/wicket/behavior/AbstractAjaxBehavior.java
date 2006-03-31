@@ -86,15 +86,11 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * Gets the url that references this handler.
 	 * 
-	 * NOTE: This function generates urls that are always executed against the
-	 * latest page version so they do not cause versioning issues. This is a
-	 * good default for ajax.
-	 * 
 	 * @return the url that references this handler
 	 */
 	public final String getCallbackUrl()
 	{
-		return getCallbackUrl(false);
+		return getCallbackUrl(true);
 	}
 
 
