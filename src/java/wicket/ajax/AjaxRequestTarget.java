@@ -389,20 +389,21 @@ public class AjaxRequestTarget implements IRequestTarget
 		RequestCycle.get().setResponse(encodingResponse);
 
 		// Initialize temporary variables
-		Page page = component.getPage();
-		if (page != null)
-		{
-			page.startComponentRender(component);
+		final Page page = component.getPage();
+		
+		if (page==null) {
+			throw new IllegalStateException("Ajax request attempted on a component that is not associated with a Page");
 		}
-
-		// Render the component
+		
+		final boolean versioned=page.isVersioned();
+		page.setVersioned(false);
+		
+		page.startComponentRender(component);
 		component.renderComponent();
+		page.endComponentRender(component);
 
-		if (page != null)
-		{
-			page.endComponentRender(component);
-		}
-
+		page.setVersioned(versioned);
+		
 		// Restore original response
 		RequestCycle.get().setResponse(originalResponse);
 
