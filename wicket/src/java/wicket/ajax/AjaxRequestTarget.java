@@ -80,12 +80,26 @@ public class AjaxRequestTarget implements IRequestTarget
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 		private boolean escaped = false;
 
+		private final WebResponse webResponse;
+
 		/**
 		 * Construct.
+		 * 
+		 * @param webResponse
 		 */
-		public EncodingResponse()
+		public EncodingResponse(WebResponse webResponse)
 		{
+			this.webResponse = webResponse;
 		}
+
+		/**
+		 * @see wicket.Response#encodeURL(java.lang.String)
+		 */
+		public String encodeURL(String url)
+		{
+			return webResponse.encodeURL(url);
+		}
+
 
 		/**
 		 * @return contents of the response
@@ -143,7 +157,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * create a response that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
-	private final EncodingResponse encodingResponse = new EncodingResponse();
+	private final EncodingResponse encodingResponse;
 
 	private final List/* <String> */javascripts = new ArrayList();
 
@@ -155,7 +169,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public AjaxRequestTarget()
 	{
-
+		WebResponse webResponse = (WebResponse)RequestCycle.get().getResponse();
+		encodingResponse = new EncodingResponse(webResponse);
 	}
 
 	/**
