@@ -88,7 +88,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the url that references this handler
 	 */
-	public final String getCallbackUrl()
+	public String getCallbackUrl()
 	{
 		return getCallbackUrl(true);
 	}
