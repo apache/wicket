@@ -93,14 +93,19 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	 */
 	public final Object convert(Object value, Class c)
 	{
-		if (CharSequence.class.isAssignableFrom(c))
+		if (String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}
-		else
+		else if (value instanceof CharSequence)
 		{
-			return toObject((value != null) ? value.toString() : (String)value);
+			return toObject((value instanceof String) ? (String)value : value.toString());
 		}
+		else if (value != null && (!value.getClass().isAssignableFrom(c)))
+		{
+			throw new IllegalArgumentException("unable to convert " + value + " to type " + c);
+		}
+		return value; // null
 	}
 
 	/**
