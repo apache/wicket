@@ -30,6 +30,7 @@ import wicket.WicketTestCase;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
@@ -270,8 +271,6 @@ public final class MarkupParserTest extends WicketTestCase
 		parser.parse("This is a test <span wicket:id=\"test\"/>");
 		parser.parse("This is a test <span wicket:id=\"test\">Body</span>");
 		parser.parse("<a wicket:id=\"[autolink]\" href=\"test.html\">Home</a>");
-		parser.parse("<span wicket:id=\"test\"/><wicket:param key=value/>");
-		parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" />");
 
 		parser.parse("<wicket:body/>");
 		parser.parse("<wicket:border/>");
@@ -310,14 +309,10 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
-		parser
-				.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
+		parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
 	}
 
 	/**
@@ -339,6 +334,7 @@ public final class MarkupParserTest extends WicketTestCase
 		markup = parser.parse("<span wicket:id=\"test\"/>");
 		assertEquals(1, markup.size());
 
+		WicketTagIdentifier.registerWellKownTagName("xxx");
 		markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
 		assertEquals(3, markup.size());
 	}

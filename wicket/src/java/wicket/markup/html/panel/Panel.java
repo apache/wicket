@@ -22,6 +22,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.model.IModel;
 
 /**
@@ -54,6 +55,12 @@ import wicket.model.IModel;
 public class Panel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("panel");
+	}
 	
 	/** If if tag was an open-close tag */
 	private boolean wasOpenCloseTag = false;

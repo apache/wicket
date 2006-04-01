@@ -21,6 +21,7 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * Usually you either have a markup file or a xml tag with
@@ -40,6 +41,12 @@ public class FragmentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("fragment");
+	}
+	
 	/**
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

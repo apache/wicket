@@ -26,6 +26,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
@@ -91,6 +92,13 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		implements
 			IComponentResolver
 {
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("border");
+		WicketTagIdentifier.registerWellKownTagName("body");
+	}
+	
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
 

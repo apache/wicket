@@ -27,6 +27,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * This is a tag resolver which handles &lt;head&gt; and
@@ -46,6 +47,12 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 public class HtmlHeaderResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("head");
+	}
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container
