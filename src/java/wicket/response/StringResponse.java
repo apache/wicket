@@ -18,9 +18,9 @@
 package wicket.response;
 
 import java.io.OutputStream;
-import java.io.StringWriter;
 
 import wicket.Response;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Response object that writes to a StringWriter. If the StringResponse is later
@@ -32,22 +32,22 @@ import wicket.Response;
 public class StringResponse extends Response
 {
 	/** StringWriter to write to */
-	protected final StringWriter out;
+	protected final AppendingStringBuffer out;
 
 	/**
 	 * Constructor
 	 */
 	public StringResponse()
 	{
-		this.out = new StringWriter();
+		this.out = new AppendingStringBuffer(128);
 	}
 
 	/**
-	 * @see wicket.Response#write(java.lang.String)
+	 * @see wicket.Response#write(CharSequence)
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
 	{
-		out.write(string);
+		out.append(string);
 	}
 
 	/**
@@ -56,6 +56,14 @@ public class StringResponse extends Response
 	public String toString()
 	{
 		return out.toString();
+	}
+	
+	/**
+	 * @return The internal buffer directly as a {@link CharSequence}
+	 */
+	public CharSequence getBuffer()
+	{
+		return out;
 	}
 
 	/**

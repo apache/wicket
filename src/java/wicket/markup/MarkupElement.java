@@ -54,6 +54,11 @@ public abstract class MarkupElement
 	}
 
 	/**
+	 * @return Gets the charseqence representation of this element
+	 */
+	public abstract CharSequence toCharSequence();
+	
+	/**
 	 * Gets a string represenetation.
 	 * @return A string representation suitable for displaying to the user 
 	 * when something goes wrong.

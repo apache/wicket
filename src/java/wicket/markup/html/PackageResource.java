@@ -312,7 +312,7 @@ public class PackageResource extends WebResource
 	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
 	{
 		final List resources = new ArrayList();
-		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/");
+		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/").toString();
 		ClassLoader loader = scope.getClassLoader();
 		try
 		{
@@ -368,8 +368,7 @@ public class PackageResource extends WebResource
 			throw new WicketRuntimeException(e);
 		}
 
-		return (resources != null) ? (PackageResource[])resources
-				.toArray(new PackageResource[resources.size()]) : null;
+		return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
 	}
 
 	/**

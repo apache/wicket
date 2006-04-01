@@ -140,7 +140,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		// Should a roundtrip be made (have onSelectionChanged called) when the checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			final String url = urlFor(IOnChangeListener.INTERFACE);
+			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
 			try

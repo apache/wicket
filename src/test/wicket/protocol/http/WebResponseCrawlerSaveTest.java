@@ -33,14 +33,14 @@ public class WebResponseCrawlerSaveTest extends TestCase
     {
         WebResponseCrawlerSave resp = new WebResponseCrawlerSave(null); 
         
-        String url = resp.encodeURL("http://localhost:8080/library?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.examples.library.BookDetails");
+        String url = resp.encodeURL("http://localhost:8080/library?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.examples.library.BookDetails").toString();
         assertEquals(url, "http://localhost:8080/library/wicket/examples/library/BookDetails.wic");
         
-        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5");
+        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5").toString();
         assertEquals(url, "http://localhost:8080/myApp/wicket/markup/html/Page.wic?id=5");
         
         /** Note that param order has changed due to HashMap key order */
-        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5&test=abcd");
+        url = resp.encodeURL("http://localhost:8080/myApp?" + WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=wicket.markup.html.Page&id=5&test=abcd").toString();
         assertEquals(url, "http://localhost:8080/myApp/wicket/markup/html/Page.wic?test=abcd&id=5");
     }
 }

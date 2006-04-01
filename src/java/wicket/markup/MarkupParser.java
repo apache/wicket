@@ -267,7 +267,7 @@ public class MarkupParser
 					if ((add == true) && (tag.getId() == null))
 					{
 						// Replace the current tag
-						replaceTag = new RawMarkup(tag.toString());
+						replaceTag = new RawMarkup(tag.toCharSequence());
 					}
 				}
 
@@ -327,7 +327,7 @@ public class MarkupParser
 				}
 				else if (tag.isModified())
 				{
-					this.markup.addMarkupElement(new RawMarkup(tag.toString()));
+					this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					xmlParser.setPositionMarker();
 				}
 			}

@@ -147,7 +147,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			}
 
 			// Automatically add <head> if necessary
-			String output = response.toString();
+			CharSequence output = response.getBuffer();
 			if (output.length() > 0)
 			{
 				if (output.charAt(0) == '\r')
@@ -157,7 +157,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\r')
 						{
-							output = output.substring(i - 2);
+							output = output.subSequence(i - 2, output.length());
 							break;
 						}
 					}
@@ -169,7 +169,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\n')
 						{
-							output = output.substring(i - 1);
+							output = output.subSequence(i - 1,output.length());
 							break;
 						}
 					}

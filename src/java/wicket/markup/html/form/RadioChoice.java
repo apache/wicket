@@ -424,27 +424,27 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add radio tag
-				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
-						+ (isSelected(choice, index, selected) ? " checked=\"checked\"" : "") + " value=\""
-						+ id + "\" id=\"" + idAttr + "\"");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"radio\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
+						id).append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
 				{
-					final String url = urlFor(IOnChangeListener.INTERFACE);
+					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 					try
 					{
 						Form form = getForm();
-						buffer.append(" onclick=\"" +  form.getJsForInterfaceUrl(url)  + ";\"");
+						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(";\"");
 					}
 					catch (WicketRuntimeException ex)
 					{
 						// NOTE: do not encode the url as that would give invalid
 						// JavaScript
-						buffer.append(" onclick=\"" + url + "&" + getInputName() + "="
-								+ id + "';\"");
+						buffer.append(" onclick=\"").append(url).append("&" + getInputName()).append("=").append(
+								id).append("';\"");
 					}
 				}
 
@@ -456,8 +456,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
-				String escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append("<label for=\"" + idAttr + "\">" + escaped + "</label>");
+				CharSequence escaped = Strings.escapeMarkup(display, false, true);
+				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
@@ -465,6 +465,6 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		}
 
 		// Replace body
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 }

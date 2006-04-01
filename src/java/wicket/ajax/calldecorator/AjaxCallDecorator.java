@@ -31,9 +31,9 @@ public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 {
 
 	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(java.lang.String)
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
 	 */
-	public String decorateScript(String script)
+	public CharSequence decorateScript(CharSequence script)
 	{
 		return script;
 	}
@@ -41,7 +41,7 @@ public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
 	 */
-	public String decorateOnSuccessScript(String script)
+	public CharSequence decorateOnSuccessScript(CharSequence script)
 	{
 		return script;
 	}
@@ -49,7 +49,7 @@ public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
 	 */
-	public String decorateOnFailureScript(String script)
+	public CharSequence decorateOnFailureScript(CharSequence script)
 	{
 		return script;
 	}

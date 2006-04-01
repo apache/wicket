@@ -48,6 +48,7 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 import wicket.util.upload.FileUploadException;
@@ -656,8 +657,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		String nameAndId = getHiddenFieldId();
-		getResponse().write(
-				"<input type=\"hidden\" name=\"" + nameAndId + "\" id=\"" + nameAndId + "\"/>");
+		getResponse().write(new AppendingStringBuffer("<input type=\"hidden\" name=\"").append(nameAndId).append("\" id=\"").append(nameAndId).append("\"/>"));
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
@@ -1113,10 +1113,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 *            and submitted
 	 * @return The javascript code that submits the form.
 	 */
-	public final String getJsForInterfaceUrl(String url)
+	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
-		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
-				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
+		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId()).append("').value='").append(url).append(
+				"';document.getElementById('").append(getJavascriptId()).append("').submit();");
 	}
 
 	/**

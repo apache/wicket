@@ -46,29 +46,29 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 
 
 	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(java.lang.String)
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
 	 */
-	public String decorateScript(String script)
+	public CharSequence decorateScript(CharSequence script)
 	{
-		String s = preDecorateScript(script);
+		CharSequence s = preDecorateScript(script);
 		return (delegate == null) ? s : delegate.decorateScript(script);
 	}
 
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
 	 */
-	public String decorateOnSuccessScript(String script)
+	public CharSequence decorateOnSuccessScript(CharSequence script)
 	{
-		String s = preDecorateOnSuccessScript(script);
+		CharSequence s = preDecorateOnSuccessScript(script);
 		return (delegate == null) ? s : delegate.decorateOnSuccessScript(script);
 	}
 
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
 	 */
-	public String decorateOnFailureScript(String script)
+	public CharSequence decorateOnFailureScript(CharSequence script)
 	{
-		String s = preDecorateOnFailureScript(script);
+		CharSequence s = preDecorateOnFailureScript(script);
 		return (delegate == null) ? s : delegate.decorateOnFailureScript(script);
 	}
 
@@ -79,7 +79,7 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 * @param script
 	 * @return decorated script
 	 */
-	public String preDecorateScript(String script)
+	public CharSequence preDecorateScript(CharSequence script)
 	{
 		return script;
 	}
@@ -90,7 +90,7 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 * @param script
 	 * @return decorated script
 	 */
-	public String preDecorateOnSuccessScript(String script)
+	public CharSequence preDecorateOnSuccessScript(CharSequence script)
 	{
 		return script;
 	}
@@ -101,7 +101,7 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 * @param script
 	 * @return decorated script
 	 */
-	public String preDecorateOnFailureScript(String script)
+	public CharSequence preDecorateOnFailureScript(CharSequence script)
 	{
 		return script;
 	}

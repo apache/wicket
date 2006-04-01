@@ -24,6 +24,7 @@ import wicket.Response;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
@@ -202,7 +203,7 @@ public class ComponentTag extends MarkupElement
 	 *            The key
 	 * @return The string value
 	 */
-	public final String getString(String key)
+	public final CharSequence getString(String key)
 	{
 		return xmlTag.getString(key);
 	}
@@ -354,7 +355,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, String value)
+	public final void put(String key, CharSequence value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -468,9 +469,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @return A synthetic close tag for this tag
 	 */
-	public final String syntheticCloseTagString()
+	public final CharSequence syntheticCloseTagString()
 	{
-		StringBuffer buf = new StringBuffer(30);
+		AppendingStringBuffer buf = new AppendingStringBuffer();
 		buf.append("</");
 		if (getNamespace() != null)
 		{
@@ -478,7 +479,15 @@ public class ComponentTag extends MarkupElement
 		}
 		buf.append(getName()).append(">");
 
-		return buf.toString();
+		return buf;
+	}
+	
+	/**
+	 * @see wicket.markup.MarkupElement#toCharSequence()
+	 */
+	public CharSequence toCharSequence()
+	{
+		return xmlTag.toCharSequence();
 	}
 
 	/**
@@ -488,7 +497,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final String toString()
 	{
-		return xmlTag.toString();
+		return toCharSequence().toString();
 	}
 
 	/**
@@ -540,7 +549,7 @@ public class ComponentTag extends MarkupElement
 				{
 					response.write(" ");
 					response.write(key);
-					String value = getString(key);
+					CharSequence value = getString(key);
 
 					// attributes without values are possible, e.g. 'disabled'
 					if (value != null)

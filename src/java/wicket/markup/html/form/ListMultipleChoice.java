@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -185,7 +186,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer buffer = new StringBuffer();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
 			final List choices = getChoices();

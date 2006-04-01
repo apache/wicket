@@ -130,7 +130,7 @@ public class ResourceTest extends TestCase
 	{
 		assertNotNull("Did not find resource: " + name, resource);
 
-		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
+		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/").toString();
 		filename += name + ".txt";
 		String resourcePath = getPath(resource);
 		
@@ -153,9 +153,9 @@ public class ResourceTest extends TestCase
 		try
 		{
 			URL url = ((UrlResourceStream)resource).getURL();
-			String path = new File(new URI(url.toString())).getPath();
+			CharSequence path = new File(new URI(url.toString())).getPath();
 			path = Strings.replaceAll(path, "\\", "/");
-			return path;
+			return path.toString();
 		}
 		catch (URISyntaxException e)
 		{

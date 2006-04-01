@@ -89,16 +89,18 @@ public class PasswordTextField extends TextField
 	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
-		try
+		if(value != null)
 		{
-			return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
-					value);
+			try
+			{
+				return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
+						value);
+			}
+			catch (Exception ex)
+			{
+				log.error("Failed to instantiate encryption object. Continue without encryption");
+			}
 		}
-		catch (Exception ex)
-		{
-			log.error("Failed to instantiate encryption object. Continue without encryption");
-		}
-
 		return value;
 	}
 

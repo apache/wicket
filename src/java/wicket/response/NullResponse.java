@@ -48,9 +48,9 @@ public class NullResponse extends Response
 	}
 
 	/**
-	 * @see wicket.Response#write(java.lang.String)
+	 * @see wicket.Response#write(CharSequence)
 	 */
-	public void write(String string)
+	public void write(CharSequence string)
 	{
 		// Does nothing
 	}

@@ -658,7 +658,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final String urlFor(final Component component, final RequestListenerInterface listener)
+	public final CharSequence urlFor(final Component component, final RequestListenerInterface listener)
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
@@ -678,7 +678,7 @@ public abstract class RequestCycle
 	 *            the request target to reference
 	 * @return a URL that references the given request target
 	 */
-	public final String urlFor(final IRequestTarget requestTarget)
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
 		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, requestTarget);
@@ -692,9 +692,9 @@ public abstract class RequestCycle
 	 *            The resource reference where a url must be generated for.
 	 * @return The url for the shared resource
 	 */
-	public final String urlFor(final ResourceReference resourceReference)
+	public final CharSequence urlFor(final ResourceReference resourceReference)
 	{
-		String url = getProcessor().getRequestCodingStrategy().encode(this,
+		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
 				new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
 		return url;
 	}
@@ -713,7 +713,7 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(final PageMap pageMap, final Class pageClass,
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
 			final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null

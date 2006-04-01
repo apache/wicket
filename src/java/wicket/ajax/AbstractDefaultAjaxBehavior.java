@@ -110,7 +110,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @return javascript that will generate an ajax GET request to this
 	 *         behavior
 	 */
-	protected String getCallbackScript()
+	protected CharSequence getCallbackScript()
 	{
 		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'", null, null);
 	}
@@ -136,15 +136,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @return script that peforms ajax callback to this behavior
 	 */
-	protected String getCallbackScript(final String partialCall, final String onSuccessScript,
-			final String onFailureScript)
+	protected CharSequence getCallbackScript(final CharSequence partialCall, final CharSequence onSuccessScript,
+			final CharSequence onFailureScript)
 	{
 		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
 		String indicatorId = findIndicatorId();
 
-		String success = (onSuccessScript == null) ? "" : onSuccessScript;
-		String failure = (onFailureScript == null) ? "" : onFailureScript;
+		CharSequence success = (onSuccessScript == null) ? "" : onSuccessScript;
+		CharSequence failure = (onFailureScript == null) ? "" : onFailureScript;
 
 		if (decorator != null)
 		{
@@ -170,7 +170,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		buff.append(partialCall).append(", function() { ").append(success);
 		buff.append("}, function() { ").append(failure).append("});");
 
-		String call = buff.toString();
+		CharSequence call = buff;
 
 		if (decorator != null)
 		{
@@ -179,7 +179,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = "wicketShow('" + indicatorId + "');" + call;
+			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');").append(call);
 		}
 
 		return call;
@@ -249,7 +249,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            once
 	 * @return wrapped javascript
 	 */
-	public static final String throttleScript(String script, String throttleId,
+	public static final CharSequence throttleScript(CharSequence script, String throttleId,
 			Duration throttleDelay)
 	{
 		if (Strings.isEmpty(script))

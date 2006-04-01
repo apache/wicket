@@ -325,21 +325,24 @@ public final class PageMap implements Serializable
 	public final void removeEntry(final IPageMapEntry entry)
 	{
 		// Remove entry from session
-		session.removeAttribute(attributeForId(entry.getNumericId()));
-
-		// Remove page from acccess stack
-		final Iterator stack = accessStack.iterator();
-		while (stack.hasNext())
+		synchronized (session)
 		{
-			final Access access = (Access)stack.next();
-			if (access.id == entry.getNumericId())
+			session.removeAttribute(attributeForId(entry.getNumericId()));
+	
+			// Remove page from acccess stack
+			final Iterator stack = accessStack.iterator();
+			while (stack.hasNext())
 			{
-				stack.remove();
+				final Access access = (Access)stack.next();
+				if (access.id == entry.getNumericId())
+				{
+					stack.remove();
+				}
 			}
+	
+			// Let the session know we changed the pagemap
+			session.dirtyPageMap(this);
 		}
-
-		// Let the session know we changed the pagemap
-		session.dirtyPageMap(this);
 	}
 
 	/**

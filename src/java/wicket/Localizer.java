@@ -197,7 +197,7 @@ public class Localizer
 		if (component != null)
 		{
 			searchStack = getComponentStack(component);
-			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".");
+			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
 		}
 		else
 		{

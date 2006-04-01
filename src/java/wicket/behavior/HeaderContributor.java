@@ -145,7 +145,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public void renderHead(Response response)
 		{
-			final String url = RequestCycle.get().urlFor(getPackageResourceReference());
+			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
 
 			response.write("<script type=\"text/javascript\" src=\"");
 			response.write(url);
@@ -180,7 +180,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public void renderHead(Response response)
 		{
-			final String url = RequestCycle.get().urlFor(getPackageResourceReference());
+			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
 			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 			response.write(url);
 			response.println("\"></link>");

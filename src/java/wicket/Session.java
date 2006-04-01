@@ -349,7 +349,7 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
+	public final synchronized Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{

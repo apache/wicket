@@ -56,7 +56,7 @@ public abstract class Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(final String url)
+	public CharSequence encodeURL(final CharSequence url)
 	{
 		return url;
 	}
@@ -205,7 +205,7 @@ public abstract class Response
 	 * @param string
 	 *            The string to write
 	 */
-	public abstract void write(final String string);
+	public abstract void write(final CharSequence string);
 
 	/**
 	 * Writes the given string to the Response subclass output destination and

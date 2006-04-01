@@ -28,6 +28,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
@@ -88,7 +89,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the url that references this handler
 	 */
-	public String getCallbackUrl()
+	public CharSequence getCallbackUrl()
 	{
 		return getCallbackUrl(true);
 	}
@@ -104,7 +105,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the url that references this handler
 	 */
-	public final String getCallbackUrl(final boolean recordPageVersion)
+	public final CharSequence getCallbackUrl(final boolean recordPageVersion)
 	{
 		if (getComponent() == null)
 		{
@@ -136,8 +137,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			rli = IUnversionedBehaviorListener.INTERFACE;
 		}
 
-		return getComponent().urlFor(rli) + '&'
-				+ WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + '=' + index;
+		return new AppendingStringBuffer(getComponent().urlFor(rli)).append('&').append(
+				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=').append(index);
 	}
 
 	/**
@@ -203,8 +204,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	protected void writeJsReference(final Response response, final PackageResourceReference ref)
 	{
-		String url = RequestCycle.get().urlFor(ref);
-		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" " + "src=\"");
+		CharSequence url = RequestCycle.get().urlFor(ref);
+		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" src=\"");
 		response.write(url);
 		response.println("\"></script>");
 	}

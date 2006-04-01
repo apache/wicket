@@ -21,6 +21,7 @@ package wicket.ajax.form;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.Form;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is
@@ -60,13 +61,13 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		this.form = form;
 	}
 
-	protected String getEventHandler()
+	protected CharSequence getEventHandler()
 	{
 		final String formId = form.getMarkupId();
-		final String url = getCallbackUrl();
+		final CharSequence url = getCallbackUrl();
 
-		return getCallbackScript("wicketSubmitFormById('" + formId + "', '" + url + "' ", null,
-				null)
+		return getCallbackScript(new AppendingStringBuffer("wicketSubmitFormById('").append(formId).append(
+				"', '").append(url).append("' "), null, null)
 				+ ";";
 	}
 

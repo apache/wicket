@@ -24,6 +24,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A button that submits the form via ajax. Since this button takes the form as
@@ -58,9 +59,9 @@ public abstract class AjaxSubmitButton extends WebComponent
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
 			
-			protected String getEventHandler()
+			protected CharSequence getEventHandler()
 			{
-				return super.getEventHandler()+"; return false;";
+				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 
 		});

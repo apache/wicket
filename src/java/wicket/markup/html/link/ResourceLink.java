@@ -96,7 +96,7 @@ public class ResourceLink extends Link implements IResourceListener
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
-	protected final String getURL()
+	protected final CharSequence getURL()
 	{
 		if (resourceReference != null)
 		{

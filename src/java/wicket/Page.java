@@ -757,7 +757,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
 				&& (application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='" + encoding + "'?>");
+			response.write("<?xml version='1.0' encoding='");
+			response.write(encoding);
+			response.write("'?>");
 		}
 
 		// Set response locale from session locale

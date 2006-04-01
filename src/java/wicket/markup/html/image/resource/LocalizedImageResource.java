@@ -247,16 +247,16 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (resource == null && resourceReference == null)
 		{
 			// Get SRC attribute of tag
-			final String src = tag.getString("src");
+			final CharSequence src = tag.getString("src");
 			if (src != null)
 			{
 				// Try to load static image
-				loadStaticImage(src);
+				loadStaticImage(src.toString());
 			}
 			else
 			{
 				// Get VALUE attribute of tag
-				final String value = tag.getString("value");
+				final CharSequence value = tag.getString("value");
 				if (value != null)
 				{
 					// Try to generate an image using an image factory
@@ -271,7 +271,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 
 		// Get URL for resource
-		final String url;
+		final CharSequence url;
 		if (this.resourceReference != null)
 		{
 			// Create URL to shared resource
@@ -359,7 +359,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 * @param value
 	 *            The value to parse
 	 */
-	private void newImage(final String value)
+	private void newImage(final CharSequence value)
 	{
 		// Parse value
 		final ImageValueParser valueParser = new ImageValueParser(value);

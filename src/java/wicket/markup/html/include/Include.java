@@ -215,11 +215,11 @@ public class Include extends WebComponent
 	 *            the url to import
 	 * @return the imported url's contents
 	 */
-	private String importRelativeUrl(String url)
+	private String importRelativeUrl(CharSequence url)
 	{
 		// make the url absolute
 		HttpServletRequest req = ((WebRequest)getRequest()).getHttpServletRequest();
-		StringBuffer buildUrl = new StringBuffer();
+		StringBuffer buildUrl = new StringBuffer(url.length());
 		String scheme = req.getScheme();
 		int port = req.getServerPort();
 		buildUrl.append(scheme); // http, https
@@ -231,9 +231,7 @@ public class Include extends WebComponent
 			buildUrl.append(req.getServerPort());
 		}
 		buildUrl.append(req.getContextPath()).append('/').append(url);
-		url = buildUrl.toString();
-
-		return importAbsoluteUrl(url);
+		return importAbsoluteUrl(buildUrl);
 	}
 
 	/**
@@ -243,11 +241,11 @@ public class Include extends WebComponent
 	 *            the url to import
 	 * @return the imported url's contents
 	 */
-	private String importAbsoluteUrl(String url)
+	private String importAbsoluteUrl(CharSequence url)
 	{
 		try
 		{
-			return importUrl(new URL(url));
+			return importUrl(new URL(url.toString()));
 		}
 		catch (MalformedURLException e)
 		{

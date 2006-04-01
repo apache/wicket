@@ -110,9 +110,9 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @return event handler
 	 */
-	protected String getEventHandler()
+	protected CharSequence getEventHandler()
 	{
-		String handler = getCallbackScript();
+		CharSequence handler = getCallbackScript();
 		if (event.equalsIgnoreCase("href"))
 		{
 			handler = "javascript:" + handler;
@@ -120,10 +120,10 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected String getCallbackScript(String partialCall, String onSuccessScript,
+	protected CharSequence getCallbackScript(String partialCall, String onSuccessScript,
 			String onFailureScript)
 	{
-		String script = super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		CharSequence script = super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
 		final ThrottlingSettings ts = throttlingSettings;
 
 		if (ts != null)

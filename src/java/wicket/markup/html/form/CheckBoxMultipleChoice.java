@@ -376,9 +376,9 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add checkbox element
-				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"checkbox\""
-						+ (isSelected(choice, index, selected) ? " checked=\"checked\"" : "") + " value=\""
-						+ id + "\" id=\"" + idAttr + "\"/>");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"checkbox\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
+						id).append("\" id=\"").append(idAttr).append("\"/>");
 
 				// Add label for checkbox
 				String display = label;
@@ -386,9 +386,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
-				String escaped = Strings.escapeMarkup(display, false, true);
+				CharSequence escaped = Strings.escapeMarkup(display, false, true);
 
-				buffer.append("<label for=\"" + idAttr + "\">").append(escaped).append("</label>");
+				buffer.append("<label for=\"");
+				buffer.append(idAttr);
+				buffer.append("\">").append(escaped).append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
@@ -396,7 +398,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		}
 
 		// Replace body
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
 

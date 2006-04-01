@@ -42,7 +42,7 @@ public interface IAjaxCallDecorator extends Serializable
 	 * @param script
 	 * @return decorated script
 	 */
-	String decorateScript(String script);
+	CharSequence decorateScript(CharSequence script);
 
 	/**
 	 * Decorates the onSuccess handler script
@@ -50,7 +50,7 @@ public interface IAjaxCallDecorator extends Serializable
 	 * @param script
 	 * @return decorated onSuccess handler script
 	 */
-	String decorateOnSuccessScript(String script);
+	CharSequence decorateOnSuccessScript(CharSequence script);
 
 	/**
 	 * Decorates the onFailure handler script
@@ -58,6 +58,6 @@ public interface IAjaxCallDecorator extends Serializable
 	 * @param script
 	 * @return decorated onFailure handler script
 	 */
-	String decorateOnFailureScript(String script);
+	CharSequence decorateOnFailureScript(CharSequence script);
 
 }

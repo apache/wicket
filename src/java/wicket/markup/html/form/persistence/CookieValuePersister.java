@@ -89,7 +89,7 @@ public class CookieValuePersister implements IValuePersister
 		}
 		else 
 		{
-			cookie.setValue(value);
+			cookie.setValue(value == null ? "" : value);
 		}
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());

@@ -242,7 +242,7 @@ public final class Strings
 	 * @see Strings#escapeMarkup(String, boolean)
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s)
+	public static CharSequence escapeMarkup(final String s)
 	{
 		return escapeMarkup(s, false);
 	}
@@ -260,7 +260,7 @@ public final class Strings
 	 *            True to replace ' ' with nonbreaking space
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s, final boolean escapeSpaces)
+	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces)
 	{
 		return escapeMarkup(s, escapeSpaces, false);
 	}
@@ -280,7 +280,7 @@ public final class Strings
 	 *            True to convert non-7 bit characters to unicode HTML (&#...)
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s, final boolean escapeSpaces,
+	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
 			final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
@@ -380,7 +380,7 @@ public final class Strings
 				}
 			}
 
-			return buffer.toString();
+			return buffer;
 		}
 	}
 
@@ -451,9 +451,9 @@ public final class Strings
 	 *            The string
 	 * @return True if the string is null or ""
 	 */
-	public static boolean isEmpty(final String string)
+	public static boolean isEmpty(final CharSequence string)
 	{
-		return string == null || string.trim().equals("");
+		return string == null || string.length() == 0 || string.toString().trim().equals("");
 	}
 	
 	/**
@@ -474,6 +474,10 @@ public final class Strings
 		if (isEmpty(string1) && isEmpty(string2))
 		{
 			return true;
+		}
+		if(string1 == null || string2 == null)
+		{
+			return false;
 		}
 		
 		return string1.equals(string2);
@@ -569,7 +573,7 @@ public final class Strings
 	 *            The value to searchFor replaceWith
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
-	public static String replaceAll(final String s, final String searchFor, String replaceWith)
+	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor, CharSequence replaceWith)
 	{
 		if (s == null)
 		{
@@ -590,8 +594,9 @@ public final class Strings
 			replaceWith = "";
 		}
 		
+		String searchString = searchFor.toString();
 		// Look for first occurrence of searchFor
-		int matchIndex = s.indexOf(searchFor);
+		int matchIndex = search(s, searchString,0);
 		if (matchIndex == -1)
 		{
 			// No replace operation needs to happen
@@ -613,24 +618,75 @@ public final class Strings
 			int pos = 0;
 			do
 			{
-				// Append text up to the match
-				buffer.append(s.substring(pos, matchIndex));
+				// Append text up to the match`
+				append(buffer, s, pos,matchIndex);
 
 				// Add replaceWith text
 				buffer.append(replaceWith);
 
 				// Find next occurrence, if any
 				pos = matchIndex + searchForLength;
-				matchIndex = s.indexOf(searchFor, pos);
+				matchIndex = search(s, searchString, pos);
 			}
 			while (matchIndex != -1);
 
 			// Add tail of s
-			buffer.append(s.substring(pos));
+			buffer.append(s.subSequence(pos,s.length()));
 
 			// Return processed buffer
-			return buffer.toString();
+			return buffer;
 		}
+	}
+
+	/**
+	 * @param buffer
+	 * @param s
+	 * @param from
+	 * @param to
+	 */
+	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	{
+		if(s instanceof AppendingStringBuffer)
+		{
+			AppendingStringBuffer asb = (AppendingStringBuffer)s;
+			buffer.append(asb.getValue(), from,to-from);
+		}
+		else if(s instanceof StringBuffer)
+		{
+			buffer.append((StringBuffer)s,from,to-from);
+		}
+		else
+		{
+			buffer.append(s.subSequence(from, to));
+		}
+	}
+
+	/**
+	 * @param s
+	 * @param searchString
+	 * @param pos 
+	 * @return The index for that string
+	 */
+	private static int search(final CharSequence s, String searchString, int pos)
+	{
+		int matchIndex = -1;
+		if(s instanceof String)
+		{
+			matchIndex = ((String)s).indexOf(searchString, pos);
+		}
+		else if(s instanceof StringBuffer)
+		{
+			matchIndex = ((StringBuffer)s).indexOf(searchString,pos);
+		}
+		else if(s instanceof AppendingStringBuffer)
+		{
+			matchIndex = ((AppendingStringBuffer)s).indexOf(searchString,pos);
+		}
+		else
+		{
+			matchIndex = s.toString().indexOf(searchString);
+		}
+		return matchIndex;
 	}
 
 	/**
@@ -769,7 +825,7 @@ public final class Strings
 	 *         &lt;br/&gt; and all multiple occurrences of newline replaced
 	 *         with &lt;p&gt;.
 	 */
-	public static String toMultilineMarkup(final String s)
+	public static CharSequence toMultilineMarkup(final CharSequence s)
 	{
 		if (s == null)
 		{
@@ -817,7 +873,7 @@ public final class Strings
 			buffer.append("</p><p>");
 		}
 		buffer.append("</p>");
-		return buffer.toString();
+		return buffer;
 	}
 
 	/**

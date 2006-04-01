@@ -79,10 +79,9 @@ public class HtmlDocumentParser
 	 */
 	public HtmlDocumentParser(final String document)
 	{
-	    this.document = document;
-		this.document = Strings.replaceAll(this.document, "\n", "");
-		this.document = Strings.replaceAll(this.document, "\r", "");
-		this.document = Strings.replaceAll(this.document, "\t", " ");
+		CharSequence tmp = Strings.replaceAll(document, "\n", "");
+		tmp = Strings.replaceAll(tmp, "\r", "");
+		this.document = Strings.replaceAll(tmp, "\t", " ").toString();
 		pos = 0;
 	}
 
@@ -160,8 +159,8 @@ public class HtmlDocumentParser
 	private Map extractAttributes(String attributeString)
 	{
 		Map m = new HashMap();
-		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ");
-		attributeString = Strings.replaceAll(attributeString, " = ", "=");
+		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
+		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
 		for (int i = 0; i < attributeElements.length; i++)
 		{
