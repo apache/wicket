@@ -21,6 +21,8 @@ package wicket.markup.html;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -342,8 +344,16 @@ public class PackageResource extends WebResource
 				}
 				else
 				{
-					String absolutePath = scope.getResource("").getPath();
-					File basedir = new File(absolutePath);
+					String absolutePath = scope.getResource("").toExternalForm();
+					File basedir;
+					try
+					{
+						basedir = new File(new URI(absolutePath));
+					}
+					catch (URISyntaxException e)
+					{
+						throw new RuntimeException(e);
+					}
 					if (!basedir.isDirectory())
 					{
 						throw new IllegalStateException("unable to read resources from directory "
@@ -413,8 +423,8 @@ public class PackageResource extends WebResource
 			{
 				if (recurse)
 				{
-					addResources(scope, pattern, resources, new StringBuffer(relativePath.toString()).append(file.getName())
-							.append('/'), file, recurse);
+					addResources(scope, pattern, resources, new StringBuffer(relativePath
+							.toString()).append(file.getName()).append('/'), file, recurse);
 				}
 			}
 			else
