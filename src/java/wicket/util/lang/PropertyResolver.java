@@ -257,8 +257,8 @@ public class PropertyResolver
 						}
 						else
 						{
-							throw new WicketRuntimeException("Can parse " + exp
-									+ " as an index or look it up as a method for the list " + clz);
+							throw new WicketRuntimeException("The expression '" + exp
+									+ "' is neither an index nor is it a method for the list " + clz);
 						}
 					}
 				}
