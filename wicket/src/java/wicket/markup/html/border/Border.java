@@ -27,7 +27,6 @@ import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.markup.resolver.IComponentResolverMarker;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 
@@ -90,8 +89,7 @@ import wicket.response.NullResponse;
  */
 public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		implements
-			IComponentResolver,
-			IComponentResolverMarker
+			IComponentResolver
 {
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
