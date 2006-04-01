@@ -53,7 +53,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	private transient Object tempModelObject;
 
 	/** keeps track of whether this model is attached or detached */
-	private boolean attached = false;
+	private transient boolean attached = false;
 
 	/**
 	 * Construct.
@@ -127,7 +127,6 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * @return the (temporary) model object
 	 */
 	protected abstract Object load();
-
 
 	/**
 	 * @see java.lang.Object#toString()
