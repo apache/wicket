@@ -94,7 +94,7 @@ public class UploadProgressBar extends Panel
 				Map variables = new HashMap();
 
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
-				String statusUrl = getPage().urlFor(ref);
+				CharSequence statusUrl = getPage().urlFor(ref);
 
 				variables.put("bar-id", barDiv.getMarkupId());
 				variables.put("status-id", statusDiv.getMarkupId());
@@ -145,8 +145,8 @@ public class UploadProgressBar extends Panel
 		String cssFile = getPackagedTextFileContents("progressbar.css");
 		Map variables = new MiniMap(2);
 
-		final String progressbarUrl = RequestCycle.get().urlFor(GIF_PROGRESSBAR);
-		final String progressbarRemainderUrl = RequestCycle.get().urlFor(GIF_PROGRESSBAR_REMAINDER);
+		final CharSequence progressbarUrl = RequestCycle.get().urlFor(GIF_PROGRESSBAR);
+		final CharSequence progressbarRemainderUrl = RequestCycle.get().urlFor(GIF_PROGRESSBAR_REMAINDER);
 
 		variables.put("progressbar", progressbarUrl);
 		variables.put("progressbarRemainder", progressbarRemainderUrl);

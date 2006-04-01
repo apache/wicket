@@ -22,6 +22,7 @@ import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.FormComponent;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A behavior that updates the hosting FormComponent via ajax when an event it
@@ -77,10 +78,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
 	 */
-	protected final String getEventHandler()
+	protected final CharSequence getEventHandler()
 	{
-		return getCallbackScript(
-				"wicketAjaxPost('" + getCallbackUrl() + "', wicketSerialize(this)", null, null);
+		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(getCallbackUrl()).append(
+				"', wicketSerialize(this)"), null, null);
 	}
 
 	/**

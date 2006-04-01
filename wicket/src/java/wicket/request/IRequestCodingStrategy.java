@@ -56,5 +56,5 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 *            the request target
 	 * @return the url to the provided target
 	 */
-	String encode(RequestCycle requestCycle, IRequestTarget requestTarget);
+	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget);
 }

@@ -88,7 +88,7 @@ public final class SmartLinkLabel extends Label
 	 *            Text to be modified
 	 * @return Modified Text
 	 */
-	static String smartLink(final String text)
+	static CharSequence smartLink(final CharSequence text)
 	{
 		if (text == null)
 		{

@@ -93,9 +93,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		/**
-		 * @see wicket.Response#encodeURL(java.lang.String)
+		 * @see wicket.Response#encodeURL(CharSequence)
 		 */
-		public String encodeURL(String url)
+		public CharSequence encodeURL(CharSequence url)
 		{
 			return originalResponse.encodeURL(url);
 		}
@@ -104,9 +104,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		/**
 		 * @return contents of the response
 		 */
-		public String getContents()
+		public CharSequence getContents()
 		{
-			return buffer.toString();
+			return buffer;
 		}
 
 		/**
@@ -139,16 +139,21 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		/**
-		 * @see wicket.Response#write(java.lang.String)
+		 * @see wicket.Response#write(CharSequence)
 		 */
-		public void write(String string)
+		public void write(CharSequence cs)
 		{
+			String string = cs.toString();
 			if (needsEncoding(string))
 			{
 				string = encode(string);
 				escaped = true;
+				buffer.append(string);
 			}
-			buffer.append(string);
+			else
+			{
+				buffer.append(cs);
+			}
 		}
 
 	}
@@ -294,7 +299,9 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.setHeader("Cache-Control", "no-cache, must-revalidate");
 			response.setHeader("Pragma", "no-cache");
 
-			response.write("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
+			response.write("<?xml version=\"1.0\" encoding=\"");
+			response.write(encoding);
+			response.write("\"?>");
 			response.write("<ajax-response>");
 
 			Iterator it = markupIdToComponent.entrySet().iterator();
@@ -424,7 +431,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		// Restore original response
 		RequestCycle.get().setResponse(originalResponse);
 
-		response.write("<component id=\"" + markupId + "\" ");
+		response.write("<component id=\"");
+		response.write(markupId);
+		response.write("\" ");
 		if (encodingResponse.isContentsEncoded())
 		{
 			response.write(" encoding=\"");

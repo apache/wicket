@@ -313,7 +313,7 @@ abstract class AbstractChoice extends FormComponent
 		}
 
 		buffer.append("\n");
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
 	/**
@@ -346,7 +346,7 @@ abstract class AbstractChoice extends FormComponent
 		{
 			display = getLocalizer().getString(displayValue, this, displayValue);
 		}
-		String escaped = Strings.escapeMarkup(display, false, true);
+		CharSequence escaped = Strings.escapeMarkup(display, false, true);
 		buffer.append(escaped);
 		buffer.append("</option>");
 	}

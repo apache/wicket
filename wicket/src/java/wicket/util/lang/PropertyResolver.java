@@ -139,7 +139,7 @@ public class PropertyResolver
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
-		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[");
+		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
 		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;

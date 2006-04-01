@@ -72,7 +72,7 @@ public class WebRequestCrawlerSave extends ServletWebRequest
 
 		if (this.path.startsWith("/") && this.path.endsWith(".wic"))
 		{
-			String path = this.path.substring(1, this.path.length() - 4);
+			CharSequence path = this.path.substring(1, this.path.length() - 4);
 
 			path = Strings.replaceAll(path, "/", ".");
 			this.parameters = new ValueMap();

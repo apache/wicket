@@ -267,6 +267,48 @@ public class ValueMap extends HashMap
 			return o.toString();
 		}
 	}
+
+	/**
+	 * Gets a string by key.
+	 * 
+	 * @param key
+	 *            The get
+	 * @return The string
+	 */
+	public final CharSequence getCharSequence(final String key)
+	{
+		final Object o = get(key);
+		if (o == null)
+		{
+			return null;
+		}
+		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		{
+			// if it is an array just get the first value
+			final Object arrayValue = Array.get(o, 0);
+			if(arrayValue == null)
+			{
+				return null;
+			}
+			else
+			{
+				if(arrayValue instanceof CharSequence)
+				{
+					return (CharSequence)arrayValue;
+				}
+				return arrayValue.toString();
+			}
+			
+		}
+		else
+		{
+			if(o instanceof CharSequence)
+			{
+				return (CharSequence)o;
+			}
+			return o.toString();
+		}
+	}
 	
 	/**
 	 * Gets a String array by key.

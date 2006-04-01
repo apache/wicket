@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.crypt.ICrypt;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -59,21 +60,21 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(String url)
+	public CharSequence encodeURL(CharSequence url)
 	{
 	    // Get the crypt implementation from the application
 		ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
 		if (urlCrypt != null)
 		{
 		    // The url must have a query string, otherwise keep the url unchanged
-		    final int pos = url.indexOf('?');
+		    final int pos = url.toString().indexOf('?');
 		    if (pos > 0)
 		    {
 		        // The url's path
-			    String urlPrefix = url.substring(0, pos);
+		    	CharSequence urlPrefix = url.subSequence(0, pos);
 
 			    // Extract the querystring 
-			    String queryString = url.substring(pos + 1);
+		    	String queryString = url.subSequence(pos + 1,url.length()).toString();
 
 			    // if the querystring starts with a parameter like 
 			    // "x=", than don#t change the querystring as it 
@@ -84,14 +85,13 @@ public class WebResponseWithCryptedUrl extends WebResponse
 			        // length of the original querystring. Let's try to
 			        // make the querystring shorter first without loosing
 			        // information.
-				    queryString = shortenUrl(queryString);
+				    queryString = shortenUrl(queryString).toString();
 
 				    // encrypt the query string
 					final String encryptedQueryString = urlCrypt.encrypt(queryString);
 
 					// build the new complete url
-					final String encryptedUrl = urlPrefix + "?x=" + escapeUrl(encryptedQueryString);
-					return encryptedUrl;
+					return new AppendingStringBuffer(urlPrefix).append("?x=").append(escapeUrl(encryptedQueryString));
 			    }
 		    }
 		}
@@ -106,9 +106,9 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 * @param queryString The orginal querystring
 	 * @return url The querystring with invalid characters escaped
 	 */
-	private String escapeUrl(String queryString)
+	private CharSequence escapeUrl(String queryString)
 	{
-		StringBuffer buf = new StringBuffer(queryString.length() * 2);
+		AppendingStringBuffer buf = new AppendingStringBuffer(queryString.length() * 2);
 		for (int i=0; i < queryString.length(); i++)
 		{
 			char ch = queryString.charAt(i);
@@ -142,7 +142,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 			}
 		}
 	    
-	    return buf.toString();
+	    return buf;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 * @param queryString The original query string
 	 * @return The shortened querystring
 	 */
-	private String shortenUrl(String queryString)
+	private CharSequence shortenUrl(CharSequence queryString)
 	{
 	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1=");
 	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2=");
@@ -170,7 +170,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	        Matcher matcher = words.matcher(queryString);
 	        while (matcher.find())
 	        {
-	            String word = queryString.substring(matcher.start(), matcher.end());
+	            CharSequence word = queryString.subSequence(matcher.start(), matcher.end());
 	            log.info("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
 	        }
 	    }

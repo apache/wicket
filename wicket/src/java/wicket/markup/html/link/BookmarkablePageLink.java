@@ -193,7 +193,7 @@ public class BookmarkablePageLink extends Link
 	 * @return The URL that this link links to
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
-	protected String getURL()
+	protected CharSequence getURL()
 	{
 		if (pageMapName != null && getPopupSettings() != null)
 		{

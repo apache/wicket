@@ -80,6 +80,13 @@ public final class RawMarkup extends MarkupElement
     }
 
     /**
+     * @see wicket.markup.MarkupElement#toCharSequence()
+     */
+    public CharSequence toCharSequence()
+    {
+    	return string;
+    }
+    /**
      * @see MarkupElement#toUserDebugString()
      */
     public String toUserDebugString()

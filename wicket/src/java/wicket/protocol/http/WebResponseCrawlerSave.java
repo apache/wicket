@@ -22,6 +22,7 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
@@ -52,17 +53,18 @@ public class WebResponseCrawlerSave extends WebResponse
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public final String encodeURL(final String url)
+	public final CharSequence encodeURL(final CharSequence url)
 	{
 	    // The url must have a query string, otherwise keep the url unchanged
-	    final int pos = url.indexOf('?');
+		String stringUrl = url.toString();
+	    final int pos = stringUrl.indexOf('?');
 	    if (pos > 0)
 	    {
 	        // The url's path
-		    final String urlPrefix = url.substring(0, pos);
+		    final String urlPrefix = stringUrl.substring(0, pos);
 		    
 		    // Extract the querystring 
-		    String queryString = url.substring(pos + 1);
+		    CharSequence queryString = stringUrl.substring(pos + 1);
 
 		    // The length of the encrypted string depends on the
 	        // length of the original querystring. Let's try to
@@ -71,8 +73,7 @@ public class WebResponseCrawlerSave extends WebResponse
 		    queryString = encodeQueryString(queryString);
 
 			// build the new complete url
-			final String newUrl = urlPrefix + queryString;
-			return newUrl;
+			return new AppendingStringBuffer(urlPrefix).append(queryString);
 	    }
 		
 		// we didn't change anything
@@ -85,14 +86,16 @@ public class WebResponseCrawlerSave extends WebResponse
 	 * @param queryString The original query string
 	 * @return The shortened querystring
 	 */
-	private String encodeQueryString(String queryString)
+	private CharSequence encodeQueryString(CharSequence queryString)
 	{
-	    final ValueMap param = new ValueMap(queryString, "&");
+	    final ValueMap param = new ValueMap(queryString.toString(), "&");
 	    
 	    final String bookmarkablePage = param.getString(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 	    if (bookmarkablePage != null)
 	    {
-	        String url = "/" + Strings.replaceAll(bookmarkablePage, ".", "/") + ".wic";
+	        AppendingStringBuffer url = new AppendingStringBuffer("/");
+	        url.append(Strings.replaceAll(bookmarkablePage, ".", "/"));
+	        url.append(".wic");
 	        
 	        param.remove(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 	        if (param.size() > 0)
@@ -101,13 +104,16 @@ public class WebResponseCrawlerSave extends WebResponse
 				for (final Iterator iterator = param.keySet().iterator(); iterator.hasNext();)
 				{
 					final String key = (String)iterator.next();
-					url += separator + key + "=" + param.getString(key);
+					url.append(separator);
+					url.append(key);
+					url.append("=");
+					url.append(param.getCharSequence(key));
 					separator = '&';
 				}
 	        }
 	        return url;
 	    }
 	    
-	    return "?" + queryString;
+	    return new AppendingStringBuffer("?").append(queryString);
 	}
 }

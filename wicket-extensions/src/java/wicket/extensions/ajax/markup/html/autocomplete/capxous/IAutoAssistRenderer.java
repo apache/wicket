@@ -22,7 +22,7 @@ public interface IAutoAssistRenderer extends Serializable
 {
 	/**
 	 * Render the html fragment for the given completion object. Usually the
-	 * html is written out by calling {@link Response#write(String)}.
+	 * html is written out by calling {@link Response#write(CharSequence)}.
 	 * 
 	 * @param object
 	 *            completion choice object

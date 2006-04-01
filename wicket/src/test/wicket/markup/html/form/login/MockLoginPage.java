@@ -45,7 +45,7 @@ public class MockLoginPage extends WebPage
 
 			protected void onSubmit()
 			{
-				login(get("username").getModelObjectAsString());
+				login(get("username").getModelObjectAsString().toString());
 			}
 		});
 		form.add(textField = new TextField("username", new Model()));

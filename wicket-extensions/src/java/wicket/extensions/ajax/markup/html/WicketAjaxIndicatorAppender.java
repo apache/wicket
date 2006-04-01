@@ -62,7 +62,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	/**
 	 * @return url of the animated indicator image
 	 */
-	protected String getIndicatorUrl()
+	protected CharSequence getIndicatorUrl()
 	{
 		return RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR);
 	}

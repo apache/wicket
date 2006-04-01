@@ -27,7 +27,6 @@ import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 

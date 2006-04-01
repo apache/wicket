@@ -172,7 +172,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * @see wicket.request.IRequestCodingStrategy#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
-	public final String encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
+	public final CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		CharSequence path = pathForTarget(requestTarget);
@@ -182,7 +182,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
 			buffer.append(prefix);
 			buffer.append(path);
-			return requestCycle.getResponse().encodeURL(buffer.toString());
+			return requestCycle.getResponse().encodeURL(buffer);
 		}
 
 		// no mount found; go on with default processing
@@ -465,11 +465,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected String encode(RequestCycle requestCycle,
+	protected CharSequence encode(RequestCycle requestCycle,
 			IBookmarkablePageRequestTarget requestTarget)
 	{
 		// Begin encoding URL
-		final StringBuffer url = new StringBuffer(64);
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 		url.append(urlPrefix(requestCycle));
 
 		// Get page Class
@@ -549,7 +549,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			}
 		}
 
-		return requestCycle.getResponse().encodeURL(url.toString());
+		return requestCycle.getResponse().encodeURL(url);
 	}
 
 	/**
@@ -605,7 +605,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected String encode(RequestCycle requestCycle,
+	protected CharSequence encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
@@ -652,7 +652,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			url.append(listenerName);
 		}
 
-		return requestCycle.getResponse().encodeURL(url.toString());
+		return requestCycle.getResponse().encodeURL(url);
 	}
 
 	/**
@@ -664,13 +664,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected String encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
+	protected CharSequence encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
 		// Get the page we want a url from:
 		Page page = requestTarget.getPage();
 
 		// A url to a page is the IRedirectListener interface:
-		String urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
+		CharSequence urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
 
 		// Touch the page once because it could be that it did go from stateless
 		// to statefull or it was a internally made page where just a url must 

@@ -17,6 +17,8 @@
  */
 package wicket.examples.frames;
 
+import java.io.Serializable;
+
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.RequestCycle;
@@ -65,11 +67,11 @@ public class BodyFrame extends WebPage
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
-		String leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
+		CharSequence leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent("leftFrame");
-		leftFrameTag.add(new AttributeModifier("src", new Model(leftFrameSrc)));
+		leftFrameTag.add(new AttributeModifier("src", new Model((Serializable)leftFrameSrc)));
 		add(leftFrameTag);
 
 		// make a simple component for the right frame tag

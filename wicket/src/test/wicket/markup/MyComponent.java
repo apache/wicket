@@ -171,7 +171,7 @@ public class MyComponent extends WebMarkupContainer
 	    str.append("dateParam: " + dateParam + "<br/>");
 	    str.append("hexParam: " + hexParam + "<br/>");
 	    
-	    getResponse().write(str.toString());
+	    getResponse().write(str);
 	    
 		super.onComponentTagBody(markupStream, openTag);
 	}

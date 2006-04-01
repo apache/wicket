@@ -98,11 +98,11 @@ public class WebResponse extends Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(String url)
+	public CharSequence encodeURL(CharSequence url)
 	{
-		if (httpServletResponse != null)
+		if (httpServletResponse != null && url != null)
 		{
-			return httpServletResponse.encodeURL(url);
+			return httpServletResponse.encodeURL(url.toString());
 		}
 		return url;
 	}
@@ -234,15 +234,36 @@ public class WebResponse extends Response
 	 * @param string
 	 *            The string to write
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
 	{
-		try
+		if(string instanceof AppendingStringBuffer)
 		{
-			httpServletResponse.getWriter().write(string);
+			write((AppendingStringBuffer)string);
 		}
-		catch (IOException e)
+		else if(string instanceof StringBuffer)
 		{
-			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+			try
+			{
+				StringBuffer sb = (StringBuffer)string;
+				char[] array = new char[sb.length()];
+				sb.getChars(0, sb.length(), array, 0);
+				httpServletResponse.getWriter().write(array,0,array.length);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+			}
+		}
+		else
+		{
+			try
+			{
+				httpServletResponse.getWriter().write(string.toString());
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+			}
 		}
 	}
 

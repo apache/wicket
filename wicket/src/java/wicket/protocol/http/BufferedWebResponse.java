@@ -96,7 +96,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param string
 	 *            The string to write
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
 	{
 		buffer.append(string);
 	}

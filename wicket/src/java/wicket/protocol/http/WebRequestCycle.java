@@ -134,7 +134,7 @@ public class WebRequestCycle extends RequestCycle
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
-					public String encodeURL(String url) 
+					public CharSequence encodeURL(CharSequence url) 
 					{
 						return currentResponse.encodeURL(url);
 					};
@@ -169,7 +169,7 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					servletResponse.close();
 
-					redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
+					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
 					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
 					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl.substring(index+1), servletResponse);
@@ -187,7 +187,7 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
-			redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 			
 			// Redirect page can touch its models already (via for example the
 			// constructors)
@@ -196,7 +196,7 @@ public class WebRequestCycle extends RequestCycle
 
 		if (redirectUrl == null)
 		{
-			redirectUrl = page.urlFor(IRedirectListener.INTERFACE);
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 		}
 		
 		// Always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap

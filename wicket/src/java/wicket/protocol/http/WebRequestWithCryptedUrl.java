@@ -161,7 +161,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 	 *            The URL's query string
 	 * @return The lengthened query string
 	 */
-	private String rebuildUrl(String queryString)
+	private String rebuildUrl(CharSequence queryString)
 	{
 		queryString = Strings.replaceAll(queryString, "1=",
 				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
@@ -178,7 +178,7 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 		queryString = Strings.replaceAll(queryString, "7=",
 				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
 
-		return queryString;
+		return queryString.toString();
 	}
 
 	/**

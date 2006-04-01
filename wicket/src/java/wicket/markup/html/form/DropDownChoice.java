@@ -157,7 +157,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		if (wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = urlFor(IOnChangeListener.INTERFACE);
+			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 			try
 			{

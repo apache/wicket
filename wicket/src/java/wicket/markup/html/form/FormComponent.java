@@ -338,9 +338,9 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		else
 		{
-			if (getEscapeModelStrings())
+			if (getEscapeModelStrings() && rawInput != null)
 			{
-				return Strings.escapeMarkup(rawInput);
+				return Strings.escapeMarkup(rawInput).toString();
 			}
 			return rawInput;
 		}

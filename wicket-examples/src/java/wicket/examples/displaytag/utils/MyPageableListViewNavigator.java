@@ -47,7 +47,7 @@ public class MyPageableListViewNavigator extends PagingNavigator
 			protected void onComponentTagBody(final MarkupStream markupStream,
 					final ComponentTag openTag)
 			{
-				String text = getHeadlineText(pageableListView);
+				CharSequence text = getHeadlineText(pageableListView);
 				replaceComponentTagBody(markupStream, openTag, text);
 			}
 		});
@@ -60,7 +60,7 @@ public class MyPageableListViewNavigator extends PagingNavigator
 	 *            the pageable list view
 	 * @return head line text
 	 */
-	protected String getHeadlineText(final PageableListView pageableListView)
+	protected CharSequence getHeadlineText(final PageableListView pageableListView)
 	{
 		int firstListItem = pageableListView.getCurrentPage() * pageableListView.getRowsPerPage();
 		StringBuffer buf = new StringBuffer(80);
@@ -69,6 +69,6 @@ public class MyPageableListViewNavigator extends PagingNavigator
 				" to ").append(String.valueOf(firstListItem + pageableListView.getRowsPerPage()))
 				.append(".");
 
-		return buf.toString();
+		return buf;
 	}
 }

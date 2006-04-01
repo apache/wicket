@@ -45,29 +45,29 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 
 
 	/**
-	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(java.lang.String)
+	 * @see wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
 	 */
-	public final String decorateScript(String script)
+	public final CharSequence decorateScript(CharSequence script)
 	{
-		String s = (delegate == null) ? script : delegate.decorateScript(script);
+		CharSequence s = (delegate == null) ? script : delegate.decorateScript(script);
 		return postDecorateScript(s);
 	}
 
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
 	 */
-	public final String decorateOnSuccessScript(String script)
+	public final CharSequence decorateOnSuccessScript(CharSequence script)
 	{
-		String s = (delegate == null) ? script : delegate.decorateOnSuccessScript(script);
+		CharSequence s = (delegate == null) ? script : delegate.decorateOnSuccessScript(script);
 		return postDecorateOnSuccessScript(s);
 	}
 
 	/**
 	 * @see wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
 	 */
-	public final String decorateOnFailureScript(String script)
+	public final CharSequence decorateOnFailureScript(CharSequence script)
 	{
-		String s = (delegate == null) ? script : delegate.decorateOnFailureScript(script);
+		CharSequence s = (delegate == null) ? script : delegate.decorateOnFailureScript(script);
 		return postDecorateOnFailureScript(s);
 	}
 
@@ -78,7 +78,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public String postDecorateScript(String script)
+	public CharSequence postDecorateScript(CharSequence script)
 	{
 		return script;
 	}
@@ -89,7 +89,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public String postDecorateOnSuccessScript(String script)
+	public CharSequence postDecorateOnSuccessScript(CharSequence script)
 	{
 		return script;
 	}
@@ -100,7 +100,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public String postDecorateOnFailureScript(String script)
+	public CharSequence postDecorateOnFailureScript(CharSequence script)
 	{
 		return script;
 	}

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
 import wicket.util.value.AttributeMap;
@@ -228,9 +229,9 @@ public class XmlTag extends MarkupElement
 	 *			  The key
 	 * @return The string value
 	 */
-	public String getString(final String key)
+	public CharSequence getString(final String key)
 	{
-		return getAttributes().getString(key);
+		return getAttributes().getCharSequence(key);
 	}
 
 	/**
@@ -402,9 +403,9 @@ public class XmlTag extends MarkupElement
 	 *		   map previously associated null with the specified key, if the
 	 *		   implementation supports null values.
 	 */
-	public Object put(final String key, final String value)
+	public Object put(final String key, final CharSequence value)
 	{
-		return getAttributes().put(key, (value != null) ? value.toString() : null);
+		return getAttributes().put(key, value);
 	}
 
 	/**
@@ -538,6 +539,14 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toString()
 	{
+		return toCharSequence().toString();
+	}
+	
+	/**
+	 * @see wicket.markup.MarkupElement#toCharSequence()
+	 */
+	public CharSequence toCharSequence()
+	{
 		if (!isMutable && (text != null))
 		{
 			return text;
@@ -563,9 +572,9 @@ public class XmlTag extends MarkupElement
 	 * @param attributeToBeIgnored	
 	 * @return A xml string matching the tag
 	 */
-	public String toXmlString(final String attributeToBeIgnored)
+	public CharSequence toXmlString(final String attributeToBeIgnored)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		buffer.append('<');
 
@@ -594,7 +603,7 @@ public class XmlTag extends MarkupElement
 				{
 					buffer.append(" ");
 					buffer.append(key);
-					String value = getString(key);
+					CharSequence value = getString(key);
 					
 					// Attributes without values are possible, e.g. 'disabled'
 					if (value != null) 
@@ -615,6 +624,6 @@ public class XmlTag extends MarkupElement
 
 		buffer.append('>');
 
-		return buffer.toString();
+		return buffer;
 	}
 }

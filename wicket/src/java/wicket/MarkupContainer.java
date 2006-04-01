@@ -1334,7 +1334,7 @@ public abstract class MarkupContainer extends Component
 			{
 				log.debug("Rendering raw markup");
 			}
-			getResponse().write(element.toString());
+			getResponse().write(element.toCharSequence());
 			markupStream.next();
 		}
 	}

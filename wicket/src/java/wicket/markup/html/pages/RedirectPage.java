@@ -42,7 +42,7 @@ public final class RedirectPage extends WebPage
 	 * @param url
 	 *            The url to redirect to
 	 */
-	public RedirectPage(final String url)
+	public RedirectPage(final CharSequence url)
 	{
 		this(url, 0);
 	}
@@ -57,7 +57,7 @@ public final class RedirectPage extends WebPage
 	 *            The number of seconds the browser should wait before
 	 *            redirecting
 	 */
-	public RedirectPage(final String url, final int waitBeforeRedirectInSeconds)
+	public RedirectPage(final CharSequence url, final int waitBeforeRedirectInSeconds)
 	{
 		final WebMarkupContainer redirect = new WebMarkupContainer("redirect");
 		final String content = waitBeforeRedirectInSeconds + ";URL=" + url;

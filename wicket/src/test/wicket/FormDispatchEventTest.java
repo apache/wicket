@@ -109,7 +109,7 @@ public class FormDispatchEventTest extends WicketTestCase
 		assertTrue("form should should set value ", submit);
 
 		application.getServletRequest().setParameter(form.getHiddenField(),
-				dropDown.urlFor(IOnChangeListener.INTERFACE));
+				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
 
 		form.onFormSubmitted();
 		assertTrue("Selection should be called", selection);

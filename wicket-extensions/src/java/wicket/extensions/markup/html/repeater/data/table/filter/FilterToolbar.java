@@ -26,6 +26,7 @@ import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Toolbar that creates a form to hold form components used to filter data in
@@ -83,8 +84,8 @@ public class FilterToolbar extends AbstractToolbar
 
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				String script = "<script>_filter_focus_restore('"
-						+ form.getFocusTrackerFieldCssId() + "');</script>";
+				AppendingStringBuffer script = new AppendingStringBuffer("<script>_filter_focus_restore('").append(
+						form.getFocusTrackerFieldCssId()).append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});

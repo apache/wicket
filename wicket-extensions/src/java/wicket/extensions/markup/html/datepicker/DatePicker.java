@@ -27,6 +27,7 @@ import wicket.markup.html.resources.JavaScriptReference;
 import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Datepicker component.
@@ -128,8 +129,7 @@ public class DatePicker extends Panel
 
 				public Object getObject(Component component)
 				{
-					String url = urlFor(resourceReference);
-					return url;
+					return urlFor(resourceReference);
 				};
 			};
 			add(new AttributeModifier("src", true, srcReplacement));
@@ -275,10 +275,10 @@ public class DatePicker extends Panel
 	 * 
 	 * @return the initilization javascript
 	 */
-	private String getInitScript()
+	private CharSequence getInitScript()
 	{
 		String targetId = target.getPath();
-		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
+		AppendingStringBuffer b = new AppendingStringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
 		b.append(settings.toScript(getLocale()));
@@ -288,6 +288,6 @@ public class DatePicker extends Panel
 			b.deleteCharAt(last);
 		}
 		b.append("\n});");
-		return b.toString();
+		return b;
 	}
 }

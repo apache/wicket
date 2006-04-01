@@ -292,7 +292,7 @@ public class StringValue implements Serializable
 	 *            What to replace with
 	 * @return This string value with searchFor replaces with replaceWith
 	 */
-	public final String replaceAll(final String searchFor, final String replaceWith)
+	public final CharSequence replaceAll(final CharSequence searchFor, final CharSequence replaceWith)
 	{
 		return Strings.replaceAll(text, searchFor, replaceWith);
 	}

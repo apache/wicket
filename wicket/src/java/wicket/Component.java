@@ -993,7 +993,7 @@ public abstract class Component implements Serializable
 			if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 			{
 				// Escape it
-				return Strings.escapeMarkup(modelString);
+				return Strings.escapeMarkup(modelString).toString();
 			}
 			return modelString;
 		}
@@ -2116,7 +2116,7 @@ public abstract class Component implements Serializable
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(final Class pageClass, final PageParameters parameters)
+	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
 	}
@@ -2131,7 +2131,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return a URL that references the given request target
 	 */
-	public final String urlFor(final IRequestTarget requestTarget)
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
 		return getRequestCycle().urlFor(requestTarget);
 	}
@@ -2154,7 +2154,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(final PageMap pageMap, final Class pageClass,
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
 			final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
@@ -2167,7 +2167,7 @@ public abstract class Component implements Serializable
 	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
-	public final String urlFor(final RequestListenerInterface listener)
+	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
 		return getRequestCycle().urlFor(this, listener);
 	}
@@ -2182,7 +2182,7 @@ public abstract class Component implements Serializable
 	 *            The resource reference
 	 * @return The url for the shared resource
 	 */
-	public final String urlFor(final ResourceReference resourceReference)
+	public final CharSequence urlFor(final ResourceReference resourceReference)
 	{
 		return getRequestCycle().urlFor(resourceReference);
 	}
@@ -2663,7 +2663,7 @@ public abstract class Component implements Serializable
 	 *            The new markup
 	 */
 	protected final void replaceComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag tag, final String body)
+			final ComponentTag tag, final CharSequence body)
 	{
 		// The tag might have been changed from open-close to open. Hence
 		// we'll need what was in the markup itself

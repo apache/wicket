@@ -144,11 +144,11 @@ public class BrowserInfoPage extends WebPage
 		WebComponent meta = new WebComponent("meta");
 		PageParameters parameters = new PageParameters();
 		parameters.put("cto", continueTo);
-		String url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class, parameters));
+		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class, parameters));
 		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));
 		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(new AttributeModifier("href", true, new Model(url)));
+		link.add(new AttributeModifier("href", true, new Model((Serializable)url)));
 		add(link);
 		add(new PostBackForm("postback"));
 	}

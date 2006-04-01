@@ -24,6 +24,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 
 /**
@@ -58,7 +59,7 @@ public abstract class AbstractOptions extends FormComponent
 
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
 		Iterator options = getOptionsIterator();
 		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
 
@@ -76,7 +77,7 @@ public abstract class AbstractOptions extends FormComponent
 		}
 
 		buffer.append("\n");
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
 	protected void onComponentTag(ComponentTag tag)

@@ -35,6 +35,12 @@ import java.io.IOException;
 
 public final class AppendingStringBuffer implements java.io.Serializable, CharSequence
 {
+	/** use serialVersionUID from JDK 1.0.2 for interoperability */
+	static final long serialVersionUID = 1L;
+
+	private static final AppendingStringBuffer NULL = new AppendingStringBuffer("null");
+	private static final StringBuffer SB_NULL = new StringBuffer("null");
+
 	/**
 	 * The value is used for character storage.
 	 * 
@@ -48,9 +54,6 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @serial
 	 */
 	private int count;
-
-	/** use serialVersionUID from JDK 1.0.2 for interoperability */
-	static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a string buffer with no characters in it and an initial
@@ -88,7 +91,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @exception NullPointerException
 	 *                if <code>str</code> is <code>null</code>
 	 */
-	public AppendingStringBuffer(String str)
+	public AppendingStringBuffer(CharSequence str)
 	{
 		this(str.length() + 16);
 		append(str);
@@ -352,6 +355,10 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			return append((AppendingStringBuffer)obj);
 		}
+		else if(obj instanceof StringBuffer)
+		{
+			return append((StringBuffer)obj);
+		}
 		return append(String.valueOf(obj));
 	}
 
@@ -442,7 +449,102 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		return this;
 	}
 
-	private static final AppendingStringBuffer NULL = new AppendingStringBuffer("null");
+	/**
+	 * Appends the specified <tt>AppendingStringBuffer</tt> to this
+	 * <tt>AppendingStringBuffer</tt>.
+	 * <p>
+	 * The characters of the <tt>AppendingStringBuffer</tt> argument are
+	 * appended, in order, to the contents of this
+	 * <tt>AppendingStringBuffer</tt>, increasing the length of this
+	 * <tt>AppendingStringBuffer</tt> by the length of the argument. If
+	 * <tt>sb</tt> is <tt>null</tt>, then the four characters
+	 * <tt>"null"</tt> are appended to this <tt>AppendingStringBuffer</tt>.
+	 * <p>
+	 * Let <i>n</i> be the length of the old character sequence, the one
+	 * contained in the <tt>AppendingStringBuffer</tt> just prior to execution
+	 * of the <tt>append</tt> method. Then the character at index <i>k</i> in
+	 * the new character sequence is equal to the character at index <i>k</i>
+	 * in the old character sequence, if <i>k</i> is less than <i>n</i>;
+	 * otherwise, it is equal to the character at index <i>k-n</i> in the
+	 * argument <code>sb</code>.
+	 * <p>
+	 * The method <tt>ensureCapacity</tt> is first called on this
+	 * <tt>AppendingStringBuffer</tt> with the new buffer length as its
+	 * argument. (This ensures that the storage of this
+	 * <tt>AppendingStringBuffer</tt> is adequate to contain the additional
+	 * characters being appended.)
+	 * 
+	 * @param sb
+	 *            the <tt>AppendingStringBuffer</tt> to append.
+	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
+	 * @since 1.4
+	 */
+	public AppendingStringBuffer append(StringBuffer sb)
+	{
+		if (sb == null)
+		{
+			sb = SB_NULL;
+		}
+
+		int len = sb.length();
+		int newcount = count + len;
+		if (newcount > value.length)
+		{
+			expandCapacity(newcount);
+		}
+		sb.getChars(0, len, value, count);
+		count = newcount;
+		return this;
+	}
+	
+
+	/**
+	 * Appends the specified <tt>AppendingStringBuffer</tt> to this
+	 * <tt>AppendingStringBuffer</tt>.
+	 * <p>
+	 * The characters of the <tt>AppendingStringBuffer</tt> argument are
+	 * appended, in order, to the contents of this
+	 * <tt>AppendingStringBuffer</tt>, increasing the length of this
+	 * <tt>AppendingStringBuffer</tt> by the length of the argument. If
+	 * <tt>sb</tt> is <tt>null</tt>, then the four characters
+	 * <tt>"null"</tt> are appended to this <tt>AppendingStringBuffer</tt>.
+	 * <p>
+	 * Let <i>n</i> be the length of the old character sequence, the one
+	 * contained in the <tt>AppendingStringBuffer</tt> just prior to execution
+	 * of the <tt>append</tt> method. Then the character at index <i>k</i> in
+	 * the new character sequence is equal to the character at index <i>k</i>
+	 * in the old character sequence, if <i>k</i> is less than <i>n</i>;
+	 * otherwise, it is equal to the character at index <i>k-n</i> in the
+	 * argument <code>sb</code>.
+	 * <p>
+	 * The method <tt>ensureCapacity</tt> is first called on this
+	 * <tt>AppendingStringBuffer</tt> with the new buffer length as its
+	 * argument. (This ensures that the storage of this
+	 * <tt>AppendingStringBuffer</tt> is adequate to contain the additional
+	 * characters being appended.)
+	 * 
+	 * @param sb
+	 *            the <tt>AppendingStringBuffer</tt> to append.
+	 * @param from The index where it must start from 
+	 * @param length The length that must be copied
+	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
+	 */
+	public AppendingStringBuffer append(StringBuffer sb, int from, int length)
+	{
+		if (sb == null)
+		{
+			sb = SB_NULL;
+		}
+
+		int newcount = count + length;
+		if (newcount > value.length)
+		{
+			expandCapacity(newcount);
+		}
+		sb.getChars(from, length, value, count);
+		count = newcount;
+		return this;
+	}
 
 	/**
 	 * Appends the string representation of the <code>char</code> array
@@ -955,6 +1057,10 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 			AppendingStringBuffer asb = (AppendingStringBuffer)obj;
 			return insert(offset, asb.value, 0, asb.count);
 		}
+		else if(obj instanceof StringBuffer)
+		{
+			return insert(offset, (StringBuffer)obj);
+		}		
 		return insert(offset, String.valueOf(obj));
 	}
 
@@ -1016,6 +1122,63 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		return this;
 	}
 
+	/**
+	 * Inserts the string into this string buffer.
+	 * <p>
+	 * The characters of the <code>String</code> argument are inserted, in
+	 * order, into this string buffer at the indicated offset, moving up any
+	 * characters originally above that position and increasing the length of
+	 * this string buffer by the length of the argument. If <code>str</code>
+	 * is <code>null</code>, then the four characters <code>"null"</code>
+	 * are inserted into this string buffer.
+	 * <p>
+	 * The character at index <i>k</i> in the new character sequence is equal
+	 * to:
+	 * <ul>
+	 * <li>the character at index <i>k</i> in the old character sequence, if
+	 * <i>k</i> is less than <code>offset</code>
+	 * <li>the character at index <i>k</i><code>-offset</code> in the
+	 * argument <code>str</code>, if <i>k</i> is not less than
+	 * <code>offset</code> but is less than <code>offset+str.length()</code>
+	 * <li>the character at index <i>k</i><code>-str.length()</code> in the
+	 * old character sequence, if <i>k</i> is not less than
+	 * <code>offset+str.length()</code>
+	 * </ul>
+	 * <p>
+	 * The offset argument must be greater than or equal to <code>0</code>,
+	 * and less than or equal to the length of this string buffer.
+	 * 
+	 * @param offset
+	 *            the offset.
+	 * @param str
+	 *            a string.
+	 * @return a reference to this <code>AppendingStringBuffer</code> object.
+	 * @exception StringIndexOutOfBoundsException
+	 *                if the offset is invalid.
+	 * @see java.lang.StringBuffer#length()
+	 */
+	public AppendingStringBuffer insert(int offset, StringBuffer str)
+	{
+		if ((offset < 0) || (offset > count))
+		{
+			throw new StringIndexOutOfBoundsException();
+		}
+
+		if (str == null)
+		{
+			str = SB_NULL;
+		}
+		int len = str.length();
+		int newcount = count + len;
+		if (newcount > value.length)
+		{
+			expandCapacity(newcount);
+		}
+		System.arraycopy(value, offset, value, offset + len, count - offset);
+		str.getChars(0, len, value, offset);
+		count = newcount;
+		return this;
+	}	
 	/**
 	 * Inserts the string representation of the <code>char</code> array
 	 * argument into this string buffer.

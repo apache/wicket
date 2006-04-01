@@ -69,7 +69,7 @@ public class AutoCompletePage extends BasePage
 				r.write("<div style='float:left; color:red; '>");
 				r.write(val);
 				r.write("</div><div style='text-align:right; width:100%;'>");
-				r.write("" + Math.random());
+				r.write(Double.toString(Math.random()));
 				r.write("</div>");
 			}
 

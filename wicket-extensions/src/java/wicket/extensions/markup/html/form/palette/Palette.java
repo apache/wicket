@@ -156,8 +156,7 @@ public class Palette extends Panel
 
 			public Object getObject(Component component)
 			{
-				String url = urlFor(javascript);
-				return url;
+				return urlFor(javascript);
 			};
 		};
 		WebMarkupContainer javascript = new WebMarkupContainer("javascript");

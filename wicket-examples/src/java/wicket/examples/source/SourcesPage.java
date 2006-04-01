@@ -120,7 +120,7 @@ public class SourcesPage extends WebPage
 			{
 				PackageName name = PackageName.forClass(page);
 				ClassLoader loader = page.getClassLoader();
-				String path = Strings.replaceAll(name.getName(), ".", "/");
+				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
 				try
 				{
 					// gives the urls for each place where the package

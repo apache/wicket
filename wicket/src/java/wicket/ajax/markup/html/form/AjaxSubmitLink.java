@@ -23,6 +23,7 @@ import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A link that submits a form via ajax. Since this link takes the form as a
@@ -57,9 +58,9 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 				AjaxSubmitLink.this.onSubmit(target, form);
 			}
 			
-			protected String getEventHandler()
+			protected CharSequence getEventHandler()
 			{
-				return super.getEventHandler()+"; return false;";
+				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 		});
 

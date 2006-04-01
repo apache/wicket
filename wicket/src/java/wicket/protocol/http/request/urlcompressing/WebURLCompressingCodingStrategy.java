@@ -62,7 +62,7 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected String encode(RequestCycle requestCycle,
+	protected CharSequence encode(RequestCycle requestCycle,
 			IListenerInterfaceRequestTarget requestTarget)
 	{
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
@@ -119,6 +119,6 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 			url.append(listenerName);
 		}
 
-		return requestCycle.getResponse().encodeURL(url.toString());
+		return requestCycle.getResponse().encodeURL(url);
 	}
 }

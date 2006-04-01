@@ -51,7 +51,11 @@ public abstract class AbstractAutoAssistBehavior extends AbstractAjaxBehavior
 		Response response=getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
 		response.write("<script>");
-		response.write("new AutoAssist(\""+id+"\", function() { return \""+getCallbackUrl()+"&val=\"+this.txtBox.value;});");
+		response.write("new AutoAssist(\"");
+		response.write(id);
+		response.write("\", function() { return \"");
+		response.write(getCallbackUrl());
+		response.write("&val=\"+this.txtBox.value;});");
 		response.write("</script>");
 
 	}

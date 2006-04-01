@@ -403,7 +403,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			{
 				// Obviously a href like href="myPkg.MyLabel.html" will do as
 				// well. Wicket will not throw an exception. It accepts it.
-				String infoPath = Strings.replaceAll(pathInfo.path, "/", ".");
+				String infoPath = Strings.replaceAll(pathInfo.path, "/", ".").toString();
 
 				Page page = container.getPage();
 				final IClassResolver defaultClassResolver = page.getApplication()
@@ -611,7 +611,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (resourceReference != null)
 			{
 				// Set href to link to this link's linkClicked method
-				String url = getRequestCycle().urlFor(resourceReference);
+				CharSequence url = getRequestCycle().urlFor(resourceReference);
 
 				// generate the href attribute
 				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
