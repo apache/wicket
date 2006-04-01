@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 4550 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,17 +27,17 @@ public class InlineTestPanel extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 * @param child
 	 */
 	public InlineTestPanel(String id, Fragment child)
 	{
 		super(id);
-		if (child==null||!"child".equals(child.getId())) {
+		if (child == null || !"child".equals(child.getId()))
+		{
 			throw new IllegalArgumentException();
 		}
 		add(child);
 	}
-
-
 }

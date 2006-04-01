@@ -30,6 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.lang.Classes;
 
 /**
@@ -48,6 +49,12 @@ import wicket.util.lang.Classes;
 public final class AutoComponentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("component");
+	}
 
     /** 
      * Temporary storage for containers currently being rendered. Thus child

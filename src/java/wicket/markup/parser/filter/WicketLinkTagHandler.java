@@ -51,6 +51,12 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("link");
+	}
+
 	/** Allow to have link regions within link regions */
 	private ArrayListStack autolinkStatus;
 

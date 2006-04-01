@@ -22,6 +22,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
@@ -32,6 +33,13 @@ import wicket.markup.html.WebMarkupContainer;
 public class MarkupInheritanceResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKownTagName("extend");
+		WicketTagIdentifier.registerWellKownTagName("child");
+	}
 
 	/**
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
