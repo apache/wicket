@@ -117,7 +117,7 @@ import wicket.util.string.Strings;
 public abstract class Session implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -426,7 +426,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * With this call you can create a pagemap name but not create the pagemap
-	 * itself already. It will give the first pagemap name where it couldn't 
+	 * itself already. It will give the first pagemap name where it couldn't
 	 * find a current pagemap for.
 	 * 
 	 * It will return the same name if you call it 2 times in a row.
@@ -445,6 +445,7 @@ public abstract class Session implements Serializable
 		}
 		return name;
 	}
+
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */
@@ -704,6 +705,25 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Gets the converter instance. This method returns the cached converter for
+	 * the current locale. Whenever the locale is changed, the cached value is
+	 * cleared and the converter will be recreated for the new locale on a next
+	 * request.
+	 * 
+	 * @return the converter
+	 */
+	public final IConverter getConverter()
+	{
+		if (converter == null)
+		{
+			// Let the factory create a new converter
+			converter = getApplication().getApplicationSettings().getConverterFactory()
+					.newConverter(getLocale());
+		}
+		return converter;
+	}
+
+	/**
 	 * Adds a feedback message to the list of messages
 	 * 
 	 * @param message
@@ -738,8 +758,8 @@ public abstract class Session implements Serializable
 			{
 				feedbackMessages = null;
 				dirty();
-			} 
-			else 
+			}
+			else
 			{
 				feedbackMessages.trimToSize();
 			}
@@ -923,22 +943,6 @@ public abstract class Session implements Serializable
 		{
 			dirtyObjects.add(map);
 		}
-	}
-
-	/**
-	 * Gets the converter instance.
-	 * 
-	 * @return the converter
-	 */
-	final IConverter getConverter()
-	{
-		if (converter == null)
-		{
-			// Let the factory create a new converter
-			converter = getApplication().getApplicationSettings().getConverterFactory()
-					.newConverter(getLocale());
-		}
-		return converter;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: PropertyResolver.java 4710 2006-03-02 00:46:15 -0800 (Thu, 02 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-02 00:46:15 -0800 (Thu, 02 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,10 +28,10 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -133,7 +133,7 @@ public class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? new Converter() : converter);
+		setter.setValue(value, converter == null ? Session.get().getConverter() : converter);
 	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
@@ -318,7 +318,8 @@ public class PropertyResolver
 						}
 						else
 						{
-							// We do not look for a public FIELD because that is not good
+							// We do not look for a public FIELD because that is
+							// not good
 							// programming with beans patterns
 							throw new WicketRuntimeException("No get method defined for class: "
 									+ clz + " expression: " + exp);

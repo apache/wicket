@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,8 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.markup.MarkupException;
-import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -87,7 +87,7 @@ public final class Classes
 
 		// Note: because the attributes are all lowercase, there is slight
 		// possibility of error due to naming issues.
-		
+
 		// Note: all setters must start with "set"
 
 		// Get the setter for the attribute
@@ -121,7 +121,8 @@ public final class Classes
 		final Class paramClass = parameterClasses[0];
 		try
 		{
-			final IConverter converter = new ConverterFactory().newConverter(Locale.US);
+			final IConverter converter = Application.get().getApplicationSettings()
+					.getConverterFactory().newConverter(locale);
 			final Object param = converter.convert(value, paramClass);
 			if (param == null)
 			{
