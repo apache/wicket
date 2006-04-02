@@ -28,9 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.PageParameters;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * Abstract class for mount encoders that uses paths and forward slashes.
@@ -39,8 +39,7 @@ import wicket.util.string.Strings;
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRequestTargetUrlCodingStrategy
-		implements
-			IRequestTargetUrlCodingStrategy
+		implements IRequestTargetUrlCodingStrategy
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
@@ -76,12 +75,12 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Decodes PageParameters object from the provided url fragment
+	 * Decodes parameters object from the provided url fragment
 	 * 
 	 * @param urlFragment
-	 * @return PageParameters object created from the url fragment
+	 * @return Parameters created from the url fragment
 	 */
-	protected PageParameters decodePageParameters(String urlFragment)
+	protected ValueMap decodeParameters(String urlFragment)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
@@ -91,7 +90,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 
 		if (urlFragment.length() == 0)
 		{
-			return new PageParameters();
+			return new ValueMap();
 		}
 
 		// Split into pairs
@@ -101,13 +100,13 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (pairs.length % 2 != 0)
 		{
 			// give up
-			throw new IllegalStateException("URL fragment has unmatched key/value pair: "
-					+ urlFragment);
+			throw new IllegalStateException("URL fragment has unmatched key/value " +
+        "pair: " + urlFragment);
 		}
 
 		// Loop through pairs
 		
-		PageParameters parameters = new PageParameters();
+		ValueMap parameters = new ValueMap();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
 			String value = pairs[i + 1];
@@ -136,16 +135,15 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Encodes PageParameters into a url fragment and append that to the
-	 * provided url buffer.
+	 * Encodes Map into a url fragment and append that to the provided url buffer.
 	 * 
 	 * @param url
 	 *            url so far
 	 * 
 	 * @param parameters
-	 *            PageParameters object to be encoded
+	 *            Map object to be encoded
 	 */
-	protected void appendPageParameters(AppendingStringBuffer url, PageParameters parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		if (parameters != null)
 		{

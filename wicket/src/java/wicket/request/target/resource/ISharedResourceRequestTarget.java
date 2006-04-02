@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: ISharedResourceRequestTarget.java 4387 2006-02-13 05:23:54Z
+ * jonathanlocke $ $Revision$ $Date: 2006-02-13 06:23:54 +0100 (ma, 13
+ * feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,7 @@
 package wicket.request.target.resource;
 
 import wicket.IRequestTarget;
+import wicket.request.RequestParameters;
 
 /**
  * Target that denotes a shared {@link wicket.Resource}.
@@ -28,9 +29,14 @@ import wicket.IRequestTarget;
 public interface ISharedResourceRequestTarget extends IRequestTarget
 {
 	/**
-	 * Gets the key of the resource.
+	 * Gets the request parameters.
 	 * 
-	 * @return the key of the resource
+	 * @return the request parameters
+	 */
+	RequestParameters getRequestParameters();
+
+	/**
+	 * @return The resource key for this SharedResource
 	 */
 	String getResourceKey();
 }

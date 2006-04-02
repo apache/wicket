@@ -44,6 +44,7 @@ import wicket.request.IRequestCycleProcessor;
 import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
@@ -69,11 +70,11 @@ import wicket.util.string.Strings;
  * init() method. For example:
  * 
  * <pre>
- *           public void init()
- *           {
- *               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *               ...
+ *            public void init()
+ *            {
+ *                String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                ...
  * </pre>
  * 
  * @see WicketServlet
@@ -246,6 +247,20 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * Mounts a shared resource class to the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param resourceKey
+	 *            the shared key of the resource being mounted
+	 */
+	public final void mountSharedResource(final String path, final String resourceKey)
+	{
+		checkMountPath(path);
+		mount(path, new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
+	}
+
+	/**
 	 * @param sessionFactory
 	 *            The session factory to use
 	 */
@@ -395,7 +410,7 @@ public abstract class WebApplication extends Application
 
 		// Add resolver for automatically resolving HTML links
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
-		
+
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(getWicketServlet().getServletContext()));
