@@ -19,6 +19,7 @@ package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
+import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
@@ -67,8 +68,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("This encoder can only be used with instances of "
-					+ IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with " +
+        "instances of "	+ IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -83,17 +84,21 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 			}
 			pageParameters.put("wicket:pageMapName", pageMapName);
 		}
-		appendPageParameters(url, pageParameters);
+		appendParameters(url, pageParameters);
 		return url;
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
 	 */
-	public IRequestTarget decode(final String urlFragment)
+	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		final String parametersFragment = urlFragment.substring(getMountPath().length());
-		final PageParameters parameters = decodePageParameters(parametersFragment);
+		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
+		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment));
+
+		// Merge with query-string arguments
+		parameters.putAll(requestParameters.getParameters());
+
 		final String pageMapName = parameters.getString("wicket:pageMapName");
 		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
 				bookmarkablePageClass, parameters);

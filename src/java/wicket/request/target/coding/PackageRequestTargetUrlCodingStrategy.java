@@ -20,6 +20,7 @@ package wicket.request.target.coding;
 import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.Session;
+import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Classes;
@@ -52,11 +53,11 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
 	 */
-	public IRequestTarget decode(String urlFragment)
+	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		String remainder = urlFragment.substring(getMountPath().length());
+		String remainder = requestParameters.getPath().substring(getMountPath().length());
 		final String parametersFragment;
 		int ix = remainder.indexOf('/', 1);
 		if (ix == -1)
@@ -77,7 +78,11 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
-		PageParameters parameters = decodePageParameters(parametersFragment);
+		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment));
+
+		// Merge with query-string arguments
+		parameters.putAll(requestParameters.getParameters());
+
 		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
 				bookmarkablePageClass, parameters);
 		return target;
@@ -97,7 +102,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
-		appendPageParameters(url, target.getPageParameters());
+		appendParameters(url, target.getPageParameters());
 		return url;
 	}
 

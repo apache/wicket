@@ -55,21 +55,21 @@ public interface IRequestTargetMounter
 	IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path);
 
 	/**
-	 * Gets the path that the provided request target conforms to.
+	 * Gets the url that the provided request target conforms to.
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 * @return The path that the provided request target conforms to
+	 * @return The url that the provided request target conforms to
 	 */
 	CharSequence pathForTarget(IRequestTarget requestTarget);
 
 	/**
-	 * Gets the request target that conforms to the given path.
+	 * Gets the request target that conforms to the given request parameters.
 	 * 
-	 * @param path
-	 *            the path
+   * @param requestParameters
+   *            the request parameters
 	 * @return the request target or null if nothing was mounted with the given
-	 *         path
+	 *         request parameters
 	 */
-	IRequestTarget targetForPath(String path);
+	IRequestTarget targetForRequest(RequestParameters requestParameters);
 }

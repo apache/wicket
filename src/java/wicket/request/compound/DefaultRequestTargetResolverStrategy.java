@@ -1,6 +1,7 @@
 /*
  * $Id: DefaultRequestTargetResolverStrategy.java,v 1.4 2005/12/30 21:47:05
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-03-21 02:33:42 +0100 (di,
+ * 21 mrt 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -60,7 +61,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
-	
+
 	/**
 	 * Construct.
 	 */
@@ -70,16 +71,14 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 	/**
 	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
-	 *      RequestParameters)
+	 *      wicket.request.RequestParameters)
 	 */
 	public final IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		String path = requestCycle.getRequest().getPath();
-
 		// first, see whether we can find any mount
 		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
-				.targetForPath(path);
+				.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
 			// the path was mounted, so return that directly
@@ -87,6 +86,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		}
 
 		// See whether this request points to a rendered page
+		final String path = requestParameters.getPath();
 		if (requestParameters.getComponentPath() != null)
 		{
 			return resolveRenderedPage(requestCycle, requestParameters);
@@ -126,7 +126,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			final RequestParameters requestParameters)
 	{
 		String resourceKey = requestParameters.getResourceKey();
-		return new SharedResourceRequestTarget(resourceKey, requestParameters);
+		return new SharedResourceRequestTarget(requestParameters);
 	}
 
 	/**
@@ -199,9 +199,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			return new RedirectPageRequestTarget(page);
 		}
-		else if(interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
+		else if (interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
 		{
-			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,INewBrowserWindowListener.INTERFACE, requestParameters);
+			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,
+					INewBrowserWindowListener.INTERFACE, requestParameters);
 		}
 		else
 		{
@@ -213,7 +214,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				throw new WicketRuntimeException(
 						"Attempt to access unknown request listener interface " + interfaceName);
 			}
-			
+
 			// Get component
 			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
@@ -227,15 +228,18 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			final Component component = page.get(pageRelativeComponentPath);
 			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
 			{
-				log.info("component not enabled or visible, redirecting to calling page, component: " + component);
+				log
+						.info("component not enabled or visible, redirecting to calling page, component: "
+								+ component);
 				return new RedirectPageRequestTarget(page);
 			}
 			if (!component.isEnableAllowed())
 			{
-				throw new UnauthorizedActionException(component,Component.ENABLE);
+				throw new UnauthorizedActionException(component, Component.ENABLE);
 			}
-			
-			// Ask the request listener interface object to create a request target
+
+			// Ask the request listener interface object to create a request
+			// target
 			return listener.newRequestTarget(page, component, listener, requestParameters);
 		}
 	}

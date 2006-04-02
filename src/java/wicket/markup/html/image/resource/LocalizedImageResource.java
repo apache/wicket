@@ -38,6 +38,7 @@ import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.OptionalMetaPattern;
 import wicket.util.parse.metapattern.parsers.MetaPatternParser;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * THIS CLASS IS INTENDED FOR INTERNAL USE IN IMPLEMENTING LOCALE SENSITIVE
@@ -85,6 +86,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 
 	/** The resource reference */
 	private ResourceReference resourceReference;
+
+  /** The resource parameters */
+  private ValueMap resourceParameters;
 
 	/** The locale of the image resource */
 	private transient Locale locale;
@@ -202,11 +206,24 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	/**
 	 * @param resourceReference
 	 *            The resource to set.
+	 * @param resourceParameters 
+	 * 			  The resource parameters for the shared resource
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
+		setResourceReference(resourceReference, null);
+	}
+	/**
+	 * @param resourceReference
+	 *            The resource to set.
+	 * @param resourceParameters 
+	 * 			  The resource parameters for the shared resource
+	 */
+	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap resourceParameters)
+	{
 		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
+	    this.resourceParameters = resourceParameters;
 		bind();
 	}
 
@@ -275,7 +292,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (this.resourceReference != null)
 		{
 			// Create URL to shared resource
-			url = RequestCycle.get().urlFor(resourceReference);
+			url = RequestCycle.get().urlFor(resourceReference, resourceParameters);
 		}
 		else
 		{

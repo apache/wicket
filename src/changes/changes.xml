@@ -10,7 +10,9 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+    <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">`
+      <action type="add" dev="Johan Compagner" issue="1460191" due-to="Gili Tzabari">Easier resource URLs encoding, mounting of shared resources</action>
+      <action type="update" dev="Johan Compagner">Changed some (mostly internal) api, so that we use CharSequence instead of Strings for better streaming/string concatting. One catch now: If comparing charsequences to a toString(), because StringBuffer.equals(String) will fail for the same chars..</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Simon Edwards">Fixed bug in SimpleConverterAdapter</action>
       <action type="fix" dev="Eelco Hillenius">Fixed various mis-uses of converters</action>
       <action type="fix" dev="Eelco Hillenius" issue="1462587" due-to="Arto Arffman">PackageResource.get() fails when blanks in path</action>

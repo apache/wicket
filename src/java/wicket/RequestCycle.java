@@ -1,7 +1,7 @@
 /*
  * $Id: RequestCycle.java 4930 2006-03-14 12:45:59 -0800 (Tue, 14 Mar 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-03-14 12:45:59 -0800 (Tue, 14
- * Mar 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-03-14 12:45:59 -0800 (Tue, 14 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,6 +36,7 @@ import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.collections.ArrayListStack;
+import wicket.util.value.ValueMap;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -658,7 +659,8 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component component, final RequestListenerInterface listener)
+	public final CharSequence urlFor(final Component component,
+			final RequestListenerInterface listener)
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
@@ -694,8 +696,26 @@ public abstract class RequestCycle
 	 */
 	public final CharSequence urlFor(final ResourceReference resourceReference)
 	{
+		return urlFor(resourceReference, null);
+	}
+
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource reference.
+	 * 
+	 * @param resourceReference
+	 *            The resource reference where a url must be generated for.
+	 * @param parameters
+	 *            The parameters to pass to the resource.
+	 * @return The url for the shared resource
+	 */
+	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap parameters)
+	{
+		RequestParameters requestParameters = new RequestParameters();
+		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
+		requestParameters.setParameters(parameters);
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
-				new SharedResourceRequestTarget(resourceReference.getSharedResourceKey()));
+				new SharedResourceRequestTarget(requestParameters));
 		return url;
 	}
 
@@ -789,8 +809,8 @@ public abstract class RequestCycle
 
 		// remove any rendered feedback messages from the session
 		session.cleanupFeedbackMessages();
-		
-		
+
+
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
