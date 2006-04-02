@@ -95,8 +95,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKownTagName("border");
-		WicketTagIdentifier.registerWellKownTagName("body");
+		WicketTagIdentifier.registerWellKnownTagName("border");
+		WicketTagIdentifier.registerWellKnownTagName("body");
 	}
 	
 	/** Will be true, once the first <wicket:body> has been seen */

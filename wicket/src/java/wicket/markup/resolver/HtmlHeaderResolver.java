@@ -51,7 +51,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKownTagName("head");
+		WicketTagIdentifier.registerWellKnownTagName("head");
 	}
 
 	/**

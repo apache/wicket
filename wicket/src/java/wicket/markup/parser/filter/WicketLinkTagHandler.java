@@ -54,7 +54,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKownTagName("link");
+		WicketTagIdentifier.registerWellKnownTagName("link");
 	}
 
 	/** Allow to have link regions within link regions */

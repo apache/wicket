@@ -37,8 +37,8 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKownTagName("extend");
-		WicketTagIdentifier.registerWellKownTagName("child");
+		WicketTagIdentifier.registerWellKnownTagName("extend");
+		WicketTagIdentifier.registerWellKnownTagName("child");
 	}
 
 	/**

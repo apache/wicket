@@ -334,7 +334,7 @@ public final class MarkupParserTest extends WicketTestCase
 		markup = parser.parse("<span wicket:id=\"test\"/>");
 		assertEquals(1, markup.size());
 
-		WicketTagIdentifier.registerWellKownTagName("xxx");
+		WicketTagIdentifier.registerWellKnownTagName("xxx");
 		markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
 		assertEquals(3, markup.size());
 	}
