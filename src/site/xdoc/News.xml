@@ -11,6 +11,172 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection
+				name="March 18, 2006 - Wicket 1.2-beta2 has been released">
+				<p>
+					A week after our first 1.2 beta release, we present
+					you with the next beta. If everything goes well this
+					will be the final beta and we will enter RC mode
+					from there on.
+				</p>
+				<p>
+					This is our first release we have created after our
+					switch to SubVersion. There have been several
+					problems with accessing the repository for the core
+					developers but we expect these problems to be solved
+					soon.
+					<ul>
+						<li>
+							Native, cross-platform AJAX support: use
+							AJAX without having to write a single line
+							of JavaScript. Wicket's AJAX cross-platform
+							capabilities
+							<a
+								href="http://www.musingsfrommars.org/2006/03/ajax-dhtml-library-scorecard.html">
+								have been rated 'A'
+							</a>
+						</li>
+						<li>
+							Render multiple components in one AJAX call,
+							where each component can occupy any part of
+							the page
+						</li>
+						<li>
+							Improved markup inheritance: panels, pages,
+							header contributions
+						</li>
+						<li>
+							Improved and simplified internationalization
+							(i18n) support, using
+							&lt;wicket:message&gt;, better resource
+							bundle lookup strategy
+						</li>
+						<li>
+							Multiple form component validation, validate
+							two or more fields that are related
+						</li>
+						<li>
+							Improved form handling: clear form
+							validation workflow that allows you to much
+							easier defined required and type conversion
+							attributes of a form component
+						</li>
+						<li>Nice URL support through URL mounting</li>
+						<li>Markup fragments (inline panels)</li>
+						<li>
+							Improved performance by replacing OGNL with
+							our own object graph language parser
+						</li>
+						<li>
+							Response filter support, added ServerTime
+							and ServerClientTime filters
+						</li>
+						<li>
+							Reloading of resource bundles in development
+							mode
+						</li>
+						<li>
+							Improved unit test support for your Wicket
+							components and pages through the
+							WicketTester, create unittests that run
+							outside the container.
+						</li>
+						<li>
+							Out-of-the-box AJAX components: paging
+							navigator, link with fallback, auto-updater,
+							AJAX form, AJAX submit buttons, etc.
+						</li>
+						<li>
+							Improved authorization and authentication
+							support, giving you the power to specify
+							authorization at the component level. An
+							example project featuring a role based,
+							annotation framework is now part of the
+							standard distribution.
+						</li>
+						<li>
+							Spring support for injecting your business
+							logic into your web pages in a non-intrusive
+							manner, while still being able to use the
+							convenient Wicket idiom for creating pages
+							(using the Java
+							<tt>new</tt>
+							operator).
+						</li>
+						<li>
+							Improved settings system: settings are now
+							partitioned into logical groupings to make
+							them easier to find
+						</li>
+						<li>
+							Numerous bug fixes and minor improvements
+						</li>
+					</ul>
+					The upcoming final Wicket 1.2 release will be a
+					major landmark in the history of Wicket and is
+					highly anticipated.
+				</p>
+				<p>
+					We have tried to keep API changes to a minimum, but
+					had to change and remove some methods and classes.
+					Wicket 1.2 will not be a drop-in replacement, though
+					most of your application's pages and components
+					should not be affected. There is a migration guide
+					available on our wiki:
+				</p>
+				<p style="text-align:center">
+					<a
+						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						Migrating to Wicket 1.2
+					</a>
+				</p>
+				<p>
+					This is the second beta release, so not considered
+					production ready. Please help us iron out the last
+					bugs by downloading and testing this beta release.
+				</p>
+			</subsection>
+			<subsection
+				name="March 13, 2006 - 2006 SourceForge.net Community Choice Awards Nominations">
+				<p>
+					Wicket is on the list to be nominated for the first
+					annual SourceForge.net
+					<a href="http://sourceforge.net/awards/cca/">
+						Community Choice Awards
+					</a>
+					! We need your
+					<a
+						href="http://www.wilsonresearch.com/2006/ostgawards06/ostgawards4.php">
+						VOTE
+					</a>
+					.
+				</p>
+				<p>
+					<a
+						href="http://www.wilsonresearch.com/2006/ostgawards06/ostgawards4.php">
+						<img src="images/wicket-cca2006.png" />
+					</a>
+				</p>
+			</subsection>
+			<subsection
+				name="March 12, 2006 - Wicket has moved to subversion">
+				<p>
+					After many complaints on the sourceforge CVS servers
+					we were able to move our project to the subversion
+					offering hosted by sourceforge. Please see the
+					<a
+						href="http://sourceforge.net/svn/?group_id=119783">
+						subversion page
+					</a>
+					for more information on retrieving Wicket from the
+					repository if you wish to do so.
+				</p>
+				<p>
+					As of today, all development on Wicket will be done
+					on the subversion repository and the CVS repository
+					is now obsolete and deprecated.
+				</p>
+			</subsection>
 			<subsection name="March 6, 2006 - Wicket 1.2 beta 1 Available">
 				<p>
 					Finally we have released our first beta of the Wicket 1.2 product. Wicket 1.2
