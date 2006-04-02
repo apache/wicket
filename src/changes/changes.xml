@@ -11,6 +11,14 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+      <action type="fix" dev="Eelco Hillenius" due-to="Simon Edwards">Fixed bug in SimpleConverterAdapter</action>
+      <action type="fix" dev="Eelco Hillenius">Fixed various mis-uses of converters</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1462587" due-to="Arto Arffman">PackageResource.get() fails when blanks in path</action>
+      <action type="add" dev="Eelco Hillenius" issue="1462340" due-to="Karthik Guru">Made Converter non-final</action>
+	  <action type="fix" dev="Eelco Hillenius">Removed check on double-registering static resources. IF that check is useful at all, it should only be done if we are sure resources properly implement their equals contract, which is not the case currently.</action>
+  	  <action type="add" dev="Eelco Hillenius">Introduced TextTemplate and TextTemplateHeaderContributor to make dynamic javascript contributions a bit less messy</action>	 
+	  <action type="add" dev="Eelco Hillenius">Added StringHeaderContributor to enable dynamic, arbitrairy header contributions with behaviors</action>
+	  <action type="add" dev="Eelco Hillenius">PackageResources can now be registered recursively (including subpackages) with regular expressions</action>	  
       <action type="fix" dev="Johan Compagner" issue="1459110" due-to="Matej Knopp">WebRequestCodingStrategy duplicates wicket:* parameters</action>
       <action type="add" dev="Igor Vaynberg">Added time based throttling to ajax events. There is a AjaxCallThrottlingDecorator that can be used on any ajax behavior, as well as a shortcut AjaxEventBehavior.setThrottleDelay() method.</action>
       <action type="update" dev="Igor Vaynberg">made PasswordTextField required by default</action>
