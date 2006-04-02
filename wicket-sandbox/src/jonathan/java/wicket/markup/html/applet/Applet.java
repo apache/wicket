@@ -254,7 +254,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 			}
 		};
 
-		final String jarResourceUrl = getRequestCycle().urlFor(jarResourceReference);
+		final String jarResourceUrl = getRequestCycle().urlFor(jarResourceReference).toString();
 		final String codebase = Strings.beforeLastPathComponent(jarResourceUrl, '/') + '/';
 		tag.put("codebase", codebase);
 		tag.put("archive", jarName);
