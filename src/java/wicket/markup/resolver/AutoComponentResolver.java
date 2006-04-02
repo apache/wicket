@@ -53,7 +53,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKownTagName("component");
+		WicketTagIdentifier.registerWellKnownTagName("component");
 	}
 
     /** 

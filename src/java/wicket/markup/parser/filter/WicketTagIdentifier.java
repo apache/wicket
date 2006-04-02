@@ -98,12 +98,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(tag.getName());
-			
+
 			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
 			{
-				throw new ParseException(
-						"Unkown tag name with Wicket namespace: '" + xmlTag.getName() + "'",
-						tag.getPos());
+				throw new ParseException("Unkown tag name with Wicket namespace: '"
+						+ xmlTag.getName()
+						+ "'. Might be you haven't installed the appropriate resolver?", tag
+						.getPos());
 			}
 		}
 		else
@@ -134,13 +135,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * 
 	 * @param name
 	 */
-	public final static void registerWellKownTagName(final String name)
+	public final static void registerWellKnownTagName(final String name)
 	{
 		if (wellKnownTagNames == null)
 		{
 			wellKnownTagNames = new ArrayList();
 		}
-		
+
 		if (wellKnownTagNames.contains(name) == false)
 		{
 			wellKnownTagNames.add(name);
