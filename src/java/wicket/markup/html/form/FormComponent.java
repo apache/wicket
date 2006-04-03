@@ -620,13 +620,25 @@ public abstract class FormComponent extends WebMarkupContainer
 	protected final void checkValidators()
 	{
 		final int size = validators_size();
-		for (int i = 0; i < size; i++)
+
+		int i = 0;
+		IValidator validator = null;
+		try
 		{
-			validators_get(i).validate(this);
-			if (!isValid())
+			for (i = 0; i < size; i++)
 			{
-				break;
+				validator = validators_get(i);
+				validator.validate(this);
+				if (!isValid())
+				{
+					break;
+				}
 			}
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Exception " + e + " occurred during validation "
+					+ validator.getClass().getName() + " on component " + this.getPath());
 		}
 	}
 
