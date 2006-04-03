@@ -26,6 +26,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -300,7 +301,7 @@ abstract class AbstractChoice extends FormComponent
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		List choices = getChoices();
-		final StringBuffer buffer = new StringBuffer((choices.size() * 50) + 16);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() * 50) + 16);
 		final String selected = getValue();
 
 		// Append default option
@@ -320,7 +321,7 @@ abstract class AbstractChoice extends FormComponent
 	 * Generats and appends html for a single choice into the provided buffer
 	 * 
 	 * @param buffer
-	 *            String buffer that will have the generated html appended
+	 *            Appending string buffer that will have the generated html appended
 	 * @param choice
 	 *            Choice object
 	 * @param index
@@ -328,7 +329,8 @@ abstract class AbstractChoice extends FormComponent
 	 * @param selected
 	 *            The currently selected string value
 	 */
-	protected void appendOptionHtml(StringBuffer buffer, Object choice, int index, String selected)
+	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index,
+			String selected)
 	{
 		final String displayValue = (String)getConverter().convert(
 				renderer.getDisplayValue(choice), String.class);
