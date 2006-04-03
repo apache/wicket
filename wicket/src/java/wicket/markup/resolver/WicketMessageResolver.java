@@ -26,6 +26,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * This is a tag resolver which handles &lt;wicket:message
@@ -38,6 +39,13 @@ import wicket.markup.parser.XmlTag;
  */
 public class WicketMessageResolver implements IComponentResolver
 {
+	static
+	{
+		// register "wicket:message"
+		WicketTagIdentifier.registerWellKnownTagName("message");
+	}
+
+	
 	private static final long serialVersionUID = 1L;
 
 	/**
