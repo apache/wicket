@@ -172,6 +172,8 @@ public abstract class Session implements Serializable
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages;
 
+	private transient ArrayList usedPages;
+
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -362,6 +364,18 @@ public abstract class Session implements Serializable
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+			while(usedPages.contains(id))
+			{
+				try
+				{
+					wait();
+				}
+				catch (InterruptedException ex)
+				{
+					throw new WicketRuntimeException(ex);
+				}
+			}
+			usedPages.add(id);
 			return pageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
@@ -577,6 +591,7 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
+		if(usedPages == null) usedPages = new ArrayList(3);
 	}
 
 	/**
@@ -967,5 +982,16 @@ public abstract class Session implements Serializable
 			dirtyObjects.set(list);
 		}
 		return list;
+	}
+
+	/**
+	 * INTERNAL API 
+	 * @param page  The page that was detached
+	 * 
+	 */
+	final synchronized void pageDetached(Page page)
+	{
+		usedPages.remove(page.getId());
+		notifyAll();
 	}
 }
