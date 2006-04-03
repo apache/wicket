@@ -45,7 +45,6 @@ public abstract class PagedTableWithAlternatingRowStyle extends PageableListView
         super(id, data, pageSize);
     }
 
-
     /**
      * Change the style with every other row
      * 

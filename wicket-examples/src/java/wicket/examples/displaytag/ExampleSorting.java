@@ -23,7 +23,7 @@ import java.util.List;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -46,7 +46,7 @@ public class ExampleSorting extends Displaytag
         final List data = new TestList(6, false);
         
         // Add table 
-        ListView table = new ListVieweWithAlternatingRowStyle("rows", data)
+        ListView table = new ListViewWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {

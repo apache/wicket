@@ -39,7 +39,7 @@ public class MyPageableListViewNavigator extends PagingNavigator
     {
         super(id, pageableListView);
 
-		// model = null; the headline test will be auto-generated during
+		// model = null; the headline text will be auto-generated during
 		// handleBody.
 		add(new Label("headline", (String)null)
 		{

@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -45,20 +45,13 @@ public class ExampleImpObjects extends Displaytag
         List data = new TestList(10, false);
         
         // Add table of existing comments
-        add(new ListVieweWithAlternatingRowStyle("rows", data)
+        add(new SimpleListView("rows", data)
         {
-            // Row number
-            private int i=1;
-            
             public void populateItem(final ListItem listItem)
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("name", value.getName()));
-                listItem.add(new Label("rowNumber", String.valueOf(i++)));
-                //listItem.add(new Label("rowNumber", String.valueOf(listItem.getIndex())));
-                listItem.add(new Label("money", value.getDescription()));
+                final int row = listItem.getIndex() + 1;
+                listItem.add(new Label("rowNumber", String.valueOf(row)));
             }
         });
     }

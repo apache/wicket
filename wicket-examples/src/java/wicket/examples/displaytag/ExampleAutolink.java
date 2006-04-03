@@ -20,9 +20,10 @@ package wicket.examples.displaytag;
 
 import java.util.List;
 
+import wicket.Component;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.extensions.markup.html.basic.SmartLinkLabel;
 import wicket.markup.html.basic.Label;
@@ -46,7 +47,7 @@ public class ExampleAutolink extends Displaytag
         List data = new TestList(10, false);
         
         // Add table 
-        add(new ListVieweWithAlternatingRowStyle("rows", data)
+        add(new SimpleListView("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -56,6 +57,15 @@ public class ExampleAutolink extends Displaytag
                 listItem.add(new SmartLinkLabel("email", value.getEmail()));
                 listItem.add(new SmartLinkLabel("url", value.getUrl()));
             }
+        });
+        
+        // Add table 
+        add(new SimpleListView("rows2", data)
+        {
+        	protected Component newLabel(String id)
+        	{
+        		return new SmartLinkLabel(id);
+        	}
         });
     }
 }

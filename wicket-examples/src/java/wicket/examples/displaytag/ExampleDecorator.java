@@ -23,11 +23,10 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.model.PropertyModel;
 import wicket.util.time.Time;
 
 /**
@@ -46,36 +45,25 @@ public class ExampleDecorator extends Displaytag
     {
         // Test data
         List data = new TestList(10, false);
-        
+
         // Add table 
-        add(new ListVieweWithAlternatingRowStyle("rows", data)
+        add(new SimpleListView("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
                 listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
                 
                 final DecimalFormat format = new DecimalFormat("$ #,##0.00");
                 listItem.add(new Label("money", format.format(value.getMoney())));
             }
         });
-        
-        // Add table 
-        add(new ListVieweWithAlternatingRowStyle("rows2", data)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new PropertyModel(listItem.getModel(), "id")));
-                listItem.add(new Label("email", new PropertyModel(listItem.getModel(), "email")));
-                listItem.add(new Label("status", new PropertyModel(listItem.getModel(), "status")));
-                listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd HH:mm:ss")));
-            }
-        });
+		// Dropdown for selecting locale
+		add(new LocaleSelector("localeSelector"));
+
+        // Add table 
+        add(new SimpleListView("rows2", data));
      }
 }

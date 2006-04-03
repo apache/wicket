@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
@@ -49,7 +49,7 @@ public class BasicColumns extends Displaytag
 
         // ==========================================================================
         // Add a simple table 
-        add(new ListVieweWithAlternatingRowStyle("rows", data)
+        add(new ListViewWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -66,7 +66,7 @@ public class BasicColumns extends Displaytag
         // ==========================================================================
         // Add a simple table but get the model data from a CompoundPropertyModel
         // avoiding redundant naming of the label id and the property name.
-        add(new ListVieweWithAlternatingRowStyle("rows2", data)
+        add(new ListViewWithAlternatingRowStyle("rows2", data)
         {
             public void populateItem(final ListItem listItem)
             {

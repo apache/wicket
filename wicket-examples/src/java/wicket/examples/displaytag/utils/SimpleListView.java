@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -40,7 +41,7 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public class SimpleListView extends ListVieweWithAlternatingRowStyle implements IComponentResolver
+public class SimpleListView extends ListViewWithAlternatingRowStyle implements IComponentResolver
 {
 	/** The tags "class" attribute for odd index rows */
     public static String ODD = "odd";
@@ -117,10 +118,21 @@ public class SimpleListView extends ListVieweWithAlternatingRowStyle implements 
      */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
 	{
-		container.autoAdd(new Label(tag.getId()));
+		container.autoAdd(newLabel(tag.getId()));
 		return true;
 	}
 
+	/**
+	 * Create a new default component in case it is not explicitly defined.
+	 * 
+	 * @param id
+	 * @return Usually a Label like component
+	 */
+	protected Component newLabel(final String id)
+	{
+		return new Label(id);
+	}
+	
 	/**
 	 * May be overriden, but doesn't have to.
 	 * 

@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
+import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.Fragment;
 
 /**
  * Show different means of displaying subsets of a table
@@ -41,19 +44,37 @@ public class ExampleSubsets extends Displaytag
         List data = new TestList(10, false);
         
         // Add table of existing comments
-        add(new SimpleDisplaytagTableComponent("table1", data));
+        newTable("table1", data);
 
         // First alternativ
         // Because subList() returns a view (not a copy) it is not serializable
         // and thus can not be used directly.
         List data2 = new ArrayList();
         data2.addAll(data.subList(0, 5));
-        add(new SimpleDisplaytagTableComponent("table2", data2));
+        newTable("table2", data);
         
         // Second alternativ
-        SimpleDisplaytagTableComponent table = new SimpleDisplaytagTableComponent("table3", data);
+        ListView table = newTable("table3", data);
         table.setStartIndex(3);
         table.setViewSize(8 - 3);
-        add(table);
+    }
+
+    /**
+     * Because the page contains 3 times the very same table, I made use of Wicket
+     * Fragment component (inline panels). 
+     * 
+     * @param id
+     * @param data
+     * @return ListView
+     */
+    private ListView newTable(final String id, final List data)
+    {
+		Fragment panel = new Fragment(id, "tableFrag");
+		add(panel);
+        
+		ListView table = new SimpleListView("rows", data);
+		panel.add(table);
+		
+		return table;
     }
 }

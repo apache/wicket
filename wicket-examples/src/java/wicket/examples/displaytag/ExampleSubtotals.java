@@ -26,7 +26,7 @@ import java.util.Map;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -97,7 +97,7 @@ public class ExampleSubtotals extends Displaytag
      * 
      * @author Juergen Donnerstag
      */
-    private class SubtotalTable extends ListVieweWithAlternatingRowStyle
+    private class SubtotalTable extends ListViewWithAlternatingRowStyle
     {
         private ReportableListObject previousValue = null;
         private double subtotal = 0;

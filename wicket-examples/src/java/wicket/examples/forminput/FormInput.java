@@ -80,8 +80,6 @@ public class FormInput extends WicketExamplePage
 	 */
 	public FormInput()
 	{
-		Locale locale = getLocale();
-
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);

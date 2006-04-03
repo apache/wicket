@@ -21,7 +21,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -50,8 +50,8 @@ public class ExampleNoColumns extends Displaytag
 		// to ListView implementing alternating row styles by changing
 		// the tags class attribute accordingly.
 		// Note: This is not the simplest way Wicket offers to render
-		// list, but it shows how ListViews work in general.
-		add(new ListVieweWithAlternatingRowStyle("entries", data)
+		// lists, but it shows how ListViews work in general.
+		add(new ListViewWithAlternatingRowStyle("entries", data)
 		{
 			/**
 			 * populateItem() is called for each item of the list. ListItem

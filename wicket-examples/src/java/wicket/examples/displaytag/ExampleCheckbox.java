@@ -22,7 +22,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListVieweWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
@@ -48,7 +48,7 @@ public class ExampleCheckbox extends Displaytag
         List data = new TestList(6, false);
         
         // Add table of existing comments
-        add(new ListVieweWithAlternatingRowStyle("rows", data)
+        add(new ListViewWithAlternatingRowStyle("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {

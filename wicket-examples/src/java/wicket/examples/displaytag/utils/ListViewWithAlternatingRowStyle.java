@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class ListVieweWithAlternatingRowStyle extends ListView
+public abstract class ListViewWithAlternatingRowStyle extends ListView
 {
     /**
      * Constructor
@@ -40,7 +40,7 @@ public abstract class ListVieweWithAlternatingRowStyle extends ListView
      * @param id
      * @param data
      */
-    public ListVieweWithAlternatingRowStyle(final String id, final List data)
+    public ListViewWithAlternatingRowStyle(final String id, final List data)
     {
         super(id, data);
     }
@@ -51,7 +51,7 @@ public abstract class ListVieweWithAlternatingRowStyle extends ListView
      * @param id
      * @param model
      */
-    public ListVieweWithAlternatingRowStyle(final String id, final IModel model)
+    public ListViewWithAlternatingRowStyle(final String id, final IModel model)
     {
         super(id, model);
     }

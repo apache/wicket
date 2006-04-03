@@ -23,6 +23,7 @@ import java.util.List;
 import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -78,21 +79,16 @@ public class ExampleDecoratorLink extends Displaytag
         });
 
         // Add table of existing comments
-        add(new ListView("rows2", data)
+        add(new SimpleListView("rows2", data)
         {
             public void populateItem(final ListItem listItem)
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new AttributeModifier("class",
-                        new Model((listItem.getIndex() % 2) == 0 ? "even" : "odd")));
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(idLink);
-
-                listItem.add(new Label("email", value.getEmail()));
 
                 listItem.add(
                         new BookmarkablePageLink("view", Page3.class)
