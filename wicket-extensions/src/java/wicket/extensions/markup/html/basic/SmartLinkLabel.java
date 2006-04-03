@@ -73,6 +73,14 @@ public final class SmartLinkLabel extends Label
 	}
 
 	/**
+	 * @see Label#Label(String)
+	 */
+	public SmartLinkLabel(String name)
+	{
+		super(name);
+	}
+
+	/**
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
