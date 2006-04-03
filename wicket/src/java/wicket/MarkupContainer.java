@@ -789,7 +789,7 @@ public abstract class MarkupContainer extends Component
 							+ "' for component '"
 							+ getClass().getName()
 							+ "' not found."
-							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried"),
+							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
 	}
