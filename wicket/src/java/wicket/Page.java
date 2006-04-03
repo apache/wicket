@@ -291,6 +291,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * @see wicket.MarkupContainer#internalDetach()
+	 */
+	public void internalDetach()
+	{
+		super.internalDetach();
+		getSession().pageDetached(this);
+	}
+	/**
 	 * Detaches any attached models referenced by this page.
 	 */
 	public void detachModels()
