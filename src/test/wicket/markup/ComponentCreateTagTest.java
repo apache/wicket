@@ -18,13 +18,9 @@
  */
 package wicket.markup;
 
-import junit.framework.TestCase;
+import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
+import wicket.WicketTestCase;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -32,12 +28,8 @@ import wicket.protocol.http.MockWebApplication;
  * 
  * @author Chris Turner
  */
-public class ComponentCreateTagTest extends TestCase
+public class ComponentCreateTagTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(ComponentCreateTagTest.class);
-
-	private MockWebApplication application;
-
 	/**
 	 * Create the test.
 	 * 
@@ -56,6 +48,7 @@ public class ComponentCreateTagTest extends TestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
+		application.getMarkupSettings().setStripWicketTags(true);
 	    executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
 	}
 
@@ -66,6 +59,7 @@ public class ComponentCreateTagTest extends TestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
+		application.getMarkupSettings().setStripWicketTags(true);
 	    executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
 	}
 
@@ -76,6 +70,7 @@ public class ComponentCreateTagTest extends TestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
+		application.getMarkupSettings().setStripWicketTags(true);
 	    executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
 	}
 
@@ -86,6 +81,7 @@ public class ComponentCreateTagTest extends TestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
+		application.getMarkupSettings().setStripWicketTags(true);
 	    executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
 	}
 
@@ -96,32 +92,8 @@ public class ComponentCreateTagTest extends TestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
-	}
-
-	/**
-	 * @param pageClass
-	 * @param filename
-	 * @throws Exception
-	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
-	{
-		application = new MockWebApplication(null) {
-			public Class getHomePage()
-			{
-				return pageClass;
-			}
-		};
 		application.getMarkupSettings().setStripWicketTags(true);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		log.info(document);
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		application.getWicketSession().setLocale(Locale.ENGLISH);
+	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
 	}
 }
