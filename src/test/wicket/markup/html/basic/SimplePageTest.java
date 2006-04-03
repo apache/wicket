@@ -331,7 +331,7 @@ public class SimplePageTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_7() throws Exception
 	{
-//		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
+		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
 	}
 
 	/**
