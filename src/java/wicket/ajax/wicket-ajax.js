@@ -205,6 +205,13 @@ function wicketAjaxProcessComponent(node) {
     }
 
     var element=document.getElementById(compId);
+   
+    if (element==undefined||element==null) {
+    	if (wicketAjaxDebugEnabled()) {
+			var log=WicketAjaxDebug.logError;
+			log("Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
+		}
+    }
     
     if (element.outerHTML) {
        element.outerHTML=text;
