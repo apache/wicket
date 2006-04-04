@@ -403,6 +403,7 @@ public class AjaxRequestTarget implements IRequestTarget
 							+ component.toString());
 		}
 
+		component.setOutputMarkupId(true);
 
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
