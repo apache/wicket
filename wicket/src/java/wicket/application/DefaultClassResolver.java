@@ -18,6 +18,7 @@
 package wicket.application;
 
 import wicket.WicketRuntimeException;
+import wicket.util.concurrent.ConcurrentReaderHashMap;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
@@ -29,14 +30,25 @@ import wicket.WicketRuntimeException;
  */
 public final class DefaultClassResolver implements IClassResolver
 {
+	private ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
 	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
 	public final Class resolveClass(final String classname)
 	{
+		
 		try
 		{
-			return DefaultClassResolver.class.getClassLoader().loadClass(classname);
+			Class clz = (Class)classes.get(classname);
+			if(clz == null)
+			{
+				synchronized (classes)
+				{
+					clz = DefaultClassResolver.class.getClassLoader().loadClass(classname);
+					classes.put(classname, clz);
+				}
+			}
+			return clz;
 		}
 		catch (ClassNotFoundException ex)
 		{

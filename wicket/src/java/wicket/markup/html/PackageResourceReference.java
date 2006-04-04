@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PackageResourceReference.java 5151 2006-03-28 13:50:28 +0200 (di, 28 mrt
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-28 13:50:28 +0200 (di, 28 mrt
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -143,7 +144,9 @@ public class PackageResourceReference extends ResourceReference
 	public PackageResourceReference(Class scope, String name)
 	{
 		super(scope, name);
-		checkExists(scope, name, null, null);
+		// This can't be done in the constructor because ResourceReferences can
+		// be declared static in a class that is stored in the session.
+		// checkExists(scope, name, null, null);
 		setHash(scope, name, null, null);
 	}
 
@@ -178,8 +181,15 @@ public class PackageResourceReference extends ResourceReference
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
 				getStyle());
-    if (packageResource!=null)
-      locale = packageResource.getLocale();
+		if (packageResource != null)
+		{
+			locale = packageResource.getLocale();
+		}
+		else
+		{
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
+					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+		}
 		return packageResource;
 	}
 
