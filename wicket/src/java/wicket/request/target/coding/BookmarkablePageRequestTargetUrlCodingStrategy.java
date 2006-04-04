@@ -94,10 +94,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
-		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment));
-
-		// Merge with query-string arguments
-		parameters.putAll(requestParameters.getParameters());
+		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
 
 		final String pageMapName = parameters.getString("wicket:pageMapName");
 		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
