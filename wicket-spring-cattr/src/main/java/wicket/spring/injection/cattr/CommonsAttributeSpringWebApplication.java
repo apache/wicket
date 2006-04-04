@@ -18,6 +18,7 @@
  */
 package wicket.spring.injection.cattr;
 
+import wicket.injection.ComponentInjector;
 import wicket.injection.web.InjectorHolder;
 import wicket.spring.SpringWebApplication;
 
@@ -37,6 +38,7 @@ public abstract class CommonsAttributeSpringWebApplication extends SpringWebAppl
 	{
 		super.internalInit();
 		InjectorHolder.setInjector(new CommonsAttributeSpringInjector(getSpringContextLocator()));
+		addComponentInstantiationListener(new ComponentInjector());
 	}
 
 }
