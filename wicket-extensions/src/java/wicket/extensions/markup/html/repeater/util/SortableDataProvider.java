@@ -21,6 +21,7 @@ package wicket.extensions.markup.html.repeater.util;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
+import wicket.model.IDetachable;
 
 /**
  * Convinience implementation of a data provider that can also act as a locator
@@ -32,7 +33,7 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
  * 
  * @author Igor Vaynberg
  */
-public abstract class SortableDataProvider implements IDataProvider, ISortStateLocator
+public abstract class SortableDataProvider implements IDataProvider, ISortStateLocator, IDetachable
 {
 	private SingleSortState state = new SingleSortState();
 
@@ -92,5 +93,12 @@ public abstract class SortableDataProvider implements IDataProvider, ISortStateL
 		setSort(new SortParam(property, ascending));
 	}
 
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+	}
 
+	
 }
