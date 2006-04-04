@@ -1,6 +1,7 @@
 /*
  * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
- * 21:28:56 eelco12 Exp $ $Revision$ $Date$
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date: 2006-04-02 14:09:16 -0700
+ * (Sun, 02 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,7 +40,8 @@ import wicket.util.value.ValueMap;
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRequestTargetUrlCodingStrategy
-		implements IRequestTargetUrlCodingStrategy
+		implements
+			IRequestTargetUrlCodingStrategy
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
@@ -78,9 +80,13 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * Decodes parameters object from the provided url fragment
 	 * 
 	 * @param urlFragment
-	 * @return Parameters created from the url fragment
+	 *            fragment of the url after the decoded path and before the
+	 *            query string
+	 * @param urlParameters
+	 *            query string parameters
+	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment)
+	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
@@ -100,12 +106,12 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (pairs.length % 2 != 0)
 		{
 			// give up
-			throw new IllegalStateException("URL fragment has unmatched key/value " +
-        "pair: " + urlFragment);
+			throw new IllegalStateException("URL fragment has unmatched key/value " + "pair: "
+					+ urlFragment);
 		}
 
 		// Loop through pairs
-		
+
 		ValueMap parameters = new ValueMap();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
@@ -113,11 +119,19 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			value = urlDecode(value);
 			parameters.add(pairs[i], value);
 		}
+
+
+		if (urlParameters != null)
+		{
+			parameters.putAll(urlParameters);
+		}
+
 		return parameters;
 	}
 
 	/**
 	 * Returns a decoded value of the given value
+	 * 
 	 * @param value
 	 * @return Decodes the value
 	 */
@@ -125,7 +139,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	{
 		try
 		{
-			value = URLDecoder.decode(value, Application.get().getRequestCycleSettings().getResponseRequestEncoding());
+			value = URLDecoder.decode(value, Application.get().getRequestCycleSettings()
+					.getResponseRequestEncoding());
 		}
 		catch (UnsupportedEncodingException ex)
 		{
@@ -135,7 +150,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Encodes Map into a url fragment and append that to the provided url buffer.
+	 * Encodes Map into a url fragment and append that to the provided url
+	 * buffer.
 	 * 
 	 * @param url
 	 *            url so far
@@ -151,13 +167,13 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				if(entry.getValue()!=null)
+				if (entry.getValue() != null)
 				{
-				    String escapedValue = urlEncode(entry.getValue().toString());
-				    if(!Strings.isEmpty(escapedValue))
-				    {
-				    		url.append("/").append(entry.getKey()).append("/").append(escapedValue);
-				    }
+					String escapedValue = urlEncode(entry.getValue().toString());
+					if (!Strings.isEmpty(escapedValue))
+					{
+						url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+					}
 				}
 			}
 		}

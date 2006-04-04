@@ -78,10 +78,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
-		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment));
-
-		// Merge with query-string arguments
-		parameters.putAll(requestParameters.getParameters());
+		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
 
 		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
 				bookmarkablePageClass, parameters);
