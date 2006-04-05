@@ -1,5 +1,7 @@
 package wicket.request.target.coding;
 
+import java.util.Map;
+
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
@@ -49,12 +51,12 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		super(mountPath, bookmarkablePageClass, pageMapName);
 	}
 
-	protected void appendPageParameters(AppendingStringBuffer url, PageParameters parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		int i = 0;
 		while (parameters.containsKey(String.valueOf(i)))
 		{
-			String value = parameters.getString(String.valueOf(i));
+			String value = (String)parameters.get(String.valueOf(i));
 			url.append("/").append(urlEncode(value));
 			i++;
 		}
