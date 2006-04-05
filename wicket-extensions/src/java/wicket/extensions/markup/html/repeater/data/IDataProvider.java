@@ -35,27 +35,29 @@ import wicket.model.IModel;
  * Example:
  * 
  * <pre>
- *        class UsersProvider implements IDataProvider() {
- *          
- *          Iterator iterator(int first, int count) {
- *            ((MyApplication)Application.get()).getUserDao().iterator(first, count);
- *          }
- *          
- *          int size() {
- *            ((MyApplication)Application.get()).getUserDao().getCount();
- *          }
- *          
- *          IModel model(Object object) {
- *            return new DetachableUserModel((User)object);
- *          }
- *        }
+ *         class UsersProvider implements IDataProvider() {
+ *           
+ *           Iterator iterator(int first, int count) {
+ *             ((MyApplication)Application.get()).getUserDao().iterator(first, count);
+ *           }
+ *           
+ *           int size() {
+ *             ((MyApplication)Application.get()).getUserDao().getCount();
+ *           }
+ *           
+ *           IModel model(Object object) {
+ *             return new DetachableUserModel((User)object);
+ *           }
+ *         }
  * </pre>
  * 
  * @see DataViewBase
  * @see DataView
  * @see GridView
  * 
- * @author Igor Vaynberg
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ * TODO 2.0: directly extend {@link IDetachable}
  * 
  */
 public interface IDataProvider extends Serializable
