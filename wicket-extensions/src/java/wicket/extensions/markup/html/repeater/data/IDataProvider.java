@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: IDataProvider.java 5261 2006-04-04 16:38:22 -0700 (Tue, 04 Apr 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-04-04 16:38:22 -0700 (Tue, 04 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,20 +35,20 @@ import wicket.model.IModel;
  * Example:
  * 
  * <pre>
- *      class UsersProvider implements IDataProvider() {
- *        
- *        Iterator iterator(int first, int count) {
- *          ((MyApplication)Application.get()).getUserDao().iterator(first, count);
+ *        class UsersProvider implements IDataProvider() {
+ *          
+ *          Iterator iterator(int first, int count) {
+ *            ((MyApplication)Application.get()).getUserDao().iterator(first, count);
+ *          }
+ *          
+ *          int size() {
+ *            ((MyApplication)Application.get()).getUserDao().getCount();
+ *          }
+ *          
+ *          IModel model(Object object) {
+ *            return new DetachableUserModel((User)object);
+ *          }
  *        }
- *        
- *        int size() {
- *          ((MyApplication)Application.get()).getUserDao().getCount();
- *        }
- *        
- *        IModel model(Object object) {
- *          return new DetachableUserModel((User)object);
- *        }
- *      }
  * </pre>
  * 
  * @see DataViewBase
@@ -80,8 +81,9 @@ public interface IDataProvider extends Serializable
 	int size();
 
 	/**
-	 * Converts the object in the collection to its model representation. This
-	 * is a good place to wrap your objects in a detachable model.
+	 * Callback used by the consumer of this data provider to wrap objects
+	 * retrieved from {@link #iterator(int, int)} with a model (usually a
+	 * detachable one).
 	 * 
 	 * @param object
 	 *            the object that needs to be wrapped
