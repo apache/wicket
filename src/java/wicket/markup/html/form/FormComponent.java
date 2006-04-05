@@ -882,6 +882,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent setRequired(final boolean required)
 	{
+		if(!required &&  type != null && type.isPrimitive())
+		{
+			throw new WicketRuntimeException("FormComponent can't be not required when the type is primitive class: " + this);
+		}
 		if (required != isRequired())
 		{
 			addStateChange(new RequiredStateChange());
@@ -930,6 +934,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final FormComponent setType(Class type)
 	{
 		this.type = type;
+		if(type != null && type.isPrimitive()) setRequired(true);
 		return this;
 	}
 

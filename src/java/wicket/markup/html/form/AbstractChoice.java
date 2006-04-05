@@ -271,7 +271,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @return Any default choice, such as "Choose One", depending on the
 	 *         subclass
 	 */
-	protected String getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoice(final Object selected)
 	{
 		return "";
 	}
