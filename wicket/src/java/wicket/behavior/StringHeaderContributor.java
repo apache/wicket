@@ -146,7 +146,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
 	 */
-	public IHeaderContributor[] getHeaderContributors()
+	public final IHeaderContributor[] getHeaderContributors()
 	{
 		return new IHeaderContributor[] { contributor };
 	}
