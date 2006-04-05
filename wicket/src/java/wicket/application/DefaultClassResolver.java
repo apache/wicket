@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5260 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,17 +30,28 @@ import wicket.util.concurrent.ConcurrentReaderHashMap;
  */
 public final class DefaultClassResolver implements IClassResolver
 {
+	/**
+	 * Usually class loaders implement more efficent caching strategies than we
+	 * could possibly do, but we experienced synchronization issue resulting in
+	 * stack traces like: java.lang.LinkageError: duplicate class definition:
+	 * 
+	 * <pre>
+	 *   wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
+	 * </pre>
+	 * 
+	 * This problem has gone since we synchronize the access.
+	 */
 	private ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
+
 	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
 	public final Class resolveClass(final String classname)
 	{
-		
 		try
 		{
 			Class clz = (Class)classes.get(classname);
-			if(clz == null)
+			if (clz == null)
 			{
 				synchronized (classes)
 				{
@@ -56,4 +67,3 @@ public final class DefaultClassResolver implements IClassResolver
 		}
 	}
 }
-
