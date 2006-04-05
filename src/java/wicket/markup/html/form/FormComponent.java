@@ -851,7 +851,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final void inputChanged()
 	{
-		if (isVisibleInHierarchy())
+		if (isVisibleInHierarchy() && isEnabled())
 		{
 			// Get input as String array
 			final String[] input = inputAsStringArray();
@@ -862,10 +862,14 @@ public abstract class FormComponent extends WebMarkupContainer
 				// join the values together with ";", for example, "id1;id2;id3"
 				rawInput = StringList.valueOf(input).join(";");
 			}
-			else
+			else if ( isInputNullable() )
 			{
 				// no input
 				rawInput = null;
+			}
+			else
+			{
+				rawInput = NO_RAW_INPUT;
 			}
 		}
 	}

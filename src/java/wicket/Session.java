@@ -20,10 +20,12 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -172,7 +174,7 @@ public abstract class Session implements Serializable
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages;
 
-	private transient ArrayList usedPages;
+	private transient Map usedPages;
 
 
 	/**
@@ -364,7 +366,8 @@ public abstract class Session implements Serializable
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			while(usedPages.contains(id))
+			Thread t = (Thread)usedPages.get(id);
+			while(t != null && t != Thread.currentThread())
 			{
 				try
 				{
@@ -375,7 +378,7 @@ public abstract class Session implements Serializable
 					throw new WicketRuntimeException(ex);
 				}
 			}
-			usedPages.add(id);
+			usedPages.put(id,Thread.currentThread());
 			return pageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
@@ -591,7 +594,7 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
-		if(usedPages == null) usedPages = new ArrayList(3);
+		if(usedPages == null) usedPages = new HashMap(3);
 	}
 
 	/**
