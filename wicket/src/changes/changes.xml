@@ -11,6 +11,10 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">`
+      <action type="fix" dev="Johan Compagner" issue="1461977" due-to="Karthik Guru">PropertyResolver seems to update the model with blank value:  Now if you do this: new TextField("id", int.class); then the textfield will be required by default! And if you set it to false again it will throw an exception at that point.</action>
+      <action type="fix" dev="Johan Compagner" issue="1464649" due-to="Joseph Toth">Incorrect bookmark mounts when servlet mapping is /*</action>
+      <action type="fix" dev="Johan Compagner" issue="1464710" due-to="gcdha">Entry of disabled TextField gets lost with server round trip</action>
+      <action type="fix" dev="Johan Compagner" issue="1461287" due-to="Martijn Dashorst">PageMap has buggy behavior, 2 fixes: Pagemap access are synced on specific places. One page can never be handled by 2 threads at the same time for the complete request. This is also importand for people with there own impl of LeastRecentlyAccessedEvictionStrategy. The access to the Pagemap should be synced around the session. See LeastRecentlyAccessedEvictionStrategy.evict(final PageMap pageMap)</action>
       <action type="update" dev="Igor Vaynberg" issue="1463930" due-to="R.J. Lorimer">AbstractRequestTargetCodingStrategy.decodeParameters() now also has access to query string params to make subclassing easier</action>
       <action type="add" dev="Johan Compagner" issue="1460191" due-to="Gili Tzabari">Easier resource URLs encoding, mounting of shared resources</action>
       <action type="update" dev="Johan Compagner">Changed some (mostly internal) api, so that we use CharSequence instead of Strings for better streaming/string concatting. One catch now: If comparing charsequences to a toString(), because StringBuffer.equals(String) will fail for the same chars..</action>

@@ -61,6 +61,28 @@ public class PropertyResolverTest extends TestCase
 		name = (String)PropertyResolver.getValue("name", person);
 		assertEquals(name, "wicket");
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testPrimitiveValue() throws Exception
+	{
+		Integer integer = (Integer)PropertyResolver.getValue("age", person);
+		assertTrue(integer.intValue() == 0);
+		
+		PropertyResolver.setValue("age", person, new Integer(10), CONVERTER);
+		integer = (Integer)PropertyResolver.getValue("age", person);
+		assertTrue(integer.intValue() == 10);
+
+		try
+		{
+			PropertyResolver.setValue("age", person, null, CONVERTER);
+			fail("primitive type can't be set to null");
+		} catch(ConversionException ce)
+		{
+			// ignore should happen
+		}
+	}
 
 	/**
 	 * @throws Exception

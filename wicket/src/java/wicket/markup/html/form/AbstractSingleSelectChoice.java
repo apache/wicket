@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Abstract base class for single-select choices.
@@ -184,16 +185,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
-	protected String getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoice(final Object selected)
 	{
-		// The <option> tag buffer
-		final StringBuffer buffer = new StringBuffer();
-
 		// Is null a valid selection value?
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
 			final String option = getLocalizer().getString("null", this, "");
+
+			// The <option> tag buffer
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
+
 
 			// Add option tag
 			buffer.append("\n<option");
@@ -206,6 +208,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 
 			// Add body of option tag
 			buffer.append(" value=\"\">").append(option).append("</option>");
+			return buffer;
 		}
 		else
 		{
@@ -215,12 +218,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			{
 				// Force the user to pick a non-null value
 				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
-				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option).append(
+				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(option).append(
 						"</option>");
 			}
 		}
-
-		return buffer.toString();
+		return "";
 	}
 
 

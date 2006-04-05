@@ -44,6 +44,8 @@ public class Person
 	private List addressList;
 
 	private Address[] addressArray;
+	
+	private int age;
 
 	/**
 	 * @return The name
@@ -165,5 +167,21 @@ public class Person
 	public void setAddressArray(Address[] addressArray)
 	{
 		this.addressArray = addressArray;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getAge()
+	{
+		return age;
+	}
+
+	/**
+	 * @param age
+	 */
+	public void setAge(int age)
+	{
+		this.age = age;
 	}
 }

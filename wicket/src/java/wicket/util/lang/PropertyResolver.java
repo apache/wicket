@@ -820,10 +820,18 @@ public class PropertyResolver
 			if (setMethod != null)
 			{
 				Object converted = converter.convert(value, getMethod.getReturnType());
-				if (converted == null && value != null)
+				if ( converted == null)
 				{
-					throw new ConversionException("Can't convert value: " + value + " to class: "
-							+ getMethod.getReturnType() + " for setting it on " + object);
+					if( value != null )
+					{
+						throw new ConversionException("Can't convert value: " + value + " to class: "
+								+ getMethod.getReturnType() + " for setting it on " + object);
+					}
+					else if( getMethod.getReturnType().isPrimitive() )
+					{
+						throw new ConversionException("Can't convert null value to a primitive class: "
+								+ getMethod.getReturnType() + " for setting it on " + object);
+					}
 				}
 				try
 				{
