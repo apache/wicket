@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: AppendingStringBuffer.java 5231 2006-04-02 01:34:49 +0200 (zo, 02 apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-02 01:34:49 +0200 (zo, 02 apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -355,7 +355,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			return append((AppendingStringBuffer)obj);
 		}
-		else if(obj instanceof StringBuffer)
+		else if (obj instanceof StringBuffer)
 		{
 			return append((StringBuffer)obj);
 		}
@@ -496,7 +496,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		count = newcount;
 		return this;
 	}
-	
+
 
 	/**
 	 * Appends the specified <tt>AppendingStringBuffer</tt> to this
@@ -525,8 +525,10 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * @param sb
 	 *            the <tt>AppendingStringBuffer</tt> to append.
-	 * @param from The index where it must start from 
-	 * @param length The length that must be copied
+	 * @param from
+	 *            The index where it must start from
+	 * @param length
+	 *            The length that must be copied
 	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
 	 */
 	public AppendingStringBuffer append(StringBuffer sb, int from, int length)
@@ -1057,10 +1059,10 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 			AppendingStringBuffer asb = (AppendingStringBuffer)obj;
 			return insert(offset, asb.value, 0, asb.count);
 		}
-		else if(obj instanceof StringBuffer)
+		else if (obj instanceof StringBuffer)
 		{
 			return insert(offset, (StringBuffer)obj);
-		}		
+		}
 		return insert(offset, String.valueOf(obj));
 	}
 
@@ -1178,7 +1180,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		str.getChars(0, len, value, offset);
 		count = newcount;
 		return this;
-	}	
+	}
+
 	/**
 	 * Inserts the string representation of the <code>char</code> array
 	 * argument into this string buffer.
@@ -1400,7 +1403,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * such that: <blockquote>
 	 * 
 	 * <pre>
-	 *      this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
+	 *       this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
 	 * </pre>
 	 * 
 	 * </blockquote> is <code>true</code>.
@@ -1602,7 +1605,83 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Converts to a string representing the data in this string buffer. A new
+	 * Tests if this AppendingStringBuffer starts with the specified prefix beginning a
+	 * specified index.
+	 * 
+	 * @param prefix
+	 *            the prefix.
+	 * @param toffset
+	 *            where to begin looking in the string.
+	 * @return <code>true</code> if the character sequence represented by the
+	 *         argument is a prefix of the substring of this object starting at
+	 *         index <code>toffset</code>; <code>false</code> otherwise.
+	 *         The result is <code>false</code> if <code>toffset</code> is
+	 *         negative or greater than the length of this <code>String</code>
+	 *         object; otherwise the result is the same as the result of the
+	 *         expression
+	 * 
+	 * <pre>
+	 * this.subString(toffset).startsWith(prefix)
+	 * </pre>
+	 */
+	public boolean startsWith(CharSequence prefix, int toffset)
+	{
+		char ta[] = value;
+		int to = toffset;
+		int po = 0;
+		int pc = prefix.length();
+		// Note: toffset might be near -1>>>1.
+		if ((toffset < 0) || (toffset > count - pc))
+		{
+			return false;
+		}
+		while (--pc >= 0)
+		{
+			if (ta[to++] != prefix.charAt(po++))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Tests if this AppendingStringBuffer starts with the specified prefix.
+	 * 
+	 * @param prefix
+	 *            the prefix.
+	 * @return <code>true</code> if the character sequence represented by the
+	 *         argument is a prefix of the character sequence represented by
+	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note also that
+	 *         <code>true</code> will be returned if the argument is an empty
+	 *         string or is equal to this <code>AppendingStringBuffer</code> object as
+	 *         determined by the {@link #equals(Object)} method.
+	 * @since 1. 0
+	 */
+	public boolean startsWith(CharSequence prefix)
+	{
+		return startsWith(prefix, 0);
+	}
+
+	/**
+	 * Tests if this AppendingStringBuffer ends with the specified suffix.
+	 * 
+	 * @param suffix
+	 *            the suffix.
+	 * @return <code>true</code> if the character sequence represented by the
+	 *         argument is a suffix of the character sequence represented by
+	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note that the result
+	 *         will be <code>true</code> if the argument is the empty string
+	 *         or is equal to this <code>AppendingStringBuffer</code> object as determined by
+	 *         the {@link #equals(Object)} method.
+	 */
+	public boolean endsWith(CharSequence suffix)
+	{
+		return startsWith(suffix, count - suffix.length());
+	}
+
+	/**
+	 * Converts to a string representing the data in this AppendingStringBuffer. A new
 	 * <code>String</code> object is allocated and initialized to contain the
 	 * character sequence currently represented by this string buffer. This
 	 * <code>String</code> is then returned. Subsequent changes to the string
@@ -1653,7 +1732,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * Compares this AppendingStringBuffer to the specified object. The result
 	 * is <code>true</code> if and only if the argument is not
 	 * <code>null</code> and is a <code>AppendingStringBuffer</code> object
-	 * that represents the same sequence of characters as this object.
+	 * or another charsequence object! that represents the same sequence of 
+	 * characters as this object.
 	 * 
 	 * @param anObject
 	 *            the object to compare this <code>AppendingStringBuffer</code>
@@ -1676,10 +1756,27 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 				char v1[] = value;
 				char v2[] = anotherString.value;
 				int i = 0;
-				int j = 0;
 				while (n-- != 0)
 				{
-					if (v1[i++] != v2[j++])
+					if (v1[i] != v2[i++])
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		else if (anObject instanceof CharSequence)
+		{
+			CharSequence sequence = (CharSequence)anObject;
+			int n = count;
+			if(sequence.length() == count)
+			{
+				char v1[] = value;
+				int i = 0;
+				while (n-- != 0)
+				{
+					if (v1[i] != sequence.charAt(i++))
 					{
 						return false;
 					}
@@ -1695,7 +1792,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * <code>AppendingStringBuffer</code> object is computed as <blockquote>
 	 * 
 	 * <pre>
-	 *   s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
+	 *    s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
 	 * </pre>
 	 * 
 	 * </blockquote> using <code>int</code> arithmetic, where
