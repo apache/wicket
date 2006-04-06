@@ -50,6 +50,15 @@ public class TypeValidatorTest extends WicketTestCase
 		{
 			super(id, Date.class);
 		}
+		
+		/**
+		 * Test method with mock input.
+		 * @see wicket.markup.html.form.FormComponent#getInput()
+		 */
+		public String getInput()
+		{
+			return "01/01/2001";
+		}
 	}
 
 	/**
@@ -91,8 +100,7 @@ public class TypeValidatorTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests the bug [ 1465702 ] Regression: typed validator throws ClassCastException
-	 *
+	 * DateField test.
 	 */
 	public void testDateField()
 	{
@@ -101,7 +109,8 @@ public class TypeValidatorTest extends WicketTestCase
 		MockPage page = new MockPage();
 
 		Form form = new Form("form", new CompoundPropertyModel(new Person()));
-		form.add(new DateField("date"));
+		DateField dateField = new DateField("birthdate");
+		form.add(dateField);
 		page.add(form);
 
 		form.onFormSubmitted();
