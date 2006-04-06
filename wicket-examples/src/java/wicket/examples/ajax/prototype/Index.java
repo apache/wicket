@@ -24,6 +24,7 @@ import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 import wicket.request.target.component.ComponentRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Example displaying partial page rendering using the counting link example and
@@ -67,10 +68,10 @@ public class Index extends WicketExamplePage
 			 * Alter the javascript 'onclick' event to emit the Ajax call and
 			 * update the counter label.
 			 */
-			protected String getOnClickScript(String url)
+			protected CharSequence getOnClickScript(String url)
 			{
-				return "new Ajax.Updater('counter', '" + urlFor(ILinkListener.INTERFACE)
-						+ "', {method:'get'}); return false;";
+				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(urlFor(ILinkListener.INTERFACE)).append(
+						"', {method:'get'}); return false;");
 			}
 		});
 
