@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,25 +36,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *        add(new Link(&quot;myLink&quot;)
- *        {
- *            public void onClick(RequestCycle cycle)
- *            {
- *                // do something here...  
- *            }
- *        );
+ *          add(new Link(&quot;myLink&quot;)
+ *          {
+ *              public void onClick(RequestCycle cycle)
+ *              {
+ *                  // do something here...  
+ *              }
+ *          );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *          &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *          &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -62,13 +62,13 @@ import wicket.util.string.Strings;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *        add(new Link(&quot;link&quot;, listItem.getModel()) 
- *        {
- *            public void onClick() 
- *            {
- *                MyObject obj = (MyObject)getModelObject();
- *                setResponsePage(new MyPage(obj.getId(), ... ));
- *            }
+ *          add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *          {
+ *              public void onClick() 
+ *              {
+ *                  MyObject obj = (MyObject)getModelObject();
+ *                  setResponsePage(new MyPage(obj.getId(), ... ));
+ *              }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -77,7 +77,7 @@ import wicket.util.string.Strings;
 public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
@@ -163,7 +163,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		return popupSettings;
 	}
-	
+
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
@@ -198,9 +198,10 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		// if there are popupsettings and this link is clicked.
 		// set the popup page map in the request parameters, so that pages that
 		// are created in the onClick are made in the wanted pagemap
-		if(popupSettings != null)
+		if (popupSettings != null)
 		{
-			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(popupSettings.getPageMap().getName());
+			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(
+					popupSettings.getPageMap().getName());
 		}
 		// Invoke subclass handler
 		onClick();
@@ -274,10 +275,23 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * @param url
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
+	 * @deprecated this method will be removed by
+	 *             {@link #getOnClickScript(CharSequence)} shortly. Please
+	 *             override that method instead.
 	 */
-	protected CharSequence getOnClickScript(final String url)
+	protected String getOnClickScript(final String url)
 	{
 		return null;
+	}
+
+	/**
+	 * @param url
+	 *            The url for the link
+	 * @return Any onClick JavaScript that should be used
+	 */
+	protected CharSequence getOnClickScript(final CharSequence url)
+	{
+		return getOnClickScript(url.toString());
 	}
 
 	/**
@@ -390,7 +404,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		}
 
 		// If the subclass specified javascript, use that
-		final CharSequence onClickJavaScript = getOnClickScript(url.toString());
+		final CharSequence onClickJavaScript = getOnClickScript(url);
 		if (onClickJavaScript != null)
 		{
 			tag.put("onclick", onClickJavaScript);
