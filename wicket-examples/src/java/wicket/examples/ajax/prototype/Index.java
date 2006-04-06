@@ -68,10 +68,10 @@ public class Index extends WicketExamplePage
 			 * Alter the javascript 'onclick' event to emit the Ajax call and
 			 * update the counter label.
 			 */
-			protected CharSequence getOnClickScript(String url)
+			protected String getOnClickScript(String url)
 			{
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(urlFor(ILinkListener.INTERFACE)).append(
-						"', {method:'get'}); return false;");
+						"', {method:'get'}); return false;").toString();
 			}
 		});
 
