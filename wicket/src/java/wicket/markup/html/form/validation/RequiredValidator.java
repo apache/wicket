@@ -32,7 +32,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @deprecated
  */
-public class RequiredValidator extends StringValidator
+public class RequiredValidator extends AbstractValidator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,6 +55,14 @@ public class RequiredValidator extends StringValidator
 	{
 	}
 
+	/**
+	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
+	 */
+	public void validate(FormComponent component)
+	{
+		onValidate(component, component.getInput());
+	}
+	
 	/**
 	 * Validates whether the input value is not-null or empty. Validation is
 	 * only executed when the component is enabled. If the value is null and the
