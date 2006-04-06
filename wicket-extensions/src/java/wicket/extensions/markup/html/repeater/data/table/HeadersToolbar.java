@@ -54,7 +54,7 @@ public class HeadersToolbar extends AbstractToolbar
 
 		for (int i = 0; i < cols.length; i++)
 		{
-			// TODO General: Is this extra component really necessary? can we
+			// TODO Post 1.2: General: Is this extra component really necessary? can we
 			// not simply use the repeater's body without the need for the id in
 			// the markup?
 			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());

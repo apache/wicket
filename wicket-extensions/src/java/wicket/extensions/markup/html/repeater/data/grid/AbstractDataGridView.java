@@ -101,7 +101,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	{
 		final IModel rowModel = item.getModel();
 
-		// TODO General: Does this need to be a refreshing view? since the rows
+		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
 		// is a refreshing view this will be recreated anyways. maybe can se
 		// orderedrepeatingview instead to simplify.
 		item.add(new RefreshingView(CELL_REPEATER_ID)

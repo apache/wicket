@@ -168,7 +168,7 @@ public abstract class GridView extends DataViewBase
 			this.rows = rows;
 		}
 
-		// TODO Performance: Can this be moved into the this.rows != rows if
+		// TODO Post 1.2: Performance: Can this be moved into the this.rows != rows if
 		// block for optimization?
 		updateItemsPerPage();
 		return this;
