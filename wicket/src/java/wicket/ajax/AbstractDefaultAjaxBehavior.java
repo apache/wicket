@@ -172,14 +172,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		CharSequence call = buff;
 
-		if (decorator != null)
-		{
-			call = decorator.decorateScript(call);
-		}
-
 		if (!Strings.isEmpty(indicatorId))
 		{
 			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');").append(call);
+		}
+
+		if (decorator != null)
+		{
+			call = decorator.decorateScript(call);
 		}
 
 		return call;
