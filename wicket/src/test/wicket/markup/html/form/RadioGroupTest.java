@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -196,5 +196,15 @@ public class RadioGroupTest extends WicketTestCase
 		}
 	}
 
-
+	/**
+	 * Regression test for markup parsing of radio buttons. Tests issue #1465676.
+	 * 
+	 * @throws Exception
+	 */
+	public void testRadioGroupTestPage3() throws Exception
+	{
+		// this test fails. You can make the test pass by closing the input tags
+		// this was not the case in beta1
+		executeTest(RadioGroupTestPage3.class, "RadioGroupTestPage3_expected.html");
+	}
 }
