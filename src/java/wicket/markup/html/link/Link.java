@@ -275,7 +275,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
 	 */
-	protected CharSequence getOnClickScript(final CharSequence url)
+	protected CharSequence getOnClickScript(final String url)
 	{
 		return null;
 	}
@@ -390,7 +390,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		}
 
 		// If the subclass specified javascript, use that
-		final CharSequence onClickJavaScript = getOnClickScript(url);
+		final CharSequence onClickJavaScript = getOnClickScript(url.toString());
 		if (onClickJavaScript != null)
 		{
 			tag.put("onclick", onClickJavaScript);
