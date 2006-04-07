@@ -297,13 +297,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		try
 		{
 			clonedPage = (WebPage)Objects.cloneObject(this);
-			final PageMap map = getSession().createAutoPageMap();
-			clonedPage.moveToPageMap(map);
 		} 
 		catch (Exception e)
 		{
 			log.error("Page couldn't be cloned to move to another pagemap: " + clonedPage.getClass(), e);
 		}
+		final PageMap map = getSession().createAutoPageMap();
+		clonedPage.moveToPageMap(map);
 		setResponsePage(clonedPage);
 	}
 
