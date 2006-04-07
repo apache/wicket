@@ -17,6 +17,9 @@
  */
 package wicket.markup.html;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.INewBrowserWindowListener;
 import wicket.IRequestTarget;
@@ -37,6 +40,7 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
@@ -69,6 +73,9 @@ import wicket.util.lang.Objects;
  */
 public class WebPage extends Page implements INewBrowserWindowListener
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(WebPage.class);
+	
 	/** Log. */
 	// private static final Log log = LogFactory.getLog(WebPage.class);
 	private static final long serialVersionUID = 1L;
@@ -287,9 +294,17 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	public void onNewBrowserWindow()
 	{
 		// if the browser reports a history of 0 then make a new webpage
-		final WebPage clonedPage = (WebPage)Objects.cloneObject(this);
-		final PageMap map = getSession().createAutoPageMap();
-		clonedPage.moveToPageMap(map);
+		WebPage clonedPage = this;
+		try
+		{
+			clonedPage = (WebPage)Objects.cloneObject(this);
+			final PageMap map = getSession().createAutoPageMap();
+			clonedPage.moveToPageMap(map);
+		} 
+		catch (Exception e)
+		{
+			log.error("Page couldn't be cloned to move to another pagemap: " + clonedPage.getClass(), e);
+		}
 		setResponsePage(clonedPage);
 	}
 
@@ -308,10 +323,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			final RequestCycle cycle = getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 			
-			// if(!isStateless()) TODO this shouldn't be done for stateless pages.
-			// This will make all pages statefull. But how do we know that if
-			// it is stateless because that is only know after render.
-			// Should we use a Response Filter??
 			int initialAccessStackSize = 0;
 			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
 					&& target instanceof RedirectPageRequestTarget)
