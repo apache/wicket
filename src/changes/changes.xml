@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">`
+      <action type="add" dev="Igor Vaynberg">Added missing wantOnSelectionChangedNotifications to CheckGroup</action>
       <action type="fix" dev="Johan Compagner" issue="1461977" due-to="Karthik Guru">PropertyResolver seems to update the model with blank value:  Now if you do this: new TextField("id", int.class); then the textfield will be required by default! And if you set it to false again it will throw an exception at that point.</action>
       <action type="fix" dev="Johan Compagner" issue="1464649" due-to="Joseph Toth">Incorrect bookmark mounts when servlet mapping is /*</action>
       <action type="fix" dev="Johan Compagner" issue="1464710" due-to="gcdha">Entry of disabled TextField gets lost with server round trip</action>
