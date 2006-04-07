@@ -440,20 +440,22 @@ public final class AutoLinkResolver implements IComponentResolver
 						&& page.getMarkupStream().isMergedMarkup())
 				{
 					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
-					
-					// Href is relative. Resolve the url given relative to the
-					// current page
-					className = Packages.extractPackageName(clazz) + "." + infoPath;
+					if (clazz != null)
+					{
+						// Href is relative. Resolve the url given relative to the
+						// current page
+						className = Packages.extractPackageName(clazz) + "." + infoPath;
 	
-					try
-					{
-						clazz = defaultClassResolver.resolveClass(className);
-						return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters());
-					}
-					catch (WicketRuntimeException ex)
-					{
-						log.warn("Did not find corresponding java class: " + className);
-						// fall through
+						try
+						{
+							clazz = defaultClassResolver.resolveClass(className);
+							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters());
+						}
+						catch (WicketRuntimeException ex)
+						{
+							log.warn("Did not find corresponding java class: " + className);
+							// fall through
+						}
 					}
 				}
 			}
