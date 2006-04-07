@@ -40,7 +40,6 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
