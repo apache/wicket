@@ -11,6 +11,8 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
+import wicket.util.lang.Objects;
+import wicket.version.undo.Change;
 
 /**
  * Reference page for TabbedPanel wicket-extensions component
@@ -22,30 +24,12 @@ import wicket.model.PropertyModel;
  */
 public class TabbedPanelPage extends WicketExamplePage
 {
-	private String var = "tabpanel";
-
-	/**
-	 * @return css variation class name used to render tabs
-	 */
-	public String getVar()
-	{
-		return var;
-	}
-
-	/**
-	 * @param var
-	 *            set css variation class name used to render tabs
-	 */
-	public void setVar(String var)
-	{
-		this.var = var;
-	}
-
 	/**
 	 * Constructor
 	 */
 	public TabbedPanelPage()
 	{
+		setModel(new Model("tabpanel"));
 
 		// create links used to switch between css variations
 		addCssSwitchingLinks();
@@ -85,7 +69,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
 		add(new TabbedPanel("tabs", tabs).add(new AttributeModifier("class", true,
-				new PropertyModel(this, "var"))));
+				TabbedPanelPage.this.getModel())));
 
 	}
 
@@ -117,7 +101,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		 */
 		public void onClick()
 		{
-			setVar(clazz);
+			TabbedPanelPage.this.setModelObject(clazz);
 		}
 
 		/**
@@ -125,7 +109,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		 */
 		public boolean isEnabled()
 		{
-			return !getVar().equals(clazz);
+			return !TabbedPanelPage.this.getModelObjectAsString().equals(clazz);
 		}
 
 	};
