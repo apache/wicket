@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.autolink;
 
-import wicket.markup.html.autolink.sub.BasePage;
 
 /**
  * 

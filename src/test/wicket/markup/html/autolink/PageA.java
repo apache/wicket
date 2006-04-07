@@ -17,13 +17,11 @@
  */
 package wicket.markup.html.autolink;
 
-import wicket.markup.html.WebPage;
-
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class PageA extends WebPage
+public class PageA extends BasePage
 {
 	private static final long serialVersionUID = 1L;
 
