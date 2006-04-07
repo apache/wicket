@@ -17,54 +17,20 @@
  */
 package wicket.markup.html.autolink;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.WicketTestCase;
-import wicket.markup.html.autolink.sub.PageB;
-import wicket.markup.resolver.AutoLinkResolver;
+import wicket.markup.html.WebPage;
 
 /**
  * 
  */
-public class AutolinkTest extends WicketTestCase
+public class BasePage extends WebPage
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
-	
-	/**
-	 * Construct.
-	 * @param name
-	 */
-	public AutolinkTest(String name)
-	{
-		super(name);
-	}
+	private static final long serialVersionUID = 1L;
 
-	/**
+	/** 
+	 * Creates a new instance of BasePanel
 	 * 
-	 * @throws Exception
 	 */
-	public void test_1() throws Exception
+	public BasePage()
 	{
-		executeTest(MyPage.class, "MyPageExpectedResult.html");
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	public void test_2() throws Exception
-	{
-		executeTest(PageA.class, "PageAExpectedResult.html");
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	public void test_3() throws Exception
-	{
-		executeTest(PageB.class, "PageBExpectedResult.html");
 	}
 }
