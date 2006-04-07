@@ -6,6 +6,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.value.ValueMap;
 
 /**
  * Url coding strategy for bookmarkable pages that encodes index based
@@ -69,7 +70,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		}
 	}
 
-	protected PageParameters decodePageParameters(String urlFragment)
+	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		PageParameters params = new PageParameters();
 		if (urlFragment == null)
