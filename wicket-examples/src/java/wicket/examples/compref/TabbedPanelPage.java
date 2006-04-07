@@ -89,64 +89,46 @@ public class TabbedPanelPage extends WicketExamplePage
 
 	}
 
-
 	private void addCssSwitchingLinks()
 	{
-		add(new Link("var0")
-		{
-			public void onClick()
-			{
-				setVar("tabpanel");
-			}
-
-			public boolean isEnabled()
-			{
-				return !getVar().equals("tabpanel");
-			}
-		});
-
-		add(new Link("var1")
-		{
-			public void onClick()
-			{
-				setVar("tabpanel1");
-			}
-
-			public boolean isEnabled()
-			{
-				return !getVar().equals("tabpanel1");
-			}
-		});
-
-		add(new Link("var2")
-		{
-			public void onClick()
-			{
-				setVar("tabpanel2");
-			}
-
-			public boolean isEnabled()
-			{
-				return !getVar().equals("tabpanel2");
-			}
-
-		});
-
-		add(new Link("var3")
-		{
-			public void onClick()
-			{
-				setVar("tabpanel3");
-			}
-
-			public boolean isEnabled()
-			{
-				return !getVar().equals("tabpanel3");
-			}
-
-		});
+		add(new CssSwitchingLink("var0", "tabpanel"));
+		add(new CssSwitchingLink("var1", "tabpanel1"));
+		add(new CssSwitchingLink("var2", "tabpanel2"));
+		add(new CssSwitchingLink("var3", "tabpanel3"));
+		add(new CssSwitchingLink("var4", "tabpanel4"));
 	}
 
+	protected class CssSwitchingLink extends Link
+	{
+		private final String clazz;
+
+		/**
+		 * @param id
+		 * @param clazz
+		 */
+		public CssSwitchingLink(String id, String clazz)
+		{
+			super(id);
+			this.clazz = clazz;
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#onClick()
+		 */
+		public void onClick()
+		{
+			setVar(clazz);
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#isEnabled()
+		 */
+		public boolean isEnabled()
+		{
+			return !getVar().equals(clazz);
+		}
+
+	};
 
 	/**
 	 * Panel representing the content panel for the first tab
