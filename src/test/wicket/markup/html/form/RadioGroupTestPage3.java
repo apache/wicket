@@ -33,6 +33,9 @@ public class RadioGroupTestPage3 extends WebPage
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public RadioGroupTestPage3()
 	{
 		Form form = new Form("form");

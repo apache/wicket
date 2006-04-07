@@ -47,6 +47,6 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public boolean accept(FeedbackMessage message)
 	{
-		return container.isAncestorOf(message.getReporter());
+		return container.getParent().contains(message.getReporter(), false);
 	}
 }

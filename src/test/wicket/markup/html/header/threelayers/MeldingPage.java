@@ -26,6 +26,9 @@ public class MeldingPage extends AbstractMeldingPage
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public MeldingPage()
 	{
 	}

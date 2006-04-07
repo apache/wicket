@@ -70,6 +70,9 @@ public class RequiredValidator extends AbstractValidator
 	 * that is interpreted as the component being disabled too. If that is the
 	 * case, validation will not be executed.
 	 * 
+	 * @param formComponent The form component that is checked 
+	 * @param value The input value of the formcomponent (not converted value)
+	 * 
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
 	 *      java.lang.String)
 	 */
