@@ -170,7 +170,7 @@ public class Person
 	}
 
 	/**
-	 * @return
+	 * @return The age of the person
 	 */
 	public int getAge()
 	{

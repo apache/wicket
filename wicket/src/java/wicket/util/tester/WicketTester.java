@@ -376,6 +376,7 @@ public class WicketTester extends MockWebApplication
 		{
 			Assert.fail("path: '" + path + "' does no exist for page: "
 					+ Classes.simpleName(getLastRenderedPage().getClass()));
+			return component;
 		}
 		if (component.isVisibleInHierarchy())
 		{
@@ -574,6 +575,7 @@ public class WicketTester extends MockWebApplication
 		if (c == null)
 		{
 			Assert.fail("component " + componentPath + " was not found");
+			return;
 		}
 
 		if (c instanceof FormComponent)

@@ -28,6 +28,9 @@ public abstract class AbstractMeldingPage extends AbstractSecurePage
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public AbstractMeldingPage()
 	{
 		add(new Label("foo", "FooBar"));

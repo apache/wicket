@@ -19,7 +19,6 @@
 package wicket.markup.html.header.threelayers;
 
 import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
 
 /**
  * @author Martijn Dashorst
