@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,7 +56,7 @@ import wicket.util.convert.ConversionException;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class CheckGroup extends FormComponent
+public class CheckGroup extends FormComponent implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class CheckGroup extends FormComponent
 		super(id, model);
 		setRenderBodyOnly(true);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
 	 */
@@ -107,7 +107,7 @@ public class CheckGroup extends FormComponent
 		 * contains null
 		 */
 		String[] paths = inputAsStringArray();
-		
+
 		List collection = new ArrayList();
 
 		/*
@@ -161,7 +161,7 @@ public class CheckGroup extends FormComponent
 	public void updateModel()
 	{
 		Collection collection = (Collection)getModelObject();
-		if(collection == null)
+		if (collection == null)
 		{
 			collection = (Collection)getConvertedInput();
 			setModelObject(collection);
@@ -174,13 +174,55 @@ public class CheckGroup extends FormComponent
 			modelChanged();
 		}
 	}
-	
+
 	/**
 	 * Check group does not support persistence through cookies
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	protected final boolean supportsPersistence()
 	{
 		return false;
 	}
+
+	/**
+	 * Called when a selection changes.
+	 */
+	public final void onSelectionChanged()
+	{
+		convert();
+		updateModel();
+		onSelectionChanged((Collection)getModelObject());
+	}
+
+	/**
+	 * Template method that can be overriden by clients that implement
+	 * IOnChangeListener to be notified by onChange events of a select element.
+	 * This method does nothing by default.
+	 * <p>
+	 * Called when a {@link Check} is clicked in a {@link CheckGroup} that wants
+	 * to be notified of this event. This method is to be implemented by clients
+	 * that want to be notified of selection events.
+	 * 
+	 * @param newSelection
+	 *            The new selection of the {@link CheckGroup}. NOTE this is the
+	 *            same as you would get by calling getModelObject() if the new
+	 *            selection were current
+	 */
+	protected void onSelectionChanged(final Collection newSelection)
+	{
+	}
+
+	/**
+	 * This method should be overridden to return true if it is desirable to
+	 * have on-selection-changed notifiaction.
+	 * 
+	 * @return true if component should receive on-selection-changed
+	 *         notifications, false otherwise
+	 */
+	protected boolean wantOnSelectionChangedNotifications()
+	{
+		return false;
+	}
+
 }

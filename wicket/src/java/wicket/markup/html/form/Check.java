@@ -110,6 +110,25 @@ public class Check extends WebMarkupContainer
 
 		// Default handling for component tag
 		super.onComponentTag(tag);
+		
+		if (group.wantOnSelectionChangedNotifications())
+		{
+			// url that points to this components IOnChangeListener method
+			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
+
+			try
+			{
+				Form form = group.getForm();
+				tag.put("onClick", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onClick", "location.href='" + url + "&" + group.getInputName()
+						+ "=' + this.value;");
+			}
+		}
+		
 	}
 
 
