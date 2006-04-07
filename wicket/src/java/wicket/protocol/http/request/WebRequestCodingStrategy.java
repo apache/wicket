@@ -182,8 +182,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
 			buffer.append(prefix);
 			buffer.append(path);
-			// TODO mounting are stable/static urls. should it be encoded to have session?
-			// if yes maybe a google spider problem. if no then every link click can result in a new session..
 			return requestCycle.getResponse().encodeURL(buffer);
 		}
 
@@ -550,12 +548,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				}
 			}
 		}
-
-		return url;
-		// Bookmarkable pages shoudn't contain session information (just like shared resources)
-		// TODO BUT if you use bookmarkable pages in youre app itself. Then it can be a problem
-		// because then a link click on a bookmarkable link will make a new session....
-		//return requestCycle.getResponse().encodeURL(url);
+		return requestCycle.getResponse().encodeURL(url);
 	}
 
 	/**
@@ -594,10 +587,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				buffer.append("/resources/");
 			}
 			buffer.append(sharedResourceKey);
-			// TODO do we need to urlEncode this yes or no?
-			// For static resources it is a bit stupid, but if the shared resource
-			// is a dynamic resource that gets session info?
-			return buffer;
+			return requestCycle.getResponse().encodeURL(buffer);
 		}
 	}
 
