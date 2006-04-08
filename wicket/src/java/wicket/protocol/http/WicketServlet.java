@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.53 $ $Date$
+ * $Id: WicketServlet.java 5151 2006-03-28 03:50:28 -0800 (Tue, 28 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-28 03:50:28 -0800 (Tue, 28 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +19,7 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,15 +51,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *             &lt;servlet&gt;
- *                 &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                 &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                 &lt;init-param&gt;
- *                     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                     &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                 &lt;/init-param&gt;
- *                 &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *             &lt;/servlet&gt;
+ *               &lt;servlet&gt;
+ *                   &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                   &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                   &lt;init-param&gt;
+ *                       &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                       &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                   &lt;/init-param&gt;
+ *                   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *               &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -67,10 +71,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *             &lt;init-param&gt;
- *               &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *                 &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *             &lt;/init-param&gt;
+ *               &lt;init-param&gt;
+ *                 &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                   &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *               &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -87,11 +91,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *             public void init() throws ServletException
- *             {
- *                 ServletConfig config = getServletConfig();
- *                 String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                 ...
+ *               public void init() throws ServletException
+ *               {
+ *                   ServletConfig config = getServletConfig();
+ *                   String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                   ...
  * </pre>
  * 
  * </p>
@@ -107,6 +111,60 @@ import wicket.util.time.Time;
  */
 public class WicketServlet extends HttpServlet
 {
+	/**
+	 * Reacts on unbinding from the session by cleaning up the session related
+	 * application data.
+	 */
+	private static final class SessionBindingListener
+			implements
+				HttpSessionBindingListener,
+				Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * cached application object so that we can access it regardless whether
+		 * of any request.
+		 */
+		private transient WebApplication application;
+
+		/** session id. */
+		private transient String id;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param application
+		 *            The session's application
+		 * @param id
+		 *            The session's id
+		 */
+		public SessionBindingListener(WebApplication application, String id)
+		{
+			this.application = application;
+			this.id = id;
+		}
+
+		/**
+		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+		 */
+		public void valueBound(HttpSessionBindingEvent arg0)
+		{
+		}
+
+		/**
+		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+		 */
+		public void valueUnbound(HttpSessionBindingEvent arg0)
+		{
+			if (application != null)
+			{
+				application.sessionDestroyed(id);
+				this.application = null;
+			}
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/** The URL path prefix expected for (so called) resources (not html pages). */
@@ -139,22 +197,29 @@ public class WicketServlet extends HttpServlet
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		long time = System.currentTimeMillis();
-		
+
 		// First, set the webapplication for this thread
 		Application.set(webApplication);
 
-		// Try to see if there is a redirect stored
-		HttpSession httpSession = servletRequest.getSession(false);
-		if (httpSession != null
-				&& webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 		{
+			// Try to see if there is a redirect stored
+			HttpSession httpSession = servletRequest.getSession(false);
+			if (httpSession == null)
+			{
+				httpSession = servletRequest.getSession(true);
+				SessionBindingListener sessionBindingListener = new SessionBindingListener(
+						webApplication, httpSession.getId());
+				httpSession.setAttribute("wicket-" + sessionBindingListener.hashCode(),
+						sessionBindingListener);
+			}
 			String sessionId = httpSession.getId();
 			String queryString = servletRequest.getQueryString();
 			if (queryString != null)
 			{
 				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
 						sessionId, queryString);
-				
+
 				if (bufferedResponse != null)
 				{
 					bufferedResponse.writeTo(servletResponse);
@@ -205,10 +270,13 @@ public class WicketServlet extends HttpServlet
 			// Create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
-			try {
+			try
+			{
 				// Process request
 				cycle.request();
-			} catch (AbortException e) {
+			}
+			catch (AbortException e)
+			{
 				// noop
 			}
 		}
@@ -218,12 +286,12 @@ public class WicketServlet extends HttpServlet
 			response.close();
 
 			RequestLogger requestLogger = webApplication.getRequestLogger();
-			
-			if(requestLogger != null)
+
+			if (requestLogger != null)
 			{
-				requestLogger.requestTime((System.currentTimeMillis()-time));
+				requestLogger.requestTime((System.currentTimeMillis() - time));
 			}
-			
+
 			// Clean up thread local session
 			Session.unset();
 
@@ -281,11 +349,12 @@ public class WicketServlet extends HttpServlet
 			// Call init method of web application
 			this.webApplication.internalInit();
 			this.webApplication.init();
-			// We initialize components here rather than in the constructor or 
-			// in the internal init, because in the init method class aliases 
-			// can be added, that would be used in installing resources in the component.
+			// We initialize components here rather than in the constructor or
+			// in the internal init, because in the init method class aliases
+			// can be added, that would be used in installing resources in the
+			// component.
 			this.webApplication.initializeComponents();
-			
+
 		}
 		finally
 		{
@@ -385,12 +454,13 @@ public class WicketServlet extends HttpServlet
 					IResourceStream stream = resource.getResourceStream();
 
 					// First ask the length so the content is created/accessed
-					// TODO check this shouldn't be needed anymore with the new dynamic resource impl.
-					//stream.length();
+					// TODO check this shouldn't be needed anymore with the new
+					// dynamic resource impl.
+					// stream.length();
 
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();
-					
+
 					try
 					{
 						stream.close();
@@ -399,9 +469,11 @@ public class WicketServlet extends HttpServlet
 					{
 						// ignore
 					}
-					
+
 					return time != null ? time.getMilliseconds() : -1;
-				} catch (AbortException e) {
+				}
+				catch (AbortException e)
+				{
 					return -1;
 				}
 				finally
