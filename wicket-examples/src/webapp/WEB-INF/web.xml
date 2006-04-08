@@ -424,6 +424,10 @@
 		<servlet-name>CustomResourceLoadingApplication</servlet-name>
 		<url-pattern>/customresourceloading/*</url-pattern>
 	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
 	
 	<welcome-file-list>
 	<welcome-file>index.html</welcome-file>
