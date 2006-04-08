@@ -132,7 +132,6 @@ public class MergedMarkup extends Markup
 
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
-		boolean headProcessed = false;
 
 		// Add all elements from the base markup to the new list
 		// until <wicket:child/> is found. Convert <wicket:child/>
@@ -222,12 +221,14 @@ public class MergedMarkup extends Markup
 			// If element in base markup is </head>, scan the derived
 			// markup for <wicket:head> and add all elements of that tag body
 			// the new markup list.
-			if ((headProcessed == false) && (element instanceof ComponentTag))
+			if ((wicketHeadProcessed == false) && (element instanceof ComponentTag))
 			{
 				final ComponentTag tag = (ComponentTag)element;
 
-				if (tag.isClose() && TagUtils.isHeadTag(tag))
+				if ((tag.isClose() && TagUtils.isHeadTag(tag)) || (tag.isOpen() && TagUtils.isBodyTag(tag)))
 				{
+					wicketHeadProcessed = true;
+					
 					// Before close the tag, add the <wicket:head> body from the
 					// derived markup
 					// Before close the tag, add the <wicket:head> body from the

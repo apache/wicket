@@ -47,7 +47,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
-	
+
 	/** The markup container the helper is associated with */
 	private final WebMarkupContainerWithAssociatedMarkup container;
 
