@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: ISessionStore.java 3777 2006-01-14 14:49:01 -0800 (Sat, 14 Jan 2006)
+ * jonathanlocke $ $Revision: 3777 $ $Date: 2006-01-14 14:49:01 -0800 (Sat, 14
+ * Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
