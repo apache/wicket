@@ -36,7 +36,6 @@ import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
-import wicket.session.ISessionStoreFactory;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
@@ -175,6 +174,9 @@ public abstract class Session implements Serializable
 	private FeedbackMessages feedbackMessages;
 
 	private transient Map usedPages;
+
+	/** cached id because you can't access the id after session unbound */
+	private String id = null;
 
 
 	/**
@@ -326,7 +328,11 @@ public abstract class Session implements Serializable
 	 */
 	public String getId()
 	{
-		return getSessionStore().getId();
+		if(id == null)
+		{
+			id = getSessionStore().getId();
+		}
+		return id;
 	}
 
 	/**
@@ -595,6 +601,7 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
+		this.sessionStore = application.getSessionStore();
 		if (usedPages == null)
 			usedPages = new HashMap(3);
 	}
@@ -836,19 +843,6 @@ public abstract class Session implements Serializable
 	 */
 	protected final ISessionStore getSessionStore()
 	{
-		if (sessionStore == null)
-		{
-			ISessionStoreFactory sessionStoreFactory = application.getSessionSettings()
-					.getSessionStoreFactory();
-			sessionStore = sessionStoreFactory.newSessionStore(this);
-
-			// Still null?
-			if (sessionStore == null)
-			{
-				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
-						+ " did not produce a session store");
-			}
-		}
 		return sessionStore;
 	}
 

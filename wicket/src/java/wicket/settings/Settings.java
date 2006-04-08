@@ -36,7 +36,6 @@ import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
@@ -235,9 +234,9 @@ public final class Settings
 	private ISessionStoreFactory sessionStoreFactory = new ISessionStoreFactory()
 	{
 		/**
-		 * @see wicket.session.ISessionStoreFactory#newSessionStore(wicket.Session)
+		 * @see wicket.session.ISessionStoreFactory#newSessionStore()
 		 */
-		public ISessionStore newSessionStore(Session session)
+		public ISessionStore newSessionStore()
 		{
 			return new HttpSessionStore();
 		}
@@ -281,6 +280,8 @@ public final class Settings
 
 	/** The context path that should be used for url prefixing */
 	private String contextPath;
+
+	private String servletContextKey;
 
 
 	/**
@@ -1159,5 +1160,21 @@ public final class Settings
 			IOUtils.closeQuietly(is);
 		}
 		return properties.getProperty("wicket.version", "n/a");
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#getServletContextKey()
+	 */
+	public String getServletContextKey()
+	{
+		return servletContextKey;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#setServletContextKey(java.lang.String)
+	 */
+	public void setServletContextKey(String contextKey)
+	{
+		this.servletContextKey = contextKey;
 	}
 }

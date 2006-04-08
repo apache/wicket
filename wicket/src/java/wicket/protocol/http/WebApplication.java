@@ -514,22 +514,7 @@ public abstract class WebApplication extends Application
 	 */
 	final WebSession getSession(final WebRequest request)
 	{
-		// Get session, creating if it doesn't exist
-		// do not create it as we try to defer the actual
-		// creation as long as we can
-		final HttpSession httpSession = request.getHttpServletRequest().getSession(false);
-
-		// The actual attribute for the session is
-		// "wicket-<servletName>-session"
-		final String sessionAttribute = getSessionAttributePrefix(request)
-				+ Session.SESSION_ATTRIBUTE_NAME;
-
-		WebSession webSession = null;
-		if (httpSession != null)
-		{
-			// Get Session abstraction from httpSession attribute
-			webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
-		}
+		WebSession webSession = (WebSession)getSessionStore().getSession(request);
 
 		if (webSession == null)
 		{
@@ -548,11 +533,7 @@ public abstract class WebApplication extends Application
 			// Set the client Locale for this session
 			webSession.setLocale(request.getLocale());
 
-			if (httpSession != null)
-			{
-				// Save this session in the HttpSession using the attribute name
-				httpSession.setAttribute(sessionAttribute, webSession);
-			}
+			getSessionStore().storeInitialSession(request, webSession);
 
 		}
 		// Set application on session
@@ -583,6 +564,10 @@ public abstract class WebApplication extends Application
 		{
 			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession
 					.remove(bufferId);
+			if(responsesPerSession.size() == 0)
+			{
+				bufferedResponses.remove(sessionId);
+			}
 			return buffered;
 		}
 		return null;
