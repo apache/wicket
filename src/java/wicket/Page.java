@@ -1013,6 +1013,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void moveToPageMap(PageMap map)
 	{
+		// TODO shouldn't we remove this page from the pagemap/session if it would be in there?
 		setPageMap(map);
 		numericId = (short)map.nextId();
 	}

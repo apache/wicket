@@ -37,6 +37,8 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.session.ISessionStore;
+import wicket.session.ISessionStoreFactory;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
@@ -144,6 +146,14 @@ public abstract class Application
 
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
+
+	/** 
+	 * The session store of this session. 
+	 * Can't contain session information! 
+	 * Shared  variable.
+	 */
+	private ISessionStore sessionStore;
+
 
 	/**
 	 * Get Application for current thread.
@@ -591,6 +601,29 @@ public abstract class Application
 	 */
 	protected abstract ISessionFactory getSessionFactory();
 
+	/**
+	 * Gets the session store.
+	 * 
+	 * @return the session store
+	 */
+	public final ISessionStore getSessionStore()
+	{
+		if (sessionStore == null)
+		{
+			ISessionStoreFactory sessionStoreFactory = getSessionSettings()
+					.getSessionStoreFactory();
+			sessionStore = sessionStoreFactory.newSessionStore();
+
+			// Still null?
+			if (sessionStore == null)
+			{
+				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
+						+ " did not produce a session store");
+			}
+		}
+		return sessionStore;
+	}
+	
 	/**
 	 * Allows for initialization of the application by a subclass. <strong>Use
 	 * this method for any application setup instead of the constructor.</strong>

@@ -57,6 +57,13 @@ public interface IApplicationSettings
 	String getContextPath();
 
 	/**
+	 * Returns the servlet context key where the application object is stored under.
+	 * 
+	 * @return contextKey
+	 */
+	String getServletContextKey();
+
+	/**
 	 * Gets the converter factory.
 	 * 
 	 * @return the converter factory
@@ -151,5 +158,10 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
+
+	/**
+	 * @param contextKey
+	 */
+	void setServletContextKey(String contextKey);
 
 }

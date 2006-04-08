@@ -246,11 +246,11 @@ public class RequestLogger
 	private SessionData getSessionData()
 	{
 		Session session = Session.get();
-		SessionData sessionData = (SessionData)liveSessions.get(session);
+		SessionData sessionData = (SessionData)liveSessions.get(session.getId());
 		if(sessionData == null)
 		{
 			sessionData = new SessionData(session);
-			liveSessions.put(session, sessionData);
+			liveSessions.put(session.getId(), sessionData);
 			totalCreatedSessions++;
 			if(peakSessions < liveSessions.size())
 			{

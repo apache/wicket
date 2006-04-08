@@ -19,7 +19,6 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
@@ -27,8 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,60 +108,6 @@ import wicket.util.time.Time;
  */
 public class WicketServlet extends HttpServlet
 {
-	/**
-	 * Reacts on unbinding from the session by cleaning up the session related
-	 * application data.
-	 */
-	private static final class SessionBindingListener
-			implements
-				HttpSessionBindingListener,
-				Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * cached application object so that we can access it regardless whether
-		 * of any request.
-		 */
-		private transient WebApplication application;
-
-		/** session id. */
-		private transient String id;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param application
-		 *            The session's application
-		 * @param id
-		 *            The session's id
-		 */
-		public SessionBindingListener(WebApplication application, String id)
-		{
-			this.application = application;
-			this.id = id;
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
-		 */
-		public void valueBound(HttpSessionBindingEvent arg0)
-		{
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
-		 */
-		public void valueUnbound(HttpSessionBindingEvent arg0)
-		{
-			if (application != null)
-			{
-				application.sessionDestroyed(id);
-				this.application = null;
-			}
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	/** The URL path prefix expected for (so called) resources (not html pages). */
@@ -205,26 +148,21 @@ public class WicketServlet extends HttpServlet
 		{
 			// Try to see if there is a redirect stored
 			HttpSession httpSession = servletRequest.getSession(false);
-			if (httpSession == null)
+			if (httpSession != null)
 			{
-				httpSession = servletRequest.getSession(true);
-				SessionBindingListener sessionBindingListener = new SessionBindingListener(
-						webApplication, httpSession.getId());
-				httpSession.setAttribute("wicket-" + sessionBindingListener.hashCode(),
-						sessionBindingListener);
-			}
-			String sessionId = httpSession.getId();
-			String queryString = servletRequest.getQueryString();
-			if (queryString != null)
-			{
-				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
-						sessionId, queryString);
-
-				if (bufferedResponse != null)
+				String sessionId = httpSession.getId();
+				String queryString = servletRequest.getQueryString();
+				if (queryString != null)
 				{
-					bufferedResponse.writeTo(servletResponse);
-					// redirect responses are ignored for the request logger...
-					return;
+					BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+							sessionId, queryString);
+	
+					if (bufferedResponse != null)
+					{
+						bufferedResponse.writeTo(servletResponse);
+						// redirect responses are ignored for the request logger...
+						return;
+					}
 				}
 			}
 		}
@@ -291,7 +229,7 @@ public class WicketServlet extends HttpServlet
 			{
 				requestLogger.requestTime((System.currentTimeMillis() - time));
 			}
-
+			
 			// Clean up thread local session
 			Session.unset();
 
@@ -337,6 +275,7 @@ public class WicketServlet extends HttpServlet
 		String contextKey = WebApplication
 				.getServletContextKey(getServletConfig().getServletName());
 		getServletContext().setAttribute(contextKey, this.webApplication);
+		
 
 		// Finished
 		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
@@ -346,8 +285,11 @@ public class WicketServlet extends HttpServlet
 		{
 			Application.set(webApplication);
 
-			// Call init method of web application
+			// Call internal init method of web application for default initialisation
 			this.webApplication.internalInit();
+			// store the servlet context key in the settings
+			this.webApplication.getApplicationSettings().setServletContextKey(contextKey);
+			// Call init method of web application
 			this.webApplication.init();
 			// We initialize components here rather than in the constructor or
 			// in the internal init, because in the init method class aliases

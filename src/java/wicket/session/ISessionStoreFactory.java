@@ -17,7 +17,6 @@
  */
 package wicket.session;
 
-import wicket.Session;
 
 /**
  * Creates instances of {@link wicket.session.ISessionStore}.
@@ -27,7 +26,7 @@ import wicket.Session;
 public interface ISessionStoreFactory
 {
 	/**
-	 * Creates a new instance of session store. Is called once when the session
+	 * Creates a new instance of session store. Is called once when the application 
 	 * initializes. In a clustered environment, this method is called once for
 	 * each server.
 	 * 
@@ -36,5 +35,5 @@ public interface ISessionStoreFactory
 	 * 
 	 * @return a new instance of {@link ISessionStore}
 	 */
-	ISessionStore newSessionStore(Session session);
+	ISessionStore newSessionStore();
 }
