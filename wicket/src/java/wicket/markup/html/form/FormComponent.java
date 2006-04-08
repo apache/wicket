@@ -58,7 +58,15 @@ import wicket.version.undo.Change;
  * FormComponents are not versioned by default. If you need versioning for your
  * FormComponents, you will need to call Form.setVersioned(true), which will set
  * versioning on for the form and all form component children.
- * 
+ * <p>
+ * If this component is required and that fails the error key that is used
+ * is the "RequiredValidator" if the Type conversions failes it will be using
+ * the key "TypeValidator" and the keys that can be used in both are :
+ * <ul>
+ * <li>${input}: the input the user did give</li>
+ * <li>${name}: the name of the component that failed</li>
+ * <li>${label}: the label of the component</li>
+ * </ul>
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner

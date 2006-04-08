@@ -100,7 +100,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
-public abstract class AbstractStringResourceLoader
+public abstract class AbstractStringResourceLoader  implements IStringResourceLoader
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(AbstractStringResourceLoader.class);
