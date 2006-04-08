@@ -30,9 +30,11 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
+import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
@@ -573,7 +575,7 @@ public abstract class MarkupContainer extends Component
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
 		}
-		
+
 		return this;
 	}
 
@@ -795,14 +797,14 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Create a new markup resource stream for the container. 
+	 * Create a new markup resource stream for the container.
 	 * <p>
-	 * Note: it will only called once, the IResourceStream will be
-	 * cached by MarkupCache.
+	 * Note: it will only called once, the IResourceStream will be cached by
+	 * MarkupCache.
 	 * <p>
-	 * Note: IResourceStreamLocators should be used in case the strategy
-	 * to find a markup resource should be extended for ALL components
-	 * of your application.
+	 * Note: IResourceStreamLocators should be used in case the strategy to find
+	 * a markup resource should be extended for ALL components of your
+	 * application.
 	 * 
 	 * @see wicket.util.resource.locator.IResourceStreamLocator
 	 * @see wicket.markup.MarkupCache
@@ -811,30 +813,32 @@ public abstract class MarkupContainer extends Component
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream newMarkupResourceStream(Class containerClass)
+	public MarkupResourceStream newMarkupResourceStream(Class containerClass)
 	{
-		// Get locator to search for the resource 
-		final IResourceStreamLocator locator = getApplication().getResourceSettings().getResourceStreamLocator();
-		
-		// Markup is associated with the containers class. Walk up the class 
-		// hierarchy up to MarkupContainer to find the containers markup resource. 
+		// Get locator to search for the resource
+		final IResourceStreamLocator locator = getApplication().getResourceSettings()
+				.getResourceStreamLocator();
+
+		// Markup is associated with the containers class. Walk up the class
+		// hierarchy up to MarkupContainer to find the containers markup
+		// resource.
 		while (containerClass != MarkupContainer.class)
 		{
-			final IResourceStream resourceStream = locator.locate(
-					containerClass, containerClass.getName().replace('.', '/'),
-					getStyle(), getLocale(), getMarkupType());
-			
+			final IResourceStream resourceStream = locator.locate(containerClass, containerClass
+					.getName().replace('.', '/'), getStyle(), getLocale(), getMarkupType());
+
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				return resourceStream;
+				return new MarkupResourceStream(resourceStream, new ContainerInfo(this),
+						containerClass);
 			}
 
-			// Walk up the class hierarchy one level, if markup has not 
+			// Walk up the class hierarchy one level, if markup has not
 			// yet been found
 			containerClass = containerClass.getSuperclass();
 		}
-		
+
 		return null;
 	}
 
@@ -1310,14 +1314,17 @@ public abstract class MarkupContainer extends Component
 					}
 				}
 
-				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
+				if (tag instanceof WicketTag)
 				{
-					// You can not render the base page of inherited markup as
-					// the <wicket:child/> tag will not be found. You must use
-					// the page (class) with the derived markup instead.
-					markupStream.throwMarkupException("Classes of base pages which "
-							+ "require inherited markup may not be used directly. "
-							+ "You must instantiate the child pages instead: " + this);
+					if (((WicketTag)tag).isChildTag())
+					{
+						markupStream.throwMarkupException("Found " + tag.toString()
+								+ " but no <wicket:extend>");
+					}
+					else
+					{
+						markupStream.throwMarkupException("Failed to handle: " + tag.toString());
+					}
 				}
 
 				// No one was able to handle the component id

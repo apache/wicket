@@ -18,6 +18,7 @@
 package wicket.markup.html.header.inheritance;
 
 import wicket.WicketTestCase;
+import wicket.markup.MarkupException;
 
 /**
  * Tests the inclusion of the wicket:head section from a panel in a subclassed
@@ -43,6 +44,23 @@ public class InheritanceHeadTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		executeTest(ConcretePage.class, "ExpectedResult.html");
+		try
+		{
+			executeTest(ConcretePage.class, "ExpectedResult.html");
+			fail("Expected an exception: <wicket:head> are not allowed after <body> tags");
+		}
+		catch (MarkupException ex)
+		{
+			// Ignore
+		}
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void test_2() throws Exception
+	{
+		executeTest(ConcretePage2.class, "ExpectedResult2.html");
 	}
 }

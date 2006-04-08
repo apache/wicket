@@ -24,6 +24,7 @@ import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.TagUtils;
 import wicket.markup.WicketTag;
@@ -44,6 +45,9 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	/** True if body onLoad attribute modifiers have been attached */
 	private boolean checkedBody = false;
 
+	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
+	private boolean noMoreWicketHeadTagsAllowed = false;
+	
 	/** The markup container the helper is associated with */
 	private final WebMarkupContainerWithAssociatedMarkup container;
 
@@ -81,6 +85,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		}
 
 		// Position pointer at current (first) header
+		this.noMoreWicketHeadTagsAllowed = false;
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
 			Class markupClass = ((WicketTag)markupStream.getTag()).getMarkupClass();
@@ -255,13 +260,18 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				WicketTag tag = (WicketTag)elem;
 				if (tag.isOpen() && tag.isHeadTag())
 				{
+					if (this.noMoreWicketHeadTagsAllowed == true)
+					{
+						throw new MarkupException(
+								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
+					}
 					return associatedMarkupStream.getCurrentIndex();
 				}
 				// wicket:head must be before border, panel or extend
 				else if (tag.isOpen()
 						&& (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
-					break;
+					this.noMoreWicketHeadTagsAllowed = true;
 				}
 			}
 			else if (elem instanceof ComponentTag)
@@ -270,12 +280,12 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// wicket:head must be before </head>
 				if (tag.isClose() && TagUtils.isHeadTag(tag))
 				{
-					break;
+					this.noMoreWicketHeadTagsAllowed = true;
 				}
 				// wicket:head must be before <body>
 				else if (tag.isOpen() && TagUtils.isBodyTag(tag))
 				{
-					break;
+					this.noMoreWicketHeadTagsAllowed = true;
 				}
 			}
 			elem = associatedMarkupStream.next();
