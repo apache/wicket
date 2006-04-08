@@ -353,7 +353,8 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final synchronized Page getPage(final String pageMapName, final String path, final int versionNumber)
+	public final synchronized Page getPage(final String pageMapName, final String path,
+			final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -367,7 +368,7 @@ public abstract class Session implements Serializable
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 			Thread t = (Thread)usedPages.get(id);
-			while(t != null && t != Thread.currentThread())
+			while (t != null && t != Thread.currentThread())
 			{
 				try
 				{
@@ -378,7 +379,7 @@ public abstract class Session implements Serializable
 					throw new WicketRuntimeException(ex);
 				}
 			}
-			usedPages.put(id,Thread.currentThread());
+			usedPages.put(id, Thread.currentThread());
 			return pageMap.get(Integer.parseInt(id), versionNumber);
 		}
 		return null;
@@ -594,7 +595,8 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
-		if(usedPages == null) usedPages = new HashMap(3);
+		if (usedPages == null)
+			usedPages = new HashMap(3);
 	}
 
 	/**
@@ -786,7 +788,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Any detach logic for session subclasses.
+	 * Any detach logic for session subclasses. This is called on the end of
+	 * handling a request, when the RequestCycle is about to be detached from
+	 * the current thread.
 	 */
 	protected void detach()
 	{
@@ -988,8 +992,10 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * INTERNAL API 
-	 * @param page  The page that was detached
+	 * INTERNAL API
+	 * 
+	 * @param page
+	 *            The page that was detached
 	 * 
 	 */
 	final synchronized void pageDetached(Page page)
