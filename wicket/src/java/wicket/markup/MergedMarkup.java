@@ -17,8 +17,10 @@
  */
 package wicket.markup;
 
+import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 
 /**
  * This is a utility class which merges the base markup and the derived markup,
@@ -112,7 +114,7 @@ public class MergedMarkup extends Markup
 
 		return null;
 	}
-
+	
 	/**
 	 * Merge inherited and base markup.
 	 * 
@@ -145,7 +147,10 @@ public class MergedMarkup extends Markup
 			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
 			{
 				ComponentTag tag = (ComponentTag) element;
-				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+				if (tag.getMarkupClass() == null)
+				{
+					tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+				}
 			}
 			
 			if (element instanceof WicketTag)
@@ -167,24 +172,14 @@ public class MergedMarkup extends Markup
 			if ((wicketHeadProcessed == false) && (element instanceof WicketTag))
 			{
 				final WicketTag tag = (WicketTag)element;
-
-				// If we reached <wicket:panel> and have not yet seen
-				// <wicket:head>, than
-				// automatically add <wicket:head> into the stream
-				boolean hitPanel = tag.isOpen() && (tag.isPanelTag() || tag.isBorderTag());
-				WicketTag openTag = null;
-				if (hitPanel)
+				
+				boolean hitHead = tag.isClose() && tag.isHeadTag();
+				if (hitHead)
 				{
-					openTag = new WicketTag(new XmlTag());
-					openTag.setName("head");
-					openTag.setNamespace(tag.getNamespace());
-					openTag.setType(XmlTag.OPEN);
-
-					addMarkupElement(openTag);
+					addMarkupElement(tag);
 				}
 
-				boolean hitHead = tag.isClose() && tag.isHeadTag();
-
+				boolean hitPanel = tag.isOpen() && (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag());
 				if (hitHead || hitPanel)
 				{
 					// Before close the tag, add the <wicket:head> body from the
@@ -200,16 +195,13 @@ public class MergedMarkup extends Markup
 							{
 								if (etag.isOpen())
 								{
-									wicketHeadProcessed = true;
 									copy = true;
 								}
 								else
 								{
+									addMarkupElement(elem);
 									copy = false;
-									break;
 								}
-
-								continue;
 							}
 						}
 
@@ -218,20 +210,12 @@ public class MergedMarkup extends Markup
 							addMarkupElement(elem);
 						}
 					}
-				}
-
-				// If we reached <wicket:panel> and have not yet seen
-				// <wicket:head>, than
-				// automatically add <wicket:head> into the stream
-				if (hitPanel)
-				{
-					WicketTag closeTag = new WicketTag(new XmlTag());
-					closeTag.setName("head");
-					closeTag.setNamespace(tag.getNamespace());
-					closeTag.setType(XmlTag.CLOSE);
-					closeTag.setOpenTag(openTag);
-
-					addMarkupElement(closeTag);
+					
+					wicketHeadProcessed = true;
+					if (hitHead)
+					{
+						continue;
+					}
 				}
 			}
 
@@ -246,6 +230,8 @@ public class MergedMarkup extends Markup
 				{
 					// Before close the tag, add the <wicket:head> body from the
 					// derived markup
+					// Before close the tag, add the <wicket:head> body from the
+					// derived markup
 					boolean copy = false;
 					for (int i = 0; i < extendIndex; i++)
 					{
@@ -257,16 +243,13 @@ public class MergedMarkup extends Markup
 							{
 								if (etag.isOpen())
 								{
-									headProcessed = true;
 									copy = true;
 								}
 								else
 								{
+									addMarkupElement(elem);
 									copy = false;
-									break;
 								}
-
-								continue;
 							}
 						}
 
@@ -353,6 +336,60 @@ public class MergedMarkup extends Markup
 			{
 				ComponentTag tag = (ComponentTag) element;
 				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+			}
+		}
+		
+		// Automatically add <head> if missing and required. On a Page
+		// it must enclose ALL of the <wicket:head> tags.
+		// Note: HtmlHeaderSectionHandler does something similar, but because
+		// markup filters are not called for merged markup again, ...
+		if (Page.class.isAssignableFrom(markup.getResource().getMarkupClass()))
+		{
+			// Find the position inside the markup for first <wicket:head>,
+			// last </wicket:head> and <head>
+			int hasOpenWicketHead = -1;
+			int hasCloseWicketHead = -1;
+			int hasHead = -1;
+			for (int i=0; i < size(); i++)
+			{
+				MarkupElement element = get(i);
+
+				if ((hasOpenWicketHead == -1) && (element instanceof WicketTag) && ((WicketTag)element).isHeadTag())
+				{
+					hasOpenWicketHead = i;
+				}
+				else if ((element instanceof WicketTag) && ((WicketTag)element).isHeadTag() && ((WicketTag)element).isClose())
+				{
+					hasCloseWicketHead = i;
+				}
+				else if ((hasHead == -1) && (element instanceof ComponentTag) && TagUtils.isHeadTag((ComponentTag)element))
+				{
+					hasHead = i;
+				}
+				else if ((hasHead != -1) && (hasOpenWicketHead != -1))
+				{
+					break;
+				}
+			}
+
+			// If a <head> tag is missing, insert it automatically
+			if ((hasOpenWicketHead != -1) && (hasHead == -1))
+			{
+				final XmlTag headOpenTag = new XmlTag();
+				headOpenTag.setName("head");
+				headOpenTag.setType(XmlTag.OPEN);
+				final ComponentTag openTag = new ComponentTag(headOpenTag);
+				openTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
+
+				final XmlTag headCloseTag = new XmlTag();
+				headCloseTag.setName(headOpenTag.getName());
+				headCloseTag.setType(XmlTag.CLOSE);
+				final ComponentTag closeTag = new ComponentTag(headCloseTag);
+				closeTag.setOpenTag(openTag);
+				closeTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
+				
+				addMarkupElement(hasOpenWicketHead, openTag);
+				addMarkupElement(hasCloseWicketHead + 2, closeTag);
 			}
 		}
 	}

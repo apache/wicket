@@ -312,6 +312,17 @@ public class Markup
 	}
 
 	/**
+	 * Add a MarkupElement
+	 * 
+	 * @param pos
+	 * @param markupElement
+	 */
+	final void addMarkupElement(final int pos, final MarkupElement markupElement)
+	{
+		this.markup.addMarkupElement(pos, markupElement);
+	}
+
+	/**
 	 * Add the tag to the local cache if open or open-close and if wicket:id is
 	 * present
 	 * 

@@ -106,7 +106,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		// if it is <head> or </head>
 		if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
-			// it is <head>
+			// we found <head>
 			if (tag.isClose())
 			{
 				foundHead = true;
@@ -123,17 +123,12 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 		else if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() != null))
 		{
+			// we found <wicket:head>
 			foundHead = true;
 		}
-		// if it is <body>
 		else if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
-			// we found no <head> . But because we found <body> we assume it
-			// could be a page. And because we need to auto-add <head> to
-			// pages only (if missing) ... Note: no one prevent a designer
-			// to put a <body> in a panel component, for previewabilty.
-			// Thus more markups than actually required might now have
-			// that tag. It should be a problem, but ... you never know.
+			// We found <body>
 			if (foundHead == false)
 			{
 				insertHeadTag();

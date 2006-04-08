@@ -50,7 +50,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 	static
 	{
-		// register "wicket:fragement"
+		// register "wicket:head"
 		WicketTagIdentifier.registerWellKnownTagName("head");
 	}
 
@@ -84,8 +84,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// Yes, we handled the tag
 			return true;
 		}
-		else if ((tag instanceof WicketTag) && "head".equalsIgnoreCase(tag.getName())
-				&& (tag.getNamespace() != null))
+		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
 		{
 		    // If we found <wicket:head> without surrounding <head> on a Page,
 		    // than we have to add wicket:head into a automatically generated
@@ -94,11 +93,10 @@ public class HtmlHeaderResolver implements IComponentResolver
 		    {
 				// Create a special header component which will gather additional
 				// input the <head> from 'contributors'.
-				final WebMarkupContainer header = new HtmlHeaderContainer(
-						HtmlHeaderSectionHandler.HEADER_ID);
+				final MarkupContainer header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
 				
 				// It is <wicket:head>. Because they do not provide any additional
-				// functionality there are merely a means of surrounding relevant
+				// functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
 				final WebMarkupContainer header2 = new WebMarkupContainer(

@@ -129,6 +129,17 @@ public class MarkupFragment
 	}
 
 	/**
+	 * Add a MarkupElement
+	 * 
+	 * @param pos
+	 * @param markupElement
+	 */
+	final void addMarkupElement(final int pos, final MarkupElement markupElement)
+	{
+		this.markupElements.add(pos, markupElement);
+	}
+
+	/**
 	 * Make all tags immutable and the list of elements unmodifable.
 	 */
 	final void makeImmutable()
