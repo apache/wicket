@@ -31,12 +31,7 @@ import wicket.Application;
  * @author Juergen Donnerstag
  */
 public class ClassStringResourceLoader extends AbstractStringResourceLoader
-		implements
-			IStringResourceLoader
 {
-	/** Log. */
-	// private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
-
 	/** The application we are loading for. */
 	private final Class clazz;
 

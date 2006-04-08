@@ -183,6 +183,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
+	 * The localizer will be ask for the property to display
+	 * Depending on if null is allowed or not it will ask for:
+	 * 
+	 * <ul>
+	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
+	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
+	 * </ul>
+	 * 
+	 * The choice for null is valid will always be returned. The choice when null is not valid
+	 * will only be returned if the selected object is null.
+	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
 	protected CharSequence getDefaultChoice(final Object selected)
@@ -191,7 +202,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString("null", this, "");
+			final String option = getLocalizer().getString("nullValid", this, "");
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());

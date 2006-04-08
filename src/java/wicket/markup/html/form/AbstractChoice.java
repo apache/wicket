@@ -266,6 +266,7 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
+	 * 
 	 * @param selected
 	 *            The object that's currently selected
 	 * @return Any default choice, such as "Choose One", depending on the

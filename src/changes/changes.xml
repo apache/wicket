@@ -11,6 +11,8 @@
   </properties>
   <body>
     <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">`
+      <action type="add" dev="Johan Compagner">wicket.Application.properties and wicket.Application_nl.properties added they will be loaded now as the last resort if nothing is found for the given key. All Validatior keys of wicket are in it. Als the null and nullValid keys of the SingleSelectChoice are in there. Because of that we needed a differentiation between the keys if null is valid or not. null (Choose One) is still the same but the emtpy one is now nullValid. We need now as many properties file for the different locales as possible.</action>
+      <action type="update" dev="Johan Compagner">getSessionStore() of Session is copied to Application, there will now be only one ISessionStore instance per application.</action>
       <action type="add" dev="Igor Vaynberg">Added missing wantOnSelectionChangedNotifications to CheckGroup</action>
       <action type="fix" dev="Johan Compagner" issue="1461977" due-to="Karthik Guru">PropertyResolver seems to update the model with blank value:  Now if you do this: new TextField("id", int.class); then the textfield will be required by default! And if you set it to false again it will throw an exception at that point.</action>
       <action type="fix" dev="Johan Compagner" issue="1464649" due-to="Joseph Toth">Incorrect bookmark mounts when servlet mapping is /*</action>

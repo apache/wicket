@@ -52,6 +52,11 @@ public abstract class NumberValidator extends AbstractValidator
      * <ul>
      * <li>${minimum}: the minimal value</li>
      * <li>${maximum}: the maximum value</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum value.
@@ -73,6 +78,11 @@ public abstract class NumberValidator extends AbstractValidator
      * can be used are:
      * <ul>
      * <li>${minimum}: the minimal value</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum value.
@@ -94,6 +104,11 @@ public abstract class NumberValidator extends AbstractValidator
      * <ul>
      * <li>${maximum}: the maximum value</li>
      * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param maximum The maximum value.
@@ -115,6 +130,11 @@ public abstract class NumberValidator extends AbstractValidator
      * <ul>
      * <li>${minimum}: the minimal value</li>
      * <li>${maximum}: the maximum value</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum value.
@@ -136,6 +156,11 @@ public abstract class NumberValidator extends AbstractValidator
      * can be used are:
      * <ul>
      * <li>${minimum}: the minimal value</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum value.
@@ -156,7 +181,11 @@ public abstract class NumberValidator extends AbstractValidator
      * can be used are:
      * <ul>
      * <li>${maximum}: the maximum value</li>
-     * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param maximum The maximum value.

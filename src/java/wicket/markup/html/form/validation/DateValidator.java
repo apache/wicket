@@ -43,6 +43,11 @@ public abstract class DateValidator extends AbstractValidator
      * <ul>
      * <li>${minimum}: The minimum date</li>
      * <li>${maximum}: The maximum date</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum date.
@@ -64,6 +69,11 @@ public abstract class DateValidator extends AbstractValidator
      * can be used are:
      * <ul>
      * <li>${minimum}: The minimal date</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param minimum The minimum length of the string.
@@ -84,6 +94,11 @@ public abstract class DateValidator extends AbstractValidator
      * can be used are:
      * <ul>
      * <li>${maximum}: The maximum date</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
      * </ul>
      * 
      * @param maximum The maximum date.

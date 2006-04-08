@@ -43,6 +43,11 @@ public abstract class StringValidator extends AbstractValidator
 	 * <li>${minimum}: the minimum length</li>
 	 * <li>${maximum}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -66,6 +71,11 @@ public abstract class StringValidator extends AbstractValidator
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
 	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -87,6 +97,11 @@ public abstract class StringValidator extends AbstractValidator
 	 * <ul>
 	 * <li>${maximum}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
