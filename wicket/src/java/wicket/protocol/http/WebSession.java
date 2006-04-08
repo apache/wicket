@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebSession.java 5064 2006-03-21 11:30:05 -0800 (Tue, 21 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-21 11:30:05 -0800 (Tue, 21
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,10 +18,6 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
-import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.Session;
 
@@ -29,7 +26,7 @@ import wicket.Session;
  * 
  * @author Jonathan Locke
  */
-public class WebSession extends Session implements HttpSessionBindingListener
+public class WebSession extends Session
 {
 	/** log. careful, this log is used to trigger profiling too! */
 	// private static Log log = LogFactory.getLog(WebSession.class);
@@ -74,37 +71,6 @@ public class WebSession extends Session implements HttpSessionBindingListener
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
-	 */
-	public void valueBound(HttpSessionBindingEvent event)
-	{
-	}
-
-	/**
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
-	 */
-	public void valueUnbound(HttpSessionBindingEvent event)
-	{
-		// if application == null then it was serialized/deserialized and then
-		// invalidated without being touched anymore.
-		// Don't know an easy way to get the application object back so can't
-		// call destroy on it except maybe:
-		// TODO we could try to get it through the servletcontext, but how to
-		// get the context key?  If the session was invalidated, couldn't the
-		// application be notified then?
-		Application application = getApplication();
-		if (application != null)
-		{
-			// will happen when the session gets invalidated or a timeout.
-			String id = getSessionStore().getId();
-			if (application instanceof WebApplication)
-			{
-				((WebApplication)application).sessionDestroyed(id);
-			}
-		}
-	}
-
-	/**
 	 * Any attach logic for session subclasses.
 	 */
 	protected void attach()
@@ -112,6 +78,9 @@ public class WebSession extends Session implements HttpSessionBindingListener
 	}
 
 	/**
+	 * Called on the end of handling a request, when the RequestCycle is about
+	 * to be detached from the current thread.
+	 * 
 	 * @see wicket.Session#detach()
 	 */
 	protected void detach()

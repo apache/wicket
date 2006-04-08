@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id: HttpSessionStore.java 5131 2006-03-26 02:12:04 -0800 (Sun, 26 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-26 02:12:04 -0800 (Sun, 26 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,11 +20,14 @@ package wicket.protocol.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +51,30 @@ public class HttpSessionStore implements ISessionStore
 	private static Log log = LogFactory.getLog(HttpSessionStore.class);
 
 	/**
+	 * Reacts on unbinding from the session and calls
+	 * {@link HttpSessionStore#httpSessionUnbound()}.
+	 */
+	private final class SessionBindingListener implements HttpSessionBindingListener, Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+		 */
+		public void valueBound(HttpSessionBindingEvent arg0)
+		{
+		}
+
+		/**
+		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+		 */
+		public void valueUnbound(HttpSessionBindingEvent arg0)
+		{
+			httpSessionUnbound();
+		}
+	}
+
+	/**
 	 * the prefix for storing variables in the actual session.
 	 */
 	private String sessionAttributePrefix;
@@ -54,21 +82,28 @@ public class HttpSessionStore implements ISessionStore
 	/** cached http session object. */
 	private HttpSession httpSession = null;
 
+	/**
+	 * cached application object so that we can access it regardless whether of
+	 * any request.
+	 */
+	private WebApplication application;
+
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
-	
+
 	/**
 	 * Construct.
 	 */
 	public HttpSessionStore()
 	{
 		// sanity check
-		Application application = Application.get();
-		if (!(application instanceof WebApplication))
+		Application app = Application.get();
+		if (!(app instanceof WebApplication))
 		{
 			throw new IllegalStateException(getClass().getName()
 					+ " can only operate in the context of web applications");
 		}
+		this.application = (WebApplication)app;
 	}
 
 	/**
@@ -76,7 +111,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public String getId()
 	{
-		if(id == null)
+		if (id == null)
 		{
 			HttpSession httpSession = getHttpSession(false);
 			if (httpSession != null)
@@ -140,9 +175,9 @@ public class HttpSessionStore implements ISessionStore
 		{
 			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
 			String attributeName = getSessionAttributePrefix() + name;
-			if(logger != null)
+			if (logger != null)
 			{
-				if(httpSession.getAttribute(attributeName) == null)
+				if (httpSession.getAttribute(attributeName) == null)
 				{
 					logger.objectCreated(value);
 				}
@@ -151,7 +186,7 @@ public class HttpSessionStore implements ISessionStore
 					logger.objectUpdated(value);
 				}
 			}
-			
+
 			httpSession.setAttribute(attributeName, value);
 		}
 	}
@@ -179,32 +214,16 @@ public class HttpSessionStore implements ISessionStore
 		{
 			String attributeName = getSessionAttributePrefix() + name;
 			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
-			if(logger != null)
+			if (logger != null)
 			{
 				Object value = httpSession.getAttribute(attributeName);
-				if(value != null)
+				if (value != null)
 				{
 					logger.objectRemoved(value);
 				}
 			}
 			httpSession.removeAttribute(attributeName);
 		}
-	}
-
-	/**
-	 * Gets the session attribute prefix.
-	 * 
-	 * @return the session attribute prefix
-	 */
-	private String getSessionAttributePrefix()
-	{
-		if (sessionAttributePrefix == null)
-		{
-			WebApplication application = (WebApplication)Application.get();
-			WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
-			sessionAttributePrefix = application.getSessionAttributePrefix(cycle.getWebRequest());
-		}
-		return sessionAttributePrefix;
 	}
 
 	/**
@@ -231,6 +250,22 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
+	 * Template method that is called when the underlying session is invalidated
+	 * or timed out.
+	 * <p>
+	 * <strong>There is no guarantee on which objects still are available in the
+	 * underlying session.</strong> Don't depend on this method for any cleanup
+	 * of specific objects in the session, but - if you really need to - let
+	 * those objects implement {@link HttpSessionBindingListener} and use
+	 * {@link HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)}
+	 * instead.
+	 * </p>
+	 */
+	protected void onHttpSessionUnbound()
+	{
+	}
+
+	/**
 	 * Gets the underlying HttpSession object or null.
 	 * <p>
 	 * WARNING: it is a bad idea to depend on the http session object directly.
@@ -240,8 +275,8 @@ public class HttpSessionStore implements ISessionStore
 	 * this directly.
 	 * </p>
 	 * 
-	 * @param createWhenNeeded 
-	 * 					Create the session when there is not one yet. 
+	 * @param createWhenNeeded
+	 *            Create the session when there is not one yet.
 	 * 
 	 * @return The underlying HttpSession object (null if not created yet).
 	 */
@@ -273,10 +308,44 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
+	 * Gets the session attribute prefix.
+	 * 
+	 * @return the session attribute prefix
+	 */
+	private String getSessionAttributePrefix()
+	{
+		if (sessionAttributePrefix == null)
+		{
+			WebApplication application = (WebApplication)Application.get();
+			WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
+			sessionAttributePrefix = application.getSessionAttributePrefix(cycle.getWebRequest());
+		}
+		return sessionAttributePrefix;
+	}
+
+	/**
+	 * Called when the underlying session is invalidated or timed out.
+	 * <strong>There is no guarantee on which objects still are available in the
+	 * underlying session.</strong> Don't depend on this method for any cleanup
+	 * of specific objects in the session, but - if you really need to - let
+	 * those objects implement {@link HttpSessionBindingListener} and use
+	 * {@link HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)}
+	 * instead.
+	 */
+	private void httpSessionUnbound()
+	{
+		// call call method
+		onHttpSessionUnbound();
+
+		application.sessionDestroyed(id);
+		this.application = null;
+	}
+
+	/**
 	 * Create the http session.
 	 * 
-	 * @param createWhenNeeded 
-	 * 					Create the session when there is not one yet. 
+	 * @param createWhenNeeded
+	 *            Create the session when there is not one yet.
 	 * 
 	 * @return The http session
 	 */
@@ -289,7 +358,16 @@ public class HttpSessionStore implements ISessionStore
 			if (request instanceof WebRequest)
 			{
 				WebRequest webRequest = (WebRequest)request;
-				return webRequest.getHttpServletRequest().getSession(createWhenNeeded);
+				HttpSession httpSession = webRequest.getHttpServletRequest().getSession(
+						createWhenNeeded);
+				if (httpSession != null)
+				{
+					// register listener object so that we'll get notified
+					// when the session is being destroyed
+					String key = getSessionAttributePrefix() + "-SessionBindingListener";
+					httpSession.setAttribute(key, new SessionBindingListener());
+				}
+				return httpSession;
 			}
 		}
 		return null;
