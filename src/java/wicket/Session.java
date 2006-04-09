@@ -817,11 +817,14 @@ public abstract class Session implements Serializable
 	 */
 	protected final ISessionStore getSessionStore()
 	{
-		SessionFacade sessionFacade = getApplication().getSessionFacade();
-		RequestCycle requestCycle = RequestCycle.get();
-		return sessionFacade.getSessionStore(requestCycle != null
-				? requestCycle.getRequest()
-				: null);
+		if (sessionStore == null)
+		{
+			SessionFacade sessionFacade = getApplication().getSessionFacade();
+			RequestCycle requestCycle = RequestCycle.get();
+			sessionStore = sessionFacade.getSessionStore(requestCycle != null ? requestCycle
+					.getRequest() : null);
+		}
+		return sessionStore;
 	}
 
 	/**
@@ -845,9 +848,6 @@ public abstract class Session implements Serializable
 	 */
 	protected final void setAttribute(String name, Object value)
 	{
-		// Get the old value if any
-		Object oldValue = getAttribute(name);
-
 		// Set the actual attribute
 		getSessionStore().setAttribute(name, value);
 	}

@@ -88,6 +88,18 @@ public abstract class SessionFacade
 	public final ISessionStore getSessionStore(Request request)
 	{
 		String sessionId = getId(request);
+		return getSessionStore(sessionId);
+	}
+
+	/**
+	 * Gets the session store for the session with the given session id.
+	 * 
+	 * @param sessionId
+	 *            The id of the session
+	 * @return The session store
+	 */
+	private ISessionStore getSessionStore(String sessionId)
+	{
 		ISessionStore sessionStore = (ISessionStore)sessionIdToSessionStore.get(sessionId);
 		if (sessionStore == null)
 		{
@@ -115,4 +127,36 @@ public abstract class SessionFacade
 	 *         {@link IllegalArgumentException}
 	 */
 	protected abstract Session lookup(Request request);
+
+	/**
+	 * Unbinds the session with the provided session id.
+	 * <p>
+	 * <strong>It is the full responsibility of subclasses of the session facade
+	 * to call the unbind method.
+	 * </p>
+	 * 
+	 * @param applicationKey
+	 *            The unique key of the application within this web application
+	 * @param sessionId
+	 *            The id of the session to be unbinded
+	 */
+	protected final void unbind(String applicationKey, String sessionId)
+	{
+		onUnbind(applicationKey, sessionId);
+		ISessionStore sessionStore = getSessionStore(sessionId);
+		sessionStore.destroy();
+	}
+
+	/**
+	 * Template method that is called when the session with the provided session
+	 * id is unbinded.
+	 * 
+	 * @param applicationKey
+	 *            The unique key of the application within this web application
+	 * @param sessionId
+	 *            The id of the session to be unbinded
+	 */
+	protected void onUnbind(String applicationKey, String sessionId)
+	{
+	}
 }

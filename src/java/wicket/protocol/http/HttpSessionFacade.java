@@ -180,7 +180,7 @@ public class HttpSessionFacade extends SessionFacade implements Serializable
 	 * @param sessionId
 	 *            The id of the session to be unbinded
 	 */
-	protected void unbind(String applicationKey, String sessionId)
+	protected void onUnbind(String applicationKey, String sessionId)
 	{
 		WebApplication application = (WebApplication)Application.get(applicationKey);
 		if (application != null)

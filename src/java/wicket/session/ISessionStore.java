@@ -20,6 +20,8 @@ package wicket.session;
 
 import java.util.List;
 
+import wicket.SessionFacade;
+
 /**
  * The actual store that is used by {@link wicket.Session} to store its
  * attributes.
@@ -70,4 +72,10 @@ public interface ISessionStore
 	 *            the value of the attribute
 	 */
 	void setAttribute(String name, Object value);
+
+	/**
+	 * Clean up method which should be called on session invalidation by the
+	 * implementation of {@link SessionFacade}.
+	 */
+	void destroy();
 }

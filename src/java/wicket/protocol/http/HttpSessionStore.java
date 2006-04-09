@@ -202,6 +202,13 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
+	 * @see wicket.session.ISessionStore#destroy()
+	 */
+	public void destroy()
+	{
+	}
+
+	/**
 	 * Gets the underlying HttpSession object or null.
 	 * <p>
 	 * WARNING: it is a bad idea to depend on the http session object directly.
