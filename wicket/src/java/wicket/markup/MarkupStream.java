@@ -202,8 +202,8 @@ public final class MarkupStream
 	 */
 	public void setCurrentIndex(final int currentIndex)
 	{
-		this.currentIndex = currentIndex;
 		current = get(currentIndex);
+		this.currentIndex = currentIndex;
 	}
 
 	/**
