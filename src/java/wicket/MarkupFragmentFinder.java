@@ -58,24 +58,31 @@ final class MarkupFragmentFinder
 
 			// In case the component has already been rendered, this is a
 			// performance short cut. But actually this was necessary because
-			// transparent containers and component which implement
+			// transparent containers and components which implement
 			// IComponentResolver destroy the 1:1 match between component path
 			// and markup path.
 			if (component.markupIndex != -1)
 			{
 				// Might be that the markup has been reloaded and that the
-				// position has changed. Make the component is still
+				// position has changed. Make sure the component is still
 				// available
-				markupStream.setCurrentIndex(component.markupIndex);
-				MarkupElement elem = markupStream.get();
-				if (elem instanceof ComponentTag)
+				try
 				{
-					ComponentTag tag = (ComponentTag)elem;
-					if (tag.getId().equals(component.getId()))
+					markupStream.setCurrentIndex(component.markupIndex);
+					MarkupElement elem = markupStream.get();
+					if (elem instanceof ComponentTag)
 					{
-						// Ok, found it
-						return markupStream;
+						ComponentTag tag = (ComponentTag)elem;
+						if (tag.getId().equals(component.getId()))
+						{
+							// Ok, found it
+							return markupStream;
+						}
 					}
+				}
+				catch (IndexOutOfBoundsException ex)
+				{
+					// fall through. Don't do anything
 				}
 			}
 

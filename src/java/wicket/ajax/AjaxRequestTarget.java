@@ -63,7 +63,6 @@ import wicket.util.string.Strings;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
@@ -76,8 +75,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private final class EncodingResponse extends Response
 	{
-
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
+		
 		private boolean escaped = false;
 
 		private final Response originalResponse;
@@ -99,7 +98,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			return originalResponse.encodeURL(url);
 		}
-
 
 		/**
 		 * @return contents of the response
@@ -188,7 +186,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		addComponent(component, component.getMarkupId());
 	}
-
 
 	/**
 	 * Adds a component to the list of components to be rendered
@@ -329,7 +326,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			// log the error but output nothing in the response, parse failure
 			// of response will cause any javascript failureHandler to be
 			// invoked
-			LOG.error(ex);
+			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
 		}
 	}
 
@@ -351,8 +348,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	protected String encode(String str)
 	{
 		// TODO Post 1.3: Java5: we can use str.replace(charseq, charseq) for
-		// more efficient
-		// replacement
+		// more efficient replacement
 		return str.replaceAll("]", "]^");
 	}
 
@@ -413,7 +409,6 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		// Initialize temporary variables
 		final Page page = component.getPage();
-
 		if (page == null)
 		{
 			throw new IllegalStateException(
@@ -450,6 +445,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 
 	/**
+	 * 
 	 * @param response
 	 * @param js
 	 */
