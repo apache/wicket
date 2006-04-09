@@ -18,7 +18,9 @@
  */
 package wicket.examples.ajax.builtin;
 
+import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
@@ -126,7 +128,62 @@ public class LinksPage extends BasePage
 
 			}
 		});
-	}
 
+		add(new AjaxLink("success-link")
+		{
+			public void onClick(AjaxRequestTarget target)
+			{
+			}
+
+			protected wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
+			{
+				return new AjaxCallDecorator()
+				{
+					public CharSequence decorateOnSuccessScript(CharSequence script)
+					{
+						return "alert('Success');";
+					}
+
+					public CharSequence decorateOnFailureScript(CharSequence script)
+					{
+						return "alert('Failure');";
+					}
+
+					public CharSequence decorateScript(CharSequence script)
+					{
+						return "alert('Before ajax call');" + script;
+					}
+				};
+			};
+		});
+		add(new AjaxLink("failure-link")
+		{
+			public void onClick(AjaxRequestTarget target)
+			{
+				throw new WicketRuntimeException("Failure link clicked");
+			}
+
+			protected wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
+			{
+				return new AjaxCallDecorator()
+				{
+					public CharSequence decorateOnSuccessScript(CharSequence script)
+					{
+						return "alert('Success');";
+					}
+
+					public CharSequence decorateOnFailureScript(CharSequence script)
+					{
+						return "alert('Failure');";
+					}
+
+					public CharSequence decorateScript(CharSequence script)
+					{
+						return "alert('Before ajax call');" + script;
+					}
+				};
+			};
+		});
+	}
 
 }
