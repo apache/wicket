@@ -101,7 +101,7 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		List loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
+		Assert.assertEquals("There should be 3 default loaders", 3, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 				loaders.get(0) instanceof ComponentStringResourceLoader);
 		Assert.assertTrue("Second loader should be the application one",
