@@ -165,8 +165,7 @@ public abstract class Session implements Serializable
 	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
 
 	/** The session store of this session. */
-	private transient ISessionStore sessionStore;
-
+	// private transient ISessionStore sessionStore;
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
@@ -178,6 +177,11 @@ public abstract class Session implements Serializable
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
 
+	/**
+	 * Temporary instance of the session store. Should be set on each request as
+	 * it is not supposed to go in the session.
+	 */
+	private transient ISessionStore sessionStore;
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -326,9 +330,9 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return The unique id for this session
 	 */
-	public String getId()
+	public final String getId()
 	{
-		if(id == null)
+		if (id == null)
 		{
 			id = getSessionStore().getId();
 		}
@@ -602,7 +606,9 @@ public abstract class Session implements Serializable
 	{
 		this.application = application;
 		if (usedPages == null)
+		{
 			usedPages = new HashMap(3);
+		}
 	}
 
 	/**
@@ -763,37 +769,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Removes any rendered feedback messages as well as compacts memory. This
-	 * method is usually called at the end of the request cycle processing.
-	 */
-	final void cleanupFeedbackMessages()
-	{
-		if (feedbackMessages != null)
-		{
-			Iterator msgs = feedbackMessages.iterator();
-			while (msgs.hasNext())
-			{
-				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
-				if (msg.isRendered())
-				{
-					msgs.remove();
-					dirty();
-				}
-			}
-			if (feedbackMessages.size() == 0)
-			{
-				feedbackMessages = null;
-				dirty();
-			}
-			else
-			{
-				feedbackMessages.trimToSize();
-			}
-		}
-
-	}
-
-	/**
 	 * Any detach logic for session subclasses. This is called on the end of
 	 * handling a request, when the RequestCycle is about to be detached from
 	 * the current thread.
@@ -842,11 +817,11 @@ public abstract class Session implements Serializable
 	 */
 	protected final ISessionStore getSessionStore()
 	{
-		if(sessionStore == null) 
-		{
-			sessionStore = application.getSessionStore();
-		}
-		return sessionStore;
+		SessionFacade sessionFacade = getApplication().getSessionFacade();
+		RequestCycle requestCycle = RequestCycle.get();
+		return sessionFacade.getSessionStore(requestCycle != null
+				? requestCycle.getRequest()
+				: null);
 	}
 
 	/**
@@ -934,6 +909,36 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Removes any rendered feedback messages as well as compacts memory. This
+	 * method is usually called at the end of the request cycle processing.
+	 */
+	final void cleanupFeedbackMessages()
+	{
+		if (feedbackMessages != null)
+		{
+			Iterator msgs = feedbackMessages.iterator();
+			while (msgs.hasNext())
+			{
+				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
+				if (msg.isRendered())
+				{
+					msgs.remove();
+					dirty();
+				}
+			}
+			if (feedbackMessages.size() == 0)
+			{
+				feedbackMessages = null;
+				dirty();
+			}
+			else
+			{
+				feedbackMessages.trimToSize();
+			}
+		}
+	}
+
+	/**
 	 * @param page
 	 *            The page to add to dirty objects list
 	 */
@@ -944,6 +949,18 @@ public abstract class Session implements Serializable
 		{
 			dirtyObjects.add(page);
 		}
+	}
+
+	/**
+	 * INTERNAL API. Page was detached event.
+	 * 
+	 * @param page
+	 *            The page that was detached
+	 */
+	final synchronized void pageDetached(Page page)
+	{
+		usedPages.remove(page.getId());
+		notifyAll();
 	}
 
 	/**
@@ -986,18 +1003,5 @@ public abstract class Session implements Serializable
 			dirtyObjects.set(list);
 		}
 		return list;
-	}
-
-	/**
-	 * INTERNAL API
-	 * 
-	 * @param page
-	 *            The page that was detached
-	 * 
-	 */
-	final synchronized void pageDetached(Page page)
-	{
-		usedPages.remove(page.getId());
-		notifyAll();
 	}
 }

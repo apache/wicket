@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -37,8 +39,6 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
-import wicket.session.ISessionStore;
-import wicket.session.ISessionStoreFactory;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
@@ -120,6 +120,13 @@ public abstract class Application
 	 */
 	public static final String CONTEXTPATH = "contextpath";
 
+	/**
+	 * Applications keyed on the {@link #getApplicationKey()} so that they can
+	 * be retrieved even without being in a request/ being set in the thread
+	 * local (we need that e.g. for when we are in a destruction thread).
+	 */
+	private static final Map applicationKeyToApplication = new HashMap(1);
+
 	/** Thread local holder of the application object. */
 	private static final ThreadLocal current = new ThreadLocal();
 
@@ -140,20 +147,15 @@ public abstract class Application
 
 	/** Settings for this application. */
 	private Settings settings;
-	
-	/**  can the settings object be set/used. */
+
+	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
 
 	/** Shared resources for this application */
 	private final SharedResources sharedResources;
 
-	/** 
-	 * The session store of this session. 
-	 * Can't contain session information! 
-	 * Shared  variable.
-	 */
-	private ISessionStore sessionStore;
-
+	/** The session facade. */
+	private SessionFacade sessionFacade;
 
 	/**
 	 * Get Application for current thread.
@@ -168,6 +170,23 @@ public abstract class Application
 			throw new WicketRuntimeException("There is no application attached to current thread "
 					+ Thread.currentThread().getName());
 		}
+		return application;
+	}
+
+	/**
+	 * Gets the Application based on the application key of that application.
+	 * THIS METHOD IS NOT MEANT INTENDED FOR FRAMEWORK CLIENTS.
+	 * 
+	 * @param applicationKey
+	 *            The unique key of the application within a certain context
+	 *            (e.g. a web application)
+	 * @return The application
+	 * @throws IllegalArgumentException
+	 *             When no application was found with the provided key
+	 */
+	public static Application get(String applicationKey)
+	{
+		Application application = (Application)applicationKeyToApplication.get(applicationKey);
 		return application;
 	}
 
@@ -517,12 +536,12 @@ public abstract class Application
 	// TODO Post 1.2: Make private
 	public Settings getSettings()
 	{
-		if (!settingsAccessible) 
+		if (!settingsAccessible)
 		{
 			throw new WicketRuntimeException(
 					"Use Application.init() method for configuring your application object");
 		}
-		
+
 		if (settings == null)
 		{
 			settings = new Settings(this);
@@ -595,35 +614,94 @@ public abstract class Application
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * Initializes wicket components.
+	 */
+	public final void initializeComponents()
+	{
+		// Load any wicket components we can find
+		try
+		{
+			// Load components used by all applications
+			for (Enumeration e = getClass().getClassLoader().getResources("wicket.properties"); e
+					.hasMoreElements();)
+			{
+				InputStream in = null;
+				try
+				{
+					final URL url = (URL)e.nextElement();
+					final Properties properties = new Properties();
+					in = url.openStream();
+					properties.load(in);
+					initializeComponents(properties);
+				}
+				finally
+				{
+					if (in != null)
+					{
+						in.close();
+					}
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to load initializers file", e);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @param target
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @param requestTarget
+	 */
+	public void logResponseTarget(IRequestTarget requestTarget)
+	{
+	}
+
+	/**
+	 * Gets the unique key of this application within a given context (like a
+	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
+	 * 
+	 * @return The unique key of this application
+	 */
+	public abstract String getApplicationKey();
+
+	/**
+	 * Gets the facade object for working getting/ storing session instances.
+	 * 
+	 * @return The session facade
+	 */
+	protected final SessionFacade getSessionFacade()
+	{
+		return sessionFacade;
+	}
+
+	/**
+	 * Creates a new session facade. Is called once per application, and is
+	 * typically not something clients reimplement.
+	 * 
+	 * @return The session facade
+	 */
+	protected abstract SessionFacade newSessionFacade();
+
+	/**
 	 * Gets the factory for creating session instances.
 	 * 
 	 * @return Factory for creating session instances
 	 */
 	protected abstract ISessionFactory getSessionFactory();
 
-	/**
-	 * Gets the session store.
-	 * 
-	 * @return the session store
-	 */
-	public final ISessionStore getSessionStore()
-	{
-		if (sessionStore == null)
-		{
-			ISessionStoreFactory sessionStoreFactory = getSessionSettings()
-					.getSessionStoreFactory();
-			sessionStore = sessionStoreFactory.newSessionStore();
-
-			// Still null?
-			if (sessionStore == null)
-			{
-				throw new IllegalStateException(sessionStoreFactory.getClass().getName()
-						+ " did not produce a session store");
-			}
-		}
-		return sessionStore;
-	}
-	
 	/**
 	 * Allows for initialization of the application by a subclass. <strong>Use
 	 * this method for any application setup instead of the constructor.</strong>
@@ -652,6 +730,19 @@ public abstract class Application
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
+
+		String applicationKey = getApplicationKey();
+		applicationKeyToApplication.put(applicationKey, this);
+
+		sessionFacade = newSessionFacade();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	protected void internalDestroy()
+	{
+		applicationKeyToApplication.remove(getApplicationKey());
 	}
 
 	/**
@@ -705,44 +796,6 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * Initializes wicket components.
-	 */
-	public final void initializeComponents()
-	{
-		// Load any wicket components we can find
-		try
-		{
-			// Load components used by all applications
-			for (Enumeration e = getClass().getClassLoader().getResources("wicket.properties"); e
-					.hasMoreElements();)
-			{
-				InputStream in = null;
-				try
-				{
-					final URL url = (URL)e.nextElement();
-					final Properties properties = new Properties();
-					in = url.openStream();
-					properties.load(in);
-					initializeComponents(properties);
-				}
-				finally
-				{
-					if (in != null)
-					{
-						in.close();
-					}
-				}
-			}
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Unable to load initializers file", e);
-		}
-	}
-
-	/**
 	 * @param properties
 	 *            Properties map with names of any library initializers in it
 	 */
@@ -750,23 +803,5 @@ public abstract class Application
 	{
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * @param target
-	 */
-	public void logEventTarget(IRequestTarget target)
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * @param requestTarget
-	 */
-	public void logResponseTarget(IRequestTarget requestTarget)
-	{
 	}
 }

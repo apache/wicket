@@ -188,7 +188,8 @@ public final class Settings
 	private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/** The eviction strategy. */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(5);
+	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
+			5);
 
 	/** The factory to be used for the property files */
 	private wicket.resource.IPropertiesFactory propertiesFactory;
@@ -298,7 +299,7 @@ public final class Settings
 		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application,Application.class));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application, Application.class));
 	}
 
 	/**
@@ -439,7 +440,7 @@ public final class Settings
 		// set (previous time or by the developer itself)
 		// This all to do missing api in the servlet spec.. You can't get a
 		// context path from the servlet context, which is just stupid.
-		if(contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
+		if (contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
 		{
 			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
 		}
@@ -1162,21 +1163,5 @@ public final class Settings
 			IOUtils.closeQuietly(is);
 		}
 		return properties.getProperty("wicket.version", "n/a");
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#getServletContextKey()
-	 */
-	public String getServletContextKey()
-	{
-		return servletContextKey;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#setServletContextKey(java.lang.String)
-	 */
-	public void setServletContextKey(String contextKey)
-	{
-		this.servletContextKey = contextKey;
 	}
 }

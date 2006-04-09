@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MockWebApplication.java 4920 2006-03-14 09:29:09 -0800 (Tue, 14 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-14 09:29:09 -0800 (Tue, 14
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,6 +32,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
+import wicket.SessionFacade;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -126,24 +128,32 @@ public class MockWebApplication extends WebApplication
 	public MockWebApplication(final String path)
 	{
 		Application.set(this);
-		
+
 		context = new MockServletContext(this, path);
-		
+
 		setWicketServlet(new WicketServlet()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public ServletContext getServletContext() 
+			public ServletContext getServletContext()
 			{
 				return context;
 			};
-			
+
 			/**
 			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
 			 */
 			public String getInitParameter(String name)
 			{
 				return null;
+			}
+
+			/**
+			 * @see javax.servlet.GenericServlet#getServletName()
+			 */
+			public String getServletName()
+			{
+				return "WicketMockServlet";
 			}
 		});
 		internalInit();
@@ -156,17 +166,9 @@ public class MockWebApplication extends WebApplication
 
 		// set the default context path
 		getApplicationSettings().setContextPath(context.getServletContextName());
-		
+
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
-	}
-
-	/**
-	 * 
-	 * @see wicket.Application#init()
-	 */
-	protected void init()
-	{
 	}
 
 	/**
@@ -287,7 +289,7 @@ public class MockWebApplication extends WebApplication
 	{
 		processRequestCycle(createRequestCycle());
 	}
-	
+
 	/**
 	 * Create and process the request cycle using the current request and
 	 * response information.
@@ -312,11 +314,12 @@ public class MockWebApplication extends WebApplication
 			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)cycle
 					.getWebRequest().getHttpServletRequest();
 
-			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this, servletSession, context);
+			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this,
+					servletSession, context);
 			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketRequest = newWebRequest(newHttpRequest);
 			wicketSession = getSession(wicketRequest);
-			
+
 			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
 			cycle.request();
 		}
@@ -349,7 +352,7 @@ public class MockWebApplication extends WebApplication
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
 					Class pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
-					if (parameters==null||parameters.size() == 0)
+					if (parameters == null || parameters.size() == 0)
 					{
 						lastRenderedPage = new DefaultPageFactory().newPage(pageClass);
 					}
@@ -386,6 +389,7 @@ public class MockWebApplication extends WebApplication
 		parametersForNextRequest.clear();
 		wicketRequest = new ServletWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
+		getSessionFacade().bind(wicketRequest, wicketSession);
 		wicketResponse = new WebResponse(servletResponse);
 	}
 
@@ -426,5 +430,13 @@ public class MockWebApplication extends WebApplication
 	public void setHomePage(Class clazz)
 	{
 		homePage = clazz;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#newSessionFacade()
+	 */
+	protected SessionFacade newSessionFacade()
+	{
+		return new MockSessionFacade();
 	}
 }
