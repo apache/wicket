@@ -813,7 +813,7 @@ public abstract class MarkupContainer extends Component
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public MarkupResourceStream newMarkupResourceStream(Class containerClass)
+	public IResourceStream newMarkupResourceStream(Class containerClass)
 	{
 		// Get locator to search for the resource
 		final IResourceStreamLocator locator = getApplication().getResourceSettings()
@@ -841,7 +841,7 @@ public abstract class MarkupContainer extends Component
 
 		return null;
 	}
-
+	
 	/**
 	 * Get the markup stream set on this container.
 	 * 
