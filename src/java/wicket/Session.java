@@ -601,7 +601,6 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
-		this.sessionStore = application.getSessionStore();
 		if (usedPages == null)
 			usedPages = new HashMap(3);
 	}
@@ -843,6 +842,10 @@ public abstract class Session implements Serializable
 	 */
 	protected final ISessionStore getSessionStore()
 	{
+		if(sessionStore == null) 
+		{
+			sessionStore = application.getSessionStore();
+		}
 		return sessionStore;
 	}
 
