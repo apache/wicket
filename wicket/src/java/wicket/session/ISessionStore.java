@@ -20,11 +20,6 @@ package wicket.session;
 
 import java.util.List;
 
-import wicket.Request;
-import wicket.RequestCycle;
-import wicket.Session;
-import wicket.protocol.http.WebSession;
-
 /**
  * The actual store that is used by {@link wicket.Session} to store its
  * attributes.
@@ -75,28 +70,4 @@ public interface ISessionStore
 	 *            the value of the attribute
 	 */
 	void setAttribute(String name, Object value);
-
-	
-	/**
-	 * This method should return the session for this request.
-	 * It can't assume that there is an {@link RequestCycle} yet.
-	 * 
-	 * @param request The current request
-	 * @return The session if found or null if not found.
-	 */
-	Session getSession(Request request);
-
-	/**
-	 * This will be called from the WebApplication.getSession()
-	 * when the session is just created.  
-	 * It shouldn't be called in any other place. Because
-	 * this method doesn't really have to store the session
-	 * if the underlying platform (for example the http session) isn't there yet.
-	 * 
-	 *  Use {@link ISessionStore#setAttribute(String, Object)} for that
-	 * 
-	 * @param request 
-	 * @param webSession
-	 */
-	void storeInitialSession(Request request,WebSession webSession);
 }

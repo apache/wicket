@@ -34,6 +34,7 @@ import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
+import wicket.SessionFacade;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
@@ -48,7 +49,6 @@ import wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
-import wicket.util.string.Strings;
 
 
 /**
@@ -70,11 +70,11 @@ import wicket.util.string.Strings;
  * init() method. For example:
  * 
  * <pre>
- *            public void init()
- *            {
- *                String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                ...
+ *                           public void init()
+ *                           {
+ *                               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                               ...
  * </pre>
  * 
  * @see WicketServlet
@@ -125,7 +125,14 @@ public abstract class WebApplication extends Application
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
+	/** Request logger instance. */
 	private RequestLogger requestLogger;
+
+	/**
+	 * The cached application key. Will be set in
+	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
+	 */
+	private String applicationKey;
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
@@ -172,6 +179,20 @@ public abstract class WebApplication extends Application
 					+ " in the init() method instead of your constructor");
 		}
 		return wicketServlet;
+	}
+
+	/**
+	 * @see wicket.Application#getApplicationKey()
+	 */
+	public final String getApplicationKey()
+	{
+		if (applicationKey == null)
+		{
+			throw new IllegalStateException("the application key does not seem to"
+					+ " be set properly or this method is called before WicketServlet is"
+					+ " set, which leads to the wrong behavior");
+		}
+		return applicationKey;
 	}
 
 	/**
@@ -283,6 +304,7 @@ public abstract class WebApplication extends Application
 		if (this.wicketServlet == null)
 		{
 			this.wicketServlet = wicketServlet;
+			this.applicationKey = wicketServlet.getServletName();
 		}
 		else
 		{
@@ -300,6 +322,53 @@ public abstract class WebApplication extends Application
 	{
 		checkMountPath(path);
 		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
+	}
+
+	/**
+	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+		super.logEventTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
+		{
+			rl.logEventTarget(target);
+		}
+	}
+
+	/**
+	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
+	 */
+	public void logResponseTarget(IRequestTarget target)
+	{
+		super.logResponseTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
+		{
+			rl.logResponseTarget(target);
+		}
+	}
+
+	/**
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
+	 */
+	public final RequestLogger getRequestLogger()
+	{
+		return requestLogger;
+	}
+
+	/**
+	 * Sets the {@link RequestLogger}.
+	 * 
+	 * @param logger
+	 *            The request logger
+	 */
+	public final void setRequestLogger(RequestLogger logger)
+	{
+		requestLogger = logger;
 	}
 
 	/**
@@ -382,6 +451,8 @@ public abstract class WebApplication extends Application
 	 */
 	protected void internalDestroy()
 	{
+		super.internalDestroy();
+		bufferedResponses.clear();
 	}
 
 	/**
@@ -483,6 +554,14 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * @see wicket.Application#newSessionFacade()
+	 */
+	protected SessionFacade newSessionFacade()
+	{
+		return new HttpSessionFacade();
+	}
+
+	/**
 	 * Add a buffered response to the redirect buffer.
 	 * 
 	 * @param sessionId
@@ -514,30 +593,34 @@ public abstract class WebApplication extends Application
 	 */
 	final WebSession getSession(final WebRequest request)
 	{
-		WebSession webSession = (WebSession)getSessionStore().getSession(request);
+		SessionFacade sessionFacade = getSessionFacade();
+		Session session = sessionFacade.getSession(request);
 
-		if (webSession == null)
+		if (session == null)
 		{
 			// Create session using session factory
-			final Session session = getSessionFactory().newSession();
-			if (session instanceof WebSession)
-			{
-				webSession = (WebSession)session;
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-						"Session created by a WebApplication session factory must be a subclass of WebSession");
-			}
+			session = getSessionFactory().newSession();
 
 			// Set the client Locale for this session
-			webSession.setLocale(request.getLocale());
+			session.setLocale(request.getLocale());
 
-			getSessionStore().storeInitialSession(request, webSession);
-
+			// Bind the session to the facade
+			sessionFacade.bind(request, session);
 		}
+
+		WebSession webSession;
+		if (session instanceof WebSession)
+		{
+			webSession = (WebSession)session;
+		}
+		else
+		{
+			throw new WicketRuntimeException("Session created by a WebApplication session factory "
+					+ "must be a subclass of WebSession");
+		}
+
 		// Set application on session
-		webSession.setApplication(this);
+		session.setApplication(this);
 
 		// Set session attribute name and attach/reattach http servlet session
 		webSession.initForRequest();
@@ -564,13 +647,28 @@ public abstract class WebApplication extends Application
 		{
 			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession
 					.remove(bufferId);
-			if(responsesPerSession.size() == 0)
+			if (responsesPerSession.size() == 0)
 			{
 				bufferedResponses.remove(sessionId);
 			}
 			return buffered;
 		}
 		return null;
+	}
+
+	/**
+	 * @param sessionId
+	 *            The session id that was destroyed
+	 */
+	void sessionDestroyed(String sessionId)
+	{
+		bufferedResponses.remove(sessionId);
+
+		RequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			logger.sessionDestroyed(sessionId);
+		}
 	}
 
 	/**
@@ -594,77 +692,4 @@ public abstract class WebApplication extends Application
 			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
 		}
 	}
-
-	/**
-	 * @param wicketServletName
-	 *            wicket servlet name
-	 * @return context key under which an instance of webapplication would be
-	 *         stored
-	 */
-	public final static String getServletContextKey(String wicketServletName)
-	{
-		if (Strings.isEmpty(wicketServletName))
-		{
-			throw new IllegalArgumentException("servletName cannot be empty");
-		}
-		return "wicket:" + wicketServletName;
-	}
-
-	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 */
-	void sessionDestroyed(String sessionId)
-	{
-		bufferedResponses.remove(sessionId);
-
-		RequestLogger logger = getRequestLogger();
-		if (logger != null)
-		{
-			logger.sessionDestroyed(sessionId);
-		}
-	}
-
-	/**
-	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
-	 */
-	public void logEventTarget(IRequestTarget target)
-	{
-		super.logEventTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logEventTarget(target);
-		}
-	}
-
-	/**
-	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
-	 */
-	public void logResponseTarget(IRequestTarget target)
-	{
-		super.logResponseTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logResponseTarget(target);
-		}
-	}
-
-	/**
-	 * @return The RequestLogger
-	 */
-	public RequestLogger getRequestLogger()
-	{
-		return requestLogger;
-	}
-
-	/**
-	 * @param logger
-	 */
-	public void setRequestLogger(RequestLogger logger)
-	{
-		requestLogger = logger;
-	}
-
 }

@@ -42,26 +42,19 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
-	 * Gets context path to use for absolute path generation.
-	 * For example an Application Server that is used as a 
-	 * virtual server on a Webserver:
-	 *  
+	 * Gets context path to use for absolute path generation. For example an
+	 * Application Server that is used as a virtual server on a Webserver:
+	 * 
 	 * <pre>
-	 *    appserver.com/context mapped to webserver/ (context path should be '/')
+	 *     appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path
 	 * 
-	 * @see IApplicationSettings#setContextPath(String) what the possible values can be.
+	 * @see IApplicationSettings#setContextPath(String) what the possible values
+	 *      can be.
 	 */
 	String getContextPath();
-
-	/**
-	 * Returns the servlet context key where the application object is stored under.
-	 * 
-	 * @return contextKey
-	 */
-	String getServletContextKey();
 
 	/**
 	 * Gets the converter factory.
@@ -109,21 +102,22 @@ public interface IApplicationSettings
 	void setClassResolver(final IClassResolver defaultClassResolver);
 
 	/**
-	 * Sets context path to use for absolute path generation.
-	 * For example an Application Server that is used as a 
-	 * virtual server on a Webserver:
-	 *  
+	 * Sets context path to use for absolute path generation. For example an
+	 * Application Server that is used as a virtual server on a Webserver:
+	 * 
 	 * <pre>
-	 *    appserver.com/context mapped to webserver/ (context path should be '/')
+	 *     appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
-	 * This method can be called in the init phase of the application 
-	 * with the servlet init parameter {@link Application#CONTEXTPATH} if it is specified
+	 * This method can be called in the init phase of the application with the
+	 * servlet init parameter {@link Application#CONTEXTPATH} if it is specified
 	 * or by the developer itself in the {@link WebApplication} init() method.
-	 * If it is not set in the init phase of the application it will be 
-	 * set automatically on the context path of the request {@link WebRequest#getContextPath()}
+	 * If it is not set in the init phase of the application it will be set
+	 * automatically on the context path of the request
+	 * {@link WebRequest#getContextPath()}
 	 * 
-	 * @param contextPath The context path to use. 
+	 * @param contextPath
+	 *            The context path to use.
 	 */
 	void setContextPath(String contextPath);
 
@@ -158,10 +152,4 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
-
-	/**
-	 * @param contextKey
-	 */
-	void setServletContextKey(String contextKey);
-
 }

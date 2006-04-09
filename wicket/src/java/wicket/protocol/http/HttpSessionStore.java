@@ -20,14 +20,11 @@ package wicket.protocol.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Request;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.session.ISessionStore;
 import wicket.util.lang.Bytes;
@@ -48,63 +44,6 @@ import wicket.util.lang.Bytes;
  */
 public class HttpSessionStore implements ISessionStore
 {
-	/**
-	 * Reacts on unbinding from the session by cleaning up the session related
-	 * application data.
-	 */
-	private static final class SessionBindingListener
-			implements
-				HttpSessionBindingListener,
-				Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * cached application object so that we can access it regardless whether
-		 * of any request.
-		 */
-		private String servletContextPath;
-
-		/** session id. */
-		private String id;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param servletContextPath
-		 *            The session's application servlet context path attribute
-		 *            name
-		 * @param id
-		 *            The session's id
-		 */
-		public SessionBindingListener(String servletContextPath, String id)
-		{
-			this.servletContextPath = servletContextPath;
-			this.id = id;
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
-		 */
-		public void valueBound(HttpSessionBindingEvent arg0)
-		{
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
-		 */
-		public void valueUnbound(HttpSessionBindingEvent arg0)
-		{
-			WebApplication application = (WebApplication)arg0.getSession().getServletContext()
-					.getAttribute(servletContextPath);
-			if (application != null)
-			{
-				application.sessionDestroyed(id);
-			}
-		}
-	}
-
-
 	/** log. */
 	private static Log log = LogFactory.getLog(HttpSessionStore.class);
 
@@ -151,9 +90,11 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public String getId()
 	{
-		// if ask for id then we have to have the real session else id will change in time.
+		// if ask for id then we have to have the real session else id will
+		// change in time.
 		return getHttpSession(true).getId();
 	}
+
 	/**
 	 * @see wicket.session.ISessionStore#setAttribute(java.lang.String,
 	 *      java.lang.Object)
@@ -284,16 +225,8 @@ public class HttpSessionStore implements ISessionStore
 			if (request instanceof WebRequest)
 			{
 				WebRequest webRequest = (WebRequest)request;
-				HttpSession httpSession = webRequest.getHttpServletRequest().getSession(createWhenNeeded);
-				String bindingListenerKey = getSessionAttributePrefix() + "SessionBindingListener";
-				if (httpSession != null && httpSession.getAttribute(bindingListenerKey) == null)
-				{
-					SessionBindingListener sessionBindingListener = new SessionBindingListener(
-							Application.get().getApplicationSettings().getServletContextKey(),
-							httpSession.getId());
-					httpSession.setAttribute(bindingListenerKey, sessionBindingListener);
-
-				}
+				HttpSession httpSession = webRequest.getHttpServletRequest().getSession(
+						createWhenNeeded);
 				return httpSession;
 			}
 		}
@@ -333,53 +266,5 @@ public class HttpSessionStore implements ISessionStore
 			sessionAttributePrefix = application.getSessionAttributePrefix(cycle.getWebRequest());
 		}
 		return sessionAttributePrefix;
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#getSession(wicket.Request)
-	 */
-	public Session getSession(Request req)
-	{
-		WebRequest request = (WebRequest)req;
-		// Get session, creating if it doesn't exist
-		// do not create it as we try to defer the actual
-		// creation as long as we can
-		final HttpSession httpSession = request.getHttpServletRequest().getSession(false);
-
-		// The actual attribute for the session is
-		// "wicket-<servletName>-session"
-		final String sessionAttribute = getSessionAttributePrefix(request)
-				+ Session.SESSION_ATTRIBUTE_NAME;
-
-
-		if (httpSession != null)
-		{
-			// Get Session abstraction from httpSession attribute
-			return (Session)httpSession.getAttribute(sessionAttribute);
-		}
-		return null;
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#storeInitialSession(Request,wicket.protocol.http.WebSession)
-	 */
-	public void storeInitialSession(Request req, WebSession webSession)
-	{
-		WebRequest request = (WebRequest)req;
-		// Get session, creating if it doesn't exist
-		// do not create it as we try to defer the actual
-		// creation as long as we can
-		final HttpSession httpSession = request.getHttpServletRequest().getSession(false);
-
-		if (httpSession != null)
-		{
-			// The actual attribute for the session is
-			// "wicket-<servletName>-session"
-			final String sessionAttribute = getSessionAttributePrefix(request)
-					+ Session.SESSION_ATTRIBUTE_NAME;
-
-			// Save this session in the HttpSession using the attribute name
-			httpSession.setAttribute(sessionAttribute, webSession);
-		}
 	}
 }
