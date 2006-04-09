@@ -30,6 +30,7 @@ import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.IChangeListener;
+import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.watch.ModificationWatcher;
@@ -175,12 +176,23 @@ public class MarkupCache
 				if (markup == null)
 				{
 					// Ask the container to locate its associated markup
-					final MarkupResourceStream markupResource = container
+					final IResourceStream resourceStream = container
 							.newMarkupResourceStream(containerClass);
 
 					// Found markup?
-					if (markupResource != null)
+					if (resourceStream != null)
 					{
+						final MarkupResourceStream markupResource;
+						if (resourceStream instanceof MarkupResourceStream)
+						{
+							markupResource = (MarkupResourceStream)resourceStream;
+						}
+						else
+						{
+							markupResource = new MarkupResourceStream(resourceStream,
+									new ContainerInfo(container), containerClass);
+						}
+						
 						// load the markup and watch for changes
 						markup = loadMarkupAndWatchForChanges(container, key, markupResource);
 					}
