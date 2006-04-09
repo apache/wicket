@@ -114,7 +114,7 @@ public class MergedMarkup extends Markup
 
 		return null;
 	}
-	
+
 	/**
 	 * Merge inherited and base markup.
 	 * 
@@ -127,9 +127,6 @@ public class MergedMarkup extends Markup
 	 */
 	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
-		// Get the body onLoad attribute from derived markup
-		final String onLoad = getBodyOnLoadString(markup);
-
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
 
@@ -141,152 +138,104 @@ public class MergedMarkup extends Markup
 		for (; baseIndex < baseMarkup.size(); baseIndex++)
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
-
-			// Make sure all tags of the base markup remember where they are from
-			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
+			if (element instanceof RawMarkup)
 			{
-				ComponentTag tag = (ComponentTag) element;
-				if (tag.getMarkupClass() == null)
-				{
-					tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
-				}
+				// Add the element to the merged list
+				addMarkupElement(element);
+				continue;
 			}
-			
+
+			final ComponentTag tag = (ComponentTag)element;
+
+			// Make sure all tags of the base markup remember where they are
+			// from
+			if ((baseMarkup.getResource() != null) && (tag.getMarkupClass() == null))
+			{
+				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+			}
+
 			if (element instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)element;
+				
+				// Found <wicket.child/>
 				if (wtag.isChildTag() && wtag.isOpenClose())
 				{
+					// <wicket:child /> => <wicket:child>...</wicket:child>
 					childTag = wtag;
 					WicketTag childOpenTag = (WicketTag)wtag.mutable();
 					childOpenTag.getXmlTag().setType(XmlTag.OPEN);
 					addMarkupElement(childOpenTag);
 					break;
 				}
-			}
 
-			// If element in base markup is </wicket:head>, scan the derived
-			// markup for <wicket:head> and add all elements of that tag body
-			// the new markup list.
-			if ((wicketHeadProcessed == false) && (element instanceof WicketTag))
-			{
-				final WicketTag tag = (WicketTag)element;
-				
-				boolean hitHead = tag.isClose() && tag.isHeadTag();
-				if (hitHead)
+				// Process the head of the extended markup only once
+				if (wicketHeadProcessed == false)
 				{
-					addMarkupElement(tag);
-				}
-
-				boolean hitPanel = tag.isOpen() && (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag());
-				if (hitHead || hitPanel)
-				{
-					// Before close the tag, add the <wicket:head> body from the
-					// derived markup
-					boolean copy = false;
-					for (int i = 0; i < extendIndex; i++)
+					// if </wicket:head> in base markup
+					if (wtag.isClose() && wtag.isHeadTag())
 					{
-						MarkupElement elem = markup.get(i);
-						if (elem instanceof WicketTag)
-						{
-							WicketTag etag = (WicketTag)elem;
-							if (etag.isHeadTag())
-							{
-								if (etag.isOpen())
-								{
-									copy = true;
-								}
-								else
-								{
-									addMarkupElement(elem);
-									copy = false;
-								}
-							}
-						}
+						wicketHeadProcessed = true;
+						
+						// Add the current close tag
+						addMarkupElement(wtag);
 
-						if (copy == true)
-						{
-							addMarkupElement(elem);
-						}
-					}
-					
-					wicketHeadProcessed = true;
-					if (hitHead)
-					{
+						// Add the <wicket:head> body from the derived markup.
+						copyWicketHead(markup, extendIndex);
+						
+						// Do not add the current tag. It has already been added.
 						continue;
 					}
+
+					// if <wicket:panel> or ... in base markup
+					if (wtag.isOpen()
+							&& (wtag.isPanelTag() || wtag.isBorderTag() || wtag.isExtendTag()))
+					{
+						wicketHeadProcessed = true;
+
+						// Add the <wicket:head> body from the derived markup.
+						copyWicketHead(markup, extendIndex);
+					}
 				}
 			}
 
-			// If element in base markup is </head>, scan the derived
-			// markup for <wicket:head> and add all elements of that tag body
-			// the new markup list.
-			if ((wicketHeadProcessed == false) && (element instanceof ComponentTag))
+			// Process the head of the extended markup only once
+			if (wicketHeadProcessed == false)
 			{
-				final ComponentTag tag = (ComponentTag)element;
-
-				if ((tag.isClose() && TagUtils.isHeadTag(tag)) || (tag.isOpen() && TagUtils.isBodyTag(tag)))
+				// if <head> in base markup
+				if ((tag.isClose() && TagUtils.isHeadTag(tag))
+						|| (tag.isOpen() && TagUtils.isBodyTag(tag)))
 				{
 					wicketHeadProcessed = true;
-					
-					// Before close the tag, add the <wicket:head> body from the
-					// derived markup
-					// Before close the tag, add the <wicket:head> body from the
-					// derived markup
-					boolean copy = false;
-					for (int i = 0; i < extendIndex; i++)
-					{
-						MarkupElement elem = markup.get(i);
-						if (elem instanceof WicketTag)
-						{
-							WicketTag etag = (WicketTag)elem;
-							if (etag.isHeadTag())
-							{
-								if (etag.isOpen())
-								{
-									copy = true;
-								}
-								else
-								{
-									addMarkupElement(elem);
-									copy = false;
-								}
-							}
-						}
 
-						if (copy == true)
-						{
-							addMarkupElement(elem);
-						}
-					}
+					// Add the <wicket:head> body from the derived markup.
+					copyWicketHead(markup, extendIndex);
 				}
 			}
 
 			// Make sure the body onLoad attribute from the extended markup is
-			// copied
-			// to the new markup
-			if (element instanceof ComponentTag)
+			// copied to the new markup
+			if (tag.isOpen() && TagUtils.isBodyTag(tag))
 			{
-				ComponentTag tag = (ComponentTag)element;
-				if (tag.isOpen() && TagUtils.isBodyTag(tag))
+				// Get the body onLoad attribute from derived markup
+				final String onLoad = getBodyOnLoadString(markup);
+
+				String onLoadBase = tag.getAttributes().getString("onLoad");
+				if (onLoadBase == null)
 				{
-					String onLoadBase = tag.getAttributes().getString("onLoad");
-					if (onLoadBase == null)
+					if (onLoad != null)
 					{
-						if (onLoad != null)
-						{
-							tag = tag.mutable();
-							tag.getAttributes().put("onLoad", onLoad);
-							element = tag;
-						}
+						ComponentTag mutableTag = tag.mutable();
+						mutableTag.getAttributes().put("onLoad", onLoad);
+						element = mutableTag;
 					}
-					else if (onLoad != null)
-					{
-						onLoadBase += onLoad;
-						tag = tag.mutable();
-						tag.getAttributes().put("onLoad", onLoadBase);
-						element = tag;
-					}
+				}
+				else if (onLoad != null)
+				{
+					onLoadBase += onLoad;
+					ComponentTag mutableTag = tag.mutable();
+					mutableTag.getAttributes().put("onLoad", onLoadBase);
+					element = mutableTag;
 				}
 			}
 
@@ -332,14 +281,15 @@ public class MergedMarkup extends Markup
 			MarkupElement element = baseMarkup.get(baseIndex);
 			addMarkupElement(element);
 
-			// Make sure all tags of the base markup remember where they are from
+			// Make sure all tags of the base markup remember where they are
+			// from
 			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
 			{
-				ComponentTag tag = (ComponentTag) element;
+				ComponentTag tag = (ComponentTag)element;
 				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 			}
 		}
-		
+
 		// Automatically add <head> if missing and required. On a Page
 		// it must enclose ALL of the <wicket:head> tags.
 		// Note: HtmlHeaderSectionHandler does something similar, but because
@@ -351,19 +301,22 @@ public class MergedMarkup extends Markup
 			int hasOpenWicketHead = -1;
 			int hasCloseWicketHead = -1;
 			int hasHead = -1;
-			for (int i=0; i < size(); i++)
+			for (int i = 0; i < size(); i++)
 			{
 				MarkupElement element = get(i);
 
-				if ((hasOpenWicketHead == -1) && (element instanceof WicketTag) && ((WicketTag)element).isHeadTag())
+				if ((hasOpenWicketHead == -1) && (element instanceof WicketTag)
+						&& ((WicketTag)element).isHeadTag())
 				{
 					hasOpenWicketHead = i;
 				}
-				else if ((element instanceof WicketTag) && ((WicketTag)element).isHeadTag() && ((WicketTag)element).isClose())
+				else if ((element instanceof WicketTag) && ((WicketTag)element).isHeadTag()
+						&& ((WicketTag)element).isClose())
 				{
 					hasCloseWicketHead = i;
 				}
-				else if ((hasHead == -1) && (element instanceof ComponentTag) && TagUtils.isHeadTag((ComponentTag)element))
+				else if ((hasHead == -1) && (element instanceof ComponentTag)
+						&& TagUtils.isHeadTag((ComponentTag)element))
 				{
 					hasHead = i;
 				}
@@ -388,9 +341,46 @@ public class MergedMarkup extends Markup
 				final ComponentTag closeTag = new ComponentTag(headCloseTag);
 				closeTag.setOpenTag(openTag);
 				closeTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
-				
+
 				addMarkupElement(hasOpenWicketHead, openTag);
 				addMarkupElement(hasCloseWicketHead + 2, closeTag);
+			}
+		}
+	}
+
+	/**
+	 * Append the wicket:head regions from the extended markup to the current
+	 * markup
+	 * 
+	 * @param markup
+	 * @param extendIndex
+	 */
+	private void copyWicketHead(final Markup markup, int extendIndex)
+	{
+		boolean copy = false;
+		for (int i = 0; i < extendIndex; i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof WicketTag)
+			{
+				WicketTag etag = (WicketTag)elem;
+				if (etag.isHeadTag())
+				{
+					if (etag.isOpen())
+					{
+						copy = true;
+					}
+					else
+					{
+						addMarkupElement(elem);
+						break;
+					}
+				}
+			}
+
+			if (copy == true)
+			{
+				addMarkupElement(elem);
 			}
 		}
 	}
