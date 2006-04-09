@@ -10,9 +10,6 @@ import wicket.extensions.markup.html.tabs.TabbedPanel;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
-import wicket.model.PropertyModel;
-import wicket.util.lang.Objects;
-import wicket.version.undo.Change;
 
 /**
  * Reference page for TabbedPanel wicket-extensions component
