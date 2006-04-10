@@ -41,9 +41,9 @@ public final class HttpSessionFacade extends AbstractHttpSessionFacade
 	protected final void onBind(Request request, Session newSession)
 	{
 		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
 		String sessionObjectAttribute = getSessionObjectAttribute(webRequest);
-		ISessionStore store = getSessionStore(request);
-		store.setAttribute(sessionObjectAttribute, newSession);
+		httpSession.setAttribute(sessionObjectAttribute, newSession);
 	}
 
 	/**
@@ -53,8 +53,8 @@ public final class HttpSessionFacade extends AbstractHttpSessionFacade
 	{
 		WebRequest webRequest = toWebRequest(request);
 		String sessionObjectAttribute = getSessionObjectAttribute(webRequest);
-		ISessionStore store = getSessionStore(request);
-		return (Session)store.getAttribute(sessionObjectAttribute);
+		HttpSession httpSession = getHttpSession(webRequest);
+		return (Session)httpSession.getAttribute(sessionObjectAttribute);
 	}
 
 	/**

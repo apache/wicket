@@ -128,7 +128,12 @@ public abstract class SessionFacade
 	{
 		onUnbind(applicationKey, sessionId);
 		ISessionStore sessionStore = (ISessionStore)sessionIdToSessionStore.remove(sessionId);
-		sessionStore.destroy();
+		// session store can be null because of a restart that serializes the sessions
+		// but with a new restart a SessionFacade is made....
+		if(sessionStore != null)
+		{
+			sessionStore.destroy();
+		}
 	}
 
 	/**
