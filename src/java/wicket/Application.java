@@ -624,13 +624,13 @@ public abstract class Application
 		try
 		{
 			// Load components used by all applications
-			for (Enumeration e = getClass().getClassLoader().getResources("wicket.properties"); e
-					.hasMoreElements();)
+			final Enumeration resources = getClass().getClassLoader().getResources("wicket.properties");
+			while (resources.hasMoreElements())
 			{
 				InputStream in = null;
 				try
 				{
-					final URL url = (URL)e.nextElement();
+					final URL url = (URL)resources.nextElement();
 					final Properties properties = new Properties();
 					in = url.openStream();
 					properties.load(in);
@@ -773,14 +773,10 @@ public abstract class Application
 		{
 			try
 			{
-				Class c = getClass().getClassLoader().loadClass(className);
+				Class c = getApplicationSettings().getClassResolver().resolveClass(className);
 				((IInitializer)c.newInstance()).init(this);
 			}
 			catch (ClassCastException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (ClassNotFoundException e)
 			{
 				throw new WicketRuntimeException("Unable to initialize " + className, e);
 			}
