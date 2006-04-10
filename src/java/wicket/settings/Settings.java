@@ -46,7 +46,6 @@ import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.protocol.http.HttpSessionStore;
 import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ApplicationStringResourceLoader;
@@ -54,8 +53,6 @@ import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
-import wicket.session.ISessionStore;
-import wicket.session.ISessionStoreFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.convert.ConverterFactory;
@@ -231,19 +228,6 @@ public final class Settings
 	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
-
-	/** The session store factory. */
-	private ISessionStoreFactory sessionStoreFactory = new ISessionStoreFactory()
-	{
-		/**
-		 * @see wicket.session.ISessionStoreFactory#newSessionStore()
-		 */
-		public ISessionStore newSessionStore()
-		{
-			return new HttpSessionStore();
-		}
-
-	};
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
@@ -673,14 +657,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISessionSettings#getSessionStoreFactory()
-	 */
-	public ISessionStoreFactory getSessionStoreFactory()
-	{
-		return sessionStoreFactory;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -1029,14 +1005,6 @@ public final class Settings
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
-	}
-
-	/**
-	 * @see wicket.settings.ISessionSettings#setSessionStoreFactory(wicket.session.ISessionStoreFactory)
-	 */
-	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
-	{
-		this.sessionStoreFactory = sessionStoreFactory;
 	}
 
 	/**

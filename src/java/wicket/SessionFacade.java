@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import wicket.session.ISessionStore;
-import wicket.session.ISessionStoreFactory;
 
 /**
  * The session facade hides where where the session and session store come from.
@@ -57,7 +56,7 @@ public abstract class SessionFacade
 	 *            The request
 	 * @return The session id for the provided request
 	 */
-	public abstract String getId(Request request);
+	public abstract String getSessionId(Request request);
 
 	/**
 	 * Retrieves the session for the provided request from this facade.
@@ -87,34 +86,19 @@ public abstract class SessionFacade
 	 */
 	public final ISessionStore getSessionStore(Request request)
 	{
-		String sessionId = getId(request);
+		String sessionId = getSessionId(request);
 		return getSessionStore(sessionId);
 	}
 
 	/**
-	 * Gets the session store for the session with the given session id.
+	 * Creates a new instance of {@link ISessionStore} for the session with the
+	 * provided id.
 	 * 
 	 * @param sessionId
-	 *            The id of the session
-	 * @return The session store
+	 *            The id of the session to create a new session store for
+	 * @return A new session store instance
 	 */
-	private ISessionStore getSessionStore(String sessionId)
-	{
-		ISessionStore sessionStore = (ISessionStore)sessionIdToSessionStore.get(sessionId);
-		if (sessionStore == null)
-		{
-			ISessionStoreFactory sessionStoreFactory = Application.get().getSessionSettings()
-					.getSessionStoreFactory();
-			sessionStore = sessionStoreFactory.newSessionStore();
-			if (sessionStore == null)
-			{
-				throw new IllegalStateException("factory " + sessionStoreFactory
-						+ " did not produce a session store instance");
-			}
-			sessionIdToSessionStore.put(sessionId, sessionStore);
-		}
-		return sessionStore;
-	}
+	protected abstract ISessionStore newSessionStore(String sessionId);
 
 	/**
 	 * Retrieves the session for the provided request from this facade.
@@ -158,5 +142,28 @@ public abstract class SessionFacade
 	 */
 	protected void onUnbind(String applicationKey, String sessionId)
 	{
+	}
+
+	/**
+	 * Gets the session store for the session with the given session id.
+	 * 
+	 * @param sessionId
+	 *            The id of the session
+	 * @return The session store
+	 */
+	private final ISessionStore getSessionStore(String sessionId)
+	{
+		ISessionStore sessionStore = (ISessionStore)sessionIdToSessionStore.get(sessionId);
+		if (sessionStore == null)
+		{
+			sessionStore = newSessionStore(sessionId);
+			if (sessionStore == null)
+			{
+				throw new IllegalStateException("session facade " + getClass().getName()
+						+ " did not produce a session store instance");
+			}
+			sessionIdToSessionStore.put(sessionId, sessionStore);
+		}
+		return sessionStore;
 	}
 }

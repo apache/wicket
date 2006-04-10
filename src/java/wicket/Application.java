@@ -682,7 +682,7 @@ public abstract class Application
 	 * 
 	 * @return The session facade
 	 */
-	protected final SessionFacade getSessionFacade()
+	public final SessionFacade getSessionFacade()
 	{
 		return sessionFacade;
 	}
