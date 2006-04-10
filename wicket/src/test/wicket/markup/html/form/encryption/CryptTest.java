@@ -50,8 +50,8 @@ public class CryptTest extends TestCase
 		{
 			if (crypt.encrypt("test") != null)
 			{
-				assertEquals("KxMxhk6i4Us=", crypt.encrypt("test"));
-				assertEquals("test", crypt.decrypt("KxMxhk6i4Us="));
+				assertEquals("KxMxhk6i4Us", crypt.encrypt("test"));
+				assertEquals("test", crypt.decrypt("KxMxhk6i4Us"));
 			}
 		}
 		catch (Exception ex)
