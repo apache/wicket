@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,12 +29,14 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 
 /**
  * Provide some simple means to encrypt and decrypt strings such as passwords.
  * The whole implementation is based around Sun's security providers and uses
- * the <a href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a> 
+ * the <a
+ * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a>
  * method to encrypt and decrypt the data.
  * 
  * @author Juergen Donnerstag
@@ -59,39 +61,36 @@ public class SunJceCrypt extends AbstractCrypt
 	 */
 	public SunJceCrypt()
 	{
-	    try
-	    {
+		try
+		{
 			// Initialize and add a security provider required for encryption
-			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
-	        final Class clazz = getClass().getClassLoader().loadClass(
-    			"com.sun.crypto.provider.SunJCE");
-	        Security.addProvider((Provider)clazz.newInstance());
-	    }
-	    catch (ClassNotFoundException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
-	    catch (IllegalAccessException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
-	    catch (InstantiationException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
+			final Class clazz = Application.get().getApplicationSettings().getClassResolver()
+					.resolveClass("com.sun.crypto.provider.SunJCE");
+			
+			Security.addProvider((Provider)clazz.newInstance());
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+		}
+		catch (InstantiationException ex)
+		{
+			throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+		}
 	}
 
 	/**
 	 * Crypts the given byte array
 	 * 
 	 * @param input
-	 *			  byte array to be crypted
+	 *            byte array to be crypted
 	 * @param mode
-	 *			  crypt mode
+	 *            crypt mode
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
-	protected final byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
+	protected final byte[] crypt(final byte[] input, final int mode)
+			throws GeneralSecurityException
 	{
 		SecretKey key = generateSecretKey();
 		PBEParameterSpec spec = new PBEParameterSpec(salt, COUNT);
@@ -109,11 +108,12 @@ public class SunJceCrypt extends AbstractCrypt
 	 * 
 	 * @return secretKey the security key generated
 	 * @throws NoSuchAlgorithmException
-	 *			   unable to find encryption algorithm specified
+	 *             unable to find encryption algorithm specified
 	 * @throws InvalidKeySpecException
-	 *			   invalid encryption key
+	 *             invalid encryption key
 	 */
-	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException, InvalidKeySpecException
+	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException,
+			InvalidKeySpecException
 	{
 		final PBEKeySpec spec = new PBEKeySpec(getKey().toCharArray());
 		return SecretKeyFactory.getInstance(CRYPT_METHOD).generateSecret(spec);
