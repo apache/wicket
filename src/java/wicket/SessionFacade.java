@@ -127,7 +127,7 @@ public abstract class SessionFacade
 	protected final void unbind(String applicationKey, String sessionId)
 	{
 		onUnbind(applicationKey, sessionId);
-		ISessionStore sessionStore = getSessionStore(sessionId);
+		ISessionStore sessionStore = (ISessionStore)sessionIdToSessionStore.remove(sessionId);
 		sessionStore.destroy();
 	}
 
