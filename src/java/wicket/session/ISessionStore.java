@@ -20,7 +20,8 @@ package wicket.session;
 
 import java.util.List;
 
-import wicket.SessionFacade;
+import wicket.Request;
+import wicket.Session;
 
 /**
  * The actual store that is used by {@link wicket.Session} to store its
@@ -33,49 +34,93 @@ public interface ISessionStore
 	/**
 	 * Gets the attribute value with the given name
 	 * 
+	 * @param request 
+	 * 			  the current request
 	 * @param name
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	Object getAttribute(final String name);
+	Object getAttribute(Request request, final String name);
 
 	/**
+	 * @param request 
+	 * 			  the current request
+	 * 
 	 * @return List of attributes for this session
 	 */
-	List getAttributeNames();
+	List getAttributeNames(Request request);
 
-
-	/**
-	 * @return The session id
-	 */
-	String getId();
 
 	/**
 	 * Invalidates the session.
+	 * 
+	 * @param request 
+	 * 			  the current request
 	 */
-	void invalidate();
+	void invalidate(Request request);
 
 	/**
 	 * Removes the attribute with the given name.
 	 * 
+	 * @param request 
+	 * 			  the current request
 	 * @param name
 	 *            the name of the attribute to remove
 	 */
-	void removeAttribute(String name);
+	void removeAttribute(Request request, String name);
 
 	/**
 	 * Adds or replaces the attribute with the given name and value.
 	 * 
+	 * @param request 
+	 * 			  the current request
 	 * @param name
 	 *            the name of the attribute
 	 * @param value
 	 *            the value of the attribute
 	 */
-	void setAttribute(String name, Object value);
+	void setAttribute(Request request, String name, Object value);
 
 	/**
-	 * Clean up method which should be called on session invalidation by the
-	 * implementation of {@link SessionFacade}.
+	 * Get the session id for the provided request.
+	 * 
+	 * @param request
+	 *            The request
+	 * @return The session id for the provided request
 	 */
-	void destroy();
+	abstract String getSessionId(Request request);
+	
+	/**
+	 * Retrieves the session for the provided request from this facade.
+	 * 
+	 * @param request
+	 *            The current request
+	 * @return The session for the provided request. The contract is to never
+	 *         return null. If it is somehow not possible to retrieve a session
+	 *         object for the provided request, implementations should throw an
+	 *         {@link IllegalArgumentException}
+	 */
+	abstract Session lookup(Request request);
+	
+	/**
+	 * Adds the provided new session to this facade using the provided request.
+	 * 
+	 * @param request
+	 *            The request that triggered making a new sesion
+	 * @param newSession
+	 *            The new session
+	 */
+	abstract void bind(Request request, Session newSession);
+
+	/**
+	 * Adds the provided new session to this facade using the provided request.
+	 * 
+	 * @param application 
+	 *            The application object that gets the unbind.
+	 * 
+	 * @param sessionId
+	 *            The SessionId that must be unbinded.
+	 */
+	abstract void unbind(String sessionId);
+	
 }

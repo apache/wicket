@@ -34,7 +34,6 @@ import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
-import wicket.SessionFacade;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
@@ -46,6 +45,7 @@ import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrate
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
 import wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
+import wicket.session.ISessionStore;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
@@ -554,11 +554,11 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see wicket.Application#newSessionFacade()
+	 * @see wicket.Application#newSessionStore()
 	 */
-	protected SessionFacade newSessionFacade()
+	protected ISessionStore newSessionStore()
 	{
-		return new HttpSessionFacade();
+		return new HttpSessionStore();
 	}
 
 	/**
@@ -593,8 +593,8 @@ public abstract class WebApplication extends Application
 	 */
 	final WebSession getSession(final WebRequest request)
 	{
-		SessionFacade sessionFacade = getSessionFacade();
-		Session session = sessionFacade.getSession(request);
+		ISessionStore sessionStore = getSessionStore();
+		Session session = sessionStore.lookup(request);
 
 		if (session == null)
 		{
@@ -605,7 +605,7 @@ public abstract class WebApplication extends Application
 			session.setLocale(request.getLocale());
 
 			// Bind the session to the facade
-			sessionFacade.bind(request, session);
+			sessionStore.bind(request, session);
 		}
 
 		WebSession webSession;
