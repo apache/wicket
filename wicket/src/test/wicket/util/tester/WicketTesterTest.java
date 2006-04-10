@@ -138,7 +138,7 @@ public class WicketTesterTest extends TestCase
 	public void testPageConstructor() throws Exception
 	{
 		MyMockApplication tester = new MyMockApplication();
-		
+		tester.createRequestCycle();
 		Book mockBook = new Book("xxId", "xxName");
 		Page page = new ViewBook(mockBook);
 		tester.startPage(page);

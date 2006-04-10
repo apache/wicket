@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestCycleFactory;
+import wicket.RequestCycle;
 import wicket.Session;
 import wicket.resource.loader.IStringResourceLoader;
 
@@ -40,7 +41,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	protected IStringResourceLoader loader;
 
 	// The dummy application
-	protected Application application;
+	protected DummyApplication application;
 
 	// The dummy component
 	protected Component component;
@@ -64,15 +65,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		this.application = new DummyApplication();
-		Session.set(new Session(this.application)
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected IRequestCycleFactory getRequestCycleFactory()
-			{
-				return null;
-			}
-		});
+		this.application.createRequestCycle();
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();
 		page.add(this.component);
