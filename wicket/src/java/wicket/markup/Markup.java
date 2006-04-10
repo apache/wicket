@@ -134,6 +134,14 @@ public class Markup
 	}
 
 	/**
+	 * @return String representation of markup list
+	 */
+	public String toDebugString()
+	{
+		return this.markup.toString();
+	}
+
+	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...

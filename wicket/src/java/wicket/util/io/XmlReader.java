@@ -120,12 +120,13 @@ public final class XmlReader extends Reader
 		final String encoding = determineEncoding(this.inputStream, readAheadSize);
 		if (encoding != null)
 		{
+			// Use the encoding as specified in <?xml encoding=".." ?>
+			// Don't re-read <?xml ..> again.
+			// Ignore ALL characters preceding <?xml>
 			this.encoding = encoding;
+			this.reader = new BufferedReader(new InputStreamReader(this.inputStream, this.encoding));
 		}
-
-		// Depending on the encoding determined from the markup-file, read
-		// the rest either with specific encoding or JVM default
-		if (this.encoding == null)
+		else if (this.encoding == null)
 		{
 			// Use JVM default
 			this.inputStream.reset();
@@ -133,9 +134,8 @@ public final class XmlReader extends Reader
 		}
 		else
 		{
-			// Use the encoding as specified in <?xml encoding=".." ?>
-			// Don't re-read <?xml ..> again.
-			// Ignore ALL characters preceding <?xml>
+			// Use JVM default
+			this.inputStream.reset();
 			this.reader = new BufferedReader(new InputStreamReader(this.inputStream, this.encoding));
 		}
 	}

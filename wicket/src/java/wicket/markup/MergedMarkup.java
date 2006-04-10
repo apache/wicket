@@ -17,10 +17,14 @@
  */
 package wicket.markup;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.util.string.Strings;
 
 /**
  * A Markup class which represents merged markup, as it is required for markup
@@ -44,6 +48,8 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
  */
 public class MergedMarkup extends Markup
 {
+	private final static Log log = LogFactory.getLog(MergedMarkup.class);
+	
 	/**
 	 * Merge inherited and base markup.
 	 * 
@@ -62,11 +68,23 @@ public class MergedMarkup extends Markup
 		setEncoding(markup.getEncoding());
 		setWicketNamespace(markup.getWicketNamespace());
 
+		if (log.isDebugEnabled())
+		{
+			String derivedResource = Strings.afterLast(markup.getResource().toString(), '/');
+			String baseResource = Strings.afterLast(baseMarkup.getResource().toString(), '/');
+			log.debug("Merge markup: derived markup: " + derivedResource + "; base markup: " + baseResource);
+		}
+		
 		// Merge derived and base markup
 		merge(markup, baseMarkup, extendIndex);
 
 		// Initialize internals based on new markup
 		initialize();
+		
+		if (log.isDebugEnabled())
+		{
+			log.debug("Merge markup: " + toDebugString());
+		}
 	}
 
 	/**
