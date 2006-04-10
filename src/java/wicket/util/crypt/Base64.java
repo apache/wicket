@@ -75,11 +75,6 @@ public class Base64
     static final int SIGN = -128;
 
     /**
-     * Byte used to pad output.
-     */
-//    static final byte PAD = (byte) '=';
-
-    /**
      * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using character encodings as
      * indices.
      * <p/>
