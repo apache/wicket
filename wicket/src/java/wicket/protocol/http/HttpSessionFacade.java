@@ -53,8 +53,8 @@ public final class HttpSessionFacade extends AbstractHttpSessionFacade
 	{
 		WebRequest webRequest = toWebRequest(request);
 		String sessionObjectAttribute = getSessionObjectAttribute(webRequest);
-		HttpSession httpSession = getHttpSession(webRequest);
-		return (Session)httpSession.getAttribute(sessionObjectAttribute);
+		ISessionStore store = getSessionStore(request);
+		return (Session)store.getAttribute(sessionObjectAttribute);
 	}
 
 	/**
