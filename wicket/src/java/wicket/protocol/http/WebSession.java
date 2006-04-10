@@ -19,6 +19,7 @@
 package wicket.protocol.http;
 
 import wicket.IRequestCycleFactory;
+import wicket.RequestCycle;
 import wicket.Session;
 
 /**
@@ -67,7 +68,7 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
-		getSessionStore().invalidate();
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
 	}
 
 	/**

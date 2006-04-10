@@ -26,14 +26,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.Application;
 import wicket.Request;
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
-import wicket.session.ISessionStore;
 import wicket.util.lang.Bytes;
 
 /**
@@ -42,64 +36,13 @@ import wicket.util.lang.Bytes;
  * 
  * @author Eelco Hillenius
  */
-public class HttpSessionStore implements ISessionStore
+public class HttpSessionStore extends AbstractHttpSessionStore
 {
-	/** log. */
-	private static Log log = LogFactory.getLog(HttpSessionStore.class);
-
 	/**
-	 * the prefix for storing variables in the actual session.
-	 */
-	private String sessionAttributePrefix;
-
-	/**
-	 * Construct.
-	 */
-	public HttpSessionStore()
-	{
-		// sanity check
-		Application app = Application.get();
-		if (!(app instanceof WebApplication))
-		{
-			throw new IllegalStateException(getClass().getName()
-					+ " can only operate in the context of web applications");
-		}
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#invalidate()
-	 */
-	public void invalidate()
-	{
-		HttpSession httpSession = getHttpSession(false);
-		if (httpSession != null)
-		{
-			try
-			{
-				httpSession.invalidate();
-			}
-			catch (IllegalStateException e)
-			{
-				// Ignore
-			}
-		}
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#getId()
-	 */
-	public String getId()
-	{
-		// if ask for id then we have to have the real session else id will
-		// change in time.
-		return getHttpSession(true).getId();
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#setAttribute(java.lang.String,
+	 * @see wicket.session.ISessionStore#setAttribute(Request,java.lang.String,
 	 *      java.lang.Object)
 	 */
-	public void setAttribute(String name, Object value)
+	public void setAttribute(Request request, String name, Object value)
 	{
 		// Do some extra profiling/ debugging. This can be a great help
 		// just for testing whether your webbapp will behave when using
@@ -122,11 +65,12 @@ public class HttpSessionStore implements ISessionStore
 			}
 		}
 
-		HttpSession httpSession = getHttpSession(true);
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
-			String attributeName = getSessionAttributePrefix() + name;
+			RequestLogger logger = application.getRequestLogger();
+			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
 				if (httpSession.getAttribute(attributeName) == null)
@@ -146,26 +90,28 @@ public class HttpSessionStore implements ISessionStore
 	/**
 	 * @see wicket.session.ISessionStore#getAttribute(java.lang.String)
 	 */
-	public Object getAttribute(String name)
+	public Object getAttribute(Request request, String name)
 	{
-		HttpSession httpSession = getHttpSession(false);
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			return httpSession.getAttribute(getSessionAttributePrefix() + name);
+			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
 		}
 		return null;
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#removeAttribute(java.lang.String)
+	 * @see wicket.session.ISessionStore#removeAttribute(Request,java.lang.String)
 	 */
-	public void removeAttribute(String name)
+	public void removeAttribute(Request request, String name)
 	{
-		HttpSession httpSession = getHttpSession(false);
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			String attributeName = getSessionAttributePrefix() + name;
-			RequestLogger logger = ((WebApplication)Application.get()).getRequestLogger();
+			String attributeName = getSessionAttributePrefix(webRequest) + name;
+			RequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
 				Object value = httpSession.getAttribute(attributeName);
@@ -179,16 +125,17 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttributeNames()
+	 * @see wicket.session.ISessionStore#getAttributeNames(Request)
 	 */
-	public List getAttributeNames()
+	public List getAttributeNames(Request request)
 	{
 		List list = new ArrayList();
-		HttpSession httpSession = getHttpSession(false);
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
 			final Enumeration names = httpSession.getAttributeNames();
-			final String prefix = getSessionAttributePrefix();
+			final String prefix = getSessionAttributePrefix(webRequest);
 			while (names.hasMoreElements())
 			{
 				final String name = (String)names.nextElement();
@@ -200,46 +147,7 @@ public class HttpSessionStore implements ISessionStore
 		}
 		return list;
 	}
-
-	/**
-	 * @see wicket.session.ISessionStore#destroy()
-	 */
-	public void destroy()
-	{
-	}
-
-	/**
-	 * Gets the underlying HttpSession object or null.
-	 * <p>
-	 * WARNING: it is a bad idea to depend on the http session object directly.
-	 * Please use the classes and methods that are exposed by Wicket instead.
-	 * Send an email to the mailing list in case it is not clear how to do
-	 * things or you think you miss funcionality which causes you to depend on
-	 * this directly.
-	 * </p>
-	 * 
-	 * @param createWhenNeeded
-	 *            Create the session when there is not one yet.
-	 * 
-	 * @return The underlying HttpSession object (null if not created yet).
-	 */
-	protected final HttpSession getHttpSession(boolean createWhenNeeded)
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle != null)
-		{
-			Request request = requestCycle.getRequest();
-			if (request instanceof WebRequest)
-			{
-				WebRequest webRequest = (WebRequest)request;
-				HttpSession httpSession = webRequest.getHttpServletRequest().getSession(
-						createWhenNeeded);
-				return httpSession;
-			}
-		}
-		return null;
-	}
-
+	
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -249,29 +157,16 @@ public class HttpSessionStore implements ISessionStore
 	 * 
 	 * @return the prefix for storing variables in the actual session
 	 */
-	protected final String getSessionAttributePrefix(final WebRequest request)
+	private String getSessionAttributePrefix(final WebRequest request)
 	{
-		if (sessionAttributePrefix == null)
-		{
-			WebApplication application = (WebApplication)Application.get();
-			sessionAttributePrefix = application.getSessionAttributePrefix(request);
-		}
-		return sessionAttributePrefix;
+		return application.getSessionAttributePrefix(request);
 	}
+	
 
 	/**
-	 * Gets the session attribute prefix.
-	 * 
-	 * @return the session attribute prefix
+	 * @see wicket.protocol.http.AbstractHttpSessionStore#onUnbind(java.lang.String)
 	 */
-	private String getSessionAttributePrefix()
+	protected void onUnbind(String sessionId)
 	{
-		if (sessionAttributePrefix == null)
-		{
-			WebApplication application = (WebApplication)Application.get();
-			WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
-			sessionAttributePrefix = application.getSessionAttributePrefix(cycle.getWebRequest());
-		}
-		return sessionAttributePrefix;
 	}
 }

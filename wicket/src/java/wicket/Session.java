@@ -334,7 +334,8 @@ public abstract class Session implements Serializable
 	{
 		if (id == null)
 		{
-			id = getSessionStore().getId();
+			id = getSessionStore().getSessionId(RequestCycle.get().getRequest());
+			dirty = true;
 		}
 		return id;
 	}
@@ -539,7 +540,7 @@ public abstract class Session implements Serializable
 	 */
 	public void invalidate()
 	{
-		getSessionStore().invalidate();
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
 	}
 
 	/**
@@ -794,7 +795,7 @@ public abstract class Session implements Serializable
 	 */
 	protected final Object getAttribute(final String name)
 	{
-		return getSessionStore().getAttribute(name);
+		return getSessionStore().getAttribute(RequestCycle.get().getRequest(), name);
 	}
 
 	/**
@@ -802,7 +803,7 @@ public abstract class Session implements Serializable
 	 */
 	protected final List getAttributeNames()
 	{
-		return getSessionStore().getAttributeNames();
+		return getSessionStore().getAttributeNames(RequestCycle.get().getRequest());
 	}
 
 	/**
@@ -819,10 +820,7 @@ public abstract class Session implements Serializable
 	{
 		if (sessionStore == null)
 		{
-			SessionFacade sessionFacade = getApplication().getSessionFacade();
-			RequestCycle requestCycle = RequestCycle.get();
-			sessionStore = sessionFacade.getSessionStore(requestCycle != null ? requestCycle
-					.getRequest() : null);
+			sessionStore = application.getSessionStore(); 
 		}
 		return sessionStore;
 	}
@@ -835,7 +833,7 @@ public abstract class Session implements Serializable
 	 */
 	protected final void removeAttribute(String name)
 	{
-		getSessionStore().removeAttribute(name);
+		getSessionStore().removeAttribute(RequestCycle.get().getRequest(), name);
 	}
 
 	/**
@@ -849,7 +847,7 @@ public abstract class Session implements Serializable
 	protected final void setAttribute(String name, Object value)
 	{
 		// Set the actual attribute
-		getSessionStore().setAttribute(name, value);
+		getSessionStore().setAttribute(RequestCycle.get().getRequest(), name, value);
 	}
 
 	/**

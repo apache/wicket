@@ -32,12 +32,12 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.SessionFacade;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.session.DefaultPageFactory;
+import wicket.session.ISessionStore;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.file.WebApplicationPath;
 
@@ -389,7 +389,7 @@ public class MockWebApplication extends WebApplication
 		parametersForNextRequest.clear();
 		wicketRequest = new ServletWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
-		getSessionFacade().bind(wicketRequest, wicketSession);
+		getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse = new WebResponse(servletResponse);
 	}
 
@@ -433,10 +433,10 @@ public class MockWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newSessionFacade()
+	 * @see wicket.protocol.http.WebApplication#newSessionStore()
 	 */
-	protected SessionFacade newSessionFacade()
+	protected ISessionStore newSessionStore()
 	{
-		return new MockSessionFacade();
+		return new HttpSessionStore();
 	}
 }

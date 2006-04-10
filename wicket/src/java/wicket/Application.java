@@ -39,6 +39,7 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.session.ISessionStore;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
@@ -155,7 +156,7 @@ public abstract class Application
 	private final SharedResources sharedResources;
 
 	/** The session facade. */
-	private SessionFacade sessionFacade;
+	private ISessionStore sessionStore;
 
 	/**
 	 * Get Application for current thread.
@@ -682,9 +683,9 @@ public abstract class Application
 	 * 
 	 * @return The session facade
 	 */
-	public final SessionFacade getSessionFacade()
+	public final ISessionStore getSessionStore()
 	{
-		return sessionFacade;
+		return sessionStore;
 	}
 
 	/**
@@ -693,7 +694,7 @@ public abstract class Application
 	 * 
 	 * @return The session facade
 	 */
-	protected abstract SessionFacade newSessionFacade();
+	protected abstract ISessionStore newSessionStore();
 
 	/**
 	 * Gets the factory for creating session instances.
@@ -734,7 +735,7 @@ public abstract class Application
 		String applicationKey = getApplicationKey();
 		applicationKeyToApplication.put(applicationKey, this);
 
-		sessionFacade = newSessionFacade();
+		sessionStore = newSessionStore();
 	}
 
 	/**
