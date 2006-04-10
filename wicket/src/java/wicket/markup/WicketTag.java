@@ -136,15 +136,19 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * 
-	 * @param wicketNamespace
-	 *            The wicket namespace defined by the markup
 	 * @return True if &lt;wicket:fragment&gt;
 	 */
-	public final boolean isFragementTag(final String wicketNamespace)
+	public final boolean isFragementTag()
 	{
-		return ("fragment".equalsIgnoreCase(getName()) && (getNamespace() != null) && getNamespace()
-				.equals(wicketNamespace));
+		return "fragment".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
+	 */
+	public final boolean isMajorWicketComponentTag()
+	{
+		return isPanelTag() || isBorderTag() || isExtendTag();
 	}
 
 	/**

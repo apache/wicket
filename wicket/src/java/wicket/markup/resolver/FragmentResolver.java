@@ -68,7 +68,7 @@ public class FragmentResolver implements IComponentResolver
 			final WicketTag wTag = (WicketTag)tag;
 
 			// If <wicket:fragment ...>
-			if (wTag.isFragementTag(markupStream.getWicketNamespace()))
+			if (wTag.isFragementTag())
 			{
 				// skip the markup associated with the tag
 				markupStream.skipComponent();
