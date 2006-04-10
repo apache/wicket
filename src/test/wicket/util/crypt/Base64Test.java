@@ -18,12 +18,12 @@
  */
 package wicket.util.crypt;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
 import java.util.Random;
+
+import junit.framework.TestCase;
+import wicket.settings.ISecuritySettings;
 
 /**
  * 
@@ -45,13 +45,76 @@ public class Base64Test extends TestCase
 	 */
 	public void test_1() throws IOException
 	{
-	    byte bytes1[] = new byte[200];
-	    new Random().nextBytes(bytes1);
+		for (int i=0; i < 200; i++)
+		{
+		    byte bytes1[] = new byte[200];
+		    new Random().nextBytes(bytes1);
+	
+		    byte[] s = new Base64().encode(bytes1);
+	
+		    byte[] bytes2 = new Base64().decode(s);
+		    boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2) );
+		    assertEquals(true, isEqual);
+		}
+	}
 
-	    byte[] s = new Base64().encode(bytes1);
+	/**
+	 * @throws IOException
+	 */
+	public void test_1a() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+
+	    byte[] s = new Base64().encode(input.getBytes());
 
 	    byte[] bytes2 = new Base64().decode(s);
-	    boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2) );
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_1b() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
+
+	    byte[] s = new Base64().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_1c() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
+
+	    byte[] s = new Base64().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_1d() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
+
+	    byte[] s = new Base64().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
 	    assertEquals(true, isEqual);
 	}
 	
@@ -68,21 +131,15 @@ public class Base64Test extends TestCase
 	}
 	
 	/**
-	 * 
-	 * @author Juergen Donnerstag
+	 * @throws IOException
 	 */
-	public static class NoCrypt extends AbstractCrypt
+	public void test_3() throws IOException
 	{
-		/**
-		 * Construct.
-		 */
-		public NoCrypt()
-		{
-		}
-		
-		protected byte[] crypt(byte[] input, int mode) throws GeneralSecurityException
-		{
-			return input;
-		}
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
+	    String s = crypt.encrypt(input);
+
+	    String output = crypt.decrypt(s);
+	    assertEquals(input, output);
 	}
 }
