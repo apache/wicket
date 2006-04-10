@@ -23,8 +23,22 @@ import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 
 /**
- * This is a utility class which merges the base markup and the derived markup,
- * which is required for markup inheritance.
+ * A Markup class which represents merged markup, as it is required for markup
+ * inheritance.
+ * <p>
+ * The Markups are merged at load time. Deep markup hierarchies are supported.
+ * Multiple inheritance is not.
+ * <p>
+ * The markup resource file, which is associated with the markup, will be the
+ * resource of the requested markup file. The base markup resources are not.
+ * <p>
+ * Base Markup must have a &lt;wicket:hild/&gt; tag which the position where the
+ * derived markup is inserted. From the derived markup all tags in between
+ * &lt;wicket:extend&gt; and &lt;/wicket:extend&gt; will be inserted.
+ * <p>
+ * In addition, all &lt;wicket:head> regions are copied as well as the body
+ * onLoad attribute. This allows to develop completely self-contained plug &
+ * play components including javascript etc. 
  * 
  * @author Juergen Donnerstag
  */
@@ -42,7 +56,7 @@ public class MergedMarkup extends Markup
 	 */
 	MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
-		// Copy setting from derived markup
+		// Copy settings from derived markup
 		setResource(markup.getResource());
 		setXmlDeclaration(markup.getXmlDeclaration());
 		setEncoding(markup.getEncoding());
@@ -78,7 +92,7 @@ public class MergedMarkup extends Markup
 					// Ok, we found <wicket:head>
 					break;
 				}
-				else if (tag.isPanelTag() || tag.isBorderTag())
+				else if (tag.isMajorWicketComponentTag())
 				{
 					// Short cut: We found <wicket:panel> or <wicket:border>.
 					// There certainly will be no <wicket:head> later on.
@@ -157,7 +171,7 @@ public class MergedMarkup extends Markup
 			if (element instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)element;
-				
+
 				// Found <wicket.child/>
 				if (wtag.isChildTag() && wtag.isOpenClose())
 				{
@@ -176,20 +190,20 @@ public class MergedMarkup extends Markup
 					if (wtag.isClose() && wtag.isHeadTag())
 					{
 						wicketHeadProcessed = true;
-						
+
 						// Add the current close tag
 						addMarkupElement(wtag);
 
 						// Add the <wicket:head> body from the derived markup.
 						copyWicketHead(markup, extendIndex);
-						
-						// Do not add the current tag. It has already been added.
+
+						// Do not add the current tag. It has already been
+						// added.
 						continue;
 					}
 
 					// if <wicket:panel> or ... in base markup
-					if (wtag.isOpen()
-							&& (wtag.isPanelTag() || wtag.isBorderTag() || wtag.isExtendTag()))
+					if (wtag.isOpen() && wtag.isMajorWicketComponentTag())
 					{
 						wicketHeadProcessed = true;
 
