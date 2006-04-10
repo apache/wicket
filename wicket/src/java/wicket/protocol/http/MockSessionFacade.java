@@ -21,6 +21,7 @@ package wicket.protocol.http;
 import wicket.Request;
 import wicket.Session;
 import wicket.SessionFacade;
+import wicket.session.ISessionStore;
 
 /**
  * Test session facade.
@@ -40,9 +41,9 @@ public class MockSessionFacade extends SessionFacade
 	}
 
 	/**
-	 * @see wicket.SessionFacade#getId(wicket.Request)
+	 * @see wicket.SessionFacade#getSessionId(wicket.Request)
 	 */
-	public String getId(Request request)
+	public String getSessionId(Request request)
 	{
 		return "sessionid";
 	}
@@ -53,5 +54,13 @@ public class MockSessionFacade extends SessionFacade
 	protected Session lookup(Request request)
 	{
 		return session;
+	}
+
+	/**
+	 * @see wicket.SessionFacade#newSessionStore(java.lang.String)
+	 */
+	protected ISessionStore newSessionStore(String sessionId)
+	{
+		return new HttpSessionStore();
 	}
 }

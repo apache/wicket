@@ -25,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +34,7 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
+import wicket.SessionFacade;
 import wicket.WicketRuntimeException;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
@@ -48,15 +48,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *                 &lt;servlet&gt;
- *                     &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                     &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                     &lt;init-param&gt;
- *                         &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                         &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                     &lt;/init-param&gt;
- *                     &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                 &lt;/servlet&gt;
+ *                   &lt;servlet&gt;
+ *                       &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                       &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                       &lt;init-param&gt;
+ *                           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                           &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                       &lt;/init-param&gt;
+ *                       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                   &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -68,10 +68,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *                 &lt;init-param&gt;
- *                   &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *                     &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *                 &lt;/init-param&gt;
+ *                   &lt;init-param&gt;
+ *                     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *                   &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -88,11 +88,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *                 public void init() throws ServletException
- *                 {
- *                     ServletConfig config = getServletConfig();
- *                     String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                     ...
+ *                   public void init() throws ServletException
+ *                   {
+ *                       ServletConfig config = getServletConfig();
+ *                       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                       ...
  * </pre>
  * 
  * </p>
@@ -147,23 +147,28 @@ public class WicketServlet extends HttpServlet
 		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 		{
 			// Try to see if there is a redirect stored
-			HttpSession httpSession = servletRequest.getSession(false);
-			if (httpSession != null)
+			SessionFacade sessionFacade = webApplication.getSessionFacade();
+			if (!(sessionFacade instanceof AbstractHttpSessionFacade))
 			{
-				String sessionId = httpSession.getId();
-				String queryString = servletRequest.getQueryString();
-				if (queryString != null)
-				{
-					BufferedHttpServletResponse bufferedResponse = webApplication
-							.popBufferedResponse(sessionId, queryString);
+				throw new IllegalStateException(
+						"in a servlet environment with the redirect to buffer strategy"
+								+ ", the session facade has to be of type (extend from) "
+								+ AbstractHttpSessionFacade.class);
+			}
+			String sessionId = ((AbstractHttpSessionFacade)sessionFacade)
+					.getSessionId(servletRequest);
+			String queryString = servletRequest.getQueryString();
+			if (queryString != null)
+			{
+				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+						sessionId, queryString);
 
-					if (bufferedResponse != null)
-					{
-						bufferedResponse.writeTo(servletResponse);
-						// redirect responses are ignored for the request
-						// logger...
-						return;
-					}
+				if (bufferedResponse != null)
+				{
+					bufferedResponse.writeTo(servletResponse);
+					// redirect responses are ignored for the request
+					// logger...
+					return;
 				}
 			}
 		}

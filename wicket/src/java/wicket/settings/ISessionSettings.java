@@ -1,7 +1,6 @@
 package wicket.settings;
 
 import wicket.IPageFactory;
-import wicket.session.ISessionStoreFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 
 /**
@@ -43,13 +42,6 @@ public interface ISessionSettings
 	IPageMapEvictionStrategy getPageMapEvictionStrategy();
 
 	/**
-	 * Gets the factory for session stores.
-	 * 
-	 * @return the factory for session stores
-	 */
-	ISessionStoreFactory getSessionStoreFactory();
-
-	/**
 	 * Sets maximum number of page maps allowed in this session
 	 * 
 	 * @param maxPageMaps
@@ -72,12 +64,4 @@ public interface ISessionSettings
 	 *            the strategy for evicting pages from the page map
 	 */
 	void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy);
-
-	/**
-	 * Sets the factory for session stores.
-	 * 
-	 * @param sessionStoreFactory
-	 *            the factory for session stores
-	 */
-	void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory);
 }

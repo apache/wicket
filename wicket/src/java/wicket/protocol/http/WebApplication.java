@@ -70,11 +70,11 @@ import wicket.util.lang.PackageName;
  * init() method. For example:
  * 
  * <pre>
- *                           public void init()
- *                           {
- *                               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                               ...
+ *                             public void init()
+ *                             {
+ *                                 String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                                 URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                                 ...
  * </pre>
  * 
  * @see WicketServlet
