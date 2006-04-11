@@ -22,11 +22,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.Application;
 import wicket.Component;
-import wicket.IRequestCycleFactory;
-import wicket.RequestCycle;
-import wicket.Session;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -65,12 +61,10 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		this.application = new DummyApplication();
-		this.application.createRequestCycle();
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();
 		page.add(this.component);
 		this.loader = createLoader();
-
 	}
 
 	/**
