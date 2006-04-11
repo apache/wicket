@@ -204,6 +204,9 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			// Create a new request cycle
+			// FIXME Instead of doing this, we should get a request cycle factory
+			// from the application settings and use that. That way we are a step
+			// closer to a session-less operation of Wicket.
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
 			try
