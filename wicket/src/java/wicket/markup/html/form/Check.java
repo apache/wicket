@@ -41,6 +41,8 @@ public class Check extends WebMarkupContainer
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final String ATTR_DISABLED = "disabled";
 
 
 	/**
@@ -67,6 +69,8 @@ public class Check extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		// Default handling for component tag
+		super.onComponentTag(tag);
 
 		// must be attached to <input type="checkbox" .../> tag
 		checkComponentTag(tag, "input");
@@ -107,9 +111,6 @@ public class Check extends WebMarkupContainer
 		{
 			tag.put("checked", "checked");
 		}
-
-		// Default handling for component tag
-		super.onComponentTag(tag);
 		
 		if (group.wantOnSelectionChangedNotifications())
 		{
@@ -128,6 +129,11 @@ public class Check extends WebMarkupContainer
 						+ "=' + this.value;");
 			}
 		}
+		
+		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+		}
+
 		
 	}
 

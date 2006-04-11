@@ -37,6 +37,7 @@ import wicket.util.lang.Objects;
  */
 public class Radio extends WebMarkupContainer
 {
+	private static final String ATTR_DISABLED = "disabled";
 	/**
 	 * 
 	 */
@@ -67,6 +68,8 @@ public class Radio extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		// Default handling for component tag
+		super.onComponentTag(tag);
 
 		// must be attached to <input type="radio" .../> tag
 		checkComponentTag(tag, "input");
@@ -119,7 +122,9 @@ public class Radio extends WebMarkupContainer
 			}
 		}
 		
-		// Default handling for component tag
-		super.onComponentTag(tag);
+		
+		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+		}
 	}
 }
