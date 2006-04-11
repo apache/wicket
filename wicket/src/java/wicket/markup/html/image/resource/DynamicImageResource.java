@@ -85,8 +85,6 @@ public abstract class DynamicImageResource extends DynamicWebResource
   /**
    * Creates a dynamic resource from for the given locale
    *
-   * @param locale
-   *            The locale of this resource
    * @param format
    *            The image format ("png", "jpeg", etc)
    */

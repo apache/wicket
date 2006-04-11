@@ -22,6 +22,7 @@ import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -35,7 +36,6 @@ import wicket.util.string.AppendingStringBuffer;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
@@ -65,7 +65,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		}
 	}
 
-
 	/**
 	 * 
 	 * @return FormComponent
@@ -80,8 +79,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected final CharSequence getEventHandler()
 	{
-		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(getCallbackUrl()).append(
-				"', wicketSerialize(this)"), null, null);
+		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
+				getCallbackUrl()).append("', wicketSerialize(this)"), null, null);
 	}
 
 	/**
@@ -95,7 +94,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 					"this behavior cannot be attached to an 'href' event");
 		}
 	}
-
 
 	/**
 	 * 
