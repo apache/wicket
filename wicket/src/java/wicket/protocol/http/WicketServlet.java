@@ -149,12 +149,12 @@ public class WicketServlet extends HttpServlet
 
 		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 		{
-			// Try to see if there is a redirect stored
-			ISessionStore sessionStore = webApplication.getSessionStore();
-			String sessionId = sessionStore.getSessionId(request);
 			String queryString = servletRequest.getQueryString();
 			if (queryString != null)
 			{
+				// Try to see if there is a redirect stored
+				ISessionStore sessionStore = webApplication.getSessionStore();
+				String sessionId = sessionStore.getSessionId(request);
 				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
 						sessionId, queryString);
 
