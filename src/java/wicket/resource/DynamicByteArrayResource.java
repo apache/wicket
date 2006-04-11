@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,7 +50,6 @@ public abstract class DynamicByteArrayResource extends WebResource
 	 */
 	public static class ResourceState
 	{
-
 		/**
 		 * @return The Byte array for this resource
 		 */
@@ -82,9 +80,8 @@ public abstract class DynamicByteArrayResource extends WebResource
 		public int getLength()
 		{
 			byte[] data = getData();
-			return data != null?data.length:0;
+			return data != null ? data.length : 0;
 		}
-
 	}
 
 	/** the locale. */
@@ -104,23 +101,17 @@ public abstract class DynamicByteArrayResource extends WebResource
 	 * 
 	 * @param locale
 	 *            The locale of this resource
-	 * @param idle
-	 *            The idle duration timeout
-	 * 
 	 */
 	public DynamicByteArrayResource(Locale locale)
 	{
 		this.locale = locale;
 	}
 
-
 	/**
 	 * Creates a dynamic resource
 	 * 
 	 * @param locale
 	 *            The locale of this resource
-	 * @param idle
-	 *            The idle duration timeout
 	 * @param cacheTimeout
 	 *            The cache duration timeout
 	 */

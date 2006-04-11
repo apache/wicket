@@ -77,8 +77,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * @param containerInfo
 	 *            The container requesting the current markup incl class, style
 	 *            and locale
-	 * @param settings
-	 *            The application settings
 	 */
 	public WicketMessageTagHandler(final IMarkupFilter parent, final ContainerInfo containerInfo)
 	{

@@ -38,7 +38,9 @@ import java.util.Set;
 public class IntHashMap implements Cloneable, Serializable
 {
 	transient volatile Set keySet = null;
+
 	transient volatile Collection values = null;
+
 	/**
 	 * The default initial capacity - MUST be a power of two.
 	 */
@@ -156,7 +158,6 @@ public class IntHashMap implements Cloneable, Serializable
 		init();
 	}
 
-
 	// internal utilities
 
 	/**
@@ -172,8 +173,9 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Returns index for hash code h.
-	 * @param h 
-	 * @param length 
+	 * 
+	 * @param h
+	 * @param length
 	 * @return The index for the hash integer for the given length
 	 */
 	static int indexFor(int h, int length)
@@ -213,7 +215,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 *            the key whose associated value is to be returned.
 	 * @return the value to which this map maps the specified key, or
 	 *         <tt>null</tt> if the map contains no mapping for this key.
-	 * @see #put(Object, Object)
+	 * @see #put(int, Object)
 	 */
 	public Object get(int key)
 	{
@@ -260,7 +262,8 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Returns the entry associated with the specified key in the HashMap.
 	 * Returns null if the HashMap contains no mapping for this key.
-	 * @param key 
+	 * 
+	 * @param key
 	 * @return The Entry object for the given hash key
 	 */
 	Entry getEntry(int key)
@@ -311,8 +314,9 @@ public class IntHashMap implements Cloneable, Serializable
 	 * This method is used instead of put by constructors and pseudoconstructors
 	 * (clone, readObject). It does not resize the table, check for
 	 * comodification, etc. It calls createEntry rather than addEntry.
-	 * @param key 
-	 * @param value 
+	 * 
+	 * @param key
+	 * @param value
 	 */
 	private void putForCreate(int key, Object value)
 	{
@@ -376,7 +380,8 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Transfer all entries from current table to newTable.
-	 * @param newTable 
+	 * 
+	 * @param newTable
 	 */
 	void transfer(Entry[] newTable)
 	{
@@ -472,7 +477,8 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Removes and returns the entry associated with the specified key in the
 	 * HashMap. Returns null if the HashMap contains no mapping for this key.
-	 * @param key 
+	 * 
+	 * @param key
 	 * @return The Entry object that was removed
 	 */
 	Entry removeEntryForKey(int key)
@@ -484,7 +490,7 @@ public class IntHashMap implements Cloneable, Serializable
 		while (e != null)
 		{
 			Entry next = e.next;
-			if ( key == e.key)
+			if (key == e.key)
 			{
 				modCount++;
 				size--;
@@ -507,7 +513,8 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Special version of remove for EntrySet.
-	 * @param o 
+	 * 
+	 * @param o
 	 * @return The entry that was removed
 	 */
 	Entry removeMapping(Object o)
@@ -593,6 +600,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Special-case code for containsValue with null argument
+	 * 
 	 * @return boolean true if there is a null value in this map
 	 */
 	private boolean containsNullValue()
@@ -649,7 +657,6 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * Create new entry.
 		 * 
-		 * @param h
 		 * @param k
 		 * @param v
 		 * @param n
@@ -727,8 +734,6 @@ public class IntHashMap implements Cloneable, Serializable
 		{
 			return getKey() + "=" + getValue(); //$NON-NLS-1$
 		}
-
-
 	}
 
 	/**
@@ -738,7 +743,6 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * Subclass overrides this to alter the behavior of put method.
 	 * 
-	 * @param hash
 	 * @param key
 	 * @param value
 	 * @param bucketIndex
@@ -760,14 +764,13 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Subclass overrides this to alter the behavior of HashMap(Map), clone, and
 	 * readObject.
 	 * 
-	 * @param hash
 	 * @param key
 	 * @param value
 	 * @param bucketIndex
 	 */
 	void createEntry(int key, Object value, int bucketIndex)
 	{
-		table[bucketIndex] = new Entry( key, value, table[bucketIndex]);
+		table[bucketIndex] = new Entry(key, value, table[bucketIndex]);
 		size++;
 	}
 
@@ -896,7 +899,6 @@ public class IntHashMap implements Cloneable, Serializable
 	{
 		return new EntryIterator();
 	}
-
 
 	// Views
 

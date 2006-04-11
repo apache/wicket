@@ -100,8 +100,6 @@ public class ResourceLink extends Link implements IResourceListener
 	 *            See Component
 	 * @param resource
 	 *            The resource
-	 * @param resourceParameters
-	 *            The resource parameters
 	 */
 	public ResourceLink(final String id, final Resource resource)
 	{

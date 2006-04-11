@@ -192,8 +192,6 @@ public class PackageResource extends WebResource
 	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
 	 *            will add all the files with extension &quot;js&quot; from that
 	 *            package).
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
 	 */
 	public static void bind(Application application, Class scope, Pattern pattern)
 	{

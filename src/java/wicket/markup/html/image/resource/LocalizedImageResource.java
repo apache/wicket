@@ -206,8 +206,6 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	/**
 	 * @param resourceReference
 	 *            The resource to set.
-	 * @param resourceParameters 
-	 * 			  The resource parameters for the shared resource
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{

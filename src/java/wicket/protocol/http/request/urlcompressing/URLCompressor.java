@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,20 +31,24 @@ import wicket.util.collections.IntHashMap;
 import wicket.util.collections.IntHashMap.Entry;
 
 /**
- * This class generates UID for Component/Interface combinations when used in conjunction with
- * {@link WebURLCompressingCodingStrategy} and {@link WebURLCompressingTargetResolverStrategy}
+ * This class generates UID for Component/Interface combinations when used in
+ * conjunction with {@link WebURLCompressingCodingStrategy} and
+ * {@link WebURLCompressingTargetResolverStrategy}
  * 
- * A page where you want to compress the urls on, should implement {@link ICompressingUrlPage} 
- * and return a instanceof of this class. This instances should be cached in the page.
+ * A page where you want to compress the urls on, should implement
+ * {@link ICompressingUrlPage} and return a instanceof of this class. This
+ * instances should be cached in the page.
  * 
- * To use the 2 strategies you have to create your own {@link CompoundRequestCycleProcessor} in
- * your {@link Application#newRequestCycleProcessor()} which should be overwritten and implemented
- * like this:
+ * To use the 2 strategies you have to create your own
+ * {@link CompoundRequestCycleProcessor} in your
+ * {@link Application#newRequestCycleProcessor()} which should be overwritten
+ * and implemented like this:
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
- *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+ * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+ * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
  * }
  * </pre>
  * 
@@ -53,8 +57,9 @@ import wicket.util.collections.IntHashMap.Entry;
  * <pre>
  * public URLCompressor getUrlCompressor()
  * {
- *   if(compressor == null) compressor = new URLCompressor();
- *   return compressor;
+ * 	if (compressor == null)
+ * 		compressor = new URLCompressor();
+ * 	return compressor;
  * }
  * </pre>
  * 
@@ -70,55 +75,55 @@ public class URLCompressor implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private transient ReferenceQueue queue = new ReferenceQueue();
-	private transient IntHashMap directComponentRefs = new IntHashMap(); //uid->component/interface
 	
+	private transient IntHashMap directComponentRefs = new IntHashMap(); // uid->component/interface
+
 	private int uid = 1;
 
-	
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
-		
+
 		int size = s.readInt();
 		queue = new ReferenceQueue();
-		directComponentRefs = new IntHashMap((int)(size*1.25));
-		
-		while(--size >= 0)
+		directComponentRefs = new IntHashMap((int)(size * 1.25));
+
+		while (--size >= 0)
 		{
 			int uid = s.readInt();
 			Component component = (Component)s.readObject();
 			String interfaceName = s.readUTF();
-			
-			IntKeyWeakReference ref = new IntKeyWeakReference(uid,component,queue);
-			directComponentRefs.put(uid,new ComponentAndInterface(ref,interfaceName));
+
+			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
+			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
 		}
-		
+
 	}
-	
+
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
-		IntKeyWeakReference ref = null; 
-		while( (ref= (IntKeyWeakReference) queue.poll()) != null)
+		IntKeyWeakReference ref = null;
+		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
 		{
 			directComponentRefs.remove(ref.uid);
 		}
 
 		s.defaultWriteObject();
-		
+
 		s.writeInt(directComponentRefs.size());
-		
+
 		Iterator it = directComponentRefs.entrySet().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			IntHashMap.Entry entry = (Entry)it.next();
-			
+
 			s.writeInt(entry.getKey());
 			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
 			s.writeObject(cai.getComponent());
 			s.writeUTF(cai.getInterfaceName());
 		}
 	}
-	
+
 	/**
 	 * @return the next uid for this url compressor
 	 */
@@ -126,13 +131,16 @@ public class URLCompressor implements Serializable
 	{
 		return uid++;
 	}
-	
+
 	/**
 	 * Returns a uid for the combination component and the to call interface.
-	 * Will return the same uid if it was already called for this specific combination.
+	 * Will return the same uid if it was already called for this specific
+	 * combination.
 	 * 
-	 * @param component The Component 
-	 * @param interfaceName The interface name
+	 * @param component
+	 *            The Component
+	 * @param interfaceName
+	 *            The interface name
 	 * @return int The uid for the component/interfaceName combination
 	 */
 	public int getUIDForComponentAndInterface(Component component, String interfaceName)
@@ -141,8 +149,8 @@ public class URLCompressor implements Serializable
 		Iterator it = directComponentRefs.entrySet().iterator();
 		while (it.hasNext())
 		{
-			IntHashMap.Entry entry = (IntHashMap.Entry) it.next();
-			ComponentAndInterface cai = (ComponentAndInterface) entry.getValue();
+			IntHashMap.Entry entry = (IntHashMap.Entry)it.next();
+			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
 			if (cai.getInterfaceName().equals(interfaceName) && cai.getComponent() == component)
 			{
 				uid = entry.getKey();
@@ -152,30 +160,30 @@ public class URLCompressor implements Serializable
 		if (uid == 0)
 		{
 			uid = getNewUID();
-			IntKeyWeakReference ref = new IntKeyWeakReference(uid,component,queue);
-			directComponentRefs.put(uid,new ComponentAndInterface(ref,interfaceName));
+			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
+			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
 		}
 		return uid;
 	}
 
 	/**
-	 * Gets the combination 
+	 * Gets the combination
 	 * 
 	 * @param uidString
-	 * @return ComponentAndInterface 
+	 * @return ComponentAndInterface
 	 */
 	public ComponentAndInterface getComponentAndInterfaceForUID(String uidString)
 	{
-		IntKeyWeakReference ref = null; 
-		while( (ref= (IntKeyWeakReference) queue.poll()) != null)
+		IntKeyWeakReference ref = null;
+		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
 		{
 			directComponentRefs.remove(ref.uid);
 		}
 		int uid = Integer.parseInt(uidString);
-		ComponentAndInterface cai = (ComponentAndInterface) directComponentRefs.get(uid);
+		ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);
 		return cai;
 	}
-	
+
 	/**
 	 * @author jcompagner
 	 */
@@ -185,36 +193,38 @@ public class URLCompressor implements Serializable
 
 		private final IntKeyWeakReference ref;
 		private final String interfaceName;
-		
-		private ComponentAndInterface(IntKeyWeakReference ref ,String interfaceName)
+
+		private ComponentAndInterface(IntKeyWeakReference ref, String interfaceName)
 		{
 			this.ref = ref;
 			this.interfaceName = interfaceName;
 		}
-		
+
 		/**
-		 * @return Component The component that should be used to call the interface
+		 * @return Component The component that should be used to call the
+		 *         interface
 		 */
 		public Component getComponent()
 		{
-			return (Component) ref.get();
+			return (Component)ref.get();
 		}
-		
+
 		/**
-		 * @return String The interface name which should be called on the component
+		 * @return String The interface name which should be called on the
+		 *         component
 		 */
 		public String getInterfaceName()
 		{
 			return interfaceName;
 		}
-	}		
-	
+	}
+
 	private static class IntKeyWeakReference extends WeakReference
 	{
 		private int uid;
-		
+
 		/**
-		 * @param uid 
+		 * @param uid
 		 * @param referent
 		 * @param q
 		 */
@@ -223,7 +233,5 @@ public class URLCompressor implements Serializable
 			super(referent, q);
 			this.uid = uid;
 		}
-		
-	}	
-
+	}
 }
