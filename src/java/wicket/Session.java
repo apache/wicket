@@ -795,7 +795,12 @@ public abstract class Session implements Serializable
 	 */
 	protected final Object getAttribute(final String name)
 	{
-		return getSessionStore().getAttribute(RequestCycle.get().getRequest(), name);
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			return getSessionStore().getAttribute(cycle.getRequest(), name);
+		}
+		return null;
 	}
 
 	/**
@@ -803,7 +808,12 @@ public abstract class Session implements Serializable
 	 */
 	protected final List getAttributeNames()
 	{
-		return getSessionStore().getAttributeNames(RequestCycle.get().getRequest());
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			return getSessionStore().getAttributeNames(cycle.getRequest());
+		}
+		return null;
 	}
 
 	/**
@@ -833,7 +843,11 @@ public abstract class Session implements Serializable
 	 */
 	protected final void removeAttribute(String name)
 	{
-		getSessionStore().removeAttribute(RequestCycle.get().getRequest(), name);
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			getSessionStore().removeAttribute(cycle.getRequest(), name);
+		}
 	}
 
 	/**
@@ -846,8 +860,15 @@ public abstract class Session implements Serializable
 	 */
 	protected final void setAttribute(String name, Object value)
 	{
-		// Set the actual attribute
-		getSessionStore().setAttribute(RequestCycle.get().getRequest(), name, value);
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			// Set the actual attribute
+			getSessionStore().setAttribute(cycle.getRequest(), name, value);
+			return;
+		}
+		
+		throw new WicketRuntimeException("Can not set the attribute. No RequestCycle available");
 	}
 
 	/**
