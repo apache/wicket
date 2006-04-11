@@ -162,7 +162,8 @@ public final class PageMap implements Serializable
 	 */
 	public static PageMap forName(final String pageMapName)
 	{
-		return Session.get().pageMapForName(pageMapName, true);
+		Session session = Session.get();
+		return (session != null) ? session.pageMapForName(pageMapName, true) : null;
 	}
 
 	/**
