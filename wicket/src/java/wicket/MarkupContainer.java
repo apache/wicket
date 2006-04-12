@@ -139,6 +139,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer add(final Component child)
 	{
+		if (child == null)
+		{
+			throw new IllegalArgumentException("argument child may not be null");
+		}
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("Add " + child.getId() + " to " + this);
@@ -175,6 +180,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final boolean autoAdd(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		/* Replace strategy */
 		if (get(component.getId()) != null)
 		{
@@ -196,6 +206,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final boolean contains(final Component component, final boolean recurse)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		if (recurse)
 		{
 			// Start at component and continue while we're not out of parents
@@ -415,6 +430,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void remove(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		children_remove(component);
 		removedComponent(component);
 	}
@@ -427,6 +447,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final void remove(final String id)
 	{
+		if (id == null)
+		{
+			throw new IllegalArgumentException("argument id may not be null");
+		}
+
 		final Component component = get(id);
 		if (component != null)
 		{
@@ -680,6 +705,15 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final Object visitChildren(final Class clazz, final IVisitor visitor)
 	{
+		if (clazz == null)
+		{
+			throw new IllegalArgumentException("argument clazz may not be null");
+		}
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("argument visitor may not be null");
+		}
+
 		// Iterate through children of this container
 		for (int i = 0; i < children_size(); i++)
 		{
