@@ -705,10 +705,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final Object visitChildren(final Class clazz, final IVisitor visitor)
 	{
-		if (clazz == null)
-		{
-			throw new IllegalArgumentException("argument clazz may not be null");
-		}
 		if (visitor == null)
 		{
 			throw new IllegalArgumentException("argument visitor may not be null");
