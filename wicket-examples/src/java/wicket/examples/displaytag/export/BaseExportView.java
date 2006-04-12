@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * A class that extends BaseExportView simple need to provide delimiters for rows and columns.
  * </p>
  * @author Fabrizio Giustina
- * @version $Revision$ ($Author$)
+ * @author Juergen Donnerstag
  */
 public abstract class BaseExportView implements Serializable
 {
@@ -144,11 +144,10 @@ public abstract class BaseExportView implements Serializable
 
         StringBuffer buffer = new StringBuffer(1000);
 
-        Iterator iterator = headerData.iterator();
-
         // start row
         buffer.append(ROW_START);
 
+        Iterator iterator = headerData.iterator();
         while (iterator.hasNext())
         {
             log.debug("iterator.hasNext()");
@@ -156,7 +155,6 @@ public abstract class BaseExportView implements Serializable
             String columnHeader = headerCell;
 
             buffer.append(CELL_START);
-
             buffer.append(escapeColumnValue(columnHeader));
 
             if (ALWAYS_APPEND_CELL_END || iterator.hasNext())
@@ -167,9 +165,7 @@ public abstract class BaseExportView implements Serializable
 
         // end row
         buffer.append(ROW_END);
-
         return buffer.toString();
-
     }
 
     /**
@@ -206,7 +202,7 @@ public abstract class BaseExportView implements Serializable
             Object row = rowIterator.next();
 
             buffer.append(ROW_START);
-            buffer.append(row.toString());
+            buffer.append(escapeColumnValue(row.toString()));
             
             if (ALWAYS_APPEND_ROW_END || rowIterator.hasNext())
             {
@@ -216,7 +212,6 @@ public abstract class BaseExportView implements Serializable
 
         // document start
         buffer.append(DOCUMENT_END);
-
         return buffer.toString();
     }
 
@@ -226,5 +221,4 @@ public abstract class BaseExportView implements Serializable
      * @return escaped column value
      */
     protected abstract Object escapeColumnValue(Object value);
-
 }

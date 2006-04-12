@@ -63,6 +63,7 @@ public class ExampleSubtotals extends Displaytag
                 groups.put(previousValue.getCity(), new Integer(i - startIdx));
                 groups.put(value.getCity(), new Integer(0));
                 previousValue = value;
+                startIdx = i;
             }
         }
 
@@ -82,7 +83,7 @@ public class ExampleSubtotals extends Displaytag
                 String group = listItem.getModelObjectAsString();
                 int size = ((Integer)groups.get(group)).intValue();
                 subtable.setViewSize(size);
-                startIndex = size;
+                startIndex += size;
                 
                 listItem.add(subtable);
                 listItem.add(new Label("name", new PropertyModel(subtable, "group1")));
