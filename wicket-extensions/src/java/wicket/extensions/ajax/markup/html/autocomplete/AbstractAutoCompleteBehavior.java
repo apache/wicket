@@ -45,7 +45,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 		response.write("<script type=\"text/javascript\">");
 		response.write("new WicketAutoComplete('"+id+"','"+getCallbackUrl()+"');");
 		response.write("</script>");
-		response.write("<div style=\"position:absolute;z-index:100;\" id=\""+id+"-autocomplete\" class=\"wicket-aa\"></div>");
+		response.write("<div style=\"position:absolute;z-index:100;display:none;\" id=\""+id+"-autocomplete\" class=\"wicket-aa\"></div>");
 	}
 
 	/**
