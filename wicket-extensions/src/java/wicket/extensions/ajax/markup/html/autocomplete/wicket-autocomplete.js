@@ -19,7 +19,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 		}
 		
 		obj.onkeydown=function(event){
-			switch(getEventKeyCode(event)){
+			switch(wicketKeyCode(getEvent(event))){
 				case KEY_UP:
 					if(selected>-1)selected--;
 					if(selected==-1){
@@ -27,7 +27,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 					} else {
 				    	render();
 				    }
-				    if(navigator.appVersion.indexOf('AppleWebKit')>0)event.stopPropagation();				 
+				    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
 					break;
 				case KEY_DOWN:
 					if(visible==0)updateChoices();					
@@ -36,27 +36,30 @@ function WicketAutoComplete(elementId,callbackUrl){
 					}
 					render();
 					showAutoComplete();		
-				    if(navigator.appVersion.indexOf('AppleWebKit')>0)event.stopPropagation();				    
+				    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
 					break;										
 				case KEY_ESC:
 					hideAutoComplete();
+					return killEvent(event);
 					break;
 				case KEY_ENTER:
 					if(selected>-1){
 						obj.value=getSelectedValue();
-						hideAutoComplete();
+						hideAutoComplete();					
 					}
+					return killEvent(event);
 					break;					
 				default:
 			}
 		}	
 		
 		obj.onkeyup=function(event){
-			switch(getEventKeyCode(event)){
+			switch(wicketKeyCode(getEvent(event))){
+				case KEY_ENTER:
+					return killEvent(event);
 				case KEY_UP:
 				case KEY_DOWN:
 				case KEY_ESC:
-				case KEY_ENTER:
 				case KEY_TAB:
 				case KEY_RIGHT:
 				case KEY_LEFT:
@@ -65,13 +68,38 @@ function WicketAutoComplete(elementId,callbackUrl){
 					updateChoices();					
 			}
 		}
+
+		obj.onkeypress=function(event){
+			if(wicketKeyCode(getEvent(event))==KEY_ENTER){
+				return killEvent(event);
+			}
+		}
+
 	}
 	
-	function getEventKeyCode(event){
-		if(!event)event=window.event;
-		return wicketKeyCode(event);
+	function getEvent(event){	
+		if(!event)return window.event;	
+		return event;
 	}
-	
+
+	function killEvent(event){
+	   if(!event)event=window.event;
+	   if(!event)return false;
+	   if(event.cancelBubble!=null){
+		event.cancelBubble=true;
+	   }
+	   if(event.returnValue){
+		 event.returnValue=false;
+           }
+	   if(event.stopPropagation){
+		event.stopPropagation();
+	  }	
+	   if(event.preventDefault){
+		event.preventDefault();
+  	   }
+	   return false;
+	}
+
 	function updateChoices(){	
 	    var transport = wicketAjaxGetTransport();
 	    if (transport == null)return false
