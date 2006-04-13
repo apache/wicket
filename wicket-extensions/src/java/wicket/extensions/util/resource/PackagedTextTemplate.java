@@ -21,6 +21,9 @@ package wicket.extensions.util.resource;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
@@ -37,6 +40,9 @@ import wicket.util.string.interpolator.MapVariableInterpolator;
 public class PackagedTextTemplate extends TextTemplate
 {
 	private static final long serialVersionUID = 1L;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(PackagedTextTemplate.class);
 
 	/** class loader stream locator. */
 	private static final ClassLoaderResourceStreamLocator streamLocator = new ClassLoaderResourceStreamLocator();
@@ -121,6 +127,20 @@ public class PackagedTextTemplate extends TextTemplate
 		catch (ResourceStreamNotFoundException e)
 		{
 			throw new RuntimeException(e);
+		}
+		finally
+		{
+			if (stream != null)
+			{
+				try
+				{
+					stream.close();
+				}
+				catch (IOException e)
+				{
+					log.error(e.getMessage(), e);
+				}
+			}
 		}
 	}
 
