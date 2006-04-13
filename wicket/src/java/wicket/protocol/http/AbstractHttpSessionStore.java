@@ -150,6 +150,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	public final void bind(Request request, Session newSession)
 	{
+		// call template method
+		onBind(request, newSession);
+
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 
@@ -157,10 +160,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		String applicationKey = application.getApplicationKey();
 		httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
 				new SessionBindingListener(applicationKey, httpSession.getId()));
-		setAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME, newSession);
 
-		// call template method
-		onBind(request, newSession);
+		// register the session object itself
+		setAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME, newSession);
 	}
 
 	/**
@@ -225,7 +227,10 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 
 	/**
 	 * Template method that is called when a session is being bound to the
-	 * session store.
+	 * session store. It is called <strong>before</strong> the session object
+	 * itself is added to this store (which is done by calling
+	 * {@link ISessionStore#setAttribute(Request, String, Object)} with key
+	 * {@link Session#SESSION_ATTRIBUTE_NAME}.
 	 * 
 	 * @param request
 	 *            The request
