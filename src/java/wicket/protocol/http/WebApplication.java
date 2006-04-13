@@ -70,11 +70,11 @@ import wicket.util.lang.PackageName;
  * init() method. For example:
  * 
  * <pre>
- *                             public void init()
- *                             {
- *                                 String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                                 URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                                 ...
+ *    public void init()
+ *    {
+ *        String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *        ...
  * </pre>
  * 
  * @see WicketServlet
@@ -94,7 +94,7 @@ import wicket.util.lang.PackageName;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  */
-public abstract class WebApplication extends Application
+public abstract class WebApplication extends Application implements ISessionFactory
 {
 	/**
 	 * Map of buffered responses that are in progress per session. Buffered
@@ -112,15 +112,7 @@ public abstract class WebApplication extends Application
 	private String sessionAttributePrefix;
 
 	/** Session factory for this web application */
-	private ISessionFactory sessionFactory = new ISessionFactory()
-	{
-		private static final long serialVersionUID = 1L;
-
-		public Session newSession()
-		{
-			return new WebSession(WebApplication.this);
-		}
-	};
+	private ISessionFactory sessionFactory = this;
 
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
@@ -430,9 +422,20 @@ public abstract class WebApplication extends Application
 	 */
 	protected ISessionFactory getSessionFactory()
 	{
-		return sessionFactory;
+		return this.sessionFactory;
 	}
-
+	
+	/**
+	 * Create new Wicket Session object. Note, this method is not called
+	 * if you registered your own ISessionFactory with the Application.
+	 * 
+	 * @see wicket.ISessionFactory#newSession()
+	 */
+	public Session newSession()
+	{
+		return new WebSession(WebApplication.this);
+	}
+	
 	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to

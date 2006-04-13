@@ -17,11 +17,9 @@
  */
 package wicket.markup.html.header.inheritance;
 
-import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
-import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 import wicket.util.tester.WicketTester;
 
@@ -75,51 +73,17 @@ public class InheritanceHeadTest extends WicketTestCase
 	 */
 	public void test_3() throws Exception
 	{
-		application = new MyApp();
-		executeTest(ConcretePage2.class, "ExpectedResult3.html");
-	}
-
-	/**
-	 */
-	public static class MyApp extends WicketTester
-	{
-		/**
-		 * Construct.
-		 */
-		public MyApp()
+		application = new WicketTester()
 		{
-			super();
-		}
-		
-		protected ISessionFactory getSessionFactory()
-		{
-			return new ISessionFactory()
+			/**
+			 * @see wicket.protocol.http.WebApplication#newSession()
+			 */
+			public Session newSession()
 			{
-				private static final long serialVersionUID = 1L;
-
-				public Session newSession()
-				{
-					return new MySession(MyApp.this, "myStyle");
-				}
-			};
-		}
-	}
-	
-	/**
-	 */
-	public static class MySession extends WebSession
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * @param appl
-		 * @param style
-		 */
-		public MySession(WebApplication appl, final String style)
-		{
-			super(appl);
-			setStyle(style);
-		}
+				return new WebSession(this).setStyle("myStyle");
+			}
+		};
+		
+		executeTest(ConcretePage2.class, "ExpectedResult3.html");
 	}
 }

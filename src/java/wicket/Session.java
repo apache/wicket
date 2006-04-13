@@ -651,11 +651,13 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param style
 	 *            The style to set.
+	 * @return the Session object
 	 */
-	public final void setStyle(final String style)
+	public final Session setStyle(final String style)
 	{
 		this.style = style;
 		dirty();
+		return this;
 	}
 
 	/**

@@ -45,7 +45,7 @@ public class WebSession extends Session
 	 * @param application
 	 *            The application
 	 */
-	protected WebSession(final WebApplication application)
+	public WebSession(final WebApplication application)
 	{
 		super(application);
 	}
