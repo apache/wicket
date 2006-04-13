@@ -32,7 +32,7 @@ function wicketHide(id) {
 
 
 // AJAX FUNCTIONS
-function wicketAjaxGetTransport() {
+function wicketAjaxCreateTransport() {
     var transport = null;
     if (window.XMLHttpRequest) {
         transport = new XMLHttpRequest();
@@ -49,6 +49,20 @@ function wicketAjaxGetTransport() {
     return transport;
 }
 
+var wicketAjaxTransports = [];
+
+
+function wicketAjaxGetTransport() {
+	var t = wicketAjaxTransports;
+	for (var i = 0; i < t.length; ++i) {
+		if (t[i].readyState == 0 || t[i].readyState == 4) {
+			return t[i];
+		}
+	}
+	t[t.length] = wicketAjaxCreateTransport();
+	return t[t.length-1];
+}
+
 function wicketAjaxGet(url, successHandler, failureHandler) {
     if (wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logInfo;
@@ -63,11 +77,16 @@ function wicketAjaxGet(url, successHandler, failureHandler) {
     if (transport == null) {
         return false;
     }
+    transport.open("GET", url + "&random=" + Math.random(), true);    
     transport.onreadystatechange = function () {
         wicketAjaxOnStateChange(transport, successHandler, failureHandler);
+        if (transport.readyState == 4) {
+        	transport.onreadystatechange = function () {};
+        	transport = null;
+        }
     };
-    transport.open("GET", url + "&random=" + Math.random(), true);
     transport.send(null);
+
     return true;
 }
 function wicketAjaxPost(url, body, successHandler, failureHandler) {
@@ -85,12 +104,17 @@ function wicketAjaxPost(url, body, successHandler, failureHandler) {
     if (transport == null) {
         return false;
     }
+    transport.open("POST", url + "&random=" + Math.random(), true);
     transport.onreadystatechange = function () {
         wicketAjaxOnStateChange(transport, successHandler, failureHandler);
+        if (transport.readyState == 4) {
+        	transport.onreadystatechange = function () {};
+        	transport = null;
+        }        
     };
-    transport.open("POST", url + "&random=" + Math.random(), true);
     transport.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     transport.send(body);
+       
     return true;
 }
 function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler) {
@@ -352,3 +376,4 @@ WicketThrottler.prototype.execute=function(id) {
 }
 
 var wicketThrottler=new WicketThrottler();
+
