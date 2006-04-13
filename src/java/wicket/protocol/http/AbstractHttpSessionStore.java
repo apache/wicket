@@ -175,7 +175,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	/**
 	 * @see wicket.session.ISessionStore#lookup(wicket.Request)
 	 */
-	public final Session lookup(Request request)
+	public Session lookup(Request request)
 	{
 		WebRequest webRequest = toWebRequest(request);
 		return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
