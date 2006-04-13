@@ -604,7 +604,7 @@ public abstract class WebApplication extends Application
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
 
-			// Bind the session to the facade
+			// Bind the session to the session store
 			sessionStore.bind(request, session);
 		}
 
