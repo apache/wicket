@@ -21,12 +21,25 @@ import junit.framework.TestCase;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.crypt.SunJceCrypt;
+import wicket.WicketTestCase;
 
 /**
  * @author Juergen Donnerstag
  */
-public class CryptTest extends TestCase
+public class CryptTest extends WicketTestCase
 {
+
+
+    /**
+     * Construct.
+     * 
+     * @param name
+     */
+    public CryptTest(String name)
+    {
+	super(name);
+    }
+
 	/**
 	 * 
 	 */
