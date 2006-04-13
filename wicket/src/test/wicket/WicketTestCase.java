@@ -20,8 +20,8 @@ package wicket;
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.tester.WicketTester;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -33,7 +33,7 @@ import wicket.protocol.http.WebRequestCycle;
 public abstract class WicketTestCase extends TestCase
 {
 	/** */
-	public MockWebApplication application;
+	public WicketTester application;
 
 	/**
 	 * Create the test.
@@ -48,7 +48,7 @@ public abstract class WicketTestCase extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new MockWebApplication(null);
+		application = new WicketTester(null);
 	}
 
 	/**

@@ -17,8 +17,13 @@
  */
 package wicket.markup.html.header.inheritance;
 
+import wicket.ISessionFactory;
+import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
+import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebSession;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests the inclusion of the wicket:head section from a panel in a subclassed
@@ -62,5 +67,59 @@ public class InheritanceHeadTest extends WicketTestCase
 	public void test_2() throws Exception
 	{
 		executeTest(ConcretePage2.class, "ExpectedResult2.html");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void test_3() throws Exception
+	{
+		application = new MyApp();
+		executeTest(ConcretePage2.class, "ExpectedResult3.html");
+	}
+
+	/**
+	 */
+	public static class MyApp extends WicketTester
+	{
+		/**
+		 * Construct.
+		 */
+		public MyApp()
+		{
+			super();
+		}
+		
+		protected ISessionFactory getSessionFactory()
+		{
+			return new ISessionFactory()
+			{
+				private static final long serialVersionUID = 1L;
+
+				public Session newSession()
+				{
+					return new MySession(MyApp.this, "myStyle");
+				}
+			};
+		}
+	}
+	
+	/**
+	 */
+	public static class MySession extends WebSession
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param appl
+		 * @param style
+		 */
+		public MySession(WebApplication appl, final String style)
+		{
+			super(appl);
+			setStyle(style);
+		}
 	}
 }

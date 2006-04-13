@@ -17,19 +17,16 @@
  */
 package wicket.markup.html.form.encryption;
 
-import junit.framework.TestCase;
+import wicket.WicketTestCase;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.crypt.SunJceCrypt;
-import wicket.WicketTestCase;
 
 /**
  * @author Juergen Donnerstag
  */
 public class CryptTest extends WicketTestCase
 {
-
-
     /**
      * Construct.
      * 

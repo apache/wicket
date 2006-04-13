@@ -18,15 +18,12 @@
  */
 package wicket.settings;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import wicket.Application;
 import wicket.Component;
@@ -62,9 +59,9 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.io.IOUtils;
 import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -1115,21 +1112,38 @@ public final class Settings
 	 */
 	public String getVersion()
 	{
-		Properties properties = new Properties();
-		InputStream is = null;
-		try
-		{
-			is = Settings.class.getResourceAsStream("/wicket.properties");
-			properties.load(is);
-		}
-		catch (IOException e)
-		{
-			// ignore the exception
-		}
-		finally
-		{
-			IOUtils.closeQuietly(is);
-		}
-		return properties.getProperty("wicket.version", "n/a");
+//		Properties properties = new Properties();
+//		InputStream is = null;
+//		try
+//		{
+//			is = Settings.class.getResourceAsStream("/wicket.properties");
+//			properties.load(is);
+//		}
+//		catch (IOException e)
+//		{
+//			// ignore the exception
+//		}
+//		finally
+//		{
+//			IOUtils.closeQuietly(is);
+//		}
+//		return properties.getProperty("wicket.version", "n/a");
+		
+		String implVersion = null;
+        try
+        {
+        	Class cls = Class.forName("wicket.Application");
+            Package pkg = cls.getPackage();
+            if (pkg != null)
+            {
+            	implVersion = pkg.getImplementationVersion();
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+        	// ignore the exception
+        }
+       
+        return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
 	}
 }

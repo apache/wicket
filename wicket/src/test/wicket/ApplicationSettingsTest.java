@@ -49,7 +49,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testFrameworkVersion()
 	{
 		Settings settings = new Settings(new DummyApplication());
-		assertFalse("n/a".equalsIgnoreCase(settings.getVersion()));
+		assertEquals("n/a", settings.getVersion());
 	}
 
 	/**
