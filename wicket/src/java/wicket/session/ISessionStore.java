@@ -28,14 +28,15 @@ import wicket.Session;
  * attributes.
  * 
  * @author Eelco Hillenius
+ * @author Johan Compagner
  */
 public interface ISessionStore
 {
 	/**
 	 * Gets the attribute value with the given name
 	 * 
-	 * @param request 
-	 * 			  the current request
+	 * @param request
+	 *            the current request
 	 * @param name
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
@@ -43,8 +44,8 @@ public interface ISessionStore
 	Object getAttribute(Request request, final String name);
 
 	/**
-	 * @param request 
-	 * 			  the current request
+	 * @param request
+	 *            the current request
 	 * 
 	 * @return List of attributes for this session
 	 */
@@ -54,16 +55,16 @@ public interface ISessionStore
 	/**
 	 * Invalidates the session.
 	 * 
-	 * @param request 
-	 * 			  the current request
+	 * @param request
+	 *            the current request
 	 */
 	void invalidate(Request request);
 
 	/**
 	 * Removes the attribute with the given name.
 	 * 
-	 * @param request 
-	 * 			  the current request
+	 * @param request
+	 *            the current request
 	 * @param name
 	 *            the name of the attribute to remove
 	 */
@@ -72,8 +73,8 @@ public interface ISessionStore
 	/**
 	 * Adds or replaces the attribute with the given name and value.
 	 * 
-	 * @param request 
-	 * 			  the current request
+	 * @param request
+	 *            the current request
 	 * @param name
 	 *            the name of the attribute
 	 * @param value
@@ -88,20 +89,23 @@ public interface ISessionStore
 	 *            The request
 	 * @return The session id for the provided request
 	 */
-	abstract String getSessionId(Request request);
-	
+	String getSessionId(Request request);
+
 	/**
 	 * Retrieves the session for the provided request from this facade.
+	 * <p>
+	 * This method should return null if it is not bound yet, so that Wicket can
+	 * recognize that it should create a session and call
+	 * {@link #bind(Request, Session)} right after that.
+	 * </p>
 	 * 
 	 * @param request
 	 *            The current request
-	 * @return The session for the provided request. The contract is to never
-	 *         return null. If it is somehow not possible to retrieve a session
-	 *         object for the provided request, implementations should throw an
-	 *         {@link IllegalArgumentException}
+	 * @return The session for the provided request or null if the session was
+	 *         not bound
 	 */
-	abstract Session lookup(Request request);
-	
+	Session lookup(Request request);
+
 	/**
 	 * Adds the provided new session to this facade using the provided request.
 	 * 
@@ -110,17 +114,16 @@ public interface ISessionStore
 	 * @param newSession
 	 *            The new session
 	 */
-	abstract void bind(Request request, Session newSession);
+	void bind(Request request, Session newSession);
 
 	/**
 	 * Adds the provided new session to this facade using the provided request.
 	 * 
-	 * @param application 
+	 * @param application
 	 *            The application object that gets the unbind.
 	 * 
 	 * @param sessionId
 	 *            The SessionId that must be unbinded.
 	 */
-	abstract void unbind(String sessionId);
-	
+	void unbind(String sessionId);
 }
