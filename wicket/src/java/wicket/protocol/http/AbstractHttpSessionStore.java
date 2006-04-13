@@ -34,7 +34,12 @@ import wicket.session.ISessionStore;
 
 
 /**
+ * Abstract implementation of {@link ISessionStore} that works with web
+ * applications and that provided some speficic http servlet/ session related
+ * functionality.
+ * 
  * @author jcompagner
+ * @author Eelco Hillenius
  */
 public abstract class AbstractHttpSessionStore implements ISessionStore
 {
@@ -183,12 +188,13 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		application.sessionDestroyed(sessionId);
 		onUnbind(sessionId);
 	}
-	
+
 	/**
-	 * Lifecycle method for a subclass called when the httpsession was invalidated.
+	 * Lifecycle method for a subclass called when the httpsession was
+	 * invalidated.
 	 * 
 	 * @param sessionId
-	 * 				The session id of the session that was invalidated.
+	 *            The session id of the session that was invalidated.
 	 */
 	protected abstract void onUnbind(String sessionId);
 
