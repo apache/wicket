@@ -167,8 +167,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			if (application instanceof WebApplication)
 			{
 				// TODO Post 1.2: General: For non webapplication another method
-				// should be
-				// implemented (getMimeType on application?)
+				// should be implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getWicketServlet().getServletContext()
 						.getMimeType(url.getFile());
 				if (contentType == null)
@@ -233,7 +232,6 @@ public class UrlResourceStream extends AbstractResourceStream
 			URLConnection urlConnection = null;
 			try
 			{
-
 				urlConnection = url.openConnection();
 
 				// update the last modified time.
