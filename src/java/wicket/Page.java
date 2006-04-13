@@ -357,24 +357,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			throw new UnauthorizedActionException(this, Component.RENDER);
 		}
 
-		// Visit all this page's children to reset markup streams and check
-		// rendering authorization, as appropriate. We set any result; positive
-		// or negative as a temporary boolean in the components, and when a
-		// authorization exception is thrown it will block the rendering of this
-		// page
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Find out if this component can be rendered
-				final boolean renderAllowed = component.isActionAuthorized(RENDER);
-
-				// Authorize rendering
-				component.setRenderAllowed(renderAllowed);
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
 		// Make sure it is really empty
 		renderedComponents = null;
 
@@ -399,6 +381,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// Now, do the initialization for the other components
 		internalAttach();
+
+		// Visit all this page's children to reset markup streams and check
+		// rendering authorization, as appropriate. We set any result; positive
+		// or negative as a temporary boolean in the components, and when a
+		// authorization exception is thrown it will block the rendering of this
+		// page
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Find out if this component can be rendered
+				final boolean renderAllowed = component.isActionAuthorized(RENDER);
+
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 
 		// Handle request by rendering page
 		onBeforeRender();
