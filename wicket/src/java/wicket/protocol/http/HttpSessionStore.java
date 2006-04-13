@@ -147,7 +147,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -160,13 +160,5 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
 		return application.getSessionAttributePrefix(request);
-	}
-	
-
-	/**
-	 * @see wicket.protocol.http.AbstractHttpSessionStore#onUnbind(java.lang.String)
-	 */
-	protected void onUnbind(String sessionId)
-	{
 	}
 }

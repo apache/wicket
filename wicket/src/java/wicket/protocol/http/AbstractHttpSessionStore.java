@@ -146,38 +146,21 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Gets the underlying HttpSession object or null.
-	 * <p>
-	 * WARNING: it is a bad idea to depend on the http session object directly.
-	 * Please use the classes and methods that are exposed by Wicket instead.
-	 * Send an email to the mailing list in case it is not clear how to do
-	 * things or you think you miss funcionality which causes you to depend on
-	 * this directly.
-	 * </p>
-	 * 
-	 * @param request
-	 * 
-	 * @return The underlying HttpSession object.
-	 */
-	protected final HttpSession getHttpSession(WebRequest request)
-	{
-		// FIXME allow for session-less operation
-		HttpSession httpSession = request.getHttpServletRequest().getSession(true);
-		return httpSession;
-	}
-
-	/**
 	 * @see wicket.session.ISessionStore#bind(wicket.Request, wicket.Session)
 	 */
 	public final void bind(Request request, Session newSession)
 	{
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
+
 		// register an unbinding listener for cleaning up
 		String applicationKey = application.getApplicationKey();
 		httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
 				new SessionBindingListener(applicationKey, httpSession.getId()));
 		setAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME, newSession);
+
+		// call template method
+		onBind(request, newSession);
 	}
 
 	/**
@@ -188,15 +171,6 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		application.sessionDestroyed(sessionId);
 		onUnbind(sessionId);
 	}
-
-	/**
-	 * Lifecycle method for a subclass called when the httpsession was
-	 * invalidated.
-	 * 
-	 * @param sessionId
-	 *            The session id of the session that was invalidated.
-	 */
-	protected abstract void onUnbind(String sessionId);
 
 	/**
 	 * @see wicket.session.ISessionStore#lookup(wicket.Request)
@@ -228,4 +202,48 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		return (WebRequest)request;
 	}
 
+	/**
+	 * Gets the underlying HttpSession object or null.
+	 * <p>
+	 * WARNING: it is a bad idea to depend on the http session object directly.
+	 * Please use the classes and methods that are exposed by Wicket instead.
+	 * Send an email to the mailing list in case it is not clear how to do
+	 * things or you think you miss funcionality which causes you to depend on
+	 * this directly.
+	 * </p>
+	 * 
+	 * @param request
+	 * 
+	 * @return The underlying HttpSession object.
+	 */
+	protected final HttpSession getHttpSession(WebRequest request)
+	{
+		// FIXME allow for session-less operation
+		HttpSession httpSession = request.getHttpServletRequest().getSession(true);
+		return httpSession;
+	}
+
+	/**
+	 * Template method that is called when a session is being bound to the
+	 * session store.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param newSession
+	 *            The new session
+	 */
+	protected void onBind(Request request, Session newSession)
+	{
+	}
+
+	/**
+	 * Template method that is called when the session is being detached from
+	 * the store, which typically happens when the httpsession was invalidated.
+	 * 
+	 * @param sessionId
+	 *            The session id of the session that was invalidated.
+	 */
+	protected void onUnbind(String sessionId)
+	{
+	}
 }
