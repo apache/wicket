@@ -127,7 +127,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 		wicketShow(elementId+'-autocomplete');		
 		obj.style.left=position[0]+'px'
 		obj.style.top=(input.offsetHeight+position[1])+'px';
-		obj.style.width=input.offsetWidth;	
+		obj.style.width=input.offsetWidth+'px';	
 		visible=1;
 	}
 
