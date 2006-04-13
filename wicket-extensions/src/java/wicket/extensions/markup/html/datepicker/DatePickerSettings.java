@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.datepicker;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Properties;
@@ -47,14 +48,27 @@ public class DatePickerSettings implements Serializable
 	private static Properties dateformats = new Properties();
 	static
 	{
+		InputStream resourceAsStream = null;
 		try
 		{
-			dateformats.load(DatePickerSettings.class.getResourceAsStream("dateformats.properties"));
+			resourceAsStream = DatePickerSettings.class.getResourceAsStream("dateformats.properties");
+			dateformats.load(resourceAsStream);
 		}
 		catch (IOException e)
 		{
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
+		}
+		finally
+		{
+			try
+			{
+				if(resourceAsStream != null) resourceAsStream.close();
+			}
+			catch (IOException ex)
+			{
+				// ignore
+			}
 		}
 	}
 
