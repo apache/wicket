@@ -1,12 +1,10 @@
 package wicket.extensions.ajax.markup.html.autocomplete;
 
-import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
-import wicket.util.string.Strings;
 
 /**
  * @since 1.2
@@ -47,7 +45,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 		response.write("<script type=\"text/javascript\">");
 		response.write("new WicketAutoComplete('"+id+"','"+getCallbackUrl()+"');");
 		response.write("</script>");
-		response.write("<div style=\"position:absolute;z-index:100;\" id=\""+id+"-autocomplete\"></div>");
+		response.write("<div style=\"position:absolute;z-index:100;\" id=\""+id+"-autocomplete\" class=\"wicket-aa\"></div>");
 	}
 
 	/**
