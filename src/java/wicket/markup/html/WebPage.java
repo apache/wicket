@@ -17,12 +17,20 @@
  */
 package wicket.markup.html;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.INewBrowserWindowListener;
 import wicket.IRequestTarget;
+import wicket.MetaDataKey;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -74,6 +82,21 @@ import wicket.util.lang.Objects;
 public class WebPage extends Page implements INewBrowserWindowListener
 {
 	private static final long serialVersionUID = 1L;
+
+	/** meta data key for missing body tags logging. */
+	private static final MetaDataKey MISSING_BODY_TAG_LOGGED_MDK = new MetaDataKey(
+			MissingBodyTagLoggedMetaData.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/** meta data for missing body tags logging. */
+	private static final class MissingBodyTagLoggedMetaData implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		Set/* <Class> */missingBodyTagsLogged = new HashSet(1);
+	}
 
 	/** log. */
 	private static Log log = LogFactory.getLog(WebPage.class);
@@ -305,7 +328,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		} 
 		catch (Exception e)
 		{
-			log.error("Page couldn't be cloned to move to another pagemap: " + clonedPage.getClass(), e);
+			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
 		}
 		final PageMap map = getSession().createAutoPageMap();
 		clonedPage.moveToPageMap(map);
@@ -361,10 +384,36 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
 				final BodyContainer body = getBodyContainer();
-				if (cycle.getWebRequest().getCookies() == null ||  body == null)
+				final Cookie[] cookies = cycle.getWebRequest().getCookies();
+				if (cookies == null ||  body == null)
 				{
 					// If the browser does not support cookies, we try to work
 					// with the history
+
+					if (cookies != null && body == null)
+					{
+						// issue a warning; the cookies based alternative would
+						// have worked, but unfortunately, it doesn't now
+						// because it misses the body tag
+						Application app = getApplication();
+						MissingBodyTagLoggedMetaData meta = (MissingBodyTagLoggedMetaData)app
+								.getMetaData(MISSING_BODY_TAG_LOGGED_MDK);
+						if (meta == null)
+						{
+							meta = new MissingBodyTagLoggedMetaData();
+							app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
+						}
+						Class pageClass = WebPage.this.getClass();
+						if (!meta.missingBodyTagsLogged.contains(pageClass))
+						{
+							log
+									.warn("Page with class "
+											+ pageClass.getName()
+											+ " does not have a body tag. It is advisable to have"
+											+ " a body tag pair, as multi window support might be problematic without.");
+							meta.missingBodyTagsLogged.add(pageClass);
+						}
+					}
 					
 					// FIXME this only works with links that open a new window
 					// and browser configurations that start with a blank home
