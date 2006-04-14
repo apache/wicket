@@ -67,6 +67,12 @@ public final class PageParameters extends ValueMap
     public PageParameters(final String keyValuePairs)
     {
         super();
+       
+        // We can not use ValueMaps constructor as it uses
+        // VariableAssignmentParser which is more suitable for markup
+        // attributes, rather than URL parameters. URL param keys for
+        // examples are allowed to start with a digit (e.g. 0=xxx)
+        // and quotes are not "quotes".
         
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, ",");
