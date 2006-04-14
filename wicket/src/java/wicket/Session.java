@@ -207,7 +207,7 @@ public abstract class Session implements Serializable
 		final Session session = (Session)current.get();
 		if (session == null)
 		{
-			throw new WicketRuntimeException("there is not session attached to current thread "
+			throw new WicketRuntimeException("there is no session attached to current thread "
 					+ Thread.currentThread().getName());
 		}
 		return session;
