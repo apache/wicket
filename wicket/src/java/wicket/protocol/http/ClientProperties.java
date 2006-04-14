@@ -30,14 +30,18 @@ package wicket.protocol.http;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * A description of the client browser environment.
  * <p>
- * Copied from on collegue framework
- * <a href="http://www.nextapp.com/platform/echo2/echo/">Echo 2</a>'s
+ * Copied and adjusted from on collegue framework <a
+ * href="http://www.nextapp.com/platform/echo2/echo/">Echo 2</a>'s
  * <code>nextapp.echo2.webrender.ClientProperties</code>.
  * </p>
+ * 
+ * @author Echo 2
+ * @author Eelco Hillenius
  */
 public class ClientProperties implements Serializable
 {
@@ -424,6 +428,25 @@ public class ClientProperties implements Serializable
 	public void setProperty(String propertyName, Object propertyValue)
 	{
 		data.put(propertyName, propertyValue);
+	}
+
+	/**
+	 * Get the client's time zone if that could be detected.
+	 * 
+	 * @return The client's time zone
+	 */
+	public final TimeZone getTimeZone()
+	{
+		String utcOffset = (String)data.get(ClientProperties.UTC_OFFSET);
+		if (utcOffset != null)
+		{
+			int offset = Integer.parseInt(utcOffset);
+			TimeZone timeZone = TimeZone
+					.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utcOffset);
+			return timeZone;
+		}
+
+		return null;
 	}
 
 	/**
