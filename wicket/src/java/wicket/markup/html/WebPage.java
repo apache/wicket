@@ -360,9 +360,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				{
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
-
 				final BodyContainer body = getBodyContainer();
-				if (cycle.getWebRequest().getCookies() == null)
+				if (cycle.getWebRequest().getCookies() == null ||  body == null)
 				{
 					// If the browser does not support cookies, we try to work
 					// with the history
@@ -375,7 +374,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					response.write(url);
 					response.write("'}</script>");
 				}
-				else if (body != null)
+				else
 				{
 					// We seem to have cookie support. Write out a script that
 					// adds a cookie on page load, and removes it on page unload.
