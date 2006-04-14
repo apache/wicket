@@ -50,7 +50,7 @@ public class HelloBrowserRequestCycle extends WebRequestCycle
 	}
 
 	/**
-	 * Construct a new {@link WebClientInfo} object that does basic analizing
+	 * Construct a new {@link WebClientInfo} object that does basic analyzing
 	 * based on the user-agent request header, and set the request target to a
 	 * snoop page. Nice thing about this is that it is only done when needed.
 	 * Danger is that other code might override setRequestTarget after this,
