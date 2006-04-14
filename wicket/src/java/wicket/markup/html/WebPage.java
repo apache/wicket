@@ -313,84 +313,100 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * 
+	 * Tries to determine whether this page was opened in a new window or tab.
+	 * If it is (and this checker wes able to recognize that), a new page map is
+	 * created for this page instance, so that it will start using it's own
+	 * history in sync with the browser window or tab.
 	 */
-	private class PageMapChecker extends AbstractBehavior implements IHeaderContributor
+	private final class PageMapChecker extends AbstractBehavior implements IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
-		
-		/** The unload model for deleting the pagemap cookie*/
+
+		/** The unload model for deleting the pagemap cookie */
 		private Model onUnLoadModel;
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public void renderHead(final Response response)
+		public final void renderHead(final Response response)
 		{
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
-			
+
 			int initialAccessStackSize = 0;
 			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
 					&& target instanceof RedirectPageRequestTarget)
 			{
 				initialAccessStackSize = 1;
 			}
-			
-			// Javascript: for the most part it is getting the same functionality
-			// for multiple browsers. What the end result is, is that a call back
-			// to the server is made at the moment it detects that there is  
-			// no history. because that could mean that a page is opened in 
-			// a new tab/window without that page being in its own pagemap, 
-			// that redirect will put that page in its own pagemap.
+
+			// Here is our trickery to detect whether the current request was
+			// made in a new window/ tab, in which case it should go in a
+			// different page map so that we don't intermangle the history of
+			// those windows
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			if (accessStack.size() > initialAccessStackSize)
 			{
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
 				{
-					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target; 
-					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(getSession().createAutoPageMapName(),
-							current.getPageClass(), current.getPageParameters());
+					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
+					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
+							getSession().createAutoPageMapName(), current.getPageClass(), current
+									.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
 				{
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
-				if(cycle.getWebRequest().getCookies() == null)
+
+				final BodyContainer body = getBodyContainer();
+				if (cycle.getWebRequest().getCookies() == null)
 				{
+					// If the browser does not support cookies, we try to work
+					// with the history
+					
+					// FIXME this only works with links that open a new window
+					// and browser configurations that start with a blank home
+					// page (which is usually not the default), in which case
+					// the page count is 2 (or 1 for IE)
 					response.write("<script language=\"javascript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
 					response.write(url);
 					response.write("'}</script>");
 				}
-				else
+				else if (body != null)
 				{
-					if(onUnLoadModel == null)
+					// We seem to have cookie support. Write out a script that
+					// adds a cookie on page load, and removes it on page unload.
+					// Whenever the cookie is not unloaded (it's there on load),
+					// we know that we have a new window/ tab instance
+					if (onUnLoadModel == null)
 					{
 						onUnLoadModel = new Model()
 						{
 							private static final long serialVersionUID = 1L;
-							
+
 							/**
 							 * @see wicket.model.Model#getObject(wicket.Component)
 							 */
 							public Object getObject(Component component)
 							{
-								return "deleteCookie('pagemap-" + getPageMap().getName()+ "');";
+								return "deleteCookie('pagemap-" + getPageMap().getName() + "');";
 							}
 						};
-						getBodyContainer().addOnUnLoadModifier(onUnLoadModel);
+						body.addOnUnLoadModifier(onUnLoadModel);
 					}
+					final String pageMapName = getPageMap().getName();
 					response.write("<script type=\"text/javascript\" src=\"");
 					response.write(urlFor(cookiesResource));
 					response.write("\"></script>\n");
 					response.write("<script language=\"javascript\">\n");
 					response.write("var pagemapcookie = getCookie('pagemap-");
-					response.write(getPageMap().getName());
+					response.write(pageMapName);
 					response.write("');\n");
 					response.write("if(!pagemapcookie && pagemapcookie != '1'){setCookie('pagemap-");
-					response.write(getPageMap().getName());
+					response.write(pageMapName);
 					response.write("',1);}\n");
 					response.write("else {document.location.href = '");
 					response.write(url);
