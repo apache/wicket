@@ -20,6 +20,8 @@ package wicket;
 import wicket.ajax.AjaxInitializer;
 import wicket.behavior.IBehaviorListener;
 import wicket.behavior.IUnversionedBehaviorListener;
+import wicket.markup.html.PackageResource;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.ILinkListener;
@@ -60,5 +62,7 @@ public class Initializer implements IInitializer
 
 		// initialize ajax components
 		new AjaxInitializer().init(application);
+		
+		PackageResource.bind(application, WebPage.class, "cookies.js");
 	}
 }
