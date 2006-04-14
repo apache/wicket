@@ -26,7 +26,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
-import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Response;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
@@ -38,6 +38,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
@@ -72,18 +73,22 @@ import wicket.util.lang.Objects;
  */
 public class WebPage extends Page implements INewBrowserWindowListener
 {
+	private static final long serialVersionUID = 1L;
+
 	/** log. */
 	private static Log log = LogFactory.getLog(WebPage.class);
 	
-	/** Log. */
-	// private static final Log log = LogFactory.getLog(WebPage.class);
-	private static final long serialVersionUID = 1L;
+
+	/** The resource references used for new window/tab support */
+	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,"cookies.js");
 
 	/** The body container */
 	private BodyContainer bodyContainer;
 
+	/** The url compressor that will compress the urls by collapsing the component path and listener interface */
 	private URLCompressor compressor;
 
+	
 	/**
 	 * Constructor. Having this constructor public means that your page is
 	 * 'bookmarkable' and hence can be called/ created from anywhere.
@@ -313,13 +318,16 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private class PageMapChecker extends AbstractBehavior implements IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
+		
+		/** The unload model for deleting the pagemap cookie*/
+		private Model onUnLoadModel;
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public void renderHead(final Response response)
 		{
-			final RequestCycle cycle = getRequestCycle();
+			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 			
 			int initialAccessStackSize = 0;
@@ -338,19 +346,57 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			if (accessStack.size() > initialAccessStackSize)
 			{
-				response.write("<script language=\"JavaScript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
+				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target; 
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(getSession().createAutoPageMapName(),
 							current.getPageClass(), current.getPageParameters());
-					response.write(cycle.urlFor(redirect));
+					url = cycle.urlFor(redirect);
 				}
 				else
 				{
-					response.write(urlFor(INewBrowserWindowListener.INTERFACE));
+					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
-				response.write("'}</script>");
+				if(cycle.getWebRequest().getCookies() == null)
+				{
+					response.write("<script language=\"javascript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
+					response.write(url);
+					response.write("'}</script>");
+				}
+				else
+				{
+					if(onUnLoadModel == null)
+					{
+						onUnLoadModel = new Model()
+						{
+							private static final long serialVersionUID = 1L;
+							
+							/**
+							 * @see wicket.model.Model#getObject(wicket.Component)
+							 */
+							public Object getObject(Component component)
+							{
+								return "deleteCookie('pagemap-" + getPageMap().getName()+ "');";
+							}
+						};
+						getBodyContainer().addOnUnLoadModifier(onUnLoadModel);
+					}
+					response.write("<script type=\"text/javascript\" src=\"");
+					response.write(urlFor(cookiesResource));
+					response.write("\"></script>\n");
+					response.write("<script language=\"javascript\">\n");
+					response.write("var pagemapcookie = getCookie('pagemap-");
+					response.write(getPageMap().getName());
+					response.write("');\n");
+					response.write("if(!pagemapcookie && pagemapcookie != '1'){setCookie('pagemap-");
+					response.write(getPageMap().getName());
+					response.write("',1);}\n");
+					response.write("else {document.location.href = '");
+					response.write(url);
+					response.write("';}\n");
+					response.write("</script>\n");
+				}
 			}
 		}
 	}

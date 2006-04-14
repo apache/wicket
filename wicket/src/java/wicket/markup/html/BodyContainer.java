@@ -76,4 +76,75 @@ public final class BodyContainer implements Serializable
 		});
 		return this;
 	}
+	
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * 'value' to the onLoad attribute of the body tag.
+	 * 
+	 * @param model
+	 *            The model that holds the value that must be appended to 'onLoad'
+	 * @return this
+	 */
+	public final BodyContainer addOnLoadModifier(final Model model)
+	{
+		final Component bodyContainer = page.get(id);
+		bodyContainer.add(new AttributeModifier("onLoad", true, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected String newValue(String currentValue, String replacementValue)
+			{
+				return (currentValue == null ? replacementValue : currentValue + replacementValue);
+			}
+		});
+		return this;
+	}	
+	
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * 'value' to the onUnLoad attribute of the body tag.
+	 * 
+	 * @param value
+	 *            The value to append to 'onUnLoad'
+	 * @return this
+	 */
+	public final BodyContainer addOnUnLoadModifier(final String value)
+	{
+		final Model model = new Model(value);
+		final Component bodyContainer = page.get(id);
+		bodyContainer.add(new AttributeModifier("onUnLoad", true, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected String newValue(String currentValue, String replacementValue)
+			{
+				return (currentValue == null ? replacementValue : currentValue + replacementValue);
+			}
+		});
+		return this;
+	}
+
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * value of the model to the onUnLoad attribute of the body tag.
+	 * 
+	 * @param model
+	 *            The model which holds the value to be appended to 'onUnLoad'
+	 * @return this
+	 */
+	public final BodyContainer addOnUnLoadModifier(final Model model)
+	{
+		final Component bodyContainer = page.get(id);
+		bodyContainer.add(new AttributeModifier("onUnLoad", true, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected String newValue(String currentValue, String replacementValue)
+			{
+				return (currentValue == null ? replacementValue : currentValue + replacementValue);
+			}
+		});
+		return this;
+	}
+	
 }
