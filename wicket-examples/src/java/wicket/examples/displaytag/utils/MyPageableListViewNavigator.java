@@ -18,17 +18,21 @@
  */
 package wicket.examples.displaytag.utils;
 
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.model.PropertyModel;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
+ * A customized navigation bar for the lists
+ * 
  * @author Juergen Donnerstag
  */
 public class MyPageableListViewNavigator extends PagingNavigator
 {
+	private final PageableListView pageableListView;
+	
     /**
      * 
      * @param id
@@ -39,35 +43,25 @@ public class MyPageableListViewNavigator extends PagingNavigator
     {
         super(id, pageableListView);
 
-		// model = null; the headline text will be auto-generated during
-		// handleBody.
-		add(new Label("headline", (String)null)
-		{
-			// Dynamically - at runtime - create the text
-			protected void onComponentTagBody(final MarkupStream markupStream,
-					final ComponentTag openTag)
-			{
-				CharSequence text = getHeadlineText(pageableListView);
-				replaceComponentTagBody(markupStream, openTag, text);
-			}
-		});
+        this.pageableListView = pageableListView;
+		add(new Label("headline", new PropertyModel(this, "headlineText")));
     }
 
 	/**
 	 * Subclasses may override it to provide their own text.
 	 * 
-	 * @param pageableListView
-	 *            the pageable list view
 	 * @return head line text
 	 */
-	protected CharSequence getHeadlineText(final PageableListView pageableListView)
+	public CharSequence getHeadlineText()
 	{
 		int firstListItem = pageableListView.getCurrentPage() * pageableListView.getRowsPerPage();
-		StringBuffer buf = new StringBuffer(80);
-		buf.append(String.valueOf(pageableListView.getList().size())).append(
-				" items found, displaying ").append(String.valueOf(firstListItem + 1)).append(
-				" to ").append(String.valueOf(firstListItem + pageableListView.getRowsPerPage()))
-				.append(".");
+		AppendingStringBuffer buf = new AppendingStringBuffer(80);
+		buf.append(String.valueOf(pageableListView.getList().size()))
+			.append(" items found, displaying ")
+			.append(String.valueOf(firstListItem + 1))
+			.append(" to ")
+			.append(String.valueOf(firstListItem + pageableListView.getRowsPerPage()))
+			.append(".");
 
 		return buf;
 	}

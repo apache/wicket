@@ -56,16 +56,12 @@ public class PagingPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
-
 				}));
-
 			}
-
 		};
 
 		dataView.setItemsPerPage(8);
