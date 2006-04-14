@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: HelloBrowser.java 3375 2005-12-06 14:18:14 -0800 (Tue, 06 Dec 2005)
+ * eelco12 $ $Revision$ $Date: 2005-12-06 14:18:14 -0800 (Tue, 06 Dec
+ * 2005) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,8 +18,16 @@
  */
 package wicket.examples.hellobrowser;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import wicket.Component;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.model.IModel;
 import wicket.protocol.http.ClientProperties;
 import wicket.protocol.http.request.WebClientInfo;
 
@@ -45,9 +54,36 @@ public class HelloBrowser extends WicketExamplePage
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
 		// is not allowed.
-		ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
+		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
 				.getProperties();
 
 		add(new Label("clientinfo", properties.toString()));
+
+		IModel clientTimeModel = new AbstractReadOnlyModel()
+		{
+			/**
+			 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+			 */
+			public Object getObject(Component component)
+			{
+				TimeZone timeZone = properties.getTimeZone();
+				if (timeZone != null)
+				{
+					Calendar cal = Calendar.getInstance(timeZone);
+					Locale locale = getLocale();
+					DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);
+					String calAsString = dateFormat.format(cal.getTime());
+					StringBuffer b = new StringBuffer("Based on your settings, your time is: ");
+					b.append(calAsString);
+					b.append(" (and your time zone is ");
+					b.append(timeZone.getDisplayName(getLocale()));
+					b.append(")");
+					return b.toString();
+				}
+				return "Unfortunately, we were not able to figure out what your time zone is, so we have"
+						+ "no idea what your time is";
+			}
+		};
+		add(new Label("clienttime", clientTimeModel));
 	}
 }
