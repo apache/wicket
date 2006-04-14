@@ -390,7 +390,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					// If the browser does not support cookies, we try to work
 					// with the history
 
-					if (cookies != null && body == null)
+					if (cookies != null && body == null && log.isWarnEnabled())
 					{
 						// issue a warning; the cookies based alternative would
 						// have worked, but unfortunately, it doesn't now
