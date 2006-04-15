@@ -374,4 +374,12 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_11() throws Exception
+	{
+		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
+	}
 }

@@ -97,7 +97,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			tag = new WicketTag(xmlTag);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setId(tag.getName());
+			tag.setId("_" + tag.getName());
 
 			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
 			{

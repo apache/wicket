@@ -36,6 +36,7 @@ public final class BodyContainer implements Serializable
 
 	/** The webpage where the body container is in */
 	private final WebPage page;
+	
 	/** The container id */
 	private final String id;
 
@@ -65,6 +66,9 @@ public final class BodyContainer implements Serializable
 	{
 		final Model model = new Model(value);
 		final Component bodyContainer = page.get(id);
+		
+		// TODO Post 1.2: Move all attribute modifier into a separate package
+		// and add an AppendingAttributeModifier to that package
 		bodyContainer.add(new AttributeModifier("onLoad", true, model)
 		{
 			private static final long serialVersionUID = 1L;

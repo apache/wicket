@@ -17,6 +17,9 @@
  */
 package wicket.markup.resolver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
@@ -39,6 +42,8 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class WicketMessageResolver implements IComponentResolver
 {
+	private static final Log log = LogFactory.getLog(WicketMessageResolver.class);
+	
 	static
 	{
 		// register "wicket:message"
@@ -70,7 +75,7 @@ public class WicketMessageResolver implements IComponentResolver
 		if (tag instanceof WicketTag)
 		{
 			WicketTag wtag = (WicketTag)tag;
-			if (wtag.isMessageTag() && (wtag.getNamespace() != null))
+			if (wtag.isMessageTag())
 			{
 				String messageKey = wtag.getAttributes().getString("key");
 				if ((messageKey == null) || (messageKey.trim().length() == 0))
@@ -90,6 +95,7 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 				else
 				{
+					log.info("No value found for message key: " + messageKey);
 					component = new WebMarkupContainer(id);
 				}
 

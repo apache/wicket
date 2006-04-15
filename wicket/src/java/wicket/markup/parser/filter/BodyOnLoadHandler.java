@@ -47,7 +47,7 @@ import wicket.markup.parser.IMarkupFilter;
 public final class BodyOnLoadHandler extends AbstractMarkupFilter
 {
 	/** The automatically assigned wicket:id to &gt;body&lt; tag */
-	public static final String BODY_ID = "_body";
+	public static final String BODY_ID = "_<body>";
 
 	/**
 	 * Construct.
