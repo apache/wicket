@@ -156,7 +156,19 @@ public class MockWebApplication extends WebApplication
 				return "WicketMockServlet";
 			}
 		});
-		internalInit();
+
+		// Call internal init method of web application for default
+		// initialisation
+		this.internalInit();
+		
+		// Call init method of web application
+		this.init();
+		
+		// We initialize components here rather than in the constructor or
+		// in the internal init, because in the init method class aliases
+		// can be added, that would be used in installing resources in the
+		// component.
+		this.initializeComponents();
 
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
