@@ -287,14 +287,15 @@ public class WicketServlet extends HttpServlet
 			// Call internal init method of web application for default
 			// initialisation
 			this.webApplication.internalInit();
+			
 			// Call init method of web application
 			this.webApplication.init();
+			
 			// We initialize components here rather than in the constructor or
 			// in the internal init, because in the init method class aliases
 			// can be added, that would be used in installing resources in the
 			// component.
 			this.webApplication.initializeComponents();
-
 		}
 		finally
 		{
