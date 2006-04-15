@@ -226,6 +226,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Cookie[] getCookies()
 	{
+		if(cookies.size() == 0)
+		{
+			return null;
+		}
 		Cookie[] result = new Cookie[cookies.size()];
 		return (Cookie[])cookies.toArray(result);
 	}

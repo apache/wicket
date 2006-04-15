@@ -89,7 +89,7 @@ public class CookieValuePersisterTest extends TestCase
 
 		// Just after init, the requests and responses cookie lists must be
 		// empty
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(0, getResponseCookies(cycle).size());
 
 		// The persister to be used for the tests
@@ -99,12 +99,12 @@ public class CookieValuePersisterTest extends TestCase
 		// Cookies works. As no cookies in the request, no "delete" cookie
 		// will be added to the response.
 		persister.clear(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(0, getResponseCookies(cycle).size());
 
 		// Save the input field's value (add it to the response's cookie list)
 		persister.save(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
@@ -115,7 +115,7 @@ public class CookieValuePersisterTest extends TestCase
 		// the same name has been provided in the request. Thus, no changes in
 		// our test case
 		persister.clear(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
