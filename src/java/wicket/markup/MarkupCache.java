@@ -461,9 +461,10 @@ public class MarkupCache
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			if (markup.get(i) instanceof WicketTag)
+			MarkupElement elem = (MarkupElement) markup.get(i);
+			if (elem instanceof WicketTag)
 			{
-				WicketTag wtag = (WicketTag)markup.get(i);
+				WicketTag wtag = (WicketTag)elem;
 				if (wtag.isExtendTag())
 				{
 					// Ok, inheritance is on and we must get the

@@ -262,10 +262,19 @@ public abstract class MarkupContainer extends Component
 		// Get child by id
 		Component child = children_get(id);
 
-		// If the container is transparent, than ask its parent
+		// If the container is transparent, than ask its parent.
+		// ParentResolver does something quite similar, but because of <head>,
+		// <body>, <wicket:panel> etc. it is quite common to have transparent
+		// components. Hence, this is little short cut for a tiny performance
+		// optimization.
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
 		{
-			child = getParent().get(path);
+			// Special tags like "_body", "_panel" must implement IComponentResolver
+			// if they want to be transparent.
+			if (path.startsWith("_") == false)
+			{
+				child = getParent().get(path);
+			}
 		}
 
 		// Found child?
@@ -540,7 +549,8 @@ public abstract class MarkupContainer extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && 
+				(associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
