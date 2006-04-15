@@ -52,7 +52,7 @@ final class MarkupFragmentFinder
 		MarkupStream markupStream = null;
 
 		// Might be that we have to walk up the component hierarchy
-		while (markupStream == null)
+		while (true)
 		{
 			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream(true);
 
@@ -116,8 +116,6 @@ final class MarkupFragmentFinder
 			// Not found, reset the stream
 			markupStream = null;
 		}
-
-		return markupStream;
 	}
 
 	/**

@@ -145,7 +145,7 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 		}
 		
 		String value = null;
-		while (value == null)
+		while (true)
 		{
 			// Get (or load) the properties associated with clazz, locale and
 			// style
