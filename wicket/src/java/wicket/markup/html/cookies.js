@@ -1,5 +1,5 @@
 // this function gets the cookie, if it exists
-function getCookie( name ) 
+function getWicketCookie( name ) 
 {
 	var start = document.cookie.indexOf( name + "=" );
 	var len = start + name.length + 1;
@@ -14,12 +14,12 @@ function getCookie( name )
 }
 	
 // this deletes the cookie when called
-function deleteCookie( name ) 
+function deleteWicketCookie( name ) 
 {
-	if ( getCookie( name ) ) document.cookie = name + "=;expires=Thu, 01-Jan-1970 00:00:01 GMT";
+	if ( getWicketCookie( name ) ) document.cookie = name + "=;expires=Thu, 01-Jan-1970 00:00:01 GMT";
 }
 
-function setCookie( name, value ) 
+function setWicketCookie( name, value ) 
 {
 	document.cookie = name + "=" +escape( value )
 }
