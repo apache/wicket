@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,9 +37,12 @@ import wicket.util.string.AppendingStringBuffer;
 public final class XmlReader extends Reader
 {
 	/** Regex to find <?xml encoding ... ?> */
-	private static final Pattern encodingPattern = Pattern.compile(
-			"[\\s\\n\\r]*<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
-	
+	private static final Pattern xmlDecl = Pattern.compile("[\\s\\n\\r]*<\\?xml(\\s+.*)?\\?>");
+
+	/** Regex to find <?xml encoding ... ?> */
+	private static final Pattern encodingPattern = Pattern
+			.compile("\\s+encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S*)).*\\?>");
+
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
 
@@ -55,9 +58,12 @@ public final class XmlReader extends Reader
 	/**
 	 * Construct.
 	 * 
-	 * @param inputStream The InputStream to read the xml data from
-	 * @param defaultEncoding Apply 'null' for JVM default
-	 * @throws IOException In case something went wrong while reading the data
+	 * @param inputStream
+	 *            The InputStream to read the xml data from
+	 * @param defaultEncoding
+	 *            Apply 'null' for JVM default
+	 * @throws IOException
+	 *             In case something went wrong while reading the data
 	 */
 	public XmlReader(final InputStream inputStream, final String defaultEncoding)
 			throws IOException
@@ -113,49 +119,78 @@ public final class XmlReader extends Reader
 		final int readAheadSize = 80;
 		this.inputStream.mark(readAheadSize);
 
-		// read-ahead the input stream if it starts with <?xml
-		// encoding=".."?>. If yes, set this.encoding.
-		// If no, return the whole line. determineEncoding will read-ahead
-		// at max the very first line of the markup.
-		final String encoding = determineEncoding(this.inputStream, readAheadSize);
-		if (encoding != null)
+		// read-ahead the input stream and check if it starts with <?xml..?>. 
+		if (getXmlDeclaration(this.inputStream, readAheadSize))
 		{
-			// Use the encoding as specified in <?xml encoding=".." ?>
-			// Don't re-read <?xml ..> again.
-			// Ignore ALL characters preceding <?xml>
-			this.encoding = encoding;
-			this.reader = new BufferedReader(new InputStreamReader(this.inputStream, this.encoding));
+			// If yes than determine the encoding from the xml decl
+			this.encoding = determineEncoding(this.xmlDeclarationString);
 		}
-		else if (this.encoding == null)
+		else
+		{
+			// If not, reset the input stream to the begining of the file
+			this.inputStream.reset();
+		}
+		
+		if (this.encoding == null)
 		{
 			// Use JVM default
-			this.inputStream.reset();
 			this.reader = new BufferedReader(new InputStreamReader(this.inputStream));
 		}
 		else
 		{
-			// Use JVM default
-			this.inputStream.reset();
+			// Use the encoding provided
 			this.reader = new BufferedReader(new InputStreamReader(this.inputStream, this.encoding));
 		}
 	}
 
 	/**
-	 * Read-ahead the input stream (markup file). If it starts with &lt;?xml
-	 * encoding=".." ?&gt;, than set this.encoding and return null. If not,
-	 * return all characters read so far. determineEncoding will read-ahead at
-	 * max. the very first line of the markup.
+	 * Determine the encoding from the xml decl.
+	 * 
+	 * @param string The xmlDecl string
+	 * @return The encoding. Null, if not found
+	 * @throws IOException
+	 */
+	private final String determineEncoding(final String string)
+	{
+		// Does the string match the <?xml .. ?> pattern
+		final Matcher matcher = encodingPattern.matcher(string);
+		if (!matcher.find())
+		{
+			// No
+			return null;
+		}
+
+		// Extract the encoding
+		String encoding = matcher.group(2);
+		if ((encoding == null) || (encoding.length() == 0))
+		{
+			encoding = matcher.group(3);
+		}
+
+		if (encoding != null)
+		{
+			encoding = encoding.trim();
+		}
+
+		return encoding;
+	}
+
+	/**
+	 * Read-ahead the input stream (markup file). If the first line contains
+	 * &lt;?xml...?&gt;, than remember the xml decl for later to determine the
+	 * encoding. 
+	 * <p>
+	 * The xml decl will not be forwarded to the user.
 	 * 
 	 * @param in
 	 *            The markup file
 	 * @param readAheadSize
 	 *            The read ahead buffer available to read the xml encoding
 	 *            information
-	 * @return Null, if &lt;?xml ..?&gt; has been found; else all characters
-	 *         read ahead
+	 * @return true, if &lt;?xml ..?&gt; has been found
 	 * @throws IOException
 	 */
-	private final String determineEncoding(final InputStream in, final int readAheadSize)
+	private final boolean getXmlDeclaration(final InputStream in, final int readAheadSize)
 			throws IOException
 	{
 		// Max one line
@@ -177,24 +212,16 @@ public final class XmlReader extends Reader
 		}
 
 		// Does the string match the <?xml .. ?> pattern
-		final Matcher matcher = encodingPattern.matcher(pushBack);
+		final Matcher matcher = xmlDecl.matcher(pushBack);
 		if (!matcher.matches())
 		{
 			// No
-			return null;
+			return false;
 		}
 
 		// Save the whole <?xml ..> string for later
 		this.xmlDeclarationString = pushBack.toString().trim();
-
-		// Extract the encoding
-		String encoding = matcher.group(3);
-		if ((encoding == null) || (encoding.length() == 0))
-		{
-			encoding = matcher.group(4);
-		}
-
-		return encoding;
+		return true;
 	}
 
 	/**

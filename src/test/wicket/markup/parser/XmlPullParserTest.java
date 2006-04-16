@@ -147,19 +147,11 @@ public class XmlPullParserTest extends TestCase
         assertNull(tag);
 
         // attribute value must be enclosed by ""
-        Exception ex = null;
-        try
-        {
-            parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"), null);
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            ex = e;
-        }
-        assertNotNull(ex);
+        parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"), null);
+        assertEquals("iso-8859-1", parser.getEncoding());
 
         // Invaluid encoding
-        ex = null;
+        Exception ex = null;
         try
         {
             parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>"), null);
