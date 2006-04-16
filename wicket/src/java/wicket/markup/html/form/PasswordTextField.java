@@ -151,9 +151,13 @@ public class PasswordTextField extends TextField
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "input");
-		checkComponentTagAttribute(tag, "type", "password");
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
 	}
+	
+	protected String getInputType()
+	{
+		return "password";
+	}
+	
 }

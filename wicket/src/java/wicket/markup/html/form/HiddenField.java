@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
 /**
@@ -76,15 +75,9 @@ public class HiddenField extends TextField
 		super(id, model);
 	}
 
-	/**
-	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
-	 */
-	protected void onComponentTag(ComponentTag tag)
-	{
-		// Check for hidden type
-		checkComponentTagAttribute(tag, "type", "hidden");
 
-		// Default handling for component tag
-		super.onComponentTag(tag);
+	protected String getInputType()
+	{
+		return "hidden";
 	}
 }

@@ -84,12 +84,8 @@ public class TextField extends AbstractTextComponent
 		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
 
-		// If this is not a subclass (PasswordTextField)
-		if (getClass() == TextField.class)
-		{
-			// check for text type
-			checkComponentTagAttribute(tag, "type", "text");
-		}
+		// check for text type
+		checkComponentTagAttribute(tag, "type", getInputType());
 
 		// No validation errors
 		tag.put("value", getValue());
@@ -98,4 +94,14 @@ public class TextField extends AbstractTextComponent
 		super.onComponentTag(tag);
 	}
 
+	/**
+	 * Subclass should override this method if this textfields mappes on a different
+	 * input type as text. Like PasswordField or HiddenField.
+	 * 
+	 * @return The input type of this textfield, default is 'text'
+	 */
+	protected String getInputType()
+	{
+		return "text";
+	}
 }
