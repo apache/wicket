@@ -299,7 +299,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", Strings.replaceAll(component.getResponse().encodeURL(url), "&", "&amp;"));
+		tag.put("src", Strings.replaceAll(RequestCycle.get().getOriginalResponse().encodeURL(url), "&", "&amp;"));
 	}
 
 	/**
