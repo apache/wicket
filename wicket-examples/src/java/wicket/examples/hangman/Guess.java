@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.13 $ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-11-07 20:59:30 +0100 (Mo, 07 Nov 2005) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this

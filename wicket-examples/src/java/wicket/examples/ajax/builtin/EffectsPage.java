@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -81,19 +80,16 @@ public class EffectsPage extends BasePage
 
 		add(new AjaxLink("c1-link")
 		{
-
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
 				target.addJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
 			}
-
 		});
 
 		add(new AjaxFallbackLink("c2-link")
 		{
-
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;

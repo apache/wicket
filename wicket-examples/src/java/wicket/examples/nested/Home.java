@@ -39,7 +39,9 @@ public class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 * 
+	 * @param parameters
+	 *            Page parameters
 	 */
 	public Home(final PageParameters parameters)
 	{
@@ -69,7 +71,9 @@ public class Home extends WicketExamplePage
 
 	/**
 	 * Convert the nested lists to a tree model
-	 * @param list the list
+	 * 
+	 * @param list
+	 *            the list
 	 * @return tree model
 	 */
 	private TreeModel convertToTreeModel(List list)
@@ -83,8 +87,11 @@ public class Home extends WicketExamplePage
 
 	/**
 	 * Add a sublist to the parent.
-	 * @param parent the parent
-	 * @param sub the sub list
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param sub
+	 *            the sub list
 	 */
 	private void add(DefaultMutableTreeNode parent, List sub)
 	{

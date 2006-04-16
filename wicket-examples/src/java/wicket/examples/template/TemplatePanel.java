@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,14 +21,16 @@ import wicket.model.IModel;
 
 /**
  * Base panel to be extended.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class TemplatePanel extends Panel
 {
 	/**
 	 * Construct.
-	 * @param id  component id
+	 * 
+	 * @param id
+	 *            component id
 	 */
 	public TemplatePanel(String id)
 	{
@@ -39,8 +39,11 @@ public abstract class TemplatePanel extends Panel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param model the model
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            the model
 	 */
 	public TemplatePanel(String id, IModel model)
 	{

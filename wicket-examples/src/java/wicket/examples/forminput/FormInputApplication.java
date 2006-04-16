@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5121 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,7 +41,7 @@ public class FormInputApplication extends WicketExampleApplication
 	public FormInputApplication()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
@@ -56,31 +56,31 @@ public class FormInputApplication extends WicketExampleApplication
 				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
 
 	}
-	
+
 	/**
 	 * Special overwrite to have url compressing for this example.
+	 * 
 	 * @see URLCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
-	{
-		return new WebRequestWithCryptedUrl(servletRequest);
-	}
+	 *      protected WebRequest newWebRequest(HttpServletRequest
+	 *      servletRequest) { return new
+	 *      WebRequestWithCryptedUrl(servletRequest); }
 	 */
 
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
-	{
-		return new WebResponseWithCryptedUrl(servletResponse);
-	}
+	 *      protected WebResponse newWebResponse(HttpServletResponse
+	 *      servletResponse) { return new
+	 *      WebResponseWithCryptedUrl(servletResponse); }
 	 */
 
 	/**

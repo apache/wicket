@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -177,7 +177,7 @@ public class FormInput extends WicketExamplePage
 				};
 			};
 			checks.add(checksList);
-			
+
 			add(new ListMultipleChoice("siteSelection", SITES));
 
 			// TextField using a custom converter.

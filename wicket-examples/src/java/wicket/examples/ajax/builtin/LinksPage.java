@@ -81,18 +81,15 @@ public class LinksPage extends BasePage
 
 		add(new AjaxLink("c1-link")
 		{
-
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
 			}
-
 		});
 
 		add(new AjaxFallbackLink("c2-link")
 		{
-
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;
@@ -105,13 +102,10 @@ public class LinksPage extends BasePage
 					target.addComponent(c2);
 				}
 			}
-
 		});
-
 
 		add(new IndicatingAjaxLink("c3-link")
 		{
-
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter3++;
@@ -125,7 +119,6 @@ public class LinksPage extends BasePage
 				{
 					// noop
 				}
-
 			}
 		});
 
@@ -156,6 +149,7 @@ public class LinksPage extends BasePage
 				};
 			};
 		});
+		
 		add(new AjaxLink("failure-link")
 		{
 			public void onClick(AjaxRequestTarget target)
@@ -185,5 +179,4 @@ public class LinksPage extends BasePage
 			};
 		});
 	}
-
 }

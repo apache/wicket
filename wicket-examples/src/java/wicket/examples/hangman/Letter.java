@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-10-02 12:04:34 +0200 (So, 02 Okt 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -75,18 +75,19 @@ public class Letter implements Serializable
 	 */
 	public ResourceReference getSharedImageResource()
 	{
-		return new ResourceReference(Letter.class, asString() + (isGuessed() ? "_enabled" : "_disabled"))
+		return new ResourceReference(Letter.class, asString()
+				+ (isGuessed() ? "_enabled" : "_disabled"))
 		{
 			protected Resource newResource()
 			{
 				// Lazy loading of shared resource
-				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
-						asString());
+				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(
+						30, 30, asString());
 				if (!isGuessed())
 				{
 					buttonResource.setColor(Color.GRAY);
 				}
-				return buttonResource;				
+				return buttonResource;
 			}
 		};
 	}

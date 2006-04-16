@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 4909 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,32 +41,26 @@ public class TabbedPanelPage extends BasePage
 		List tabs = new ArrayList();
 		tabs.add(new AbstractTab(new Model("first tab"))
 		{
-
 			public Panel getPanel(String panelId)
 			{
 				return new TabPanel1(panelId);
 			}
-
 		});
 
 		tabs.add(new AbstractTab(new Model("second tab"))
 		{
-
 			public Panel getPanel(String panelId)
 			{
 				return new TabPanel2(panelId);
 			}
-
 		});
 
 		tabs.add(new AbstractTab(new Model("third tab"))
 		{
-
 			public Panel getPanel(String panelId)
 			{
 				return new TabPanel3(panelId);
 			}
-
 		});
 
 		add(new AjaxTabbedPanel("tabs", tabs));
@@ -78,7 +71,6 @@ public class TabbedPanelPage extends BasePage
 	 */
 	private static class TabPanel1 extends Panel
 	{
-
 		/**
 		 * Constructor
 		 * 
@@ -89,7 +81,6 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-
 	};
 
 	/**
@@ -107,7 +98,6 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-
 	};
 
 	/**
@@ -115,7 +105,6 @@ public class TabbedPanelPage extends BasePage
 	 */
 	private static class TabPanel3 extends Panel
 	{
-
 		/**
 		 * Constructor
 		 * 
@@ -126,6 +115,5 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-
 	};
 }

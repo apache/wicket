@@ -34,6 +34,7 @@ public class TodoList extends WebPage
 	{
 		/** Is the item done? */
 		private boolean checked;
+		
 		/** Description of the item. */
 		private String text;
 
@@ -213,6 +214,7 @@ public class TodoList extends WebPage
 				return linkVisible;
 			}
 		}
+		
 		/**
 		 * Displays a form which offers an edit field and two buttons: one for
 		 * adding the todo item, and one for canceling the addition. The
@@ -243,6 +245,7 @@ public class TodoList extends WebPage
 						onAdd(item, target);
 					}
 				});
+				
 				add(new AjaxSubmitButton("cancel", this)
 				{
 					public void onSubmit(AjaxRequestTarget target, Form form)

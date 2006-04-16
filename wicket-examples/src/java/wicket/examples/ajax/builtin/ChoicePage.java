@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -64,7 +63,6 @@ public class ChoicePage extends BasePage
 		this.selectedMake = selectedMake;
 	}
 
-
 	/**
 	 * Constructor.
 	 */
@@ -115,7 +113,6 @@ public class ChoicePage extends BasePage
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{
-
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				target.addComponent(models);

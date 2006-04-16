@@ -1,6 +1,7 @@
 /*
- * $Id: HelloWorldApplication.java 3646 2006-01-04 13:32:14 -0800 (Wed, 04 Jan 2006) ivaynberg $
- * $Revision: 3646 $ $Date: 2006-01-04 13:32:14 -0800 (Wed, 04 Jan 2006) $
+ * $Id: HelloWorldApplication.java 3646 2006-01-04 13:32:14 -0800 (Wed, 04 Jan
+ * 2006) ivaynberg $ $Revision: 3646 $ $Date: 2006-01-04 13:32:14 -0800 (Wed, 04
+ * Jan 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -31,7 +32,7 @@ public class EchoApplication extends WicketExampleApplication
 	 */
 	public EchoApplication()
 	{
-		
+
 	}
 
 	/**

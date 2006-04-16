@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.compref;
 
@@ -28,7 +26,7 @@ import wicket.model.CompoundPropertyModel;
 
 /**
  * Page with examples on {@link wicket.markup.html.form.TextArea}.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class TextAreaPage extends WicketExamplePage
@@ -73,14 +71,16 @@ public class TextAreaPage extends WicketExamplePage
 			return "text = '" + text + "'";
 		}
 	}
-    /**
-    	 * Override base method to provide an explanation
-    	 */
-    	protected void explain() {
-    		String html = "<textarea wicket:id=\"text\" rows=\"6\" cols=\"20\">Input comes here</textarea>";
-    		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a text area component that uses the model object's 'text' property.\n"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextArea(\"text\"));";
-    		add(new ExplainPanel(html, code));
-    	}
+
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain()
+	{
+		String html = "<textarea wicket:id=\"text\" rows=\"6\" cols=\"20\">Input comes here</textarea>";
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a text area component that uses the model object's 'text' property.\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextArea(\"text\"));";
+		add(new ExplainPanel(html, code));
+	}
 
 }

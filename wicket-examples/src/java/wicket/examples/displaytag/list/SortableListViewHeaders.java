@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag.list;
 
@@ -29,11 +28,12 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.resolver.IComponentResolver;
 
 /**
- * This is a convenient component to create sorted list view headers very easily. It first
- * scans the markup for &lt;th wicket:id=".*" ..&gt> tags and automatically creates a
- * SortableListViewHeader for each.
+ * This is a convenient component to create sorted list view headers very
+ * easily. It first scans the markup for &lt;th wicket:id=".*" ..&gt> tags and
+ * automatically creates a SortableListViewHeader for each.
  * <p>
  * The component can only be used with &lt;thead&gt; tags.
+ * 
  * @see SortableListViewHeaderGroup
  * @see SortableListViewHeader
  * @author Juergen Donnerstag
@@ -42,14 +42,17 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 {
 	/** Logging. */
 	final private static Log log = LogFactory.getLog(SortableListViewHeaders.class);
-	
+
 	/** Each SortableTableHeader (without 's) must be attached to a group. */
 	final private SortableListViewHeaderGroup group;
 
 	/**
 	 * Construct.
-	 * @param id The component's id; must not be null
-	 * @param listView the underlying ListView
+	 * 
+	 * @param id
+	 *            The component's id; must not be null
+	 * @param listView
+	 *            the underlying ListView
 	 */
 	public SortableListViewHeaders(final String id, final ListView listView)
 	{
@@ -59,8 +62,9 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	}
 
 	/**
-	 * Compare two object of the column to be sorted, assuming both Objects support
-	 * compareTo().
+	 * Compare two object of the column to be sorted, assuming both Objects
+	 * support compareTo().
+	 * 
 	 * @see Comparable#compareTo(java.lang.Object)
 	 * @param header
 	 * @param o1
@@ -76,6 +80,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 
 	/**
 	 * Get one of the two Object to be compared for sorting a column.
+	 * 
 	 * @param header
 	 * @param object
 	 * @return comparable object
@@ -92,7 +97,8 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * @param tag
 	 * @return true, if component got resolved
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+			final ComponentTag tag)
 	{
 		if (tag.getName().equalsIgnoreCase("th"))
 		{
@@ -115,13 +121,14 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 				return true;
 			}
 		}
-		
-	    return false;
+
+		return false;
 	}
-	
+
 	/**
-	 * Scan the related markup and attach a SortableListViewHeader to each &lt;th&gt; tag
-	 * found.
+	 * Scan the related markup and attach a SortableListViewHeader to each
+	 * &lt;th&gt; tag found.
+	 * 
 	 * @see wicket.Component#onRender(MarkupStream)
 	 */
 	protected void onRender(final MarkupStream markupStream)

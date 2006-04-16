@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4564 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -45,17 +45,17 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
-		
+
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
-		
+
 		// maybe not the neatest sight, but for package mounting it makes
 		// sense to use one of the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
 	}
-	
+
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */

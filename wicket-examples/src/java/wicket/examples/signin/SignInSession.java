@@ -27,7 +27,7 @@ import wicket.protocol.http.WebSession;
  */
 public final class SignInSession extends WebSession
 {
-    /** Trivial user representation */
+	/** Trivial user representation */
 	private String user;
 
 	/**
@@ -90,5 +90,3 @@ public final class SignInSession extends WebSession
 		this.user = user;
 	}
 }
-
-

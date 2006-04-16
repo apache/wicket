@@ -68,7 +68,6 @@ public class FormPage extends BasePage
 		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
 
-
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("name-label", fc));
 
@@ -79,24 +78,19 @@ public class FormPage extends BasePage
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("email-label", fc));
 
-
 		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
 
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeydown", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-
 		form.add(new AjaxSubmitButton("ajax-submit-button", form)
 		{
-
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
 				target.addComponent(feedback);
 			}
-
 		});
-
 	}
 
 	/** simple java bean. */

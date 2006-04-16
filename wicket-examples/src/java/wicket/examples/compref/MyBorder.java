@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,14 +20,16 @@ import wicket.markup.html.border.Border;
 
 /**
  * A sample panel component.
- *
+ * 
  * @author Eelco Hillenius
  */
 class MyBorder extends Border
 {
 	/**
 	 * Construct.
-	 * @param id component id
+	 * 
+	 * @param id
+	 *            component id
 	 */
 	public MyBorder(String id)
 	{

@@ -68,8 +68,7 @@ public class ExampleStyles extends Displaytag
 	 */
 	public void addStyleLink(final String id)
 	{
-		add(new BookmarkablePageLink(id, this.getClass())
-				.setParameter("class", id)
-				.setAutoEnable(false));
+		add(new BookmarkablePageLink(id, this.getClass()).setParameter("class", id).setAutoEnable(
+				false));
 	}
 }

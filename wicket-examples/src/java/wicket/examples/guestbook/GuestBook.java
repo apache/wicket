@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.15 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -115,7 +115,8 @@ public final class GuestBook extends WicketExamplePage
 	/**
 	 * Clears the comments.
 	 */
-	public static void clear() {
+	public static void clear()
+	{
 		commentList.clear();
 	}
 }

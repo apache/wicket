@@ -1,3 +1,20 @@
+/*
+ * $Id: AjaxApplication.java 4860 2006-03-12 08:57:48Z ivaynberg $ $Revision:
+ * 4860 $ $Date: 2006-03-12 09:57:48 +0100 (So, 12 Mrz 2006) $
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.ajax.builtin;
 
 import wicket.Component;
@@ -11,14 +28,12 @@ import wicket.model.PropertyModel;
  * Page to demo the inplace edit label {@link AjaxEditableLabel}
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class EditableLabelPage extends BasePage
 {
 	private String text1 = "fox";
 	private String text2 = "dog";
 	private int refreshCounter = 0;
-
 
 	/**
 	 * Constructor
@@ -27,25 +42,21 @@ public class EditableLabelPage extends BasePage
 	{
 		add(new AjaxEditableLabel("text1", new PropertyModel(this, "text1")));
 		add(new AjaxEditableLabel("text2", new PropertyModel(this, "text2")));
-		
+
 		add(new Label("refresh-counter", new AbstractReadOnlyModel()
 		{
-
 			public Object getObject(Component component)
 			{
-				return ""+refreshCounter;
+				return "" + refreshCounter;
 			}
-
 		}));
 
 		add(new Link("refresh-link")
 		{
-
 			public void onClick()
 			{
 				refreshCounter++;
 			}
-
 		});
 	}
 
@@ -57,7 +68,6 @@ public class EditableLabelPage extends BasePage
 		return text1;
 	}
 
-
 	/**
 	 * @return text2
 	 */
@@ -65,7 +75,6 @@ public class EditableLabelPage extends BasePage
 	{
 		return text2;
 	}
-
 
 	/**
 	 * @param text1
@@ -75,7 +84,6 @@ public class EditableLabelPage extends BasePage
 		this.text1 = text1;
 	}
 
-
 	/**
 	 * @param text2
 	 */
@@ -83,6 +91,4 @@ public class EditableLabelPage extends BasePage
 	{
 		this.text2 = text2;
 	}
-
-
 }

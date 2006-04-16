@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 5244 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag;
 
@@ -36,36 +35,37 @@ import wicket.markup.html.list.ListItem;
  */
 public class ExampleAutolink extends Displaytag
 {
-    /**
-     * Constructor.
-     * 
-     * @param parameters Page parameters
-     */
-    public ExampleAutolink(final PageParameters parameters)
-    {
-        // test data
-        List data = new TestList(10, false);
-        
-        // Add table 
-        add(new SimpleListView("rows", data)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final ListObject value = (ListObject) listItem.getModelObject();
+	/**
+	 * Constructor.
+	 * 
+	 * @param parameters
+	 *            Page parameters
+	 */
+	public ExampleAutolink(final PageParameters parameters)
+	{
+		// test data
+		List data = new TestList(10, false);
 
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new SmartLinkLabel("email", value.getEmail()));
-                listItem.add(new SmartLinkLabel("url", value.getUrl()));
-            }
-        });
-        
-        // Add table 
-        add(new SimpleListView("rows2", data)
-        {
-        	protected Component newLabel(String id)
-        	{
-        		return new SmartLinkLabel(id);
-        	}
-        });
-    }
+		// Add table
+		add(new SimpleListView("rows", data)
+		{
+			public void populateItem(final ListItem listItem)
+			{
+				final ListObject value = (ListObject)listItem.getModelObject();
+
+				listItem.add(new Label("id", Integer.toString(value.getId())));
+				listItem.add(new SmartLinkLabel("email", value.getEmail()));
+				listItem.add(new SmartLinkLabel("url", value.getUrl()));
+			}
+		});
+
+		// Add table
+		add(new SimpleListView("rows2", data)
+		{
+			protected Component newLabel(String id)
+			{
+				return new SmartLinkLabel(id);
+			}
+		});
+	}
 }

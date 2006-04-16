@@ -66,7 +66,7 @@ public class ExamplePaging extends Displaytag
 		// - Explicitly create a Label
 		List data2 = new ArrayList();
 		data2.addAll(data.subList(0, 10));
-		final SimplePageableListView table2 = new SimplePageableListView ("rows2", data2, 20)
+		final SimplePageableListView table2 = new SimplePageableListView("rows2", data2, 20)
 		{
 			public void populateItem(final ListItem listItem)
 			{
@@ -76,7 +76,7 @@ public class ExamplePaging extends Displaytag
 				listItem.add(new Label("comments", value.getDescription()));
 			}
 		};
-		
+
 		add(table2);
 		add(new MyPageableListViewNavigator("pageTableNav2", table2));
 

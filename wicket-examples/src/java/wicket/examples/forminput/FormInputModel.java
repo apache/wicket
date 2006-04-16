@@ -383,8 +383,8 @@ public final class FormInputModel implements Serializable
 						", integerInRangeProperty = ").append(integerInRangeProperty).append(
 						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
 				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
-				.append(", numbersCheckgroup ").append(numbersCheckGroup)
-				.append(", numberRadioGroup= ").append(numbersGroup);
+				.append(", numbersCheckgroup ").append(numbersCheckGroup).append(
+						", numberRadioGroup= ").append(numbersGroup);
 		b.append(", selected sites {");
 		for (Iterator i = siteSelection.iterator(); i.hasNext();)
 		{

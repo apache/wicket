@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-03-04 13:35:30 +0100 (Sa, 04 Mrz 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -49,7 +49,7 @@ public class Page5 extends WicketExamplePage
 			for (int i = 0; i < array.length; i++)
 			{
 				p1 += array[i];
-				if(array.length-1 != i)
+				if (array.length - 1 != i)
 				{
 					p1 += ", ";
 				}
@@ -63,7 +63,7 @@ public class Page5 extends WicketExamplePage
 			for (int i = 0; i < array.length; i++)
 			{
 				p2 += array[i];
-				if(array.length-1 != i)
+				if (array.length - 1 != i)
 				{
 					p2 += ", ";
 				}

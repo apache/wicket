@@ -1,19 +1,19 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 3292 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.repeater;
 
@@ -35,7 +35,6 @@ import wicket.model.AbstractReadOnlyModel;
  * @see RefreshingView
  * 
  * @author igor
- * 
  */
 public class RefreshingPage extends BasePage
 {
@@ -44,15 +43,16 @@ public class RefreshingPage extends BasePage
 	 */
 	public RefreshingPage()
 	{
-		final List contacts=new ArrayList(10);
-		
+		final List contacts = new ArrayList(10);
+
 		// populate list of contacts to be displayed
-		ContactDataProvider dp=new ContactDataProvider();
-		Iterator it=dp.iterator(0, 10);
-		while (it.hasNext()) {
+		ContactDataProvider dp = new ContactDataProvider();
+		Iterator it = dp.iterator(0, 10);
+		while (it.hasNext())
+		{
 			contacts.add(dp.model(it.next()));
 		}
-		
+
 		// create the refreshing view
 		RefreshingView view = new RefreshingView("view")
 		{
@@ -64,7 +64,6 @@ public class RefreshingPage extends BasePage
 				return contacts.iterator();
 			}
 
-			
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
@@ -78,29 +77,22 @@ public class RefreshingPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
-
 				}));
-
 			}
-
-
 		};
 
 		add(view);
 
-		add(new Link("refreshLink") {
-
+		add(new Link("refreshLink")
+		{
 			public void onClick()
 			{
 				// noop
-				
 			}
-			
 		});
 	}
 }

@@ -10,6 +10,7 @@ import wicket.markup.html.list.PageableListView;
 
 /**
  * Shows an ajaxian paging navigator in action.
+ * 
  * @author Martijn Dashorst
  */
 public class PageablesPage extends BasePage
@@ -33,7 +34,7 @@ public class PageablesPage extends BasePage
 		WebMarkupContainer datacontainer = new WebMarkupContainer("data");
 		datacontainer.setOutputMarkupId(true);
 		add(datacontainer);
-		
+
 		PageableListView listview = new PageableListView("rows", Arrays.asList(names), 10)
 		{
 			protected void populateItem(ListItem item)
@@ -41,7 +42,7 @@ public class PageablesPage extends BasePage
 				item.add(new Label("name", item.getModelObjectAsString()));
 			}
 		};
-		
+
 		datacontainer.add(listview);
 		datacontainer.add(new AjaxPagingNavigator("navigator", listview));
 	}

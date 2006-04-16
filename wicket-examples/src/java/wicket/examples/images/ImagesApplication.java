@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5121 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,7 +36,7 @@ public class ImagesApplication extends WicketExampleApplication
 	 */
 	public ImagesApplication()
 	{
-		
+
 	}
 
 	/**
@@ -46,14 +46,16 @@ public class ImagesApplication extends WicketExampleApplication
 	{
 		return Home.class;
 	}
-	
+
 	/**
 	 * Special overwrite to have url compressing for this example.
+	 * 
 	 * @see URLCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }

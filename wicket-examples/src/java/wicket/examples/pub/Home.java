@@ -62,7 +62,8 @@ public final class Home extends WicketExamplePage
 		// Add the label with the dynamic model
 		add(new Label("salutation", labelModel));
 
-		// Add a couple of links to be able to play around with the session locale
+		// Add a couple of links to be able to play around with the session
+		// locale
 		add(new Link("goCanadian")
 		{
 			public void onClick()
@@ -91,7 +92,7 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-        add(new Link("goChinese")
+		add(new Link("goChinese")
 		{
 			public void onClick()
 			{

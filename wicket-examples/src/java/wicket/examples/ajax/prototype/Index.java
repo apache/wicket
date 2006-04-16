@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-04-06 19:51:46 +0200 (Do, 06 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -70,8 +69,9 @@ public class Index extends WicketExamplePage
 			 */
 			protected String getOnClickScript(String url)
 			{
-				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(urlFor(ILinkListener.INTERFACE)).append(
-						"', {method:'get'}); return false;").toString();
+				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
+						urlFor(ILinkListener.INTERFACE))
+						.append("', {method:'get'}); return false;").toString();
 			}
 		});
 

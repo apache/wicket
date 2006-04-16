@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-10-02 01:14:57 +0200 (So, 02 Okt 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,15 +33,18 @@ import wicket.markup.html.tree.Tree;
 
 /**
  * tree implementation.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class MyTree extends Tree
 {
-	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
-	private final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
-	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
-	
+	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(),
+			MyTree.class, "folderopen.gif");
+	private final ResourceReference folder = new PackageResourceReference(Application.get(),
+			MyTree.class, "folder.gif");
+	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(),
+			MyTree.class, "node.gif");
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
 

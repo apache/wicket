@@ -34,7 +34,6 @@ import wicket.model.Model;
  * page that demonstrates dataview with ReuseIfModelsEqualStrategy
  * 
  * @author igor
- * 
  */
 public class OIRPage extends BasePage
 {
@@ -68,7 +67,6 @@ public class OIRPage extends BasePage
 				}
 			});
 		}
-
 	}
 
 	/**
@@ -80,20 +78,17 @@ public class OIRPage extends BasePage
 
 		final DataView dataView = new DataView("oir", dp)
 		{
-
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
 				item.add(new Link("toggleHighlite")
 				{
-
 					public void onClick()
 					{
 						HighlitableDataItem hitem = (HighlitableDataItem)item;
 						hitem.toggleHighlite();
 					}
-
 				});
 				item.add(new Label("contactid", String.valueOf(contact.getId())));
 				item.add(new Label("firstname", contact.getFirstName()));
@@ -103,12 +98,10 @@ public class OIRPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
-
 				}));
 			}
 
@@ -116,7 +109,6 @@ public class OIRPage extends BasePage
 			{
 				return new HighlitableDataItem(id, index, model);
 			}
-
 		};
 
 		dataView.setItemsPerPage(8);
@@ -138,9 +130,7 @@ public class OIRPage extends BasePage
 			}
 		});
 
-
 		add(dataView);
-
 		add(new PagingNavigator("navigator", dataView));
 	}
 }

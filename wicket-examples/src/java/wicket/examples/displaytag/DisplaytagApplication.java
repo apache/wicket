@@ -42,7 +42,7 @@ public class DisplaytagApplication extends WebApplication
 	{
 		return DisplaytagIndex.class;
 	}
-	
+
 	protected void init()
 	{
 		getPageSettings().addComponentResolver(new FragmentResolver());

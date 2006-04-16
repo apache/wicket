@@ -1,6 +1,6 @@
 /*
- * $Id: FormInput.java 5050 2006-03-21 12:46:29Z joco01 $
- * $Revision$ $Date: 2006-03-21 13:46:29 +0100 (Di, 21 Mrz 2006) $
+ * $Id: FormInput.java 5050 2006-03-21 12:46:29Z joco01 $ $Revision$
+ * $Date: 2006-03-21 13:46:29 +0100 (Di, 21 Mrz 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -44,10 +44,10 @@ public class LocaleSelector extends Panel
 	 * 
 	 * @param id
 	 */
-	public LocaleSelector(final String id) 
+	public LocaleSelector(final String id)
 	{
 		super(id);
-	
+
 		// Dropdown for selecting locale
 		add(new LocaleDropDownChoice("localeSelect"));
 
