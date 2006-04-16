@@ -100,18 +100,22 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/** log. */
 	private static Log log = LogFactory.getLog(WebPage.class);
-	
+
 
 	/** The resource references used for new window/tab support */
-	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,"cookies.js");
+	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
+			"cookies.js");
 
 	/** The body container */
 	private BodyContainer bodyContainer;
 
-	/** The url compressor that will compress the urls by collapsing the component path and listener interface */
+	/**
+	 * The url compressor that will compress the urls by collapsing the
+	 * component path and listener interface
+	 */
 	private URLCompressor compressor;
 
-	
+
 	/**
 	 * Constructor. Having this constructor public means that your page is
 	 * 'bookmarkable' and hence can be called/ created from anywhere.
@@ -270,16 +274,18 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * This method is called when the compressing coding and response stategies are 
-	 * configured in your Application object like this:
+	 * This method is called when the compressing coding and response stategies
+	 * are configured in your Application object like this:
 	 * 
-	 *  <pre>
+	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
-	 *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+	 * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+	 * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	 * }
-	 *  </pre>
-	 * @return The URLCompressor for this webpage. 
+	 * </pre>
+	 * 
+	 * @return The URLCompressor for this webpage.
 	 * 
 	 * @since 1.2
 	 * 
@@ -289,12 +295,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	public final URLCompressor getUrlCompressor()
 	{
-		if (compressor == null) 
+		if (compressor == null)
 		{
 			compressor = new URLCompressor();
 		}
 		return compressor;
-	}	
+	}
+
 	/**
 	 * 
 	 * @see wicket.Component#onDetach()
@@ -302,10 +309,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected void onDetach()
 	{
 		// This code can not go into HtmlHeaderContainer as
-		// header.onEndRequest() is executed inside an iterator 
-		// and you can only call container.remove() which 
-		// is != iter.remove(). And the iterator is not available 
-		// inside onEndRequest(). Obviously WebPage.onEndRequest() 
+		// header.onEndRequest() is executed inside an iterator
+		// and you can only call container.remove() which
+		// is != iter.remove(). And the iterator is not available
+		// inside onEndRequest(). Obviously WebPage.onEndRequest()
 		// is invoked outside the iterator loop.
 		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
@@ -325,7 +332,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		try
 		{
 			clonedPage = (WebPage)Objects.cloneObject(this);
-		} 
+		}
 		catch (Exception e)
 		{
 			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
@@ -368,53 +375,53 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			// different page map so that we don't intermangle the history of
 			// those windows
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
-			if (accessStack.size() > initialAccessStackSize)
+			CharSequence url = null;
+			if (target instanceof IBookmarkablePageRequestTarget)
 			{
-				CharSequence url = null;
-				if (target instanceof IBookmarkablePageRequestTarget)
-				{
-					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
-					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-							getSession().createAutoPageMapName(), current.getPageClass(), current
-									.getPageParameters());
-					url = cycle.urlFor(redirect);
-				}
-				else
-				{
-					url = urlFor(INewBrowserWindowListener.INTERFACE);
-				}
-				final BodyContainer body = getBodyContainer();
-				final Cookie[] cookies = cycle.getWebRequest().getCookies();
-				if (cookies == null ||  body == null)
-				{
-					// If the browser does not support cookies, we try to work
-					// with the history
+				IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
+				BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
+						getSession().createAutoPageMapName(), current.getPageClass(), current
+								.getPageParameters());
+				url = cycle.urlFor(redirect);
+			}
+			else
+			{
+				url = urlFor(INewBrowserWindowListener.INTERFACE);
+			}
+			final BodyContainer body = getBodyContainer();
+			final Cookie[] cookies = cycle.getWebRequest().getCookies();
+			if (cookies == null || body == null)
+			{
+				// If the browser does not support cookies, we try to work
+				// with the history
 
-					if (cookies != null && body == null && log.isWarnEnabled())
+				if (cookies != null && body == null && log.isWarnEnabled())
+				{
+					// issue a warning; the cookies based alternative would
+					// have worked, but unfortunately, it doesn't now
+					// because it misses the body tag
+					Application app = getApplication();
+					MissingBodyTagLoggedMetaData meta = (MissingBodyTagLoggedMetaData)app
+							.getMetaData(MISSING_BODY_TAG_LOGGED_MDK);
+					if (meta == null)
 					{
-						// issue a warning; the cookies based alternative would
-						// have worked, but unfortunately, it doesn't now
-						// because it misses the body tag
-						Application app = getApplication();
-						MissingBodyTagLoggedMetaData meta = (MissingBodyTagLoggedMetaData)app
-								.getMetaData(MISSING_BODY_TAG_LOGGED_MDK);
-						if (meta == null)
-						{
-							meta = new MissingBodyTagLoggedMetaData();
-							app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
-						}
-						Class pageClass = WebPage.this.getClass();
-						if (!meta.missingBodyTagsLogged.contains(pageClass))
-						{
-							log
-									.warn("Page with class "
-											+ pageClass.getName()
-											+ " does not have a body tag. It is advisable to have"
-											+ " a body tag pair, as multi window support might be problematic without.");
-							meta.missingBodyTagsLogged.add(pageClass);
-						}
+						meta = new MissingBodyTagLoggedMetaData();
+						app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
 					}
-					
+					Class pageClass = WebPage.this.getClass();
+					if (!meta.missingBodyTagsLogged.contains(pageClass))
+					{
+						log
+								.warn("Page with class "
+										+ pageClass.getName()
+										+ " does not have a body tag. It is advisable to have"
+										+ " a body tag pair, as multi window support might be problematic without.");
+						meta.missingBodyTagsLogged.add(pageClass);
+					}
+				}
+
+				if (accessStack.size() > initialAccessStackSize)
+				{
 					// FIXME this only works with links that open a new window
 					// and browser configurations that start with a blank home
 					// page (which is usually not the default), in which case
@@ -423,44 +430,44 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					response.write(url);
 					response.write("'}</script>");
 				}
-				else
+			}
+			else
+			{
+				// We seem to have cookie support. Write out a script that
+				// adds a cookie on page load, and removes it on page unload.
+				// Whenever the cookie is not unloaded (it's there on load),
+				// we know that we have a new window/ tab instance
+				if (onUnLoadModel == null)
 				{
-					// We seem to have cookie support. Write out a script that
-					// adds a cookie on page load, and removes it on page unload.
-					// Whenever the cookie is not unloaded (it's there on load),
-					// we know that we have a new window/ tab instance
-					if (onUnLoadModel == null)
+					onUnLoadModel = new Model()
 					{
-						onUnLoadModel = new Model()
-						{
-							private static final long serialVersionUID = 1L;
+						private static final long serialVersionUID = 1L;
 
-							/**
-							 * @see wicket.model.Model#getObject(wicket.Component)
-							 */
-							public Object getObject(Component component)
-							{
-								return "deleteCookie('pagemap-" + getPageMap().getName() + "');";
-							}
-						};
-						body.addOnUnLoadModifier(onUnLoadModel);
-					}
-					final String pageMapName = getPageMap().getName();
-					response.write("<script type=\"text/javascript\" src=\"");
-					response.write(urlFor(cookiesResource));
-					response.write("\"></script>\n");
-					response.write("<script language=\"javascript\">\n");
-					response.write("var pagemapcookie = getCookie('pagemap-");
-					response.write(pageMapName);
-					response.write("');\n");
-					response.write("if(!pagemapcookie && pagemapcookie != '1'){setCookie('pagemap-");
-					response.write(pageMapName);
-					response.write("',1);}\n");
-					response.write("else {document.location.href = '");
-					response.write(url);
-					response.write("';}\n");
-					response.write("</script>\n");
+						/**
+						 * @see wicket.model.Model#getObject(wicket.Component)
+						 */
+						public Object getObject(Component component)
+						{
+							return "deleteWicketCookie('pagemap-" + getPageMap().getName() + "');";
+						}
+					};
+					body.addOnUnLoadModifier(onUnLoadModel);
 				}
+				final String pageMapName = getPageMap().getName();
+				response.write("<script type=\"text/javascript\" src=\"");
+				response.write(urlFor(cookiesResource));
+				response.write("\"></script>\n");
+				response.write("<script language=\"JavaScript\">\n");
+				response.write("var pagemapcookie = getWicketCookie('pagemap-");
+				response.write(pageMapName);
+				response.write("');\n");
+				response.write("if(!pagemapcookie && pagemapcookie != '1'){setWicketCookie('pagemap-");
+				response.write(pageMapName);
+				response.write("',1);}\n");
+				response.write("else {document.location.href = '");
+				response.write(url);
+				response.write("';}\n");
+				response.write("</script>\n");
 			}
 		}
 	}
