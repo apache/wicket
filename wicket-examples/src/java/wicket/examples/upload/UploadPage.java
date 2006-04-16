@@ -150,8 +150,7 @@ public class UploadPage extends WicketExamplePage
 			add(fileUploadField = new FileUploadField("fileInput"));
 
 			// Set maximum size to 100K for demo purposes
-			// setMaxSize(Bytes.kilobytes(100));
-			setMaxSize(Bytes.megabytes(800));
+			setMaxSize(Bytes.kilobytes(100));
 		}
 
 		/**
