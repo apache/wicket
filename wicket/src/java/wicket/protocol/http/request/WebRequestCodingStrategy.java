@@ -182,7 +182,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
 			buffer.append(prefix);
 			buffer.append(path);
-			return requestCycle.getResponse().encodeURL(buffer);
+			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
 
 		// no mount found; go on with default processing
@@ -548,7 +548,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				}
 			}
 		}
-		return requestCycle.getResponse().encodeURL(url);
+		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 
 	/**
@@ -587,7 +587,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				buffer.append("/resources/");
 			}
 			buffer.append(sharedResourceKey);
-			return requestCycle.getResponse().encodeURL(buffer);
+			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
 	}
 
@@ -651,7 +651,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			url.append(listenerName);
 		}
 
-		return requestCycle.getResponse().encodeURL(url);
+		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 
 	/**

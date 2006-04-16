@@ -119,6 +119,6 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 			url.append(listenerName);
 		}
 
-		return requestCycle.getResponse().encodeURL(url);
+		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 }
