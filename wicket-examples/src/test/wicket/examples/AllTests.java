@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -94,7 +94,7 @@ public final class AllTests extends TestSuite
 	public static Test suite()
 	{
 		// The javascript 'history' variable is not supported by
-		// httpunit and we don't want httpunit to throw an 
+		// httpunit and we don't want httpunit to throw an
 		// exception just because they can not handle it.
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 

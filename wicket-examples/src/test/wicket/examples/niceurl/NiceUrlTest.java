@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -56,7 +56,7 @@ public class NiceUrlTest extends WicketWebTestCase
 		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - niceurl");
 		assertTextPresent("This example displays how you can work with 'nice' urls for bookmarkable pages.");
-		
+
 		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 1");
 		assertTitleEquals("Wicket Examples - niceurl");
 

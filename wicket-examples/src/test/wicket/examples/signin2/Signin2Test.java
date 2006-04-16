@@ -17,6 +17,9 @@
  */
 package wicket.examples.signin2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import junit.framework.Test;
 import wicket.examples.WicketWebTestCase;
 
@@ -25,6 +28,8 @@ import wicket.examples.WicketWebTestCase;
  */
 public class Signin2Test extends WicketWebTestCase
 {
+	private final static Log log = LogFactory.getLog(Signin2Test.class);
+
 	/**
 	 * 
 	 * @return Test
@@ -51,24 +56,24 @@ public class Signin2Test extends WicketWebTestCase
 	public void testSignIn2()
 	{
 		beginAt("/signin2");
-		this.dumpResponse(System.err);
 		assertTitleEquals("Wicket Examples - signin2");
 
 		this.setFormElement("username", "wicket");
 		this.setFormElement("password", "wicket");
 		this.checkCheckbox("rememberMeRow:rememberMe");
+		log.debug("Submit Login screen");
 		this.submit("submit");
 
 		// this.dumpResponse(System.err);
 		assertTitleEquals("Wicket Examples - signin2");
 		// a) With wicket submitting a form will result in a temporary redirect,
-		// with
-		// the redirect setting the Cookie.
+		// with the redirect setting the Cookie.
 		// b) jWebUnits Cookie test methods are all using the http response
 		// object only
 		// c) Like a browser, jwebunit will automatically handle the redirect
 		// request
-		// Thus dumpCookie will not print an Cookie and assertCookiePresent will
+		// Hence dumpCookie will not print an Cookie and assertCookiePresent
+		// will
 		// fail.
 		// The only mean available is to indirectly test the cookies. Indirectly
 		// because
@@ -76,9 +81,13 @@ public class Signin2Test extends WicketWebTestCase
 		// this.dumpCookies(System.err);
 		// this.assertCookiePresent("signInPanel.signInForm.username");
 		// this.assertCookiePresent("signInPanel.signInForm.password");
+		this.dumpResponse(System.out);
+		log.debug("Click 'Sign Out'");
 		this.clickLinkWithText("Sign Out");
 
 		assertTitleEquals("Wicket Examples - signin2");
+		this.dumpResponse(System.out);
+		log.debug("Click 'Home'");
 		this.clickLinkWithText("Home");
 		/*
 		 * jWebUnit is missing assertCookieNotPresent() try { // jWebUnit does

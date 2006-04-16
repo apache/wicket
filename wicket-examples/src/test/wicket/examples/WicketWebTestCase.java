@@ -45,7 +45,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	public static Test suite(Class clazz)
 	{
 		// The javascript 'history' variable is not supported by
-		// httpunit and we don't want httpunit to throw an 
+		// httpunit and we don't want httpunit to throw an
 		// exception just because they can not handle it.
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
@@ -55,7 +55,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
 		deco.setContextPath("/wicket-examples");
-		
+
 		return deco;
 	}
 

@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision: 1.1 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -55,7 +54,7 @@ public class EncodingTest extends WicketWebTestCase
 		beginAt("/encodings");
 		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - encodings");
-		//assertEquals("ŠšŸ", "\u00e4\u00f6\u00fc");
+		// assertEquals("ŠšŸ", "\u00e4\u00f6\u00fc");
 		assertTextPresent("Hello world! Test: \u00e4\u00f6\u00fc");
 	}
 }
