@@ -26,7 +26,7 @@ import java.util.Map;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
-import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -49,7 +49,8 @@ public class ExampleSubtotals extends Displaytag
         // Test data
         final ReportList data = new ReportList();
         final Map groups = new LinkedHashMap(); // Keep the insertion order
-        
+
+        // Fill the 'groups' map
         ReportableListObject previousValue = (ReportableListObject) data.get(0);
         groups.put(previousValue.getCity(), new Integer(0));
         int startIdx = 0;
@@ -57,8 +58,7 @@ public class ExampleSubtotals extends Displaytag
         {
             final ReportableListObject value = (ReportableListObject) data.get(i);
 
-            boolean equal = value.getCity().equals(previousValue.getCity());
-            if (!equal)
+            if (!value.getCity().equals(previousValue.getCity()))
             {
                 groups.put(previousValue.getCity(), new Integer(i - startIdx));
                 groups.put(value.getCity(), new Integer(0));
@@ -66,7 +66,6 @@ public class ExampleSubtotals extends Displaytag
                 startIdx = i;
             }
         }
-
         groups.put(previousValue.getCity(), new Integer(data.size() - startIdx));
         
         // add the table
@@ -80,6 +79,7 @@ public class ExampleSubtotals extends Displaytag
             {
                 SubtotalTable subtable = new SubtotalTable("rows", data);
                 subtable.setStartIndex(startIndex);
+                
                 String group = listItem.getModelObjectAsString();
                 int size = ((Integer)groups.get(group)).intValue();
                 subtable.setViewSize(size);
@@ -95,10 +95,8 @@ public class ExampleSubtotals extends Displaytag
     /**
      * A subtotal + grouping table prints the tables rows and adds a bar 
      * and the subtotal at the bottom. 
-     * 
-     * @author Juergen Donnerstag
      */
-    private class SubtotalTable extends ListViewWithAlternatingRowStyle
+    private class SubtotalTable extends SimpleListView
     {
         private ReportableListObject previousValue = null;
         private double subtotal = 0;
@@ -137,13 +135,7 @@ public class ExampleSubtotals extends Displaytag
         {
             final ReportableListObject value = (ReportableListObject) listItem.getModelObject();
 
-            if (previousValue == null)
-            {
-                city = value.getCity();
-                listItem.add(new Label("city", value.getCity()));
-                listItem.add(new Label("project", value.getProject()));
-            } 
-            else
+            if (previousValue != null)
             {
                 listItem.add(new Label("city", ""));
                 
@@ -152,7 +144,6 @@ public class ExampleSubtotals extends Displaytag
             }
 
             listItem.add(new Label("hours", Double.toString(value.getAmount())));
-            listItem.add(new Label("task", value.getTask()));
             
             subtotal += value.getAmount();
             previousValue = value;

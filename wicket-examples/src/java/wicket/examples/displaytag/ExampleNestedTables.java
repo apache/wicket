@@ -22,9 +22,8 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
 /**
@@ -45,29 +44,16 @@ public class ExampleNestedTables extends Displaytag
         List data = new TestList(6, false);
         
         // straight forward
-        add(new ListViewWithAlternatingRowStyle("rows", data)
+        add(new SimpleListView("rows", data)
         {
             public void populateItem(final ListItem listItem)
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("comments", value.getDescription()));
-
                 List data2 = new TestList(3, false);
                 
                 // Just create a new table, which will be put into the current cell
-                listItem.add(new ListViewWithAlternatingRowStyle("rows", data2)
-                {
-                    public void populateItem(final ListItem listItem)
-                    {
-                        final ListObject value = (ListObject) listItem.getModelObject();
-
-                        listItem.add(new Label("name", value.getName()));
-                        listItem.add(new Label("email", value.getEmail()));
-                    }
-                });
+                listItem.add(new SimpleListView("rows", data2));
             }
         });
     }

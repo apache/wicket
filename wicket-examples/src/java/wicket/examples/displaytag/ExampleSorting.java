@@ -23,11 +23,8 @@ import java.util.List;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 
 /**
  * A sorted table example
@@ -45,21 +42,8 @@ public class ExampleSorting extends Displaytag
         // Test data
         final List data = new TestList(6, false);
         
-        // Add table 
-        ListView table = new ListViewWithAlternatingRowStyle("rows", data)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("name", value.getName()));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("comment", value.getDescription()));
-            }
-        };
-
+        // Add the table (but no table header) 
+        SimpleListView table = new SimpleListView("rows", data);
         add(table);
         
         // And this is with a little bit of magic

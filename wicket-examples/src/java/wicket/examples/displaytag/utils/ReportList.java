@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import wicket.util.string.AppendingStringBuffer;
+
 /**
  * Just a utility class for testing out the table and column tags. This List fills itself with objects and sorts them
  * as though it where pulling data from a report. This list is used to show the various report oriented examples (such
@@ -61,4 +63,18 @@ public class ReportList extends ArrayList implements Serializable
 
         Collections.sort(this);
     }
+    
+    /**
+     * @return String 
+     */
+    public String toString()
+    {
+    	AppendingStringBuffer buf = new AppendingStringBuffer(200);
+        for (int j = 0; j < this.size(); j++)
+        {
+            buf.append("" + j + ": " + get(j) + "\n");
+        }
+        return buf.toString();
+    }
+    
 }

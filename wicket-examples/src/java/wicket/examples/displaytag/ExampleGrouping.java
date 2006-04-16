@@ -21,7 +21,7 @@ package wicket.examples.displaytag;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
-import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
@@ -43,7 +43,7 @@ public class ExampleGrouping extends Displaytag
         ReportList data = new ReportList();
 
         // Add table of existing comments
-        add(new ListViewWithAlternatingRowStyle("rows", data)
+        add(new SimpleListView("rows", data)
         {
             // Remember the value from the previous row
             private ReportableListObject previousValue = null;
@@ -52,13 +52,9 @@ public class ExampleGrouping extends Displaytag
             {
                 final ReportableListObject value = (ReportableListObject) listItem.getModelObject();
 
-                // If first row, print anyway
-                if (previousValue == null)
-                {
-	                listItem.add(new Label("city", value.getCity()));
-	                listItem.add(new Label("project", value.getProject()));
-                } 
-                else
+                // If not the first row. Remember: components not explicitly
+                // added are automatically added as Label components. 
+                if (previousValue != null)
                 {
 	                boolean equal = value.getCity().equals(previousValue.getCity());
 	                listItem.add(new Label("city", equal ? "" : value.getCity()));
@@ -69,7 +65,6 @@ public class ExampleGrouping extends Displaytag
 
                 // These values are not grouped
                 listItem.add(new Label("hours", Double.toString(value.getAmount())));
-                listItem.add(new Label("task", value.getTask()));
                 
                 // Remember current value
                 previousValue = value;

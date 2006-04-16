@@ -136,9 +136,9 @@ public class ReportableListObject extends Object implements Comparable, Serializ
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+        	.append("city", this.city)
         	.append("project", this.project)
         	.append("amount", this.amount)
-        	.append("city", this.city)
         	.append("task", this.task)
         	.toString();
     }

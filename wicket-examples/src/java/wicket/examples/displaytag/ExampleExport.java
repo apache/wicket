@@ -25,12 +25,8 @@ import wicket.examples.displaytag.export.CsvView;
 import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
 import wicket.examples.displaytag.export.XmlView;
-import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.ListViewWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.util.time.Time;
 
 /**
  * How to support exporting table data
@@ -50,20 +46,7 @@ public class ExampleExport extends Displaytag
         final List data = new TestList(6, false);
         
         // Add the table
-        ListViewWithAlternatingRowStyle table = new ListViewWithAlternatingRowStyle("rows", data)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("date", Time.valueOf(value.getDate()).toDateString()));
-            }
-        };
-        
-        add(table);
+        add(new SimpleListView("rows", data));
         
         // Add the export links
         add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));

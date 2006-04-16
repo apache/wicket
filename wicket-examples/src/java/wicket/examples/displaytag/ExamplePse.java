@@ -26,9 +26,9 @@ import wicket.examples.displaytag.export.XmlView;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.MyPageableListViewNavigator;
-import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
+import wicket.examples.displaytag.utils.SimplePageableListView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
@@ -50,13 +50,13 @@ public class ExamplePse extends Displaytag
         final ReportList data = new ReportList();
 
         // Add the table
-        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
+        final SimplePageableListView table = new SimplePageableListView("rows", data, 10)
         {
             // Groups: value must be equal
             private ReportableListObject previousValue = null;
-            
+
             /**
-             * @see wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle#populateItem(ListItem)
+             * 
              */
             public void populateItem(final ListItem listItem)
             {
@@ -65,12 +65,7 @@ public class ExamplePse extends Displaytag
                 final ReportableListObject value = (ReportableListObject) listItem.getModelObject();
 
                 // If first row of table, print anyway
-                if (previousValue == null)
-                {
-                    listItem.add(new Label("city", value.getCity()));
-                    listItem.add(new Label("project", value.getProject()));
-                } 
-                else
+                if (previousValue != null)
                 {
 	                boolean equal = value.getCity().equals(previousValue.getCity());
 	                listItem.add(new Label("city", equal ? "" : value.getCity()));
@@ -81,7 +76,6 @@ public class ExamplePse extends Displaytag
 
                 // Not included in grouping
                 listItem.add(new Label("hours", Double.toString(value.getAmount())));
-                listItem.add(new Label("task", value.getTask()));
                 
                 // remember the current value for the next row
                 previousValue = value;

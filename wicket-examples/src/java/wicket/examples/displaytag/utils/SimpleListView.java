@@ -28,6 +28,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
@@ -41,7 +42,7 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public class SimpleListView extends ListViewWithAlternatingRowStyle implements IComponentResolver
+public class SimpleListView extends ListView implements IComponentResolver
 {
 	/** The tags "class" attribute for odd index rows */
     public static String ODD = "odd";

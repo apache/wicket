@@ -24,16 +24,16 @@ import java.util.List;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
-import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
+import wicket.examples.displaytag.utils.SimplePageableListView;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigation;
 import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 import wicket.markup.html.navigation.paging.PagingNavigationLink;
 import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
+import wicket.model.IModel;
 
 /**
  * Sortable + pageable table example
@@ -60,21 +60,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         this.data.addAll(list);
 
         // Add a table 
-        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", list, 10)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                super.populateItem(listItem);
-                
-                final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", Integer.toString(value.getId())));
-                listItem.add(new Label("name", value.getName()));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("comments", value.getDescription()));
-            }
-        };
+        final SimplePageableListView table = new SimplePageableListView("rows", list, 10);
         add(table);
 
         // Add a sortable header to the table
@@ -115,31 +101,49 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         });
 
         // Add a headline
-        add(new Label("headline", new Model(null))
-        {
-            protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-            {
-                int firstCell = table.getCurrentPage() * table.getRowsPerPage();
-                
-                String text = 
-                    String.valueOf(list.size()) 
-                    + " items found, displaying "
-                    + String.valueOf(firstCell + 1)
-                    + " to "
-                    + String.valueOf(firstCell + table.getRowsPerPage())
-                    + ".";
-                
-                replaceComponentTagBody(markupStream, openTag, text);
-            }
-        });
+        add(new TableHeaderLabel("headline", table));
 
-        final PagingNavigation tableNavigation = new PagingNavigation("navigation", table /* , 5, 2 */);
-        add(tableNavigation);
+        // Add navigation
+        add(new PagingNavigation("navigation", table));
 
         // Add some navigation links
         add(new PagingNavigationLink("first", table, 0));
         add(new PagingNavigationIncrementLink("prev", table, -1));
         add(new PagingNavigationIncrementLink("next", table, 1));
         add(new PagingNavigationLink("last", table, table.getPageCount() - 1));
+    }
+
+    /**
+     * 
+     */
+    public static class TableHeaderLabel extends Label
+    {
+    	private final PageableListView listView;
+    	
+    	/**
+    	 * 
+    	 * @param id
+    	 * @param table
+    	 */
+    	public TableHeaderLabel(final String id, final PageableListView table)
+    	{
+    		super(id, (IModel)null);
+    		this.listView = table;
+    	}
+    	
+        protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+        {
+            int firstCell = listView.getCurrentPage() * listView.getRowsPerPage();
+            
+            String text = 
+                String.valueOf(listView.size()) 
+                + " items found, displaying "
+                + String.valueOf(firstCell + 1)
+                + " to "
+                + String.valueOf(firstCell + listView.getRowsPerPage())
+                + ".";
+            
+            replaceComponentTagBody(markupStream, openTag, text);
+        }
     }
 }
