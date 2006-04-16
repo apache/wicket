@@ -1,20 +1,28 @@
 var wupb= {
-	get : function(id) {
+
+    Def : function(formid, statusid, barid, url) {
+        this.formid=formid;
+        this.statusid=statusid;
+        this.barid=barid;
+        this.url=url;
+    },
+    
+ 	get : function(id) {
 		return document.getElementById(id);
 	},
 	
-	start : function() {
-		wupb.get('${form-id}').submit();
-		wupb.get('${status-id}').innerHTML='Upload starting...';
-	    wupb.get('${bar-id}').firstChild.firstChild.style.width='0%';
+	start : function(def) {
+		wupb.get(def.formid).submit();
+		wupb.get(def.statusid).innerHTML='Upload starting...';
+	    wupb.get(def.barid).firstChild.firstChild.style.width='0%';
 	    
-		wupb.get('${status-id}').style.display='block';
-	    wupb.get('${bar-id}').style.display='block';
+		wupb.get(def.statusid).style.display='block';
+	    wupb.get(def.barid).style.display='block';
 	    
-	    window.setTimeout(function() { wupb.ajax('${statusUrl}'); }, 1000);
+	    window.setTimeout(function() { wupb.ajax(def); }, 1000);
 	},
 	
-	ajax : function(url) {
+	ajax : function(def) {
 		transport = false;
 
 		if(window.XMLHttpRequest)
@@ -43,12 +51,12 @@ var wupb= {
 			return false;
 		}
 	
-		transport.onreadystatechange = function() { wupb.update(transport, url); };
-		transport.open('GET', url, true);
+		transport.onreadystatechange = function() { wupb.update(transport, def); };
+		transport.open('GET', def.url, true);
 		transport.send(null);
 	},
 	
-	update: function(transport, url) {
+	update: function(transport, def) {
 		if (transport.readyState == 4) {
 
             if (transport.status == 200) {
@@ -66,8 +74,8 @@ var wupb= {
 
                 if ((completed_upload_size != "") && (completed_upload_size != 0))
                 {
-                    wupb.get('${bar-id}').firstChild.firstChild.style.width=progressPercent+'%';
-                    wupb.get('${status-id}').innerHTML=progressPercent + '% finished, '
+                    wupb.get(def.barid).firstChild.firstChild.style.width=progressPercent+'%';
+                    wupb.get(def.statusid).innerHTML=progressPercent + '% finished, '
                             + completed_upload_size + ' of '
                             + total_upload_size + ' at '
                             + transferRate  
@@ -77,16 +85,16 @@ var wupb= {
                 if (progressPercent == 100)
                 {
 
-                    wupb.get('${bar-id}').firstChild.firstChild.style.width='100%';
+                    wupb.get(def.barid).firstChild.firstChild.style.width='100%';
                     
-					wupb.get('${status-id}').style.display='none';
-				    wupb.get('${bar-id}').style.display='none';
+					wupb.get(def.statusid).style.display='none';
+				    wupb.get(def.barid).style.display='none';
 
                     return null;
                 }
 
 
-                window.setTimeout(function() { wupb.ajax(url); }, 1000);
+                window.setTimeout(function() { wupb.ajax(def); }, 1000);
             } else {
                 alert('Error: got a not-OK status code...');
             }
