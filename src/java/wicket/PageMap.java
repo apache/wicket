@@ -177,6 +177,10 @@ public final class PageMap implements Serializable
 	PageMap(final String name, final Session session)
 	{
 		this.name = name;
+		if (session == null)
+		{
+			throw new IllegalArgumentException("session must be not null");
+		}
 		this.session = session;
 	}
 
