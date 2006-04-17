@@ -10,7 +10,10 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-SNAPSHOT" date="tbd." description="Wicket 1.2 release">
+    <release version="1.2-rc1" date="tbd" description="Wicket 1.2 release candidate 2">
+      <action type="add" dev="Eelco Hillenius">fix window checker for case where app is configured for server root and has no web app name.</action>
+  	</release>
+    <release version="1.2-rc1" date="2006-04-17" description="Wicket 1.2 release candidate 1">
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Joni Suominen">Added Finnish translation of our Application.properties</action>
       <action type="add" dev="Martijn Dashorst" issue="1424558">Added example for markup inheritance</action>
       <action type="add" dev="Johan Compagner">wicket.Application.properties and wicket.Application_nl.properties added they will be loaded now as the last resort if nothing is found for the given key. All Validatior keys of wicket are in it. Als the null and nullValid keys of the SingleSelectChoice are in there. Because of that we needed a differentiation between the keys if null is valid or not. null (Choose One) is still the same but the emtpy one is now nullValid. We need now as many properties file for the different locales as possible.</action>
