@@ -38,20 +38,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.3</version>
@@ -59,13 +45,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.12</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-						<dependency>
 			<groupId>jetty</groupId>
 			<artifactId>org.mortbay.jetty</artifactId>
 			<version>4.2.24</version>
@@ -77,16 +56,15 @@
 			<artifactId>jasper-compiler</artifactId>
 			<version>4.1.30</version>
 			<type>jar</type>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>tomcat</groupId>
 			<artifactId>jasper-runtime</artifactId>
 			<version>4.1.30</version>
 			<type>jar</type>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
-		
 	</dependencies>
 
 	<build>
