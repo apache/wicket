@@ -92,16 +92,16 @@ public final class Settings
 			IFrameworkSettings
 {
 	/** ajax debug mode status */
-	boolean ajaxDebugModeEnabled = false;
+	private boolean ajaxDebugModeEnabled = false;
 
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
 	 */
-	boolean stripWicketTags = false;
+	private boolean stripWicketTags = false;
 
 	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	boolean stripXmlDeclarationFromOutput;
+	private boolean stripXmlDeclarationFromOutput;
 
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
@@ -208,14 +208,7 @@ public final class Settings
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
 
-	/**
-	 * List of {@link IResponseFilter}s.
-	 */
-	// TODO Post 1.2: General: Revisit... I don't think everyone agrees with
-	// this (e.g. why not use servlet filters to achieve the same)
-	// and if we want to support this, it could more elegantly
-	// be made part of e.g. request targets or a request processing
-	// strategy
+	/** List of {@link IResponseFilter}s. */
 	private List responseFilters;
 
 	/**
@@ -235,6 +228,21 @@ public final class Settings
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
 
+	/** Type of handling for unexpected exceptions */
+	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
+
+	/** Determines behavior of string resource loading if string is missing */
+	private boolean useDefaultOnMissingResource = true;
+
+	/** Determines if pages should be managed by a version manager by default */
+	private boolean versionPagesByDefault = true;
+
+	/** The context path that should be used for url prefixing */
+	private String contextPath;
+
+	/** Whether Wicket should try to support multiple windows transparently, true by default. */
+	private boolean automaticMultiWindowSupport = true;
+
 	/** Authorizer for component instantiations */
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
 	{
@@ -251,21 +259,6 @@ public final class Settings
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
 	};
-
-	/** Type of handling for unexpected exceptions */
-	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
-
-	/** Determines behavior of string resource loading if string is missing */
-	private boolean useDefaultOnMissingResource = true;
-
-	/** Determines if pages should be managed by a version manager by default */
-	private boolean versionPagesByDefault = true;
-
-	/** The context path that should be used for url prefixing */
-	private String contextPath;
-
-	private String servletContextKey;
-
 
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -1108,42 +1101,58 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IPageSettings#getAutomaticMultiWindowSupport()
+	 */
+	public boolean getAutomaticMultiWindowSupport()
+	{
+		return automaticMultiWindowSupport;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#setAutomaticMultiWindowSupport(boolean)
+	 */
+	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
+	{
+		this.automaticMultiWindowSupport = automaticMultiWindowSupport;
+	}
+
+	/**
 	 * @see wicket.settings.IFrameworkSettings#getVersion()
 	 */
 	public String getVersion()
 	{
-//		Properties properties = new Properties();
-//		InputStream is = null;
-//		try
-//		{
-//			is = Settings.class.getResourceAsStream("/wicket.properties");
-//			properties.load(is);
-//		}
-//		catch (IOException e)
-//		{
-//			// ignore the exception
-//		}
-//		finally
-//		{
-//			IOUtils.closeQuietly(is);
-//		}
-//		return properties.getProperty("wicket.version", "n/a");
-		
+		// Properties properties = new Properties();
+		// InputStream is = null;
+		// try
+		// {
+		// is = Settings.class.getResourceAsStream("/wicket.properties");
+		// properties.load(is);
+		// }
+		// catch (IOException e)
+		// {
+		// // ignore the exception
+		// }
+		// finally
+		// {
+		// IOUtils.closeQuietly(is);
+		// }
+		// return properties.getProperty("wicket.version", "n/a");
+
 		String implVersion = null;
-        try
-        {
-        	Class cls = Class.forName("wicket.Application");
-            Package pkg = cls.getPackage();
-            if (pkg != null)
-            {
-            	implVersion = pkg.getImplementationVersion();
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-        	// ignore the exception
-        }
-       
-        return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
+		try
+		{
+			Class cls = Class.forName("wicket.Application");
+			Package pkg = cls.getPackage();
+			if (pkg != null)
+			{
+				implVersion = pkg.getImplementationVersion();
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			// ignore the exception
+		}
+
+		return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
 	}
 }
