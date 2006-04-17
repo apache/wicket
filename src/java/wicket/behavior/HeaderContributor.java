@@ -27,6 +27,7 @@ import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * A {@link wicket.behavior.AbstractHeaderContributor} behavior that is
@@ -146,10 +147,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		public void renderHead(Response response)
 		{
 			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
-
-			response.write("<script type=\"text/javascript\" src=\"");
-			response.write(url);
-			response.println("\"></script>");
+			JavascriptUtils.writeJavascriptUrl(response, url);
 		}
 	}
 

@@ -29,6 +29,7 @@ import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
@@ -206,9 +207,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	protected void writeJsReference(final Response response, final PackageResourceReference ref)
 	{
 		CharSequence url = RequestCycle.get().urlFor(ref);
-		response.write("\t<script language=\"JavaScript\" type=\"text/javascript\" src=\"");
-		response.write(url);
-		response.println("\"></script>");
+		JavascriptUtils.writeJavascriptUrl(response, url);
 	}
 
 	/**

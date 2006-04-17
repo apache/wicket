@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4913 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * This filter logs the server time so the time it takes from the start of a
@@ -47,11 +49,13 @@ public class ServerTimeFilter implements IResponseFilter
 		if (index != -1)
 		{
 			AppendingStringBuffer script = new AppendingStringBuffer(75);
-			script.append("\n<script>\nwindow.defaultStatus='Server time: ");
+			script.append("\n" + JavascriptUtils.SCRIPT_OPEN_TAG
+					+ "\nwindow.defaultStatus='Server time: ");
 			script.append(((double)timeTaken) / 1000);
-			script.append("s';\n</script>\n");
+			script.append("s';\n" + JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 			responseBuffer.insert(index + 6, script);
 		}
+		
 		log.info(timeTaken + "ms server time taken for request "
 				+ RequestCycle.get().getRequest().getURL() + " response size: "
 				+ responseBuffer.length());

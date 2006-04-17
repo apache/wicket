@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,6 +29,7 @@ import wicket.RequestCycle;
 import wicket.Session;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * This is a filter that injects javascript code to the top head portion and
@@ -70,12 +72,14 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 					"ServerAndClientTimeFilter.statustext", null, Model.valueOf(map),
 					Session.get().getLocale(), Session.get().getStyle(), defaultValue.toString());
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
-			endScript.append("\n<script>\nwindow.defaultStatus='");
+			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);
+			endScript.append("\nwindow.defaultStatus='");
 			endScript.append(txt);
-			endScript.append("';\n</script>\n");
+			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6,
-					"\n<script>\nvar clientTimeVariable = new Date().getTime();\n</script>\n");
+			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG
+					+ "\nvar clientTimeVariable = new Date().getTime();\n"
+					+ JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		log.info(timeTaken + "ms server time taken for request "
 				+ RequestCycle.get().getRequest().getURL() + " response size: "
