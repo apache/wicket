@@ -25,6 +25,7 @@ import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 import wicket.settings.IAjaxSettings;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 
@@ -44,7 +45,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static final PackageResourceReference INDICATOR = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
-
 	/** reference to the default ajax support javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
@@ -56,7 +56,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/** reference to the default ajax debug support javascript file. */
 	private static final PackageResourceReference JAVASCRIPT_DEBUG = new PackageResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
-
 
 	/**
 	 * 
@@ -89,12 +88,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (settings.isAjaxDebugModeEnabled())
 		{
-			response.write("<script>wicketAjaxDebugEnable=true;</script>");
+			JavascriptUtils.writeJavascript(response, "wicketAjaxDebugEnable=true;");
 			writeJsReference(response, JAVASCRIPT_DEBUG_DRAG);
 			writeJsReference(response, JAVASCRIPT_DEBUG);
 		}
-
-
 	}
 
 	/**
@@ -114,7 +111,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'", null, null);
 	}
-
 
 	/**
 	 * Returns javascript that performs an ajax callback to this behavior. The
@@ -158,12 +154,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			failure = failure + hide;
 		}
 
-
 		if (decorator != null)
 		{
 			failure = decorator.decorateOnFailureScript(failure);
 		}
-
 
 		AppendingStringBuffer buff = new AppendingStringBuffer(256);
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
@@ -185,7 +179,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return call;
 	}
 
-
+	/**
+	 * 
+	 * @return String
+	 */
 	private String findIndicatorId()
 	{
 		if (getComponent() instanceof IAjaxIndicatorAware)

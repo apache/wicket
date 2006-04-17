@@ -1,9 +1,10 @@
 <html>
 <head>
   <title>ajax-test</title>
-	<script language="JavaScript" type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
-<script>wicketAjaxDebugEnable=true;</script>	<script language="JavaScript" type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
-	<script language="JavaScript" type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
+<script type="text/javascript">wicketAjaxDebugEnable=true;</script>
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 </head>
 <body onLoad="setTimeout(function() { var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:testPanel:baseSpan:linja1::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { }); }, 2000);">
   <span wicket:id="testPanel"><wicket:panel>
