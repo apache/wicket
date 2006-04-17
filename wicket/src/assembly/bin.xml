@@ -12,6 +12,12 @@
                 <include>NOTICE*</include>
                 <include>pom.xml</include>
                 <include>project.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/assembly</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
                 <include>build.xml</include>
             </includes>
         </fileSet>
