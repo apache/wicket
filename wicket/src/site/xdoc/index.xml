@@ -60,18 +60,17 @@
 		</section>
 		<section name="Latest News">
 			<subsection
-				name="April 2, 2006 - Wicket 1.2-beta 3 available">
+				name="April 17, 2006 - Wicket 1.2-rc1 available">
 				<p>
 					The
 					<a href="http://wicketframework.org">Wicket</a>
-					project has released the third beta release of the
+					project has released the first release candidate of the
 					1.2 effort.
 				</p>
 				<p>
-					This is our third beta release of the Wicket 1.2
-					version. We expect this to be the final beta and
-					start finalizing this version soon. Major features
-					of Wicket 1.2 include:
+					This is our first release candidate of the Wicket 1.2
+					version. We expect to finalize the 1.2 release very soon.
+					Major features of Wicket 1.2 include:
 				</p>
 				<ul>
 					<li>
@@ -173,6 +172,25 @@
 						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
 						Migrating to Wicket 1.2
 					</a>
+				</p>
+				<p>
+					This is the first release candidate, so not considered
+					production ready. Please help us iron out the last
+					bugs by downloading and testing this release candidate!
+				</p>
+			</subsection>
+			<subsection
+				name="April 2, 2006 - Wicket 1.2-beta 3 available">
+				<p>
+					The
+					<a href="http://wicketframework.org">Wicket</a>
+					project has released the third beta release of the
+					1.2 effort.
+				</p>
+				<p>
+					This is our third beta release of the Wicket 1.2
+					version. We expect this to be the final beta and
+					start finalizing this version soon. 
 				</p>
 				<p>
 					This is the third beta release, so not considered
