@@ -17,12 +17,8 @@
  */
 package wicket.markup.html.internal;
 
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.parser.filter.BodyOnLoadHandler;
-import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * This is basically a transparent WebMarkupContainer with the ability to get
@@ -53,9 +49,9 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(String)
 	 */
-	public HtmlBodyContainer()
+	public HtmlBodyContainer(final String id)
 	{
-		super(BodyOnLoadHandler.BODY_ID);
+		super(id);
 	}
 
 	/**
@@ -64,39 +60,5 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	public boolean isTransparentResolver()
 	{
 		return true;
-	}
-
-	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onLoad attribute of the body tag.
-	 * 
-	 * @param value
-	 *            The value to append to 'onLoad'
-	 * @return The HtmlBodyContainer
-	 */
-	public final Component addOnLoadModifier(final String value)
-	{
-		return addOnLoadModifier(new Model(value));
-	}
-
-	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onLoad attribute of the body tag.
-	 * 
-	 * @param model
-	 *            The value to append to 'onLoad'
-	 * @return The HtmlBodyContainer
-	 */
-	public final Component addOnLoadModifier(final IModel model)
-	{
-		return add(new AttributeModifier("onLoad", true, model)
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected String newValue(String currentValue, String replacementValue)
-			{
-				return (currentValue == null ? replacementValue : currentValue + replacementValue);
-			}
-		});
 	}
 }

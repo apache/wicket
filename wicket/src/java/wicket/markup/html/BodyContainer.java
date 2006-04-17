@@ -25,10 +25,18 @@ import wicket.Component;
 import wicket.model.Model;
 
 /**
+ * This is not realy a Container component in the standard Wicket sense. It  
+ * rather is a facade which allows to easily add attribute modifier to the
+ * MarkupContainer associated with &lt;body&gt;. That container might be a
+ * Wicket generated one (automatically) or one manually added by a user the
+ * standard Wicket way.
+ * <p>
  * Container for the page body. This is mostly an internal class that is used
  * for contributions to the body tag's onload event handler.
  * 
  * @author jcompagner
+ * 
+ * TODO Post 1.2: Change the name. It is not derived from MarkupContainer
  */
 public final class BodyContainer implements Serializable
 {
@@ -151,4 +159,13 @@ public final class BodyContainer implements Serializable
 		return this;
 	}
 	
+	/**
+	 * Get the real body container (WebMarkupContainer)
+	 * 
+	 * @return WebMarkupContainer associated with the &lt;body&gt; tag
+	 */
+	public WebMarkupContainer getBodyContainer()
+	{
+		return (WebMarkupContainer) this.page.get(this.id);
+	}
 }
