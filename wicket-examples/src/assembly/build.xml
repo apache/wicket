@@ -45,7 +45,6 @@
 		<copy todir="${build.main.classes}">
 			<fileset dir="${src.main.dir}">
 				<include name="**/*.*" />
-				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
 	</target>
