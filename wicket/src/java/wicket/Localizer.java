@@ -196,6 +196,8 @@ public class Localizer
 		final String path;
 		if (component != null)
 		{
+			// The reason why need to create that stack is because we need to
+			// walk it downwards starting with Page down to the Component 
 			searchStack = getComponentStack(component);
 			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
 		}
@@ -388,7 +390,7 @@ public class Localizer
 				{
 					Class clazz = (Class)searchStack.get(i);
 					
-					// First check if the a property with the 'key' provided by the user
+					// First check if a property with the 'key' provided by the user
 					// is available.
 					string = loader.loadStringResource(clazz, key, locale, style);
 					

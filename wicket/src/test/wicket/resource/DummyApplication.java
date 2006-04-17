@@ -22,11 +22,11 @@ import wicket.util.tester.WicketTester;
 
 /**
  * Dummy application used for resource loader testing.
+ * 
  * @author Chris Turner
  */
 public class DummyApplication extends WicketTester
 {
-
 	/**
 	 * Create the dummy application.
 	 */
@@ -34,7 +34,4 @@ public class DummyApplication extends WicketTester
 	{
 		super(null);
 	}
-
 }
-
-// 

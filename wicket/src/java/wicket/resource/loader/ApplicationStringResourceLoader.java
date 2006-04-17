@@ -27,6 +27,8 @@ import wicket.Application;
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
+ * 
+ * TODO Post 1.2: remove it. It doesn't provide any value compared to ClassStringResourceLoader
  */
 public class ApplicationStringResourceLoader extends ClassStringResourceLoader
 {

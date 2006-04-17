@@ -22,8 +22,8 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.resource.DummyApplication;
-import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.Settings;
 
@@ -101,11 +101,11 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		List loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 3 default loaders", 3, loaders.size());
+		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 				loaders.get(0) instanceof ComponentStringResourceLoader);
 		Assert.assertTrue("Second loader should be the application one",
-				loaders.get(1) instanceof ApplicationStringResourceLoader);
+				loaders.get(1) instanceof ClassStringResourceLoader);
 	}
 
 	/**

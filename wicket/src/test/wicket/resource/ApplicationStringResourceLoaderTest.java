@@ -22,7 +22,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 import wicket.protocol.http.MockWebApplication;
-import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -47,7 +47,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 */
 	protected IStringResourceLoader createLoader()
 	{
-		return new ApplicationStringResourceLoader(application);
+		return new ClassStringResourceLoader(application, application.getClass());
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	public void testLoaderUnknownResources()
 	{
 		MockWebApplication app = new MockWebApplication(null);
-		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
+		IStringResourceLoader loader = new ClassStringResourceLoader(app, app.getClass());
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
 				"test.string", Locale.getDefault(), null));
 	}

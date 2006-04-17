@@ -171,12 +171,13 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 				}
 			}
 			
-			// Move to the next superclass
-			clazz = clazz.getSuperclass();
 			if (isStopResourceSearch(clazz))
 			{
 				break;
 			}
+			
+			// Move to the next superclass
+			clazz = clazz.getSuperclass();
 		}
 
 		// Return the resource value (may be null if resource was not found)
