@@ -11,9 +11,15 @@
                 <include>LICENSE*</include>
                 <include>NOTICE*</include>
                 <include>pom.xml</include>
-                <include>build.xml</include>
             </includes>
         </fileSet>
+		<fileSet>
+			<directory>src/assembly</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>build.xml</include>
+			</includes>
+		</fileSet>
         <fileSet>
             <directory>licenses</directory>
             <outputDirectory>licenses</outputDirectory>
