@@ -213,7 +213,7 @@ public abstract class Response
 	 * 
 	 * @param string
 	 */
-	public final void println(final String string)
+	public final void println(final CharSequence string)
 	{
 		write(string);
 		write(Strings.LINE_SEPARATOR);
