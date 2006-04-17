@@ -45,7 +45,6 @@ import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
-import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
@@ -272,8 +271,7 @@ public final class Settings
 		this.application = application;
 		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application, Application.class));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application.getClass()));
 	}
 
 	/**

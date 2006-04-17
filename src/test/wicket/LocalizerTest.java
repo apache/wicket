@@ -17,13 +17,13 @@
  */
 package wicket;
 
+import java.util.Locale;
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
 import wicket.resource.DummyApplication;
-import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.IResourceSettings;
 import wicket.util.value.ValueMap;
@@ -58,7 +58,6 @@ public class LocalizerTest extends WicketTestCase
 	{
 		application = new DummyApplication();
 		settings = application.getResourceSettings();
-		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
 		localizer = application.getResourceSettings().getLocalizer();
 	}
 
@@ -149,13 +148,14 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testTwoComponents()
 	{
+		Session.get().setLocale(Locale.ENGLISH);
 		MyMockPage page = new MyMockPage();
 		Application.get().getResourceSettings().addStringResourceLoader(
 				new ComponentStringResourceLoader(Application.get()));
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
-		String drop1 = localizer.getString("null", page.drop1, "");
-		String drop2 = localizer.getString("null", page.drop2, "");
+		String drop1 = localizer.getString("null", page.drop1);
+		String drop2 = localizer.getString("null", page.drop2);
 		
 		assertEquals("value 1", drop1);
 		assertEquals("value 2", drop2);
