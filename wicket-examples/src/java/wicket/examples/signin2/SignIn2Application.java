@@ -51,9 +51,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	 */
 	protected void init()
 	{
-		// Disable creation of javascript which jWebUnit (test only) 
-		// doesn't handle properly
-		getPageSettings().setAutomaticMultiWindowSupport(false);
+		super.init();
 		
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{

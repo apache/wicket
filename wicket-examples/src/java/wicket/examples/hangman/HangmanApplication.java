@@ -35,18 +35,6 @@ public class HangmanApplication extends WicketExampleApplication
 	public HangmanApplication()
 	{
 	}
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#init()
-	 */
-	protected void init()
-	{
-		super.init();
-		
-		// Disable creation of javascript which jWebUnit (test only) 
-		// doesn't handle properly
-		getPageSettings().setAutomaticMultiWindowSupport(false);
-	}
 	
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
