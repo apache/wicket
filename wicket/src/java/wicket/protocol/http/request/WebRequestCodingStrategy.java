@@ -56,7 +56,7 @@ import wicket.util.string.Strings;
 /**
  * Request parameters factory implementation that uses http request parameters
  * and path info to construct the request parameters object.
- *
+ * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
@@ -153,7 +153,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		while (iterator.hasNext())
 		{
 			String key = (String)iterator.next();
-			if(key.startsWith(NAME_SPACE))
+			if (key.startsWith(NAME_SPACE))
 			{
 				iterator.remove();
 			}
@@ -171,18 +171,20 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * after the defaults have been tried. When that doesn't provide a url
 	 * either, and exception will be thrown saying that encoding could not be
 	 * done.
-	 *
+	 * 
 	 * @see wicket.request.IRequestCodingStrategy#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
-	public final CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
+	public final CharSequence encode(final RequestCycle requestCycle,
+			final IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		CharSequence path = pathForTarget(requestTarget);
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length() + path.length());
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
+					+ path.length());
 			buffer.append(prefix);
 			buffer.append(path);
 			return requestCycle.getOriginalResponse().encodeURL(buffer);
@@ -226,7 +228,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
 		}
-		else if (!path.equals("/")) // ignore root paths.. is this the right path?
+		else if (!path.equals("/")) // ignore root paths.. is this the right
+		// path?
 		{
 			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
 			{
@@ -294,7 +297,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
 	{
-		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters.getPath());
+		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters
+				.getPath());
 		return (encoder != null) ? encoder.decode(requestParameters) : null;
 	}
 
@@ -321,11 +325,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * Adds bookmarkable page related parameters (page alias and optionally page
 	 * parameters). Any bookmarkable page alias mount will override this method;
 	 * hence if a mount is found, this method will not be called.
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param request
 	 *            the incoming request
 	 * @param parameters
@@ -359,11 +363,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Adds page related parameters (path and pagemap and optionally version and
 	 * interface).
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param request
 	 *            the incoming request
 	 * @param parameters
@@ -417,11 +421,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * Adds (shared) resource related parameters (resource key). Any shared
 	 * resource key mount will override this method; hence if a mount is found,
 	 * this method will not be called.
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param request
 	 *            the incomming request
 	 * @param parameters
@@ -442,10 +446,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * after the defaults have been tried. When this doesn't provide a url
 	 * either (returns null), an exception will be thrown by the encode method
 	 * saying that encoding could not be done.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle (for efficient access)
-	 *
+	 * 
 	 * @param requestTarget
 	 *            the request target
 	 * @return the url to the provided target
@@ -457,11 +461,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Encode a page class target.
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should
+	 * be overridden to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
@@ -556,18 +560,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Encode a shared resource target.
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #addResourceParameters(Request, RequestParameters)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected CharSequence encode(RequestCycle requestCycle, ISharedResourceRequestTarget requestTarget)
+	protected CharSequence encode(RequestCycle requestCycle,
+			ISharedResourceRequestTarget requestTarget)
 	{
 		final CharSequence prefix = urlPrefix(requestCycle);
 		final String sharedResourceKey = requestTarget.getResourceKey();
@@ -581,7 +586,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					.length()
 					+ prefix.length() + 11);
 			buffer.append(prefix);
-			if (buffer.charAt(buffer.length()-1) == '/')
+			if ((buffer.length() > 0) && buffer.charAt(buffer.length() - 1) == '/')
 			{
 				buffer.append("resources/");
 			}
@@ -596,11 +601,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Encode a listener interface target.
-	 *
+	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden
-	 * to by in sync with that behaviour.
-	 *
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
@@ -659,7 +664,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Encode a page target.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
@@ -683,7 +688,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Gets the mount encoder for the given request target if any.
-	 *
+	 * 
 	 * @param requestTarget
 	 *            the request target to match
 	 * @return the mount encoder if any
@@ -708,7 +713,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * Gets the request info path. This is an overridable method in order to
 	 * provide users with a means to implement e.g. a path encryption scheme.
 	 * This method by default returns {@link Request#getPath()}.
-	 *
+	 * 
 	 * @param request
 	 *            the request
 	 * @return the path info object, possibly processed
@@ -720,10 +725,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 
 	/**
 	 * Gets prefix.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the request cycle
-	 *
+	 * 
 	 * @return prefix
 	 */
 	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
@@ -751,7 +756,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				String path = request.getServletPath();
 				if (path == null || "".equals(path))
 				{
-					if(buffer.length() > 0 && !buffer.endsWith("/"))
+					if (buffer.length() > 0 && !buffer.endsWith("/"))
 					{
 						buffer.append("/");
 					}
