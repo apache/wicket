@@ -93,13 +93,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>jetty</groupId>
-			<artifactId>org.mortbay.jetty</artifactId>
-			<version>4.2.24</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
 			<version>0.9.5</version>
@@ -118,14 +111,21 @@
 			<artifactId>jasper-compiler</artifactId>
 			<version>4.1.30</version>
 			<type>jar</type>
-			<scope>test</scope>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>org.mortbay.jetty</artifactId>
+			<version>4.2.24</version>
+			<type>jar</type>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>tomcat</groupId>
 			<artifactId>jasper-runtime</artifactId>
 			<version>4.1.30</version>
 			<type>jar</type>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>
@@ -225,10 +225,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
