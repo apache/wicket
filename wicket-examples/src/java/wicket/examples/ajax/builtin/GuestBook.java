@@ -10,7 +10,6 @@ import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.examples.guestbook.Comment;
-import wicket.examples.guestbook.GuestBook.CommentForm;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -22,6 +21,11 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
+/**
+ * Ajax enabled example for the guestbook.
+ * 
+ * @author Martijn Dashorst
+ */
 public class GuestBook extends BasePage
 {
 	/** A global list of all comments from all users across all sessions */
@@ -29,20 +33,28 @@ public class GuestBook extends BasePage
 
 	/** The list view that shows comments */
 	private final ListView commentListView;
+	/** Container for the comments, used to update the listview.  */
 	private WebMarkupContainer comments;
+	
+	/** The textarea for entering the comments, is updated in the ajax call. */
 	private Component text;
 
-
+	/**
+	 * Constructor.
+	 */
 	public GuestBook()
 	{
 		// Add comment form
 		CommentForm commentForm = new CommentForm("commentForm");
 		add(commentForm);
 
+		// the WebMarkupContainer is used to update the listview in an ajax call
 		comments = new WebMarkupContainer("comments");
 		add(comments.setOutputMarkupId(true));
+		
 		// Add commentListView of existing comments
-		comments.add(commentListView = new ListView("comments", new PropertyModel(this, "commentList"))
+		comments.add(commentListView = new ListView("comments", new PropertyModel(this,
+				"commentList"))
 		{
 			public void populateItem(final ListItem listItem)
 			{
@@ -51,6 +63,14 @@ public class GuestBook extends BasePage
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
+		
+		// we need to cancel the standard submit of the form in the onsubmit handler,
+		// otherwise we'll get double submits. To do so, we return false after the
+		// ajax submit has occurred.
+		
+		// The AjaxFormSubmitBehavior already calls the onSubmit of the form, all
+		// we need to do in the onSubmit(AjaxRequestTarget) handler is do our Ajax
+		// specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "onsubmit")
 		{
 			protected IAjaxCallDecorator getAjaxCallDecorator()
@@ -66,10 +86,13 @@ public class GuestBook extends BasePage
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
+				// add the list of components that need to be updated
 				target.addComponent(comments);
 				target.addComponent(text);
+				
 				// focus the textarea again
-				target.addJavascript("document.getElementById('" + text.getMarkupId() + "').focus();");
+				target.addJavascript("document.getElementById('" + text.getMarkupId()
+						+ "').focus();");
 			}
 		});
 	}
