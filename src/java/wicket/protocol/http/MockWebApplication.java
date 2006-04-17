@@ -181,6 +181,7 @@ public class MockWebApplication extends WebApplication
 
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+		getPageSettings().setAutomaticMultiWindowSupport(false);
 		
 		createRequestCycle();
 	}

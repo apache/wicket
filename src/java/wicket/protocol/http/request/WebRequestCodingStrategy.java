@@ -74,6 +74,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/** Parameter name used all over the place */
 	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = NAME_SPACE + "bookmarkablePage";
 
+	/** Pagemap parameter constant */
+	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
+
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
 	{

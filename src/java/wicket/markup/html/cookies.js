@@ -7,19 +7,24 @@ function getWicketCookie( name )
 	{
 		return null;
 	}
-	if ( start == -1 ) return null;
+	if ( start == -1 )
+	{
+		return null;
+	}
 	var end = document.cookie.indexOf( ";", len );
 	if ( end == -1 ) end = document.cookie.length;
-	return unescape( document.cookie.substring( len, end ) );
+	var value = unescape( document.cookie.substring( len, end ) );
+	return value;
+	
 }
 	
 // this deletes the cookie when called
 function deleteWicketCookie( name ) 
 {
-	if ( getWicketCookie( name ) ) document.cookie = name + "=;expires=Thu, 01-Jan-1970 00:00:01 GMT";
+	if ( getWicketCookie( name ) ) document.cookie = name + "=;path=/;expires=Thu, 01-Jan-1970 00:00:01 GMT";
 }
 
 function setWicketCookie( name, value ) 
 {
-	document.cookie = name + "=" +escape( value )
+	document.cookie = name + "=" +escape( value ) + ";path=/;";
 }

@@ -85,7 +85,18 @@ public class TextField extends AbstractTextComponent
 		checkComponentTag(tag, "input");
 
 		// check for text type
-		checkComponentTagAttribute(tag, "type", getInputType());
+		String inputType = getInputType();
+		if(inputType != null)
+		{
+			checkComponentTagAttribute(tag, "type", inputType);
+		}
+		else
+		{
+			if(tag.getAttributes().containsKey("type"))
+			{
+				checkComponentTagAttribute(tag, "type", "text");
+			}
+		}
 
 		// No validation errors
 		tag.put("value", getValue());
@@ -102,6 +113,6 @@ public class TextField extends AbstractTextComponent
 	 */
 	protected String getInputType()
 	{
-		return "text";
+		return null;
 	}
 }

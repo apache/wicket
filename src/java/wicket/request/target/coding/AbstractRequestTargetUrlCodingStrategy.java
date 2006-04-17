@@ -161,7 +161,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 */
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
-		if (parameters != null)
+		if (parameters != null && parameters.size() > 0)
 		{
 			Iterator entries = parameters.entrySet().iterator();
 			while (entries.hasNext())
