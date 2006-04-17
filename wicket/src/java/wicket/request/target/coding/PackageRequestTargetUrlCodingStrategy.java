@@ -20,6 +20,7 @@ package wicket.request.target.coding;
 import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.Session;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -80,7 +81,10 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 				bookmarkablePageClassName);
 		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
 
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
+		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		requestParameters.setPageMapName(pageMapName);
+
+		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
 				bookmarkablePageClass, parameters);
 		return target;
 	}
@@ -99,7 +103,14 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
-		appendParameters(url, target.getPageParameters());
+		
+		PageParameters pageParameters = target.getPageParameters();
+		if(target.getPageMapName() != null)
+		{
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
+		}
+		
+		appendParameters(url, pageParameters);
 		return url;
 	}
 

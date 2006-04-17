@@ -394,7 +394,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			}
 			final BodyContainer body = getBodyContainer();
 			final Cookie[] cookies = cycle.getWebRequest().getCookies();
-			if (cookies == null || body == null)
+			if ( (cookies == null && accessStack.size() > initialAccessStackSize) || body == null)
 			{
 				// If the browser does not support cookies, we try to work
 				// with the history
@@ -430,7 +430,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					// and browser configurations that start with a blank home
 					// page (which is usually not the default), in which case
 					// the page count is 2 (or 1 for IE)
-					response.write("<script language=\"JavaScript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
+					response.write("<script type=\"text/javascript\">if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
 					response.write(url);
 					response.write("'}</script>");
 				}
@@ -452,21 +452,27 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						 */
 						public Object getObject(Component component)
 						{
-							return "deleteWicketCookie('pagemap-" + getPageMap().getName() + "');";
+							Application application = Application.get();
+							return "deleteWicketCookie('pm-" + getPageMap().getName() + application.getApplicationSettings().getContextPath() + application.getApplicationKey() + "');";
 						}
 					};
 					body.addOnUnLoadModifier(onUnLoadModel);
 				}
+				Application application = Application.get(); 
 				final String pageMapName = getPageMap().getName();
 				response.write("<script type=\"text/javascript\" src=\"");
 				response.write(urlFor(cookiesResource));
 				response.write("\"></script>\n");
-				response.write("<script language=\"JavaScript\">\n");
-				response.write("var pagemapcookie = getWicketCookie('pagemap-");
+				response.write("<script type=\"text/javascript\">\n");
+				response.write("var pagemapcookie = getWicketCookie('pm-");
 				response.write(pageMapName);
+				response.write(application.getApplicationSettings().getContextPath());
+				response.write(application.getApplicationKey());
 				response.write("');\n");
-				response.write("if(!pagemapcookie && pagemapcookie != '1'){setWicketCookie('pagemap-");
+				response.write("if(!pagemapcookie && pagemapcookie != '1'){setWicketCookie('pm-");
 				response.write(pageMapName);
+				response.write(application.getApplicationSettings().getContextPath());
+				response.write(application.getApplicationKey());
 				response.write("',1);}\n");
 				response.write("else {document.location.href = '");
 				response.write(url);
