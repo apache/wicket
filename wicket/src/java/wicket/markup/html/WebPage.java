@@ -230,7 +230,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Common code executed by constructors
+	 * Common code executed by constructors.
 	 */
 	private void commonInit()
 	{
@@ -265,7 +265,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			}
 		}
 
-		add(new PageMapChecker());
+		// if automatic multi window support is on, add a page checker instance
+		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
+		{
+			add(new PageMapChecker());
+		}
 
 		// TODO Post 1.2: If the concept proofs valuable we could add the header
 		// container the same way instead of using a resolver. The advantages
