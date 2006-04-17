@@ -36,6 +36,7 @@
 			debug="true"
 			deprecation="true"
 			optimize="false"
+			includes="**/*.java"
 			excludes="**/package.html"
 			srcdir="${src.main.dir}"
 			classpathref="build.classpath"
@@ -56,6 +57,7 @@
 			debug="true"
 			deprecation="true"
 			optimize="false"
+			includes="**/*.java"
 			excludes="**/package.html"
 			srcdir="${src.test.dir}"
 		>
