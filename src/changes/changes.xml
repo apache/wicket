@@ -10,7 +10,9 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-rc1" date="tbd" description="Wicket 1.2 release candidate 2">
+    <release version="1.2-rc2" date="tbd" description="Wicket 1.2 release candidate 2">
+      <action type="fix" dev="Martijn Dashorst">Fixed encryption issue of password, maintaining backwards compatibility, and implementing correct URL encryption using URL safe base64 encryption.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Zenrique Steckelberg">Added Brazilian translation of our Application.properties</action>
       <action type="fix" dev="Johan Compagner" issue="1472451">fixed FormcomponentFeedbackBorder, which didn't display when it should</action>
 	  <action type="add" dev="Eelco Hillenius">override setModel and added setList. The override on setModel does an additional remove of the children so that - even if optimizeItemRemoval == true - the listview will be rendered with the actual contents. setList is a convenience method and is consitent with the List constructor.</action>
       <action type="fix" dev="Eelco Hillenius">fixed window checker for case where app is configured for server root and has no web app name.</action>
