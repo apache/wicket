@@ -24,6 +24,7 @@ import wicket.MarkupContainer;
  * Filter for child-of relationship
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
  */
 public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
