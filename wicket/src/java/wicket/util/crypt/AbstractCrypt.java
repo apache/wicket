@@ -64,7 +64,28 @@ public abstract class AbstractCrypt implements ICrypt
 	{
 		try
 		{
-			return new String(decryptStringToByteArray(text), CHARACTER_ENCODING);
+			byte[] encrypted = Base64.decodeBase64(text.getBytes());
+			return new String(decryptByteArray(encrypted), CHARACTER_ENCODING);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
+	}
+
+	/**
+	 * Decrypts a string into a string.
+	 * 
+	 * @param text
+	 *            text to decript
+	 * @return the decrypted text
+	 */
+	public final String decryptUrlSafe(final String text)
+	{
+		try
+		{
+			byte[] encrypted = Base64UrlSafe.decodeBase64(text.getBytes());
+			return new String(decryptByteArray(encrypted), CHARACTER_ENCODING);
 		}
 		catch (UnsupportedEncodingException ex)
 		{
@@ -85,6 +106,27 @@ public abstract class AbstractCrypt implements ICrypt
 		{
 			byte[] cipherText = encryptStringToByteArray(plainText);
 			return new String(Base64.encodeBase64(cipherText));
+		}
+		catch (GeneralSecurityException e)
+		{
+			log.error("Unable to encrypt text '" + plainText + "'", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Encrypt a string into a string using URL safe Base64 encoding.
+	 * 
+	 * @param plainText
+	 *            text to encrypt
+	 * @return encrypted string
+	 */
+	public final String encryptUrlSafe(final String plainText)
+	{
+		try
+		{
+			byte[] cipherText = encryptStringToByteArray(plainText);
+			return new String(Base64UrlSafe.encodeBase64(cipherText));
 		}
 		catch (GeneralSecurityException e)
 		{
@@ -128,19 +170,17 @@ public abstract class AbstractCrypt implements ICrypt
 			throws GeneralSecurityException;
 
 	/**
-	 * Decrypts a String into a byte array.
+	 * Decrypts an encrypted, but Base64 decoded byte array into a byte array.
 	 * 
 	 * @param encrypted
-	 *            text to decrypt
+	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	private final byte[] decryptStringToByteArray(final String encrypted)
+	private final byte[] decryptByteArray(final byte[] encrypted)
 	{
-		final byte[] plainBytes;
 		try
 		{
-			plainBytes = Base64.decodeBase64(encrypted.getBytes());;
-			return crypt(plainBytes, Cipher.DECRYPT_MODE);
+			return crypt(encrypted, Cipher.DECRYPT_MODE);
 		}
 		catch (GeneralSecurityException e)
 		{

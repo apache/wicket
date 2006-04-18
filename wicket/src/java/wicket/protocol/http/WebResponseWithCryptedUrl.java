@@ -88,7 +88,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 				    queryString = shortenUrl(queryString).toString();
 
 				    // encrypt the query string
-					final String encryptedQueryString = urlCrypt.encrypt(queryString);
+					final String encryptedQueryString = urlCrypt.encryptUrlSafe(queryString);
 
 					// build the new complete url
 					return new AppendingStringBuffer(urlPrefix).append("?x=").append(escapeUrl(encryptedQueryString));

@@ -47,6 +47,8 @@ public class CryptTest extends WicketTestCase
 
 		assertEquals("test", crypt.encrypt("test"));
 		assertEquals("test", crypt.decrypt("test"));
+		assertEquals("test", crypt.encryptUrlSafe("test"));
+		assertEquals("test", crypt.decryptUrlSafe("test"));
 	}
 
 	/**
@@ -60,8 +62,10 @@ public class CryptTest extends WicketTestCase
 		{
 			if (crypt.encrypt("test") != null)
 			{
-				assertEquals("KxMxhk6i4Us", crypt.encrypt("test"));
-				assertEquals("test", crypt.decrypt("KxMxhk6i4Us"));
+				assertEquals("KxMxhk6i4Us=", crypt.encrypt("test"));
+				assertEquals("KxMxhk6i4Us", crypt.encryptUrlSafe("test"));
+				assertEquals("test", crypt.decryptUrlSafe("KxMxhk6i4Us"));
+				assertEquals("test", crypt.decrypt("KxMxhk6i4Us="));
 			}
 		}
 		catch (Exception ex)

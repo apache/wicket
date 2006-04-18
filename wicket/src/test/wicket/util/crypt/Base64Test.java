@@ -142,4 +142,106 @@ public class Base64Test extends TestCase
 	    String output = crypt.decrypt(s);
 	    assertEquals(input, output);
 	}
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_1() throws IOException
+	{
+		for (int i=0; i < 200; i++)
+		{
+		    byte bytes1[] = new byte[200];
+		    new Random().nextBytes(bytes1);
+	
+		    byte[] s = new Base64UrlSafe().encode(bytes1);
+	
+		    byte[] bytes2 = new Base64UrlSafe().decode(s);
+		    boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2) );
+		    assertEquals(true, isEqual);
+		}
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_1a() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+
+	    byte[] s = new Base64UrlSafe().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64UrlSafe().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_1b() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
+
+	    byte[] s = new Base64UrlSafe().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64UrlSafe().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_1c() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
+
+	    byte[] s = new Base64UrlSafe().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64UrlSafe().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_1d() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
+
+	    byte[] s = new Base64UrlSafe().encode(input.getBytes());
+
+	    byte[] bytes2 = new Base64UrlSafe().decode(s);
+	    String output = new String(bytes2);
+	    boolean isEqual = input.equals(output);
+	    assertEquals(true, isEqual);
+	}
+	
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_2() throws IOException
+	{
+		String input = "This is a text which is longer than 76 character and which contains some none-ascii chars like these: הצüßי?´`=";
+	    String s = new NoCrypt().encryptUrlSafe(input);
+
+	    String output = new NoCrypt().decryptUrlSafe(s);
+	    assertEquals(input, output);
+	}
+	
+	/**
+	 * @throws IOException
+	 */
+	public void test_UrlSafe_3() throws IOException
+	{
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
+	    String s = crypt.encryptUrlSafe(input);
+
+	    String output = crypt.decryptUrlSafe(s);
+	    assertEquals(input, output);
+	}
 }
