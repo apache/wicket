@@ -40,7 +40,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 */
 	public final void renderFooter(Response response)
 	{
-	        response.write("<ul>");
+	        response.write("</ul>");
 	}
 
 	/**
