@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.50 $ $Date$
+ * $Id: ListView.java 5343 2006-04-12 00:58:25 -0700 (Wed, 12 Apr 2006)
+ * gwynevans $ $Revision$ $Date: 2006-04-12 00:58:25 -0700 (Wed, 12 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.Component;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
@@ -36,10 +38,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *           &lt;tbody&gt;
- *             &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                 &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *             ...    
+ *            &lt;tbody&gt;
+ *              &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                  &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *              ...    
  * </pre>
  * 
  * <p>
@@ -63,16 +65,16 @@ import wicket.version.undo.Change;
  * WARNING: though you can nest ListViews within Forms, you HAVE to set the
  * optimizeItemRemoval property to true in order to have validation work
  * properly. By default, optimizeItemRemoval is false, which has the effect that
- * ListView replaces all child components by new instances. The idea behind
- * this is that you always render the fresh data, and as people usually use
- * ListViews for displaying read-only lists (at least, that's what we think),
- * this is good default behavior. <br />
+ * ListView replaces all child components by new instances. The idea behind this
+ * is that you always render the fresh data, and as people usually use ListViews
+ * for displaying read-only lists (at least, that's what we think), this is good
+ * default behavior. <br />
  * However, as the components are replaced before the rendering starts, the
  * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
- * (temporary) instance data of the components. As these components are
- * replaced by new ones, your user will never see the wrong data when
- * optimizeItemRemoval is false.
+ * (temporary) instance data of the components. As these components are replaced
+ * by new ones, your user will never see the wrong data when optimizeItemRemoval
+ * is false.
  * </p>
  * 
  * @author Jonathan Locke
@@ -432,6 +434,39 @@ public abstract class ListView extends WebMarkupContainer
 		}
 
 		return this;
+	}
+
+	/**
+	 * Sets the model as the provided list and removes all children, so that the
+	 * next render will be using the contents of the model.
+	 * 
+	 * @param list
+	 *            The list for the new model. The list must implement
+	 *            {@link Serializable}.
+	 * @return This for chaining
+	 */
+	public Component setList(List list)
+	{
+		return setModel(new Model((Serializable)list));
+	}
+
+	/**
+	 * Sets the model and removes all current children, so that the next render
+	 * will be using the contents of the model.
+	 * 
+	 * @param model
+	 *            The new model
+	 * @return This for chaining
+	 * 
+	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		// remove all children; this has no effect when the list
+		// didn't render before, as in that case the list view
+		// does not yet have any children
+		removeAll();
+		return super.setModel(model);
 	}
 
 	/**
