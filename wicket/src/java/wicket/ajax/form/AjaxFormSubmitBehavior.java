@@ -21,6 +21,7 @@ package wicket.ajax.form;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -67,7 +68,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		final CharSequence url = getCallbackUrl();
 
 		return getCallbackScript(new AppendingStringBuffer("wicketSubmitFormById('").append(formId).append(
-				"', '").append(url).append("' "), null, null)
+				"', '").append(url).append("', '").append(((FormComponent)getComponent()).getInputName()).append("' "), null, null)
 				+ ";";
 	}
 
