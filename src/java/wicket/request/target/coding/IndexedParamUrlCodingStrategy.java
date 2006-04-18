@@ -5,6 +5,7 @@ import java.util.Map;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 
@@ -61,6 +62,13 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			url.append("/").append(urlEncode(value));
 			i++;
 		}
+		
+		String pageMap = (String)parameters.get(WebRequestCodingStrategy.PAGEMAP);
+		if(pageMap != null)
+		{
+			i++;
+			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap));
+		}
 
 		if (i != parameters.size())
 		{
@@ -85,7 +93,15 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		String[] parts = urlFragment.split("/");
 		for (int i = 0; i < parts.length; i++)
 		{
-			params.put(String.valueOf(i), parts[i]);
+			if(WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			{
+				i++;
+				params.put(WebRequestCodingStrategy.PAGEMAP,parts[i]);
+			}
+			else
+			{
+				params.put(String.valueOf(i), parts[i]);
+			}
 		}
 		return params;
 	}
