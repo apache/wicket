@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.datepicker;
 
@@ -32,9 +30,9 @@ import wicket.ResourceReference;
 import wicket.markup.html.PackageResourceReference;
 
 /**
- * The settings of the date picker component. Use this to customize the datepicker
- * (e.g. the icon, locale, format, etc).
- *
+ * The settings of the date picker component. Use this to customize the
+ * datepicker (e.g. the icon, locale, format, etc).
+ * 
  * @author Eelco Hillenius
  */
 public class DatePickerSettings implements Serializable
@@ -51,7 +49,8 @@ public class DatePickerSettings implements Serializable
 		InputStream resourceAsStream = null;
 		try
 		{
-			resourceAsStream = DatePickerSettings.class.getResourceAsStream("dateformats.properties");
+			resourceAsStream = DatePickerSettings.class
+					.getResourceAsStream("dateformats.properties");
 			dateformats.load(resourceAsStream);
 		}
 		catch (IOException e)
@@ -63,7 +62,8 @@ public class DatePickerSettings implements Serializable
 		{
 			try
 			{
-				if(resourceAsStream != null) resourceAsStream.close();
+				if (resourceAsStream != null)
+					resourceAsStream.close();
 			}
 			catch (IOException ex)
 			{
@@ -73,22 +73,23 @@ public class DatePickerSettings implements Serializable
 	}
 
 	/**
-	 * The format string that will be used to enter the date in the input field. This
-	 * format will be honored even if the input field is hidden.
+	 * The format string that will be used to enter the date in the input field.
+	 * This format will be honored even if the input field is hidden. Use
+	 * Javascript notation, like '%m/%d/%Y'.
 	 */
 	private String ifFormat = null;
 
 	/**
-	 * Wether the calendar is in ``single-click mode'' or ``double-click mode''. If
-	 * true (the default) the calendar will be created in single-click mode.
+	 * Wether the calendar is in ``single-click mode'' or ``double-click mode''.
+	 * If true (the default) the calendar will be created in single-click mode.
 	 */
 	private boolean mode = true;
 
 	/**
 	 * Specifies which day is to be displayed as the first day of week. Possible
-	 * values are 0 to 6; 0 means Sunday, 1 means Monday, ..., 6 means Saturday. The
-	 * end user can easily change this too, by clicking on the day name in the
-	 * calendar header.
+	 * values are 0 to 6; 0 means Sunday, 1 means Monday, ..., 6 means Saturday.
+	 * The end user can easily change this too, by clicking on the day name in
+	 * the calendar header.
 	 */
 	private int firstDay = 0;
 
@@ -98,50 +99,51 @@ public class DatePickerSettings implements Serializable
 	private boolean weekNumbers = true;
 
 	/**
-	 * Alignment of the calendar, relative to the reference element. The reference
-	 * element is dynamically chosen like this: if a displayArea is specified then it
-	 * will be the reference element. Otherwise, the input field is the reference
-	 * element.
+	 * Alignment of the calendar, relative to the reference element. The
+	 * reference element is dynamically chosen like this: if a displayArea is
+	 * specified then it will be the reference element. Otherwise, the input
+	 * field is the reference element.
 	 * <p>
 	 * Align may contain one or two characters. The first character dictates the
-	 * vertical alignment, relative to the element, and the second character dictates
-	 * the horizontal alignment. If the second character is missing it will be assumed
-	 * "l" (the left margin of the calendar will be at the same horizontal position as
-	 * the left margin of the element). The characters given for the align parameters
-	 * are case sensitive. This function only makes sense when the calendar is in
-	 * popup mode. After computing the position it uses Calendar.showAt to display the
-	 * calendar there.
+	 * vertical alignment, relative to the element, and the second character
+	 * dictates the horizontal alignment. If the second character is missing it
+	 * will be assumed "l" (the left margin of the calendar will be at the same
+	 * horizontal position as the left margin of the element). The characters
+	 * given for the align parameters are case sensitive. This function only
+	 * makes sense when the calendar is in popup mode. After computing the
+	 * position it uses Calendar.showAt to display the calendar there.
 	 * </p>
 	 * <p>
-	 * <strong>Vertical alignment</strong> The first character in ``align'' can take
-	 * one of the following values:
+	 * <strong>Vertical alignment</strong> The first character in ``align'' can
+	 * take one of the following values:
 	 * <ul>
-	 * <li>T -- completely above the reference element (bottom margin of the calendar
-	 * aligned to the top margin of the element). </li>
-	 * <li>t -- above the element but may overlap it (bottom margin of the calendar
+	 * <li>T -- completely above the reference element (bottom margin of the
+	 * calendar aligned to the top margin of the element). </li>
+	 * <li>t -- above the element but may overlap it (bottom margin of the
+	 * calendar aligned to the bottom margin of the element). </li>
+	 * <li>c -- the calendar displays vertically centered to the reference
+	 * element. It might overlap it (that depends on the horizontal alignment).
+	 * </li>
+	 * <li>b -- below the element but may overlap it (top margin of the
+	 * calendar aligned to the top margin of the element). </li>
+	 * <li>B -- completely below the element (top margin of the calendar
 	 * aligned to the bottom margin of the element). </li>
-	 * <li>c -- the calendar displays vertically centered to the reference element.
-	 * It might overlap it (that depends on the horizontal alignment). </li>
-	 * <li>b -- below the element but may overlap it (top margin of the calendar
-	 * aligned to the top margin of the element). </li>
-	 * <li>B -- completely below the element (top margin of the calendar aligned to
-	 * the bottom margin of the element). </li>
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * <strong>Horizontal alignment</strong> The second character in ``align'' can
-	 * take one of the following values:
+	 * <strong>Horizontal alignment</strong> The second character in ``align''
+	 * can take one of the following values:
 	 * <ul>
-	 * <li>L -- completely to the left of the reference element (right margin of the
-	 * calendar aligned to the left margin of the element). </li>
-	 * <li>l -- to the left of the element but may overlap it (left margin of the
-	 * calendar aligned to the left margin of the element). </li>
-	 * <li>c -- horizontally centered to the element. Might overlap it, depending on
-	 * the vertical alignment. </li>
-	 * <li>r -- to the right of the element but may overlap it (right margin of the
+	 * <li>L -- completely to the left of the reference element (right margin
+	 * of the calendar aligned to the left margin of the element). </li>
+	 * <li>l -- to the left of the element but may overlap it (left margin of
+	 * the calendar aligned to the left margin of the element). </li>
+	 * <li>c -- horizontally centered to the element. Might overlap it,
+	 * depending on the vertical alignment. </li>
+	 * <li>r -- to the right of the element but may overlap it (right margin of
+	 * the calendar aligned to the right margin of the element). </li>
+	 * <li>R -- completely to the right of the element (left margin of the
 	 * calendar aligned to the right margin of the element). </li>
-	 * <li>R -- completely to the right of the element (left margin of the calendar
-	 * aligned to the right margin of the element). </li>
 	 * </ul>
 	 * </p>
 	 */
@@ -159,16 +161,16 @@ public class DatePickerSettings implements Serializable
 	private String timeFormat = null;
 
 	/**
-	 * Set this to ``false'' if you want the calendar to update the field only when
-	 * closed (by default it updates the field at each date change, even if the
-	 * calendar is not closed).
+	 * Set this to ``false'' if you want the calendar to update the field only
+	 * when closed (by default it updates the field at each date change, even if
+	 * the calendar is not closed).
 	 */
 	private boolean electric = true;
 
 	/**
-	 * If set to ``true'' then days belonging to months overlapping with the currently
-	 * displayed month will also be displayed in the calendar (but in a ``faded-out''
-	 * color).
+	 * If set to ``true'' then days belonging to months overlapping with the
+	 * currently displayed month will also be displayed in the calendar (but in
+	 * a ``faded-out'' color).
 	 */
 	private boolean showOthers = false;
 
@@ -190,14 +192,18 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Return the properties as a script.
-	 * @param locale the current locale
+	 * 
+	 * @param locale
+	 *            the current locale
 	 * @return the properties as a script
 	 */
 	public String toScript(Locale locale)
 	{
 		StringBuffer b = new StringBuffer();
-		// create the script that represents these properties. Only create entries for
-		// values that are different from the default value (save a bit bandwith)
+		// create the script that represents these properties. Only create
+		// entries for
+		// values that are different from the default value (save a bit
+		// bandwith)
 
 		if (!isMode())
 		{
@@ -245,147 +251,178 @@ public class DatePickerSettings implements Serializable
 		{
 			b.append("\n\t\tifFormat : \"").append(ifFormat).append("\"");
 		}
-		
+
 		return b.toString();
 	}
 
 	/**
 	 * create a button icon.
+	 * 
 	 * @return a button icon.
 	 */
 	public final PackageResourceReference newButtonIconRed()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_1.gif");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"calendar_icon_1.gif");
 	}
 
 	/**
 	 * create a button icon.
+	 * 
 	 * @return a button icon.
 	 */
 	public final PackageResourceReference newButtonIconPlain()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_2.gif");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"calendar_icon_2.gif");
 	}
 
 	/**
 	 * create a button icon.
+	 * 
 	 * @return a button icon.
 	 */
 	public final PackageResourceReference newButtonIconBlue()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_3.gif");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"calendar_icon_3.gif");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleAqua()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/theme.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/aqua/theme.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWinter()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-blue.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-blue.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleBlue()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-blue2.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-blue2.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleSummer()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-brown.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-brown.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleGreen()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-green.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-green.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleSystem()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-system.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-system.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleTas()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-tas.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-tas.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWin2k()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-win2k.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWin2k1()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-1.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-win2k-1.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWin2k2()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/theme.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/aqua/theme.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWin2kCold1()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-win2k-cold-1.css");
 	}
 
 	/**
 	 * Create a style
+	 * 
 	 * @return a style
 	 */
 	public final PackageResourceReference newStyleWin2kCold2()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"style/calendar-win2k-cold-2.css");
 	}
 
 	/**
 	 * Gets the align.
+	 * 
 	 * @return align
 	 */
 	public String getAlign()
@@ -395,7 +432,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the align.
-	 * @param align align
+	 * 
+	 * @param align
+	 *            align
 	 */
 	public void setAlign(String align)
 	{
@@ -404,6 +443,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the electric.
+	 * 
 	 * @return electric
 	 */
 	public boolean isElectric()
@@ -413,7 +453,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the electric.
-	 * @param electric electric
+	 * 
+	 * @param electric
+	 *            electric
 	 */
 	public void setElectric(boolean electric)
 	{
@@ -422,6 +464,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the firstDay.
+	 * 
 	 * @return firstDay
 	 */
 	public int getFirstDay()
@@ -431,7 +474,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the firstDay.
-	 * @param firstDay firstDay
+	 * 
+	 * @param firstDay
+	 *            firstDay
 	 */
 	public void setFirstDay(int firstDay)
 	{
@@ -439,9 +484,13 @@ public class DatePickerSettings implements Serializable
 	}
 
 	/**
-	 * Gets the ifFormat.
-	 * @param locale current locale
-	 * @return ifFormat
+	 * Gets the format string that will be used to enter the date in the input
+	 * field based on the provided locale. Should return Javascript notation,
+	 * like '%m/%d/%Y'.
+	 * 
+	 * @param locale
+	 *            The locale
+	 * @return The date format
 	 */
 	public String getIfFormat(Locale locale)
 	{
@@ -457,8 +506,16 @@ public class DatePickerSettings implements Serializable
 	}
 
 	/**
-	 * Sets the ifFormat.
-	 * @param ifFormat ifFormat
+	 * Sets the format string that will be used to enter the date in the input
+	 * field. This format will be honored even if the input field is hidden. Use
+	 * Javascript notation, like '%m/%d/%Y'.
+	 * <p>
+	 * Note: setting this field to a non-null value, overrides the lookup using
+	 * dateformats.properties. To remove the override, pass null.
+	 * </p>
+	 * 
+	 * @param ifFormat
+	 *            the data format
 	 */
 	public void setIfFormat(String ifFormat)
 	{
@@ -467,6 +524,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the mode.
+	 * 
 	 * @return mode
 	 */
 	public boolean isMode()
@@ -476,7 +534,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the mode.
-	 * @param mode mode
+	 * 
+	 * @param mode
+	 *            mode
 	 */
 	public void setMode(boolean mode)
 	{
@@ -485,6 +545,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the showOthers.
+	 * 
 	 * @return showOthers
 	 */
 	public boolean isShowOthers()
@@ -494,7 +555,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the showOthers.
-	 * @param showOthers showOthers
+	 * 
+	 * @param showOthers
+	 *            showOthers
 	 */
 	public void setShowOthers(boolean showOthers)
 	{
@@ -503,6 +566,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the showsTime.
+	 * 
 	 * @return showsTime
 	 */
 	public boolean isShowsTime()
@@ -512,7 +576,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the showsTime.
-	 * @param showsTime showsTime
+	 * 
+	 * @param showsTime
+	 *            showsTime
 	 */
 	public void setShowsTime(boolean showsTime)
 	{
@@ -521,6 +587,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the timeFormat.
+	 * 
 	 * @return timeFormat
 	 */
 	public String getTimeFormat()
@@ -530,7 +597,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the timeFormat.
-	 * @param timeFormat timeFormat
+	 * 
+	 * @param timeFormat
+	 *            timeFormat
 	 */
 	public void setTimeFormat(String timeFormat)
 	{
@@ -539,6 +608,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the weekNumbers.
+	 * 
 	 * @return weekNumbers
 	 */
 	public boolean isWeekNumbers()
@@ -548,7 +618,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the weekNumbers.
-	 * @param weekNumbers weekNumbers
+	 * 
+	 * @param weekNumbers
+	 *            weekNumbers
 	 */
 	public void setWeekNumbers(boolean weekNumbers)
 	{
@@ -557,6 +629,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the icon.
+	 * 
 	 * @return icon
 	 */
 	public ResourceReference getIcon()
@@ -571,7 +644,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the icon.
-	 * @param icon icon
+	 * 
+	 * @param icon
+	 *            icon
 	 */
 	public void setIcon(ResourceReference icon)
 	{
@@ -580,7 +655,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the language.
-	 * @param currentLocale the current locale
+	 * 
+	 * @param currentLocale
+	 *            the current locale
 	 * @return language
 	 */
 	public ResourceReference getLanguage(Locale currentLocale)
@@ -595,7 +672,9 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Sets the language.
-	 * @param language language
+	 * 
+	 * @param language
+	 *            language
 	 */
 	public void setLanguage(ResourceReference language)
 	{
@@ -604,6 +683,7 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the style.
+	 * 
 	 * @return style
 	 */
 	public ResourceReference getStyle()
@@ -612,13 +692,15 @@ public class DatePickerSettings implements Serializable
 		{
 			style = newStyleAqua();
 		}
-		
+
 		return style;
 	}
 
 	/**
 	 * Sets the style.
-	 * @param style style
+	 * 
+	 * @param style
+	 *            style
 	 */
 	public void setStyle(ResourceReference style)
 	{
