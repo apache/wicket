@@ -11,7 +11,8 @@
   </properties>
   <body>
     <release version="1.2-rc1" date="tbd" description="Wicket 1.2 release candidate 2">
-      <action type="add" dev="Eelco Hillenius">fix window checker for case where app is configured for server root and has no web app name.</action>
+	  <action type="add" dev="Eelco Hillenius">override setModel and added setList. The override on setModel does an additional remove of the children so that - even if optimizeItemRemoval == true - the listview will be rendered with the actual contents. setList is a convenience method and is consitent with the List constructor.</action>
+      <action type="fix" dev="Eelco Hillenius">fixed window checker for case where app is configured for server root and has no web app name.</action>
   	</release>
     <release version="1.2-rc1" date="2006-04-17" description="Wicket 1.2 release candidate 1">
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Joni Suominen">Added Finnish translation of our Application.properties</action>
