@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -920,6 +921,52 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setPath(final String path)
 	{
 		this.path = path;
+	}
+	
+	/**
+	 * Set the complete url for this request.
+	 * The url will be analized.
+	 * 
+	 * @param url
+	 */
+	public void setURL(String url)
+	{
+		if(url.startsWith("http://"))
+		{
+			int index = url.indexOf("/", 7);
+			url = url.substring(index);
+		}
+		if(url.startsWith(getContextPath()));
+		{
+			url = url.substring(getContextPath().length());
+		}
+		if(url.startsWith(getServletPath()));
+		{
+			url = url.substring(getServletPath().length());
+		}
+		
+		int index = url.indexOf("?");
+		if(index == -1)
+		{
+			path = url;
+		}
+		else
+		{
+			path = url.substring(0, index);
+			
+			String queryString = url.substring(index+1);
+			StringTokenizer st = new StringTokenizer(queryString,"&");
+			while(st.hasMoreTokens())
+			{
+				String token = st.nextToken();
+				int tmp = token.indexOf("=");
+				if(tmp != -1)
+				{
+					setParameter(token.substring(0,tmp), token.substring(tmp+1));
+				}
+			}
+			
+		}
 	}
 
 	/**
