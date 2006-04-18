@@ -226,7 +226,7 @@ public class DatePickerSettings implements Serializable
 
 		if (getTimeFormat() != null)
 		{
-			b.append("\n\timeFormat : ").append(getTimeFormat()).append(",");
+			b.append("\n\ttimeFormat : ").append(getTimeFormat()).append(",");
 		}
 
 		if (!isElectric())
