@@ -389,6 +389,7 @@ public abstract class Session implements Serializable
 				{
 					throw new WicketRuntimeException(ex);
 				}
+				t = (Thread)usedPages.get(id);
 			}
 			usedPages.put(id, Thread.currentThread());
 			return pageMap.get(Integer.parseInt(id), versionNumber);
