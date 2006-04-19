@@ -21,7 +21,6 @@ import java.util.Collections;
 
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 
 /**
@@ -84,7 +83,7 @@ public class EqualInputValidator extends AbstractFormValidator
 
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{
-			final String key = Classes.simpleName(getClass());
+			final String key = "EqualInputValidator";
 			formComponent2.error(Collections.singletonList(key), messageModel());
 		}
 	}
