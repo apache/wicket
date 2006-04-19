@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import wicket.WicketRuntimeException;
+
 /**
  * A variety of static String utility methods.
  * <p>
@@ -923,7 +925,12 @@ public final class Strings
 			// first print the last cause
 			int length = al.size()-1;
 			cause = (Throwable)al.get(length);
-			
+			if(throwable instanceof WicketRuntimeException)
+			{
+				sb.append("WicketMessage: ");
+				sb.append(throwable.getMessage());
+				sb.append("\n\n");
+			}
 			sb.append("Root cause:\n\n");
 			outputThrowable(cause, sb,false);
 

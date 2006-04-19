@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-rc2" date="tbd" description="Wicket 1.2 release candidate 2">
+      <action type="fix" dev="Johan Compagner" due-to="Martijn Dashorst">Improved error message handling when exceptions occur during validation.</action>
       <action type="fix" dev="Martijn Dashorst">Fixed encryption issue of password, maintaining backwards compatibility, and implementing correct URL encryption using URL safe base64 encryption.</action>
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Zenrique Steckelberg">Added Brazilian translation of our Application.properties</action>
       <action type="fix" dev="Johan Compagner" issue="1472451">fixed FormcomponentFeedbackBorder, which didn't display when it should</action>
