@@ -166,7 +166,8 @@ public class RequestListenerInterface
 		{
 			// Honor redirect exception contract defined in IPageFactory
 			if (e.getTargetException() instanceof AbstractRestartResponseException || 
-					e.getTargetException() instanceof AuthorizationException)
+					e.getTargetException() instanceof AuthorizationException ||
+					e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}

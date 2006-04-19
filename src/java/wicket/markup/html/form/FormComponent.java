@@ -645,7 +645,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Exception " + e + " occurred during validation "
+			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation "
 					+ validator.getClass().getName() + " on component " + this.getPath(), e);
 		}
 	}
