@@ -73,6 +73,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>HelloBrowserApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -373,6 +383,11 @@
 	<servlet-mapping>
 		<servlet-name>EchoApplication</servlet-name>
 		<url-pattern>/echo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<url-pattern>/unicodeconverter/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

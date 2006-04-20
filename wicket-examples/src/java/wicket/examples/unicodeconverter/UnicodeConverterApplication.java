@@ -16,23 +16,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.echo;
+package wicket.examples.unicodeconverter;
 
 import wicket.examples.WicketExampleApplication;
 
 /**
- * Application class for the Echo example.
+ * Application class for the unicode converter example.
  * 
  * @author Eelco Hillenius
  */
-public class EchoApplication extends WicketExampleApplication
+public class UnicodeConverterApplication extends WicketExampleApplication
 {
 	/**
 	 * Constructor.
 	 */
-	public EchoApplication()
+	public UnicodeConverterApplication()
 	{
-
 	}
 
 	/**
@@ -40,6 +39,6 @@ public class EchoApplication extends WicketExampleApplication
 	 */
 	public Class getHomePage()
 	{
-		return Echo.class;
+		return UnicodeConverter.class;
 	}
 }
