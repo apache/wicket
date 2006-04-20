@@ -1,6 +1,7 @@
 package wicket.extensions.markup.html.form.palette.component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.html.form.HiddenField;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.model.Model;
+import wicket.util.string.Strings;
 
 /**
  * Component to keep track of selections on the html side. Also used for
@@ -21,6 +23,8 @@ public class Recorder extends HiddenField
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final String[] EMPTY_IDS=new String[0];
+	
 	/** conviniently maintained array of selected ids */
 	private String[] ids;
 
@@ -62,9 +66,10 @@ public class Recorder extends HiddenField
 		// set model and update ids array
 		String modelString = modelStringBuffer.toString();
 		setModel(new Model(modelString));
-		ids = modelString.split(",");
+		updateIds(modelString);
 	}
 
+	
 	protected void onValid()
 	{
 		super.onValid();
@@ -145,7 +150,15 @@ public class Recorder extends HiddenField
 
 	private void updateIds()
 	{
-		ids = getValue().split(",");
+		updateIds(getValue());
+	}
+
+	private void updateIds(String value) {
+		if (Strings.isEmpty(value)) {
+			ids=EMPTY_IDS;
+		} else {
+			ids = value.split(",");
+		}
 	}
 
 }
