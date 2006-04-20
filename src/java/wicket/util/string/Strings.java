@@ -53,6 +53,10 @@ public final class Strings
 {
 	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
 
+	/** A table of hex digits */
+	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+			'B', 'C', 'D', 'E', 'F' };
+
 	/**
 	 * The line seperator for the current platform.
 	 */
@@ -292,7 +296,7 @@ public final class Strings
 		else
 		{
 			int len = s.length();
-			final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len*1.1));
+			final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1));
 
 			for (int i = 0; i < len; i++)
 			{
@@ -457,10 +461,10 @@ public final class Strings
 	{
 		return string == null || string.length() == 0 || string.toString().trim().equals("");
 	}
-	
+
 	/**
-	 * Checks whether two strings are equals taken care of 'null' values
-	 * and treating 'null' same as trim(string).equals("")
+	 * Checks whether two strings are equals taken care of 'null' values and
+	 * treating 'null' same as trim(string).equals("")
 	 * 
 	 * @param string1
 	 * @param string2
@@ -472,16 +476,16 @@ public final class Strings
 		{
 			return true;
 		}
-		
+
 		if (isEmpty(string1) && isEmpty(string2))
 		{
 			return true;
 		}
-		if(string1 == null || string2 == null)
+		if (string1 == null || string2 == null)
 		{
 			return false;
 		}
-		
+
 		return string1.equals(string2);
 	}
 
@@ -575,7 +579,8 @@ public final class Strings
 	 *            The value to searchFor replaceWith
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
-	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor, CharSequence replaceWith)
+	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
+			CharSequence replaceWith)
 	{
 		if (s == null)
 		{
@@ -595,10 +600,10 @@ public final class Strings
 		{
 			replaceWith = "";
 		}
-		
+
 		String searchString = searchFor.toString();
 		// Look for first occurrence of searchFor
-		int matchIndex = search(s, searchString,0);
+		int matchIndex = search(s, searchString, 0);
 		if (matchIndex == -1)
 		{
 			// No replace operation needs to happen
@@ -606,7 +611,8 @@ public final class Strings
 		}
 		else
 		{
-			// Allocate a AppendingStringBuffer that will hold one replacement with a
+			// Allocate a AppendingStringBuffer that will hold one replacement
+			// with a
 			// little extra room.
 			int size = s.length();
 			final int replaceWithLength = replaceWith.length();
@@ -621,7 +627,7 @@ public final class Strings
 			do
 			{
 				// Append text up to the match`
-				append(buffer, s, pos,matchIndex);
+				append(buffer, s, pos, matchIndex);
 
 				// Add replaceWith text
 				buffer.append(replaceWith);
@@ -633,7 +639,7 @@ public final class Strings
 			while (matchIndex != -1);
 
 			// Add tail of s
-			buffer.append(s.subSequence(pos,s.length()));
+			buffer.append(s.subSequence(pos, s.length()));
 
 			// Return processed buffer
 			return buffer;
@@ -641,54 +647,185 @@ public final class Strings
 	}
 
 	/**
-	 * @param buffer
-	 * @param s
-	 * @param from
-	 * @param to
+	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
+	 * chars to their original forms.
+	 * 
+	 * @param escapedUnicodeString
+	 *            escaped unicode string, like '\u4F60\u597D'.
+	 * 
+	 * @return The actual unicode. Can be used for instance with message bundles
 	 */
-	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	public static String fromEscapedUnicode(String escapedUnicodeString)
 	{
-		if(s instanceof AppendingStringBuffer)
+		int off = 0;
+		char[] in = escapedUnicodeString.toCharArray();
+		int len = in.length;
+		char[] convtBuf = new char[len];
+
+		if (convtBuf.length < len)
 		{
-			AppendingStringBuffer asb = (AppendingStringBuffer)s;
-			buffer.append(asb.getValue(), from,to-from);
+			int newLen = len * 2;
+			if (newLen < 0)
+			{
+				newLen = Integer.MAX_VALUE;
+			}
+			convtBuf = new char[newLen];
 		}
-		else if(s instanceof StringBuffer)
+		char aChar;
+		char[] out = convtBuf;
+		int outLen = 0;
+		int end = off + len;
+
+		while (off < end)
 		{
-			buffer.append((StringBuffer)s,from,to-from);
+			aChar = in[off++];
+			if (aChar == '\\')
+			{
+				aChar = in[off++];
+				if (aChar == 'u')
+				{
+					// Read the xxxx
+					int value = 0;
+					for (int i = 0; i < 4; i++)
+					{
+						aChar = in[off++];
+						switch (aChar)
+						{
+							case '0' :
+							case '1' :
+							case '2' :
+							case '3' :
+							case '4' :
+							case '5' :
+							case '6' :
+							case '7' :
+							case '8' :
+							case '9' :
+								value = (value << 4) + aChar - '0';
+								break;
+							case 'a' :
+							case 'b' :
+							case 'c' :
+							case 'd' :
+							case 'e' :
+							case 'f' :
+								value = (value << 4) + 10 + aChar - 'a';
+								break;
+							case 'A' :
+							case 'B' :
+							case 'C' :
+							case 'D' :
+							case 'E' :
+							case 'F' :
+								value = (value << 4) + 10 + aChar - 'A';
+								break;
+							default :
+								throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+						}
+					}
+					out[outLen++] = (char)value;
+				}
+				else
+				{
+					if (aChar == 't')
+						aChar = '\t';
+					else if (aChar == 'r')
+						aChar = '\r';
+					else if (aChar == 'n')
+						aChar = '\n';
+					else if (aChar == 'f')
+						aChar = '\f';
+					out[outLen++] = aChar;
+				}
+			}
+			else
+			{
+				out[outLen++] = (char)aChar;
+			}
 		}
-		else
-		{
-			buffer.append(s.subSequence(from, to));
-		}
+		return new String(out, 0, outLen);
 	}
 
 	/**
-	 * @param s
-	 * @param searchString
-	 * @param pos 
-	 * @return The index for that string
+	 * Converts unicodes to encoded &#92;uxxxx.
+	 * 
+	 * @param unicodeString
+	 *            The unicode string
+	 * @return The escaped unicode string, like '\u4F60\u597D'.
 	 */
-	private static int search(final CharSequence s, String searchString, int pos)
+	public static String toEscapedUnicode(String unicodeString)
 	{
-		int matchIndex = -1;
-		if(s instanceof String)
+		int len = unicodeString.length();
+		int bufLen = len * 2;
+		if (bufLen < 0)
 		{
-			matchIndex = ((String)s).indexOf(searchString, pos);
+			bufLen = Integer.MAX_VALUE;
 		}
-		else if(s instanceof StringBuffer)
+		StringBuffer outBuffer = new StringBuffer(bufLen);
+
+		for (int x = 0; x < len; x++)
 		{
-			matchIndex = ((StringBuffer)s).indexOf(searchString,pos);
+			char aChar = unicodeString.charAt(x);
+			// Handle common case first, selecting largest block that
+			// avoids the specials below
+			if ((aChar > 61) && (aChar < 127))
+			{
+				if (aChar == '\\')
+				{
+					outBuffer.append('\\');
+					outBuffer.append('\\');
+					continue;
+				}
+				outBuffer.append(aChar);
+				continue;
+			}
+			switch (aChar)
+			{
+				case ' ' :
+					if (x == 0)
+						outBuffer.append('\\');
+					outBuffer.append(' ');
+					break;
+				case '\t' :
+					outBuffer.append('\\');
+					outBuffer.append('t');
+					break;
+				case '\n' :
+					outBuffer.append('\\');
+					outBuffer.append('n');
+					break;
+				case '\r' :
+					outBuffer.append('\\');
+					outBuffer.append('r');
+					break;
+				case '\f' :
+					outBuffer.append('\\');
+					outBuffer.append('f');
+					break;
+				case '=' : // Fall through
+				case ':' : // Fall through
+				case '#' : // Fall through
+				case '!' :
+					outBuffer.append('\\');
+					outBuffer.append(aChar);
+					break;
+				default :
+					if ((aChar < 0x0020) || (aChar > 0x007e))
+					{
+						outBuffer.append('\\');
+						outBuffer.append('u');
+						outBuffer.append(toHex((aChar >> 12) & 0xF));
+						outBuffer.append(toHex((aChar >> 8) & 0xF));
+						outBuffer.append(toHex((aChar >> 4) & 0xF));
+						outBuffer.append(toHex(aChar & 0xF));
+					}
+					else
+					{
+						outBuffer.append(aChar);
+					}
+			}
 		}
-		else if(s instanceof AppendingStringBuffer)
-		{
-			matchIndex = ((AppendingStringBuffer)s).indexOf(searchString,pos);
-		}
-		else
-		{
-			matchIndex = s.toString().indexOf(searchString);
-		}
-		return matchIndex;
+		return outBuffer.toString();
 	}
 
 	/**
@@ -824,8 +961,8 @@ public final class Strings
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br/&gt; and all multiple occurrences of newline replaced
-	 *         with &lt;p&gt;.
+	 *         &lt;br/&gt; and all multiple occurrences of newline replaced with
+	 *         &lt;p&gt;.
 	 */
 	public static CharSequence toMultilineMarkup(final CharSequence s)
 	{
@@ -915,7 +1052,7 @@ public final class Strings
 			ArrayList al = new ArrayList();
 			Throwable cause = throwable;
 			al.add(cause);
-			while(cause.getCause() != null && cause != cause.getCause())
+			while (cause.getCause() != null && cause != cause.getCause())
 			{
 				cause = cause.getCause();
 				al.add(cause);
@@ -923,30 +1060,27 @@ public final class Strings
 
 			AppendingStringBuffer sb = new AppendingStringBuffer(256);
 			// first print the last cause
-			int length = al.size()-1;
+			int length = al.size() - 1;
 			cause = (Throwable)al.get(length);
-			if(throwable instanceof WicketRuntimeException)
+			if (throwable instanceof WicketRuntimeException)
 			{
 				sb.append("WicketMessage: ");
 				sb.append(throwable.getMessage());
 				sb.append("\n\n");
 			}
 			sb.append("Root cause:\n\n");
-			outputThrowable(cause, sb,false);
+			outputThrowable(cause, sb, false);
 
-			if(length > 0)
+			if (length > 0)
 			{
 				sb.append("\n\nComplete stack:\n\n");
 				for (int i = 0; i < length; i++)
 				{
-					outputThrowable((Throwable)al.get(i), sb,true);
+					outputThrowable((Throwable)al.get(i), sb, true);
 					sb.append("\n");
 				}
 			}
 			return sb.toString();
-//			final StringWriter stringWriter = new StringWriter();
-//			throwable.printStackTrace(new PrintWriter(stringWriter));
-//			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
 		}
 		else
 		{
@@ -955,33 +1089,86 @@ public final class Strings
 	}
 
 	/**
-	 * Outputs the throwable and its stacktrace to the stringbuffer.
-	 * If stopAtWicketSerlvet is true then the output will stop when the wicket servlet is reached.
-	 * sun.reflect. packages are filtered out.
-	 *  
+	 * Outputs the throwable and its stacktrace to the stringbuffer. If
+	 * stopAtWicketSerlvet is true then the output will stop when the wicket
+	 * servlet is reached. sun.reflect. packages are filtered out.
+	 * 
 	 * @param cause
 	 * @param sb
 	 * @param stopAtWicketServlet
 	 */
-	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb, boolean stopAtWicketServlet)
+	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
+			boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
 		StackTraceElement[] trace = cause.getStackTrace();
-		for (int i=0; i < trace.length; i++)
+		for (int i = 0; i < trace.length; i++)
 		{
 			String traceString = trace[i].toString();
-			if(!(traceString.startsWith("sun.reflect.") && i > 1))
+			if (!(traceString.startsWith("sun.reflect.") && i > 1))
 			{
 				sb.append("     at ");
 				sb.append(traceString);
 				sb.append("\n");
-				if(stopAtWicketServlet && traceString.startsWith("wicket.protocol.http.WicketServlet"))
+				if (stopAtWicketServlet
+						&& traceString.startsWith("wicket.protocol.http.WicketServlet"))
 				{
 					return;
 				}
 			}
 		}
+	}
+
+	/**
+	 * Convert a nibble to a hex character
+	 * 
+	 * @param nibble
+	 *            the nibble to convert.
+	 * @return hex character
+	 */
+	private static char toHex(int nibble)
+	{
+		return hexDigit[(nibble & 0xF)];
+	}
+
+	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	{
+		if (s instanceof AppendingStringBuffer)
+		{
+			AppendingStringBuffer asb = (AppendingStringBuffer)s;
+			buffer.append(asb.getValue(), from, to - from);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			buffer.append((StringBuffer)s, from, to - from);
+		}
+		else
+		{
+			buffer.append(s.subSequence(from, to));
+		}
+	}
+
+	private static int search(final CharSequence s, String searchString, int pos)
+	{
+		int matchIndex = -1;
+		if (s instanceof String)
+		{
+			matchIndex = ((String)s).indexOf(searchString, pos);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			matchIndex = ((StringBuffer)s).indexOf(searchString, pos);
+		}
+		else if (s instanceof AppendingStringBuffer)
+		{
+			matchIndex = ((AppendingStringBuffer)s).indexOf(searchString, pos);
+		}
+		else
+		{
+			matchIndex = s.toString().indexOf(searchString);
+		}
+		return matchIndex;
 	}
 
 	/**
