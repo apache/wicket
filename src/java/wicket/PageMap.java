@@ -225,7 +225,7 @@ public final class PageMap implements Serializable
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
-		return (IPageMapEntry)session.getAttribute(attributeForId(id));
+		return(IPageMapEntry)session.getAttribute(attributeForId(id));
 	}
 
 	/**
@@ -511,11 +511,18 @@ public final class PageMap implements Serializable
 
 			// Store entry in session
 			final String attribute = attributeForId(entry.getNumericId());
-
-			// Set attribute
-			//session.setAttribute(attribute, entry);
-			// Don't set it directly but add to the dirty map
-			session.dirtyPage(page);
+			
+			if(session.getAttribute(attribute) == null)
+			{
+				// Set attribute if it is a new page, so that it will exists
+				// already for other threads that can come on the same time.
+				session.setAttribute(attribute, entry);
+			}
+			else
+			{
+				// Else don't set it directly but add to the dirty map
+				session.dirtyPage(page);
+			}
 
 			// Evict any page(s) as need be
 			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);

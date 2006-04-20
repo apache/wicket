@@ -916,9 +916,16 @@ public abstract class Session implements Serializable
 					final Page page = (Page)object;
 					if (page.isStateless())
 					{
+						// check, can it be that stateless pages where added to the session?
+						// and should be removed now?
 						continue;
 					}
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
+					if(getAttribute(attribute) == null)
+					{
+						// page removed by another thread. don't add it again.
+						continue;
+					}
 					object = page.getPageMapEntry();
 				}
 				else if (object instanceof PageMap)
@@ -1018,7 +1025,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The current thread dirty objects list
 	 */
-	private List getDirtyObjectsList()
+	List getDirtyObjectsList()
 	{
 		List list = (List)dirtyObjects.get();
 		if (list == null)
