@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5121 $ $Date$
+ * $Id: FormInputApplication.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-16 06:36:52 -0700 (Sun,
+ * 16 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,6 +18,7 @@
  */
 package wicket.examples.forminput;
 
+import java.awt.Font;
 import java.util.Locale;
 
 import wicket.examples.WicketExampleApplication;
@@ -50,11 +52,13 @@ public class FormInputApplication extends WicketExampleApplication
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 		getMarkupSettings().setStripWicketTags(true);
-		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
-				new DefaultButtonImageResource("\u4E4B\u5916"));
-		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
-				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
-
+		Font font = new Font("SimSun", Font.BOLD, 16);
+		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
+		imgSave.setFont(font);
+		DefaultButtonImageResource imgReset = new DefaultButtonImageResource("\u91CD\u7F6E");
+		imgReset.setFont(font);
+		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
+		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
 	}
 
 	/**
