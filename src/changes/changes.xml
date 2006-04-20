@@ -10,7 +10,10 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-rc2" date="tbd" description="Wicket 1.2 release candidate 2">
+    <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
+      <action type="fix" dev="Johan Compagner" due-to="Blake Day" issue="1472477">NPE at wicket.PageMap.removeEntry</action>
+  	</release>
+    <release version="1.2-rc2" date="2006-04-20" description="Wicket 1.2 release candidate 2">
       <action type="fix" dev="Johan Compagner" due-to="Martijn Dashorst">Improved error message handling when exceptions occur during validation.</action>
       <action type="fix" dev="Martijn Dashorst">Fixed encryption issue of password, maintaining backwards compatibility, and implementing correct URL encryption using URL safe base64 encryption.</action>
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Zenrique Steckelberg">Added Brazilian translation of our Application.properties</action>
