@@ -757,12 +757,7 @@ public final class Strings
 	{
 		int len = unicodeString.length();
 		int bufLen = len * 2;
-		if (bufLen < 0)
-		{
-			bufLen = Integer.MAX_VALUE;
-		}
 		StringBuffer outBuffer = new StringBuffer(bufLen);
-
 		for (int x = 0; x < len; x++)
 		{
 			char aChar = unicodeString.charAt(x);
