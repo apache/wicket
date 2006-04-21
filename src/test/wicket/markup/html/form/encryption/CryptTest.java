@@ -53,6 +53,7 @@ public class CryptTest extends WicketTestCase
 
 	/**
 	 * 
+	 * 
 	 */
 	public void testCrypt()
 	{
@@ -62,10 +63,14 @@ public class CryptTest extends WicketTestCase
 		{
 			if (crypt.encrypt("test") != null)
 			{
-				assertEquals("KxMxhk6i4Us=", crypt.encrypt("test"));
-				assertEquals("KxMxhk6i4Us", crypt.encryptUrlSafe("test"));
-				assertEquals("test", crypt.decryptUrlSafe("KxMxhk6i4Us"));
-				assertEquals("test", crypt.decrypt("KxMxhk6i4Us="));
+				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
+				final String expectedDefaultEncrypted = "g+N/AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd+go0P+0kuIe6UvAYP7dlzx+9mfmPaMQ5lCk=";
+				final String expectedUrlSafeEncrypted = "g*N-AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd*go0P*0kuIe6UvAYP7dlzx*9mfmPaMQ5lCk";
+				
+				assertEquals(expectedDefaultEncrypted, crypt.encrypt(text));
+				assertEquals(text, crypt.decrypt(expectedDefaultEncrypted));
+				assertEquals(expectedUrlSafeEncrypted, crypt.encryptUrlSafe(text));
+				assertEquals(text, crypt.decrypt(expectedUrlSafeEncrypted));
 			}
 		}
 		catch (Exception ex)
