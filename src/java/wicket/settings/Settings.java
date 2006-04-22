@@ -1119,38 +1119,12 @@ public final class Settings
 	 */
 	public String getVersion()
 	{
-		// Properties properties = new Properties();
-		// InputStream is = null;
-		// try
-		// {
-		// is = Settings.class.getResourceAsStream("/wicket.properties");
-		// properties.load(is);
-		// }
-		// catch (IOException e)
-		// {
-		// // ignore the exception
-		// }
-		// finally
-		// {
-		// IOUtils.closeQuietly(is);
-		// }
-		// return properties.getProperty("wicket.version", "n/a");
-
 		String implVersion = null;
-		try
+		Package pkg = this.getClass().getPackage();
+		if (pkg != null)
 		{
-			Class cls = Class.forName("wicket.Application");
-			Package pkg = cls.getPackage();
-			if (pkg != null)
-			{
-				implVersion = pkg.getImplementationVersion();
-			}
+			implVersion = pkg.getImplementationVersion();
 		}
-		catch (ClassNotFoundException e)
-		{
-			// ignore the exception
-		}
-
-		return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
+		return Strings.isEmpty(implVersion)?"n/a":implVersion;
 	}
 }
