@@ -320,7 +320,7 @@ public class FormInput extends WicketExamplePage
 		{
 			super(id);
 			// always do this in forms!
-			setOptimizeItemRemoval(true);
+			setReuseItems(true);
 		}
 
 		protected void populateItem(ListItem item)
