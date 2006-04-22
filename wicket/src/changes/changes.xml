@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Stefan Kanev">Added Bulgarian translation of our Application.properties</action>
       <action type="fix" dev="Johan Compagner" due-to="Blake Day" issue="1472477">NPE at wicket.PageMap.removeEntry</action>
   	</release>
     <release version="1.2-rc2" date="2006-04-20" description="Wicket 1.2 release candidate 2">
