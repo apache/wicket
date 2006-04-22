@@ -191,8 +191,17 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 
 		/**
 		 * @see wicket.markup.html.list.ListView#getOptimizeItemRemoval()
+		 * @deprecated Use {@link #getReuseItems()} instead
 		 */
 		public boolean getOptimizeItemRemoval()
+		{
+			return getReuseItems();
+		}
+
+		/**
+		 * @see wicket.markup.html.list.ListView#getReuseItems()
+		 */
+		public boolean getReuseItems()
 		{
 			return Tree.this.getOptimizeItemRemoval();
 		}
