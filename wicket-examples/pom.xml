@@ -35,6 +35,14 @@
 		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-examples</url>
 	</scm>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mortbay-repo</id>
+            <name>mortbay-repo</name>
+            <url>http://www.mortbay.org/maven2/snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>wicket</groupId>
@@ -218,6 +226,15 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>surefire-report-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+			    <groupId>org.mortbay.jetty</groupId>
+			    <artifactId>maven-jetty6-plugin</artifactId>
+			    <version>6.0-SNAPSHOT</version>
+			    <configuration>
+			            <scanIntervalSeconds>60</scanIntervalSeconds>
+			            <webAppSourceDirectory>src/webapp</webAppSourceDirectory>
+			    </configuration>
+		   </plugin>
 		</plugins>
 	</build>
 	<reporting>
