@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <document>
   <properties>
@@ -13,6 +13,7 @@
     <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Stefan Kanev">Added Bulgarian translation of our Application.properties</action>
       <action type="fix" dev="Johan Compagner" due-to="Blake Day" issue="1472477">NPE at wicket.PageMap.removeEntry</action>
+      <action type="fix" dev="Gwyn Evans">Changed Settings.java to pick up the version string from the Wicket jar's MANIFEST.MF via the Package API.</action>
   	</release>
     <release version="1.2-rc2" date="2006-04-20" description="Wicket 1.2 release candidate 2">
       <action type="fix" dev="Johan Compagner" due-to="Martijn Dashorst">Improved error message handling when exceptions occur during validation.</action>
