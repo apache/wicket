@@ -164,8 +164,25 @@ public abstract class ListView extends WebMarkupContainer
 	 * validation will not work properly.
 	 * 
 	 * @return Returns the optimizeItemRemoval.
+	 * @deprecated Use {@link #getReuseItems()} instead
 	 */
+	//TODO Post 1.2: Remove
 	public boolean getOptimizeItemRemoval()
+	{
+		return getReuseItems();
+	}
+
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
+	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
+	 * validation will not work properly.
+	 * 
+	 * @return Returns the optimizeItemRemoval.
+	 */
+	public boolean getReuseItems()
 	{
 		return optimizeItemRemoval;
 	}
@@ -387,10 +404,29 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param optimizeItemRemoval
 	 *            The optimizeItemRemoval to set.
 	 * @return this
+	 * @deprecated Use {@link #setReuseItems(boolean)} instead
 	 */
+	//TODO Post 1.2: Remove
 	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
-		this.optimizeItemRemoval = optimizeItemRemoval;
+		return setReuseItems(optimizeItemRemoval);
+	}
+
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
+	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
+	 * validation will not work properly.
+	 * 
+	 * @param reuseItems
+	 *            The reuseItems to set.
+	 * @return this
+	 */
+	public ListView setReuseItems(boolean reuseItems)
+	{
+		this.optimizeItemRemoval = reuseItems;
 		return this;
 	}
 
@@ -498,7 +534,7 @@ public abstract class ListView extends WebMarkupContainer
 		final int size = getViewSize();
 		if (size > 0)
 		{
-			if (getOptimizeItemRemoval())
+			if (getReuseItems())
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
