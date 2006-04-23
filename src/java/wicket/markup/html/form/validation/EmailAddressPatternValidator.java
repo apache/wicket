@@ -19,11 +19,14 @@ package wicket.markup.html.form.validation;
 
 import java.util.regex.Pattern;
 
+import wicket.markup.html.form.FormComponent;
+
 /**
  * Validator for checking the form/pattern of email addresses.
  * 
  * @author Chris Turner
  * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public class EmailAddressPatternValidator extends PatternValidator
 {
@@ -42,11 +45,19 @@ public class EmailAddressPatternValidator extends PatternValidator
 	}
 	
 	/**
-	 * Protectected constructor to force use of static singleton accessor method.
+	 * Protected constructor to force use of static singleton accessor method.
 	 * Or override it to implement resourceKey(Component)
 	 */
 	protected EmailAddressPatternValidator()
 	{
 		super("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$", Pattern.CASE_INSENSITIVE);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
+	 */
+	protected String resourceKey(FormComponent formComponent)
+	{
+		return "EmailAddressPatternValidator";
 	}
 }
