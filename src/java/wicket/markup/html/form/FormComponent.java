@@ -355,6 +355,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Use hasRawInput() to check if this component has raw input because
+	 * null can mean 2 things: It doesn't have rawinput or the rawinput 
+	 * is really null. 
+	 * 
 	 * @return The raw form input that is stored for this formcomponent
 	 */
 	public final String getRawInput()
@@ -362,6 +366,18 @@ public abstract class FormComponent extends WebMarkupContainer
 		return rawInput == NO_RAW_INPUT ? null : rawInput;
 	}
 
+	/**
+	 * This method can be called to know if this component really has
+	 * raw input.
+	 * 
+	 * @return boolean if this form component has rawinput.
+	 */
+	public final boolean hasRawInput()
+	{
+		return rawInput != NO_RAW_INPUT;
+	}
+
+	
 	/**
 	 * Called to indicate that
 	 */
