@@ -364,7 +364,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Create a request cylce factory which is used by default by WebSession.
+	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
 	 * session specific request cycle factory.
