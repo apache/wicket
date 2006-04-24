@@ -126,7 +126,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 			return "";
 		}
 
-		return returnValue.toString();
+		return returnValue;
 	}
 
 	/**
