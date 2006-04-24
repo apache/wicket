@@ -91,10 +91,10 @@ public class Radio extends WebMarkupContainer
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
-		String rawInput = group.getRawInput();
-		if(rawInput != null)
+		if(group.hasRawInput())
 		{
-			if(rawInput.equals(path))
+			String rawInput = group.getRawInput();
+			if(rawInput != null && rawInput.equals(path))
 			{
 				tag.put("checked", "checked");
 			}

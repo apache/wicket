@@ -99,10 +99,10 @@ public class Check extends WebMarkupContainer
 			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
 		}
 		
-		String rawInput = group.getRawInput();
-		if(rawInput != null)
+		if(group.hasRawInput())
 		{
-			if(rawInput.indexOf(path) != -1)
+			String rawInput = group.getRawInput();
+			if(rawInput != null && rawInput.indexOf(path) != -1)
 			{
 				tag.put("checked", "checked");
 			}
