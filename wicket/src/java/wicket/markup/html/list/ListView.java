@@ -421,7 +421,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * validation will not work properly.
 	 * 
 	 * @param reuseItems
-	 *            The reuseItems to set.
+	 *            Whether to reuse the child items.
 	 * @return this
 	 */
 	public ListView setReuseItems(boolean reuseItems)
