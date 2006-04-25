@@ -148,7 +148,6 @@ public final class XmlReader extends Reader
 	 * 
 	 * @param string The xmlDecl string
 	 * @return The encoding. Null, if not found
-	 * @throws IOException
 	 */
 	private final String determineEncoding(final String string)
 	{
