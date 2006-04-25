@@ -18,6 +18,8 @@
  */
 package wicket.ajax;
 
+import java.io.Serializable;
+
 import wicket.markup.ComponentTag;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -172,8 +174,10 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @author ivaynberg
 	 */
-	private static class ThrottlingSettings
+	private static class ThrottlingSettings implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final Duration delay;
 		private final String id;
 
