@@ -195,10 +195,103 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param locale
 	 *            the current locale
+	 * @param format 
 	 * @return the properties as a script
 	 */
-	public String toScript(Locale locale)
+	public String toScript(Locale locale, String format)
 	{
+		if(format != null)
+		{
+			boolean showTime = false;
+			String timeFormat = "24";
+			char prev = 0;
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < format.length(); i++)
+			{
+				char ch = format.charAt(i);
+				if(ch == 'd')
+				{
+					if(prev != 'd')
+					{
+						sb.append("%d");
+					}
+					prev = ch;
+				}
+				else if(ch == 'M')
+				{
+					if(prev != 'M')
+					{
+						sb.append("%m");
+					}
+					prev = ch;
+				}
+				else if(ch == 'y')
+				{
+					if(prev != 'y')
+					{
+						sb.append("%Y");
+					}
+					prev = ch;
+				}
+				else if(ch == 'H')
+				{
+					showTime = true;
+					if(prev != 'H')
+					{
+						sb.append("%H");
+					}
+					prev = ch;
+				}
+				else if(ch == 'h')
+				{
+					timeFormat = "12"; 
+					showTime = true;
+					if(prev != 'h')
+					{
+						sb.append("%I");
+					}
+					prev = ch;
+				}
+				else if(ch == 'm')
+				{
+					showTime = true;
+					if(prev != 'm')
+					{
+						sb.append("%M");
+					}
+					prev = ch;
+				}
+				else if(ch == 's')
+				{
+					showTime = true;
+					if(prev != 's')
+					{
+						sb.append("%S");
+					}
+					prev = ch;
+				}
+				else if(ch == 'a')
+				{
+					if(prev != 'a')
+					{
+						sb.append("%P");
+					}
+					prev = ch;
+				}
+				else if("GwWDFEkKSzZ".indexOf(ch) != -1)
+				{
+					prev = 0;
+				}
+				else if(prev != 0)
+				{
+					sb.append(ch);
+				}
+			}
+			setIfFormat(sb.toString().trim());
+			setShowsTime(showTime);
+			setTimeFormat(timeFormat);
+		}
+
 		StringBuffer b = new StringBuffer();
 		// create the script that represents these properties. Only create
 		// entries for

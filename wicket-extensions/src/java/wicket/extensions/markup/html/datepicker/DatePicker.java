@@ -16,6 +16,9 @@
  */
 package wicket.extensions.markup.html.datepicker;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.markup.ComponentTag;
@@ -27,6 +30,7 @@ import wicket.markup.html.resources.JavaScriptReference;
 import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.converters.DateConverter;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -174,6 +178,8 @@ public class DatePicker extends Panel
 	/** settings for the javascript datepicker component. */
 	private final DatePickerSettings settings;
 
+	private DateConverter dateConverter;
+
 	/**
 	 * Construct with a default button and style.
 	 * 
@@ -269,6 +275,17 @@ public class DatePicker extends Panel
 		}));
 		add(new StyleSheetReference("calendarStyle", settings.getStyle()));
 	}
+	
+	/**
+	 * Sets the date converter to use for generating the javascript format string.
+	 * If this is not set or set to null the default DateConverter will be used.
+	 * 
+	 * @param dateConverter
+	 */
+	public void setDateConverter(DateConverter dateConverter)
+	{
+		this.dateConverter = dateConverter;
+	}
 
 	/**
 	 * Gets the initilization javascript.
@@ -281,7 +298,18 @@ public class DatePicker extends Panel
 		AppendingStringBuffer b = new AppendingStringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		b.append(settings.toScript(getLocale()));
+		
+		String pattern = null;
+		if(dateConverter == null)
+		{
+			dateConverter = new DateConverter();
+		}
+		DateFormat df = dateConverter.getDateFormat(target.getLocale());
+		if(df instanceof SimpleDateFormat)
+		{
+			pattern = ((SimpleDateFormat)df).toPattern();
+		}
+		b.append(settings.toScript(target.getLocale(),pattern));
 		int last = b.length() - 1;
 		if (',' == b.charAt(last))
 		{
