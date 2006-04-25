@@ -471,11 +471,31 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * session, the tree you registered cannot be GC-ed). TRUE by default.
 	 * 
 	 * @param optimizeItemRemoval
-	 *            whether item removal should be optimized
+	 *            whether the child items should be reused
 	 */
+	//	TODO Post 1.2: Remove
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
-		this.optimizeItemRemoval = optimizeItemRemoval;
+		setReuseItems(optimizeItemRemoval);
+	}
+
+	/**
+	 * Sets whether item removal should be optimized. If true, re-rendering the
+	 * tree is more efficient if the tree model doesn't get changed. However, if
+	 * this is true, you need to push changes to this tree. This can easility be
+	 * done by registering this tree as the listener for tree model events
+	 * (TreeModelListener), but you should <b>be carefull</b> not to create a
+	 * memory leak by doing this (e.g. when you store the tree model in your
+	 * session, the tree you registered cannot be GC-ed). TRUE by default.
+	 * 
+	 * @param reuseItems
+	 *            whether the child items should be reused
+	 * @return This
+	 */
+	public Tree setReuseItems(boolean reuseItems)
+	{
+		this.optimizeItemRemoval = reuseItems;
+		return this;
 	}
 
 	/**
