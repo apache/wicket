@@ -814,7 +814,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * {@link FormComponent}. This method is typically called when a form needs
 	 * to be reset.
 	 */
-	protected void clearInput()
+	public final void clearInput()
 	{
 		// Visit all the (visible) form components and clear the input on each.
 		visitFormComponents(new FormComponent.IVisitor()
