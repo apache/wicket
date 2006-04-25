@@ -88,7 +88,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttribute(java.lang.String)
+	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request, java.lang.String)
 	 */
 	public Object getAttribute(Request request, String name)
 	{

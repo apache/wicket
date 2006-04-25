@@ -412,6 +412,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
+	// TODO Doesn't this method belong in Application, not WebApplication?
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new DefaultWebRequestCycleProcessor();

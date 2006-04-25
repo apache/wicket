@@ -119,9 +119,6 @@ public interface ISessionStore
 	/**
 	 * Adds the provided new session to this facade using the provided request.
 	 * 
-	 * @param application
-	 *            The application object that gets the unbind.
-	 * 
 	 * @param sessionId
 	 *            The SessionId that must be unbinded.
 	 */

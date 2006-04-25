@@ -24,7 +24,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.util.collections.IntHashMap;
@@ -35,13 +34,15 @@ import wicket.util.collections.IntHashMap.Entry;
  * conjunction with {@link WebURLCompressingCodingStrategy} and
  * {@link WebURLCompressingTargetResolverStrategy}
  * 
+ * TODO Update this comment!  ICompressingUrlPage does not exist.
+ * 
  * A page where you want to compress the urls on, should implement
  * {@link ICompressingUrlPage} and return a instanceof of this class. This
  * instances should be cached in the page.
  * 
  * To use the 2 strategies you have to create your own
  * {@link CompoundRequestCycleProcessor} in your
- * {@link Application#newRequestCycleProcessor()} which should be overwritten
+ * application's newRequestCycleProcessor() method, which should be overridden
  * and implemented like this:
  * 
  * <pre>

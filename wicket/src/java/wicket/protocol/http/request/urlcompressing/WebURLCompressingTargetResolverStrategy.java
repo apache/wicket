@@ -45,7 +45,7 @@ import wicket.util.string.Strings;
  * will be removed from the url and only an uid will be inserted into the url.
  * 
  * To use this url compressing behaviour you must override the 
- * {@link WebApplication#newRequestCycleProcessor()} method. To make a request cycle
+ * {@link WebApplication} newRequestCycleProcessor() method. To make a request cycle
  * processor with this ResolverStrategy and the {@link WebURLCompressingCodingStrategy}
  * 
  * <pre>

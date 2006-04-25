@@ -223,7 +223,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * @see ICachingResource#invalidate()
+	 * @see wicket.Resource#invalidate()
 	 */
 	public void invalidate()
 	{
