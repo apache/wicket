@@ -345,7 +345,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
 			if (components.length != 2)
 			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter");
+				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " + requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
 			// Extract any pagemap name
