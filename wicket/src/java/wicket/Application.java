@@ -625,7 +625,8 @@ public abstract class Application
 		try
 		{
 			// Load components used by all applications
-			final Enumeration resources = getClass().getClassLoader().getResources("wicket.properties");
+			final Enumeration resources = getClass().getClassLoader().getResources(
+					"wicket.properties");
 			while (resources.hasMoreElements())
 			{
 				InputStream in = null;
@@ -743,7 +744,17 @@ public abstract class Application
 	 */
 	protected void internalDestroy()
 	{
+		destroy();
 		applicationKeyToApplication.remove(getApplicationKey());
+	}
+
+	/**
+	 * Called when wicket servlet is destroyed. Overrides do not have to call
+	 * super.
+	 */
+	protected void destroy()
+	{
+
 	}
 
 	/**
