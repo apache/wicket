@@ -81,7 +81,7 @@ public class FormPage extends BasePage
 		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
 
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeydown", Duration.ONE_SECOND);
+		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
 		form.add(new AjaxSubmitButton("ajax-submit-button", form)
