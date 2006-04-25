@@ -347,7 +347,6 @@ public abstract class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap replacedObjects = new HashMap();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
