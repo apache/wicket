@@ -323,34 +323,37 @@ public class PackageResource extends WebResource
 				if (connection instanceof JarURLConnection)
 				{
 					JarFile jf = ((JarURLConnection)connection).getJarFile();
-					Enumeration enumeration = jf.entries();
-					while (enumeration.hasMoreElements())
-					{
-						JarEntry je = (JarEntry)enumeration.nextElement();
-						String name = je.getName();
-						if (name.startsWith(packageRef))
-						{
-							name = name.substring(packageRef.length() + 1);
-							if (pattern.matcher(name).matches()
-									&& (recurse || (name.indexOf('/') == -1)))
-							{
-								// we add the entry as a package resource
-								resources.add(get(scope, name, null, null));
-							}
-						}
-					}
+					scanJarFile(scope, pattern, recurse, resources, packageRef, jf);
 				}
 				else
 				{
 					String absolutePath = scope.getResource("").toExternalForm();
 					File basedir;
+					URI uri;
 					try
 					{
-						basedir = new File(new URI(absolutePath));
+						uri = new URI(absolutePath);
 					}
 					catch (URISyntaxException e)
 					{
 						throw new RuntimeException(e);
+					}
+					try
+					{
+						basedir = new File(uri);
+					}
+					catch(IllegalArgumentException e)
+					{
+						// if this is throwen then the path is not really a file. but could be a zip.
+						String jarZipPart = uri.getSchemeSpecificPart().toLowerCase();
+						int index = jarZipPart.indexOf(".zip");
+						if(index == -1) index = jarZipPart.indexOf(".jar");
+						if(index == -1) throw e;
+						
+						String filename = jarZipPart.substring(0, index+4);
+						JarFile jarFile = new JarFile(filename,false);
+						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
+						return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
 					}
 					if (!basedir.isDirectory())
 					{
@@ -367,6 +370,34 @@ public class PackageResource extends WebResource
 		}
 
 		return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
+	}
+
+	/**
+	 * @param scope
+	 * @param pattern
+	 * @param recurse
+	 * @param resources
+	 * @param packageRef
+	 * @param jf
+=	 */
+	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse, final List resources, String packageRef, JarFile jf)
+	{
+		Enumeration enumeration = jf.entries();
+		while (enumeration.hasMoreElements())
+		{
+			JarEntry je = (JarEntry)enumeration.nextElement();
+			String name = je.getName();
+			if (name.startsWith(packageRef))
+			{
+				name = name.substring(packageRef.length() + 1);
+				if (pattern.matcher(name).matches()
+						&& (recurse || (name.indexOf('/') == -1)))
+				{
+					// we add the entry as a package resource
+					resources.add(get(scope, name, null, null));
+				}
+			}
+		}
 	}
 
 	/**
