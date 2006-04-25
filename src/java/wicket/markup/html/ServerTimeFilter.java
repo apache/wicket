@@ -49,10 +49,13 @@ public class ServerTimeFilter implements IResponseFilter
 		if (index != -1)
 		{
 			AppendingStringBuffer script = new AppendingStringBuffer(75);
-			script.append("\n" + JavascriptUtils.SCRIPT_OPEN_TAG
-					+ "\nwindow.defaultStatus='Server time: ");
+			script.append("\n");
+			script.append(JavascriptUtils.SCRIPT_OPEN_TAG);
+			script.append("\nwindow.defaultStatus='Server time: ");
 			script.append(((double)timeTaken) / 1000);
-			script.append("s';\n" + JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+			script.append("s';\n");
+			script.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
+			script.append("\n");
 			responseBuffer.insert(index + 6, script);
 		}
 		
