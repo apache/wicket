@@ -336,21 +336,29 @@ public abstract class MarkupContainer extends Component
 	public void internalAttach()
 	{
 		// Handle begin request for the container itself
-		super.internalAttach();
-
-		// Loop through child components
-		final int size = children_size();
-		for (int i = 0; i < size; i++)
+		try
 		{
-			// Get next child
-			final Component child = children_get(i);
+			super.internalAttach();
 
-			// Ignore feedback as that was done in Page
-			if (!(child instanceof IFeedback))
+			// Loop through child components
+			final int size = children_size();
+			for (int i = 0; i < size; i++)
 			{
-				// Call begin request on the child
-				child.internalAttach();
+				// Get next child
+				final Component child = children_get(i);
+
+				// Ignore feedback as that was done in Page
+				if (!(child instanceof IFeedback))
+				{
+					// Call begin request on the child
+					child.internalAttach();
+				}
 			}
+		}
+		catch (RuntimeException ex)
+		{
+			if(ex instanceof WicketRuntimeException) throw ex;
+			else throw new WicketRuntimeException("Error attaching this container for rendering: " + this,ex);
 		}
 	}
 
