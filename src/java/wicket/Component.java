@@ -1648,37 +1648,45 @@ public abstract class Component implements Serializable
 					.throwMarkupException("You can not modify a open tag to open-close: " + tag);
 		}
 
-		// Render open tag
-		if (getRenderBodyOnly() == false)
+		try
 		{
-			renderComponentTag(tag);
-		}
-		markupStream.next();
-
-		// Render the body only if open-body-close. Do not render if open-close.
-		if (tag.isOpen())
-		{
-			// Render the body
-			onComponentTagBody(markupStream, tag);
-		}
-
-		// Render close tag
-		if (tag.isOpen())
-		{
-			if (openTag.isOpen())
+			// Render open tag
+			if (getRenderBodyOnly() == false)
 			{
-				renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+				renderComponentTag(tag);
 			}
-			else
+			markupStream.next();
+	
+			// Render the body only if open-body-close. Do not render if open-close.
+			if (tag.isOpen())
 			{
-				// If a open-close tag has been to modified to be
-				// open-body-close than a synthetic close tag must be rendered.
-				if (getRenderBodyOnly() == false)
+				// Render the body
+				onComponentTagBody(markupStream, tag);
+			}
+	
+			// Render close tag
+			if (tag.isOpen())
+			{
+				if (openTag.isOpen())
 				{
-					// Close the manually opened panel tag.
-					getResponse().write(openTag.syntheticCloseTagString());
+					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+				}
+				else
+				{
+					// If a open-close tag has been to modified to be
+					// open-body-close than a synthetic close tag must be rendered.
+					if (getRenderBodyOnly() == false)
+					{
+						// Close the manually opened panel tag.
+						getResponse().write(openTag.syntheticCloseTagString());
+					}
 				}
 			}
+		} 
+		catch(RuntimeException re)
+		{
+			if(re instanceof WicketRuntimeException) throw re;
+			throw new WicketRuntimeException("Exception in rendering component: " + this,re);
 		}
 	}
 
