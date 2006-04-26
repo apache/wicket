@@ -344,6 +344,7 @@ public class PackageResource extends WebResource
 					}
 					catch(IllegalArgumentException e)
 					{
+						log.debug("Can't construct the uri as a file: " + absolutePath, e);
 						// if this is throwen then the path is not really a file. but could be a zip.
 						String jarZipPart = uri.getSchemeSpecificPart().toLowerCase();
 						int index = jarZipPart.indexOf(".zip");
@@ -351,6 +352,7 @@ public class PackageResource extends WebResource
 						if(index == -1) throw e;
 						
 						String filename = jarZipPart.substring(0, index+4);
+						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 						JarFile jarFile = new JarFile(filename,false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
 						return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
