@@ -459,6 +459,32 @@ public class ValueMap extends HashMap
 		return super.remove(key);
 	}
 
+	/**
+	 * Provided the hash key is a string and you need to access the
+	 * value ignoring ignoring the keys case (upper or lower letter),
+	 * than you may use this method to get the correct writing.
+	 *  
+	 * @param key
+	 * @return The key with the correct writing
+	 */
+	public String getKey(final String key)
+	{
+		Iterator iter = this.keySet().iterator();
+		while (iter.hasNext())
+		{
+			Object keyValue = iter.next();
+			if (keyValue instanceof String)
+			{
+				String keyString = (String) keyValue;
+				if (key.equalsIgnoreCase(keyString))
+				{
+					return keyString;
+				}
+			}
+		}
+		return null;
+	}
+	
     /**
 	 * Gets a string representation of this object
 	 * 
