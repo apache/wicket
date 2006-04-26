@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,6 +39,10 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public ContainerFeedbackMessageFilter(MarkupContainer container)
 	{
+		if (container == null)
+		{
+			throw new IllegalArgumentException("container must be not null");
+		}
 		this.container = container;
 	}
 
