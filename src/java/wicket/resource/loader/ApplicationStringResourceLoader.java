@@ -22,7 +22,7 @@ import wicket.Application;
 /**
  * This string resource loader attempts to find a single resource bundle that
  * has the same name and location as the application. If this bundle is found
- * then strings are obtained from here. This implemnentation is fully aware of
+ * then strings are obtained from here. This implementation is fully aware of
  * both locale and style values when trying to obtain the appropriate bundle.
  * 
  * @author Chris Turner
