@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +21,7 @@ import wicket.markup.html.panel.Panel;
 
 /**
  * Default header for a bean editor.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class DefaultBeanHeaderPanel extends Panel
@@ -32,8 +30,11 @@ public class DefaultBeanHeaderPanel extends Panel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * 
+	 * @param id
+	 *            component id
+	 * @param beanModel
+	 *            model with the JavaBean to be edited or displayed
 	 */
 	public DefaultBeanHeaderPanel(String id, BeanModel beanModel)
 	{

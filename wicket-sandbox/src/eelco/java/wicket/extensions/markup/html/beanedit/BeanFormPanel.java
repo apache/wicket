@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +28,7 @@ import wicket.model.StringResourceModel;
 
 /**
  * Panel with a form for generic bean displaying/ editing.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class BeanFormPanel extends Panel
@@ -39,8 +37,11 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param bean JavaBean to be edited or displayed
+	 * 
+	 * @param id
+	 *            component id
+	 * @param bean
+	 *            JavaBean to be edited or displayed
 	 */
 	public BeanFormPanel(String id, Serializable bean)
 	{
@@ -49,8 +50,11 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * 
+	 * @param id
+	 *            component id
+	 * @param beanModel
+	 *            model with the JavaBean to be edited or displayed
 	 */
 	public BeanFormPanel(String id, BeanModel beanModel)
 	{
@@ -61,8 +65,11 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Creates a new instance of the bean panel.
-	 * @param panelId component id
-	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * 
+	 * @param panelId
+	 *            component id
+	 * @param beanModel
+	 *            model with the JavaBean to be edited or displayed
 	 * @return a new instance of bean panel
 	 */
 	protected AbstractBeanPanel newBeanPanel(String panelId, BeanModel beanModel)
@@ -86,6 +93,7 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Gets the label model for the cancel button.
+	 * 
 	 * @return the label model for the cancel button
 	 */
 	protected IModel getLabelModelForCancelButton()
@@ -95,6 +103,7 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Gets the label model for the save button.
+	 * 
 	 * @return the label model for the save button
 	 */
 	protected IModel getLabelModelForSaveButton()
@@ -104,6 +113,7 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Gets the css class model for the cancel button.
+	 * 
 	 * @return the css class model for the cancel button
 	 */
 	protected IModel getCSSClassModelForCancelButton()
@@ -113,6 +123,7 @@ public class BeanFormPanel extends Panel
 
 	/**
 	 * Gets the css class model for the save button.
+	 * 
 	 * @return the css class model for the save button
 	 */
 	protected IModel getCSSClassModelForSaveButton()
@@ -129,8 +140,11 @@ public class BeanFormPanel extends Panel
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param beanModel model with the JavaBean to be edited or displayed
+		 * 
+		 * @param id
+		 *            component id
+		 * @param beanModel
+		 *            model with the JavaBean to be edited or displayed
 		 */
 		public BeanForm(String id, BeanModel beanModel)
 		{

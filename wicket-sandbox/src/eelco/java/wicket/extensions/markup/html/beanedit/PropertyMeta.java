@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,7 +21,7 @@ import java.io.Serializable;
 
 /**
  * Wraps meta data about a property.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class PropertyMeta implements Serializable
@@ -41,8 +39,11 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Construct.
-	 * @param beanModel the bean model
-	 * @param propertyDescriptor the beans property descriptor
+	 * 
+	 * @param beanModel
+	 *            the bean model
+	 * @param propertyDescriptor
+	 *            the beans property descriptor
 	 */
 	public PropertyMeta(final BeanModel beanModel, final PropertyDescriptor propertyDescriptor)
 	{
@@ -62,6 +63,7 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Gets the model with the bean that owns the property.
+	 * 
 	 * @return the model with the bean that owns the property
 	 */
 	public final BeanModel getBeanModel()
@@ -71,6 +73,7 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Gets the beans property descriptor.
+	 * 
 	 * @return the beans property descriptor
 	 */
 	public final PropertyDescriptor getPropertyDescriptor()
@@ -80,6 +83,7 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Gets the type of the property.
+	 * 
 	 * @return the type of the property
 	 */
 	public Class getPropertyType()
@@ -89,6 +93,7 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Gets the display name of the property.
+	 * 
 	 * @return the display name of the property
 	 */
 	public String getDisplayName()
@@ -98,6 +103,7 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Gets the edit mode.
+	 * 
 	 * @return the edit mode
 	 */
 	public EditMode getEditMode()
@@ -107,7 +113,9 @@ public class PropertyMeta implements Serializable
 
 	/**
 	 * Sets the edit mode.
-	 * @param editMode the edit mode
+	 * 
+	 * @param editMode
+	 *            the edit mode
 	 */
 	public void setEditMode(EditMode editMode)
 	{
@@ -119,7 +127,7 @@ public class PropertyMeta implements Serializable
 	 */
 	public String toString()
 	{
-		return "meta for property " + propertyDescriptor.getDisplayName() +
-			" of bean " + beanModel.getBean();
+		return "meta for property " + propertyDescriptor.getDisplayName() + " of bean "
+				+ beanModel.getBean();
 	}
 }

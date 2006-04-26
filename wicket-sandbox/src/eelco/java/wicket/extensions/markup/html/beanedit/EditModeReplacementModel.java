@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.beanedit;
 
@@ -23,15 +21,15 @@ import wicket.model.Model;
 
 /**
  * <p>
- * Replacement model that returns 'disabled' when the editMode == EditMode.MODE_READ_ONLY
- * or the property descriptor has no write method. Use this model with AttributeModifier
- * 'disabled'.
+ * Replacement model that returns 'disabled' when the editMode ==
+ * EditMode.MODE_READ_ONLY or the property descriptor has no write method. Use
+ * this model with AttributeModifier 'disabled'.
  * </p>
  * <p>
- * Be sure NOT to have the 'disabled' attribute in your markup, and create
- * the AttributeModifier with constructor parameter 'addAttributeIfNotPresent' true.
+ * Be sure NOT to have the 'disabled' attribute in your markup, and create the
+ * AttributeModifier with constructor parameter 'addAttributeIfNotPresent' true.
  * </p>
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class EditModeReplacementModel extends Model
@@ -46,7 +44,9 @@ public final class EditModeReplacementModel extends Model
 
 	/**
 	 * Construct.
-	 * @param propertyMeta property descriptor
+	 * 
+	 * @param propertyMeta
+	 *            property descriptor
 	 */
 	public EditModeReplacementModel(PropertyMeta propertyMeta)
 	{
@@ -57,8 +57,11 @@ public final class EditModeReplacementModel extends Model
 
 	/**
 	 * Construct.
-	 * @param editMode edit mode
-	 * @param propertyMeta property descriptor
+	 * 
+	 * @param editMode
+	 *            edit mode
+	 * @param propertyMeta
+	 *            property descriptor
 	 */
 	public EditModeReplacementModel(EditMode editMode, PropertyMeta propertyMeta)
 	{
@@ -78,7 +81,9 @@ public final class EditModeReplacementModel extends Model
 		}
 		if (propertyMeta != null)
 		{
-			return (propertyMeta.getPropertyDescriptor().getWriteMethod() == null) ? "disabled" : null;
+			return (propertyMeta.getPropertyDescriptor().getWriteMethod() == null)
+					? "disabled"
+					: null;
 		}
 		return null;
 	}

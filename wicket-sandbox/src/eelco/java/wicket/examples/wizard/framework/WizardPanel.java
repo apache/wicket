@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.wizard.framework;
 
@@ -28,7 +26,7 @@ import wicket.version.undo.Change;
 
 /**
  * The main wizard panel.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class WizardPanel extends Panel
@@ -37,8 +35,10 @@ public class WizardPanel extends Panel
 	final WizardState state;
 
 	/**
-	 * @param id component id
-	 * @param configuration wizard configuration object
+	 * @param id
+	 *            component id
+	 * @param configuration
+	 *            wizard configuration object
 	 */
 	public WizardPanel(final String id, WizardConfiguration configuration)
 	{
@@ -57,6 +57,7 @@ public class WizardPanel extends Panel
 
 	/**
 	 * Gets the wizard state object.
+	 * 
 	 * @return the wizard state object
 	 */
 	protected final WizardState getState()
@@ -66,13 +67,15 @@ public class WizardPanel extends Panel
 
 	/**
 	 * Gets the editor for the given node.
-	 * @param editorId the id that must be used to create the editor
+	 * 
+	 * @param editorId
+	 *            the id that must be used to create the editor
 	 * @return the editor panel
 	 */
 	protected Panel newEditor(String editorId)
 	{
 		Node node = state.getCurrentNode();
-		if(node != null)
+		if (node != null)
 		{
 			Panel editor = node.newEditor(editorId);
 			if (editor != null)
@@ -91,7 +94,9 @@ public class WizardPanel extends Panel
 	{
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public WizardForm(String id)
 		{
@@ -104,7 +109,7 @@ public class WizardPanel extends Panel
 				protected void onSubmit()
 				{
 					Node current = state.getCurrentNode();
-					if(current instanceof Step)
+					if (current instanceof Step)
 					{
 						record(current);
 						TransitionLabel result = ((Step)current).previous(WizardForm.this);
@@ -127,7 +132,7 @@ public class WizardPanel extends Panel
 				protected void onSubmit()
 				{
 					Node current = state.getCurrentNode();
-					if(current instanceof Step)
+					if (current instanceof Step)
 					{
 						record(current);
 						TransitionLabel result = ((Step)current).next(WizardForm.this);
@@ -160,7 +165,7 @@ public class WizardPanel extends Panel
 
 				public boolean isVisible()
 				{
-					return ( state.getCurrentNode() instanceof Exit );
+					return (state.getCurrentNode() instanceof Exit);
 				}
 			};
 			exitButton.add(new AttributeModifier("value", new Model()
@@ -168,7 +173,7 @@ public class WizardPanel extends Panel
 				public Object getObject(wicket.Component component)
 				{
 					Node current = state.getCurrentNode();
-					if(current instanceof Exit)
+					if (current instanceof Exit)
 					{
 						return ((Exit)current).getLabel();
 					}
@@ -181,7 +186,9 @@ public class WizardPanel extends Panel
 
 	/**
 	 * Record current state.
-	 * @param currentStep step to record for undoing
+	 * 
+	 * @param currentStep
+	 *            step to record for undoing
 	 */
 	protected void record(final Node currentStep)
 	{
@@ -203,7 +210,9 @@ public class WizardPanel extends Panel
 	{
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public EmptyPanel(String id)
 		{

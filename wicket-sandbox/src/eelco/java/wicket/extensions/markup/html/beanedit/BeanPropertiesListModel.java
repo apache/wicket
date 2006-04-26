@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.beanedit;
 
@@ -29,7 +27,7 @@ import wicket.model.Model;
 
 /**
  * Models that extracts the property descriptors of a JavaBean as a list.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class BeanPropertiesListModel extends Model
@@ -41,7 +39,9 @@ public final class BeanPropertiesListModel extends Model
 
 	/**
 	 * Construct.
-	 * @param beanModel model that provides the java bean
+	 * 
+	 * @param beanModel
+	 *            model that provides the java bean
 	 */
 	public BeanPropertiesListModel(BeanModel beanModel)
 	{
@@ -72,7 +72,7 @@ public final class BeanPropertiesListModel extends Model
 				int defaultPropertyIndex = beanInfo.getDefaultPropertyIndex();
 				if (defaultPropertyIndex != -1)
 				{
-					
+
 				}
 				return all;
 			}
@@ -81,8 +81,9 @@ public final class BeanPropertiesListModel extends Model
 	}
 
 	/**
-	 * As this is a read-only model, this method allways
-	 * throws an {@link UnsupportedOperationException}.
+	 * As this is a read-only model, this method allways throws an
+	 * {@link UnsupportedOperationException}.
+	 * 
 	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
 	 */
 	public void setObject(Component component, Object object)
@@ -92,6 +93,7 @@ public final class BeanPropertiesListModel extends Model
 
 	/**
 	 * Whether this descriptor should be added to the list.
+	 * 
 	 * @param descriptor
 	 * @return whether this descriptor should be added to the list
 	 */

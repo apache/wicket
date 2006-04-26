@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.beanedit;
 
@@ -36,7 +34,7 @@ import wicket.markup.html.panel.Panel;
 
 /**
  * Panel for generic bean displaying/ editing.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class BeanPanel extends AbstractBeanPanel
@@ -55,8 +53,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param bean JavaBean to be edited or displayed
+	 * 
+	 * @param id
+	 *            component id
+	 * @param bean
+	 *            JavaBean to be edited or displayed
 	 */
 	public BeanPanel(String id, Serializable bean)
 	{
@@ -65,8 +66,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * 
+	 * @param id
+	 *            component id
+	 * @param beanModel
+	 *            model with the JavaBean to be edited or displayed
 	 */
 	public BeanPanel(String id, BeanModel beanModel)
 	{
@@ -83,8 +87,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Gets the header panel of this editor.
-	 * @param panelId id of panel; must be used for constructing any panel
-	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * 
+	 * @param panelId
+	 *            id of panel; must be used for constructing any panel
+	 * @param beanModel
+	 *            model with the JavaBean to be edited or displayed
 	 * @return the header panel
 	 */
 	protected Panel newHeader(String panelId, BeanModel beanModel)
@@ -94,8 +101,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Gets the editor for the given property.
-	 * @param panelId id of panel; must be used for constructing any panel
-	 * @param propertyMeta property descriptor
+	 * 
+	 * @param panelId
+	 *            id of panel; must be used for constructing any panel
+	 * @param propertyMeta
+	 *            property descriptor
 	 * @return the editor
 	 */
 	protected Panel newPropertyEditor(String panelId, PropertyMeta propertyMeta)
@@ -118,10 +128,10 @@ public class BeanPanel extends AbstractBeanPanel
 		return editor;
 	}
 
-	
 
 	/**
 	 * Gets the editMode.
+	 * 
 	 * @return editMode
 	 */
 	protected EditMode getEditMode()
@@ -131,7 +141,9 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Sets the editMode.
-	 * @param editMode editMode
+	 * 
+	 * @param editMode
+	 *            editMode
 	 */
 	protected void setEditMode(EditMode editMode)
 	{
@@ -140,12 +152,15 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Gets a default property editor panel.
-	 * @param panelId component id
-	 * @param propertyMeta property descriptor
+	 * 
+	 * @param panelId
+	 *            component id
+	 * @param propertyMeta
+	 *            property descriptor
 	 * @return a property editor
 	 */
-	protected final BeanPropertyEditor newDefaultEditor(
-			final String panelId, final PropertyMeta propertyMeta)
+	protected final BeanPropertyEditor newDefaultEditor(final String panelId,
+			final PropertyMeta propertyMeta)
 	{
 		BeanPropertyEditor editor;
 		final Class type = propertyMeta.getPropertyType();
@@ -166,8 +181,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 	/**
 	 * Does isAssignableFrom check on given class array for given type.
-	 * @param types array of types
-	 * @param type type to check against
+	 * 
+	 * @param types
+	 *            array of types
+	 * @param type
+	 *            type to check against
 	 * @return true if one of the types matched
 	 */
 	private boolean checkAssignableFrom(Class[] types, Class type)
@@ -186,8 +204,11 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Finds a possible custom editor by looking for the type name + 'Editor'
 	 * (e.g. mypackage.MyBean has editor mypackage.MyBeanEditor).
-	 * @param panelId id of panel; must be used for constructing any panel
-	 * @param propertyMeta property descriptor
+	 * 
+	 * @param panelId
+	 *            id of panel; must be used for constructing any panel
+	 * @param propertyMeta
+	 *            property descriptor
 	 * @return PropertyEditor if found or null
 	 */
 	protected final BeanPropertyEditor findCustomEditor(String panelId, PropertyMeta propertyMeta)
@@ -206,11 +227,12 @@ public class BeanPanel extends AbstractBeanPanel
 			try
 			{
 				// get constructor
-				Constructor constructor = editorClass.getConstructor(
-						new Class[]{String.class, BeanModel.class, PropertyMeta.class, EditMode.class});
+				Constructor constructor = editorClass.getConstructor(new Class[] { String.class,
+						BeanModel.class, PropertyMeta.class, EditMode.class });
 
 				// construct arguments
-				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), propertyMeta, getEditMode()};
+				Object[] args = new Object[] { panelId, BeanPanel.this.getModel(), propertyMeta,
+						getEditMode() };
 
 				// create editor instance
 				BeanPropertyEditor editor = (BeanPropertyEditor)constructor.newInstance(args);
@@ -237,7 +259,7 @@ public class BeanPanel extends AbstractBeanPanel
 				throw new WicketRuntimeException(e);
 			}
 		}
-		catch(ClassNotFoundException e)
+		catch (ClassNotFoundException e)
 		{
 			// ignore; there just is no custom editor
 		}
@@ -254,13 +276,16 @@ public class BeanPanel extends AbstractBeanPanel
 
 		/**
 		 * Construct.
-		 * @param id component name
-		 * @param model the model
+		 * 
+		 * @param id
+		 *            component name
+		 * @param model
+		 *            the model
 		 */
 		public PropertyList(String id, BeanPropertiesListModel model)
 		{
 			super(id, model);
-			setOptimizeItemRemoval(true);
+			setReuseItems(true);
 		}
 
 		/**
@@ -288,18 +313,20 @@ public class BeanPanel extends AbstractBeanPanel
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param propertyMeta property descriptor
+		 * 
+		 * @param id
+		 *            component id
+		 * @param propertyMeta
+		 *            property descriptor
 		 */
 		public PropertyInput(String id, final PropertyMeta propertyMeta)
 		{
 			super(id, propertyMeta);
 			setRenderBodyOnly(true);
 			Class type = propertyMeta.getPropertyType();
-			TextField valueTextField = new TextField("value",
-					new BeanPropertyModel(propertyMeta), type);
-			EditModeReplacementModel replacementModel =
-				new EditModeReplacementModel(propertyMeta);
+			TextField valueTextField = new TextField("value", new BeanPropertyModel(propertyMeta),
+					type);
+			EditModeReplacementModel replacementModel = new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
@@ -314,18 +341,19 @@ public class BeanPanel extends AbstractBeanPanel
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param propertyMeta property descriptor
+		 * 
+		 * @param id
+		 *            component id
+		 * @param propertyMeta
+		 *            property descriptor
 		 */
 		public PropertyCheckBox(String id, final PropertyMeta propertyMeta)
 		{
 			super(id, propertyMeta);
 			setRenderBodyOnly(true);
 			Class type = propertyMeta.getPropertyType();
-			CheckBox valueTextField = new CheckBox("value",
-					new BeanPropertyModel(propertyMeta));
-			EditModeReplacementModel replacementModel =
-				new EditModeReplacementModel(propertyMeta);
+			CheckBox valueTextField = new CheckBox("value", new BeanPropertyModel(propertyMeta));
+			EditModeReplacementModel replacementModel = new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
@@ -340,8 +368,11 @@ public class BeanPanel extends AbstractBeanPanel
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param propertyMeta property descriptor
+		 * 
+		 * @param id
+		 *            component id
+		 * @param propertyMeta
+		 *            property descriptor
 		 */
 		public ButtonToMoreDetails(String id, final PropertyMeta propertyMeta)
 		{

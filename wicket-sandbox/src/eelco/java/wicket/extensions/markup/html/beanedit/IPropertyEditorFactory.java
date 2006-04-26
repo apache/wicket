@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,18 +20,22 @@ import java.io.Serializable;
 
 /**
  * Factory for property editors.
- *
+ * 
  * @author Eelco Hillenius
  */
 public interface IPropertyEditorFactory extends Serializable
 {
 	/**
 	 * Creates a new property editor.
-	 * @param panelId id of the panel; must be used for constructing any panel
-	 * @param propertyMeta property descriptor
-	 * @param editMode edit mode
+	 * 
+	 * @param panelId
+	 *            id of the panel; must be used for constructing any panel
+	 * @param propertyMeta
+	 *            property descriptor
+	 * @param editMode
+	 *            edit mode
 	 * @return a property editor
 	 */
-	BeanPropertyEditor newPropertyEditor(
-			String panelId, PropertyMeta propertyMeta, EditMode editMode);
+	BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
+			EditMode editMode);
 }

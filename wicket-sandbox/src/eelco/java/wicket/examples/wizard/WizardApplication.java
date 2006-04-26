@@ -32,7 +32,6 @@ public class WizardApplication extends WebApplication
 	 */
 	public WizardApplication()
 	{
-		getMarkupSettings().setStripWicketTags(true);
 	}
 
 	/**

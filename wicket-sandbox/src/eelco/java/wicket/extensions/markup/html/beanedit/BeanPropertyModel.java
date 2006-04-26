@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.beanedit;
 
@@ -27,7 +25,7 @@ import wicket.model.IModel;
 
 /**
  * Model for one JavaBean property.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class BeanPropertyModel implements IModel
@@ -39,6 +37,7 @@ public class BeanPropertyModel implements IModel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param propertyMeta
 	 */
 	public BeanPropertyModel(PropertyMeta propertyMeta)
@@ -57,7 +56,7 @@ public class BeanPropertyModel implements IModel
 			Object bean = propertyMeta.getBeanModel().getBean();
 			try
 			{
-				Object value = method.invoke(bean, null);
+				Object value = method.invoke(bean, (Object[])null);
 				return value;
 			}
 			catch (IllegalAccessException e)
@@ -83,7 +82,7 @@ public class BeanPropertyModel implements IModel
 			Object bean = propertyMeta.getBeanModel().getBean();
 			try
 			{
-				method.invoke(bean, new Object[]{object});
+				method.invoke(bean, new Object[] { object });
 			}
 			catch (IllegalAccessException e)
 			{

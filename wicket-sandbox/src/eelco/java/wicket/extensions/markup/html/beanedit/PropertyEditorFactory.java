@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Default property editor factory.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class PropertyEditorFactory implements IPropertyEditorFactory
@@ -40,7 +38,10 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	/** map of classes to property editor factories. */
 	private Map classToFactory = new HashMap();
 
-	/** default factory to be used when no registration was found for a certain class. */
+	/**
+	 * default factory to be used when no registration was found for a certain
+	 * class.
+	 */
 	private IPropertyEditorFactory defaultPropertyEditorFactory = new IPropertyEditorFactory()
 	{
 		private static final long serialVersionUID = 1L;
@@ -51,7 +52,7 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 			return new BeanPanel.PropertyInput(panelId, propertyMeta);
 		}
 	};
-	
+
 	/**
 	 * Construct.
 	 */
@@ -61,8 +62,11 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 
 	/**
 	 * Sets a factory for with class c.
-	 * @param c the type
-	 * @param factory the property editor factory
+	 * 
+	 * @param c
+	 *            the type
+	 * @param factory
+	 *            the property editor factory
 	 */
 	public final void set(Class c, IPropertyEditorFactory factory)
 	{
@@ -75,13 +79,12 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 			throw new IllegalArgumentException("Argument c (class) may not be null");
 		}
 
-		IPropertyEditorFactory replaced =
-			(IPropertyEditorFactory)classToFactory.put(c, factory);
+		IPropertyEditorFactory replaced = (IPropertyEditorFactory)classToFactory.put(c, factory);
 
 		if (replaced != null)
 		{
-			log.info("replaced property editor factory " + replaced + " with " +
-					factory + " for type " + c);
+			log.info("replaced property editor factory " + replaced + " with " + factory
+					+ " for type " + c);
 		}
 		else
 		{
@@ -92,9 +95,10 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	/**
 	 * Gets the factory that is registered for class c.
 	 * 
-	 * @param c the class to get the factory for
-	 * @return the factory that is registered for class c or null if no
-	 *         type converter was registered for class c
+	 * @param c
+	 *            the class to get the factory for
+	 * @return the factory that is registered for class c or null if no type
+	 *         converter was registered for class c
 	 */
 	public final IPropertyEditorFactory get(Class c)
 	{
@@ -102,7 +106,8 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.beanedit.IPropertyEditorFactory#newPropertyEditor(java.lang.String, PropertyMeta, wicket.extensions.markup.html.beanedit.EditMode)
+	 * @see wicket.extensions.markup.html.beanedit.IPropertyEditorFactory#newPropertyEditor(java.lang.String,
+	 *      PropertyMeta, wicket.extensions.markup.html.beanedit.EditMode)
 	 */
 	public BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
 			EditMode editMode)
