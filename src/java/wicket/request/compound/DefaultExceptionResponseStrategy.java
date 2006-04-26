@@ -38,6 +38,7 @@ import wicket.settings.IExceptionSettings;
  * {@link wicket.RequestCycle#onRuntimeException(Page, RuntimeException)}.
  * 
  * @author Eelco Hillenius
+ * @author Johan Compagner
  */
 public class DefaultExceptionResponseStrategy implements IExceptionResponseStrategy
 {
