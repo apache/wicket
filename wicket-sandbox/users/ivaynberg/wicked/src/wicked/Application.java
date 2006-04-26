@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import wicked.markup.Markup;
-import wicked.markup.parser.BasicSAXParser;
 import wicked.markup.parser.BasicXPPParser;
 import wicked.markup.parser.IMarkupParser;
 

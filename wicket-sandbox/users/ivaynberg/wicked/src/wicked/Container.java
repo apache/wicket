@@ -9,7 +9,6 @@ import java.util.Map;
 
 import wicked.markup.ComponentFragment;
 import wicked.markup.Fragment;
-import wicked.markup.Tag;
 
 public class Container extends Component {
 
