@@ -383,7 +383,7 @@ public abstract class Session implements Serializable
 			{
 				try
 				{
-					wait();
+					wait(1000);
 				}
 				catch (InterruptedException ex)
 				{
