@@ -463,17 +463,6 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWin2k()
-	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-win2k.css");
-	}
-
-	/**
-	 * Create a style
-	 * 
-	 * @return a style
-	 */
 	public final PackageResourceReference newStyleWin2k1()
 	{
 		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
@@ -488,7 +477,7 @@ public class DatePickerSettings implements Serializable
 	public final PackageResourceReference newStyleWin2k2()
 	{
 		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/aqua/theme.css");
+				"style/calendar-win2k-2.css");
 	}
 
 	/**
