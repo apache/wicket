@@ -92,6 +92,7 @@ public class PropertyColumn extends AbstractColumn
 		item.add(new Label(componentId, createLabelModel(model)));
 	}
 
+	//TODO Post 1.3: rename embeddedModel to itemModel
 	protected IModel createLabelModel(IModel embeddedModel)
 	{
 		return new PropertyModel(embeddedModel, propertyExpression);
