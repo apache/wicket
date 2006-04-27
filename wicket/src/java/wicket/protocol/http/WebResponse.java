@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebResponse.java 5231 2006-04-01 15:34:49 -0800 (Sat, 01 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-01 15:34:49 -0800 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 import wicket.util.time.Time;
 
 /**
@@ -81,7 +83,7 @@ public class WebResponse extends Response
 	{
 		getHttpServletResponse().addCookie(cookie);
 	}
-	
+
 	/**
 	 * Closes response output.
 	 */
@@ -158,14 +160,15 @@ public class WebResponse extends Response
 				{
 					if (httpServletResponse.isCommitted())
 					{
-						log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
+						log.error("Unable to redirect to: " + url
+								+ ", HTTP Response has already been committed.");
 					}
-	
+
 					if (log.isDebugEnabled())
 					{
 						log.debug("Redirecting to " + url);
 					}
-	
+
 					httpServletResponse.sendRedirect(url);
 					redirect = true;
 				}
@@ -236,18 +239,18 @@ public class WebResponse extends Response
 	 */
 	public void write(final CharSequence string)
 	{
-		if(string instanceof AppendingStringBuffer)
+		if (string instanceof AppendingStringBuffer)
 		{
 			write((AppendingStringBuffer)string);
 		}
-		else if(string instanceof StringBuffer)
+		else if (string instanceof StringBuffer)
 		{
 			try
 			{
 				StringBuffer sb = (StringBuffer)string;
 				char[] array = new char[sb.length()];
 				sb.getChars(0, sb.length(), array, 0);
-				httpServletResponse.getWriter().write(array,0,array.length);
+				httpServletResponse.getWriter().write(array, 0, array.length);
 			}
 			catch (IOException e)
 			{
@@ -271,20 +274,20 @@ public class WebResponse extends Response
 	 * Writes AppendingStringBuffer to response output.
 	 * 
 	 * @param asb
-	 *  		  The AppendingStringBuffer to write to the stream
+	 *            The AppendingStringBuffer to write to the stream
 	 */
 	public void write(AppendingStringBuffer asb)
 	{
 		try
 		{
-			httpServletResponse.getWriter().write(asb.getValue(),0,asb.length());
+			httpServletResponse.getWriter().write(asb.getValue(), 0, asb.length());
 		}
 		catch (IOException e)
 		{
 			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
 		}
 	}
-	
+
 	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
@@ -295,7 +298,7 @@ public class WebResponse extends Response
 	{
 		httpServletResponse.setDateHeader(header, date);
 	}
-	
+
 
 	/**
 	 * Set a header to the string value in the servlet response stream.
@@ -306,5 +309,19 @@ public class WebResponse extends Response
 	public void setHeader(String header, String value)
 	{
 		httpServletResponse.setHeader(header, value);
+	}
+
+	/**
+	 * Convinience method for setting the content-disposition:attachment header.
+	 * This header is used if the response should prompt the user to download it
+	 * as a file instead of opening in a browser.
+	 * 
+	 * @param filename
+	 *            file name of the attachment
+	 */
+	public void setAttachmentHeader(String filename)
+	{
+		setHeader("Content-Disposition", "attachment"
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=" + filename) : ""));
 	}
 }
