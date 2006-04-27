@@ -87,7 +87,7 @@ import wicket.util.thread.ICode;
  * 
  * @author Jonathan Locke
  */
-public final class Duration extends AbstractTimeValue
+public class Duration extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
 
@@ -362,7 +362,7 @@ public final class Duration extends AbstractTimeValue
 	 * @param milliseconds
 	 *            Number of milliseconds in this duration
 	 */
-	private Duration(final long milliseconds)
+	protected Duration(final long milliseconds)
 	{
 		super(milliseconds);
 	}
