@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -57,8 +57,10 @@ import wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public abstract class Tree extends AbstractTree implements TreeModelListener
+public class Tree extends AbstractTree implements TreeModelListener
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Name of the junction image component; value = 'junctionImage'. */
 	public static final String JUNCTION_IMAGE_NAME = "junctionImage";
 
@@ -245,7 +247,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			listItem.add(new SpacerList("spacers", level));
 
 			// add node panel
-			NodePanel nodePanel = newNodePanel("node", node);
+			Component nodePanel = newNodePanel("node", node);
 			if (nodePanel == null)
 			{
 				throw new WicketRuntimeException("node panel must be not-null");
@@ -359,51 +361,37 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * A panel for a tree node. You can provide an alternative panel by
-	 * overriding Tree.newNodePanel. Extend this class if you want to provide
-	 * other components than the default. If you just want to provide different
-	 * markup, you should consider extending DefaultNodePanel
-	 * </p>
-	 */
-	public abstract class NodePanel extends Panel
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 *            component id
-		 * @param node
-		 *            the tree node
-		 */
-		public NodePanel(final String id, final DefaultMutableTreeNode node)
-		{
-			super(id);
-		}
-	}
-
-	/**
 	 * The default node panel. If you provide your own panel by overriding
 	 * Tree.newNodePanel, but only want to override the markup, not the
-	 * components that are added, extend this class. If you want to use other
-	 * components than the default, extend NodePanel directly. instead.
+	 * components that are added, you <i>may</i> extend this class. If you want
+	 * to use other components than the default, provide a panel or fragment
+	 * instead (and that's probably what you want as the look and feel of what
+	 * this panel renders may be adjusted by overriding
+	 * {@link Tree#createJunctionLink(DefaultMutableTreeNode)} and
+	 * {@link Tree#createNodeLink(DefaultMutableTreeNode)}.
 	 */
-	public class DefaultNodePanel extends NodePanel
+	public static class DefaultNodePanel extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
+		 * 
 		 * @param panelId
+		 *            The component id
+		 * @param tree
+		 *            The containing tree component
 		 * @param node
+		 *            The tree node for this panel
 		 */
-		public DefaultNodePanel(String panelId, DefaultMutableTreeNode node)
+		public DefaultNodePanel(String panelId, Tree tree, DefaultMutableTreeNode node)
 		{
-			super(panelId, node);
+			super(panelId);
 			// create a link for expanding and collapsing the node
-			Link expandCollapsLink = Tree.this.createJunctionLink(node);
+			Link expandCollapsLink = tree.createJunctionLink(node);
 			add(expandCollapsLink);
 			// create a link for selecting a node
-			Link selectLink = Tree.this.createNodeLink(node);
+			Link selectLink = tree.createNodeLink(node);
 			add(selectLink);
 		}
 	}
@@ -473,7 +461,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * @param optimizeItemRemoval
 	 *            whether the child items should be reused
 	 */
-	//	TODO Post 1.2: Remove
+	// TODO Post 1.2: Remove
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		setReuseItems(optimizeItemRemoval);
@@ -633,9 +621,9 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node for the panel
 	 * @return a new Panel
 	 */
-	protected NodePanel newNodePanel(String panelId, DefaultMutableTreeNode node)
+	protected Component newNodePanel(String panelId, DefaultMutableTreeNode node)
 	{
-		return new DefaultNodePanel(panelId, node);
+		return new DefaultNodePanel(panelId, this, node);
 	}
 
 	/**
@@ -776,7 +764,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 *            the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	private final Link createJunctionLink(final DefaultMutableTreeNode node)
+	protected final Link createJunctionLink(final DefaultMutableTreeNode node)
 	{
 		final Link junctionLink = new Link("junctionLink")
 		{
@@ -798,7 +786,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 *            the model of the node
 	 * @return link for selection
 	 */
-	private final Link createNodeLink(final DefaultMutableTreeNode node)
+	protected final Link createNodeLink(final DefaultMutableTreeNode node)
 	{
 		final Link nodeLink = new Link("nodeLink")
 		{

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.tree.Tree;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -65,8 +66,24 @@ public class Home extends WicketExamplePage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		MyTree tree = new MyTree("tree", treeModel);
+		Tree tree = new Tree("tree", treeModel)
+		{
+			protected String getNodeLabel(DefaultMutableTreeNode node)
+			{
+				Object userObject = node.getUserObject();
+				return (userObject instanceof List) ? "<sub>" : String
+						.valueOf(node.getUserObject());
+			}
+		};
 		add(tree);
+
+		// and another one
+		Tree tree2 = new MyTree("tree2", treeModel);
+		add(tree2);
+
+		// and yet another one
+		Tree tree3 = new AnotherTree("tree3", treeModel);
+		add(tree3);
 	}
 
 	/**
