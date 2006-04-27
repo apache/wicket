@@ -91,6 +91,8 @@ public class DatePickerComponentInitializer implements IInitializer
 		localeToLanguageReference.put(new Locale("tr", "", "").toString(), "lang/calendar-tr.js");
 		localeToLanguageReference.put(new Locale("zh", "", "").toString(),
 				"lang/calendar-zh-utf8.js");
+		localeToLanguageReference.put(new Locale("zh", "TW", "").toString(),
+				"lang/calendar-zh_TW-utf8.js");
 	}
 
 	/**
