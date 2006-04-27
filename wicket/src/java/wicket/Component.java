@@ -2022,12 +2022,8 @@ public abstract class Component implements Serializable
 		// Is new visibility state a change?
 		if (visible != getFlag(FLAG_VISIBLE))
 		{
-			// Tell the page that this component's visibility was changed
-			final Page page = findPage();
-			if (page != null)
-			{
-				addStateChange(new VisibilityChange(this));
-			}
+			// record component's visibility change
+			addStateChange(new VisibilityChange(this));
 
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
