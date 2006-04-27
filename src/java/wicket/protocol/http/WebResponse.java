@@ -322,6 +322,6 @@ public class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment"
-				+ ((!Strings.isEmpty(filename)) ? ("; filename=" + filename) : ""));
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename+"\"") : ""));
 	}
 }
