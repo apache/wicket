@@ -79,7 +79,7 @@ public class DateTextField extends TextField
 	{
 		super(id, Date.class);
 		this.datePattern = datePattern;
-		this.converter = initializeConverter();
+		this.converter = new DateTextFieldConverter();
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class DateTextField extends TextField
 	{
 		super(id, object, Date.class);
 		this.datePattern = datePattern;
-		this.converter = initializeConverter();
+		this.converter = new DateTextFieldConverter();
 	}
 
 	/**
@@ -119,22 +119,35 @@ public class DateTextField extends TextField
 	}
 	
 	/**
-	 * Creates an appropriate converter for this <code>TextField</code>
+	 * Converts <code>String</code> to <code>java.util.Date</code> and back
+	 * via the datePattern in the inner class
+	 * 
+	 * @author Stefan Kanev, s.kanev@spider.bg
 	 *
-	 * @return A converter that handles <code>String</code>-<code>Date</code>
-	 *         conversions according to the <code>datePattern</code> field. 
 	 */
-	private Converter initializeConverter() {
-		StringConverter stringConverter = new StringConverter();
-		stringConverter.set(Date.class, new DateToStringPatternConverter());
-		
-		Converter converter = new Converter(getSession().getLocale());
-		converter.set(String.class, stringConverter);
-		converter.set(Date.class, new StringPatternToDateConverter());
-		
-		return converter;
-	}
+	public final class DateTextFieldConverter extends Converter 
+	{
 
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Creates an instance, setting 
+		 * <code>DateToStringPatternConverter</code> and
+		 * <code>StringPatternToDateConverter</code> as it is appropriate.
+		 */
+		public DateTextFieldConverter() 
+		{
+			super(getSession().getLocale());
+			
+			StringConverter stringConverter = new StringConverter();
+			stringConverter.set(Date.class, new DateToStringPatternConverter());
+			
+			set(String.class, stringConverter);
+			set(Date.class, new StringPatternToDateConverter());
+		}
+		
+	}
+	
 	/**
 	 * Converts a <code>java.util.Date</code> to <code>String</code> using
      * the the pattern in <code>DateTextField</code>
@@ -142,7 +155,8 @@ public class DateTextField extends TextField
 	 * @author Stefan Kanev
 	 *
 	 */
-	public final class DateToStringPatternConverter extends AbstractConverter {
+	public final class DateToStringPatternConverter extends AbstractConverter
+	{
 		
 		private static final long serialVersionUID = 1L;
 
@@ -177,7 +191,8 @@ public class DateTextField extends TextField
 	 * @author Stefan Kanev, s.kanev@spider.bg
 	 *
 	 */
-	public final class StringPatternToDateConverter extends AbstractConverter {
+	public final class StringPatternToDateConverter extends AbstractConverter 
+	{
 
 		private static final long serialVersionUID = 1L;
 
