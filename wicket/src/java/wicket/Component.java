@@ -2694,8 +2694,11 @@ public abstract class Component implements Serializable
 			}
 		}
 
-		// Write the new body
-		getResponse().write(body);
+		if(body != null)
+		{
+			// Write the new body
+			getResponse().write(body);
+		}
 
 		// If we had an open tag (and not an openclose tag) and we found a
 		// close tag, we're good
