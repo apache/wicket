@@ -72,24 +72,18 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String value) throws ConversionException
+	protected Object convertValue(String[] input) throws ConversionException
 	{
-		/*
-		 * the input value contains the full path of the radio unless no choice
-		 * was selected in which case the input contains null
-		 */
-		String path = getInput();
-
-		if (path != null)
+		if (input != null && input.length > 0)
 		{
 			/*
 			 * single radio choice component path sans group path = relative
 			 * path from group to choice since we know the choice is child of
 			 * group
 			 */
-			path = path.substring(getPath().length() + 1);
+			String path = input[0].substring(getPath().length() + 1);
 
 			// retrieve the selected single radio choice component
 			Radio choice = (Radio)get(path);

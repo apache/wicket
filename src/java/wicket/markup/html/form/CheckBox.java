@@ -170,13 +170,14 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 
 	
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String value)
+	protected Object convertValue(String[] value)
 	{
+		String tmp = value != null && value.length > 0?value[0]:null;
 		try
 		{
-			return Strings.toBoolean(getInput());
+			return Strings.toBoolean(tmp);
 		}
 		catch (StringValueConversionException e)
 		{
