@@ -17,6 +17,8 @@
  */
 package wicket.properties;
 
+import java.util.Locale;
+
 import wicket.WicketTestCase;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.resource.loader.WicketBundleStringResourceLoader;
@@ -56,6 +58,7 @@ public class PropertiesTest extends WicketTestCase
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
 		TestPage page = new TestPage();
+		cycle.getSession().setLocale(Locale.GERMANY);
 		cycle.getSession().setStyle("mystyle");
 
 		String str = page.getString("test1");
