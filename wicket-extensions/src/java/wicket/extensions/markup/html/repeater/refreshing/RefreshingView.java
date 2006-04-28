@@ -216,8 +216,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @param strategy
 	 *            item reuse strategy
+	 * @return this for chaining
 	 */
-	public void setItemReuseStrategy(IItemReuseStrategy strategy)
+	public RefreshingView setItemReuseStrategy(IItemReuseStrategy strategy)
 	{
 		if (strategy == null)
 		{
@@ -248,6 +249,7 @@ public abstract class RefreshingView extends RepeatingView
 			}
 			itemReuseStrategy = strategy;
 		}
+		return this;
 	}
 
 
