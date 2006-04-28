@@ -448,9 +448,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @param value
 	 *            The value
 	 */
-	public void setModelValue(final String value)
+	public void setModelValue(final String[] value)
 	{
-		setModelObject(convertValue(value));
+		convertedInput = convertValue(value);
+		updateModel();
 	}
 
 	/**
@@ -458,8 +459,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @param persistent
 	 *            True if this component is to be persisted.
+	 * @return this for chaining
 	 */
-	public final void setPersistent(final boolean persistent)
+	public final FormComponent setPersistent(final boolean persistent)
 	{
 		if (supportsPersistence())
 		{
@@ -470,6 +472,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			throw new UnsupportedOperationException("FormComponent " + getClass()
 					+ " does not support cookies");
 		}
+		return this;
 	}
 
 	/**
@@ -547,7 +550,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		{
 			try
 			{
-				convertedInput = convertValue(getInput());
+				convertedInput = convertValue(inputAsStringArray());
 			}
 			catch (ConversionException e)
 			{
@@ -617,12 +620,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
-	// TODO Post 1.2:evaluate whether we really need this method in 1.3.
-	// if we go ahead and refactor conversion, we don't want to
-	// leave this extra option open
-	protected Object convertValue(String value) throws ConversionException
+	protected Object convertValue(String[] value) throws ConversionException
 	{
-		return value != null ? value.trim() : null;
+		return value != null && value.length > 0? value[0].trim() : null;
 	}
 
 	/**

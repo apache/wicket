@@ -203,41 +203,6 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
-	 */
-	public final void setModelValue(final String value)
-	{
-		Collection selectedValues = (Collection)getModelObject();
-		if (selectedValues == null)
-		{
-			selectedValues = new ArrayList();
-			setModelObject(selectedValues);
-		}
-		else
-		{
-			selectedValues.clear();
-		}
-		final List choices = getChoices();
-		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
-				.hasMoreTokens();)
-		{
-			String selected = tokenizer.nextToken();
-
-			for (int index = 0; index < choices.size(); index++)
-			{
-				// Get next choice
-				final Object choice = choices.get(index);
-				if (getChoiceRenderer().getIdValue(choice, index).equals(selected))
-				{
-					selectedValues.add(choice);
-					break;
-				}
-			}
-
-		}
-	}
-
-	/**
 	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
 	 *      String)
 	 */
@@ -275,12 +240,10 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String value) throws ConversionException
+	protected Object convertValue(String[] ids) throws ConversionException
 	{
-		// ignore value, get the input as a string array.
-		final String[] ids = inputAsStringArray();
 		ArrayList selectedValues = new ArrayList();
 
 		// If one or more ids is selected

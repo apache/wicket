@@ -93,11 +93,12 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String value) throws ConversionException
+	protected Object convertValue(String[] value) throws ConversionException
 	{
-		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(value))
+		String tmp = value != null && value.length > 0?value[0]:null;
+		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
 		{
 			return null;
 		}

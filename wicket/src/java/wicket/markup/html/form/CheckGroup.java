@@ -97,17 +97,10 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String value) throws ConversionException
+	protected Object convertValue(String[] paths) throws ConversionException
 	{
-		/*
-		 * the input contains an array of full path of the checcked checkbox
-		 * components unless nothing was selected in which case the input
-		 * contains null
-		 */
-		String[] paths = inputAsStringArray();
-
 		List collection = new ArrayList();
 
 		/*

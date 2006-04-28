@@ -165,16 +165,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected final Object convertValue(final String value)
+	protected final Object convertValue(final String[] value)
 	{
+		String tmp = value != null && value.length > 0?value[0]:null;
 		List choices = getChoices();
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
-			if (getChoiceRenderer().getIdValue(choice, index).equals(value))
+			if (getChoiceRenderer().getIdValue(choice, index).equals(tmp))
 			{
 				return choice;
 			}
