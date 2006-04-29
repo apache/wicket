@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
+      <action type="fix" dev="Juergen Donnerstag" issue="1474092" due-to="David-S">body tag onLoads contributed by Panel are now removed when the the Panel gets removed.</action>
       <action type="fix" dev="Johan Compagner" issue="1476770" due-to="AndreasG">bugfix for 1476770 so that convertValue now gets a String[] instead of String, so that components who need the value don't bypass the param.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1477246">Made Tree better extensible. Added two more examples of customized tree to wicket examples, and display them in a table for better utilization of space.</action>
       <action type="update" dev="Johan Compagner">Made Form.clearInput() public final instead of protected, so that it is more visible and easier to call in a onSelectionChange or something like that.</action>
