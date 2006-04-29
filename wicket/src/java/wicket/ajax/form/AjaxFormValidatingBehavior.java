@@ -21,9 +21,9 @@ package wicket.ajax.form;
 import wicket.Component;
 import wicket.Component.IVisitor;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.panel.FeedbackPanel;
 import wicket.util.time.Duration;
 
 /**
@@ -55,7 +55,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 
 	protected void onSubmit(final AjaxRequestTarget target)
 	{
-		getComponent().getPage().visitChildren(FeedbackPanel.class, new IVisitor()
+		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor()
 		{
 			public Object component(Component component)
 			{
