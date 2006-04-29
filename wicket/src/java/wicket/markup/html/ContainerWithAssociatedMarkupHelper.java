@@ -174,7 +174,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 						// Attach an AttributeModifier to the body container
 						// which appends the new value to the onLoad
 						// attribute
-						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad);
+						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad, container);
 					}
 
 					// There can only be one body tag

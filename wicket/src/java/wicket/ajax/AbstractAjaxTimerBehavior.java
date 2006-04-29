@@ -69,7 +69,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		{
 			this.attachedBodyOnLoadModifier = true;
 			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(
-					getJsTimeoutCall(updateInterval));
+					getJsTimeoutCall(updateInterval), getComponent());
 		}
 	}
 
