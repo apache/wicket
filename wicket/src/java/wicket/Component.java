@@ -536,13 +536,13 @@ public abstract class Component implements Serializable
 	/** Any parent container. */
 	private MarkupContainer parent;
 
-	/** 
+	/**
 	 * I really dislike it, but for now we need it. Reason: due to transparent
-	 * containers and IComponentResolver there is guaranteed 1:1 mapping 
-	 * between component and markup
-	 */ 
+	 * containers and IComponentResolver there is guaranteed 1:1 mapping between
+	 * component and markup
+	 */
 	int markupIndex = -1;
-	
+
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
@@ -1272,19 +1272,20 @@ public abstract class Component implements Serializable
 	public final boolean isAncestorOf(final Component component)
 	{
 		return getParent().contains(component, false);
-//		// Walk up containment hierarchy
-//		for (MarkupContainer current = component.parent; current != null; current = current
-//				.getParent())
-//		{
-//			// Is this an ancestor?
-//			if (current == this)
-//			{
-//				return true;
-//			}
-//		}
-//
-//		// This component is not an ancestor of the given component
-//		return false;
+		// // Walk up containment hierarchy
+		// for (MarkupContainer current = component.parent; current != null;
+		// current = current
+		// .getParent())
+		// {
+		// // Is this an ancestor?
+		// if (current == this)
+		// {
+		// return true;
+		// }
+		// }
+		//
+		// // This component is not an ancestor of the given component
+		// return false;
 	}
 
 	/**
@@ -1572,17 +1573,18 @@ public abstract class Component implements Serializable
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
 			MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-	
+
 			try
 			{
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
 
-				if (this instanceof MarkupContainer) 
+				if (this instanceof MarkupContainer)
 				{
 					MarkupContainer container = (MarkupContainer)this;
-					
-					// First, give priority to IFeedback instances, as they have to
+
+					// First, give priority to IFeedback instances, as they have
+					// to
 					// collect their messages before components like ListViews
 					// remove any child components
 					container.visitChildren(IFeedback.class, new IVisitor()
@@ -1595,11 +1597,11 @@ public abstract class Component implements Serializable
 						}
 					});
 				}
-				
+
 				// Render the component and all its children
 				internalAttach();
 				onBeforeRender();
-				
+
 				render(markupStream);
 			}
 			finally
@@ -1656,14 +1658,15 @@ public abstract class Component implements Serializable
 				renderComponentTag(tag);
 			}
 			markupStream.next();
-	
-			// Render the body only if open-body-close. Do not render if open-close.
+
+			// Render the body only if open-body-close. Do not render if
+			// open-close.
 			if (tag.isOpen())
 			{
 				// Render the body
 				onComponentTagBody(markupStream, tag);
 			}
-	
+
 			// Render close tag
 			if (tag.isOpen())
 			{
@@ -1674,7 +1677,8 @@ public abstract class Component implements Serializable
 				else
 				{
 					// If a open-close tag has been to modified to be
-					// open-body-close than a synthetic close tag must be rendered.
+					// open-body-close than a synthetic close tag must be
+					// rendered.
 					if (getRenderBodyOnly() == false)
 					{
 						// Close the manually opened panel tag.
@@ -1682,11 +1686,12 @@ public abstract class Component implements Serializable
 					}
 				}
 			}
-		} 
-		catch(RuntimeException re)
+		}
+		catch (RuntimeException re)
 		{
-			if(re instanceof WicketRuntimeException) throw re;
-			throw new WicketRuntimeException("Exception in rendering component: " + this,re);
+			if (re instanceof WicketRuntimeException)
+				throw re;
+			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
 	}
 
@@ -2527,9 +2532,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Called when a request begins.
 	 * 
-	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
-	 *             be replaced by onBeginRender or beforeRender with the same
-	 *             semantics.
+	 * @deprecated use onAttach() instead. This method will be removed in 1.3
 	 */
 	protected void onBeginRequest()
 	{
@@ -2690,7 +2693,7 @@ public abstract class Component implements Serializable
 			}
 		}
 
-		if(body != null)
+		if (body != null)
 		{
 			// Write the new body
 			getResponse().write(body);
