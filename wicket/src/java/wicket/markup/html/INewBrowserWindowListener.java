@@ -15,7 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.markup.html;
+
+import wicket.IRequestListener;
+import wicket.RequestListenerInterface;
 
 
 /**

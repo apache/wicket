@@ -124,10 +124,11 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
 	 */
-	public final void setModelValue(String value)
+	public final void setModelValue(String[] valueArray)
 	{
+		String value = valueArray != null && valueArray.length > 0? valueArray[0]: null;
 		String decryptedValue;
 		try
 		{

@@ -238,7 +238,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * @return The parent form for this form component
 	 */
-	public final Form getForm()
+	public Form getForm()
 	{
 		// Look for parent form
 		final Form form = (Form)findParent(Form.class);

@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.INewBrowserWindowListener;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -36,6 +35,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
+import wicket.markup.html.INewBrowserWindowListener;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;

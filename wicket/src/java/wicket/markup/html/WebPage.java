@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.INewBrowserWindowListener;
 import wicket.IRequestTarget;
 import wicket.MetaDataKey;
 import wicket.Page;
@@ -327,7 +326,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see wicket.INewBrowserWindowListener#onNewBrowserWindow()
+	 * @see wicket.markup.html.INewBrowserWindowListener#onNewBrowserWindow()
 	 */
 	public void onNewBrowserWindow()
 	{
