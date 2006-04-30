@@ -80,6 +80,7 @@ public class PropertiesTest extends WicketTestCase
 
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
+		cycle.getSession().setLocale(Locale.GERMANY);
 		TestPage page = new TestPage()
 		{
 			private static final long serialVersionUID = 1L;
