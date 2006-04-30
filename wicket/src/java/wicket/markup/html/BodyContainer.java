@@ -72,6 +72,7 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onLoad'
 	 * @return this
+	 * @deprecated use {@link #addOnLoadModifier(String, Component)} instead
 	 */
 	public final BodyContainer addOnLoadModifier(final String value)
 	{
@@ -92,6 +93,7 @@ public final class BodyContainer implements Serializable
 	 *            The model that holds the value that must be appended to
 	 *            'onLoad'
 	 * @return this
+	 * @deprecated use {@link #addOnLoadModifier(IModel, Component)} instead
 	 */
 	public final BodyContainer addOnLoadModifier(final IModel model)
 	{
@@ -107,6 +109,7 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onUnLoad'
 	 * @return this
+	 * @deprecated use {@link #addOnUnLoadModifier(String, Component)} instead
 	 */
 	public final BodyContainer addOnUnLoadModifier(final String value)
 	{
@@ -123,6 +126,7 @@ public final class BodyContainer implements Serializable
 	 * @param model
 	 *            The model which holds the value to be appended to 'onUnLoad'
 	 * @return this
+	 * @deprecated use {@link #addOnUnLoadModifier(IModel, Component)} instead
 	 */
 	public final BodyContainer addOnUnLoadModifier(final IModel model)
 	{
@@ -176,7 +180,7 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier
+	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
@@ -199,7 +203,7 @@ public final class BodyContainer implements Serializable
 	 * @param model
 	 *            The model which holds the value to be appended to 'onLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier
+	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
@@ -228,7 +232,7 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onUnLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier
+	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
@@ -251,7 +255,7 @@ public final class BodyContainer implements Serializable
 	 * @param model
 	 *            The model which holds the value to be appended to 'onUnLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier
+	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
