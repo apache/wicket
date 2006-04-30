@@ -19,6 +19,7 @@
 package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. 
@@ -70,6 +71,20 @@ public class SubmitLink extends Button
     {
         super(id);
     }
+
+	/**
+     * With this constructor the SubmitLink must be inside a Form.
+     * 
+     * @param id 
+     * 			The id of the submitlink.
+	 * @param model
+	 * 			The model for this submitlink, It won't be used by the submit link itself, 
+	 * 			but it can be used for keeping state  
+     */
+    public SubmitLink(String id, IModel model)
+    {
+        super(id, model);
+    }
     
 
 	/**
@@ -81,8 +96,10 @@ public class SubmitLink extends Button
      * be rendered first. Then the {@link Form} will have a generated javascript/css id.
      * The markup javascript/css id that can exist will be overridden. 
      * 
-     * @param id The id of the submitlink.
-	 * @param form The form which this submitlink must submit.
+     * @param id 
+     * 			The id of the submitlink.
+	 * @param form 
+	 * 			The form which this submitlink must submit.
      */
     public SubmitLink(String id, Form form)
     {
@@ -90,6 +107,29 @@ public class SubmitLink extends Button
         this.form = form;
     }
 
+	/**
+     * With this constructor the SubmitLink will submit the {@link Form} that 
+     * is given when the link is clicked on.  
+     * 
+     * The SubmitLink doesn't have to be in inside the {@link Form}.
+     * But currently if it is outside the {@link Form} and the SubmitLink will 
+     * be rendered first. Then the {@link Form} will have a generated javascript/css id.
+     * The markup javascript/css id that can exist will be overridden. 
+     * 
+     * @param id 
+     * 			The id of the submitlink.
+	 * @param model
+	 * 			The model for this submitlink, It won't be used by the submit link itself, 
+	 * 			but it can be used for keeping state  
+	 * @param form 
+	 * 			The form which this submitlink must submit.
+     */
+    public SubmitLink(String id, IModel model,Form form)
+    {
+        super(id);
+        this.form = form;
+    }
+    
     /**
      * @inheritDoc
      * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
@@ -109,7 +149,7 @@ public class SubmitLink extends Button
      */
     private String getTriggerJavaScript()
     {
-		Form form = getSubmitLinkForm();
+		Form form = getForm();
 		StringBuffer sb = new StringBuffer(100);
 		sb.append("document.getElementById('");
 		sb.append(form.getHiddenFieldId());
@@ -125,7 +165,7 @@ public class SubmitLink extends Button
 	/**
 	 * @return the Form for which this submit link submits
 	 */
-	public final Form getSubmitLinkForm()
+	public final Form getForm()
 	{
 		if (form == null)
 		{
