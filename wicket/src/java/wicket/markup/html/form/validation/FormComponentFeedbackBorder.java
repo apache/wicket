@@ -25,9 +25,12 @@ import wicket.markup.html.border.Border;
 
 /**
  * A border that can be placed around a form component to indicate when the
- * bordered child has a validation error. A child of the border named
+ * bordered child/children has a validation error. A child of the border named
  * "errorIndicator" will be shown and hidden depending on whether the child has
  * an error. A typical error indicator might be a little red asterisk.
+ * <p>
+ * <strong>Note: </strong> Since this border checks its children do not use
+ * setTransparentResolver(true) and add the children directly into the border
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -46,6 +49,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	private final class ErrorIndicator extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 
