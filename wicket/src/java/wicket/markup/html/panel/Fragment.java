@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: Fragment.java 5075 2006-03-21 18:59:42 -0800 (Tue, 21 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-21 18:59:42 -0800 (Tue, 21 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,13 +40,13 @@ import wicket.version.undo.Change;
  * <p>
  * 
  * <pre>
- *           &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *          
- *           &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *           &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *            &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *           
+ *            &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *            &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *           add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *            add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -198,6 +199,12 @@ public class Fragment extends WebMarkupContainer
 			// The following statement assumes that the markup provider is a
 			// parent along the line up to the Page
 			final MarkupStream providerMarkupStream = this.markupProvider.getMarkupStream();
+
+			if (providerMarkupStream == null)
+			{
+				throw new IllegalStateException(
+						"no markup stream found for providing markup container " + markupProvider);
+			}
 
 			renderFragment(providerMarkupStream, openTag);
 		}
