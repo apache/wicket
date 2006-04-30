@@ -48,7 +48,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param httpServletResponse
 	 *            The servlet response object
 	 */
-	BufferedWebResponse(final HttpServletResponse httpServletResponse)
+	public BufferedWebResponse(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
