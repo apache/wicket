@@ -459,7 +459,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 									+ application.getApplicationKey() + "');";
 						}
 					};
-					body.addOnUnLoadModifier(onUnLoadModel);
+					body.addOnUnLoadModifier(onUnLoadModel, null);
 				}
 				Application application = Application.get();
 				final String pageMapName = getPageMap().getName();
