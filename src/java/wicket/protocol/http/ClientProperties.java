@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import wicket.util.string.AppendingStringBuffer;
+
 /**
  * A description of the client browser environment.
  * <p>
@@ -440,7 +442,35 @@ public class ClientProperties implements Serializable
 		String utcOffset = (String)data.get(ClientProperties.UTC_OFFSET);
 		if (utcOffset != null)
 		{
+			int dotPos = utcOffset.indexOf('.');
+			if (dotPos >= 0)
+			{
+				String hours = utcOffset.substring(0, dotPos);
+				String hourPart = utcOffset.substring(dotPos + 1);
+
+				if (hours.startsWith("+"))
+				{
+					hours = hours.substring(1);
+				}
+				int offsetHours = Integer.parseInt(hours);
+				int offsetMins = (int)(Double.parseDouble(hourPart) * 6);
+
+				AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
+				sb.append(offsetHours > 0 ? "+" : "-");
+				sb.append(Math.abs(offsetHours));
+				sb.append(":");
+				if (offsetMins < 10)
+				{
+					sb.append("0");
+				}
+				sb.append(offsetMins);
+				return TimeZone.getTimeZone(sb.toString());
+			}
 			int offset = Integer.parseInt(utcOffset);
+			if (offset < 0)
+			{
+				utcOffset = utcOffset.substring(1);
+			}
 			TimeZone timeZone = TimeZone
 					.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utcOffset);
 			return timeZone;
