@@ -374,18 +374,6 @@
 				</reportSets>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changes-maven-plugin</artifactId>
-				<version>2.0-beta-1</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>changes-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
@@ -398,7 +386,11 @@
 	<distributionManagement>
 		<site>
 			<id>wicket-site</id>
-			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/</url>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs</url>
 		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
 	</distributionManagement>
 </project>
