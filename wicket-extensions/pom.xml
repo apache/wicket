@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Extensions</name>
-	<description></description>
+	<description>Wicket Extensions is a rich component library for the Wicket framework.</description>
 	<url>http://wicket.sourceforge.net/wicket-extensions</url>
 	<inceptionYear>2004</inceptionYear>
 
@@ -205,4 +205,14 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-extensions</url>
+		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
+	</distributionManagement>
 </project>
