@@ -936,11 +936,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 			int index = url.indexOf("/", 7);
 			url = url.substring(index);
 		}
-		if(url.startsWith(getContextPath()));
+		if(url.startsWith(getContextPath()))
 		{
 			url = url.substring(getContextPath().length());
 		}
-		if(url.startsWith(getServletPath()));
+		if(url.startsWith(getServletPath()))
 		{
 			url = url.substring(getServletPath().length());
 		}
