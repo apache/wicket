@@ -74,6 +74,21 @@ public final class PageParameters extends ValueMap
 	 */
 	public PageParameters(final String keyValuePairs)
 	{
+		this(keyValuePairs, ",");
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param keyValuePairs
+	 *            List of key value pairs separated by commas. For example,
+	 *            "param1=foo,param2=bar"
+	 * @param delimiter
+	 *            Delimiter string used to separate key/value pairs
+	 * @see ValueMap#ValueMap(String)
+	 */
+	public PageParameters(final String keyValuePairs, final String delimiter)
+	{
 		super();
 
 		// We can not use ValueMaps constructor as it uses
@@ -83,7 +98,7 @@ public final class PageParameters extends ValueMap
 		// and quotes are not "quotes".
 
 		// Get list of strings separated by the delimiter
-		final StringList pairs = StringList.tokenize(keyValuePairs, ",");
+		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
 		// Go through each string in the list
 		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
