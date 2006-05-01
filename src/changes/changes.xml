@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
+      <action type="fix" dev="Johan Compagner" issue="1478684" due-to="Igor!">Deadlock fixed when trying to render a page that was expired the second time.</action>
       <action type="fix" dev="Johan Compagner" issue="1473355" due-to="Nathan Hamblen">BufferedWebResponse constructor should be public.</action>
       <action type="fix" dev="Johan Compagner" issue="1479245" due-to="Jan Bares">SubmitLink with form object. FormComponent.getForm() is not final anymore because of this and SubmitLink now only overrides that method</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1474092" due-to="David-S">body tag onLoads contributed by Panel are now removed when the the Panel gets removed.</action>

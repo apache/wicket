@@ -392,7 +392,13 @@ public abstract class Session implements Serializable
 				t = (Thread)usedPages.get(id);
 			}
 			usedPages.put(id, Thread.currentThread());
-			return pageMap.get(Integer.parseInt(id), versionNumber);
+			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
+			if(page == null)
+			{
+				usedPages.remove(id);
+				notifyAll();
+			}
+			return page;
 		}
 		return null;
 	}
