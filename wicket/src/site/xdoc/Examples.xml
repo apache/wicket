@@ -33,6 +33,10 @@
 						<a href="ExampleStockQuote.html">StockQuote</a>
 						- A short example of building a custom component
 					</li>
+					<li>
+						<a href="ExampleMarkupInheritance.html">Markup Inheritance</a>
+						- A short example explaining markup inheritance
+					</li>
 				</ul>
 			</p>
 			<subsection name="Examples in Live Action">
