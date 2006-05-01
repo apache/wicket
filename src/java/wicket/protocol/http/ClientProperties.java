@@ -442,6 +442,11 @@ public class ClientProperties implements Serializable
 		String utcOffset = (String)data.get(ClientProperties.UTC_OFFSET);
 		if (utcOffset != null)
 		{
+			// apparently it is platform dependent on whether you get the
+			// offset in a decimal form or not. This parses the decimal
+			// form of the UTC offset, taking into account several possibilities
+			// such as getting the format in +2.5 or -1.2
+
 			int dotPos = utcOffset.indexOf('.');
 			if (dotPos >= 0)
 			{
@@ -454,6 +459,9 @@ public class ClientProperties implements Serializable
 				}
 				int offsetHours = Integer.parseInt(hours);
 				int offsetMins = (int)(Double.parseDouble(hourPart) * 6);
+
+				// construct a GMT timezone offset string from the retrieved 
+				// offset which can be parsed by the TimeZone class.
 
 				AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
 				sb.append(offsetHours > 0 ? "+" : "-");
