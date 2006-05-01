@@ -9,9 +9,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.form.AjaxCheckBox;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
-import wicket.examples.WicketExampleHeader;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -25,7 +23,7 @@ import wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class TodoList extends WebPage
+public class TodoList extends BasePage
 {
 	/**
 	 * The todo object.
@@ -379,9 +377,6 @@ public class TodoList extends WebPage
 	 */
 	public TodoList()
 	{
-		// add the examples navigation component.
-		add(new WicketExampleHeader("mainNavigation", "Todo List", this));
-
 		// add the listview container for the todo items.
 		showItems = new TodoItemsContainer("showItems");
 		add(showItems);
