@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Guide</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="User's Guide">
+			<p>
+				Currently there is no (finished) up to date User's Guide. In this document we
+				describe places where you can find any documentation that is available.
+				<a href="/wiki/index.php/Newuserguide">Work is in progress</a>
+				to build a new, up to date user's guide.
+			</p>
+			<p>You could consult the following places for information on using Wicket:</p>
+			<ul>
+				<li>
+					<a href="QuickTour.html">The examples</a>
+					The examples are a showcase of how one might use Wicket. There are examples
+					displaying form validation, using Hibernate, Spring, etc. You can see the
+					examples in action using the
+					<a href="QuickStartBinary.html">binary distribution</a>
+					, or the
+					<a href="QuickStartSource.html">source distribution</a>
+					.
+				</li>
+				<li>
+					<a href="/wiki/index.php/Models">Working with Wicket Models</a>
+				</li>
+				<li>
+					<a href="/wiki/index.php/Lifecycle">The Lifecycle of a Wicket Application</a>
+				</li>
+				<li>
+					<a href="/wiki/index.php/Newuserguide">The new User's Guide</a>
+					Please consult the
+					<a href="/wiki/index.php/Newuserguide">Wiki</a>
+					effort for creating a new, up to date user's guide. It is still in its infancy,
+					but you will find accurate documentation there.
+				</li>
+				<li>
+					<a href="/apidocs/index.html" target="_blank" class="newwindow">The JavaDoc</a>
+					The JavaDoc's are kept up to date religiously, so probably the best information
+					can be found there.
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>

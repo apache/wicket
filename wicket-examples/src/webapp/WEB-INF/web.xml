@@ -7,6 +7,8 @@
 
 	<display-name>Wicket Examples</display-name>
 	
+	<distributable />
+
 	<!-- only available with servlet spec. 2.4 
 	<locale-encoding-mapping-list>
 		<locale-encoding-mapping>
@@ -16,15 +18,39 @@
 	</locale-encoding-mapping-list>
 	-->	  
   
-<!--  With wicket examples this is the means to configure deployment
-      resp. a development configuration.  
-      Comment the following lines for "development" (reloading when templates change) 
+<!--  
+      There are three means to configure Wickets configuration mode and they are
+      tested in the order given. 
+      1) A system property: -Dwicket.configuration
+      2) servlet specific <init-param>
+      3) context specific <context-param>
+      The value might be either "development" (reloading when templates change)
+      or "deployment". If no configuration is found, "deployment" is the default.
 -->
+	<context-param>
+	  <param-name>configuration</param-name>
+	  <param-value>development</param-value>
+	</context-param>
 
-		<!-- context-param>
-		  <param-name>deployment</param-name>
-		  <param-value>true</param-value>
-		</context-param-->
+	<servlet>
+		<servlet-name>AjaxPrototypeApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.ajax.prototype.PrototypeApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>AjaxApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>
@@ -36,6 +62,45 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>EchoApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.echo.EchoApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>HelloBrowserApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+    <servlet>
+        <servlet-name>StockQuoteApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>wicket.examples.stockquote.StockQuoteApplication</param-value>
+        </init-param>
+    </servlet>
+    
 	<servlet>
 		<servlet-name>HangmanApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -177,30 +242,99 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>CustomComponentsApplication</servlet-name>
+		<servlet-name>TemplateApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.customcomponents.CustomComponentsApplication</param-value>
+		  <param-value>wicket.examples.template.TemplateApplication</param-value>
+		</init-param>
+		<init-param>
+		  <param-name>configuration</param-name>
+		  <param-value>development</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet>
-		<servlet-name>WizardApplication</servlet-name>
+		<servlet-name>ComponentReferenceApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
+		  <param-value>wicket.examples.compref.ComponentReferenceApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>RepeaterExamplesApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.examples.repeater.RepeaterApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>NiceUrlApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.niceurl.NiceUrlApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>FramesApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.frames.FramesApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>CustomResourceLoadingApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AjaxApplication</servlet-name>
+		<url-pattern>/ajax/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>AjaxPrototypeApplication</servlet-name>
+		<url-pattern>/prototype/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>RepeaterExamplesApplication</servlet-name>
+		<url-pattern>/repeater/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>NiceUrlApplication</servlet-name>
+		<url-pattern>/niceurl/*</url-pattern>
+	</servlet-mapping>	
 
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
 	</servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>StockQuoteApplication</servlet-name>
+        <url-pattern>/stock/*</url-pattern>
+    </servlet-mapping>
+    
 	<servlet-mapping>
 		<servlet-name>SignIn2Application</servlet-name>
 		<url-pattern>/signin2/*</url-pattern>
@@ -247,6 +381,21 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>EchoApplication</servlet-name>
+		<url-pattern>/echo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<url-pattern>/unicodeconverter/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>HelloBrowserApplication</servlet-name>
+		<url-pattern>/hellobrowser/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>FormInputApplication</servlet-name>
 		<url-pattern>/forminput/*</url-pattern>
 	</servlet-mapping>
@@ -272,14 +421,28 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>CustomComponentsApplication</servlet-name>
-		<url-pattern>/customcomponents/*</url-pattern>
+		<servlet-name>TemplateApplication</servlet-name>
+		<url-pattern>/template/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>WizardApplication</servlet-name>
-		<url-pattern>/wizard/*</url-pattern>
+		<servlet-name>ComponentReferenceApplication</servlet-name>
+		<url-pattern>/compref/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FramesApplication</servlet-name>
+		<url-pattern>/frames/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>CustomResourceLoadingApplication</servlet-name>
+		<url-pattern>/customresourceloading/*</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
 	
 	<welcome-file-list>
 	<welcome-file>index.html</welcome-file>

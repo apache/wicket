@@ -19,7 +19,6 @@ package wicket.util.lang;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,6 +90,8 @@ import wicket.util.value.LongValue;
  */
 public final class Bytes extends LongValue
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Pattern for string parsing. */
 	private static final Pattern valuePattern = Pattern.compile(
 			"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
@@ -385,7 +386,7 @@ public final class Bytes extends LongValue
 		{
 			if (terabytes() >= 1.0)
 			{
-				return unitString(gigabytes(), "T", locale);
+				return unitString(terabytes(), "T", locale);
 			}
 
 			if (gigabytes() >= 1.0)

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.Strings;
 
 /**
@@ -25,7 +26,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent extends FormComponent
 {
 	/**
 	 * @see wicket.Component#Component(String)
@@ -56,7 +57,19 @@ abstract class AbstractTextComponent extends FormComponent
 	{
 		return getFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL);
 	}
-	
+
+	/**
+	 * TextFields return an empty string even if the user didn't type anything
+	 * in them. To be able to work nice with validation, this method returns
+	 * false.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
+	 */
+	public boolean isInputNullable()
+	{
+		return false;
+	}
+
 	/**
 	 * Should the bound object become <code>null</code> when the input is
 	 * empty?
@@ -78,19 +91,17 @@ abstract class AbstractTextComponent extends FormComponent
 	{
 		return true;
 	}
-
+	
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected void updateModel()
+	protected Object convertValue(String[] value) throws ConversionException
 	{
-		String input = getInput();
-		if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+		String tmp = value != null && value.length > 0?value[0]:null;
+		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
 		{
-			input = null;
+			return null;
 		}
-		setModelObject(input);
+		return super.convertValue(value);
 	}
 }

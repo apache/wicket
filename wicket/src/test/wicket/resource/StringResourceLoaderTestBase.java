@@ -18,16 +18,12 @@
  */
 package wicket.resource;
 
-import java.util.List;
 import java.util.Locale;
 
-import wicket.Application;
-import wicket.Component;
-import wicket.IRequestCycleFactory;
-import wicket.Session;
-import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.Component;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader
@@ -41,7 +37,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	protected IStringResourceLoader loader;
 
 	// The dummy application
-	protected Application application;
+	protected DummyApplication application;
 
 	// The dummy component
 	protected Component component;
@@ -65,40 +61,10 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		this.application = new DummyApplication();
-		Session.set(new Session(this.application)
-		{
-            public void invalidate()
-            {
-            }
-
-			protected Object getAttribute(String name)
-			{
-				return null;
-			}
-
-			protected void setAttribute(String name, Object object)
-			{
-			}
-
-			protected List getAttributeNames()
-			{
-				return null;
-			}
-
-			protected void removeAttribute(String name)
-			{
-			}
-
-			protected IRequestCycleFactory getRequestCycleFactory()
-			{
-				return null;
-			}
-		});
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();
 		page.add(this.component);
 		this.loader = createLoader();
-
 	}
 
 	/**
@@ -106,11 +72,11 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyNoStyleDefaultLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", Locale.getDefault(), null);
+		String s = loader.loadStringResource(component.getClass(), "test.string", Locale.getDefault(), null);
 		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 
 		// And do it again to ensure caching path is exercised
-		s = loader.loadStringResource(component, "test.string", Locale.getDefault(), null);
+		s = loader.loadStringResource(component.getClass(), "test.string", Locale.getDefault(), null);
 		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 	}
 
@@ -119,7 +85,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderInvalidKeyNoStyleDefaultLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(component, "unknown.string",
+		Assert.assertNull("Missing key should return null", loader.loadStringResource(component.getClass(), "unknown.string",
 				Locale.getDefault(), null));
 	}
 
@@ -128,7 +94,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyNoStyleAlternativeLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", new Locale("zz"), null);
+		String s = loader.loadStringResource(component.getClass(), "test.string", new Locale("zz"), null);
 		Assert.assertEquals("Resource should be loaded", "Flib flob", s);
 	}
 
@@ -137,7 +103,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderInvalidKeyNoStyleAlternativeLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(component, "unknown.string",
+		Assert.assertNull("Missing key should return null", loader.loadStringResource(component.getClass(), "unknown.string",
 				new Locale("zz"), null));
 	}
 
@@ -146,7 +112,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	public void testLoaderValidKeyStyleNoLocale()
 	{
-		String s = loader.loadStringResource(component, "test.string", null, "alt");
+		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt");
 		Assert.assertEquals("Resource should be loaded", "Alt test string", s);
 	}
 

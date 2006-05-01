@@ -64,7 +64,7 @@ Calendar._SMN = new Array
  "Feb",
  "M\u00e4r",
  "Apr",
- "May",
+ "Mai",
  "Jun",
  "Jul",
  "Aug",
@@ -72,6 +72,10 @@ Calendar._SMN = new Array
  "Okt",
  "Nov",
  "Dez");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // tooltips
 Calendar._TT = {};

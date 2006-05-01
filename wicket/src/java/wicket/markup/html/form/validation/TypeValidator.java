@@ -23,24 +23,33 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Session;
+import wicket.markup.html.form.FormComponent;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
+ * This validator has been depreacted in favor of
+ * {@link FormComponent#setType(Class)}
+ * 
  * Validates input by trying it to convert to the given type using the
  * {@link wicket.util.convert.IConverter}instance of the component doing the
  * validation.
  * <p>
  * This component adds ${type}, ${exception}, ${locale} and ${format} to the
- * model for OGNL error message interpolation. Format is only valid if the type
+ * model for error message interpolation. Format is only valid if the type
  * conversion involves a date.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * @deprecated
  */
 public class TypeValidator extends StringValidator
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The locale to use */
 	private Locale locale = null;
 
@@ -88,28 +97,29 @@ public class TypeValidator extends StringValidator
 	 * {@link wicket.util.convert.IConverter}instance of the component doing
 	 * the validation.
 	 * 
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+	 *      java.lang.String)
 	 */
-	public void onValidate(String value)
+	public void onValidate(FormComponent formComponent, String value)
 	{
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
 		{
 			// Check value by attempting to convert it
-			final IConverter converter = getFormComponent().getConverter();
+			final IConverter converter = formComponent.getConverter();
 			try
 			{
 				converter.convert(value, type);
 			}
 			catch (Exception e)
 			{
-				if(e instanceof ConversionException)
+				if (e instanceof ConversionException)
 				{
-					error(messageModel((ConversionException)e));
+					error(formComponent, messageModel(formComponent, (ConversionException)e));
 				}
 				else
 				{
-					error(messageModel(new ConversionException(e)));
+					error(formComponent, messageModel(formComponent, new ConversionException(e)));
 				}
 			}
 		}
@@ -126,14 +136,16 @@ public class TypeValidator extends StringValidator
 	/**
 	 * Gets the message context.
 	 * 
+	 * @param formComponent
+	 *            form component
 	 * @param e
 	 *            the conversion exception
 	 * @return a map with variables for interpolation
 	 */
-	protected Map messageModel(final ConversionException e)
+	protected Map messageModel(FormComponent formComponent, final ConversionException e)
 	{
-		final Map model = super.messageModel();
-		model.put("type", type);
+		final Map model = super.messageModel(formComponent);
+		model.put("type", Classes.simpleName(type));
 		final Locale locale = e.getLocale();
 		if (locale != null)
 		{

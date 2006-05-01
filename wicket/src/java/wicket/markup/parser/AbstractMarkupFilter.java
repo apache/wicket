@@ -20,6 +20,8 @@ package wicket.markup.parser;
 /**
  * Base class for markup filters
  * 
+ * @see wicket.markup.MarkupParser
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
@@ -45,13 +47,15 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	{
 		return parent;
 	}
-	
+
 	/**
 	 * Set new parent.
-	 * @param parent The next element in the chain
+	 * 
+	 * @param parent
+	 *            The next element in the chain
 	 */
 	public final void setParent(final IMarkupFilter parent)
 	{
-	    this.parent = parent;
+		this.parent = parent;
 	}
 }

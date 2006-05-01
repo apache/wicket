@@ -1,356 +1,439 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
+ * $Id$ $Revision:
+ * 5136 $ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.ApplicationSettings;
+import wicket.Application;
+import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
-import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHandler;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.TagTypeHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
-import wicket.markup.parser.filter.WicketParamTagHandler;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
-import wicket.util.resource.IResourceStream;
+import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.string.AppendingStringBuffer;
+import wicket.util.value.ValueMap;
 
 
 /**
  * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a
  * streaming XML parser to read the markup and IMarkupFilters to remove
- * comments, identify Wicket relevant tags, apply html specific treatments
- * etc.. <p>
+ * comments, identify Wicket relevant tags, apply html specific treatments etc..
+ * <p>
  * The result will be an Markup object, which is basically a list, containing
  * Wicket relevant tags and RawMarkup.
- *
+ * 
+ * @see IMarkupFilter
+ * @see IMarkupParserFactory
+ * @see IMarkupSettings
+ * @see Markup
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public class MarkupParser
 {
-    /** Logging */
-    private static final Log log = LogFactory.getLog(MarkupParser.class);
+	/** Wicket URI */
+	private static final String WICKET_URI = "http://wicket.sourceforge.net";
 
-    /** Name of desired componentId tag attribute.
-     * E.g. &lt;tag wicket:id="..."&gt; */
-    private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
+	/** namespace prefix: e.g. <html xmlns:wicket="http://wicket.sourceforge.net"> */ 
+	private static final String XMLNS = "xmlns:";
 
-    /** True to strip out HTML comments. */
-    private boolean stripComments;
+	/** The XML parser to use */
+	private final IXmlPullParser xmlParser;
 
-    /** True to compress multiple spaces/tabs or line endings to a single space or line ending. */
-    private boolean compressWhitespace;
+	/** The markup handler chain: each filter has a specific task */
+	private IMarkupFilter markupFilterChain;
 
-    /** if true, <wicket:param ..> tags will be removed from markup */
-    private boolean stripWicketTag;
+	/** The markup created by reading the markup file */
+	private final Markup markup;
 
-    /** If true, MarkupParser will automatically create a WicketTag for
-     * all tags surrounding a href attribute with a relative path to a
-     * html file. E.g. &lt;a href="Home.html"&gt;
-     */
-    private boolean automaticLinking = false;
+	/** Temporary variable: Application.get().getMarkupSettings() */
+	private final IMarkupSettings markupSettings;
 
-    /** The XML parser to use */
-    private IXmlPullParser xmlParser = new XmlPullParser();
-
-    /** The markup handler chain: each filter has a specific task */
-    private IMarkupFilter markupFilterChain;
-
-    /**
-     * Constructor.
-     * @param xmlParser The streaming xml parser to read and parse the markup
-     * @param wicketNamespace The wicket namespace to identifiy wicket tags; e.g. wicket:id="xxx"
-     */
-    public MarkupParser(final IXmlPullParser xmlParser, final String wicketNamespace)
-    {
-        this.xmlParser = xmlParser;
-        this.wicketNamespace = wicketNamespace;
-    }
-
-    /**
-     * Constructor.
-     * @param xmlParser The streaming xml parser to read and parse the markup
-     */
-    public MarkupParser(final IXmlPullParser xmlParser)
-    {
-        this.xmlParser = xmlParser;
-    }
-
-    /**
-	 * Configure the markup parser based on Wicket application settings
-	 * @param settings Wicket application settings
-	 */
-	public void configure(final ApplicationSettings settings)
-	{
-        this.wicketNamespace = settings.getWicketNamespace();
-        this.stripWicketTag = settings.getStripWicketTags();
-        this.stripComments = settings.getStripComments();
-        this.compressWhitespace = settings.getCompressWhitespace();
-        this.automaticLinking = settings.getAutomaticLinking();
-	}
-	
 	/**
-	 * Create a new markup filter chain and initialize with all default
-	 * filters required.
+	 * Constructor.
+	 * 
+	 * @param xmlParser
+	 *            The streaming xml parser to read and parse the markup
+	 */
+	public MarkupParser(final IXmlPullParser xmlParser)
+	{
+		this.xmlParser = xmlParser;
+		this.markup = new Markup();
+		this.markupSettings = Application.get().getMarkupSettings();
+	}
+
+	/**
+	 * In case you want to analyze markup which BY DEFAULT does not use "wicket"
+	 * to find relevant tags.
+	 * 
+	 * @param namespace
+	 */
+	public final void setWicketNamespace(final String namespace)
+	{
+		this.markup.setWicketNamespace(namespace);
+	}
+
+	/**
+	 * Create a new markup filter chain and initialize with all default filters
+	 * required.
 	 * 
 	 * @param tagList
+	 *            A list which the handler may add new MarkupElement to which
+	 *            were not found in the markup file.
 	 * @return a preconfigured markup filter chain
 	 */
-	private IMarkupFilter newFilterChain(final List tagList)
+	private final IMarkupFilter newFilterChain(final List tagList)
 	{
-        // Chain together all the different markup filters and configure them
-        final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
-        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
-        
-        final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
-                new HtmlHandler(detectWicketComponents));
-        wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
-        
-        final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
-        
-        final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
-        autolinkHandler.setAutomaticLinking(this.automaticLinking);
+		// Chain together all the different markup filters and configure them
+		IMarkupFilter filter = new WicketTagIdentifier(markup, xmlParser);
 
-        // TODO Note: currently not needed
-        //final HtmlHeaderSectionHandler headerHandler = new HtmlHeaderSectionHandler(autolinkHandler);
-        //headerHandler.setTagList(tagList);
-        
-        // Markup filter chain starts with auto link handler
-        return autolinkHandler;
+		filter = new TagTypeHandler(filter);
+		filter = new HtmlHandler(filter);
+		filter = new WicketRemoveTagHandler(filter);
+		filter = new WicketLinkTagHandler(filter);
+
+		// Provided the wicket component requesting the markup is known ...
+		MarkupResourceStream resource = markup.getResource();
+		if ((resource != null) && (resource.getContainerInfo() != null))
+		{
+			if (WicketMessageTagHandler.enable)
+			{
+				filter = new WicketMessageTagHandler(filter, resource.getContainerInfo());
+			}
+
+			filter = new BodyOnLoadHandler(filter);
+
+			// Pages require additional handlers
+			if (Page.class.isAssignableFrom(resource.getContainerInfo().getContainerClass()))
+			{
+				filter = new HtmlHeaderSectionHandler(tagList, filter);
+			}
+		}
+
+		return filter;
 	}
 
 	/**
 	 * By default don't do anything. Subclasses may append additional markup
-	 * filter if required.
+	 * filters if required.
+	 * 
+	 * @see #appendMarkupFilter(IMarkupFilter)
 	 */
 	protected void initFilterChain()
 	{
-	    ;
 	}
 
 	/**
-	 * Append a new filter to the list of already pre-configured markup
-	 * filters.
+	 * Append a new filter to the list of already pre-configured markup filters.
+	 * To be used by subclasses which implement {@link #initFilterChain()}.
 	 * 
-	 * @param filter The filter to be appended
+	 * @param filter
+	 *            The filter to be appended
 	 */
-	public void appendMarkupFilter(final IMarkupFilter filter)
+	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
-	    filter.setParent(markupFilterChain);
-	    markupFilterChain = filter;
+		filter.setParent(markupFilterChain);
+		markupFilterChain = filter;
 	}
-	
-    /**
-     * Return the encoding used while reading the markup file.
-     * You need to call @see #read(Resource) first to initialise
-     * the value.
-     *
-     * @return if null, than JVM default is used.
-     */
-    public String getEncoding()
-    {
-        return xmlParser.getEncoding();
-    }
 
 	/**
-	 * Return the XML declaration string, in case if found in the
-	 * markup.
+	 * Reads and parses markup from a file.
 	 * 
-	 * @return Null, if not found.
+	 * @param resource
+	 *            The file
+	 * @return The markup
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
 	 */
-    public String getXmlDeclaration()
-    {
-        return xmlParser.getXmlDeclaration();
-    }
-    
-    /**
-     * Reads and parses markup from a file.
-     * @param resource The file
-     * @return The markup
-     * @throws ParseException
-     * @throws IOException
-     * @throws ResourceStreamNotFoundException
-     */
-    public Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
-            ResourceStreamNotFoundException
-    {
-        xmlParser.parse(resource);
-        return new Markup(resource, parseMarkup(), getXmlDeclaration(), getEncoding());
-    }
+	final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
+			ResourceStreamNotFoundException
+	{
+		// Remove all existing markup elements
+		this.markup.reset();
 
-    /**
-     * Parse the markup.
-     * @param string The markup
-     * @return The markup
-     * @throws ParseException
-     * @throws IOException
-     * @throws ResourceStreamNotFoundException
-     */
-    Markup parse(final String string) throws ParseException, IOException,
-    	ResourceStreamNotFoundException
-    {
-        xmlParser.parse(string);
-        return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding());
-    }
+		// For diagnostic purposes
+		this.markup.setResource(resource);
 
-    /**
-     * Scans the given markup string and extracts balancing tags.
-     * @return An immutable list of immutable MarkupElement elements
-     * @throws ParseException Thrown if markup is malformed or tags don't balance
-     */
-    private List parseMarkup() throws ParseException
-    {
-        final List autoAddList = new ArrayList();
-        
-        this.markupFilterChain = newFilterChain(autoAddList);
-        initFilterChain();
-        
-        // List to return
-        final List list = new ArrayList();
+		// Initialize the xml parser
+		this.xmlParser.parse(resource, this.markupSettings.getDefaultMarkupEncoding());
 
-        // If remaining tags after <wicket:extend/> shall be ignored
-        // TODO remove <wicket:extend> specific code from MarkupParser
-        int stripRemainingElements = -1;
+		// parse the xml markup and tokenize it into wicket relevant markup
+		// elements
+		parseMarkup();
 
-        // Loop through tags
-        for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
-        {
-            boolean add = (tag.getId() != null);
-            if (!add && tag.getXmlTag().isClose())
-            {
-                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
-            }
+		this.markup.setEncoding(xmlParser.getEncoding());
+		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-            // Add tag to list?
-            if (add || (autoAddList.size() > 0))
-            {
-                final CharSequence text =
-                    	xmlParser.getInputFromPositionMarker(tag.getPos());
+		return this.markup;
+	}
 
-                // Add text from last position to tag position
-                if (text.length() > 0)
-                {
-                    String rawMarkup = text.toString();
+	/**
+	 * Parse the markup.
+	 * 
+	 * @param string
+	 *            The markup
+	 * @return The markup
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public final Markup parse(final String string) throws IOException,
+			ResourceStreamNotFoundException
+	{
+		// Remove all existing markup elements
+		this.markup.reset();
 
-                    if (stripComments)
-                    {
-                        rawMarkup = rawMarkup.replaceAll("<!--(.|\n|\r)*?-->", "");
-                    }
+		// Initialize the xml parser
+		this.xmlParser.parse(string);
 
-                    if (compressWhitespace)
-                    {
-                        rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
-                        rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
-                    }
+		// parse the xml markup and tokenize it into wicket relevant markup
+		// elements
+		parseMarkup();
 
-                    list.add(new RawMarkup(rawMarkup));
-                }
+		this.markup.setEncoding(xmlParser.getEncoding());
+		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-                // Strip raw markup preceding <wicket:extend> and following </wicket:extend>
-                // Make sure no wicket components get removed
-                if (tag instanceof WicketTag)
-                {
-                    final WicketTag wtag = (WicketTag) tag;
-                    if (wtag.isExtendTag())
-                    {
-                        if (wtag.isOpen())
-                        {
-                            // TODO check if only RawMarkup
-                            list.clear();
-                        }
-                        else if (wtag.isClose())
-                        {
-                            if (stripRemainingElements != -1)
-                            {
-                                throw new MarkupException("Have already seen a <wicket:extend> tag");
-                            }
-                            
-                            stripRemainingElements = list.size() + 1;
-                        }
-                        else
-                        {
-                            throw new MarkupException("Unmatched open close tags for <wicket:extend>");
-                        }
-                    }
-                }
+		return this.markup;
+	}
 
-                if ((add == false) && (autoAddList.size() > 0))
-                {
-                    xmlParser.setPositionMarker(tag.getPos());
-                }
-                list.addAll(autoAddList);
-                autoAddList.clear();
-            }
-            
-            if (add)
-            {
-                // Add to list unless preview component tag remover flagged as removed
-                if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
-                {
-	                list.add(tag);
-                }
-                
-                xmlParser.setPositionMarker();
-            }
-        }
+	/**
+	 * Scans the given markup and extracts balancing tags.
+	 * 
+	 */
+	private void parseMarkup()
+	{
+		// Handlers may add MarkupElements which were not found in the markup
+		// file.
+		final List autoAddList = new ArrayList();
 
-        // Add tail?
-        final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
-        if (text.length() > 0)
-        {
-            list.add(new RawMarkup(text));
-        }
-        
-        // Remove raw markup following </wicket:extend>
-        if (stripRemainingElements != -1)
-        {
-            for (int i = list.size() - 1; i >= stripRemainingElements; i--)
-            {
-                // TODO check if only RawMarkup
-                list.remove(i);
-            }
-        }
+		// Initialize the markup filter chain
+		this.markupFilterChain = newFilterChain(autoAddList);
+		
+		// Allow subclasses to extend the filter chain
+		initFilterChain();
 
-        // Make all tags immutable. Note: We can not make tag immutable 
-        // just prior to adding to the list, because <wicket:param> 
-        // needs to modify its preceding tag (add the attributes). And 
-        // because WicketParamTagHandler and ComponentTag are not in the 
-        // same package, WicketParamTagHandler is not able to modify the
-        // default protected variables of ComponentTag, either.
-        for (int i=0; i < list.size(); i++)
-        {
-            MarkupElement elem = (MarkupElement) list.get(i);
-            if (elem instanceof ComponentTag)
-            {
-                ((ComponentTag)elem).makeImmutable();
-            }
-        }
-        
-        // Return immutable list of all MarkupElements
-        return Collections.unmodifiableList(list);
-    }
+		// Get relevant settings from the Application
+		boolean stripComments = this.markupSettings.getStripComments();
+		boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
+
+		try
+		{
+			// Loop through tags
+			for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
+			{
+				boolean add = (tag.getId() != null);
+				if (!add && tag.getXmlTag().isClose())
+				{
+					add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
+				}
+
+				// Determine wicket namespace: <html
+				// xmlns:wicket="http://wicket.sourceforge.net">
+				RawMarkup replaceTag = null;
+				if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
+				{
+					// if add already true, do not make it false
+					add |= determineWicketNamespace(tag);
+
+					// If add and tag has no wicket:id, than
+					if ((add == true) && (tag.getId() == null))
+					{
+						// Replace the current tag
+						replaceTag = new RawMarkup(tag.toCharSequence());
+					}
+				}
+
+				// Add tag to list?
+				if (add || (autoAddList.size() > 0) || tag.isModified())
+				{
+					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
+
+					// Add text from last position to tag position
+					if (text.length() > 0)
+					{
+						String rawMarkup = text.toString();
+
+						if (stripComments)
+						{
+							rawMarkup = removeComment(rawMarkup);
+						}
+
+						if (compressWhitespace)
+						{
+							rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
+							rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
+						}
+
+						this.markup.addMarkupElement(new RawMarkup(rawMarkup));
+					}
+
+					if ((add == false) && (autoAddList.size() > 0))
+					{
+						xmlParser.setPositionMarker(tag.getPos());
+					}
+
+					for (int i = 0; i < autoAddList.size(); i++)
+					{
+						this.markup.addMarkupElement((MarkupElement)autoAddList.get(i));
+					}
+					autoAddList.clear();
+				}
+
+				if (add)
+				{
+					// Add to list unless preview component tag remover flagged
+					// as removed
+					if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
+					{
+						if (replaceTag != null)
+						{
+							this.markup.addMarkupElement(replaceTag);
+						}
+						else
+						{
+							this.markup.addMarkupElement(tag);
+						}
+					}
+
+					xmlParser.setPositionMarker();
+				}
+				else if (tag.isModified())
+				{
+					this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+					xmlParser.setPositionMarker();
+				}
+			}
+		}
+		catch (ParseException ex)
+		{
+			// Add remaining input string
+			final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+			if (text.length() > 0)
+			{
+				this.markup.addMarkupElement(new RawMarkup(text));
+			}
+
+			this.markup.setEncoding(xmlParser.getEncoding());
+			this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
+
+			MarkupStream markupStream = new MarkupStream(markup);
+			markupStream.setCurrentIndex(this.markup.size() - 1);
+			throw new MarkupException(markupStream, ex.getMessage(), ex);
+		}
+
+		// Add tail?
+		final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+		if (text.length() > 0)
+		{
+			this.markup.addMarkupElement(new RawMarkup(text));
+		}
+
+		// Make all tags immutable and the list of elements unmodifable
+		this.markup.makeImmutable();
+	}
+
+	/**
+	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
+	 * reasons I don't understand, the following regex
+	 * <code>"<!--(.|\n|\r)*?-->"<code>
+	 * causes a stack overflow in some circumstances (jdk 1.5) 
+	 * 
+	 * @param rawMarkup
+	 * @return raw markup
+	 */
+	private String removeComment(String rawMarkup)
+	{
+		int pos1 = rawMarkup.indexOf("<!--");
+		while (pos1 >= 0)
+		{
+			AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
+			int pos2 = rawMarkup.indexOf("-->", pos1);
+
+			if (pos2 >= 0)
+			{
+				buf.append(rawMarkup.substring(0, pos1 - 1));
+				buf.append(rawMarkup.substring(pos2 + 4));
+				rawMarkup = buf.toString();
+			}
+			pos1 = rawMarkup.indexOf("<!--");
+		}
+		return rawMarkup;
+	}
+
+	/**
+	 * Determine wicket namespace from xmlns:wicket or
+	 * xmlns:wicket="http://wicket.sourceforge.net"
+	 * 
+	 * @param tag
+	 * @return true, if tag has been modified
+	 */
+	private boolean determineWicketNamespace(final ComponentTag tag)
+	{
+		String attrValue = null;
+
+		// For all tags attributes
+		final ValueMap attributes = tag.getAttributes();
+		final Iterator it = attributes.entrySet().iterator();
+		while (it.hasNext())
+		{
+			final Map.Entry entry = (Map.Entry)it.next();
+
+			// Find attributes with namespace "xmlns"
+			final String attributeName = (String)entry.getKey();
+			if (attributeName.startsWith(XMLNS))
+			{
+				final String xmlnsUrl = (String)entry.getValue();
+
+				// If Wicket relevant ...
+				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0)
+						|| xmlnsUrl.startsWith(WICKET_URI))
+				{
+					// Set the Wicket namespace for wicket tags (e.g.
+					// <eicket:panel>) and attributes (e.g. wicket:id)
+					String namespace = attributeName.substring(XMLNS.length());
+					markup.setWicketNamespace(namespace);
+					attrValue = attributeName;
+				}
+			}
+		}
+
+		// Note: <html ...> tags usually have no wicket:id and hence are treated
+		// as raw markup and removing xmlns:wicket from markup does not have any
+		// effect. The solution approach does not work.
+		if ((attrValue != null) && this.markupSettings.getStripWicketTags())
+		{
+			attributes.remove(attrValue);
+			return true;
+		}
+
+		return false;
+	}
 }

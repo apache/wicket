@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,8 +17,8 @@
  */
 package wicket;
 
-import java.util.Locale;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * ResourceReference is essentially a reference to an actual resource which is
@@ -35,8 +35,7 @@ import java.io.Serializable;
  * have to worry about it).
  * <p>
  * Resources may be added to the Application when the Application is constructed
- * using
- * {@link Application#getSharedResources()} followed by 
+ * using {@link Application#getSharedResources()} followed by
  * {@link SharedResources#add(Class, String, Locale, String, Resource)},
  * {@link SharedResources#add(String, Locale, Resource)}or
  * {@link SharedResources#add(String, Resource)}.
@@ -46,13 +45,15 @@ import java.io.Serializable;
  * resource by overriding the {@link ResourceReference#newResource()}method. In
  * this method, the component should supply logic that creates the shared
  * resource.
- *
+ * 
  * @author Jonathan Locke
  */
 public class ResourceReference implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The locale of the resource */
-	private Locale locale;
+	protected Locale locale;
 
 	/** The name of the resource */
 	private final String name;
@@ -85,7 +86,8 @@ public class ResourceReference implements Serializable
 	/**
 	 * Contructs a resource reference with Application.class scope and the given
 	 * name. All resource references constructed with this constructor must have
-	 * unique names since they all have the same Application-wide scope.
+	 * unique names since they all have the same Application-wide scope that is the 
+	 * wicket.Application.class
 	 * 
 	 * @param name
 	 *            The name of the resource
@@ -97,7 +99,7 @@ public class ResourceReference implements Serializable
 
 	/**
 	 * Binds this shared resource to the given application.
-	 *
+	 * 
 	 * @param application
 	 *            The application which holds the shared resource
 	 */
@@ -107,7 +109,7 @@ public class ResourceReference implements Serializable
 		if (resource == null)
 		{
 			// Try to get resource from Application repository
-			resource = application.getSharedResources().get(scope, name, locale, style);
+			resource = application.getSharedResources().get(scope, name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -118,7 +120,8 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, null, null);
+					resource = application.getSharedResources().get(scope, name, locale, style,
+							false);
 					if (resource == null)
 					{
 						throw new WicketRuntimeException("Unable to resolve shared resource "
@@ -149,21 +152,20 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * @return Path for this resource reference.
+	 * @return the shared resource key for this resource reference.
 	 */
-	public final String getPath()
+	public final String getSharedResourceKey()
 	{
-		final StringBuffer buffer = new StringBuffer();
-		buffer.append("resources/");
-		buffer.append(SharedResources.path(scope, name, locale, style));
-		return buffer.toString();
+		Application application = Application.get();
+		bind(application);
+		return application.getSharedResources().resourceKey(scope, name, locale, style);
 	}
 
 	/**
 	 * Gets the resource for this resource reference. If the ResourceReference
 	 * has not yet been bound to the application via
 	 * {@link ResourceReference#bind(Application)}this method may return null.
-	 *
+	 * 
 	 * @return The resource, or null if the ResourceReference has not yet been
 	 *         bound.
 	 */
@@ -228,7 +230,7 @@ public class ResourceReference implements Serializable
 
 	/**
 	 * Factory method for lazy initialization of shared resources.
-	 *
+	 * 
 	 * @return The resource
 	 */
 	protected Resource newResource()

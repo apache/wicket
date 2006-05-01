@@ -17,14 +17,11 @@
  */
 package wicket.util.value;
 
-import java.io.Serializable;
-
-import java.util.Collection;
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.string.IStringIterator;
@@ -55,23 +52,21 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap implements Map, Serializable
+public class ValueMap extends HashMap
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 	
+	private static final long serialVersionUID = 1L;
+	
 	/** True if this value map has been made immutable. */
 	private boolean immutable = false;
-
-	/** The underlying map. */
-	private Map map;
 
 	/**
 	 * Constructs empty value map.
 	 */
 	public ValueMap()
 	{
-		this.map = new HashMap();
 	}
 
 	/**
@@ -82,7 +77,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public ValueMap(final Map map)
 	{
-		this.map = new HashMap(map);
+		super.putAll(map);
 	}
 
 	/**
@@ -108,9 +103,6 @@ public class ValueMap implements Map, Serializable
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
-		// Create empty map
-		this.map = new HashMap();
-
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
@@ -142,39 +134,20 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final void clear()
 	{
-		map.clear();
+		checkMutability();
+		super.clear();
 	}
 
 	/**
-	 * @see java.util.Map#containsKey(java.lang.Object)
+	 * Gets a boolean value by key.
+	 *
+	 * @param key The key
+	 * @return The value
+	 * @throws StringValueConversionException
 	 */
-	public boolean containsKey(final Object key)
+	public final boolean getBoolean(final String key) throws StringValueConversionException
 	{
-		return map.containsKey(key);
-	}
-
-	/**
-	 * @see java.util.Map#containsValue(java.lang.Object)
-	 */
-	public final boolean containsValue(final Object value)
-	{
-		return map.containsValue(value);
-	}
-
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public final Set entrySet()
-	{
-		return map.entrySet();
-	}
-
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(final Object key)
-	{
-		return map.get(key);
+		return getStringValue(key).toBoolean();
 	}
 
 	/**
@@ -229,8 +202,7 @@ public class ValueMap implements Map, Serializable
 	public final int getInt(final String key, final int defaultValue)
 			throws StringValueConversionException
 	{
-		final StringValue value = getStringValue(key);
-		return (value != null) ? value.toInt() : defaultValue;
+		return getStringValue(key).toInt(defaultValue);
 	}
 
 	/**
@@ -259,8 +231,7 @@ public class ValueMap implements Map, Serializable
 	public final long getLong(final String key, final long defaultValue)
 			throws StringValueConversionException
 	{
-		final StringValue value = getStringValue(key);
-		return (value != null) ? value.toLong() : defaultValue;
+		return getStringValue(key).toLong(defaultValue);
 	}
 
 	/**
@@ -272,16 +243,109 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final String getString(final String key)
 	{
-		final Object o = getStringValue(key);
-
+		final Object o = get(key);
 		if (o == null)
 		{
 			return null;
+		}
+		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		{
+			// if it is an array just get the first value
+			final Object arrayValue = Array.get(o, 0);
+			if(arrayValue == null)
+			{
+				return null;
+			}
+			else
+			{
+				return arrayValue.toString();
+			}
+			
 		}
 		else
 		{
 			return o.toString();
 		}
+	}
+
+	/**
+	 * Gets a string by key.
+	 * 
+	 * @param key
+	 *            The get
+	 * @return The string
+	 */
+	public final CharSequence getCharSequence(final String key)
+	{
+		final Object o = get(key);
+		if (o == null)
+		{
+			return null;
+		}
+		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		{
+			// if it is an array just get the first value
+			final Object arrayValue = Array.get(o, 0);
+			if(arrayValue == null)
+			{
+				return null;
+			}
+			else
+			{
+				if(arrayValue instanceof CharSequence)
+				{
+					return (CharSequence)arrayValue;
+				}
+				return arrayValue.toString();
+			}
+			
+		}
+		else
+		{
+			if(o instanceof CharSequence)
+			{
+				return (CharSequence)o;
+			}
+			return o.toString();
+		}
+	}
+	
+	/**
+	 * Gets a String array by key.
+	 * If the value was a String[] it will be returned directly.
+	 * If it was a String it will be converted to a String array of one.
+	 * If it was an array of another type a String array will be made and
+	 * the elements will be converted to a string.
+	 * 
+	 * @param key
+	 * @return The String array of that key
+	 */
+	public String[] getStringArray(final String key)
+	{
+		final Object o = get(key);
+		if(o == null)
+		{
+			return null;
+		}
+		else if(o instanceof String[])
+		{
+			return (String[])o;
+		}
+		else if(o.getClass().isArray())
+		{
+			int length = Array.getLength(o);
+			String[] array = new String[length];
+			for (int i = 0; i < length; i++)
+			{
+				final Object arrayValue = Array.get(o, i);
+				if(arrayValue != null)
+				{
+					array[i] = arrayValue.toString();
+				}
+			}
+			return array;
+		}
+		return new String[] {o.toString()};
 	}
 
 	/**
@@ -293,7 +357,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public StringValue getStringValue(final String key)
 	{
-		return StringValue.valueOf(get(key));
+		return StringValue.valueOf(getString(key));
 	}
 
 	/**
@@ -310,19 +374,12 @@ public class ValueMap implements Map, Serializable
 	}
 
 	/**
-	 * @see java.util.Map#isEmpty()
+	 * Gets whether this value map is made immutable.
+	 * @return whether this value map is made immutable
 	 */
-	public final boolean isEmpty()
+	public final boolean isImmutable()
 	{
-		return map.isEmpty();
-	}
-
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public final Set keySet()
-	{
-		return map.keySet();
+		return immutable;
 	}
 
 	/**
@@ -333,11 +390,7 @@ public class ValueMap implements Map, Serializable
 	 */
 	public final void makeImmutable()
 	{
-		if (!immutable)
-		{
-			map = Collections.unmodifiableMap(map);
-			immutable = true;
-		}
+		this.immutable = true;
 	}
 
 	/**
@@ -345,15 +398,56 @@ public class ValueMap implements Map, Serializable
 	 */
 	public Object put(final Object key, final Object value)
 	{
-		return map.put(key, value);
+		checkMutability();
+		return super.put(key, value);
 	}
+	
+	/**
+	 * This methods adds the value to this map under the given key
+	 * If the key already is in the map it will combine the values 
+	 * into a String array else it will just store the value itself
+	 * 
+	 * @param key The key to store the value under.
+	 * @param value The value that must be added/merged to the map
+	 * @return The value itself if there was no previous value or a string array with the combined values.
+	 */
+	public final Object add(final String key, final String value)
+	{
+		checkMutability();
+		final Object o = get(key);
+		if (o == null)
+		{
+			return put(key, value);
+		}
+		else if (o.getClass().isArray())
+		{
+			int length = Array.getLength(o);
+			String destArray[] = new String[length + 1];
+			for (int i = 0; i < length; i++)
+			{
+				final Object arrayValue = Array.get(o, i);
+				if(arrayValue != null)
+				{
+					destArray[i] = arrayValue.toString();
+				}
+			}
+			destArray[length] = value;
+
+			return put(key, destArray);
+		}
+		else
+		{
+			return put(key, new String[] { o.toString(), value });
+		}
+	}	
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map t)
+	public void putAll(final Map map)
 	{
-		map.putAll(t);
+		checkMutability();
+		super.putAll(map);
 	}
 
 	/**
@@ -361,26 +455,37 @@ public class ValueMap implements Map, Serializable
 	 */
 	public Object remove(final Object key)
 	{
-		return map.remove(key);
+		checkMutability();
+		return super.remove(key);
 	}
 
 	/**
-	 * @see java.util.Map#size()
+	 * Provided the hash key is a string and you need to access the
+	 * value ignoring ignoring the keys case (upper or lower letter),
+	 * than you may use this method to get the correct writing.
+	 *  
+	 * @param key
+	 * @return The key with the correct writing
 	 */
-	public final int size()
+	public String getKey(final String key)
 	{
-		return map.size();
+		Iterator iter = this.keySet().iterator();
+		while (iter.hasNext())
+		{
+			Object keyValue = iter.next();
+			if (keyValue instanceof String)
+			{
+				String keyString = (String) keyValue;
+				if (key.equalsIgnoreCase(keyString))
+				{
+					return keyString;
+				}
+			}
+		}
+		return null;
 	}
-
-	/**
-	 * @return Debug string representation of this map
-	 */
-	public final String toDebugString()
-	{
-		return "[" + toString() + "]";
-	}
-
-	/**
+	
+    /**
 	 * Gets a string representation of this object
 	 * 
 	 * @return String representation of map consistent with tag attribute style
@@ -388,23 +493,43 @@ public class ValueMap implements Map, Serializable
 	 */
 	public String toString()
 	{
-		final StringList list = new StringList();
-
-		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
+		final StringBuffer buffer = new StringBuffer();
+		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
 		{
-			final String key = (String)iterator.next();
+			final Map.Entry entry = (Map.Entry)iterator.next();
+			buffer.append(entry.getKey());
+			buffer.append(" = \"");
+			final Object value = entry.getValue();
+			if (value == null)
+			{
+				buffer.append("null");
+			}
+			else if (value.getClass().isArray())
+			{
+				buffer.append(Arrays.asList((Object[])value));
+			}
+			else
+			{
+				buffer.append(value);
+			}
 
-			list.add(key + " = \"" + getString(key) + "\"");
+			buffer.append("\"");
+			if (iterator.hasNext())
+			{
+				buffer.append(' ');
+			}
 		}
-
-		return list.join(" ");
+		return buffer.toString();
 	}
-
+	
 	/**
-	 * @see java.util.Map#values()
+	 * Throw exception if map is immutable.
 	 */
-	public final Collection values()
+	private final void checkMutability()
 	{
-		return map.values();
+		if (immutable)
+		{
+			throw new UnsupportedOperationException("Map is immutable");
+		}
 	}
 }

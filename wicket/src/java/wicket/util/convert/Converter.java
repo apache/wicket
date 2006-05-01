@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import ognl.OgnlOps;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -33,6 +32,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
+import wicket.util.lang.Objects;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -67,8 +67,10 @@ import wicket.util.convert.converters.StringConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class Converter implements IConverter
+public class Converter implements IConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
 
@@ -77,15 +79,22 @@ public final class Converter implements IConverter
 	 */
 	private IConverter defaultConverter = new IConverter()
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/**
-		 * Converts the given value object to class c using OgnlOps.
+		 * Converts the given value object to class c.
 		 * 
 		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 		 *      java.lang.Class)
 		 */
 		public Object convert(Object value, Class c)
 		{
-			return OgnlOps.convertValue(value, c);
+			if(value == null || "".equals(value))
+			{
+				return null;
+			}
+			
+			return Objects.convertValue(value, c);
 		}
 
 		public Locale getLocale()
@@ -141,7 +150,7 @@ public final class Converter implements IConverter
 	/**
 	 * Removes all registered converters.
 	 */
-	public void clear()
+	public final void clear()
 	{
 		classToConverter.clear();
 	}
@@ -158,7 +167,7 @@ public final class Converter implements IConverter
 	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 	 *      java.lang.Class)
 	 */
-	public Object convert(Object value, Class c)
+	public final Object convert(Object value, Class c)
 	{
 		// Null is always converted to null
 		if (value == null)
@@ -204,7 +213,7 @@ public final class Converter implements IConverter
 	 * @return The type converter that is registered for class c or null if no
 	 *         type converter was registered for class c
 	 */
-	public ITypeConverter get(Class c)
+	public final ITypeConverter get(Class c)
 	{
 		return (ITypeConverter)classToConverter.get(c);
 	}
@@ -224,7 +233,7 @@ public final class Converter implements IConverter
 	/**
 	 * @see wicket.util.convert.ILocalizable#getLocale()
 	 */
-	public Locale getLocale()
+	public final Locale getLocale()
 	{
 		return locale;
 	}
@@ -238,7 +247,7 @@ public final class Converter implements IConverter
 	 * @return The converter that was registered for class c before removal or
 	 *         null if none was registered
 	 */
-	public ITypeConverter remove(Class c)
+	public final ITypeConverter remove(Class c)
 	{
 		return (ITypeConverter)classToConverter.remove(c);
 	}
@@ -253,7 +262,7 @@ public final class Converter implements IConverter
 	 * @return The previous registered converter for class c or null if none was
 	 *         registered yet for class c
 	 */
-	public ITypeConverter set(final Class c, final ITypeConverter converter)
+	public final ITypeConverter set(final Class c, final ITypeConverter converter)
 	{
 		if (converter == null)
 		{

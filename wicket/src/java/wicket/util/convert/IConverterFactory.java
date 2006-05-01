@@ -34,5 +34,5 @@ public interface IConverterFactory
 	 * @param locale The Locale to create the converter for 
 	 * @return A new IConverter instance
 	 */
-	public IConverter newConverter(final Locale locale);
+	IConverter newConverter(final Locale locale);
 }

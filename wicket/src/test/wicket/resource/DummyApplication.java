@@ -18,15 +18,15 @@
  */
 package wicket.resource;
 
-import wicket.protocol.http.MockWebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * Dummy application used for resource loader testing.
+ * 
  * @author Chris Turner
  */
-public class DummyApplication extends MockWebApplication
+public class DummyApplication extends WicketTester
 {
-
 	/**
 	 * Create the dummy application.
 	 */
@@ -34,7 +34,4 @@ public class DummyApplication extends MockWebApplication
 	{
 		super(null);
 	}
-
 }
-
-// 

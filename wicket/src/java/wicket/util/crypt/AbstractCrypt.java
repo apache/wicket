@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,7 @@
  */
 package wicket.util.crypt;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
@@ -25,8 +25,6 @@ import javax.crypto.Cipher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import wicket.WicketRuntimeException;
 
 /**
@@ -38,10 +36,13 @@ public abstract class AbstractCrypt implements ICrypt
 {
 	/** Default encryption key */
 	private static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-CrYpT";
-	
+
+	/** Encoding used to convert java String from and to byte[] */
+	private static final String CHARACTER_ENCODING = "UTF-8";
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(AbstractCrypt.class);
-	
+
 	/** Key used to de-/encrypt the data */
 	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;
 
@@ -61,7 +62,35 @@ public abstract class AbstractCrypt implements ICrypt
 	 */
 	public final String decrypt(final String text)
 	{
-		return new String(decryptStringToByteArray(text));
+		try
+		{
+			byte[] encrypted = Base64.decodeBase64(text.getBytes());
+			return new String(decryptByteArray(encrypted), CHARACTER_ENCODING);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
+	}
+
+	/**
+	 * Decrypts a string into a string.
+	 * 
+	 * @param text
+	 *            text to decript
+	 * @return the decrypted text
+	 */
+	public final String decryptUrlSafe(final String text)
+	{
+		try
+		{
+			byte[] encrypted = Base64UrlSafe.decodeBase64(text.getBytes());
+			return new String(decryptByteArray(encrypted), CHARACTER_ENCODING);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
 	}
 
 	/**
@@ -76,7 +105,28 @@ public abstract class AbstractCrypt implements ICrypt
 		try
 		{
 			byte[] cipherText = encryptStringToByteArray(plainText);
-			return new BASE64Encoder().encode(cipherText);
+			return new String(Base64.encodeBase64(cipherText));
+		}
+		catch (GeneralSecurityException e)
+		{
+			log.error("Unable to encrypt text '" + plainText + "'", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Encrypt a string into a string using URL safe Base64 encoding.
+	 * 
+	 * @param plainText
+	 *            text to encrypt
+	 * @return encrypted string
+	 */
+	public final String encryptUrlSafe(final String plainText)
+	{
+		try
+		{
+			byte[] cipherText = encryptStringToByteArray(plainText);
+			return new String(Base64UrlSafe.encodeBase64(cipherText));
 		}
 		catch (GeneralSecurityException e)
 		{
@@ -92,7 +142,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 */
 	public String getKey()
 	{
-	    return this.encryptionKey;
+		return this.encryptionKey;
 	}
 
 	/**
@@ -116,31 +166,25 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
-	protected abstract byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException;
+	protected abstract byte[] crypt(final byte[] input, final int mode)
+			throws GeneralSecurityException;
 
 	/**
-	 * Decrypts a String into a byte array.
+	 * Decrypts an encrypted, but Base64 decoded byte array into a byte array.
 	 * 
 	 * @param encrypted
-	 *            text to decrypt
+	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	private final byte[] decryptStringToByteArray(final String encrypted)
+	private final byte[] decryptByteArray(final byte[] encrypted)
 	{
-		final byte[] plainBytes;
 		try
 		{
-			plainBytes = new BASE64Decoder().decodeBuffer(encrypted);
-			return crypt(plainBytes, Cipher.DECRYPT_MODE);
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e.getMessage());
+			return crypt(encrypted, Cipher.DECRYPT_MODE);
 		}
 		catch (GeneralSecurityException e)
 		{
-			log.error("Unable to decrypt text '" + encrypted + "'", e);
-			return null;
+			throw new WicketRuntimeException("Unable to decrypt the text '" + encrypted + "'", e);
 		}
 	}
 
@@ -155,6 +199,13 @@ public abstract class AbstractCrypt implements ICrypt
 	private final byte[] encryptStringToByteArray(final String plainText)
 			throws GeneralSecurityException
 	{
-		return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
+		try
+		{
+			return crypt(plainText.getBytes(CHARACTER_ENCODING), Cipher.ENCRYPT_MODE);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
 	}
 }

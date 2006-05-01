@@ -44,6 +44,8 @@ import wicket.util.time.Time;
  */
 public class ThumbnailImageResource extends DynamicImageResource
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(ThumbnailImageResource.class);
 
@@ -68,9 +70,9 @@ public class ThumbnailImageResource extends DynamicImageResource
 	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
 		super();
-		if(unscaledImageResource == null)
+		if (unscaledImageResource == null)
 		{
-			throw new NullPointerException("unscaledImageResource must be not null");
+			throw new IllegalArgumentException("Argument unscaledImageResource must be not null");
 		}
 		this.unscaledImageResource = unscaledImageResource;
 		this.maxSize = maxSize;
@@ -81,11 +83,11 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		if(thumbnail == null)
+		if (thumbnail == null)
 		{
 			final BufferedImage image = getScaledImageInstance();
 			thumbnail = toImageData(image);
-			lastModifiedTime = Time.now();
+			setLastModifiedTime(Time.now());
 		} 
 		return thumbnail;
 	}
@@ -118,7 +120,10 @@ public class ThumbnailImageResource extends DynamicImageResource
 		}
 		finally
 		{
-			if (is != null) try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			if (is != null)
+			{
+				try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			}
 		}
 
 		int originalWidth = originalImage.getWidth();
@@ -157,9 +162,17 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * Sets hint(s) for the scale operation.
 	 * @param scaleHints hint(s) for the scale operation
 	 */
-	public final void setScaleHints(int scaleHints)
+	public synchronized final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
+		invalidate();
+	}
+	
+	/**
+	 * @see wicket.markup.html.DynamicWebResource#invalidate()
+	 */
+	public synchronized void invalidate()
+	{
 		thumbnail = null;
 	}
 }

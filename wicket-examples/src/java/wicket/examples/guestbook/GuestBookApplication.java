@@ -31,6 +31,14 @@ public class GuestBookApplication extends WicketExampleApplication
 	 */
 	public GuestBookApplication()
 	{
-		getPages().setHomePage(GuestBook.class);
+
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return GuestBook.class;
 	}
 }

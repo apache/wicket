@@ -17,8 +17,6 @@
  */
 package wicket.util.resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A StringResourceStream is an IResource implementation for strings. 
@@ -29,8 +27,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class StringResourceStream extends AbstractStringResourceStream
 {
-	/** Logging */
-	private static Log log = LogFactory.getLog(StringResourceStream.class);
+	private static final long serialVersionUID = 1L;
 
 	/** The string resource */
 	private final CharSequence string;

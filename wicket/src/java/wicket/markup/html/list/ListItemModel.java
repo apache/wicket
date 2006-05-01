@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
+ * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -28,6 +28,8 @@ import wicket.model.IModel;
  */
 public class ListItemModel extends AbstractDetachableModel
 {
+	private static final long serialVersionUID = 1L;
+	
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
 	private transient Object object;

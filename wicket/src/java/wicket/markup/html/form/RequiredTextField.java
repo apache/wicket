@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.IModel;
 
 /**
@@ -28,13 +27,15 @@ import wicket.model.IModel;
  */
 public class RequiredTextField extends TextField
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
 	public RequiredTextField(final String id)
 	{
 		super(id);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -43,7 +44,7 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, final Class type)
 	{
 		super(id, type);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, final IModel model)
 	{
 		super(id, model);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 
 	/**
@@ -67,6 +68,6 @@ public class RequiredTextField extends TextField
 	public RequiredTextField(final String id, IModel model, Class type)
 	{
 		super(id, model, type);
-		add(RequiredValidator.getInstance());
+		setRequired(true);
 	}
 }

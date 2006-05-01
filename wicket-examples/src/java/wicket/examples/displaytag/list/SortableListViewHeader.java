@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag.list;
 
@@ -27,8 +26,10 @@ import wicket.markup.html.link.Link;
 
 
 /**
- * Sortable list view header component for a single list view column. Functionality provided
- * includes sorting the underlying list view and changing the colours (style) of the header.
+ * Sortable list view header component for a single list view column.
+ * Functionality provided includes sorting the underlying list view and changing
+ * the colours (style) of the header.
+ * 
  * @see SortableListViewHeaderGroup
  * @see SortableListViewHeaders
  * @author Juergen Donnerstag
@@ -37,14 +38,17 @@ public abstract class SortableListViewHeader extends Border
 {
 	/** Sort ascending or descending */
 	private boolean ascending;
-	
+
 	/** All sortable columns of a single list view are grouped */
 	private final SortableListViewHeaderGroup group;
 
 	/**
 	 * Construct.
-	 * @param id The component's id
-	 * @param group The group of headers the new one will be added to
+	 * 
+	 * @param id
+	 *            The component's id
+	 * @param group
+	 *            The group of headers the new one will be added to
 	 */
 	public SortableListViewHeader(final String id, final SortableListViewHeaderGroup group)
 	{
@@ -66,11 +70,14 @@ public abstract class SortableListViewHeader extends Border
 	}
 
 	/**
-	 * Compare two objects (list elements of list view's model object). Both objects must
-	 * implement Comparable. In order to compare basic types like int or double, simply
-	 * subclass the method.
-	 * @param o1 first object
-	 * @param o2 second object
+	 * Compare two objects (list elements of list view's model object). Both
+	 * objects must implement Comparable. In order to compare basic types like
+	 * int or double, simply subclass the method.
+	 * 
+	 * @param o1
+	 *            first object
+	 * @param o2
+	 *            second object
 	 * @return comparision result
 	 */
 	protected int compareTo(Object o1, Object o2)
@@ -81,20 +88,23 @@ public abstract class SortableListViewHeader extends Border
 	}
 
 	/**
-	 * Get CSS style for the header based on ascending / descending. Delegate to the header
-	 * group to determine the style.
+	 * Get CSS style for the header based on ascending / descending. Delegate to
+	 * the header group to determine the style.
+	 * 
 	 * @return css class
 	 */
 	protected final String getCssClass()
 	{
-		// TODO This needs to be integrated with our CSS design
+		// TODO General: This needs to be integrated with our CSS design
 		return group.getCssClass(getId(), ascending);
 	}
 
 	/**
-	 * Returns the comparable object of the list view the header/column is referring to, e.g.
-	 * obj.getId();
-	 * @param object the ListItems model object
+	 * Returns the comparable object of the list view the header/column is
+	 * referring to, e.g. obj.getId();
+	 * 
+	 * @param object
+	 *            the ListItems model object
 	 * @return The object to compare
 	 */
 	protected Comparable getObjectToCompare(Object object)
@@ -119,8 +129,10 @@ public abstract class SortableListViewHeader extends Border
 
 	/**
 	 * Delegate to the header group to handle the tag.
+	 * 
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
-	 * @param tag The current ComponentTag to handle
+	 * @param tag
+	 *            The current ComponentTag to handle
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{

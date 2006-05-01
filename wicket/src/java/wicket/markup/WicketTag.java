@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.16 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,16 +20,15 @@ package wicket.markup;
 import wicket.markup.parser.XmlTag;
 
 /**
- * WicketTag extends ComponentTag and will be created by a MarkupParser
- * whenever it parses a tag in the wicket namespace. By default, this namespace
- * is "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
+ * WicketTag extends ComponentTag and will be created by a MarkupParser whenever
+ * it parses a tag in the wicket namespace. By default, this namespace is
+ * "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
- * Note 2: The namespace name is configurable through ApplicationSettings.
- *
- * @see wicket.ApplicationSettings#setWicketNamespace(String)
+ * Note 2: The namespace name is configurable. E.g. &lt;html
+ * xmlns:wcn="http://wicket.sourcefourge.net"&gt;
  * 
  * @author Juergen Donnerstag
  */
@@ -48,6 +47,7 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
+	 * 
 	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()
@@ -69,14 +69,6 @@ public class WicketTag extends ComponentTag
 	public final boolean isLinkTag()
 	{
 		return "link".equalsIgnoreCase(getName());
-	}
-
-	/**
-	 * @return True, if tag name equals 'wicket:param'
-	 */
-	public final boolean isParamTag()
-	{
-		return "param".equalsIgnoreCase(getName());
 	}
 
 	/**
@@ -117,6 +109,46 @@ public class WicketTag extends ComponentTag
 	public final boolean isHeadTag()
 	{
 		return "head".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:message'
+	 */
+	public final boolean isMessageTag()
+	{
+		return "message".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:panel'
+	 */
+	public final boolean isPanelTag()
+	{
+		return "panel".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:border'
+	 */
+	public final boolean isBorderTag()
+	{
+		return "border".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True if &lt;wicket:fragment&gt;
+	 */
+	public final boolean isFragementTag()
+	{
+		return "fragment".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
+	 */
+	public final boolean isMajorWicketComponentTag()
+	{
+		return isPanelTag() || isBorderTag() || isExtendTag();
 	}
 
 	/**

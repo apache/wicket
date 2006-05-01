@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.43 $ $Date$
+ * $Id: Application.java 4893 2006-03-13 12:27:09 -0800 (Mon, 13 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-13 12:27:09 -0800 (Mon, 13 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,98 +18,87 @@
  */
 package wicket;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.HeadComponentCache;
+import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
-import wicket.markup.MarkupParser;
-import wicket.markup.html.HtmlHeaderResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
-import wicket.markup.parser.XmlPullParser;
-import wicket.model.IModel;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverterFactory;
-import wicket.util.crypt.ICrypt;
-import wicket.util.crypt.NoCrypt;
+import wicket.markup.resolver.AutoComponentResolver;
+import wicket.markup.resolver.HtmlHeaderResolver;
+import wicket.markup.resolver.MarkupInheritanceResolver;
+import wicket.markup.resolver.ParentResolver;
+import wicket.markup.resolver.WicketLinkResolver;
+import wicket.markup.resolver.WicketMessageResolver;
+import wicket.session.ISessionStore;
+import wicket.settings.IAjaxSettings;
+import wicket.settings.IApplicationSettings;
+import wicket.settings.IDebugSettings;
+import wicket.settings.IExceptionSettings;
+import wicket.settings.IFrameworkSettings;
+import wicket.settings.IMarkupSettings;
+import wicket.settings.IPageSettings;
+import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IResourceSettings;
+import wicket.settings.ISecuritySettings;
+import wicket.settings.ISessionSettings;
+import wicket.settings.Settings;
+import wicket.util.file.IResourceFinder;
 import wicket.util.lang.Classes;
-import wicket.util.resource.locator.DefaultResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.time.Duration;
-import wicket.util.watch.ModificationWatcher;
 
 /**
  * Base class for all Wicket applications. To create a Wicket application, you
  * generally should <i>not </i> directly subclass this class. Instead, you will
  * want to subclass some subclass of Application, like WebApplication, which is
  * appropriate for the protocol and markup type you are working with.
- * 
+ * <p>
  * Application has the following interesting features / attributes:
  * <ul>
- * <li><b>Name </b>- The application's name, which is the same as its class
+ * <li><b>Name </b>- The Application's name, which is the same as its class
  * name.
  * 
- * <li><b>Application Settings </b>- A variety of settings that control the
- * behavior of the Wicket framework for a given application. It is not necessary
- * to learn all the settings. Good defaults can be set for deployment and
- * development by calling ApplicationSettings.configure("deployment") or
- * ApplicationSettings.configure("development").
+ * <li><b>Home Page </b>- The Application's home Page class. Subclasses must
+ * override getHomePage() to provide this property value.
  * 
- * <li><b>Application Pages </b>- A particular set of required pages. The
- * required pages returned by getPages() include a home page and pages for
- * handling common error conditions. The only page you must supply to create a
- * Wicket application is the application home page.
+ * <li><b>Settings </b>- Application settings are partitioned into sets of
+ * related settings using interfaces in the wicket.settings package. These
+ * interfaces are returned by the following methods, which should be used to
+ * configure framework settings for your application: getApplicationSettings(),
+ * getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
+ * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and
+ * getSessionSettings(). These settings are configured by default through the
+ * constructor or internalInit methods. Default the application is configured
+ * for DEVELOPMENT. You can configure this globally to DEPLOYMENT or override
+ * specific settings by implementing the init() method.
  * 
- * <li><b>Shared Resources </b>- Resources added to an application with any of
- * the Application.addResource() methods have application-wide scope and can be
- * referenced using a logical scope and a name with the ResourceReference class.
- * resourceReferences can then be used by multiple components in the same
- * application without additional overhead (beyond the ResourceReference
- * instance held by each referee) and will yield a stable URL, permitting
- * efficient browser caching of the resource (even if the resource is
- * dynamically generated). Resources shared in this manner may also be
- * localized. See {@link wicket.ResourceReference}for more details.
+ * <li><b>Shared Resources </b>- Resources added to an Application's
+ * SharedResources have application-wide scope and can be referenced using a
+ * logical scope and a name with the ResourceReference class. ResourceReferences
+ * can then be used by multiple components in the same application without
+ * additional overhead (beyond the ResourceReference instance held by each
+ * referee) and will yield a stable URL, permitting efficient browser caching of
+ * the resource (even if the resource is dynamically generated). Resources
+ * shared in this manner may also be localized. See
+ * {@link wicket.ResourceReference} for more details.
  * 
- * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
- * can provide your own factory which creates locale sensitive Converter
- * instances.
- * 
- * <li><b>A ResourceStreamLocator </b>- An Application's ResourceStreamLocator
- * is used to find resources such as images or markup files. You can supply your
- * own ResourceStreamLocator if your prefer to store your applicaiton's
- * resources in a non-standard location (such as a different filesystem
- * location, a particular JAR file or even a database) by overriding the
- * getResourceLocator() method.
- * 
- * <li><b>Resource Factories </b>- Resource factories can be used to create
- * resources dynamically from specially formatted HTML tag attribute values. For
- * more details, see {@link IResourceFactory},
- * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}
- * and especially
- * {@link wicket.markup.html.image.resource.LocalizedImageResource}.
- * 
- * <li><b>A Localizer </b>- The getLocalizer() method returns an object
- * encapsulating all of the functionality required to access localized
- * resources. For many localization problems, even this will not be required, as
- * there are convenience methods available to all components:
- * {@link wicket.Component#getString(String key)}and
- * {@link wicket.Component#getString(String key, IModel model)}.
- * 
- * <li><b>A Session Factory </b>- The Application subclass WebApplication
+ * <li><b>Session Factory </b>- The Application subclass WebApplication
  * supplies an implementation of getSessionFactory() which returns an
  * implementation of ISessionFactory that creates WebSession Session objects
  * appropriate for web applications. You can (and probably will want to)
  * override getSessionFactory() to provide your own session factory that creates
  * Session instances of your own application-specific subclass of WebSession.
  * 
- * <li><b>A Page Sets Factory </b>- Page sets are an experimental feature which
- * will not be finished until Wicket 1.1.
  * </ul>
  * 
  * @see wicket.protocol.http.WebApplication
@@ -116,122 +106,317 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
-	/** log. */
-	private static Log log = LogFactory.getLog(Application.class);
+	/** Configuration constant for the 2 types */
+	public static final String CONFIGURATION = "configuration";
 
-	/** List of (static) ComponentResolvers */
-	private List componentResolvers = new ArrayList();
+	/** Configuration type constant for deployment */
+	public static final String DEPLOYMENT = "deployment";
+
+	/** Configuration type constant for development */
+	public static final String DEVELOPMENT = "development";
 
 	/**
-	 * Factory for the converter instance; default to the non localized factory
-	 * {@link ConverterFactory}.
+	 * Configuration type constant for getting the context path out of the
+	 * web.xml
 	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
+	public static final String CONTEXTPATH = "contextpath";
 
-	/** The single application-wide localization class */
-	private final Localizer localizer;
+	/**
+	 * Applications keyed on the {@link #getApplicationKey()} so that they can
+	 * be retrieved even without being in a request/ being set in the thread
+	 * local (we need that e.g. for when we are in a destruction thread).
+	 */
+	private static final Map applicationKeyToApplication = new HashMap(1);
+
+	/** Thread local holder of the application object. */
+	private static final ThreadLocal current = new ThreadLocal();
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(Application.class);
+
+	/** list of {@link IComponentInstantiationListener}s. */
+	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
 
-	/** Markup cache for this application */
-	private final HeadComponentCache headComponentCache;
+	/** Application level meta data. */
+	private MetaDataEntry[] metaData;
 
 	/** Name of application subclass. */
 	private final String name;
 
-	/** Map to look up resource factories by name */
-	private final Map nameToResourceFactory = new HashMap();
+	/** Settings for this application. */
+	private Settings settings;
 
-	/** Pages for application */
-	private final ApplicationPages pages = new ApplicationPages();
+	/** can the settings object be set/used. */
+	private boolean settingsAccessible;
 
-	/** The default resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
+	/** Shared resources for this application */
+	private final SharedResources sharedResources;
 
-	/** ModificationWatcher to watch for changes in markup files */
-	private ModificationWatcher resourceWatcher;
-
-	/** Settings for application. */
-	private final ApplicationSettings settings = new ApplicationSettings(this);
-	
-	/** Shared resources for the application */
-	private final SharedResources sharedResources = new SharedResources();
-
-	/** cached encryption/decryption object. */
-	private ICrypt crypt;
+	/** The session facade. */
+	private ISessionStore sessionStore;
 
 	/**
-	 * Constructor
-	 */
-	public Application()
-	{
-		// Create name from subclass
-		this.name = Classes.name(getClass());
-
-		// Construct markup cache fot this application
-		this.markupCache = new MarkupCache(this);
-		this.headComponentCache = new HeadComponentCache();
-
-		// Construct localizer for this application
-		this.localizer = new Localizer(this);
-
-		// Install default component resolvers
-		componentResolvers.add(new AutoComponentResolver());
-		componentResolvers.add(new MarkupInheritanceResolver());
-		componentResolvers.add(new HtmlHeaderResolver());
-
-		// Install button image resource factory
-		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
-	}
-
-	/**
-	 * Adds a resource factory to the list of factories to consult when
-	 * generating resources automatically
+	 * Get Application for current thread.
 	 * 
-	 * @param name
-	 *            The name to give to the factory
-	 * @param resourceFactory
-	 *            The resource factory to add
+	 * @return The current thread's Application
 	 */
-	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	public static Application get()
 	{
-		nameToResourceFactory.put(name, resourceFactory);
+		final Application application = (Application)current.get();
+		if (application == null)
+		{
+			throw new WicketRuntimeException("There is no application attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return application;
 	}
 
 	/**
-	 * Get the (modifiable) list of IComponentResolvers.
+	 * Gets the Application based on the application key of that application.
+	 * THIS METHOD IS NOT MEANT INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
-	 * @see AutoComponentResolver for an example
-	 * @return List of ComponentResolvers
+	 * @param applicationKey
+	 *            The unique key of the application within a certain context
+	 *            (e.g. a web application)
+	 * @return The application
+	 * @throws IllegalArgumentException
+	 *             When no application was found with the provided key
 	 */
-	public final List getComponentResolvers()
+	public static Application get(String applicationKey)
 	{
-		return componentResolvers;
-	}
-
-	/**
-	 * Gets the converter factory.
-	 * 
-	 * @return the converter factory
-	 */
-	public IConverterFactory getConverterFactory()
-	{
-		return converterFactory;
-	}
-
-	/**
-	 * @return The application wide localizer instance
-	 */
-	public Localizer getLocalizer()
-	{
-		return localizer;
+		Application application = (Application)applicationKeyToApplication.get(applicationKey);
+		return application;
 	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
-	 * @return Returns the markup cache associated with the application
+	 * @param application
+	 *            The current application or null for this thread
+	 */
+	public static void set(final Application application)
+	{
+		if (application == null)
+		{
+			throw new IllegalArgumentException("Argument application can not be null");
+		}
+		current.set(application);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 */
+	public static void unset()
+	{
+		current.set(null);
+	}
+
+	/**
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your
+	 * application instead of overriding the constructor.</strong>
+	 */
+	public Application()
+	{
+		// Create name from subclass
+		this.name = Classes.simpleName(getClass());
+
+		// Construct markup cache for this application
+		this.markupCache = new MarkupCache(this);
+
+		// Create shared resources repository
+		this.sharedResources = new SharedResources(this);
+
+		// Install default component instantiation listener that uses
+		// authorization strategy to check component instantiations.
+		addComponentInstantiationListener(new IComponentInstantiationListener()
+		{
+			/**
+			 * @see wicket.application.IComponentInstantiationListener#onInstantiation(wicket.Component)
+			 */
+			public void onInstantiation(final Component component)
+			{
+				// If component instantiation is not authorized
+				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
+						component.getClass()))
+				{
+					// then call any unauthorized component instantiation
+					// listener
+					getSecuritySettings().getUnauthorizedComponentInstantiationListener()
+							.onUnauthorizedInstantiation(component);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adds a component instantiation listener. This method should typicaly only
+	 * be called during application startup; it is not thread safe.
+	 * <p>
+	 * Note: wicket does not guarantee the execution order of added listeners
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 */
+	public final void addComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("argument listener may not be null");
+		}
+
+		// if an instance of this listener is already present ignore this call
+		for (int i = 0; i < componentInstantiationListeners.length; i++)
+		{
+			if (listener == componentInstantiationListeners[i])
+			{
+				return;
+			}
+		}
+
+		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
+		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
+				componentInstantiationListeners.length);
+		newListeners[componentInstantiationListeners.length] = listener;
+		componentInstantiationListeners = newListeners;
+	}
+
+	/**
+	 * Convenience method that sets application settings to good defaults for
+	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
+	 * 
+	 * @param configurationType
+	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
+	 * @see wicket.Application#configure(String, IResourceFinder)
+	 */
+	public final void configure(final String configurationType)
+	{
+		configure(configurationType, (IResourceFinder)null);
+	}
+
+	/**
+	 * Configures application settings to good defaults for the given
+	 * configuration type (either DEVELOPMENT or DEPLOYMENT).
+	 * 
+	 * @param configurationType
+	 *            The configuration type. Must currently be either DEVELOPMENT
+	 *            or DEPLOYMENT. Currently, if the configuration type is
+	 *            DEVELOPMENT, resources are polled for changes, component usage
+	 *            is checked, wicket tags are not stripped from ouput and a
+	 *            detailed exception page is used. If the type is DEPLOYMENT,
+	 *            component usage is not checked, wicket tags are stripped from
+	 *            output and a non-detailed exception page is used to display
+	 *            errors.
+	 * @param resourceFinder
+	 *            Resource finder for looking up resources
+	 */
+	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
+	{
+		if (resourceFinder != null)
+		{
+			getResourceSettings().setResourceFinder(resourceFinder);
+		}
+		// As long as this is public api the developermenat and deployment mode
+		// should counter act each other for all properties.
+		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
+		{
+			log.info("You are in DEVELOPMENT mode");
+			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+			getDebugSettings().setComponentUseCheck(true);
+			getMarkupSettings().setStripWicketTags(false);
+			getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+			getAjaxSettings().setAjaxDebugModeEnabled(true);
+		}
+		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
+		{
+			getResourceSettings().setResourcePollFrequency(null);
+			getDebugSettings().setComponentUseCheck(false);
+			getMarkupSettings().setStripWicketTags(true);
+			getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+			getAjaxSettings().setAjaxDebugModeEnabled(false);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
+		}
+	}
+
+	/**
+	 * Convenience method that sets application settings to good defaults for
+	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
+	 * 
+	 * @param configurationType
+	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
+	 * @param resourceFolder
+	 *            Folder for polling resources
+	 */
+	public final void configure(final String configurationType, final String resourceFolder)
+	{
+		configure(configurationType);
+		if (resourceFolder != null)
+		{
+			getResourceSettings().addResourceFolder(resourceFolder);
+		}
+	}
+
+	/**
+	 * @return Application's application-wide settings
+	 * @see IApplicationSettings
+	 * @since 1.2
+	 */
+	public final IApplicationSettings getApplicationSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's debug related settings
+	 * @see IDebugSettings
+	 * @since 1.2
+	 */
+	public final IDebugSettings getDebugSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's exception handling settings
+	 * @see IExceptionSettings
+	 * @since 1.2
+	 */
+	public final IExceptionSettings getExceptionSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Wicket framework settings
+	 * @see IFrameworkSettings
+	 * @since 1.2
+	 */
+	public final IFrameworkSettings getFrameworkSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * Application subclasses must specify a home page class by implementing
+	 * this abstract method.
+	 * 
+	 * @return Home page class for this application
+	 */
+	public abstract Class getHomePage();
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * @return The markup cache associated with the application
 	 */
 	public final MarkupCache getMarkupCache()
 	{
@@ -239,13 +424,26 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * @return Returns the header component cache associated with the application
+	 * @return Application's markup related settings
+	 * @see IMarkupSettings
+	 * @since 1.2
 	 */
-	public HeadComponentCache getHeadComponentCache()
+	public final IMarkupSettings getMarkupSettings()
 	{
-		return this.headComponentCache;
+		return getSettings();
+	}
+
+	/**
+	 * Gets metadata for this application using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
 	}
 
 	/**
@@ -259,92 +457,103 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's common pages
+	 * @return Application's page related settings
+	 * @see IPageSettings
+	 * @since 1.2
 	 */
-	public final ApplicationPages getPages()
+	public final IPageSettings getPageSettings()
 	{
-		return pages;
+		return getSettings();
 	}
 
 	/**
-	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
+	 * @return Application's request cycle related settings
+	 * @see IDebugSettings
+	 * @since 1.2
+	 */
+	public final IRequestCycleSettings getRequestCycleSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's ajax related settings
+	 * @see IAjaxSettings
+	 * @since 1.2
+	 */
+	public final IAjaxSettings getAjaxSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's resources related settings
+	 * @see IResourceSettings
+	 * @since 1.2
+	 */
+	public final IResourceSettings getResourceSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's security related settings
+	 * @see ISecuritySettings
+	 * @since 1.2
+	 */
+	public final ISecuritySettings getSecuritySettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's session related settings
+	 * @see ISessionSettings
+	 * @since 1.2
+	 */
+	public final ISessionSettings getSessionSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * This method is still here for backwards compatibility with 1.1 source
+	 * code. The getXXXSettings() methods are now preferred. This method will be
+	 * removed post 1.2 version.
 	 * 
-	 * @param page
-	 *            The Page for which a list of PageSets should be retrieved
-	 * @return Sequence of PageSets for a given Page
-	 */
-	public final Iterator getPageSets(final Page page)
-	{
-		return new Iterator()
-		{
-			public boolean hasNext()
-			{
-				return false;
-			}
-
-			public Object next()
-			{
-				return null;
-			}
-
-			public void remove()
-			{
-			}
-		};
-	}
-
-	/**
-	 * @param name
-	 *            Name of the factory to get
-	 * @return The IResourceFactory with the given name.
-	 */
-	public final IResourceFactory getResourceFactory(final String name)
-	{
-		return (IResourceFactory)nameToResourceFactory.get(name);
-	}
-
-	/**
-	 * @return Resource locator for this application
-	 */
-	public ResourceStreamLocator getResourceStreamLocator()
-	{
-		if (resourceStreamLocator == null)
-		{
-			// Create compound resource locator using source path from
-			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
-					.getResourcePath());
-		}
-		return resourceStreamLocator;
-	}
-
-	/**
-	 * @return Resource watcher with polling frequency determined by setting, or
-	 *         null if no polling frequency has been set.
-	 */
-	public final ModificationWatcher getResourceWatcher()
-	{
-		if (resourceWatcher == null)
-		{
-			final Duration pollFrequency = getSettings().getResourcePollFrequency();
-			if (pollFrequency != null)
-			{
-				resourceWatcher = new ModificationWatcher(pollFrequency);
-			}
-		}
-		return resourceWatcher;
-	}
-
-	/**
 	 * @return Application settings
+	 * 
+	 * @see Application#getApplicationSettings()
+	 * @see Application#getDebugSettings()
+	 * @see Application#getExceptionSettings()
+	 * @see Application#getMarkupSettings()
+	 * @see Application#getPageSettings()
+	 * @see Application#getRequestCycleSettings()
+	 * @see Application#getResourceSettings()
+	 * @see Application#getSecuritySettings()
+	 * @see Application#getSessionSettings()
+	 * @deprecated will be made private after 1.2
 	 */
-	public ApplicationSettings getSettings()
+	// TODO Post 1.2: Make private
+	public Settings getSettings()
 	{
+		if (!settingsAccessible)
+		{
+			throw new WicketRuntimeException(
+					"Use Application.init() method for configuring your application object");
+		}
+
+		if (settings == null)
+		{
+			settings = new Settings(this);
+		}
 		return settings;
 	}
-	
+
 	/**
-	 * @return Returns the sharedResources.
+	 * Gets the shared resources.
+	 * 
+	 * @return The SharedResources for this application.
 	 */
 	public final SharedResources getSharedResources()
 	{
@@ -352,74 +561,152 @@ public abstract class Application
 	}
 
 	/**
-	 * Factory method that creates an instance of de-/encryption class.
-	 * NOTE: this implementation caches the crypt instance, so it has
-	 * to be Threadsafe. If you want other behaviour, or want to provide
-	 * a custom crypt class, you should override this method.
+	 * Removes a component instantiation listener. This method should typicaly
+	 * only be called during application startup; it is not thread safe.
 	 * 
-	 * @return Instance of de-/encryption class
+	 * @param listener
+	 *            the listener to remove
 	 */
-	public synchronized ICrypt newCrypt()
+	public final void removeComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
 	{
-		if(crypt == null)
-		{
-			Class cryptClass = getSettings().getCryptClass();
-			try
-			{
-				crypt = (ICrypt)cryptClass.newInstance();
-				log.info("using encryption/decryption object " + crypt);
-				crypt.setKey(getSettings().getEncryptionKey());
-				return crypt;
-			}
-			catch (Throwable e)
-			{
-				log.warn("************************** WARNING **************************");
-				log.warn("As the instantion of encryption/decryption class:");
-				log.warn("\t" + cryptClass);
-				log.warn("failed, Wicket will fallback on a dummy implementation");
-				log.warn("\t(" + NoCrypt.class.getName() + ")");
-				log.warn("This is not recommended for production systems.");
-				log.warn("Please override method wicket.Application.newCrypt()");
-				log.warn("to provide a custom encryption/decryption implementation");
-				log.warn("The cause of the instantion failure: ");
-				log.warn("\t" + e.getMessage());
-				if(log.isDebugEnabled())
-				{
-					log.debug("exception: ", e);
-				}
-				else
-				{
-					log.warn("set log level to DEBUG to display the stack trace.");
-				}
-				log.warn("*************************************************************");
+		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
+		final int len = listeners.length;
 
-				// assign the dummy crypt implementation
-				crypt = new NoCrypt();
+		if (listener != null && len > 0)
+		{
+			int pos = 0;
+
+			for (pos = 0; pos < len; pos++)
+			{
+				if (listener == listeners[pos])
+				{
+					break;
+				}
+			}
+
+			if (pos < len)
+			{
+				listeners[pos] = listeners[len - 1];
+				final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
+				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
+
+				componentInstantiationListeners = newListeners;
 			}
 		}
-
-		return crypt;
 	}
 
 	/**
-	 * Factory method that creates a markup parser.
+	 * Sets the metadata for this application using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
-	 * @return A new MarkupParser
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
 	 */
-	public MarkupParser newMarkupParser()
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser());
-		parser.configure(getSettings());
-		return parser;
+		metaData = key.set(metaData, object);
 	}
 
 	/**
-	 * @return Factory for creating sessions
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * Initializes wicket components.
+	 */
+	public final void initializeComponents()
+	{
+		// Load any wicket components we can find
+		try
+		{
+			// Load components used by all applications
+			final Enumeration resources = getClass().getClassLoader().getResources(
+					"wicket.properties");
+			while (resources.hasMoreElements())
+			{
+				InputStream in = null;
+				try
+				{
+					final URL url = (URL)resources.nextElement();
+					final Properties properties = new Properties();
+					in = url.openStream();
+					properties.load(in);
+					initializeComponents(properties);
+				}
+				finally
+				{
+					if (in != null)
+					{
+						in.close();
+					}
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to load initializers file", e);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @param target
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @param requestTarget
+	 */
+	public void logResponseTarget(IRequestTarget requestTarget)
+	{
+	}
+
+	/**
+	 * Gets the unique key of this application within a given context (like a
+	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
+	 * 
+	 * @return The unique key of this application
+	 */
+	public abstract String getApplicationKey();
+
+	/**
+	 * Gets the facade object for working getting/ storing session instances.
+	 * 
+	 * @return The session facade
+	 */
+	public final ISessionStore getSessionStore()
+	{
+		return sessionStore;
+	}
+
+	/**
+	 * Creates a new session facade. Is called once per application, and is
+	 * typically not something clients reimplement.
+	 * 
+	 * @return The session facade
+	 */
+	protected abstract ISessionStore newSessionStore();
+
+	/**
+	 * Gets the factory for creating session instances.
+	 * 
+	 * @return Factory for creating session instances
 	 */
 	protected abstract ISessionFactory getSessionFactory();
 
 	/**
-	 * Allows for initialization of the application by a subclass.
+	 * Allows for initialization of the application by a subclass. <strong>Use
+	 * this method for any application setup instead of the constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -429,20 +716,100 @@ public abstract class Application
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
 	 * CALL.
 	 * 
-	 * Internal intialization.
+	 * Internal initialization.
 	 */
 	protected void internalInit()
 	{
+		settingsAccessible = true;
+		// Install default component resolvers
+		getPageSettings().addComponentResolver(new ParentResolver());
+		getPageSettings().addComponentResolver(new AutoComponentResolver());
+		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
+		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
+		getPageSettings().addComponentResolver(new WicketLinkResolver());
+		getPageSettings().addComponentResolver(new WicketMessageResolver());
+
+		// Install button image resource factory
+		getResourceSettings().addResourceFactory("buttonFactory",
+				new DefaultButtonImageResourceFactory());
+
+		String applicationKey = getApplicationKey();
+		applicationKeyToApplication.put(applicationKey, this);
+
+		sessionStore = newSessionStore();
 	}
 
 	/**
-	 * Called by ApplicationSettings when source path property is changed. This
-	 * method sets the resourceStreamLocator to null so it will get recreated
-	 * the next time it is accessed using the new source path.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
-	final void resourcePathChanged()
+	protected void internalDestroy()
 	{
-		this.resourceStreamLocator = null;
+		destroy();
+		applicationKeyToApplication.remove(getApplicationKey());
 	}
 
+	/**
+	 * Called when wicket servlet is destroyed. Overrides do not have to call
+	 * super.
+	 */
+	protected void destroy()
+	{
+
+	}
+
+	/**
+	 * Notifies the registered component instantiation listeners of the
+	 * construction of the provided component
+	 * 
+	 * @param component
+	 *            the component that is being instantiated
+	 */
+	final void notifyComponentInstantiationListeners(final Component component)
+	{
+		final int len = componentInstantiationListeners.length;
+		for (int i = 0; i < len; i++)
+		{
+			componentInstantiationListeners[i].onInstantiation(component);
+		}
+	}
+
+	/**
+	 * Instantiate initializer with the given class name.
+	 * 
+	 * @param className
+	 *            The name of the initializer class
+	 */
+	private final void initialize(final String className)
+	{
+		if (!Strings.isEmpty(className))
+		{
+			try
+			{
+				Class c = getApplicationSettings().getClassResolver().resolveClass(className);
+				((IInitializer)c.newInstance()).init(this);
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library initializers in it
+	 */
+	private final void initializeComponents(final Properties properties)
+	{
+		initialize(properties.getProperty("initializer"));
+		initialize(properties.getProperty(getName() + "-initializer"));
+	}
 }

@@ -29,6 +29,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public final class IntegerConverter extends AbstractIntegerConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a integer converter
 	 */

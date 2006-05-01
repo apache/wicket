@@ -79,10 +79,9 @@ public class HtmlDocumentParser
 	 */
 	public HtmlDocumentParser(final String document)
 	{
-	    this.document = document;
-		this.document = Strings.replaceAll(this.document, "\n", "");
-		this.document = Strings.replaceAll(this.document, "\r", "");
-		this.document = Strings.replaceAll(this.document, "\t", " ");
+		CharSequence tmp = Strings.replaceAll(document, "\n", "");
+		tmp = Strings.replaceAll(tmp, "\r", "");
+		this.document = Strings.replaceAll(tmp, "\t", " ").toString();
 		pos = 0;
 	}
 
@@ -160,8 +159,8 @@ public class HtmlDocumentParser
 	private Map extractAttributes(String attributeString)
 	{
 		Map m = new HashMap();
-		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ");
-		attributeString = Strings.replaceAll(attributeString, " = ", "=");
+		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
+		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
 		for (int i = 0; i < attributeElements.length; i++)
 		{
@@ -178,13 +177,19 @@ public class HtmlDocumentParser
 				{
 					value.append(bits[j]);
 					if (j < (bits.length - 1))
+					{
 						value.append('=');
+					}
 				}
 				bits[1] = value.toString().trim();
 				if (bits[1].startsWith("\""))
+				{
 					bits[1] = bits[1].substring(1);
+				}
 				if (bits[1].endsWith("\""))
+				{
 					bits[1] = bits[1].substring(0, bits[1].length() - 1);
+				}
 				m.put(bits[0].toLowerCase(), bits[1]);
 			}
 		}

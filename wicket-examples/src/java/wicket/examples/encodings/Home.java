@@ -57,19 +57,17 @@ public class Home extends WicketExamplePage
 
 		super.configureResponse();
 
-		// This is no longer useful in many cases, since we now forward the 
+		// This is no longer useful in many cases, since we now forward the
 		// <?xml ..encoding=".." ?> from the Page's markup and use it explicitly
 		// set the responses encoding (see super class implementation).
 		// It is however not completely useless, as many html (not xhtml) pages
 		// might not have that xml declaration <?xml ..?> string.
-/*		
-		final String encoding = "text/" + getMarkupType() + "; charset="
-				+ CharSetUtil.getEncoding(getRequestCycle());
-				
-		getResponse().setContentType(encoding);
-*/
+		/*
+		 * final String encoding = "text/" + getMarkupType() + "; charset=" +
+		 * CharSetUtil.getEncoding(getRequestCycle());
+		 * 
+		 * getResponse().setContentType(encoding);
+		 */
 		getSession().setLocale(originalLocale);
 	}
 }
-
-

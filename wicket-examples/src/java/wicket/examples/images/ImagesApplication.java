@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5121 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,7 +18,11 @@
 package wicket.examples.images;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -32,7 +36,26 @@ public class ImagesApplication extends WicketExampleApplication
 	 */
 	public ImagesApplication()
 	{
-		getPages().setHomePage(Home.class);
-		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
+	/**
+	 * Special overwrite to have url compressing for this example.
+	 * 
+	 * @see URLCompressor
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }

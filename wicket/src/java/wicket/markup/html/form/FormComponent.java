@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FormComponent.java 4952 2006-03-15 05:21:36 -0800 (Wed, 15 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-15 05:21:36 -0800 (Wed, 15 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,22 +18,39 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import wicket.AttributeModifier;
+import wicket.Component;
+import wicket.Localizer;
+import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.util.convert.ConversionException;
+import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
+import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
- * An html form component knows how to validate itself. Validators that
+ * An HTML form component knows how to validate itself. Validators that
  * implement IValidator can be added to the component. They will be evaluated in
  * the order they were added and the first Validator that returns an error
  * message determines the error message returned by the component.
@@ -40,43 +58,28 @@ import wicket.util.string.StringList;
  * FormComponents are not versioned by default. If you need versioning for your
  * FormComponents, you will need to call Form.setVersioned(true), which will set
  * versioning on for the form and all form component children.
- * 
+ * <p>
+ * If this component is required and that fails the error key that is used
+ * is the "RequiredValidator" if the Type conversions failes it will be using
+ * the key "TypeValidator" and the keys that can be used in both are :
+ * <ul>
+ * <li>${input}: the input the user did give</li>
+ * <li>${name}: the name of the component that failed</li>
+ * <li>${label}: the label of the component</li>
+ * </ul>
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
-	/**
-	 * Special flag value to indicate when there is no invalid input, since null
-	 * is a valid value!
-	 */
-	protected static final String NO_INVALID_INPUT = "[No invalid input]";
-
-	/** Make empty strings null values boolean */
-	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
+	 * Typesafe interface to code that is called when visiting a form component.
 	 */
-	private String invalidInput = NO_INVALID_INPUT;
-
-	/**
-	 * Whether this form component should save and restore state between
-	 * sessions. This is false by default.
-	 */
-	private boolean persistent = false;
-
-	/** The validator or validator list for this component. */
-	private IValidator validator = IValidator.NULL;
-
-	/**
-	 * Typesafe interface to code that is called when visiting a form component
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public interface IVisitor
+	public static interface IVisitor
 	{
 		/**
 		 * Called when visiting a form component
@@ -88,120 +91,104 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * A convenient and memory efficent representation for a list of validators.
+	 * Change object to capture the required flag change
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	static private final class ValidatorList implements IValidator
+	private final class RequiredStateChange extends Change
 	{
-		/**
-		 * Left part of linked list.
-		 */
-		private final IValidator left;
+		private static final long serialVersionUID = 1L;
+
+		private final boolean required = isRequired();
 
 		/**
-		 * Right part of linked list.
+		 * @see wicket.version.undo.Change#undo()
 		 */
-		private IValidator right;
-
-		/**
-		 * Constructs a list with validators in it.
-		 * 
-		 * @param left
-		 *            The left validator
-		 * @param right
-		 *            The right validator
-		 */
-		ValidatorList(final IValidator left, final IValidator right)
+		public void undo()
 		{
-			this.left = left;
-			this.right = right;
-		}
-
-		/**
-		 * Gets the string representation of this object.
-		 * 
-		 * @return String representation of this object
-		 */
-		public String toString()
-		{
-			final StringList stringList = new StringList();
-			ValidatorList current = this;
-
-			while (true)
-			{
-				stringList.add(Classes.name(current.left.getClass()) + " "
-						+ current.left.toString());
-
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					stringList.add(Classes.name(current.right.getClass()) + " "
-							+ current.right.toString());
-
-					break;
-				}
-			}
-
-			return stringList.toString();
-		}
-
-		/**
-		 * Validates the given component.
-		 * 
-		 * @param component
-		 *            The component to validate
-		 */
-		public void validate(final FormComponent component)
-		{
-			left.validate(component);
-			right.validate(component);
-		}
-
-		/**
-		 * Adds the given code validator to this list of code validators.
-		 * 
-		 * @param validator
-		 *            The validator
-		 */
-		void add(final IValidator validator)
-		{
-			ValidatorList current = this;
-
-			while (current.right instanceof ValidatorList)
-			{
-				current = (ValidatorList)current.right;
-			}
-
-			current.right = new ValidatorList(current.right, validator);
-		}
-
-		/**
-		 * Gets the validators as a List.
-		 * 
-		 * @return the validators as a List
-		 */
-		List asList()
-		{
-			ValidatorList current = this;
-			List validators = new ArrayList();
-			while (true)
-			{
-				validators.add(current.left);
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					validators.add(current.right);
-					break;
-				}
-			}
-			return validators;
+			setRequired(required);
 		}
 	}
+
+	/**
+	 * Attribute modifier model that returns 'disabled' if a form component is
+	 * disabled or null otherwise (resulting in no attribute being appended).
+	 */
+	private final class DisabledAttributeModel extends Model
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 */
+		public Object getObject(Component component)
+		{
+			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
+					? null
+					: "disabled";
+		}
+	}
+
+	/**
+	 * Attribute modifier that adds 'disabled="disabled"' to the component tag's
+	 * attribute if a form component is disabled.
+	 */
+	private static final class DisabledAttributeModifier extends AttributeModifier
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param model
+		 */
+		public DisabledAttributeModifier(DisabledAttributeModel model)
+		{
+			super("disabled", true, model);
+		}
+	}
+
+	/**
+	 * Type that the raw input string will be converted to
+	 */
+	private Class type;
+
+	/**
+	 * Make empty strings null values boolean. Used by AbstractTextComponent
+	 * subclass.
+	 */
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+
+	/**
+	 * Whether this form component should save and restore state between
+	 * sessions. This is false by default.
+	 */
+	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
+
+
+	/** Whether or not this component's value is required (non-empty) */
+	private static final short FLAG_REQUIRED = FLAG_RESERVED3;
+
+	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
+
+	/**
+	 * Raw Input entered by the user or NO_RAW_INPUT if nothing is filled in.
+	 */
+	private String rawInput = NO_RAW_INPUT;
+
+	/**
+	 * The list of validators for this form component as either an IValidator
+	 * instance or an array of IValidator instances.
+	 */
+	private Object validators = null;
+
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 */
+	private IModel labelModel = null;
+
+	private transient Object convertedInput;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -209,6 +196,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	public FormComponent(final String id)
 	{
 		super(id);
+		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
+		// the form decides whether form components are versioned or not
+		// see Form.setVersioned
 		setVersioned(false);
 	}
 
@@ -218,6 +208,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	public FormComponent(final String id, IModel model)
 	{
 		super(id, model);
+		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
+		// the form decides whether form components are versioned or not
+		// see Form.setVersioned
 		setVersioned(false);
 	}
 
@@ -230,25 +223,14 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
-		// If we don't yet have a validator
-		if (this.validator == IValidator.NULL)
+		// keep this in until we remove TypeValidator
+		if (validator instanceof TypeValidator)
 		{
-			// Just add the validator directly
-			this.validator = validator;
+			setType(((TypeValidator)validator).getType());
 		}
 		else
 		{
-			// Create a validator list?
-			if (this.validator instanceof ValidatorList)
-			{
-				// Already have a list. Just add new validator to list
-				((ValidatorList)this.validator).add(validator);
-			}
-			else
-			{
-				// Create a set of the current validator and the new validator
-				this.validator = new ValidatorList(this.validator, validator);
-			}
+			validators_add(validator);
 		}
 		return this;
 	}
@@ -256,7 +238,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * @return The parent form for this form component
 	 */
-	public final Form getForm()
+	public Form getForm()
 	{
 		// Look for parent form
 		final Form form = (Form)findParent(Form.class);
@@ -268,60 +250,87 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public FormComponent setLabel(final IModel labelModel)
+	{
+		this.labelModel = labelModel;
+		return this;
+	}
+
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * 
+	 * @return labelModel
+	 */
+	public IModel getLabel()
+	{
+		return this.labelModel;
+	}
+
+	/**
 	 * Gets the request parameter for this component as a string.
 	 * 
 	 * @return The value in the request for this component
 	 */
-	public final String getInput()
+	public String getInput()
 	{
-		return getRequest().getParameter(getPath());
+		return getRequest().getParameter(getInputName());
 	}
 
 	/**
-	 * Gets the type for any TypeValidator assigned to this component.
+	 * Gets the string to be used for the <tt>name</tt> attribute of the form
+	 * element. Generated using the path from the form to the component,
+	 * excluding the form itself. Override it if you want even a smaller name.
+	 * E.g. if you know for sure that the id is unique within a form.
 	 * 
-	 * @return Any type assigned to this component via type validation, or null
-	 *         if no TypeValidator has been added.
+	 * @return The string to use as the form element's name attribute
 	 */
-	public final Class getValidationType()
+	public String getInputName()
 	{
-		// Loop through validators
-		final List validators = getValidators();
-		for (final Iterator iterator = validators.iterator(); iterator.hasNext();)
+		String id = getId();
+		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
+		Component c = this;
+		while (true)
 		{
-			// If validator is a TypeValidator
-			final IValidator validator = (IValidator)iterator.next();
-			if (validator instanceof TypeValidator)
+			inputName.prepend(id);
+			c = c.getParent();
+			if (c == null || c instanceof Form || c instanceof Page)
 			{
-				// Return the type validator's type
-				return ((TypeValidator)validator).getType();
+				break;
 			}
+			inputName.prepend(Component.PATH_SEPARATOR);
+			id = c.getId();
 		}
-		return null;
+		return inputName.toString();
 	}
 
 	/**
-	 * Gets the registered validators as a list.
+	 * Gets an unmodifiable list of validators for this FormComponent.
 	 * 
-	 * @return the validators as a list
+	 * @return List of validators
 	 */
 	public final List getValidators()
 	{
-		final List list;
-		if (this.validator == null)
+		final int size = validators_size();
+		if (size == 0)
 		{
-			list = Collections.EMPTY_LIST;
-		}
-		else if (this.validator instanceof ValidatorList)
-		{
-			list = ((ValidatorList)this.validator).asList();
+			return Collections.EMPTY_LIST;
 		}
 		else
 		{
-			list = new ArrayList(1);
-			list.add(validator);
+			final List list = new ArrayList();
+			for (int i = 0; i < size; i++)
+			{
+				list.add(validators_get(i));
+			}
+			return Collections.unmodifiableList(list);
 		}
-		return list;
 	}
 
 	/**
@@ -331,9 +340,44 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		return invalidInput == NO_INVALID_INPUT ? getModelValue() : invalidInput;
+		if (NO_RAW_INPUT.equals(rawInput))
+		{
+			return getModelValue();
+		}
+		else
+		{
+			if (getEscapeModelStrings() && rawInput != null)
+			{
+				return Strings.escapeMarkup(rawInput).toString();
+			}
+			return rawInput;
+		}
 	}
 
+	/**
+	 * Use hasRawInput() to check if this component has raw input because
+	 * null can mean 2 things: It doesn't have rawinput or the rawinput 
+	 * is really null. 
+	 * 
+	 * @return The raw form input that is stored for this formcomponent
+	 */
+	public final String getRawInput()
+	{
+		return rawInput == NO_RAW_INPUT ? null : rawInput;
+	}
+
+	/**
+	 * This method can be called to know if this component really has
+	 * raw input.
+	 * 
+	 * @return boolean if this form component has rawinput.
+	 */
+	public final boolean hasRawInput()
+	{
+		return rawInput != NO_RAW_INPUT;
+	}
+
+	
 	/**
 	 * Called to indicate that
 	 */
@@ -343,12 +387,20 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * @return True if this component encodes data in a multipart form submit
+	 */
+	public boolean isMultiPart()
+	{
+		return false;
+	}
+
+	/**
 	 * @return True if this component supports persistence AND it has been asked
 	 *         to persist itself with setPersistent().
 	 */
 	public final boolean isPersistent()
 	{
-		return supportsPersistence() && persistent;
+		return supportsPersistence() && getFlag(FLAG_PERSISTENT);
 	}
 
 	/**
@@ -372,7 +424,22 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final boolean isValidated()
 	{
-		return this.validator != IValidator.NULL;
+		return this.validators != null;
+	}
+
+	/**
+	 * Gets whether this component's input can be null. By default, components
+	 * that do not get input will have null values passed in for input. However,
+	 * component TextField is an example (possibly the only one) that never gets
+	 * a null passed in, even if the field is left empty UNLESS it had attribute
+	 * <code>disabled="disabled"</code> set.
+	 * 
+	 * @return True if this component's input can be null. Returns true by
+	 *         default.
+	 */
+	public boolean isInputNullable()
+	{
+		return true;
 	}
 
 	/**
@@ -381,9 +448,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @param value
 	 *            The value
 	 */
-	public void setModelValue(final String value)
+	public void setModelValue(final String[] value)
 	{
-		setModelObject(value);
+		convertedInput = convertValue(value);
+		updateModel();
 	}
 
 	/**
@@ -391,26 +459,211 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @param persistent
 	 *            True if this component is to be persisted.
+	 * @return this for chaining
 	 */
-	public final void setPersistent(final boolean persistent)
+	public final FormComponent setPersistent(final boolean persistent)
 	{
 		if (supportsPersistence())
 		{
-			this.persistent = persistent;
+			setFlag(FLAG_PERSISTENT, persistent);
 		}
 		else
 		{
 			throw new UnsupportedOperationException("FormComponent " + getClass()
 					+ " does not support cookies");
 		}
+		return this;
 	}
 
 	/**
-	 * Called to indicate that
+	 * Updates this components' model from the request, it expect that the
+	 * object is already converted through the convert() call. By default it
+	 * just does this:
+	 * 
+	 * <pre>
+	 * setModelObject(getConvertedInput());
+	 * </pre>
+	 * 
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
+	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 */
+	public void updateModel()
+	{
+		setModelObject(getConvertedInput());
+	}
+
+	/**
+	 * Called to indicate that the user input is valid.
 	 */
 	public final void valid()
 	{
+		clearInput();
+
 		onValid();
+	}
+
+	/**
+	 * Clears the user input.
+	 */
+	final void clearInput()
+	{
+		rawInput = NO_RAW_INPUT;
+	}
+
+	/**
+	 * Checks if the raw input value is not null if this component is required
+	 */
+	protected final void checkRequired()
+	{
+		if (isRequired())
+		{
+			final String input = getInput();
+
+			// when null, check whether this is natural for that component, or
+			// whether - as is the case with text fields - this can only happen
+			// when the component was disabled
+			if (input == null && !isInputNullable())
+			{
+				// this value must have come from a disabled field
+				// do not perform validation
+				return;
+			}
+
+			// peform validation by looking whether the value is null or empty
+			if (Strings.isEmpty(input))
+			{
+				error(Collections.singletonList("RequiredValidator"), new HashMap());
+			}
+
+		}
+	}
+
+	/**
+	 * Converts and validates the conversion of the raw input string into the
+	 * object specified by {@link FormComponent#getType()} and records any
+	 * errors. Converted value is available thorugh
+	 * {@link FormComponent#getConvertedInput()}
+	 */
+	protected final void convert()
+	{
+		if (type == null)
+		{
+			try
+			{
+				convertedInput = convertValue(inputAsStringArray());
+			}
+			catch (ConversionException e)
+			{
+				Map args = new HashMap();
+				final Locale locale = e.getLocale();
+				if (locale != null)
+				{
+					args.put("locale", locale);
+				}
+				args.put("exception", e);
+				Format format = e.getFormat();
+				if (format instanceof SimpleDateFormat)
+				{
+					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+				}
+
+				String typedResourceKey = "ConversionError." + e.getTargetType();
+				String[] resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+
+				error(Arrays.asList(resourceKeys), args);
+			}
+		}
+		else if (!Strings.isEmpty(getInput()))
+		{
+			final IConverter converter = getConverter();
+			try
+			{
+				convertedInput = converter.convert(getInput(), type);
+			}
+			catch (ConversionException e)
+			{
+				Map args = new HashMap();
+				args.put("type", Classes.simpleName(type));
+				final Locale locale = e.getLocale();
+				if (locale != null)
+				{
+					args.put("locale", locale);
+				}
+				args.put("exception", e);
+				Format format = e.getFormat();
+				if (format instanceof SimpleDateFormat)
+				{
+					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+				}
+
+
+				final String typedResourceKey = "TypeValidator" + "." + Classes.simpleName(type);
+
+				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
+
+				error(Arrays.asList(resourceKeys), args);
+			}
+		}
+	}
+
+	/**
+	 * Subclasses should overwrite this if the conversion is not done through
+	 * the type field and the IConverter. <strong>WARNING: this method may be
+	 * removed in future versions.</strong>
+	 * 
+	 * If conversion fails then a ConversionException should be thrown
+	 * 
+	 * @param value
+	 *            The value can be the getInput() or through a cookie
+	 * 
+	 * @return The converted value. default returns just the given value
+	 * @throws ConversionException
+	 *             If input can't be converted
+	 */
+	protected Object convertValue(String[] value) throws ConversionException
+	{
+		return value != null && value.length > 0? value[0].trim() : null;
+	}
+
+	/**
+	 * Performs full validation of the form component, which consists of calling
+	 * validateRequired(), validateTypeConversion(), and validateValidators().
+	 * This method should only be used if the form component needs to be fully
+	 * validated outside the form process.
+	 */
+	public final void validate()
+	{
+		checkRequired();
+		convert();
+		checkValidators();
+	}
+
+	/**
+	 * Validates this component using the component's validators.
+	 */
+	protected final void checkValidators()
+	{
+		final int size = validators_size();
+
+		int i = 0;
+		IValidator validator = null;
+		try
+		{
+			for (i = 0; i < size; i++)
+			{
+				validator = validators_get(i);
+				validator.validate(this);
+				if (!isValid())
+				{
+					break;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation "
+					+ validator.getClass().getName() + " on component " + this.getPath(), e);
+		}
 	}
 
 	/**
@@ -493,11 +746,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Gets the request parameters for this component as strings.
 	 * 
-	 * @return The valuess in the request for this component
+	 * @return The values in the request for this component
 	 */
 	protected final String[] inputAsStringArray()
 	{
-		return getRequest().getParameters(getPath());
+		return getRequest().getParameters(getInputName());
 	}
 
 	/**
@@ -509,35 +762,22 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		tag.put("name", getPath());
+		tag.put("name", getInputName());
 		super.onComponentTag(tag);
 	}
 
 	/**
-	 * Handle invalidation by storing the user input for form repopulation
+	 * Handle invalidation
 	 */
 	protected void onInvalid()
 	{
-		// Get input as String array
-		final String[] input = inputAsStringArray();
-
-		// If there is any input
-		if (input != null)
-		{
-			// join the values together with ";", for example, "id1;id2;id3"
-			invalidInput = StringList.valueOf(input).join(";");
-		}
-		else
-		{
-			// no input
-			invalidInput = null;
-		}
 	}
 
+
 	/**
-	 * @see wicket.Component#onModelChanged()
+	 * @see wicket.Component#internalOnModelChanged()
 	 */
-	protected void onModelChanged()
+	protected void internalOnModelChanged()
 	{
 		// If the model for this form component changed, we should make it
 		// valid again because there can't be any invalid input for it anymore.
@@ -549,7 +789,6 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onValid()
 	{
-		invalidInput = NO_INVALID_INPUT;
 	}
 
 	/**
@@ -561,16 +800,328 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Implemented by form component subclass to update the form component's
-	 * model.
+	 * @param validator
+	 *            The validator to add to the validators Object (which may be an
+	 *            array of IValidators or a single instance, for efficiency)
 	 */
-	protected abstract void updateModel();
+	private void validators_add(final IValidator validator)
+	{
+		if (this.validators == null)
+		{
+			this.validators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = validators_size();
+
+			// Create array that holds size + 1 elements
+			final IValidator[] validators = new IValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
+			{
+				validators[i] = validators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.validators = validators;
+		}
+	}
 
 	/**
-	 * Validates this component using the component's validator.
+	 * Gets validator from validators Object (which may be an array of
+	 * IValidators or a single instance, for efficiency) at the given index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The validator
 	 */
-	protected final void validate()
+	private IValidator validators_get(int index)
 	{
-		validator.validate(this);
+		if (this.validators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators)[index];
+		}
+		return (IValidator)validators;
+	}
+
+	/**
+	 * @return The number of validators in the validators Object (which may be
+	 *         an array of IValidators or a single instance, for efficiency)
+	 */
+	private int validators_size()
+	{
+		if (this.validators == null)
+		{
+			return 0;
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators).length;
+		}
+		return 1;
+	}
+
+	/**
+	 * Used by Form to tell the FormComponent that a new user input is available
+	 */
+	public final void inputChanged()
+	{
+		if (isVisibleInHierarchy() && isEnabled())
+		{
+			// Get input as String array
+			final String[] input = inputAsStringArray();
+
+			// If there is any input
+			if (input != null)
+			{
+				// join the values together with ";", for example, "id1;id2;id3"
+				rawInput = StringList.valueOf(input).join(";");
+			}
+			else if ( isInputNullable() )
+			{
+				// no input
+				rawInput = null;
+			}
+			else
+			{
+				rawInput = NO_RAW_INPUT;
+			}
+		}
+	}
+
+	/**
+	 * Sets the required flag
+	 * 
+	 * @param required
+	 * @return this for chaining
+	 */
+	public final FormComponent setRequired(final boolean required)
+	{
+		if(!required &&  type != null && type.isPrimitive())
+		{
+			throw new WicketRuntimeException("FormComponent can't be not required when the type is primitive class: " + this);
+		}
+		if (required != isRequired())
+		{
+			addStateChange(new RequiredStateChange());
+		}
+		setFlag(FLAG_REQUIRED, required);
+		return this;
+	}
+
+	/**
+	 * @return whether or not this component's value is required
+	 */
+	public boolean isRequired()
+	{
+		return getFlag(FLAG_REQUIRED);
+	}
+
+	/**
+	 * @return value of input converted into appropriate type if any was set
+	 */
+	public final Object getConvertedInput()
+	{
+		return convertedInput;
+	}
+
+	protected void onDetach()
+	{
+		super.onDetach();
+		convertedInput = null;
+	}
+
+	/**
+	 * @return the type to use when updating the model for this form component
+	 */
+	public final Class getType()
+	{
+		return type;
+	}
+
+	/**
+	 * Sets the type that will be used when updating the model for this
+	 * component. If no type is specified String type is assumed.
+	 * 
+	 * @param type
+	 * @return this for chaining
+	 */
+	public final FormComponent setType(Class type)
+	{
+		this.type = type;
+		if(type != null && type.isPrimitive()) setRequired(true);
+		return this;
+	}
+
+	/**
+	 * @see Form#getValidatorKeyPrefix()
+	 * @return prefix used when constructing validator key messages
+	 */
+	public String getValidatorKeyPrefix()
+	{
+		return getForm().getValidatorKeyPrefix();
+	}
+
+	/**
+	 * Builds and reports an error message. Typically called from a validator.
+	 * <p>
+	 * This function will iterate over the list of resource keys and try to find
+	 * a resource message that matches. Each key is first tried verbatim, and
+	 * then a key of form prefix.key is tried; prefix comes from
+	 * {@link #getValidatorKeyPrefix()}.
+	 * <p>
+	 * If a message is found, any variables in it with form ${varname} will be
+	 * interpolated given the arguments in the args parameter.
+	 * <p>
+	 * This method will add a few default arguments to the args map if they are
+	 * not already present:
+	 * <ul>
+	 * <li>input - the raw string value entered by the user</li>
+	 * <li>name - the id of the this form component</li>
+	 * <li>label - string value of object returned from the {@link #getLabel()}
+	 * model</li>
+	 * </ul>
+	 * 
+	 * 
+	 * @param resourceKeys
+	 *            list of resource keys to try
+	 * @param args
+	 *            argument substituion map with format map:varname->varvalue
+	 */
+	public final void error(List/* <String> */resourceKeys, Map/* <String,String> */args)
+	{
+		String prefix = getValidatorKeyPrefix();
+		if (Strings.isEmpty(prefix))
+		{
+			prefix = "";
+		}
+
+		// prepare the arguments map by adding default arguments such as input,
+		// name, and label
+		final Map fullArgs;
+		if (args == null)
+		{
+			fullArgs = new HashMap(6);
+		}
+		else
+		{
+			fullArgs = new HashMap(args.size() + 6);
+			fullArgs.putAll(args);
+		}
+
+		if (!fullArgs.containsKey("input"))
+		{
+			fullArgs.put("input", getInput());
+		}
+		if (!fullArgs.containsKey("name"))
+		{
+			fullArgs.put("name", getId());
+		}
+		if (!fullArgs.containsKey("label"))
+		{
+			Object label = null;
+			if (getLabel() != null)
+			{
+				label = getLabel().getObject(this);
+			}
+			if (label != null)
+			{
+				fullArgs.put("label", label);
+			}
+			else
+			{
+				// apply default value (component id) if key/value can not be
+				// found
+				fullArgs.put("label", getLocalizer().getString(getId(), getParent(), getId()));
+			}
+		}
+
+		final IModel argsModel = new Model((Serializable)fullArgs);
+
+		// iterate through keys in order they were provided
+
+		final Localizer localizer = getLocalizer();
+		final Iterator keys = resourceKeys.iterator();
+
+		String message = null;
+
+		while (keys.hasNext())
+		{
+			final String key = (String)keys.next();
+
+			String resource = prefix + getId() + "." + key;
+
+			// Note: It is important that the default value of "" is provided
+			// to getString() not to throw a MissingResourceException or to
+			// return a default string like "[Warning: String ..."
+			message = localizer.getString(resource, getParent(), argsModel, "");
+
+			// If not found, than ..
+			if (Strings.isEmpty(message))
+			{
+				// Have a 2nd try with the class name as the key. This makes for
+				// keys like "RequiredValidator" in any of the properties files
+				// along the path.
+
+				resource = prefix + key;
+
+				if (keys.hasNext())
+				{
+					message = localizer.getString(resource, this, argsModel, "");
+				}
+				else
+				{
+					/*
+					 * Note: This is the last key we are going to try. It is
+					 * important that the default value of "" is NOT provided to
+					 * getString() throw either MissingResourceException or to
+					 * to return a default string like "[Warning: String ..." in
+					 * case the property could not be found.
+					 */
+					message = localizer.getString(resource, this, argsModel);
+				}
+			}
+
+			if (!Strings.isEmpty(message))
+			{
+				break;
+			}
+
+		}
+
+		error(message);
+	}
+
+
+	/**
+	 * This method will retrieve the request parameter, validate it, and if
+	 * valid update the model. These are the same steps as would be performed by
+	 * the form.
+	 * 
+	 * This is useful when a formcomponent is used outside a form.
+	 * 
+	 */
+	public final void processInput()
+	{
+		inputChanged();
+		validate();
+		if (hasErrorMessage())
+		{
+			invalid();
+		}
+		else
+		{
+			valid();
+			updateModel();
+		}
 	}
 }

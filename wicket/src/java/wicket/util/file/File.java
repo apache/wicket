@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-10-02 03:06:33 -0700 (Sun, 02 Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,6 +35,19 @@ import wicket.util.watch.IModifiable;
  */
 public class File extends java.io.File implements IModifiable
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param file
+	 *            File from java.io package
+	 */
+	public File(final java.io.File file)
+	{
+		super(file.getAbsolutePath());
+	}
+
 	/**
 	 * Constructor.
 	 * 
@@ -101,13 +114,13 @@ public class File extends java.io.File implements IModifiable
 	{
 		Files.remove(this);
 	}
-	
+
 	/**
 	 * Writes the given input stream to this file
 	 * 
 	 * @param input
 	 *            The input
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public final void writeTo(final InputStream input) throws IOException
 	{

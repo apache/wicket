@@ -41,6 +41,8 @@ import wicket.util.string.Strings;
  */
 public final class SmartLinkMultiLineLabel extends MultiLineLabel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
@@ -64,7 +66,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     protected void onComponentTagBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
-        final String body = Strings.toMultilineMarkup(getModelObjectAsString());
+        final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
         replaceComponentTagBody(markupStream, openTag, SmartLinkLabel.smartLink(body));
     }
 }

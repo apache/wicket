@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -29,17 +28,21 @@ import wicket.model.PropertyModel;
  */
 public class MarkupInheritanceBase_4 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int counter = 0;
 
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritanceBase_4(final PageParameters parameters)
+	public MarkupInheritanceBase_4()
 	{
 		add(new Label("label1", new PropertyModel(this, "counter")));
 		add(new Link("link")
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public void onClick()
 			{
 				counter++;

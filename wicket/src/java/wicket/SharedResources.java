@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SharedResources.java 5151 2006-03-28 03:50:28 -0800 (Tue, 28 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-28 03:50:28 -0800 (Tue, 28 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +22,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.util.file.Files;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Class which holds shared resources. Resources can be shared by name. An
@@ -29,17 +34,34 @@ import wicket.util.file.Files;
  * style can be given as well.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Gili Tzabari
  */
 public class SharedResources
 {
-	/** Map of shared resources */
+	/** Logger */
+	private static Log log = LogFactory.getLog(SharedResources.class);
+
+	/** Map of Class to alias String */
+	private final Map classAliasMap = new HashMap();
+
+	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Construct.
 	 * 
-	 * Inserts _[locale] and _[style] into path just before any extension that
-	 * might exist.
+	 * @param application
+	 *            The application
+	 */
+	SharedResources(Application application)
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
+	 * _[locale] and _[style] into path just before any extension that might
+	 * exist.
 	 * 
 	 * @param path
 	 *            The resource path
@@ -49,24 +71,35 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final String path, final Locale locale, final String style)
+	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
-		final StringBuffer buffer = new StringBuffer();
 		final String extension = Files.extension(path);
 		final String basePath = Files.basePath(path, extension);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
-		if (locale != null)
-		{
-			if (!locale.equals(Locale.getDefault()))
-			{
-				buffer.append('_');
-				buffer.append(locale.toString());
-			}
-		}
+
+		// First style because locale can append later on.
 		if (style != null)
 		{
 			buffer.append('_');
 			buffer.append(style);
+		}
+		if (locale != null)
+		{
+			buffer.append('_');
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c || (l && v))
+			{
+				buffer.append('_').append(locale.getCountry()); // This may just
+				// append '_'
+			}
+			if (v && (l || c))
+			{
+				buffer.append('_').append(locale.getVariant());
+			}
 		}
 		if (extension != null)
 		{
@@ -89,13 +122,35 @@ public class SharedResources
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	public static String path(final Class scope, final String path, final Locale locale,
+	public String resourceKey(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
-		return scope.getName() + '/' + path(path, locale, style);
+		String alias = (String)classAliasMap.get(scope);
+		if (alias == null)
+		{
+			alias = scope.getName();
+		}
+		return alias + '/' + resourceKey(path, locale, style);
 	}
 
 	/**
+	 * Sets an alias for a class so that a resource url can look like:
+	 * resources/images/Image.jpg instead of
+	 * resources/wicket.resources.ResourceClass/Image.jpg
+	 * 
+	 * @param clz
+	 *            The class that has to be aliased.
+	 * @param alias
+	 *            The alias string.
+	 */
+	public final void putClassAlias(Class clz, String alias)
+	{
+		classAliasMap.put(clz, alias);
+	}
+
+	/**
+	 * Adds a resource.
+	 * 
 	 * @param scope
 	 *            Scope of resource
 	 * @param name
@@ -111,14 +166,26 @@ public class SharedResources
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String key = path(scope, name, locale, style);
-		resourceMap.put(key, resource);
-
-		// Application shared resources are cacheable.
-		resource.setCacheable(true);
+		final String key = resourceKey(scope, name, locale, style);
+		synchronized (resourceMap)
+		{
+			Resource value = (Resource)resourceMap.get(key);
+			if (value == null)
+				resourceMap.put(key, resource);
+			
+			// FIXME IF this is important at all, it really only works when all resources implement
+			// their equals contracts properly, which is currently not the case
+//			else if (!value.equals(resource))
+//			{
+//				throw new IllegalArgumentException(key + " has a different resource "
+//						+ "already associated with it: " + value);
+//			}
+		}
 	}
 
 	/**
+	 * Adds a resource.
+	 * 
 	 * @param name
 	 *            Logical name of resource
 	 * @param locale
@@ -132,6 +199,8 @@ public class SharedResources
 	}
 
 	/**
+	 * Adds a resource.
+	 * 
 	 * @param name
 	 *            Logical name of resource
 	 * @param resource
@@ -151,53 +220,63 @@ public class SharedResources
 	 *            The locale of the resource
 	 * @param style
 	 *            The resource style (see {@link wicket.Session})
+	 * @param exact
+	 *            If true then only return the resource that is registered for
+	 *            the given locale and style.
+	 * 
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
-			final String style)
+			final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String key = path(scope, name, locale, style);
-			final Resource resource = get(key);
+			final String resourceKey = resourceKey(scope, name, locale, style);
+			final Resource resource = get(resourceKey);
 			if (resource != null)
 			{
 				return resource;
+			}
+			if (exact)
+			{
+				return null;
 			}
 		}
 
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = path(scope, name, locale, null);
+			final String key = resourceKey(scope, name, locale, null);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
+			}
+			if (exact)
+			{
+				return null;
 			}
 		}
 
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = path(scope, name, null, style);
+			final String key = resourceKey(scope, name, null, style);
 			final Resource resource = get(key);
 			if (resource != null)
 			{
 				return resource;
 			}
+			if (exact)
+			{
+				return null;
+			}
 		}
 
 		// 4. Look for base name with no locale or style
-		if (locale == null && style == null)
-		{
-			final String key = scope.getName() + '/' + name;
-			return get(key);
-		}
-
-		// Resource not found!
-		return null;
+		final String key = resourceKey(scope, name, null, null);
+		return get(key);
 	}
 
 	/**
@@ -209,6 +288,23 @@ public class SharedResources
 	 */
 	public final Resource get(final String key)
 	{
-		return (Resource)resourceMap.get(key);
+		synchronized (resourceMap)
+		{
+			return (Resource)resourceMap.get(key);
+		}
+	}
+
+	/**
+	 * Removes a shared resource.
+	 * 
+	 * @param key
+	 *            Shared resource key
+	 */
+	public final void remove(final String key)
+	{
+		synchronized (resourceMap)
+		{
+			resourceMap.remove(key);
+		}
 	}
 }

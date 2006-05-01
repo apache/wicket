@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-03-08 21:05:26 +0100 (Mi, 08 Mrz 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +17,8 @@
  */
 package wicket.examples.linkomatic;
 
-import wicket.IFeedback;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
@@ -83,7 +83,8 @@ public class Home extends WicketExamplePage
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		add(new BookmarkablePageLink("page3Link", Page3.class).setParameter("id", 3));
+		add(new BookmarkablePageLink("page3Link", Page3.class).setParameter("bookmarkparameter",
+				"3++2 & 5 € >< space + á"));
 
 		// Link to BookDetails page
 		add(new PageLink("bookDetailsLink", new IPageLink()
@@ -121,19 +122,26 @@ public class Home extends WicketExamplePage
 				new BookmarkablePageLink("page3", Page3.class)));
 
 		// Popup example
-		PopupSettings popupSettings = new PopupSettings().setHeight(500).setWidth(500);
+		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
+				500).setWidth(500);
 		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
-		
+
+		// And that link as a popup
+		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE
+				| PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
+		add(new ExternalLink("googlePopup", "http://www.google.com",
+				"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
+
 		// Shared resource link
 		add(new ResourceLink("cancelButtonLink", new ResourceReference("cancelButton")));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
-		add(new RedirectForm("redirectForm", feedbackPanel));
+		add(new RedirectForm("redirectForm"));
 	}
 
 	/**
@@ -146,12 +154,13 @@ public class Home extends WicketExamplePage
 
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param feedback feedback receiver
+		 * 
+		 * @param id
+		 *            component id
 		 */
-		public RedirectForm(String id, IFeedback feedback)
+		public RedirectForm(String id)
 		{
-			super(id, feedback);
+			super(id);
 			setModel(new CompoundPropertyModel(this));
 			add(new TextField("redirectUrl"));
 		}
@@ -166,6 +175,7 @@ public class Home extends WicketExamplePage
 
 		/**
 		 * Gets the redirectUrl.
+		 * 
 		 * @return redirectUrl
 		 */
 		public String getRedirectUrl()
@@ -175,7 +185,9 @@ public class Home extends WicketExamplePage
 
 		/**
 		 * Sets the redirectUrl.
-		 * @param redirectUrl redirectUrl
+		 * 
+		 * @param redirectUrl
+		 *            redirectUrl
 		 */
 		public void setRedirectUrl(String redirectUrl)
 		{
@@ -220,6 +232,12 @@ public class Home extends WicketExamplePage
 	{
 		this.onClickLinkClickCount = onClickLinkClickCount;
 	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
 }
-
-

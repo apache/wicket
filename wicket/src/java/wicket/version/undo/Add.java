@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005/10/02 10:06:30 $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,11 @@
  */
 package wicket.version.undo;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
+import wicket.util.lang.Classes;
 
 /**
  * An add change operation.
@@ -26,18 +30,62 @@ import wicket.Component;
  */
 class Add extends Change
 {
+	private static final long serialVersionUID = 1L;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(Add.class);
+
+	/** subject. */
 	private final Component component;
-	
+
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 *            subject
+	 */
 	Add(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component must be not null");
+		}
+
+		if (component.getParent() == null)
+		{
+			throw new IllegalStateException("component " + component + " doesn't have a parent");
+		}
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("RECORD ADD: added " + component.getPath() + " ("
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
+					+ ") to parent");
+		}
+
 		this.component = component;
 	}
-	
+
 	/**
 	 * @see wicket.version.undo.Change#undo()
 	 */
 	public void undo()
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("UNDO ADD: removing " + component.getPath() + " ("
+					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
+					+ ") from parent");
+		}
+
 		component.remove();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Add[component: " + component.getPath() + "]";
 	}
 }

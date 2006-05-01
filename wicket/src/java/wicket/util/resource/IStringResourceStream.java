@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,10 +33,10 @@ public interface IStringResourceStream extends IResourceStream
 	 * @param charset
 	 *            Charset for component
 	 */
-	public void setCharset(final Charset charset);
+	void setCharset(final Charset charset);
 
 	/**
 	 * @return This resource as a String.
 	 */
-	public String asString();
+	String asString();
 }

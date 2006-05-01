@@ -18,20 +18,20 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 
 
 /**
  */
 public class MarkupInheritanceExtension_3 extends MarkupInheritanceBase_3
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public MarkupInheritanceExtension_3(final PageParameters parameters) 
+	public MarkupInheritanceExtension_3() 
 	{
-	    super(parameters);
 	    
 	    //add(new Label("label5", "extension label"));
     }

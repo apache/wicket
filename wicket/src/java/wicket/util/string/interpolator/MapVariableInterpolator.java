@@ -65,4 +65,17 @@ public class MapVariableInterpolator extends VariableInterpolator
 	{
 		return variables.get(variableName).toString();
 	}
+
+	/**
+	 * Interpolate the string with the arguments defined in a map
+	 * 
+	 * @param string
+	 * @param variables
+	 * @return interpolated string
+	 */
+	public static String interpolate(String string, Map variables)
+	{
+		return new MapVariableInterpolator(string, variables).toString();
+	}
+
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+	<p>
+	This page is private/ non bookmarkable. There is no way for any user to navigate to this
+	page directly like it is possible with bookmarkable pages.
+	</p>
+	<p>
+	When navigating to this page, we passed the page that we came from as an argument. This
+	page holds that as a variable, and uses it to navigate back to it when the user clicks
+	the link beneath. Everytime a page is rendered, it is put in front of the list of pages
+	that is in the session.
+	</p>
+	
+	<p>
+	<a wicket:id="navigateBackLink">navigate back to where we came from</a>
+	</p>
+
+</body>
+</html>

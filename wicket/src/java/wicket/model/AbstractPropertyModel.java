@@ -17,15 +17,8 @@
  */
 package wicket.model;
 
-import java.lang.reflect.Member;
-import java.util.Map;
-
-import ognl.DefaultTypeConverter;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
 import wicket.Component;
-import wicket.WicketRuntimeException;
+import wicket.util.lang.PropertyResolver;
 import wicket.util.string.Strings;
 
 /**
@@ -39,9 +32,6 @@ import wicket.util.string.Strings;
  */
 public abstract class AbstractPropertyModel extends AbstractDetachableModel
 {
-	/** Ognl context wrapper object. It contains the type converter. */
-	private transient OgnlContext context;
-
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
 
@@ -63,8 +53,9 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 
 	/**
 	 * Gets the nested model.
-	 * @return The nested model, <code>null</code> when this is the 
-	 *         final model in the hierarchy
+	 * 
+	 * @return The nested model, <code>null</code> when this is the final
+	 *         model in the hierarchy
 	 */
 	public final IModel getNestedModel()
 	{
@@ -91,10 +82,10 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 
 	/**
 	 * @param component
-	 *            The component to get an OGNL expression for
-	 * @return The OGNL expression for the component
+	 *            The component to get a property expression for
+	 * @return The property expression for the component
 	 */
-	protected abstract String ognlExpression(Component component);
+	protected abstract String propertyExpression(Component component);
 
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
@@ -110,9 +101,6 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 */
 	protected void onDetach()
 	{
-		// Reset OGNL context
-		this.context = null;
-
 		// Detach nested object if it's an IModel
 		if (nestedModel instanceof IModel)
 		{
@@ -125,89 +113,67 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 */
 	protected Object onGetObject(final Component component)
 	{
-		final String expression = ognlExpression(component);
+		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
 		{
-			// No expression will cause OGNL to throw an exception. The OGNL
-			// expression to return the current object is "#this". Instead
-			// of throwing that exception, we'll provide a meaningful
-			// return value
+			// Return a meaningful value for an empty property expression
 			return modelObject(component);
 		}
 
 		final Object modelObject = modelObject(component);
 		if (modelObject != null)
 		{
-			try
-			{
-				// note: if property type is null it is ignored by Ognl
-				return Ognl.getValue(expression, getContext(component), modelObject,
-						propertyType(component));
-			}
-			catch (OgnlException e)
-			{
-				throw new WicketRuntimeException("OGNL Exception: expression='" + expression + "'; component='" + component.getPath() + "'", e);
-			}
+			return PropertyResolver.getValue(expression, modelObject);
 		}
 		return null;
 	}
 
 	/**
-	 * Applies the Ognl expression on the model object using the given object
-	 * argument (Ognl.setValue).
+	 * Applies the property expression on the model object using the given
+	 * object argument.
 	 * 
 	 * @param object
-	 *            the object that will be used when applying Ognl.setValue on
-	 *            the model object
+	 *            The object that will be used when setting a value on the model
+	 *            object
 	 * @see AbstractDetachableModel#onSetObject(Component, Object)
 	 */
 	protected void onSetObject(final Component component, Object object)
 	{
-		try
+		final String expression = propertyExpression(component);
+		if (Strings.isEmpty(expression))
 		{
-			final String expression = ognlExpression(component);
-			if (Strings.isEmpty(expression))
+			if (nestedModel instanceof IModel)
 			{
-				// No expression will cause OGNL to throw an exception. The OGNL
-				// expression to set the current object is "#this".
-				if(nestedModel instanceof IModel)
-				{
-					((IModel)nestedModel).setObject(null, object);
-				}
-				else
-				{
-					nestedModel = object;
-				}
+				((IModel)nestedModel).setObject(null, object);
 			}
 			else
 			{
-				// Get the real object
-				Object modelObject = modelObject(component);
-	
-				// If the object is a String
-				if (object instanceof String)
-				{
-					// and that String is not empty
-					final String string = (String)object;
-					if (!Strings.isEmpty(string))
-					{
-						// and there is a non-null property type for the component
-						final Class propertyType = propertyType(component);
-						if (propertyType != null)
-						{
-							// convert the String to the right type
-							object = component.getConverter().convert(string, propertyType);
-						}
-					}
-				}
-	
-				// Let OGNL set the value
-				Ognl.setValue(ognlExpression(component), getContext(component), modelObject, object);
+				nestedModel = object;
 			}
 		}
-		catch (OgnlException e)
+		else
 		{
-			throw new WicketRuntimeException(e);
+			// Get the real object
+			Object modelObject = modelObject(component);
+
+			// If the object is a String
+			if (object instanceof String)
+			{
+				// and that String is not empty
+				final String string = (String)object;
+				if (!Strings.isEmpty(string))
+				{
+					// and there is a non-null property type for the component
+					final Class propertyType = propertyType(component);
+					if (propertyType != null)
+					{
+						// convert the String to the right type
+						object = component.getConverter().convert(string, propertyType);
+					}
+				}
+			}
+
+			PropertyResolver.setValue(expression, modelObject, object, component==null ? null:component.getConverter());
 		}
 	}
 
@@ -219,57 +185,12 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	protected abstract Class propertyType(Component component);
 
 	/**
-	 * Gets the Ognl context that is used for evaluating expressions. It
-	 * contains the type converter that is used to access the converter
-	 * framework.
-	 * 
-	 * @param component
-	 *            The Component
-	 * @return The Ognl context that is used for evaluating expressions.
+	 * @see java.lang.Object#toString()
 	 */
-	private final OgnlContext getContext(final Component component)
+	public String toString()
 	{
-		if (context == null)
-		{
-			// Setup ognl context for this request
-			this.context = new OgnlContext();
-			context.setTypeConverter(new DefaultTypeConverter()
-			{
-				/**
-				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-				 *      java.lang.Object, java.lang.Class)
-				 */
-				public Object convertValue(Map context, Object value, Class toType)
-				{
-					if (value == null)
-					{
-						return null;
-					}
-
-					if (!toType.isArray() && value instanceof String[]
-							&& ((String[])value).length == 1)
-					{
-						value = ((String[])value)[0];
-					}
-
-					if (value instanceof String && ((String)value).trim().equals(""))
-					{
-						return null;
-					}
-					return component.getConverter().convert(value, toType);
-				}
-
-				/**
-				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-				 *      java.lang.Object,java.lang.Class)
-				 */
-				public Object convertValue(Map context, Object target, Member member,
-						String propertyName, Object value, Class toType)
-				{
-					return convertValue(context, value, toType);
-				}
-			});
-		}
-		return context;
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":nestedModel=[").append(nestedModel).append("]");
+		return sb.toString();
 	}
 }

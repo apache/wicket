@@ -31,6 +31,8 @@ import wicket.util.string.Strings;
  */
 public final class BooleanConverter extends AbstractConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a boolean converter
 	 */

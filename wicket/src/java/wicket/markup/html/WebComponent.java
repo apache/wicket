@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.15 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,18 +18,24 @@
 package wicket.markup.html;
 
 import wicket.Component;
+import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see WebMarkupContainer or use Panel if the
- * component will have its own associated markup.
+ * you need to support nested components, see WebMarkupContainer or use Panel if
+ * the component will have its own associated markup.
  * 
  * @see wicket.markup.html.WebMarkupContainer
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
 public class WebComponent extends Component
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -47,10 +53,11 @@ public class WebComponent extends Component
 	}
 
 	/**
-	 * Renders this component.
+	 * 
+	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
-	protected void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		renderComponent(findMarkupStream());
+		renderComponent(markupStream);
 	}
 }

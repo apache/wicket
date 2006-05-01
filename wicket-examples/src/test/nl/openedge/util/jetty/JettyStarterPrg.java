@@ -1,32 +1,30 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
+ * use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of OpenEdge B.V. nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.util.jetty;
 
@@ -46,22 +44,31 @@ import org.mortbay.util.MultiException;
  */
 public class JettyStarterPrg
 {
-	/** command line argument for the xml configuration document, value == '-xml'. */
+	/**
+	 * command line argument for the xml configuration document, value ==
+	 * '-xml'.
+	 */
 	public static final String CMDARG_XML_CONFIG = "-xml";
 
 	/** command line argument for the http listen port, value == '-port'. */
 	public static final String CMDARG_PORT = "-port";
 
 	/**
-	 * default port for http listen request; used when no port is provided and no xml doc is used,
-	 * value == 8080.
+	 * default port for http listen request; used when no port is provided and
+	 * no xml doc is used, value == 8080.
 	 */
 	public static final String DEFAULT_HTTP_LISTEN_PORT = "8080";
 
-	/** command line argument for the webapp context root folder, value == '-webappContextRoot'. */
+	/**
+	 * command line argument for the webapp context root folder, value ==
+	 * '-webappContextRoot'.
+	 */
 	public static final String CMDARG_WEBAPP_CONTEXT_ROOT = "-webappContextRoot";
 
-	/** command line argument for the context path (webapp name), value == '-contextPath'. */
+	/**
+	 * command line argument for the context path (webapp name), value ==
+	 * '-contextPath'.
+	 */
 	public static final String CMDARG_CONTEXT_PATH = "-contextPath";
 
 	/** command line argument whether to use JettyPlus, value == '-useJettyPlus'. */
@@ -88,7 +95,8 @@ public class JettyStarterPrg
 	public static void main(String[] args)
 	{
 		Properties cmdArguments = new Properties();
-		for (int i = 0; i < args.length; i += 2) // put arguments (if any) in cmdArguments
+		for (int i = 0; i < args.length; i += 2) // put arguments (if any) in
+		// cmdArguments
 		{
 			if (i + 1 < args.length)
 			{
@@ -101,7 +109,7 @@ public class JettyStarterPrg
 
 		// get arguments from the previously build properties
 		boolean useJettyPlus = Boolean.valueOf(
-				(String) cmdArguments.getProperty(CMDARG_USE_JETTY_PLUS, "false")).booleanValue();
+				cmdArguments.getProperty(CMDARG_USE_JETTY_PLUS, "false")).booleanValue();
 		String jettyConfig = cmdArguments.getProperty(CMDARG_XML_CONFIG);
 		int port = Integer
 				.parseInt(cmdArguments.getProperty(CMDARG_PORT, DEFAULT_HTTP_LISTEN_PORT));
@@ -147,7 +155,8 @@ public class JettyStarterPrg
 	 * Start Jetty Server and the admin monitor.
 	 * 
 	 * @param jettyConfig
-	 *            jetty config location; if null, the next three parameters will be used instead
+	 *            jetty config location; if null, the next three parameters will
+	 *            be used instead
 	 * @param port
 	 *            port for http requests
 	 * @param webappContextRoot
@@ -160,9 +169,12 @@ public class JettyStarterPrg
 	 *            auth key
 	 * @param monitorPort
 	 *            listen port for admin monitor
-	 * @throws MalformedURLException when the url is not valid
-	 * @throws MultiException when Jetty is unable to startup
-	 * @throws JettyHelperException when the server could not be created
+	 * @throws MalformedURLException
+	 *             when the url is not valid
+	 * @throws MultiException
+	 *             when Jetty is unable to startup
+	 * @throws JettyHelperException
+	 *             when the server could not be created
 	 */
 	private static void startServer(String jettyConfig, int port, String webappContextRoot,
 			String contextPath, boolean useJettyPlus, String monitorCommKey, int monitorPort)
@@ -170,7 +182,8 @@ public class JettyStarterPrg
 	{
 		Server jettyServer = null;
 		// get instance of proper Jetty server
-		if (jettyConfig != null) // either start with xml configuration document
+		if (jettyConfig != null) // either start with xml configuration
+		// document
 		{
 			URL jettyConfigURL = null;
 			jettyConfigURL = URLHelper.convertToURL(jettyConfig, JettyStarterPrg.class);
@@ -180,13 +193,14 @@ public class JettyStarterPrg
 		else
 		// or some basic arguments
 		{
-			jettyServer = JettyHelper.getJettyServerInstance(port, webappContextRoot,
-					contextPath, useJettyPlus);
+			jettyServer = JettyHelper.getJettyServerInstance(port, webappContextRoot, contextPath,
+					useJettyPlus);
 		}
 
 		// now, before starting the server, first create the monitor
-		JettyMonitor monitor = JettyMonitor.startMonitor(jettyServer, monitorCommKey,
-				monitorPort); // start admin monitor
+		JettyMonitor monitor = JettyMonitor.startMonitor(jettyServer, monitorCommKey, monitorPort); // start
+		// admin
+		// monitor
 		log.info("Started " + monitor);
 
 		// finally, start the server

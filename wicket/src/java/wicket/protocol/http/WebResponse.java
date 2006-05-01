@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebResponse.java 5231 2006-04-01 15:34:49 -0800 (Sat, 01 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-01 15:34:49 -0800 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -28,6 +30,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 import wicket.util.time.Time;
 
 /**
@@ -54,7 +58,7 @@ public class WebResponse extends Response
 	/**
 	 * Constructor for testing harness.
 	 */
-	WebResponse()
+	public WebResponse()
 	{
 		this.httpServletResponse = null;
 	}
@@ -64,11 +68,20 @@ public class WebResponse extends Response
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	WebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponse(final HttpServletResponse httpServletResponse)
 	{
 		this.httpServletResponse = httpServletResponse;
+	}
+
+	/**
+	 * Add a cookie to the web response
+	 * 
+	 * @param cookie
+	 */
+	public void addCookie(final Cookie cookie)
+	{
+		getHttpServletResponse().addCookie(cookie);
 	}
 
 	/**
@@ -87,11 +100,11 @@ public class WebResponse extends Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(String url)
+	public CharSequence encodeURL(CharSequence url)
 	{
-		if (httpServletResponse != null)
+		if (httpServletResponse != null && url != null)
 		{
-			return httpServletResponse.encodeURL(url);
+			return httpServletResponse.encodeURL(url.toString());
 		}
 		return url;
 	}
@@ -139,27 +152,35 @@ public class WebResponse extends Response
 	 */
 	public void redirect(final String url)
 	{
-		if (httpServletResponse != null)
+		if (!redirect)
 		{
-			try
+			if (httpServletResponse != null)
 			{
-				if (httpServletResponse.isCommitted())
+				try
 				{
-					log.error("Unable to redirect to: " + url + ", HTTP Response has already been committed.");
-				}
+					if (httpServletResponse.isCommitted())
+					{
+						log.error("Unable to redirect to: " + url
+								+ ", HTTP Response has already been committed.");
+					}
 
-				if (log.isDebugEnabled())
+					if (log.isDebugEnabled())
+					{
+						log.debug("Redirecting to " + url);
+					}
+
+					httpServletResponse.sendRedirect(url);
+					redirect = true;
+				}
+				catch (IOException e)
 				{
-					log.debug("Redirecting to " + url);
+					throw new WicketRuntimeException("Redirect failed", e);
 				}
-
-				httpServletResponse.sendRedirect(url);
-				redirect = true;
 			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Redirect failed", e);
-			}
+		}
+		else
+		{
+			log.info("Already redirecting to an url current one ignored: " + url);
 		}
 	}
 
@@ -187,11 +208,8 @@ public class WebResponse extends Response
 	 */
 	public void setLastModifiedTime(Time time)
 	{
-		if (time != null)
+		if (time != null && time.getMilliseconds() != -1)
 		{
-			// If time is set also set cache headers.
-			httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			httpServletResponse.setHeader("Cache-Control", "max-age=" + 3600);
 			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
 		}
 	}
@@ -219,15 +237,91 @@ public class WebResponse extends Response
 	 * @param string
 	 *            The string to write
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
+	{
+		if (string instanceof AppendingStringBuffer)
+		{
+			write((AppendingStringBuffer)string);
+		}
+		else if (string instanceof StringBuffer)
+		{
+			try
+			{
+				StringBuffer sb = (StringBuffer)string;
+				char[] array = new char[sb.length()];
+				sb.getChars(0, sb.length(), array, 0);
+				httpServletResponse.getWriter().write(array, 0, array.length);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+			}
+		}
+		else
+		{
+			try
+			{
+				httpServletResponse.getWriter().write(string.toString());
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
+			}
+		}
+	}
+
+	/**
+	 * Writes AppendingStringBuffer to response output.
+	 * 
+	 * @param asb
+	 *            The AppendingStringBuffer to write to the stream
+	 */
+	public void write(AppendingStringBuffer asb)
 	{
 		try
 		{
-			httpServletResponse.getWriter().write(string);
+			httpServletResponse.getWriter().write(asb.getValue(), 0, asb.length());
 		}
 		catch (IOException e)
 		{
 			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
 		}
+	}
+
+	/**
+	 * Set a header to the date value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param date
+	 */
+	public void setDateHeader(String header, long date)
+	{
+		httpServletResponse.setDateHeader(header, date);
+	}
+
+
+	/**
+	 * Set a header to the string value in the servlet response stream.
+	 * 
+	 * @param header
+	 * @param value
+	 */
+	public void setHeader(String header, String value)
+	{
+		httpServletResponse.setHeader(header, value);
+	}
+
+	/**
+	 * Convinience method for setting the content-disposition:attachment header.
+	 * This header is used if the response should prompt the user to download it
+	 * as a file instead of opening in a browser.
+	 * 
+	 * @param filename
+	 *            file name of the attachment
+	 */
+	public void setAttachmentHeader(String filename)
+	{
+		setHeader("Content-Disposition", "attachment"
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename+"\"") : ""));
 	}
 }

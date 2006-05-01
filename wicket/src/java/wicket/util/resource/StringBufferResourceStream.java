@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.util.resource;
 
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Time;
 
 /**
@@ -26,8 +27,10 @@ import wicket.util.time.Time;
  */
 public class StringBufferResourceStream extends AbstractStringResourceStream
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Stylesheet information */
-	private StringBuffer buffer = new StringBuffer();
+	private AppendingStringBuffer buffer = new AppendingStringBuffer(128);
 
 	/**
 	 * Constructor.
@@ -53,11 +56,13 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 * 
 	 * @param s
 	 *            The string to add
+	 * @return this for chaining
 	 */
-	public void append(final String s)
+	public StringBufferResourceStream append(final CharSequence s)
 	{
 		buffer.append(s);
 		setLastModified(Time.now());
+		return this;
 	}
 
 	/**
@@ -65,19 +70,23 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 * 
 	 * @param s
 	 *            The string to prepend
+	 * @return this for chaining
 	 */
-	public void prepend(final String s)
+	public StringBufferResourceStream prepend(final CharSequence s)
 	{
 		buffer.insert(0, s);
 		setLastModified(Time.now());
+		return this;
 	}
 
 	/**
 	 * Clears the string buffer resource.
+	 * @return this for chaining
 	 */
-	public void clear()
+	public StringBufferResourceStream clear()
 	{
 		buffer.delete(0, buffer.length());
+		return this;
 	}
 
 	/**
@@ -87,7 +96,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	{
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */

@@ -1,32 +1,30 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
+ * $Revision$ $Date$
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
+ * use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of OpenEdge B.V. nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.util.jetty;
 
@@ -38,10 +36,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * JUnit decorator for starting and stopping a Jetty instance in a seperate VM.
  * <p>
- * Jetty is started by doing a system call that results in starting up class JettyStarterPrg.
- * JettyStarterPrg starts up Jetty and a admin monitor. Shutting down Jetty is done - after all
- * tests were run - by sending a command to the admin monitor which then stops Jetty and exits the
- * VM. The output of the process is intercepted by LogConnector and then - after some decoration -
+ * Jetty is started by doing a system call that results in starting up class
+ * JettyStarterPrg. JettyStarterPrg starts up Jetty and a admin monitor.
+ * Shutting down Jetty is done - after all tests were run - by sending a command
+ * to the admin monitor which then stops Jetty and exits the VM. The output of
+ * the process is intercepted by LogConnector and then - after some decoration -
  * send to the Commons Logger.
  * </p>
  * <p>
@@ -87,13 +86,13 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	private static Log log = LogFactory.getLog(JettyExternalVMDecorator.class);
 
 	/**
-	 * command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a new
-	 * window on DOS systems using that window for output, and {"java"} starts an invisible process
-	 * where the output will be intercepted and interleaved with the current output (commons
-	 * logger). Default == { "java" }.
+	 * command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start",
+	 * "java"} opens a new window on DOS systems using that window for output,
+	 * and {"java"} starts an invisible process where the output will be
+	 * intercepted and interleaved with the current output (commons logger).
+	 * Default == { "java" }.
 	 */
-	private String[] startCommand = new String[]
-		{"java"};
+	private String[] startCommand = new String[] { "java" };
 
 	/** Remote proces. */
 	private Process process = null;
@@ -153,7 +152,8 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 				String msg = "Starting Jetty in a seperate VM failed";
 				throw new Exception(msg);
 			}
-			process = worker.getProcess(); // keep reference to external process
+			process = worker.getProcess(); // keep reference to external
+			// process
 		}
 	}
 
@@ -286,10 +286,11 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	}
 
 	/**
-	 * Get command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a
-	 * new window on DOS systems using that window for output, and {"java"} starts an invisible
-	 * process where the output will be intercepted and interleaved with the current output (commons
-	 * logger). Default == { "java" }.
+	 * Get command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C",
+	 * "start", "java"} opens a new window on DOS systems using that window for
+	 * output, and {"java"} starts an invisible process where the output will be
+	 * intercepted and interleaved with the current output (commons logger).
+	 * Default == { "java" }.
 	 * 
 	 * @return String[] command to execute
 	 */
@@ -299,10 +300,11 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	}
 
 	/**
-	 * Set command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a
-	 * new window on DOS systems using that window for output, and {"java"} starts an invisible
-	 * process where the output will be intercepted and interleaved with the current output (commons
-	 * logger). Default == { "java" }.
+	 * Set command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C",
+	 * "start", "java"} opens a new window on DOS systems using that window for
+	 * output, and {"java"} starts an invisible process where the output will be
+	 * intercepted and interleaved with the current output (commons logger).
+	 * Default == { "java" }.
 	 * 
 	 * @param startCommand
 	 *            command to execute

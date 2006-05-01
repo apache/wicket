@@ -1,9 +1,10 @@
 /* 
-	calendar-cs-win.js
+	calendar-cs-utf8.js
 	language: Czech
-	encoding: windows-1250
+	encoding: utf-8
 	author: Lubos Jerabek (xnet@seznam.cz)
 	        Jan Uhlir (espinosa@centrum.cz)
+	        improved by Jan Bares (jan.bares@volny.cz)
 */
 
 // ** I18N
@@ -11,6 +12,10 @@ Calendar._DN  = new Array('Neděle','Pondělí','Úterý','Středa','Čtvrtek','
 Calendar._SDN = new Array('Ne','Po','Út','St','Čt','Pá','So','Ne');
 Calendar._MN  = new Array('Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec');
 Calendar._SMN = new Array('Led','Úno','Bře','Dub','Kvě','Črv','Čvc','Srp','Zář','Říj','Lis','Pro');
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // tooltips
 Calendar._TT = {};
@@ -34,7 +39,7 @@ Calendar._TT["ABOUT"] =
 "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
 "\n\n" +
 "Výběr datumu:\n" +
-"- Use the \xab, \xbb buttons to select year\n" +
+"- Použijte tlačítka \xab, \xbb k výběru roku\n" +
 "- Použijte tlačítka " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " k výběru měsíce\n" +
 "- Podržte tlačítko myši na jakémkoliv z těch tlačítek pro rychlejší výběr.";
 
@@ -59,7 +64,7 @@ Calendar._TT["TIME_PART"] = "(Shift-)Klikni nebo táhni pro změnu hodnoty";
 
 // date formats
 Calendar._TT["DEF_DATE_FORMAT"] = "d.m.yy";
-Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
+Calendar._TT["TT_DATE_FORMAT"] = "%a %e %b";
 
 Calendar._TT["WK"] = "wk";
 Calendar._TT["TIME"] = "Čas:";

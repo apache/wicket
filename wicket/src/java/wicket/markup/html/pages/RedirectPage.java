@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: RedirectPage.java 5231 2006-04-01 15:34:49 -0800 (Sat, 01 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-01 15:34:49 -0800 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +21,6 @@ package wicket.markup.html.pages;
 import wicket.AttributeModifier;
 import wicket.IRedirectListener;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.model.Model;
@@ -34,13 +34,15 @@ import wicket.model.Model;
  */
 public final class RedirectPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor. The page will immediately redirect to the given url.
 	 * 
 	 * @param url
 	 *            The url to redirect to
 	 */
-	public RedirectPage(final String url)
+	public RedirectPage(final CharSequence url)
 	{
 		this(url, 0);
 	}
@@ -55,26 +57,23 @@ public final class RedirectPage extends WebPage
 	 *            The number of seconds the browser should wait before
 	 *            redirecting
 	 */
-	public RedirectPage(final String url, final int waitBeforeRedirectInSeconds)
+	public RedirectPage(final CharSequence url, final int waitBeforeRedirectInSeconds)
 	{
 		final WebMarkupContainer redirect = new WebMarkupContainer("redirect");
-		final String content = waitBeforeRedirectInSeconds + "; " + url;
+		final String content = waitBeforeRedirectInSeconds + ";URL=" + url;
 		redirect.add(new AttributeModifier("content", new Model(content)));
 		add(redirect);
 	}
 
 	/**
-	 * Since nobody ever reads the documentation, this method is here to educate
-	 * users on the correct way to redirect to a Page. If this method was not
-	 * here, we would get requests for it. By throwing an exception here, we can
-	 * ensure that users learn the right way to redirect to a Page.
+	 * Construct. The page will redirect to the given Page.
 	 * 
 	 * @param page
-	 *            The page to redirect to (ignored)
+	 *            The page to redirect to.
 	 */
 	public RedirectPage(final Page page)
 	{
-		throw new WicketRuntimeException("To redirect to a Page, call Component.setRedirect(true)");
+		this(page.urlFor(IRedirectListener.INTERFACE), 0);
 	}
 
 	/**
@@ -89,6 +88,14 @@ public final class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{
-		this(page.urlFor(page, IRedirectListener.class), waitBeforeRedirectInSeconds);
+		this(page.urlFor(IRedirectListener.INTERFACE), waitBeforeRedirectInSeconds);
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
 	}
 }

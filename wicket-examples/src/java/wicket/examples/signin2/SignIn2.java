@@ -29,13 +29,13 @@ import wicket.examples.panels.signin.SignInPanel;
  */
 public final class SignIn2 extends WicketExamplePage
 {
-    /**
-     * Construct
-     */
-    public SignIn2()
-    {
-       this(null);  
-    }
+	/**
+	 * Construct
+	 */
+	public SignIn2()
+	{
+		this(null);
+	}
 
 	/**
 	 * Constructor

@@ -1,10 +1,12 @@
-<html>
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - forminput</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
     <span wicket:id="mainNavigation"/>
+    <form wicket:id="inputForm" id="inputForm">
 	<div>
 		Gebruik locale: 
 		<select wicket:id="localeSelect">
@@ -14,7 +16,6 @@
 		<a href="#" wicket:id="defaultLocaleLink">[standaard]</a>
     </div>
 	<p>
-    <form wicket:id="inputForm" id="inputForm">
       <fieldset>
         <legend>Invoer</legend>
          <table id="inputFormTable">
@@ -26,11 +27,17 @@
 	          <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
 	          <label for="doubleProperty">Numeriek</label>
 	          <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
-	          <label for="dateProperty">Datum</label>
-	          <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
+	          <label wicket:id="dateLabel" for="dateProperty">Datum</label>
+	          <input wicket:id="dateProperty" type="text" size="40"/>
+	          <span wicket:id="datePicker" id="dateProperty"></span>
+	          <label>Listview in een Form</label>
+			  <ul>
+			   <li wicket:id="lines">
+			    <input type="text" wicket:id="lineEdit" /> 
+			   </li>
+			  </ul>
 	          <label for="booleanProperty">Booleaans</label>
 	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-
 	      </td>
 	      <td valign="top">
 
@@ -38,10 +45,26 @@
 	          <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
 	          <label for="urlProperty">URL (moet een geldig url zijn)</label>
 	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
-			  <label for="numberRadioChoice">selecteer een nummer</label>
+	          <label for="phoneNumberUS">US phone number (mask: '(###) ###-####')</label>
+	          <input wicket:id="phoneNumberUS" id="phoneNumberUS" type="text" size="40"/>        
+			  <label for="numberRadioChoice">selecteer een nummer (RadioChoice)</label>
 			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
 	    		<input type="radio">foo</input>
 				<input type="radio">bar</input>
+			  </span>
+			  <span wicket:id="numbersGroup">
+			  <label>selecteer een nummer (RadioGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="radio" wicket:id="radio"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
+			  </span>
+			  <span wicket:id="numbersCheckGroup">
+			  <label>selecteer de nummers (CheckGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="checkbox" wicket:id="check"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
 			  </span>
 			  <label for="siteSelection">jouw favorite sites</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
@@ -65,6 +88,5 @@
 	<div id="feedbackPanel">
 		<span wicket:id="feedback"/>
     </div>
-
 </body>
 </html>

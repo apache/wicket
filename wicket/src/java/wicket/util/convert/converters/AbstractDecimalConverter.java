@@ -17,7 +17,6 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -35,6 +34,6 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	 */
 	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		return DecimalFormat.getInstance(locale);
+		return NumberFormat.getInstance(locale);
 	}
 }

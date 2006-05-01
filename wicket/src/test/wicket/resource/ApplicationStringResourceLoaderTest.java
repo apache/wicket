@@ -21,8 +21,9 @@ package wicket.resource;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import wicket.Application;
-import wicket.ISessionFactory;
+import wicket.protocol.http.MockWebApplication;
+import wicket.resource.loader.ClassStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -46,7 +47,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 */
 	protected IStringResourceLoader createLoader()
 	{
-		return new ApplicationStringResourceLoader(application);
+		return new ClassStringResourceLoader(application, application.getClass());
 	}
 
 	/**
@@ -54,35 +55,9 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 */
 	public void testLoaderUnknownResources()
 	{
-		Application app = new Application()
-		{                        
-			public ISessionFactory getSessionFactory()
-			{
-				return null;
-			}
-		};
-
-		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component,
+		MockWebApplication app = new MockWebApplication(null);
+		IStringResourceLoader loader = new ClassStringResourceLoader(app, app.getClass());
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
 				"test.string", Locale.getDefault(), null));
 	}
-
-	/**
-	 * 
-	 */
-	public void testNullApplication()
-	{
-		try
-		{
-			new ApplicationStringResourceLoader(null);
-			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Extected result
-		}
-	}
-
 }
-
-// 

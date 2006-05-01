@@ -38,6 +38,10 @@ Calendar._MN = new Array
 "Nentor",
 "Dhjetor");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 // muajte shkurt
 Calendar._SMN = new Array
 ("Jan",
@@ -52,6 +56,10 @@ Calendar._SMN = new Array
 "Tet",
 "Nen",
 "Dhj");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // ndihmesa
 Calendar._TT = {};

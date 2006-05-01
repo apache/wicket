@@ -26,7 +26,7 @@ import wicket.protocol.http.MockWebApplication;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class PagedTableNavigatorWithMarginTest extends TestCase
 {
@@ -48,143 +48,143 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(PagedTableNavigatorWithMarginPage.class);
+		application.setHomePage(PagedTableNavigatorWithMarginPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_1.html"));
 
-		Link link = (Link)page.get("navigator.first");
+		Link link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_2.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_3.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_4.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_5.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertFalse(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.navigation.3.pageLink");
+		link = (Link)page.get("navigator:navigation:3:pageLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_6.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_7.html"));
 
-		link = (Link)page.get("navigator.first");
+		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.prev");
+		link = (Link)page.get("navigator:prev");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.next");
+		link = (Link)page.get("navigator:next");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("navigator.last");
+		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 	}
 	

@@ -53,7 +53,7 @@ public abstract class AbstractDetachableModel implements IModel
 	{
 		if (!attached)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("attaching " + this + " for requestCycle " + RequestCycle.get());
 			}
@@ -69,18 +69,20 @@ public abstract class AbstractDetachableModel implements IModel
 	{
 		if (attached)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("detaching " + this + " for requestCycle " + RequestCycle.get());
 			}
 			attached = false;
 			onDetach();
 		}
-		else if(getNestedModel() != null)
+
+		IModel nestedModel = getNestedModel();
+		if (nestedModel != null)
 		{
 			// do detach the nested model because this one could be attached 
 			// if the model is used not through this compound model
-			getNestedModel().detach();
+			nestedModel.detach();
 		}
 	}
 	
@@ -116,16 +118,26 @@ public abstract class AbstractDetachableModel implements IModel
 		attach();
 		onSetObject(component, object);
 	}
-	
+
+	/**
+	 * @see Object#toString() 
+	 */
+	public String toString() {
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
+		sb.append(":attached=").append(isAttached());
+		return sb.toString();
+	}
+
 	/**
 	 * Attaches to the current request. Implement this method with custom
-	 * behaviour, such as loading the model object.
+	 * behavior, such as loading the model object.
 	 */
 	protected abstract void onAttach();
 
 	/**
 	 * Detaches from the current request. Implement this method with custom
-	 * behaviour, such as setting the model object to null.
+	 * behavior, such as setting the model object to null.
 	 */
 	protected abstract void onDetach();
 

@@ -33,6 +33,8 @@ import wicket.Page;
  */
 public class PageLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The delayed linking Page source. */
 	private final IPageLink pageLink;
 
@@ -57,6 +59,8 @@ public class PageLink extends Link
 
 		this.pageLink = new IPageLink()
 		{
+			private static final long serialVersionUID = 1L;
+			
 			public Page getPage()
 			{
 				// Create page using page factory
@@ -71,10 +75,40 @@ public class PageLink extends Link
 	}
 
 	/**
+	 * This constructor is ideal if a Page object was passed in from a previous
+	 * Page. Construct a link to the Page.
+	 *
+	 * @param id  See component
+	 * @param page The page
+	 */
+	public PageLink(final String id, final Page page)
+	{
+	    super(id);
+
+		this.pageLink = new IPageLink()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getPage()
+			{
+				// Create page using page factory
+				return page;
+			}
+
+			public Class getPageIdentity()
+			{
+				return page.getClass();
+			}
+		};
+	}
+
+	/**
+	 * This constructor is ideal for constructing pages lazily.
+	 *
 	 * Constructs a link which invokes the getPage() method of the IPageLink
 	 * interface when the link is clicked. Whatever Page objects is returned by
 	 * this method will be rendered back to the user.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param pageLink

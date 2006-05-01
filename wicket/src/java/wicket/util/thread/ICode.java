@@ -32,5 +32,5 @@ public interface ICode
 	 * @param log
 	 *            The log that will be used by the code.
 	 */
-	public void run(Log log);
+	void run(Log log);
 }

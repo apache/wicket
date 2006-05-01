@@ -75,6 +75,10 @@ Calendar._SMN = new Array
  "Nov",
  "Dec");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 // tooltips
 Calendar._TT = {};
 Calendar._TT["INFO"] = "A propos du calendrier";

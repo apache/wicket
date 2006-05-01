@@ -17,20 +17,21 @@
  */
 package wicket.protocol.http;
 
-import java.util.Set;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Collections;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.servlet.ServletContext;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -214,9 +215,13 @@ public class MockServletContext implements ServletContext
 	{
 		int index = name.lastIndexOf('.');
 		if (index == -1 || index == (name.length() - 1))
+		{
 			return null;
+		}
 		else
+		{
 			return mimeTypes.getString(name.substring(index + 1));
+		}
 	}
 
 	/**
@@ -250,15 +255,24 @@ public class MockServletContext implements ServletContext
 	public String getRealPath(String name)
 	{
 		if (webappRoot == null)
+		{
 			return null;
+		}
 
 		if (name.startsWith("/"))
+		{
 			name = name.substring(1);
+		}
+		
 		File f = new File(webappRoot, name);
 		if (!f.exists())
+		{
 			return null;
+		}
 		else
+		{
 			return f.getPath();
+		}
 	}
 
 	/**
@@ -300,15 +314,24 @@ public class MockServletContext implements ServletContext
 	public URL getResource(String name) throws MalformedURLException
 	{
 		if (webappRoot == null)
+		{
 			return null;
+		}
 
 		if (name.startsWith("/"))
+		{
 			name = name.substring(1);
+		}
+		
 		File f = new File(webappRoot, name);
 		if (!f.exists())
+		{
 			return null;
+		}
 		else
-			return f.toURL();
+		{
+			return f.toURI().toURL();
+		}
 	}
 
 	/**
@@ -323,13 +346,20 @@ public class MockServletContext implements ServletContext
 	public InputStream getResourceAsStream(String name)
 	{
 		if (webappRoot == null)
+		{
 			return null;
+		}
 
 		if (name.startsWith("/"))
+		{
 			name = name.substring(1);
+		}
+		
 		File f = new File(webappRoot, name);
 		if (!f.exists())
+		{
 			return null;
+		}
 		else
 		{
 			try
@@ -355,17 +385,27 @@ public class MockServletContext implements ServletContext
 	public Set getResourcePaths(String name)
 	{
 		if (webappRoot == null)
+		{
 			return new HashSet();
+		}
 
 		if (name.startsWith("/"))
+		{
 			name = name.substring(1);
+		}
 		if (name.endsWith("/"))
+		{
 			name = name.substring(0, name.length() - 1);
+		}
 		String[] elements = null;
 		if (name.trim().length() == 0)
+		{
 			elements = new String[0];
+		}
 		else
+		{
 			elements = name.split("/");
+		}
 
 		File current = webappRoot;
 		for (int i = 0; i < elements.length; i++)
@@ -382,7 +422,9 @@ public class MockServletContext implements ServletContext
 				}
 			}
 			if (!match)
+			{
 				return null;
+			}
 		}
 
 		File[] files = current.listFiles();
@@ -392,7 +434,9 @@ public class MockServletContext implements ServletContext
 		{
 			String s = files[f].getPath().substring(stripLength).replace('\\', '/');
 			if (files[f].isDirectory())
+			{
 				s = s + "/";
+			}
 			result.add(s);
 		}
 		return result;

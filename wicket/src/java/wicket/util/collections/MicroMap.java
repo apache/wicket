@@ -18,7 +18,6 @@
 package wicket.util.collections;
 
 import java.io.Serializable;
-
 import java.util.AbstractList;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -35,6 +34,8 @@ import java.util.Set;
  */
 public final class MicroMap implements Map, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The maximum number of entries this map supports. */
 	public static final int MAX_ENTRIES = 1;
 

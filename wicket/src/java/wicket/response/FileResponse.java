@@ -100,9 +100,9 @@ public final class FileResponse extends Response
 	}
 
 	/**
-	 * @see wicket.Response#write(java.lang.String)
+	 * @see wicket.Response#write(CharSequence)
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
 	{
 		try
 		{

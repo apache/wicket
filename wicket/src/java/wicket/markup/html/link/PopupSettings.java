@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,16 +19,29 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
+import wicket.PageMap;
+import wicket.RequestCycle;
+
 /**
  * A popup specification can be used as a property of the {@link Link}classes
  * to specify that the link should be rendered with an onClick javascript event
  * handler that opens a new window with the links' URL.
+ * <p>
+ * You can 'or' display flags together like this:
+ * 
+ * <pre>
+ * new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS);
+ * </pre>
+ * 
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public class PopupSettings implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Flag to include location bar */
 	public static final int LOCATION_BAR = 1;
 
@@ -79,7 +92,19 @@ public class PopupSettings implements Serializable
 	private String windowName = null;
 
 	/**
-	 * Construct.
+	 * The pagemap name where the page that will be created by this popuplink
+	 * will be created in.
+	 */
+	private String pageMapName;
+
+	/**
+	 * Construct. If you are not using these popup settings with an external
+	 * link - in which case we don't need to know about a page map - you should
+	 * use one of the constructors with a {@link PageMap} argument. Typically,
+	 * you should put any popup in a seperate page map as Wicket holds
+	 * references to a limited number of pages/ versions only. If you don't put
+	 * your popup in a seperate page map, the user might get page expired
+	 * exceptions when getting back to the main window again.
 	 */
 	public PopupSettings()
 	{
@@ -94,6 +119,41 @@ public class PopupSettings implements Serializable
 	public PopupSettings(final int displayFlags)
 	{
 		this.displayFlags = displayFlags;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pagemap
+	 *            The pagemap where this popup must be in. Typically, you should
+	 *            put any popup in a seperate page map as Wicket holds
+	 *            references to a limited number of pages/ versions only. If you
+	 *            don't put your popup in a seperate page map, the user might
+	 *            get page expired exceptions when getting back to the main
+	 *            window again.
+	 */
+	public PopupSettings(PageMap pagemap)
+	{
+		this.pageMapName = pagemap.getName();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pagemap
+	 *            The pagemap where this popup must be in. Typically, you should
+	 *            put any popup in a seperate page map as Wicket holds
+	 *            references to a limited number of pages/ versions only. If you
+	 *            don't put your popup in a seperate page map, the user might
+	 *            get page expired exceptions when getting back to the main
+	 *            window again.
+	 * @param displayFlags
+	 *            Display flags
+	 */
+	public PopupSettings(PageMap pagemap, final int displayFlags)
+	{
+		this.displayFlags = displayFlags;
+		this.pageMapName = pagemap.getName();
 	}
 
 	/**
@@ -112,38 +172,37 @@ public class PopupSettings implements Serializable
 		else
 		{
 			// Fix for IE bug.
-			windowTitle = windowTitle.replace('.', '_'); 
+			windowTitle = windowTitle.replace(':', '_');
 		}
 
-		StringBuffer script = new StringBuffer("if (!window.focus) return true; window.open("
-				+ target + ", '").append(windowTitle).append("', '");
+		StringBuffer script = new StringBuffer("window.open(" + target + ", '").append(windowTitle)
+				.append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
-		script.append(", location=").append(flagToString(LOCATION_BAR));
-		script.append(", menuBar=").append(flagToString(MENU_BAR));
-		script.append(", resizable=").append(flagToString(RESIZABLE));
-		script.append(", scrollbars=").append(flagToString(SCROLLBARS));
-		script.append(", status=").append(flagToString(STATUS_BAR));
-		script.append(", toolbar=").append(flagToString(TOOL_BAR));
+		script.append(",location=").append(flagToString(LOCATION_BAR));
+		script.append(",menuBar=").append(flagToString(MENU_BAR));
+		script.append(",resizable=").append(flagToString(RESIZABLE));
+		script.append(",status=").append(flagToString(STATUS_BAR));
+		script.append(",toolbar=").append(flagToString(TOOL_BAR));
 
 		if (width != -1)
 		{
-			script.append(", width=").append(width);
+			script.append(",width=").append(width);
 		}
 
 		if (height != -1)
 		{
-			script.append(", height=").append(height);
+			script.append(",height=").append(height);
 		}
 
 		if (left != -1)
 		{
-			script.append(", left=").append(left);
+			script.append(",left=").append(left);
 		}
 
 		if (top != -1)
 		{
-			script.append(", top=").append(top);
+			script.append(",top=").append(top);
 		}
 
 		script.append("'); ").append(" return false;");
@@ -241,5 +300,23 @@ public class PopupSettings implements Serializable
 	private String flagToString(final int flag)
 	{
 		return (this.displayFlags & flag) != 0 ? "yes" : "no";
+	}
+
+	/**
+	 * Gets the pagemap where the popup page must be created in.
+	 * 
+	 * @return The pagemap where the popup page must be created in
+	 */
+	public PageMap getPageMap()
+	{
+		if (pageMapName != null)
+		{
+			return PageMap.forName(pageMapName);
+		}
+		else
+		{
+			// fallback on the current page map
+			return RequestCycle.get().getRequest().getPage().getPageMap();
+		}
 	}
 }

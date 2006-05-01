@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.pages;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.Page;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -24,7 +26,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
-import wicket.markup.html.debug.WicketComponentTree;
+import wicket.markup.html.debug.PageView;
 import wicket.util.string.Strings;
 
 /**
@@ -34,6 +36,11 @@ import wicket.util.string.Strings;
  */
 public class ExceptionErrorPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	 
+	/** Keep a reference to the root cause. WicketTester will use it */
+	private transient Throwable throwable;
+
 	/**
 	 * Constructor.
 	 * 
@@ -44,6 +51,8 @@ public class ExceptionErrorPage extends WebPage
 	 */
 	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
+		this.throwable = throwable;
+		
 		// Add exception label
 		add(new MultiLineLabel("exception", Strings.toString(throwable)));
 
@@ -66,7 +75,7 @@ public class ExceptionErrorPage extends WebPage
 		// Create markup label
 		final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
 
-		markupLabel.setShouldEscapeModelStrings(false);
+		markupLabel.setEscapeModelStrings(false);
 
 		// Add container with markup highlighted
 		final WebMarkupContainer markupHighlight = new WebMarkupContainer("markupHighlight");
@@ -81,7 +90,7 @@ public class ExceptionErrorPage extends WebPage
 		// Show component tree of the page
 		if (page != null)
 		{
-		    add(new WicketComponentTree("componentTree", page));
+		    add(new PageView("componentTree", page));
 		}
 		else
 		{
@@ -90,10 +99,37 @@ public class ExceptionErrorPage extends WebPage
 	}
 	
 	/**
+	 * @see wicket.markup.html.WebPage#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	
+	}
+	
+	/**
+	 * Get access to the exception
+	 * 
+	 * @return The exception
+	 */
+	public Throwable getThrowable() 
+	{
+		return throwable;
+	}
+
+	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
 	public boolean isErrorPage()
 	{
 		return true;
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
 	}
 }

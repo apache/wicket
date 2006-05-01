@@ -34,6 +34,10 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
  */
 public class ImageButton extends Button implements IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+	
+	// private static final Log log = LogFactory.getLog(ImageButton.class);
+	
 	/** The image resource this image component references */
 	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
@@ -108,13 +112,5 @@ public class ImageButton extends Button implements IResourceListener
 		checkComponentTagAttribute(tag, "type", "image");
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
-	}
-	
-	/**
-	 * @see wicket.Component#onSessionAttach()
-	 */
-	protected void onSessionAttach()
-	{
-		localizedImageResource.bind();
 	}
 }

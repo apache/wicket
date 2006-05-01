@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link.subdir;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -29,11 +28,13 @@ import wicket.markup.html.WebPage;
  */
 public class Page1 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
-	 * @param parameters
+	 * 
 	 */
-	public Page1(final PageParameters parameters) 
+	public Page1() 
 	{
     }
 }

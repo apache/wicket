@@ -1,6 +1,6 @@
 /*
  * $Id$ $Revision:
- * 1.5 $ $Date$
+ * 1.14 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,6 +20,10 @@ package wicket;
 import java.util.Locale;
 import java.util.Map;
 
+import wicket.request.IRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.RequestParameters;
+
 /**
  * Base class for page request implementations allowing access to request
  * parameters. A Request has a URL and a parameter map. You can retrieve the URL
@@ -32,16 +36,51 @@ import java.util.Map;
  */
 public abstract class Request
 {
+	/** Any Page decoded for this request */
+	private Page page;
+
+	/** the type safe request parameters object for this request. */
+	private RequestParameters requestParameters;
+
+	/**
+	 * Construct.
+	 */
+	public Request()
+	{
+	}
+
+	/**
+	 * An implementation of this method is only required if a subclass wishes to
+	 * support sessions via URL rewriting. This default implementation simply
+	 * returns the URL String it is passed.
+	 * 
+	 * @param url
+	 *            The URL to decode
+	 * @return The decoded url
+	 */
+	public String decodeURL(final String url)
+	{
+		return url;
+	}
+
 	/**
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
 
 	/**
+	 * @return Any Page for this request
+	 */
+	public Page getPage()
+	{
+		return page;
+	}
+
+	/**
 	 * Gets a given (query) parameter by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter value
 	 */
 	public abstract String getParameter(final String key);
@@ -57,20 +96,74 @@ public abstract class Request
 	 * Gets an array of multiple parameters by name.
 	 * 
 	 * @param key
-	 *           Parameter name
+	 *            Parameter name
 	 * @return Parameter values
 	 */
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the URL of this request.
-	 * 
-	 * @return The full original request URL
-	 */
-	public abstract String getURL();
-	
-	/**
 	 * @return Path info for request
 	 */
 	public abstract String getPath();
+
+	/**
+	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
+	 * url without the context path and without a leading '/'). Use this method
+	 * e.g. to load resources using the servlet context.
+	 * 
+	 * @return Request URL
+	 */
+	public abstract String getRelativeURL();
+
+	/**
+	 * Retrieves the absolute URL of this request for local use.
+	 * 
+	 * @return The absolute request URL for local use
+	 */
+	public abstract String getURL();
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param page
+	 *            The Page for this request
+	 */
+	public void setPage(final Page page)
+	{
+		this.page = page;
+	}
+
+	/**
+	 * Gets the request parameters object using the instance of
+	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
+	 * 
+	 * @return the request parameters object
+	 */
+	public final RequestParameters getRequestParameters()
+	{
+		// reused cached parameters
+		if (requestParameters != null)
+		{
+			return requestParameters;
+		}
+
+		// get the request encoder to decode the request parameters
+		IRequestCycleProcessor processor = RequestCycle.get().getProcessor();
+		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
+		if (encoder == null)
+		{
+			throw new WicketRuntimeException("request encoder must be not-null (provided by "
+					+ processor + ")");
+		}
+
+		// decode the request parameters into a strongly typed parameters
+		// object that is to be used by the target resolving
+		requestParameters = encoder.decode(this);
+		if (requestParameters == null)
+		{
+			throw new WicketRuntimeException("request parameters must be not-null (provided by "
+					+ encoder + ")");
+		}
+		return requestParameters;
+	}
 }

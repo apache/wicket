@@ -1,6 +1,6 @@
 /*
- * $Id: WicketTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,73 +20,68 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.markup.parser.XmlTag;
 
 /**
- * This is a markup inline filter. It assumes that WicketTagIdentifier has been 
- * called first and that <wicket:head> tags have been detected. This filter checks
- * that <wicket:head> occur only within <head> sections.<p>
+ * This is a markup inline filter. It assumes that WicketTagIdentifier has been
+ * called first and search for a &lt;head&gt; tag (note: not wicket:head).
+ * Provided the markup contains a &lt;body&gt; tag it will automatically prepend
+ * a &lt;head&gt; tag if missing.
+ * <p>
+ * Note: This handler is only relevant for Pages (see
+ * MarkupParser.newFilterChain())
  * 
- * Note: it is currently commented out, but it may also add <head> components
- * in case they are not found in the markup file.
- * 
+ * @see wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
+	/** The automatically assigned wicket:id to &gt;head&lt; tag */
+	public static final String HEADER_ID = "_header";
 
-	/** If true, we have seen <head> but not </head> yet. */
-	private boolean withinHead; 
-	
+	/** True if <head> has been found already */
+	private boolean foundHead = false;
+
+	/** True if all the rest of the markup file can be ignored */
+	private boolean ignoreTheRest = false;
+
 	/**
-	 * Only if false, it will watch for head tags.
-	 */
-	private boolean done;
-	
-	/** In case you want to add extra Component to the markup, just add them
-	 * to the list. MarkupParser will handle it.
+	 * In case you want to add extra Components to the markup, just add them to
+	 * the list. MarkupParser will handle it.
 	 */
 	private List tagList;
-	
+
 	/**
 	 * Construct.
 	 * 
+	 * @param tagList
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public HtmlHeaderSectionHandler(final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final List tagList, final IMarkupFilter parent)
 	{
 		super(parent);
+		setTagList(tagList);
 	}
-	
+
 	/**
 	 * In order to add ComponentTags which are NOT from markup file.
+	 * 
 	 * @param tagList
 	 */
 	public void setTagList(final List tagList)
 	{
-	    this.tagList = tagList;
+		this.tagList = tagList;
 	}
 
 	/**
 	 * Get the next tag from the next MarkupFilter in the chain and search for
 	 * Wicket specific tags.
 	 * <p>
-	 * Note: The xml parser - the next MarkupFilter in the chain - returns
-	 * XmlTags which are a subclass of MarkupElement. The implementation of this
-	 * filter will return either ComponentTags or ComponentWicketTags. Both are
-	 * subclasses of MarkupElement as well and both maintain a reference to the
-	 * XmlTag. But no XmlTag is returned.
 	 * 
 	 * @see wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return The next tag from markup to be processed. If null, no more tags
@@ -101,59 +96,73 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		{
 			return tag;
 		}
-		
-		if (done == true)
+
+		// Whatever there is left in the markup, ignore it
+		if (ignoreTheRest == true)
 		{
-		    return tag;
+			return tag;
 		}
 
-		if (!(tag instanceof WicketTag) && "head".equalsIgnoreCase(tag.getName()))
-        {
-		    withinHead = !withinHead;
-		    if (tag.isClose() == true)
-		    {
-		        done = true;
-		    }
-		    
-		    return tag;
-        }
-		
-		if ("body".equalsIgnoreCase(tag.getName()))
-        {
-		    done = true;
-
-			// TODO remove comment, to activate
-/*		    
-			final XmlTag headOpenTag = new XmlTag();
-			headOpenTag.setName("head");
-			headOpenTag.setType(XmlTag.OPEN);
-			final ComponentTag openTag = new ComponentTag(headOpenTag);
-			openTag.setId("_header");
-				
-			final XmlTag headCloseTag = new XmlTag();
-			headCloseTag.setName("head");
-			headCloseTag.setType(XmlTag.CLOSE);
-			final ComponentTag closeTag = new ComponentTag(headCloseTag);
-			closeTag.setOpenTag(openTag);
-			closeTag.setId("_header");
-
-			tagList.add(openTag);
-			tagList.add(closeTag);
-*/		
-		    return tag;
-        }
-		
-		if (!(tag instanceof WicketTag))
+		// if it is <head> or </head>
+		if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
-		    return tag;
+			// we found <head>
+			if (tag.isClose())
+			{
+				foundHead = true;
+			}
+
+			// Usually <head> is not a wicket special tag. But because we want
+			// transparent header support we insert it automatically if missing
+			// and while rendering its content all child components are asked if
+			// they want to contribute something to the header. Thus we have to
+			// handle <head> accordingly.
+			tag.setId(HEADER_ID);
+
+			return tag;
+		}
+		else if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() != null))
+		{
+			// we found <wicket:head>
+			foundHead = true;
+		}
+		else if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		{
+			// We found <body>
+			if (foundHead == false)
+			{
+				insertHeadTag();
+			}
+
+			// <head> must always be before <body>
+			ignoreTheRest = true;
+			return tag;
 		}
 
-		final WicketTag wtag = (WicketTag) tag;
-		if ((withinHead == false) && (wtag.isHeadTag() == true))
-		{
-		    throw new MarkupException("<wicket:head> is only allow within <head> section.");
-		}
-		
 		return tag;
+	}
+
+	/**
+	 * Insert <head> open and close tag (with empty body) to the current
+	 * position.
+	 */
+	private void insertHeadTag()
+	{
+		final XmlTag headOpenTag = new XmlTag();
+		headOpenTag.setName("head");
+		headOpenTag.setType(XmlTag.OPEN);
+		final ComponentTag openTag = new ComponentTag(headOpenTag);
+		openTag.setId(HEADER_ID);
+
+		final XmlTag headCloseTag = new XmlTag();
+		headCloseTag.setName(headOpenTag.getName());
+		headCloseTag.setType(XmlTag.CLOSE);
+		final ComponentTag closeTag = new ComponentTag(headCloseTag);
+		closeTag.setOpenTag(openTag);
+		closeTag.setId(HEADER_ID);
+
+		// insert the tags into the markup stream
+		tagList.add(openTag);
+		tagList.add(closeTag);
 	}
 }

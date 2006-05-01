@@ -17,19 +17,18 @@
  */
 package wicket;
 
-import java.io.Serializable;
 
 /**
  * A factory interface used by Applications to create Sessions.
  * 
  * @author Jonathan Locke
  */
-public interface ISessionFactory extends Serializable
+public interface ISessionFactory
 {
 	/**
 	 * Creates a new session
 	 * 
 	 * @return The session
 	 */
-	public Session newSession();
+	Session newSession();
 }
