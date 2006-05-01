@@ -10,7 +10,9 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-rc3" date="tbd" description="Wicket 1.2 release candidate 3">
+    <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
+    </release>
+    <release version="1.2-rc3" date="2006-05-01" description="Wicket 1.2 release candidate 3">
       <action type="fix" dev="Martijn Dashorst" issue="1479917">HelloBrowser example test failed due to wrong parsing of timezone string.</action>
       <action type="fix" dev="Johan Compagner" issue="1478684" due-to="Igor!">Deadlock fixed when trying to render a page that was expired the second time.</action>
       <action type="fix" dev="Johan Compagner" issue="1473355" due-to="Nathan Hamblen">BufferedWebResponse constructor should be public.</action>
