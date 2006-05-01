@@ -60,7 +60,7 @@
 			<tr>
 				<td>
 					<a
-						href="http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=166850">
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
 						wicket-quickstart
 					</a>
 				</td>
@@ -72,7 +72,7 @@
 			<tr>
 				<td>
 					<a
-						href="http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494">
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=182494">
 						wicket-spring
 					</a>
 				</td>
@@ -84,7 +84,7 @@
 			<tr>
 				<td>
 					<a
-						href="http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182506">
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=182506">
 						wicket-auth
 					</a>
 				</td>

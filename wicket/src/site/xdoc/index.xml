@@ -60,15 +60,15 @@
 		</section>
 		<section name="Latest News">
 			<subsection
-				name="April 17, 2006 - Wicket 1.2-rc1 available">
+				name="May 1st, 2006 - Wicket 1.2-rc3 available">
 				<p>
 					The
 					<a href="http://wicketframework.org">Wicket</a>
-					project has released the first release candidate of the
+					project has released the third release candidate of the
 					1.2 effort.
 				</p>
 				<p>
-					This is our first release candidate of the Wicket 1.2
+					This is our third release candidate of the Wicket 1.2
 					version. We expect to finalize the 1.2 release very soon.
 					Major features of Wicket 1.2 include:
 				</p>
@@ -174,56 +174,9 @@
 					</a>
 				</p>
 				<p>
-					This is the first release candidate, so not considered
+					This is the third release candidate, so not considered
 					production ready. Please help us iron out the last
 					bugs by downloading and testing this release candidate!
-				</p>
-			</subsection>
-			<subsection
-				name="April 2, 2006 - Wicket 1.2-beta 3 available">
-				<p>
-					The
-					<a href="http://wicketframework.org">Wicket</a>
-					project has released the third beta release of the
-					1.2 effort.
-				</p>
-				<p>
-					This is our third beta release of the Wicket 1.2
-					version. We expect this to be the final beta and
-					start finalizing this version soon. 
-				</p>
-				<p>
-					This is the third beta release, so not considered
-					production ready. Please help us iron out the last
-					bugs by downloading and testing this beta release.
-				</p>
-			</subsection>
-			<subsection
-				name="March 18, 2006 - 2006 SourceForge.net Community Choice Awards Nominations">
-				<p>
-					Wicket has passed the preliminary selection for the
-					<a href="http://www.sourceforge.net/awards/cca">
-						SourceForge.net 2006 Community Choice Awards
-					</a>
-					. The final voting has started and will last until
-					March 23. The Wicket team wishes to thank all of you
-					who have voted for us to get through the first
-					round.
-				</p>
-				<p>
-					This time it is for the award itself. If you have
-					voted in the first round, then we need your vote
-					again! Make Wicket your choice,
-					<a
-						href="http://www.wilsonresearch.com/2006/ostgawards06/ostgawards4.php">
-						VOTE FOR WICKET!
-					</a>
-				</p>
-				<p style="text-align:center">
-					<a
-						href="http://www.wilsonresearch.com/2006/ostgawards06/ostgawards4.php">
-						<img src="images/wicket-cca2006.png" />
-					</a>
 				</p>
 			</subsection>
 			<p>
