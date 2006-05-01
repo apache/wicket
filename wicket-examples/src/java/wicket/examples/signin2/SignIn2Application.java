@@ -17,9 +17,6 @@
  */
 package wicket.examples.signin2;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.RestartResponseAtInterceptPageException;
@@ -27,10 +24,10 @@ import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestWithCryptedUrl;
-import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.WebResponseWithCryptedUrl;
+import wicket.protocol.http.request.CryptedUrlWebRequestCodingStrategy;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Forms example.
@@ -92,21 +89,15 @@ public final class SignIn2Application extends WicketExampleApplication
 			}
 		};
 	}
-
+	
 	/**
-	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
+	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new WebRequestWithCryptedUrl(servletRequest);
-	}
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	 */
-	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
-	{
-		return new WebResponseWithCryptedUrl(servletResponse);
+		return new CompoundRequestCycleProcessor(
+				new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy()),
+				null, null, null, null);
 	}
 
 	/**
