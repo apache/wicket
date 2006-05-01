@@ -23,6 +23,7 @@ import wicket.IInitializer;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
+import wicket.extensions.wizard.Wizard;
 
 /**
  * Initializer for the extensions package.
@@ -39,5 +40,6 @@ public class Initializer implements IInitializer
 		new DatePickerComponentInitializer().init(application);
 		new PaletteInitializer().init(application);
 		new UploadProgressBar.ComponentInitializer().init(application);
+		new Wizard.WizardInitializer().init(application);
 	}
 }
