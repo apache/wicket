@@ -743,7 +743,7 @@ public abstract class Session implements Serializable
 	{
 		if (feedbackMessages == null)
 		{
-			feedbackMessages = new FeedbackMessages(true);
+			feedbackMessages = new FeedbackMessages();
 		}
 		return feedbackMessages;
 	}

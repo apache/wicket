@@ -48,9 +48,6 @@ public final class FeedbackMessages implements Serializable
 	 */
 	private ArrayList messages = null;
 
-	/** Whether or not this store is in session */
-	private final boolean sessionStored;
-
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
 	 * this class is managed by the framework.
@@ -58,9 +55,8 @@ public final class FeedbackMessages implements Serializable
 	 * @param sessionStored
 	 *            whether or not this object is stored in session
 	 */
-	public FeedbackMessages(boolean sessionStored)
+	public FeedbackMessages()
 	{
-		this.sessionStored = sessionStored;
 	}
 
 	/**
@@ -117,7 +113,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void debug(Component reporter, String message)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG, sessionStored));
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
 
 	/**
@@ -130,7 +126,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void error(Component reporter, String message)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR, sessionStored));
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
 
 	/**
@@ -143,7 +139,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void fatal(Component reporter, String message)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL, sessionStored));
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
 
 	/**
@@ -209,7 +205,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void info(Component reporter, String message)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO, sessionStored));
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
 
 	/**
@@ -292,7 +288,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void warn(Component reporter, String message)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING, false));
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
 
 	/**
@@ -302,7 +298,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param level
 	 */
 	public final void add(Component reporter, String message, int level) {
-		add(new FeedbackMessage(reporter, message, level, sessionStored));
+		add(new FeedbackMessage(reporter, message, level));
 	}
 	
 	/**

@@ -71,9 +71,6 @@ public final class FeedbackMessage implements Serializable
 	/** The reporting component. */
 	private final Component reporter;
 
-	/** Whether or not this message will be stored in session */
-	private final boolean sessionStored;
-
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
 
@@ -89,8 +86,7 @@ public final class FeedbackMessage implements Serializable
 	 * @param sessionStored
 	 *            Whether or not this message will be stored in session
 	 */
-	FeedbackMessage(final Component reporter, final String message, final int level,
-			boolean sessionStored)
+	FeedbackMessage(final Component reporter, final String message, final int level)
 	{
 		this.reporter = reporter;
 		this.message = message;
@@ -99,22 +95,8 @@ public final class FeedbackMessage implements Serializable
 		{
 			throw new IllegalArgumentException("Invalid level value");
 		}
-
-		this.sessionStored = sessionStored;
 	}
-
-
-	/**
-	 * Gets whether or not this message is stored in the session
-	 * 
-	 * @return true if this message is stored in session, false oterwise
-	 */
-	public final boolean isSessionStored()
-	{
-		return sessionStored;
-	}
-
-
+	
 	/**
 	 * Gets whether or not this message has been rendered
 	 * 
