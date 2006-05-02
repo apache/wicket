@@ -1597,6 +1597,10 @@ public abstract class Component implements Serializable
 						}
 					});
 				}
+				
+				if (this instanceof IFeedback) {
+					((IFeedback)this).updateFeedback();
+				}
 
 				// Render the component and all its children
 				internalAttach();

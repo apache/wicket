@@ -379,6 +379,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
+		if (this instanceof IFeedback) {
+			((IFeedback)this).updateFeedback();
+		}
+		
 		// Now, do the initialization for the other components
 		internalAttach();
 
