@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.11 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,5 +40,18 @@ public abstract class AbstractModel implements IModel
 		StringBuffer sb = new StringBuffer("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
+	}
+
+	/**
+	 * This default implementation of getNestedModel unconditionally returns
+	 * null.
+	 * 
+	 * @see wicket.model.IModel#getNestedModel()
+	 * 
+	 * @return null
+	 */
+	public IModel getNestedModel()
+	{
+		return null;
 	}
 }
