@@ -44,6 +44,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
@@ -176,6 +177,18 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/** multi-validators assigned to this form */
 	private Object formValidators = null;
 
+	/**
+	 * Any default button. If set, a hidden submit button will be rendered right
+	 * after the form tag, so that when users press enter in a textfield, this
+	 * button's action will be selected. If no default button is set, nothing
+	 * additional is rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 */
+	private Button defaultButton;
 
 	/**
 	 * Constructs a form with no validation.
@@ -198,6 +211,25 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public Form(final String id, IModel model)
 	{
 		super(id, model);
+	}
+
+	/**
+	 * Gets the default button. If set (not null), a hidden submit button will
+	 * be rendered right after the form tag, so that when users press enter in a
+	 * textfield, this button's action will be selected. If no default button is
+	 * set (it is null), nothing additional is rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 * 
+	 * @return The button to set as the default button, or null when you want to
+	 *         'unset' any previously set default button
+	 */
+	public final Button getDefaultButton()
+	{
+		return defaultButton;
 	}
 
 	/**
@@ -346,6 +378,27 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * Sets the default button. If set (not null), a hidden submit button will
+	 * be rendered right after the form tag, so that when users press enter in a
+	 * textfield, this button's action will be selected. If no default button is
+	 * set (so unset by calling this method with null), nothing additional is
+	 * rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 * 
+	 * @param button
+	 *            The button to set as the default button, or null when you want
+	 *            to 'unset' any previously set default button
+	 */
+	public final void setDefaultButton(Button button)
+	{
+		this.defaultButton = button;
+	}
+
+	/**
 	 * @param maxSize
 	 *            The maxSize for uploaded files
 	 */
@@ -433,6 +486,51 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
+	}
+
+	/**
+	 * If a default button was set on this form, this method will be called to
+	 * render an extra field with an invisible style so that pressing enter in
+	 * one of the textfields will do a form submit using this button. This
+	 * method is overridable as what we do is best effort only, and may not what
+	 * you want in specific situations. So if you have specific usability
+	 * concerns, or want to follow another strategy, you may override this
+	 * method.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void appendDefaultButtonField(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		String nameAndId = getHiddenFieldId();
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		// get the value, first seeing whether the value attribute is set
+		// by a model
+		String value = defaultButton.getModelObjectAsString();
+		if (value == null || "".equals(value))
+		{
+			// nope it isn't; try to read from the attributes
+			// note that we're only trying lower case here
+			value = defaultButton.getMarkupAttributes().getString("value");
+		}
+
+		// append the button
+		String userAgent = ((WebClientInfo)getSession().getClientInfo()).getUserAgent();
+		buffer.append("<input type=\"submit\" value=\"").append(value).append("\" name=\"").append(
+				defaultButton.getInputName()).append("\"");
+		if (userAgent != null && userAgent.indexOf("MSIE") != -1)
+		{
+			buffer.append("style=\"width: 0px\"");
+		}
+		else
+		{
+			buffer.append(" style=\"display: none\"");
+		}
+		buffer.append("\" />");
+		getResponse().write(buffer);
 	}
 
 	/**
@@ -647,7 +745,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Append an additional hidden input tag to support anchor tags that can
-	 * submit a form
+	 * submit a form.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -656,8 +754,22 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+		// get the hidden field id
 		String nameAndId = getHiddenFieldId();
-		getResponse().write(new AppendingStringBuffer("<input type=\"hidden\" name=\"").append(nameAndId).append("\" id=\"").append(nameAndId).append("\"/>"));
+
+		// render the hidden field
+		AppendingStringBuffer buffer = new AppendingStringBuffer("<input type=\"hidden\" name=\"")
+				.append(nameAndId).append("\" id=\"").append(nameAndId).append("\" />");
+		getResponse().write(buffer);
+
+		// if a default button was set, handle the rendering of that
+		if (defaultButton != null && defaultButton.isVisibleInHierarchy()
+				&& defaultButton.isEnabled())
+		{
+			appendDefaultButtonField(markupStream, openTag);
+		}
+
+		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
@@ -1115,8 +1227,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
-		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId()).append("').value='").append(url).append(
-				"';document.getElementById('").append(getJavascriptId()).append("').submit();");
+		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId())
+				.append("').value='").append(url).append("';document.getElementById('").append(
+						getJavascriptId()).append("').submit();");
 	}
 
 	/**
