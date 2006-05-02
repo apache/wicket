@@ -25,8 +25,6 @@ import java.util.List;
 
 import wicket.util.collections.ArrayListStack;
 
-import com.sun.corba.se.internal.orbutil.Condition;
-
 /**
  * Default implementation of {@link IWizardModel}.
  * <p>
@@ -111,7 +109,7 @@ public class WizardModel implements IWizardModel
 
 	/**
 	 * Adds the next step to the wizard. If the {@link WizardStep} implements
-	 * {@link Condition}, then this method is equivalent to calling
+	 * {@link ICondition}, then this method is equivalent to calling
 	 * {@link #add(IWizardStep, ICondition) add(step, (ICondition)step)}.
 	 * 
 	 * @param step
