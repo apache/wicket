@@ -18,6 +18,9 @@
 package wicket.markup.html.body;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 import wicket.AttributeModifier;
@@ -194,28 +197,49 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 
 		return (currentValue == null ? replacementValue : currentValue + replacementValue);
 	}
-	
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
-	{
-		s.defaultReadObject();
 
-		Object o = s.readObject();
-		if(o != null)
+	/**
+	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence,
+	 * we need to implement our read/write methods to properly support it.
+	 * 
+	 * @see Serializable
+	 * 
+	 * @param inputStream
+	 *            The input stream to read the object from
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void readObject(final ObjectInputStream inputStream) throws IOException,
+			ClassNotFoundException
+	{
+		inputStream.defaultReadObject();
+
+		final Object object = inputStream.readObject();
+		if (object != null)
 		{
-			componentReference = new WeakReference(o);
+			componentReference = new WeakReference(object);
 		}
 	}
 
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	/**
+	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence,
+	 * we need to implement our read/write methods to properly support it.
+	 * 
+	 * @see Serializable
+	 * 
+	 * @param outputStream
+	 * @throws IOException
+	 */
+	private void writeObject(final ObjectOutputStream outputStream) throws IOException
 	{
-		s.defaultWriteObject();
-		if(componentReference != null)
+		outputStream.defaultWriteObject();
+		if (componentReference != null)
 		{
-			s.writeObject(componentReference.get());
+			outputStream.writeObject(componentReference.get());
 		}
 		else
 		{
-			s.writeObject(null);
+			outputStream.writeObject(null);
 		}
-	}	
+	}
 }
