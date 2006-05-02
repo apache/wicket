@@ -57,11 +57,11 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/** Logger. */
 	private static final Log log = LogFactory.getLog(LoadableDetachableModel.class);
 
-	/** temporary, transient object. */
-	private transient Object tempModelObject;
-
 	/** keeps track of whether this model is attached or detached */
 	private transient boolean attached = false;
+
+	/** temporary, transient object. */
+	private transient Object tempModelObject;
 
 	/**
 	 * Construct.
@@ -81,6 +81,25 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	{
 		this.tempModelObject = object;
 		attached = true;
+	}
+
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public final void detach()
+	{
+		if (attached)
+		{
+			attached = false;
+			tempModelObject = null;
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("removed transient object for " + this + ", requestCycle "
+						+ RequestCycle.get());
+			}
+			onDetach();
+		}
 	}
 
 	/**
@@ -105,23 +124,32 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	}
 
 	/**
-	 * @see wicket.model.IDetachable#detach()
+	 * Gets the attached status of this model instance
+	 * 
+	 * @return true if the model is attached, false otherwise
 	 */
-	public final void detach()
+	public final boolean isAttached()
 	{
-		if (attached)
-		{
-			attached = false;
-			tempModelObject = null;
-
-			if (log.isDebugEnabled())
-			{
-				log.debug("removed transient object for " + this + ", requestCycle "
-						+ RequestCycle.get());
-			}
-			onDetach();
-		}
+		return attached;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
+				this.tempModelObject).append("]");
+		return sb.toString();
+	}
+
+	/**
+	 * Loads and returns the (temporary) model object.
+	 * 
+	 * @return the (temporary) model object
+	 */
+	protected abstract Object load();
 
 	/**
 	 * Attaches to the current request. Implement this method with custom
@@ -137,33 +165,5 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 */
 	protected void onDetach()
 	{
-	}
-
-	/**
-	 * Gets the attached status of this model instance
-	 * 
-	 * @return true if the model is attached, false otherwise
-	 */
-	public final boolean isAttached()
-	{
-		return attached;
-	}
-
-	/**
-	 * Loads and returns the (temporary) model object.
-	 * 
-	 * @return the (temporary) model object
-	 */
-	protected abstract Object load();
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-				this.tempModelObject).append("]");
-		return sb.toString();
 	}
 }
