@@ -484,7 +484,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		if (feedbackMessages == null)
 		{
-			feedbackMessages = new FeedbackMessages(false);
+			feedbackMessages = new FeedbackMessages();
 		}
 		return feedbackMessages;
 	}
