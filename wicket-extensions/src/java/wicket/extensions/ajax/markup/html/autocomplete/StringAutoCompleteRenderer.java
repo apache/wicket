@@ -1,6 +1,5 @@
 package wicket.extensions.ajax.markup.html.autocomplete;
 
-import wicket.Response;
 
 /**
  * An renderer that assumes that assist objects are {@link String}s. Great for
@@ -11,7 +10,7 @@ import wicket.Response;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class StringAutoCompleteRenderer extends AbstractAutoCompleteRenderer
+public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRenderer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -20,12 +19,9 @@ public class StringAutoCompleteRenderer extends AbstractAutoCompleteRenderer
 	 */
 	public static final IAutoCompleteRenderer INSTANCE = new StringAutoCompleteRenderer();
 
-
-	protected void renderChoices(Object object, Response response)
-	{
-		response.write(object.toString());
-	}
-
+	/**
+	 * @see AbstractAutoCompleteTextRenderer#getTextValue(Object)
+	 */
 	protected String getTextValue(Object object)
 	{
 		return object.toString();

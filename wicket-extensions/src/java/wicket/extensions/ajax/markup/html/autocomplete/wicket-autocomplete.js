@@ -30,7 +30,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 				    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
 					break;
 				case KEY_DOWN:
-					if(visible==0)updateChoices();					
+					if(visible==0) updateChoices();					
 					if(selected<elementCount-1){
 						selected++;
 					}
@@ -101,6 +101,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 	}
 
 	function updateChoices(){	
+	    selected=-1;
 	    var transport = wicketAjaxGetTransport();
 	    if (transport == null)return false
     	transport.onreadystatechange = function () {
@@ -159,7 +160,6 @@ function WicketAutoComplete(elementId,callbackUrl){
 	function doUpdateChoices(resp){
 		var element=wicketGet(elementId+'-autocomplete');
 		element.innerHTML=resp;
-		selected=-1;
 		showAutoComplete();	
 	    if(element.firstChild && element.firstChild.childNodes) {
 	    	elementCount=element.firstChild.childNodes.length;
@@ -176,6 +176,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 	}
 	
 	function render(){	
+		document.title="selected: "+selected+" count: "+elementCount;
 		var element=wicketGet(elementId+'-autocomplete');
     	for(var i=0;i<elementCount;i++){
     		var node=element.firstChild.childNodes[i];

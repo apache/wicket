@@ -22,7 +22,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	public final void render(Object object, Response response)
 	{
 	        response.write("<li>");
-		renderChoices(object, response);
+		renderChoice(object, response);
 		response.write("</li>");
 	}
 
@@ -52,17 +52,6 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 *            current assist choice
 	 * @param response
 	 */
-	protected abstract void renderChoices(Object object, Response response);
-
-	/**
-	 * Retrieves the text value that will be set on the textbox if this assist
-	 * is selected
-	 * 
-	 * @param object
-	 *            assist choice object
-	 * @return the text value that will be set on the textbox if this assist is
-	 *         selected
-	 */
-	protected abstract String getTextValue(Object object);
+	protected abstract void renderChoice(Object object, Response response);
 
 }
