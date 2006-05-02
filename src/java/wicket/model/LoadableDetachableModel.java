@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: LoadableDetachableModel.java 5224 2006-04-01 11:55:14 +0000 (Sat, 01 Apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-01 11:55:14 +0000 (Sat, 01
+ * Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,6 +41,13 @@ import wicket.RequestCycle;
  * 	}
  * };
  * </pre>
+ * 
+ * <p>
+ * Though you can override methods {@link #onAttach()} and {@link #detach()} for
+ * additional attach/ detach behavior, the point of this class is to hide as
+ * much of the attaching/ detaching as possible. So you should rarely need to
+ * override those methods, if ever.
+ * </p>
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg
@@ -82,8 +90,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	{
 		if (!attached)
 		{
-			tempModelObject = load();
 			attached = true;
+			tempModelObject = load();
 
 			if (log.isDebugEnabled())
 			{
@@ -91,6 +99,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 						+ ", requestCycle " + RequestCycle.get());
 			}
 
+			onAttach();
 		}
 		return tempModelObject;
 	}
@@ -98,17 +107,36 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IDetachable#detach()
 	 */
-	public void detach()
+	public final void detach()
 	{
-		boolean wasAttached = attached;
-		tempModelObject = null;
-		attached = false;
-
-		if (wasAttached && log.isDebugEnabled())
+		if (attached)
 		{
-			log.debug("removed transient object for " + this + ", requestCycle "
-					+ RequestCycle.get());
+			attached = false;
+			tempModelObject = null;
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("removed transient object for " + this + ", requestCycle "
+						+ RequestCycle.get());
+			}
+			onDetach();
 		}
+	}
+
+	/**
+	 * Attaches to the current request. Implement this method with custom
+	 * behavior, such as loading the model object.
+	 */
+	protected void onAttach()
+	{
+	}
+
+	/**
+	 * Detaches from the current request. Implement this method with custom
+	 * behavior, such as setting the model object to null.
+	 */
+	protected void onDetach()
+	{
 	}
 
 	/**
@@ -134,7 +162,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(this.tempModelObject).append("]");
+		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
+				this.tempModelObject).append("]");
 		return sb.toString();
 	}
 }
