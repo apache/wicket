@@ -903,7 +903,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			if (input != null)
 			{
 				// join the values together with ";", for example, "id1;id2;id3"
-				rawInput = StringList.valueOf(input).join(";");
+				rawInput = StringList.valueOf(input).join(VALUE_SEPARATOR);
 			}
 			else if ( isInputNullable() )
 			{
