@@ -122,7 +122,7 @@ public class PackageResourceReference extends ResourceReference
 	 */
 	public PackageResourceReference(Application application, String name)
 	{
-		this(application, null, name);
+		this(application, Application.class, name);
 	}
 
 	/**
