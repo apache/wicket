@@ -31,7 +31,7 @@ function WicketAutoComplete(elementId,callbackUrl){
 					break;
 				case KEY_DOWN:
 					if(visible==0)updateChoices();					
-					if(selected<elementCount-2){
+					if(selected<elementCount-1){
 						selected++;
 					}
 					render();
