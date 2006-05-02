@@ -22,9 +22,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
 import wicket.util.collections.ArrayListStack;
+
+import com.sun.corba.se.internal.orbutil.Condition;
 
 /**
  * Default implementation of {@link IWizardModel}.
