@@ -11,6 +11,8 @@
   </properties>
   <body>
     <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
+      <action type="add" dev="Eelco Hillenius">Forms can now have a default sumbit button. If they have Wicket makes a best effort to make the action of that button the default action when pressing enter in a text field. The wizard's next button uses this functionality.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Stefan Kanev">Fixed detaching of LoadableDetachableModel was potentially done more than once in a request cycle, which would be a problem when people would override detach, which was unfortunately possible as we didn't make that method final. I made that method final now, and fixed the detaching to only be executed once.</action>
       <action type="fix" dev="Johan Compagner" issue="1476778" due-to="AndreasG">PackageResourceReference(Application,String) throws NPE.</action>
     </release>
     <release version="1.2-rc3" date="2006-05-01" description="Wicket 1.2 release candidate 3">
