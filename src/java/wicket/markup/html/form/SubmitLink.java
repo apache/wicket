@@ -169,7 +169,7 @@ public class SubmitLink extends Button
 	{
 		if (form == null)
 		{
-			form = getForm();
+			form = super.getForm();
 		}
 		return form;
 	}
