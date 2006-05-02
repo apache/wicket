@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.body;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import wicket.AttributeModifier;
@@ -46,7 +47,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * Make sure we don't keep a reference to the component longer than realy
 	 * needed.
 	 */
-	private WeakReference componentReference;
+	private transient WeakReference componentReference;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
@@ -193,4 +194,28 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 
 		return (currentValue == null ? replacementValue : currentValue + replacementValue);
 	}
+	
+	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+
+		Object o = s.readObject();
+		if(o != null)
+		{
+			componentReference = new WeakReference(o);
+		}
+	}
+
+	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	{
+		s.defaultWriteObject();
+		if(componentReference != null)
+		{
+			s.writeObject(componentReference.get());
+		}
+		else
+		{
+			s.writeObject(null);
+		}
+	}	
 }
