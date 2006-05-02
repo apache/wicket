@@ -77,6 +77,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * The value separator 
+	 */
+	public static String VALUE_SEPARATOR = ";";
+	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
 	public static interface IVisitor
@@ -440,6 +444,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	public boolean isInputNullable()
 	{
 		return true;
+	}
+
+	/**
+	 * Sets the value for a form component this value will be split
+	 * the string with {@link FormComponent#VALUE_SEPARATOR} and calls
+	 * setModelValue(String[]) with that.
+	 * 
+	 * @param value
+	 *            The value
+	 *            
+	 * @depricated call or override setModelValue(String[])
+	 */
+	public void setModelValue(final String value)
+	{
+		setModelValue(value.split(VALUE_SEPARATOR));
 	}
 
 	/**
