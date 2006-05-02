@@ -196,7 +196,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 				int index = choices.indexOf(object);
 				buffer.append(getChoiceRenderer().getIdValue(object, index));
-				buffer.append(";");
+				buffer.append(VALUE_SEPARATOR);
 			}
 		}
 		return buffer.toString();
@@ -212,7 +212,7 @@ public class ListMultipleChoice extends AbstractChoice
 		if (selected != null)
 		{
 			// Loop through ids
-			for (final StringTokenizer tokenizer = new StringTokenizer(selected, ";"); tokenizer
+			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer
 					.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
