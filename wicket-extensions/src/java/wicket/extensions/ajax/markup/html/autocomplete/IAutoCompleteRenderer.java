@@ -10,7 +10,26 @@ import wicket.Response;
  * Helper implementations of this interface may abstract the implementation specific
  * details. Direct implementations of this interface should only be used when
  * total control is required.
+ * <p>
+ * The autocompletion value is supplied via an attribute on the first html element
+ * named <code>textvalue</code>, if no attribute is found the innerHtml property
+ * of the first element will be used instead.
  * 
+ * For example:
+ * 
+ * <pre>
+ * new IAutoCompleteRenderer() {
+ *     void renderHead(Response r) { r.write("<ul>"); }
+ *     
+ *     void render(Object o, Response r) {
+ *        // notice the textvalue attribute we define for li element
+ *        r.write("<li textvalue=\""+o.toString()+"\"><i>"+o.toString()+"</i></li>";
+ *     }
+ *     
+ *     void renderFooter(Response r) { r.write("</ul>"); }
+ * }
+ * </pre>
+ *     
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)

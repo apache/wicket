@@ -171,8 +171,12 @@ function WicketAutoComplete(elementId,callbackUrl){
 	
 	function getSelectedValue(){
 		var element=wicketGet(elementId+'-autocomplete');
-		var ret=element.firstChild.childNodes[selected].innerHTML;
-		return ret;
+		var attr=element.firstChild.childNodes[selected].attributes['textvalue'];
+		if (attr==undefined) {
+		    return element.firstChild.childNodes[selected].innerHTML;
+		} else {
+		    return attr.value;
+        }		    
 	}
 	
 	function render(){	

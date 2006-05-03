@@ -21,7 +21,16 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 */
 	public final void render(Object object, Response response)
 	{
-	        response.write("<li>");
+		String textValue = getTextValue(object);
+		if (textValue == null)
+		{
+			throw new IllegalStateException(
+					"A call to textValue(Object) returned an illegal value: null for object: "
+							+ object.toString());
+		}
+		textValue = textValue.replaceAll("\\\"", "&quot;");
+		
+		response.write("<li textvalue=\"" + textValue + "\">");
 		renderChoice(object, response);
 		response.write("</li>");
 	}
@@ -32,7 +41,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 */
 	public final void renderHeader(Response response)
 	{
-	        response.write("<ul>");
+		response.write("<ul>");
 	}
 
 	/**
@@ -40,7 +49,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 */
 	public final void renderFooter(Response response)
 	{
-	        response.write("</ul>");
+		response.write("</ul>");
 	}
 
 	/**
@@ -54,4 +63,14 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 */
 	protected abstract void renderChoice(Object object, Response response);
 
+	/**
+	 * Retrieves the text value that will be set on the textbox if this assist
+	 * is selected
+	 * 
+	 * @param object
+	 *            assist choice object
+	 * @return the text value that will be set on the textbox if this assist is
+	 *         selected
+	 */
+	protected abstract String getTextValue(Object object);
 }

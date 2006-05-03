@@ -20,15 +20,4 @@ public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompl
 		response.write(getTextValue(object));
 	}
 
-	/**
-	 * Retrieves the text value that will be set on the textbox if this assist
-	 * is selected
-	 * 
-	 * @param object
-	 *            assist choice object
-	 * @return the text value that will be set on the textbox if this assist is
-	 *         selected
-	 */
-	protected abstract String getTextValue(Object object);
-
 }
