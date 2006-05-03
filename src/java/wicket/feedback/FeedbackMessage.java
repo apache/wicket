@@ -28,7 +28,7 @@ import wicket.Component;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FeedbackMessage implements Serializable
+public class FeedbackMessage implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -86,15 +86,11 @@ public final class FeedbackMessage implements Serializable
 	 * @param sessionStored
 	 *            Whether or not this message will be stored in session
 	 */
-	FeedbackMessage(final Component reporter, final String message, final int level)
+	public FeedbackMessage(final Component reporter, final String message, final int level)
 	{
 		this.reporter = reporter;
 		this.message = message;
 		this.level = level;
-		if (level < UNDEFINED || level > FATAL)
-		{
-			throw new IllegalArgumentException("Invalid level value");
-		}
 	}
 	
 	/**
@@ -134,7 +130,7 @@ public final class FeedbackMessage implements Serializable
 	 * 
 	 * @return The current level as a String
 	 */
-	public final String getLevelAsString()
+	public String getLevelAsString()
 	{
 		return levelStrings[getLevel()];
 	}
