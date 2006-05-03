@@ -180,7 +180,6 @@ function WicketAutoComplete(elementId,callbackUrl){
 	}
 	
 	function render(){	
-		document.title="selected: "+selected+" count: "+elementCount;
 		var element=wicketGet(elementId+'-autocomplete');
     	for(var i=0;i<elementCount;i++){
     		var node=element.firstChild.childNodes[i];
