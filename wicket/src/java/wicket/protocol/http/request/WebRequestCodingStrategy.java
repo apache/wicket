@@ -754,15 +754,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					buffer.append(contextPath);
 				}
 				String path = request.getServletPath();
-				if (path == null || "".equals(path))
+				if (path != null && !path.equals(""))
 				{
-					if (buffer.length() > 0 && !buffer.endsWith("/"))
-					{
-						buffer.append("/");
-					}
-				}
-				else
-				{
+					if(!buffer.endsWith("/") && !path.startsWith("/")) buffer.append("/");
 					buffer.append(path);
 				}
 			}
