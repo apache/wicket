@@ -2713,8 +2713,9 @@ public abstract class Component implements Serializable
 			{
 				// There must be a component in this discarded body
 				markupStream
-						.throwMarkupException("Expected close tag.	Possible attempt to embed component(s) "
-								+ "in the body of a component which discards its body");
+						.throwMarkupException("Expected close tag for '" + markupOpenTag + "' Possible attempt to embed component(s) '" + 
+								markupStream.get() + 
+								"' in the body of this component which discards its body");
 			}
 		}
 	}
