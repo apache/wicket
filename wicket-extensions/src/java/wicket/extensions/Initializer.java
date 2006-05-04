@@ -21,6 +21,7 @@ package wicket.extensions;
 import wicket.Application;
 import wicket.IInitializer;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import wicket.extensions.breadcrumb.BreadCrumbBar;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
 import wicket.extensions.wizard.Wizard;
@@ -41,5 +42,6 @@ public class Initializer implements IInitializer
 		new PaletteInitializer().init(application);
 		new UploadProgressBar.ComponentInitializer().init(application);
 		new Wizard.WizardInitializer().init(application);
+		new BreadCrumbBar.BreadCrumbBarInitializer().init(application);
 	}
 }
