@@ -305,7 +305,7 @@ public class DatePickerSettings implements Serializable
 
 		if (getFirstDay() != 0)
 		{
-			b.append("\n\tfistDay : ").append(getFirstDay()).append(",");
+			b.append("\n\tfirstDay : ").append(getFirstDay()).append(",");
 		}
 
 		if (!isWeekNumbers())
