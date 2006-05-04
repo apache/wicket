@@ -75,7 +75,8 @@ public class Files
 	 */
 	public static String filename(final String path)
 	{
-		return Strings.lastPathComponent(path.replace('/', java.io.File.separatorChar), java.io.File.separatorChar);
+		return Strings.lastPathComponent(path.replace('/', java.io.File.separatorChar),
+				java.io.File.separatorChar);
 	}
 
 	/**
@@ -114,15 +115,16 @@ public class Files
 	 *            The file to write to
 	 * @param input
 	 *            The input
+	 * @return Number of bytes written
 	 * @throws IOException
 	 */
-	public static final void writeTo(final java.io.File file, final InputStream input)
+	public static final int writeTo(final java.io.File file, final InputStream input)
 			throws IOException
 	{
-		FileOutputStream out = new FileOutputStream(file);
+		final FileOutputStream out = new FileOutputStream(file);
 		try
 		{
-			Streams.copy(input, out);
+			return Streams.copy(input, out);
 		}
 		finally
 		{
