@@ -610,7 +610,7 @@ public abstract class MarkupContainer extends Component
 			{
 				throw new WicketRuntimeException(
 						exceptionMessage("Cannot replace a component which has not been added: id='"
-								+ child.getId() + "'"));
+								+ child.getId() + "', component=" + child));
 			}
 
 			removedComponent(replaced);
