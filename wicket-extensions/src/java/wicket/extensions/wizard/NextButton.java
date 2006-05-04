@@ -43,19 +43,18 @@ public final class NextButton extends WizardButton
 	}
 
 	/**
-	 * @see wicket.Component#onAttach()
+	 * @see wicket.Component#isEnabled()
 	 */
-	protected void onAttach()
+	public final boolean isEnabled()
 	{
-		// TODO after the constructor change we can do this in the constructor
-		// of either this class or the button form
-		getForm().setDefaultButton(this);
+		IWizardModel wizardModel = getWizardModel();
+		return !wizardModel.isLastStep(wizardModel.getActiveStep());
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.WizardButton#doAction()
+	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
-	public void doAction()
+	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
 		IWizardStep step = wizardModel.getActiveStep();
@@ -77,11 +76,12 @@ public final class NextButton extends WizardButton
 	}
 
 	/**
-	 * @see wicket.Component#isEnabled()
+	 * @see wicket.Component#onAttach()
 	 */
-	public boolean isEnabled()
+	protected final void onAttach()
 	{
-		IWizardModel wizardModel = getWizardModel();
-		return !wizardModel.isLastStep(wizardModel.getActiveStep());
+		// TODO after the constructor change we can do this in the constructor
+		// of either this class or the button form
+		getForm().setDefaultButton(this);
 	}
 }

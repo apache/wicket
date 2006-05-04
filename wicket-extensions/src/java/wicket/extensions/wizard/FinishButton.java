@@ -43,9 +43,18 @@ public final class FinishButton extends WizardButton
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.WizardButton#doAction()
+	 * @see wicket.Component#isEnabled()
 	 */
-	public void doAction()
+	public final boolean isEnabled()
+	{
+		IWizardStep activeStep = getWizardModel().getActiveStep();
+		return (activeStep != null && getWizardModel().isLastStep(activeStep));
+	}
+
+	/**
+	 * @see wicket.extensions.wizard.WizardButton#onClick()
+	 */
+	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
 		IWizardStep step = wizardModel.getActiveStep();
@@ -63,14 +72,5 @@ public final class FinishButton extends WizardButton
 			error(getLocalizer().getString(
 					"wicket.extensions.wizard.FinishButton.step.did.not.complete", this));
 		}
-	}
-
-	/**
-	 * @see wicket.Component#isEnabled()
-	 */
-	public boolean isEnabled()
-	{
-		IWizardStep activeStep = getWizardModel().getActiveStep();
-		return (activeStep != null && getWizardModel().isLastStep(activeStep));
 	}
 }

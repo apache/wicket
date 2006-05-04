@@ -44,18 +44,18 @@ public final class PreviousButton extends WizardButton
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.WizardButton#doAction()
+	 * @see wicket.Component#isEnabled()
 	 */
-	public void doAction()
+	public final boolean isEnabled()
 	{
-		getWizardModel().previous();
+		return getWizardModel().isPreviousAvailable();
 	}
 
 	/**
-	 * @see wicket.Component#isEnabled()
+	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
-	public boolean isEnabled()
+	public final void onClick()
 	{
-		return getWizardModel().isPreviousAvailable();
+		getWizardModel().previous();
 	}
 }

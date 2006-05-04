@@ -26,7 +26,7 @@ import wicket.model.ResourceModel;
  * It uses resource bundles to display the button label.
  * <p>
  * When wizard buttons are presses (and they pass validation if that is
- * relevant), they pass control to {@link #doAction() their action method},
+ * relevant), they pass control to {@link #onClick() their action method},
  * which should do the real work.
  * </p>
  * 
@@ -56,11 +56,6 @@ public abstract class WizardButton extends Button
 	}
 
 	/**
-	 * Called when this button is clicked.
-	 */
-	protected abstract void doAction();
-
-	/**
 	 * Gets the {@link Wizard}.
 	 * 
 	 * @return The wizard
@@ -81,10 +76,15 @@ public abstract class WizardButton extends Button
 	}
 
 	/**
+	 * Called when this button is clicked.
+	 */
+	protected abstract void onClick();
+
+	/**
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
 	protected final void onSubmit()
 	{
-		doAction();
+		onClick();
 	}
 }

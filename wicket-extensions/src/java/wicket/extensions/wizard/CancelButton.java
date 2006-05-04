@@ -43,17 +43,9 @@ public final class CancelButton extends WizardButton
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.WizardButton#doAction()
-	 */
-	public void doAction()
-	{
-		getWizard().onCancel();
-	}
-
-	/**
 	 * @see wicket.Component#isEnabled()
 	 */
-	public boolean isEnabled()
+	public final boolean isEnabled()
 	{
 		return true;
 	}
@@ -61,8 +53,16 @@ public final class CancelButton extends WizardButton
 	/**
 	 * @see wicket.Component#isVisible()
 	 */
-	public boolean isVisible()
+	public final boolean isVisible()
 	{
 		return getWizardModel().isCancelVisible();
+	}
+
+	/**
+	 * @see wicket.extensions.wizard.WizardButton#onClick()
+	 */
+	public final void onClick()
+	{
+		getWizard().onCancel();
 	}
 }
