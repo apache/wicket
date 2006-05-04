@@ -101,7 +101,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	private IWizardModel wizardModel;
 
 	/**
-	 * Construct.
+	 * Construct. Adds the default style.
 	 * <p>
 	 * If you override this class, it makes sense to call this constructor
 	 * (super(id)), then - in your constructor - construct a transition model
@@ -116,7 +116,49 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public Wizard(String id)
 	{
+		this(id, true);
+	}
+
+	/**
+	 * Construct.
+	 * <p>
+	 * If you override this class, it makes sense to call this constructor
+	 * (super(id)), then - in your constructor - construct a transition model
+	 * and then call {@link #init(IWizardModel)} to initialize the wizard.
+	 * </p>
+	 * <p>
+	 * This constructor is not meant for normal clients of this class
+	 * </p>
+	 * 
+	 * @param id
+	 *            The component model
+	 * @param addDefaultCssStyle
+	 *            Whether to add the {@link #addDefaultCssStyle() default style}
+	 */
+	public Wizard(String id, boolean addDefaultCssStyle)
+	{
 		super(id);
+
+		if (addDefaultCssStyle)
+		{
+			addDefaultCssStyle();
+		}
+	}
+
+	/**
+	 * Construct with a transition model. Adds the default style.
+	 * <p>
+	 * For most clients, this is typically the right constructor to use.
+	 * </p>
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param wizardModel
+	 *            The transitions model
+	 */
+	public Wizard(String id, IWizardModel wizardModel)
+	{
+		this(id, wizardModel, true);
 	}
 
 	/**
@@ -129,12 +171,19 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 *            The component id
 	 * @param wizardModel
 	 *            The transitions model
+	 * @param addDefaultCssStyle
+	 *            Whether to add the {@link #addDefaultCssStyle() default style}
 	 */
-	public Wizard(String id, IWizardModel wizardModel)
+	public Wizard(String id, IWizardModel wizardModel, boolean addDefaultCssStyle)
 	{
 		super(id);
 
 		init(wizardModel);
+
+		if (addDefaultCssStyle)
+		{
+			addDefaultCssStyle();
+		}
 	}
 
 	/**

@@ -55,9 +55,6 @@ public class StaticWizard extends Wizard
 		model.add(new StaticContentStep("Three", "The third and last step",
 				"Owk, I'm done with this wizard", true));
 
-		// add the default css header contribution
-		addDefaultCssStyle();
-
 		// and initialize the wizard
 		init(model);
 	}

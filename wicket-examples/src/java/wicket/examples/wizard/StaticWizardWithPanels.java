@@ -98,9 +98,6 @@ public class StaticWizardWithPanels extends Wizard
 		model.add(new Step2());
 		model.add(new Step3());
 
-		// add the default css styles
-		addDefaultCssStyle();
-
 		// initialize the wizard
 		init(model);
 	}

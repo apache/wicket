@@ -156,14 +156,6 @@ public class NewUserWizard extends Wizard
 		model.add(new UserRolesStep());
 		model.add(new ConfirmationStep());
 
-		// add the default css style of the wizard
-		// instead, we could also provide our own css file
-		// by adding a HeaderContributor directly. Look at
-		// the HTML sources of the wizard component to find
-		// out about the css classes that are available
-		// by default
-		addDefaultCssStyle();
-
 		// initialize the wizard with the wizard model we just built
 		init(model);
 	}
