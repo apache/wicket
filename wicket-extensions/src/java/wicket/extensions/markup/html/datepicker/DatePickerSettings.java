@@ -91,7 +91,7 @@ public class DatePickerSettings implements Serializable
 	 * The end user can easily change this too, by clicking on the day name in
 	 * the calendar header.
 	 */
-	private int firstDay = 0;
+	private int firstDay = -1;
 
 	/**
 	 * If ``true'' then the calendar will display week numbers.
@@ -303,7 +303,7 @@ public class DatePickerSettings implements Serializable
 			b.append("\n\tmode : false,");
 		}
 
-		if (getFirstDay() != 0)
+		if (getFirstDay() != -1)
 		{
 			b.append("\n\tfirstDay : ").append(getFirstDay()).append(",");
 		}
