@@ -138,7 +138,7 @@ public class MergedMarkup extends Markup
 				ComponentTag tag = (ComponentTag)elem;
 				if (tag.isOpen() && TagUtils.isBodyTag(tag))
 				{
-					String onLoad = tag.getAttributes().getString("onLoad");
+					String onLoad = tag.getAttributes().getString("onload");
 					return onLoad;
 				}
 			}
@@ -252,13 +252,13 @@ public class MergedMarkup extends Markup
 				// Get the body onLoad attribute from derived markup
 				final String onLoad = getBodyOnLoadString(markup);
 
-				String onLoadBase = tag.getAttributes().getString("onLoad");
+				String onLoadBase = tag.getAttributes().getString("onload");
 				if (onLoadBase == null)
 				{
 					if (onLoad != null)
 					{
 						ComponentTag mutableTag = tag.mutable();
-						mutableTag.getAttributes().put("onLoad", onLoad);
+						mutableTag.getAttributes().put("onload", onLoad);
 						element = mutableTag;
 					}
 				}
@@ -266,7 +266,7 @@ public class MergedMarkup extends Markup
 				{
 					onLoadBase += onLoad;
 					ComponentTag mutableTag = tag.mutable();
-					mutableTag.getAttributes().put("onLoad", onLoadBase);
+					mutableTag.getAttributes().put("onload", onLoadBase);
 					element = mutableTag;
 				}
 			}
