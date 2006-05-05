@@ -141,11 +141,12 @@ public class File extends java.io.File implements IModifiable
 	 * 
 	 * @param input
 	 *            The input
+	 * @return Number of bytes written
 	 * @throws IOException
 	 */
-	public final void write(final InputStream input) throws IOException
+	public final int write(final InputStream input) throws IOException
 	{
-		Files.writeTo(this, input);
+		return Files.writeTo(this, input);
 	}
 
 	/**
