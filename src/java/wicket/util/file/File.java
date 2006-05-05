@@ -17,11 +17,13 @@
  */
 package wicket.util.file;
 
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import wicket.util.io.Streams;
 import wicket.util.time.Time;
 import wicket.util.watch.IModifiable;
 
@@ -37,6 +39,19 @@ import wicket.util.watch.IModifiable;
 public class File extends java.io.File implements IModifiable
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param parent
+	 *            parent
+	 * @param child
+	 *            child
+	 */
+	public File(final File parent, final String child)
+	{
+		super(parent, child);
+	}
 
 	/**
 	 * Construct.
@@ -76,19 +91,6 @@ public class File extends java.io.File implements IModifiable
 	/**
 	 * Constructor.
 	 * 
-	 * @param parent
-	 *            parent
-	 * @param child
-	 *            child
-	 */
-	public File(final File parent, final String child)
-	{
-		super(parent, child);
-	}
-
-	/**
-	 * Constructor.
-	 * 
 	 * @param uri
 	 *            file uri
 	 */
@@ -106,6 +108,23 @@ public class File extends java.io.File implements IModifiable
 	public final Time lastModifiedTime()
 	{
 		return Time.milliseconds(lastModified());
+	}
+
+	/**
+	 * @return String read from this file
+	 * @throws IOException
+	 */
+	public final String readString() throws IOException
+	{
+		final InputStream in = new FileInputStream(this);
+		try
+		{
+			return Streams.readString(in);
+		}
+		finally
+		{
+			in.close();
+		}
 	}
 
 	/**
