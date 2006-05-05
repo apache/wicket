@@ -135,7 +135,7 @@ public class File extends java.io.File implements IModifiable
 	 *            The string to write
 	 * @throws IOException
 	 */
-	public final void writeString(final String string) throws IOException
+	public final void write(final String string) throws IOException
 	{
 		final FileWriter out = new FileWriter(this);
 		try
