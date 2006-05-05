@@ -61,7 +61,6 @@ public class NewUserWizard extends Wizard
 			super(true);
 			IModel userModel = new Model(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
-			setSummaryModel(new ResourceModel("confirmation.summary"));
 			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
 			setContentModel(new StringResourceModel("confirmation.content", this, userModel));
 		}
