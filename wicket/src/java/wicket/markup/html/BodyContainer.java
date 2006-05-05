@@ -235,7 +235,7 @@ public final class BodyContainer implements Serializable
 	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
 	 * @return this
 	 * 
-	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
+	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
 	public final BodyContainer addOnUnLoadModifier(final String value, final Component behaviorOwner)

@@ -136,11 +136,32 @@ public class SubmitLink extends Button
      */
     protected void onComponentTag(ComponentTag tag)
     {
-        if(tag.getName().equalsIgnoreCase("a"))
-        {
-        	tag.put("href","#");
-        }
-        tag.put("onclick",getTriggerJavaScript());
+//   	 If we're disabled
+ 		if (!isEnabled())
+ 		{
+ 			// if the tag is an anchor proper
+ 			if (tag.getName().equalsIgnoreCase("a"))
+ 			{
+ 				// Change anchor link to span tag
+ 				tag.setName("span");
+
+ 				// Remove any href from the old link
+ 				tag.remove("href");
+ 			}
+ 			else
+ 			{
+ 				// Remove any onclick design time code
+ 				tag.remove("onclick");
+ 			}
+ 		}
+ 		else
+ 		{
+ 			if(tag.getName().equalsIgnoreCase("a"))
+ 			{
+				tag.put("href", "#");
+			}
+			tag.put("onclick", getTriggerJavaScript());
+ 		}
     }
     
     /**
