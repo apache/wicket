@@ -91,6 +91,9 @@ public class Duration extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Constant for maximum duration */
+	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE); 
+
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
 
