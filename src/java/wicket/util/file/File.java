@@ -128,11 +128,12 @@ public class File extends java.io.File implements IModifiable
 	}
 
 	/**
+	 * @return True if the file was removed
 	 * @see java.io.File#delete()
 	 */
-	public final void remove()
+	public boolean remove()
 	{
-		Files.remove(this);
+		return Files.remove(this);
 	}
 
 	/**
