@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-10-02 03:06:33 -0700 (Sun, 02 Oct 2005) $
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.util.file;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -125,5 +126,25 @@ public class File extends java.io.File implements IModifiable
 	public final void writeTo(final InputStream input) throws IOException
 	{
 		Files.writeTo(this, input);
+	}
+
+	/**
+	 * Write the given string to this file
+	 * 
+	 * @param string
+	 *            The string to write
+	 * @throws IOException
+	 */
+	public final void writeString(final String string) throws IOException
+	{
+		final FileWriter out = new FileWriter(this);
+		try
+		{
+			out.write(string);
+		}
+		finally
+		{
+			out.close();
+		}
 	}
 }
