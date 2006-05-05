@@ -81,7 +81,7 @@ public final class BodyContainer implements Serializable
 
 		// TODO Post 1.2: Move all attribute modifier into a separate package
 		// and add an AppendingAttributeModifier to that package
-		bodyContainer.add(new AppendingAttributeModifier("onLoad", model));
+		bodyContainer.add(new AppendingAttributeModifier("onload", model));
 		return this;
 	}
 
@@ -98,7 +98,7 @@ public final class BodyContainer implements Serializable
 	public final BodyContainer addOnLoadModifier(final IModel model)
 	{
 		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onLoad", model));
+		bodyContainer.add(new AppendingAttributeModifier("onload", model));
 		return this;
 	}
 
@@ -115,7 +115,7 @@ public final class BodyContainer implements Serializable
 	{
 		final IModel model = new Model(value);
 		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onUnLoad", model));
+		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
 		return this;
 	}
 
@@ -131,7 +131,7 @@ public final class BodyContainer implements Serializable
 	public final BodyContainer addOnUnLoadModifier(final IModel model)
 	{
 		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onUnLoad", model));
+		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
 		return this;
 	}
 
@@ -217,7 +217,7 @@ public final class BodyContainer implements Serializable
 		}
 
 		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new BodyTagAttributeModifier("onLoad", true, model, behaviorOwner));
+		bodyContainer.add(new BodyTagAttributeModifier("onload", true, model, behaviorOwner));
 		return this;
 	}
 
@@ -269,7 +269,7 @@ public final class BodyContainer implements Serializable
 		}
 
 		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new BodyTagAttributeModifier("onUnLoad", true, model, behaviorOwner));
+		bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
 		return this;
 	}
 }
