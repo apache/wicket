@@ -184,7 +184,7 @@ public class Duration extends AbstractTimeValue
 	 */
 	public static Duration elapsed(final Time start)
 	{
-		return start.elapsed();
+		return start.elapsedSince();
 	}
 
 	/**

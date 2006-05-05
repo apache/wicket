@@ -243,6 +243,20 @@ public final class Time extends AbstractTime
 	}
 
 	/**
+	 * @return Amount of time that has elapsed since this time
+	 * @throws IllegalStateException Thrown if this time is in the future
+	 */
+	public Duration elapsedSince()
+	{
+		final Time now = now();
+		if (this.greaterThan(now))
+		{
+			throw new IllegalStateException("This time is in the future");
+		}
+		return now.subtract(this);
+	}
+
+	/**
 	 * Gets the duration from now to this time value. If this time value is in
 	 * the past, then the Duration returned will be negative. Otherwise, it will
 	 * be the number of milliseconds from now to this Time.
@@ -415,20 +429,6 @@ public final class Time extends AbstractTime
 	public int getYear(final Calendar calendar)
 	{
 		return get(calendar, Calendar.YEAR);
-	}
-
-	/**
-	 * @return Amount of time that has elapsed since this time
-	 * @throws IllegalStateException Thrown if this time is in the future
-	 */
-	public Duration elapsed()
-	{
-		final Time now = now();
-		if (this.greaterThan(now))
-		{
-			throw new IllegalStateException("This time is in the future");
-		}
-		return now.subtract(this);
 	}
 
 	/**
