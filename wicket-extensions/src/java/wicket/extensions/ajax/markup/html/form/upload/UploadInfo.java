@@ -121,7 +121,7 @@ public class UploadInfo implements Serializable
 		int percentageComplete = getPercentageComplete();
 
 
-		long totalTime = ((getElapsedSeconds() * 100) / percentageComplete);
+		long totalTime = ((getElapsedSeconds() * 100) / Math.max(percentageComplete, 1));
 		long remainingTime = (totalTime - getElapsedSeconds());
 		long remainingTimeInMillis = remainingTime * 1000;
 
