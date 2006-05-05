@@ -233,8 +233,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	public void onActiveStepChanged(IWizardStep newStep)
 	{
 		this.activeStep = newStep;
-		form.replace(activeStep.newView(VIEW_ID, this, this));
-		form.replace(activeStep.newHeader(HEADER_ID, this, this));
+		form.replace(activeStep.getView(VIEW_ID, this, this));
+		form.replace(activeStep.getHeader(HEADER_ID, this, this));
 	}
 
 	/**

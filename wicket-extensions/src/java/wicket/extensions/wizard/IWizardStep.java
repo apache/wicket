@@ -50,23 +50,6 @@ public interface IWizardStep extends Serializable
 	void applyState();
 
 	/**
-	 * Initializes this step with the model it will belong to.
-	 * 
-	 * @param wizardModel
-	 *            the owning wizard model
-	 */
-	void init(IWizardModel wizardModel);
-
-	/**
-	 * Checks if this step is compete. This method should return true if the
-	 * wizard can proceed to the next step.
-	 * 
-	 * @return <tt>true</tt> if the wizard can proceed from this step,
-	 *         <tt>false</tt> otherwise.
-	 */
-	boolean isComplete();
-
-	/**
 	 * Gets the header component for this step. This component is displayed in a
 	 * special section of the wizard.
 	 * 
@@ -78,7 +61,7 @@ public interface IWizardStep extends Serializable
 	 *            The wizard component the header will be placed on
 	 * @return The header component
 	 */
-	Component newHeader(String id, Component parent, IWizard wizard);
+	Component getHeader(String id, Component parent, IWizard wizard);
 
 	/**
 	 * Returns the current view this step is displaying. This component will be
@@ -94,5 +77,22 @@ public interface IWizardStep extends Serializable
 	 *            The wizard component the header will be placed on
 	 * @return The current view of the step.
 	 */
-	Component newView(String id, Component parent, IWizard wizard);
+	Component getView(String id, Component parent, IWizard wizard);
+
+	/**
+	 * Initializes this step with the model it will belong to.
+	 * 
+	 * @param wizardModel
+	 *            the owning wizard model
+	 */
+	void init(IWizardModel wizardModel);
+
+	/**
+	 * Checks if this step is compete. This method should return true if the
+	 * wizard can proceed to the next step.
+	 * 
+	 * @return <tt>true</tt> if the wizard can proceed from this step,
+	 *         <tt>false</tt> otherwise.
+	 */
+	boolean isComplete();
 }

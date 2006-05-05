@@ -50,18 +50,18 @@ import wicket.model.Model;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *             &lt;wicket:panel&gt;
- *              &lt;table&gt;
- *               &lt;tr&gt;
- *                &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *               &lt;/tr&gt;
- *               &lt;tr&gt;
- *                &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *               &lt;/tr&gt;
- *              &lt;/table&gt;
- *             &lt;/wicket:panel&gt;
+ *              &lt;wicket:panel&gt;
+ *               &lt;table&gt;
+ *                &lt;tr&gt;
+ *                 &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                 &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                &lt;/tr&gt;
+ *                &lt;tr&gt;
+ *                 &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                 &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                &lt;/tr&gt;
+ *               &lt;/table&gt;
+ *              &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -131,7 +131,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
-	 * custom header by overiding {@link #newHeader(String, Component, Wizard)}.
+	 * custom header by overiding {@link #getHeader(String, Component, Wizard)}.
 	 */
 	public WizardStep()
 	{
@@ -214,6 +214,15 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
+	 * @see wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
+	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 */
+	public Component getHeader(String id, Component parent, IWizard wizard)
+	{
+		return new Header(id, wizard);
+	}
+
+	/**
 	 * Gets the summary of this step. This will be displayed in the title of the
 	 * wizard while this step is active. The summary is typically an overview of
 	 * the step or some usage guidelines for the user.
@@ -233,6 +242,15 @@ public class WizardStep extends Panel implements IWizardStep
 	public String getTitle()
 	{
 		return (title != null) ? (String)title.getObject(this) : (String)null;
+	}
+
+	/**
+	 * @see wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
+	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 */
+	public Component getView(String id, Component parent, IWizard wizard)
+	{
+		return this;
 	}
 
 	/**
@@ -259,24 +277,6 @@ public class WizardStep extends Panel implements IWizardStep
 	public final boolean isComplete()
 	{
 		return complete;
-	}
-
-	/**
-	 * @see wicket.extensions.wizard.IWizardStep#newHeader(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
-	 */
-	public Component newHeader(String id, Component parent, IWizard wizard)
-	{
-		return new Header(id, wizard);
-	}
-
-	/**
-	 * @see wicket.extensions.wizard.IWizardStep#newView(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
-	 */
-	public Component newView(String id, Component parent, IWizard wizard)
-	{
-		return this;
 	}
 
 	/**
