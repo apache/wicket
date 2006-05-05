@@ -123,7 +123,7 @@ public class File extends java.io.File implements IModifiable
 	 *            The input
 	 * @throws IOException
 	 */
-	public final void writeTo(final InputStream input) throws IOException
+	public final void write(final InputStream input) throws IOException
 	{
 		Files.writeTo(this, input);
 	}
