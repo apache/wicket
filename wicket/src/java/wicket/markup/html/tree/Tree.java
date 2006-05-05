@@ -42,7 +42,6 @@ import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * An tree that renders as a flat (not-nested) list, using spacers for
@@ -59,95 +58,46 @@ import wicket.model.Model;
  */
 public class Tree extends AbstractTree implements TreeModelListener
 {
-	private static final long serialVersionUID = 1L;
-
-	/** Name of the junction image component; value = 'junctionImage'. */
-	public static final String JUNCTION_IMAGE_NAME = "junctionImage";
-
-	/** Name of the node image component; value = 'nodeImage'. */
-	public static final String NODE_IMAGE_NAME = "nodeImage";
-
-	/** Blank image. */
-	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class,
-			"blank.gif");
-
-	/** Minus sign image. */
-	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class,
-			"minus.gif");
-
-	/** Plus sign image. */
-	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class,
-			"plus.gif");
-
 	/**
-	 * Reference to the css file.
+	 * The default node panel. If you provide your own panel by overriding
+	 * Tree.newNodePanel, but only want to override the markup, not the
+	 * components that are added, you <i>may</i> extend this class. If you want
+	 * to use other components than the default, provide a panel or fragment
+	 * instead (and that's probably what you want as the look and feel of what
+	 * this panel renders may be adjusted by overriding
+	 * {@link Tree#createJunctionLink(DefaultMutableTreeNode)} and
+	 * {@link Tree#createNodeLink(DefaultMutableTreeNode)}.
 	 */
-	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class,
-			"tree.css");
-
-	/**
-	 * If true, re-rendering the tree is more efficient if the tree model
-	 * doesn't get changed. However, if this is true, you need to push changes
-	 * to this tree. This can easility be done by registering this tree as the
-	 * listener for tree model events (TreeModelListener), but you should <b>be
-	 * carefull</b> not to create a memory leak by doing this (e.g. when you
-	 * store the tree model in your session, the tree you registered cannot be
-	 * GC-ed). TRUE by default.
-	 */
-	private boolean optimizeItemRemoval = true;
-
-	/** Model for the paths of the tree. */
-	private TreePathsModel treePathsModel;
-
-	/** List view for tree paths. */
-	private TreePathsListView treePathsListView;
-
-	/**
-	 * Replacement model that looks up whether the current row is the active
-	 * one.
-	 */
-	private final class SelectedPathReplacementModel extends Model
+	public static class DefaultNodePanel extends Panel
 	{
 		private static final long serialVersionUID = 1L;
-
-		/** the tree node. */
-		private final DefaultMutableTreeNode node;
 
 		/**
 		 * Construct.
 		 * 
+		 * @param panelId
+		 *            The component id
+		 * @param tree
+		 *            The containing tree component
 		 * @param node
-		 *            tree node
+		 *            The tree node for this panel
 		 */
-		public SelectedPathReplacementModel(DefaultMutableTreeNode node)
+		public DefaultNodePanel(String panelId, Tree tree, DefaultMutableTreeNode node)
 		{
-			this.node = node;
-		}
-
-		/**
-		 * @see wicket.model.IModel#getObject(Component)
-		 */
-		public Object getObject(final Component component)
-		{
-			TreePath path = new TreePath(node.getPath());
-			TreePath selectedPath = getTreeState().getSelectedPath();
-			if (selectedPath != null)
-			{
-				boolean equals = Tree.this.equals(path, selectedPath);
-
-				if (equals)
-				{
-					return Tree.this.getCssClassForSelectedRow();
-				}
-			}
-			return Tree.this.getCssClassForRow();
+			super(panelId);
+			// create a link for expanding and collapsing the node
+			Link expandCollapsLink = tree.createJunctionLink(node);
+			add(expandCollapsLink);
+			// create a link for selecting a node
+			Link selectLink = tree.createNodeLink(node);
+			add(selectLink);
 		}
 	}
 
 	/**
 	 * Renders spacer items.
 	 */
-	private final class SpacerList extends Loop
+	private static final class SpacerList extends Loop
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -189,15 +139,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 		public TreePathsListView(String name)
 		{
 			super(name, treePathsModel);
-		}
-
-		/**
-		 * @see wicket.markup.html.list.ListView#getOptimizeItemRemoval()
-		 * @deprecated Use {@link #getReuseItems()} instead
-		 */
-		public boolean getOptimizeItemRemoval()
-		{
-			return getReuseItems();
 		}
 
 		/**
@@ -260,8 +201,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 			listItem.add(nodePanel);
 
 			// add attr modifier for highlighting the selection
-			listItem.add(new AttributeModifier("class", true,
-					new SelectedPathReplacementModel(node)));
+			listItem.add(new AttributeModifier("class", true, new SelectedPathReplacementModel(
+					Tree.this, node)));
 		}
 	}
 
@@ -279,39 +220,12 @@ public class Tree extends AbstractTree implements TreeModelListener
 		private List paths = new ArrayList();
 
 		/**
-		 * Inserts the given node in the path list with the given index.
-		 * 
-		 * @param index
-		 *            the index where the node should be inserted in
-		 * @param node
-		 *            node to insert
+		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 		 */
-		void add(int index, DefaultMutableTreeNode node)
+		public IModel getNestedModel()
 		{
-			paths.add(index, node);
-		}
-
-		/**
-		 * Removes the given node from the path list.
-		 * 
-		 * @param node
-		 *            the node to remove
-		 */
-		void remove(DefaultMutableTreeNode node)
-		{
-			paths.remove(node);
-		}
-
-		/**
-		 * Gives the index of the given node withing this tree.
-		 * 
-		 * @param node
-		 *            node to look for
-		 * @return the index of the given node withing this tree
-		 */
-		int indexOf(DefaultMutableTreeNode node)
-		{
-			return paths.indexOf(node);
+			// TODO General: Check calls to this method; original: return paths;
+			return null;
 		}
 
 		/**
@@ -351,50 +265,84 @@ public class Tree extends AbstractTree implements TreeModelListener
 		}
 
 		/**
-		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
+		 * Inserts the given node in the path list with the given index.
+		 * 
+		 * @param index
+		 *            the index where the node should be inserted in
+		 * @param node
+		 *            node to insert
 		 */
-		public IModel getNestedModel()
+		void add(int index, DefaultMutableTreeNode node)
 		{
-			// TODO General: Check calls to this method; original: return paths;
-			return null;
+			paths.add(index, node);
 		}
-	}
-
-	/**
-	 * The default node panel. If you provide your own panel by overriding
-	 * Tree.newNodePanel, but only want to override the markup, not the
-	 * components that are added, you <i>may</i> extend this class. If you want
-	 * to use other components than the default, provide a panel or fragment
-	 * instead (and that's probably what you want as the look and feel of what
-	 * this panel renders may be adjusted by overriding
-	 * {@link Tree#createJunctionLink(DefaultMutableTreeNode)} and
-	 * {@link Tree#createNodeLink(DefaultMutableTreeNode)}.
-	 */
-	public static class DefaultNodePanel extends Panel
-	{
-		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Construct.
+		 * Gives the index of the given node withing this tree.
 		 * 
-		 * @param panelId
-		 *            The component id
-		 * @param tree
-		 *            The containing tree component
 		 * @param node
-		 *            The tree node for this panel
+		 *            node to look for
+		 * @return the index of the given node withing this tree
 		 */
-		public DefaultNodePanel(String panelId, Tree tree, DefaultMutableTreeNode node)
+		int indexOf(DefaultMutableTreeNode node)
 		{
-			super(panelId);
-			// create a link for expanding and collapsing the node
-			Link expandCollapsLink = tree.createJunctionLink(node);
-			add(expandCollapsLink);
-			// create a link for selecting a node
-			Link selectLink = tree.createNodeLink(node);
-			add(selectLink);
+			return paths.indexOf(node);
+		}
+
+		/**
+		 * Removes the given node from the path list.
+		 * 
+		 * @param node
+		 *            the node to remove
+		 */
+		void remove(DefaultMutableTreeNode node)
+		{
+			paths.remove(node);
 		}
 	}
+
+	/** Name of the junction image component; value = 'junctionImage'. */
+	public static final String JUNCTION_IMAGE_NAME = "junctionImage";
+
+	/** Name of the node image component; value = 'nodeImage'. */
+	public static final String NODE_IMAGE_NAME = "nodeImage";
+
+	/** Blank image. */
+	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class,
+			"blank.gif");
+
+	/**
+	 * Reference to the css file.
+	 */
+	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class,
+			"tree.css");
+
+	/** Minus sign image. */
+	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class,
+			"minus.gif");
+
+	/** Plus sign image. */
+	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class,
+			"plus.gif");
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * If true, re-rendering the tree is more efficient if the tree model
+	 * doesn't get changed. However, if this is true, you need to push changes
+	 * to this tree. This can easility be done by registering this tree as the
+	 * listener for tree model events (TreeModelListener), but you should <b>be
+	 * carefull</b> not to create a memory leak by doing this (e.g. when you
+	 * store the tree model in your session, the tree you registered cannot be
+	 * GC-ed). TRUE by default.
+	 */
+	private boolean reuseItems = true;
+
+	/** List view for tree paths. */
+	private TreePathsListView treePathsListView;
+
+	/** Model for the paths of the tree. */
+	private TreePathsModel treePathsModel;
 
 	/**
 	 * Constructor.
@@ -443,23 +391,42 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * session, the tree you registered cannot be GC-ed). TRUE by default.
 	 * 
 	 * @return whether item removal should be optimized
+	 * @deprecated Will be replaced by {@link #getReuseItems()}
 	 */
+	// TODO Post 1.2: Remove
 	public boolean getOptimizeItemRemoval()
 	{
-		return optimizeItemRemoval;
+		return getReuseItems();
 	}
 
 	/**
-	 * Sets whether item removal should be optimized. If true, re-rendering the
-	 * tree is more efficient if the tree model doesn't get changed. However, if
-	 * this is true, you need to push changes to this tree. This can easility be
-	 * done by registering this tree as the listener for tree model events
+	 * Gets whether items should be reused. If true, re-rendering the tree is
+	 * more efficient if the tree model doesn't get changed. However, if this is
+	 * true, you need to push changes to this tree. This can easility be done by
+	 * registering this tree as the listener for tree model events
+	 * (TreeModelListener), but you should <b>be carefull</b> not to create a
+	 * memory leak by doing this (e.g. when you store the tree model in your
+	 * session, the tree you registered cannot be GC-ed). TRUE by default.
+	 * 
+	 * @return whether items should be reused
+	 */
+	public boolean getReuseItems()
+	{
+		return reuseItems;
+	}
+
+	/**
+	 * Sets whether items should be reused. If true, re-rendering the tree is
+	 * more efficient if the tree model doesn't get changed. However, if this is
+	 * true, you need to push changes to this tree. This can easility be done by
+	 * registering this tree as the listener for tree model events
 	 * (TreeModelListener), but you should <b>be carefull</b> not to create a
 	 * memory leak by doing this (e.g. when you store the tree model in your
 	 * session, the tree you registered cannot be GC-ed). TRUE by default.
 	 * 
 	 * @param optimizeItemRemoval
 	 *            whether the child items should be reused
+	 * @deprecated Will be replaced by {@link #setReuseItems(boolean)}
 	 */
 	// TODO Post 1.2: Remove
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
@@ -482,22 +449,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 */
 	public Tree setReuseItems(boolean reuseItems)
 	{
-		this.optimizeItemRemoval = reuseItems;
+		this.reuseItems = reuseItems;
 		return this;
-	}
-
-	/**
-	 * Sets the current tree state to the given tree state.
-	 * 
-	 * @param treeState
-	 *            the tree state to set as the current one
-	 */
-	public void setTreeState(final TreeState treeState)
-	{
-		super.setTreeState(treeState);
-		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView();
-		replace(treePathsListView);
 	}
 
 	/**
@@ -509,6 +462,20 @@ public class Tree extends AbstractTree implements TreeModelListener
 	public void setTreeModel(final TreeModel treeModel)
 	{
 		super.setTreeModel(treeModel);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
+	}
+
+	/**
+	 * Sets the current tree state to the given tree state.
+	 * 
+	 * @param treeState
+	 *            the tree state to set as the current one
+	 */
+	public void setTreeState(final TreeState treeState)
+	{
+		super.setTreeState(treeState);
 		this.treePathsModel = new TreePathsModel();
 		treePathsListView = createTreePathsListView();
 		replace(treePathsListView);
@@ -583,47 +550,48 @@ public class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * Creates a junction link.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return link for expanding/ collapsing the tree
 	 */
-	protected void internalOnAttach()
+	protected final Link createJunctionLink(final DefaultMutableTreeNode node)
 	{
-		// if we don't optimize, rebuild the paths on every request
-		if (!getOptimizeItemRemoval())
+		final Link junctionLink = new Link("junctionLink")
 		{
-			treePathsModel.dirty = true;
-		}
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				junctionLinkClicked(node);
+			}
+		};
+		junctionLink.add(getJunctionImage(node));
+		return junctionLink;
 	}
 
 	/**
-	 * Create a new panel for a tree node. This method can be overriden to
-	 * provide a custom panel. This way, you can effectively nest anything you
-	 * want in the tree, like input fields, images, etc.
-	 * <p>
-	 * <strong> you must use the provide panelId as the id of your custom panel
-	 * </strong><br>
-	 * for example, do:
+	 * Creates a node link.
 	 * 
-	 * <pre>
-	 * return new MyNodePanel(panelId, node);
-	 * </pre>
-	 * 
-	 * </p>
-	 * <p>
-	 * You can choose to either let your own panel extend from DefaultNodePanel
-	 * when you just want to provide different markup but want to reuse the
-	 * default components on this panel, or extend from NodePanel directly, and
-	 * provide any component structure you like.
-	 * </p>
-	 * 
-	 * @param panelId
-	 *            the id that the panel MUST use
 	 * @param node
-	 *            the tree node for the panel
-	 * @return a new Panel
+	 *            the model of the node
+	 * @return link for selection
 	 */
-	protected Component newNodePanel(String panelId, DefaultMutableTreeNode node)
+	protected final Link createNodeLink(final DefaultMutableTreeNode node)
 	{
-		return new DefaultNodePanel(panelId, this, node);
+		final Link nodeLink = new Link("nodeLink")
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				nodeLinkClicked(node);
+			}
+		};
+		nodeLink.add(getNodeImage(node));
+		nodeLink.add(new Label("label", getNodeLabel(node)));
+		return nodeLink;
 	}
 
 	/**
@@ -653,6 +621,16 @@ public class Tree extends AbstractTree implements TreeModelListener
 		Object pathNode = path.getLastPathComponent();
 		Object selectedPathNode = selectedPath.getLastPathComponent();
 		return (pathNode != null && selectedPathNode != null && pathNode.equals(selectedPathNode));
+	}
+
+	/**
+	 * Gets the stylesheet.
+	 * 
+	 * @return the stylesheet
+	 */
+	protected PackageResourceReference getCss()
+	{
+		return CSS;
 	}
 
 	/**
@@ -722,6 +700,18 @@ public class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	protected void internalOnAttach()
+	{
+		// if we don't optimize, rebuild the paths on every request
+		if (!getOptimizeItemRemoval())
+		{
+			treePathsModel.dirty = true;
+		}
+	}
+
+	/**
 	 * Handler that is called when a junction link is clicked; this
 	 * implementation sets the expanded state to one that corresponds with the
 	 * node selection.
@@ -735,6 +725,38 @@ public class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
+	 * Create a new panel for a tree node. This method can be overriden to
+	 * provide a custom panel. This way, you can effectively nest anything you
+	 * want in the tree, like input fields, images, etc.
+	 * <p>
+	 * <strong> you must use the provide panelId as the id of your custom panel
+	 * </strong><br>
+	 * for example, do:
+	 * 
+	 * <pre>
+	 * return new MyNodePanel(panelId, node);
+	 * </pre>
+	 * 
+	 * </p>
+	 * <p>
+	 * You can choose to either let your own panel extend from DefaultNodePanel
+	 * when you just want to provide different markup but want to reuse the
+	 * default components on this panel, or extend from NodePanel directly, and
+	 * provide any component structure you like.
+	 * </p>
+	 * 
+	 * @param panelId
+	 *            the id that the panel MUST use
+	 * @param node
+	 *            the tree node for the panel
+	 * @return a new Panel
+	 */
+	protected Component newNodePanel(String panelId, DefaultMutableTreeNode node)
+	{
+		return new DefaultNodePanel(panelId, this, node);
+	}
+
+	/**
 	 * Handler that is called when a node link is clicked; this implementation
 	 * sets the expanded state just as a click on a junction would do. Override
 	 * this for custom behavior.
@@ -745,80 +767,5 @@ public class Tree extends AbstractTree implements TreeModelListener
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
 		setSelected(node);
-	}
-
-	/**
-	 * Gets the stylesheet.
-	 * 
-	 * @return the stylesheet
-	 */
-	protected PackageResourceReference getCss()
-	{
-		return CSS;
-	}
-
-	/**
-	 * Creates a junction link.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return link for expanding/ collapsing the tree
-	 */
-	protected final Link createJunctionLink(final DefaultMutableTreeNode node)
-	{
-		final Link junctionLink = new Link("junctionLink")
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void onClick()
-			{
-				junctionLinkClicked(node);
-			}
-		};
-		junctionLink.add(getJunctionImage(node));
-		return junctionLink;
-	}
-
-	/**
-	 * Creates a node link.
-	 * 
-	 * @param node
-	 *            the model of the node
-	 * @return link for selection
-	 */
-	protected final Link createNodeLink(final DefaultMutableTreeNode node)
-	{
-		final Link nodeLink = new Link("nodeLink")
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void onClick()
-			{
-				nodeLinkClicked(node);
-			}
-		};
-		nodeLink.add(getNodeImage(node));
-		nodeLink.add(new Label("label", getNodeLabel(node)));
-		return nodeLink;
-	}
-
-	/**
-	 * Gets the CSS class attribute value for a normal (not-selected) row.
-	 * 
-	 * @return the CSS class attribute value for a normal (not-selected) row
-	 */
-	private String getCssClassForRow()
-	{
-		return "treerow";
-	}
-
-	/**
-	 * Gets the CSS class attribute value for the selected row.
-	 * 
-	 * @return the CSS class attribute value for the selected row
-	 */
-	private String getCssClassForSelectedRow()
-	{
-		return "treerow-selected";
 	}
 }
