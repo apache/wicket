@@ -18,6 +18,8 @@
  */
 package wicket.extensions.breadcrumb.panel;
 
+import java.io.Serializable;
+
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 
 /**
@@ -25,7 +27,7 @@ import wicket.extensions.breadcrumb.IBreadCrumbModel;
  * getting the proper id for creation. Mainly meant for supporting
  * {@link BreadCrumbPanel#activate(IBreadCrumbPanelFactory)}.
  */
-public interface IBreadCrumbPanelFactory
+public interface IBreadCrumbPanelFactory extends Serializable
 {
 	/**
 	 * Creates a new {@link BreadCrumbPanel bread crumb panel} instance. The

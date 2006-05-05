@@ -31,6 +31,7 @@ import wicket.extensions.breadcrumb.IBreadCrumbModel;
  */
 public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 {
+	private static final long serialVersionUID = 1L;
 
 	/** Class to construct. */
 	private Class panelClass;

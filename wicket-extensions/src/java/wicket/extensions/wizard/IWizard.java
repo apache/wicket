@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import java.io.Serializable;
+
 /**
  * Interface for the wizard component. This interface is here for ultimate
  * flexibility, though it doesn't guarantee much. Typically, you would extend
@@ -31,7 +33,7 @@ package wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public interface IWizard
+public interface IWizard extends Serializable
 {
 	/**
 	 * Gets the model this wizard is using. This should never be null; a wizard
