@@ -180,10 +180,11 @@ public class Duration extends AbstractTimeValue
 	 * @param start
 	 *            The start time
 	 * @return The elapsed period
+	 * @throws IllegalStateException Thrown if start is in the future
 	 */
 	public static Duration elapsed(final Time start)
 	{
-		return Time.now().subtract(start);
+		return start.elapsed();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-01-04 01:28:14 -0800 (Wed, 04 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -415,6 +415,20 @@ public final class Time extends AbstractTime
 	public int getYear(final Calendar calendar)
 	{
 		return get(calendar, Calendar.YEAR);
+	}
+
+	/**
+	 * @return Amount of time that has elapsed since this time
+	 * @throws IllegalStateException Thrown if this time is in the future
+	 */
+	public Duration elapsed()
+	{
+		final Time now = now();
+		if (this.greaterThan(now))
+		{
+			throw new IllegalStateException("This time is in the future");
+		}
+		return now.subtract(this);
 	}
 
 	/**
