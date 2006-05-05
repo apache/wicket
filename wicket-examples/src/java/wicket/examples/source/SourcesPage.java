@@ -1,3 +1,20 @@
+/*
+ * $Id$ $Revision$
+ * $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.source;
 
 import java.io.BufferedReader;
@@ -7,6 +24,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
@@ -31,6 +51,8 @@ import wicket.util.string.Strings;
  */
 public class SourcesPage extends WebPage
 {
+	private static Log log = LogFactory.getLog(SourcesPage.class);
+	
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged
 	 * resource.
@@ -74,7 +96,7 @@ public class SourcesPage extends WebPage
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				log.error("Unable to read resource stream for: " + name + "; Page=" + page.toString(), e);
 				return "";
 			}
 			finally
@@ -141,7 +163,7 @@ public class SourcesPage extends WebPage
 				}
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					log.error("Unable to read resource for: " + path, e);
 				}
 			}
 			return resources;
@@ -172,7 +194,7 @@ public class SourcesPage extends WebPage
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace(System.err);
+				log.error("Unable to get package content: " + packageListing.toString(), e);
 			}
 			finally
 			{
