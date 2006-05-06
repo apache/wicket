@@ -155,6 +155,10 @@ public final class BodyContainer implements Serializable
 
 		protected String newValue(final String currentValue, final String replacementValue)
 		{
+			if(currentValue != null && !currentValue.trim().endsWith(";"))
+			{
+				return currentValue + ";"+ replacementValue;
+			}
 			return (currentValue == null ? replacementValue : currentValue + replacementValue);
 		}
 	}
