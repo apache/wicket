@@ -19,6 +19,7 @@ package wicket.examples.source;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ import wicket.util.string.Strings;
 public class SourcesPage extends WebPage
 {
 	private static Log log = LogFactory.getLog(SourcesPage.class);
-	
+
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged
 	 * resource.
@@ -85,7 +86,12 @@ public class SourcesPage extends WebPage
 			{
 				StringBuffer sb = new StringBuffer();
 
-				br = new BufferedReader(new InputStreamReader(page.getResourceAsStream(name)));
+				InputStream resourceAsStream = page.getResourceAsStream(name);
+				if (resourceAsStream == null)
+				{
+					return "Unable to read the source for " + name;
+				}
+				br = new BufferedReader(new InputStreamReader(resourceAsStream));
 
 				while (br.ready())
 				{
@@ -96,7 +102,8 @@ public class SourcesPage extends WebPage
 			}
 			catch (IOException e)
 			{
-				log.error("Unable to read resource stream for: " + name + "; Page=" + page.toString(), e);
+				log.error("Unable to read resource stream for: " + name + "; Page="
+						+ page.toString(), e);
 				return "";
 			}
 			finally
@@ -180,7 +187,12 @@ public class SourcesPage extends WebPage
 			BufferedReader br = null;
 			try
 			{
-				br = new BufferedReader(new InputStreamReader(packageListing.openStream()));
+				InputStream openStream = packageListing.openStream();
+				if (openStream == null)
+				{
+					return;
+				}
+				br = new BufferedReader(new InputStreamReader(openStream));
 
 				while (br.ready())
 				{
