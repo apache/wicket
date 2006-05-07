@@ -155,10 +155,10 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 */
 	protected ValueMap decodeParameters(String fragment, Map passedParameters)
 	{
-		if (fragment.indexOf('/') >= 0)
+		if (fragment.indexOf('?') != 0)
 		{
 			throw new IllegalStateException("URL fragment '" + fragment
-					+ "' contains an illegal characther '/'. "
+					+ "' contains must start with '?'. "
 					+ "This maybe caused by you manually manipulating "
 					+ "the url or a conflict due to mount names");
 		}
