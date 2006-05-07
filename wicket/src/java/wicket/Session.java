@@ -354,7 +354,7 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets metadata for this application using the given key.
+	 * Gets metadata for this session using the given key.
 	 * 
 	 * @param key
 	 *            The key for the data
