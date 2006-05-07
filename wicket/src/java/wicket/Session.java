@@ -183,6 +183,9 @@ public abstract class Session implements Serializable
 	 */
 	private transient ISessionStore sessionStore;
 
+	/** Application level meta data. */
+	private MetaDataEntry[] metaData;
+
 	/**
 	 * Visitor interface for visiting page maps
 	 * 
@@ -348,6 +351,19 @@ public abstract class Session implements Serializable
 	public Locale getLocale()
 	{
 		return locale;
+	}
+
+	/**
+	 * Gets metadata for this application using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
 	}
 
 	/**
@@ -651,6 +667,24 @@ public abstract class Session implements Serializable
 		this.locale = locale;
 		this.converter = null;
 		dirty();
+	}
+
+	/**
+	 * Sets the metadata for this session using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		metaData = key.set(metaData, object);
 	}
 
 	/**
