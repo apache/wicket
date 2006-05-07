@@ -598,6 +598,8 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param ifFormat
 	 *            the data format
+	 *  
+	 *  @deprecated The format is extracted from the java datefomatter format string
 	 */
 	public void setIfFormat(String ifFormat)
 	{
@@ -661,6 +663,8 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param showsTime
 	 *            showsTime
+	 *            
+	 *  @deprecated The format is extracted from the java datefomatter format string
 	 */
 	public void setShowsTime(boolean showsTime)
 	{
@@ -682,6 +686,8 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param timeFormat
 	 *            timeFormat
+	 *            
+	 *  @deprecated The format is extracted from the java datefomatter format string
 	 */
 	public void setTimeFormat(String timeFormat)
 	{
