@@ -149,50 +149,18 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @param fragment
 	 *            contains the query string
 	 * @param passedParameters
-	 *            holds "key=value(s)" pairs
+	 *            paremeters decoded by wicket before this method - usually off
+	 *            the query string
 	 * 
 	 * @return Parameters
 	 */
 	protected ValueMap decodeParameters(String fragment, Map passedParameters)
 	{
-		if (fragment.indexOf('?') != 0)
-		{
-			throw new IllegalStateException("URL fragment '" + fragment
-					+ "' contains must start with '?'. "
-					+ "This maybe caused by you manually manipulating "
-					+ "the url or a conflict due to mount names");
-		}
-
 		ValueMap parameters = new ValueMap();
 
 		if (passedParameters != null)
 		{
 			parameters.putAll(passedParameters);
-		}
-
-		if (fragment.length() == 0)
-		{
-			return parameters;
-		}
-
-		/* Split into "key=value(s)" pairs divided by ampersands or semicolons. */
-		final String[] pairs = fragment.split("(&|;)");
-
-		/* If we don't have an even number of pairs... */
-		if (pairs.length % 2 != 0)
-		{
-			/* ... then give up. */
-			throw new IllegalStateException("URL query string has unmatched key or value(s): "
-					+ fragment);
-		}
-
-		/* Loop through pairs. */
-
-		for (int i = 0; i < pairs.length; i += 2)
-		{
-			String value = pairs[i + 1];
-			value = urlDecode(value);
-			parameters.add(pairs[i], value);
 		}
 
 		return parameters;
