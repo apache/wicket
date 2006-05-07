@@ -20,7 +20,9 @@ package wicket.extensions.markup.html.repeater.data.table;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
+import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.panel.Panel;
@@ -38,7 +40,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *        &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *           &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -106,7 +108,7 @@ public class DataTable extends Panel implements IPageable
 			{
 				return DataTable.this.newRowItem(id, index, model);
 			}
-			
+
 			protected Item newCellItem(String id, int index, IModel model)
 			{
 				return DataTable.this.newCellItem(id, index, model);
@@ -276,5 +278,21 @@ public class DataTable extends Panel implements IPageable
 		return new Item(id, index, model);
 	}
 
+	/**
+	 * Sets the item reuse strategy. This strategy controls the creation of
+	 * {@link Item}s.
+	 * 
+	 * @see RefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see IItemReuseStrategy
+	 * 
+	 * @param strategy
+	 *            item reuse strategy
+	 * @return this for chaining
+	 */
+	public final DataTable setItemReuseStrategy(IItemReuseStrategy strategy)
+	{
+		datagrid.setItemReuseStrategy(strategy);
+		return this;
+	}
 
 }
