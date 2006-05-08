@@ -40,13 +40,13 @@ import wicket.version.undo.Change;
  * <p>
  * 
  * <pre>
- *            &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *           
- *            &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *            &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *             &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *            
+ *             &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *             &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *            add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *             add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -190,24 +190,34 @@ public class Fragment extends WebMarkupContainer
 		// Skip the components body. It will be replaced by the fragment
 		markupStream.skipRawMarkup();
 
+		final MarkupStream providerMarkupStream = chooseMarkupStream(markupStream);
+		if (providerMarkupStream == null)
+		{
+			throw new IllegalStateException(
+					"no markup stream found for providing markup container " + markupProvider);
+		}
+
+		renderFragment(providerMarkupStream, openTag);
+	}
+
+	/**
+	 * Get the markup stream which shall be used to search for the fragment
+	 * 
+	 * @param markupStream
+	 *            The markup stream is associated with the component (not the
+	 *            fragment)
+	 * @return The markup stream to be used to find the fragment markup
+	 */
+	protected MarkupStream chooseMarkupStream(final MarkupStream markupStream)
+	{
 		if (this.markupProvider == null)
 		{
-			renderFragment(markupStream, openTag);
+			return markupStream;
 		}
-		else
-		{
-			// The following statement assumes that the markup provider is a
-			// parent along the line up to the Page
-			final MarkupStream providerMarkupStream = this.markupProvider.getMarkupStream();
 
-			if (providerMarkupStream == null)
-			{
-				throw new IllegalStateException(
-						"no markup stream found for providing markup container " + markupProvider);
-			}
-
-			renderFragment(providerMarkupStream, openTag);
-		}
+		// The following statement assumes that the markup provider is a
+		// parent along the line up to the Page
+		return this.markupProvider.getMarkupStream();
 	}
 
 	/**

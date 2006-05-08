@@ -114,6 +114,24 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testInlinePanel_4() throws Exception
+	{
+		application.getPageSettings().addComponentResolver(new FragmentResolver());
+		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testInlinePanel_5() throws Exception
+	{
+		application.getPageSettings().addComponentResolver(new FragmentResolver());
+		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testPanelWithAttributeModifier() throws Exception
 	{
 		executeTest(PanelWithAttributeModifierPage.class,
