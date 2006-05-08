@@ -989,13 +989,16 @@ public abstract class Component implements Serializable
 			// Model string from property
 			final String modelString = (String)converter.convert(modelObject, String.class);
 
-			// If we should escape the markup
-			if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+			if (modelString != null)
 			{
-				// Escape it
-				return Strings.escapeMarkup(modelString).toString();
+				// If we should escape the markup
+				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+				{
+					// Escape it
+					return Strings.escapeMarkup(modelString).toString();
+				}
+				return modelString;
 			}
-			return modelString;
 		}
 		return "";
 	}
