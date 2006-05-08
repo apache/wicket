@@ -42,14 +42,14 @@ import wicket.util.string.Strings;
  * <p>
  * In addition, all &lt;wicket:head> regions are copied as well as the body
  * onLoad attribute. This allows to develop completely self-contained plug &
- * play components including javascript etc. 
+ * play components including javascript etc.
  * 
  * @author Juergen Donnerstag
  */
 public class MergedMarkup extends Markup
 {
 	private final static Log log = LogFactory.getLog(MergedMarkup.class);
-	
+
 	/**
 	 * Merge inherited and base markup.
 	 * 
@@ -72,15 +72,16 @@ public class MergedMarkup extends Markup
 		{
 			String derivedResource = Strings.afterLast(markup.getResource().toString(), '/');
 			String baseResource = Strings.afterLast(baseMarkup.getResource().toString(), '/');
-			log.debug("Merge markup: derived markup: " + derivedResource + "; base markup: " + baseResource);
+			log.debug("Merge markup: derived markup: " + derivedResource + "; base markup: "
+					+ baseResource);
 		}
-		
+
 		// Merge derived and base markup
 		merge(markup, baseMarkup, extendIndex);
 
 		// Initialize internals based on new markup
 		initialize();
-		
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("Merge markup: " + toDebugString());
@@ -190,15 +191,33 @@ public class MergedMarkup extends Markup
 			{
 				WicketTag wtag = (WicketTag)element;
 
-				// Found <wicket.child/>
-				if (wtag.isChildTag() && wtag.isOpenClose())
+				// Found wicket.child in base markup. In case of 3+ level
+				// inheritance make sure the child tag is not from one of the
+				// deeper levels
+				if (wtag.isChildTag()
+						&& (tag.getMarkupClass() == baseMarkup.getResource().getMarkupClass()))
 				{
-					// <wicket:child /> => <wicket:child>...</wicket:child>
-					childTag = wtag;
-					WicketTag childOpenTag = (WicketTag)wtag.mutable();
-					childOpenTag.getXmlTag().setType(XmlTag.OPEN);
-					addMarkupElement(childOpenTag);
-					break;
+					if (wtag.isOpenClose())
+					{
+						// <wicket:child /> => <wicket:child>...</wicket:child>
+						childTag = wtag;
+						WicketTag childOpenTag = (WicketTag)wtag.mutable();
+						childOpenTag.getXmlTag().setType(XmlTag.OPEN);
+						childOpenTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+						addMarkupElement(childOpenTag);
+						break;
+					}
+					else if (wtag.isOpen())
+					{
+						// <wicket:child>
+						addMarkupElement(wtag);
+						break;
+					}
+					else
+					{
+						throw new WicketRuntimeException("Did not expect a </wicket:child> tag in "
+								+ baseMarkup.toString());
+					}
 				}
 
 				// Process the head of the extended markup only once
@@ -277,7 +296,8 @@ public class MergedMarkup extends Markup
 
 		if (baseIndex == baseMarkup.size())
 		{
-			throw new WicketRuntimeException("Expected to find <wicket:child/> in base markup");
+			throw new WicketRuntimeException("Expected to find <wicket:child/> in base markup: "
+					+ baseMarkup.toString());
 		}
 
 		// Now append all elements from the derived markup starting with
@@ -299,15 +319,58 @@ public class MergedMarkup extends Markup
 
 		if (extendIndex == markup.size())
 		{
-			throw new WicketRuntimeException("Missing close tag </wicket:extend> in derived markup");
+			throw new WicketRuntimeException(
+					"Missing close tag </wicket:extend> in derived markup: " + markup.toString());
 		}
 
-		// And now all remaining elements from the derived markup.
-		// But first add </wicket:child>
-		WicketTag childCloseTag = (WicketTag)childTag.mutable();
-		childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
-		addMarkupElement(childCloseTag);
+		// If <wicket:child> than skip the body and find </wicket:child>
+		if (((ComponentTag)baseMarkup.get(baseIndex)).isOpen())
+		{
+			for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
+			{
+				MarkupElement element = baseMarkup.get(baseIndex);
+				if (element instanceof WicketTag)
+				{
+					WicketTag tag = (WicketTag)element;
+					if (tag.isChildTag() && tag.isClose())
+					{
+						// Ok, skipped the childs content
+						tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+						addMarkupElement(tag);
+						break;
+					}
+					else
+					{
+						throw new WicketRuntimeException(
+								"Wicket tags like <wicket:xxx> are not allowed in between <wicket:child> and </wicket:child> tags: "
+										+ markup.toString());
+					}
+				}
+				else if (element instanceof ComponentTag)
+				{
+					throw new WicketRuntimeException(
+							"Wicket tags identified by wicket:id are not allowed in between <wicket:child> and </wicket:child> tags: "
+									+ markup.toString());
+				}
+			}
 
+			// </wicket:child> not found
+			if (baseIndex == baseMarkup.size())
+			{
+				throw new WicketRuntimeException(
+						"Expected to find </wicket:child> in base markup: " + baseMarkup.toString());
+			}
+		}
+		else
+		{
+			// And now all remaining elements from the derived markup.
+			// But first add </wicket:child>
+			WicketTag childCloseTag = (WicketTag)childTag.mutable();
+			childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
+			childCloseTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
+			addMarkupElement(childCloseTag);
+		}
+		
 		for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
