@@ -24,6 +24,7 @@ import wicket.extensions.breadcrumb.BreadCrumbLink;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 import wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import wicket.markup.html.panel.Panel;
+import wicket.model.IModel;
 import wicket.version.undo.Change;
 
 /**
@@ -74,6 +75,22 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel)
 	{
 		super(id);
+		this.breadCrumbModel = breadCrumbModel;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            Component id
+	 * @param breadCrumbModel
+	 *            The bread crumb model
+	 * @param model
+	 *            The model
+	 */
+	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel, IModel model)
+	{
+		super(id, model);
 		this.breadCrumbModel = breadCrumbModel;
 	}
 
