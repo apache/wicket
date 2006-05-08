@@ -3,8 +3,8 @@
 
 	<property name="final.name" value="wicket-auth-roles-examples" />
 
-	<property name="src.main.dir" value="src/java" />
-	<property name="src.test.dir" value="src/test" />
+	<property name="src.main.dir" value="src/main/java" />
+	<property name="src.test.dir" value="src/test/java" />
 	<property name="src.web.dir" value="src/webapp" />
 	
 	<property name="lib.dir" value="lib" />
@@ -33,7 +33,8 @@
 	<target name="compile" depends="init" description="o Compiles the Java sources">
 		<mkdir dir="${build.main.classes}" />
 		<javac destdir="${build.main.classes}" 
-			target="1.4" 
+			target="1.5"
+			source="1.5"
 			debug="true"
 			deprecation="true"
 			optimize="false"
@@ -99,7 +100,7 @@
 	     Ant. Maven tests /do/ work. 
 	  -->
 	<target name="war" depends="compile" description="o Creates a WAR file for this package">
-		<war destfile="${final.name}.war" 
+		<war destfile="${build.dir}/${final.name}.war" 
 			webxml="${src.web.dir}/WEB-INF/web.xml"
 			excludes="**/package.html" 
 		>
