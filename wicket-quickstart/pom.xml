@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wicket</groupId>
 	<artifactId>wicket-quickstart</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Quickstart</name>
 	<description></description>
@@ -103,6 +103,13 @@
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>${basedir}/src/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
 			<plugin>
