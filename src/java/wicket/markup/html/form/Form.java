@@ -698,7 +698,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Mark each form component on this form invalid.
+	 * Mark each form component on this form valid.
 	 */
 	protected final void markFormComponentsValid()
 	{
