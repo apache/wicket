@@ -59,14 +59,15 @@ import wicket.version.undo.Change;
  * FormComponents, you will need to call Form.setVersioned(true), which will set
  * versioning on for the form and all form component children.
  * <p>
- * If this component is required and that fails the error key that is used
- * is the "RequiredValidator" if the Type conversions failes it will be using
- * the key "TypeValidator" and the keys that can be used in both are :
+ * If this component is required and that fails the error key that is used is
+ * the "RequiredValidator" if the Type conversions failes it will be using the
+ * key "TypeValidator" and the keys that can be used in both are :
  * <ul>
  * <li>${input}: the input the user did give</li>
  * <li>${name}: the name of the component that failed</li>
  * <li>${label}: the label of the component</li>
  * </ul>
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -77,9 +78,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The value separator 
+	 * The value separator
 	 */
 	public static String VALUE_SEPARATOR = ";";
+
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
@@ -359,9 +361,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Use hasRawInput() to check if this component has raw input because
-	 * null can mean 2 things: It doesn't have rawinput or the rawinput 
-	 * is really null. 
+	 * Use hasRawInput() to check if this component has raw input because null
+	 * can mean 2 things: It doesn't have rawinput or the rawinput is really
+	 * null.
 	 * 
 	 * @return The raw form input that is stored for this formcomponent
 	 */
@@ -371,8 +373,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * This method can be called to know if this component really has
-	 * raw input.
+	 * This method can be called to know if this component really has raw input.
 	 * 
 	 * @return boolean if this form component has rawinput.
 	 */
@@ -381,7 +382,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		return rawInput != NO_RAW_INPUT;
 	}
 
-	
+
 	/**
 	 * Called to indicate that
 	 */
@@ -447,13 +448,13 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the value for a form component this value will be split
-	 * the string with {@link FormComponent#VALUE_SEPARATOR} and calls
+	 * Sets the value for a form component this value will be split the string
+	 * with {@link FormComponent#VALUE_SEPARATOR} and calls
 	 * setModelValue(String[]) with that.
 	 * 
 	 * @param value
 	 *            The value
-	 *            
+	 * 
 	 * @depricated call or override setModelValue(String[])
 	 */
 	public void setModelValue(final String value)
@@ -530,9 +531,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Checks if the raw input value is not null if this component is required
+	 * Checks if the form component's 'required' requirement is met
+	 * 
+	 * @return true if the 'required' requirement is met, false otherwise
 	 */
-	protected final void checkRequired()
+	public final boolean checkRequired()
 	{
 		if (isRequired())
 		{
@@ -545,17 +548,29 @@ public abstract class FormComponent extends WebMarkupContainer
 			{
 				// this value must have come from a disabled field
 				// do not perform validation
-				return;
+				return true;
 			}
 
 			// peform validation by looking whether the value is null or empty
 			if (Strings.isEmpty(input))
 			{
-				error(Collections.singletonList("RequiredValidator"), new HashMap());
+				return false;
 			}
+		}
+		return true;
+	}
 
+	/**
+	 * Checks if the raw input value is not null if this component is required
+	 */
+	protected final void validateRequired()
+	{
+		if (!checkRequired())
+		{
+			error(Collections.singletonList("RequiredValidator"), new HashMap());
 		}
 	}
+
 
 	/**
 	 * Converts and validates the conversion of the raw input string into the
@@ -641,7 +656,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected Object convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0? value[0].trim() : null;
+		return value != null && value.length > 0 ? value[0].trim() : null;
 	}
 
 	/**
@@ -652,15 +667,15 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final void validate()
 	{
-		checkRequired();
+		validateRequired();
 		convert();
-		checkValidators();
+		validateValidators();
 	}
 
 	/**
 	 * Validates this component using the component's validators.
 	 */
-	protected final void checkValidators()
+	protected final void validateValidators()
 	{
 		final int size = validators_size();
 
@@ -905,7 +920,7 @@ public abstract class FormComponent extends WebMarkupContainer
 				// join the values together with ";", for example, "id1;id2;id3"
 				rawInput = StringList.valueOf(input).join(VALUE_SEPARATOR);
 			}
-			else if ( isInputNullable() )
+			else if (isInputNullable())
 			{
 				// no input
 				rawInput = null;
@@ -925,9 +940,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent setRequired(final boolean required)
 	{
-		if(!required &&  type != null && type.isPrimitive())
+		if (!required && type != null && type.isPrimitive())
 		{
-			throw new WicketRuntimeException("FormComponent can't be not required when the type is primitive class: " + this);
+			throw new WicketRuntimeException(
+					"FormComponent can't be not required when the type is primitive class: " + this);
 		}
 		if (required != isRequired())
 		{
@@ -977,7 +993,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final FormComponent setType(Class type)
 	{
 		this.type = type;
-		if(type != null && type.isPrimitive()) setRequired(true);
+		if (type != null && type.isPrimitive())
+			setRequired(true);
 		return this;
 	}
 

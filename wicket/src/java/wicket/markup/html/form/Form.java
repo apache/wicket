@@ -966,7 +966,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public void validate(final FormComponent formComponent)
 			{
-				formComponent.checkRequired();
+				formComponent.validateRequired();
 			}
 		});
 	}
@@ -994,7 +994,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public void validate(final FormComponent formComponent)
 			{
-				formComponent.checkValidators();
+				formComponent.validateValidators();
 			}
 		});
 	}
