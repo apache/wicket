@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,6 +22,7 @@ import java.util.Map;
 
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
+import wicket.util.lang.Classes;
 
 /**
  * Base class for {@link wicket.markup.html.form.validation.IFormValidator}s.
@@ -76,5 +76,19 @@ public abstract class AbstractFormValidator implements IFormValidator
 		{
 			return new HashMap(2);
 		}
+	}
+
+	/**
+	 * Gets the resource key for validator's error message from the
+	 * ApplicationSettings class.
+	 * 
+	 * @param components
+	 *            form components being validated
+	 * 
+	 * @return the resource key based on the form component
+	 */
+	protected String resourceKey(FormComponent[] components)
+	{
+		return Classes.simpleName(getClass());
 	}
 }

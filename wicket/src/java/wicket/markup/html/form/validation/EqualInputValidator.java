@@ -39,6 +39,11 @@ import wicket.util.lang.Objects;
  */
 public class EqualInputValidator extends AbstractFormValidator
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** form components to be checked. */
 	private final FormComponent[] components;
 
@@ -83,7 +88,7 @@ public class EqualInputValidator extends AbstractFormValidator
 
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{
-			final String key = "EqualInputValidator";
+			final String key = resourceKey(components);
 			formComponent2.error(Collections.singletonList(key), messageModel());
 		}
 	}
