@@ -284,11 +284,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return The value in the request for this component
 	 */
+	// TODO Post 1.2: make this final, if the users want to override this they
+	// should really be overriding #getInputAsArray()
 	public String getInput()
 	{
-		return getRequest().getParameter(getInputName());
+		String[] input = getInputAsArray();
+		if (input == null || input.length == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return input[0];
+		}
 	}
-	
+
 	/**
 	 * Gets the request parameters for this component as strings.
 	 * 
@@ -793,6 +803,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @return The values in the request for this component
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
+	//TODO Post 1.2: remove
 	protected final String[] inputAsStringArray()
 	{
 		return getInputAsArray();
