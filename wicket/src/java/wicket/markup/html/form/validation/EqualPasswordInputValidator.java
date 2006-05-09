@@ -1,6 +1,7 @@
 /*
- * $Id: EqualInputValidator.java 5301 2006-04-08 23:48:26 +0200 (za, 08 apr 2006) joco01 $
- * $Revision: 5301 $ $Date: 2006-04-08 23:48:26 +0200 (za, 08 apr 2006) $
+ * $Id: EqualInputValidator.java 5301 2006-04-08 23:48:26 +0200 (za, 08 apr
+ * 2006) joco01 $ $Revision: 5301 $ $Date: 2006-04-08 23:48:26 +0200 (za, 08 apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,8 +26,8 @@ import wicket.util.lang.Objects;
 
 /**
  * Validates that the input of two form components is identical. Errors are
- * reported on the second form component with key 'EqualInputValidator' and
- * the variables:
+ * reported on the second form component with key 'EqualInputValidator' and the
+ * variables:
  * <ul>
  * <li>${input(n)}: the user's input</li>
  * <li>${name}: the name of the component</li>
@@ -39,6 +40,11 @@ import wicket.util.lang.Objects;
  */
 public class EqualPasswordInputValidator extends AbstractFormValidator
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** form components to be checked. */
 	private final FormComponent[] components;
 
