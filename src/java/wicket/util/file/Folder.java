@@ -17,6 +17,7 @@
  */
 package wicket.util.file;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -116,6 +117,21 @@ public final class Folder extends File
 	public Folder(final URI uri)
 	{
 		super(uri);
+	}
+
+	/**
+	 * Does a mkdirs() on this folder if it does not exist. If the folder cannot
+	 * be created, an IOException is thrown.
+	 * 
+	 * @throws IOException
+	 *             Thrown if folder cannot be created
+	 */
+	public void ensureExists() throws IOException
+	{
+		if (!exists() && !mkdirs())
+		{
+			throw new IOException("Unable to create folder " + this);
+		}
 	}
 
 	/**
