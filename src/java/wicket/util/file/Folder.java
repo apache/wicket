@@ -152,12 +152,16 @@ public final class Folder extends File
 		});
 
 		// Convert java.io files to wicket files
-		final File[] wicketFiles = new File[files.length];
-		for (int i = 0; i < files.length; i++)
+		if (files != null)
 		{
-			wicketFiles[i] = new File(files[i]);
+			final File[] wicketFiles = new File[files.length];
+			for (int i = 0; i < files.length; i++)
+			{
+				wicketFiles[i] = new File(files[i]);
+			}
+			return wicketFiles;
 		}
-		return wicketFiles;
+		return new File[0];
 	}
 
 	/**
@@ -197,12 +201,16 @@ public final class Folder extends File
 		});
 
 		// Convert
-		final Folder[] wicketFolders = new Folder[files.length];
-		for (int i = 0; i < files.length; i++)
+		if (files != null)
 		{
-			wicketFolders[i] = new Folder(files[i]);
+			final Folder[] wicketFolders = new Folder[files.length];
+			for (int i = 0; i < files.length; i++)
+			{
+				wicketFolders[i] = new Folder(files[i]);
+			}
+			return wicketFolders;
 		}
-		return wicketFolders;
+		return new Folder[0];
 	}
 
 	/**
