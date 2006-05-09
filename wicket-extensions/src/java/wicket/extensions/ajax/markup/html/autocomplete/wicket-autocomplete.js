@@ -30,12 +30,15 @@ function WicketAutoComplete(elementId,callbackUrl){
 				    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
 					break;
 				case KEY_DOWN:
-					if(visible==0) updateChoices();					
 					if(selected<elementCount-1){
 						selected++;
 					}
-					render();
-					showAutoComplete();		
+					if(visible==0){
+						updateChoices();
+					} else {						
+						render();
+						showAutoComplete();		
+					}
 				    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
 					break;										
 				case KEY_ESC:
@@ -103,11 +106,26 @@ function WicketAutoComplete(elementId,callbackUrl){
 	function updateChoices(){	
 	    selected=-1;
 	    var transport = wicketAjaxGetTransport();
-	    if (transport == null)return false
-    	transport.onreadystatechange = function () {
+	    if (transport == null){
+       	    	if (wicketAjaxDebugEnabled()) {
+			var log=WicketAjaxDebug.logError;
+	     		log("Ajax-transport not available!");
+		}
+		return false;
+	     }
+
+	    var value=wicketGet(elementId).value;
+	    transport.open("GET",callbackUrl+"&random="+Math.random()+"&q="+value,true);
+ 		transport.onreadystatechange = function () {
 			if (transport.readyState == 4) {
 				if (transport.status == 200) {
-					doUpdateChoices(transport.responseText);
+				    if (wicketAjaxDebugEnabled()) {
+				                var log=WicketAjaxDebug.logInfo;
+        				        log("received ajax autocomplete response. "+transport.responseText.length+" characters.");
+				                log("elementId="+elementId+"-autocomplete");
+				                log(transport.responseText);
+			            }
+				doUpdateChoices(transport.responseText);
 		        } else {
         	    	if (wicketAjaxDebugEnabled()) {
 	             	   var log=WicketAjaxDebug.logError;
@@ -116,19 +134,17 @@ function WicketAutoComplete(elementId,callbackUrl){
         	    }
 	        }            	
 	    };	    
-	    var value=wicketGet(elementId).value;
-	    transport.open("GET",callbackUrl+"&q="+value,true);
     	transport.send(null);
 	}
 
 	function showAutoComplete(){
 		var position=getPosition(wicketGet(elementId));		
 		var obj=wicketGet(elementId+'-autocomplete');
-		var input=wicketGet(elementId);
-		wicketShow(elementId+'-autocomplete');		
+		var input=wicketGet(elementId);	
+		wicketShow(elementId+'-autocomplete');				
 		obj.style.left=position[0]+'px'
 		obj.style.top=(input.offsetHeight+position[1])+'px';
-		obj.style.width=input.offsetWidth+'px';	
+		obj.style.width=input.offsetWidth+'px';			
 		visible=1;
 	}
 
@@ -142,16 +158,11 @@ function WicketAutoComplete(elementId,callbackUrl){
 	function getPosition(obj) {
 		var leftPosition=0;
 		var topPosition=0;
-		if(obj.offsetParent){
-			do{
-				topPosition+=obj.offsetTop;
-				leftPosition+=obj.offsetLeft;
-				obj=obj.offsetParent;
-			} while(obj);
-		} else {
-			if(obj.y)topPosition=obj.y;
-			if(obj.x)leftPosition=obj.x;
-		}
+		 do {
+      			topPosition += obj.offsetTop  || 0;
+      			leftPosition += obj.offsetLeft || 0;
+      			obj = obj.offsetParent;
+		 } while (obj);
 		return [leftPosition,topPosition];
 	}
 

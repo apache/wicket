@@ -23,7 +23,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 
 	protected String getImplementationId()
 	{
-	    return "wicket-default";
+	    return "wicket-default-autocomplete";
 	}
 
 	protected void onBind()
