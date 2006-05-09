@@ -556,7 +556,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	protected final Link createJunctionLink(final DefaultMutableTreeNode node)
+	protected Link createJunctionLink(final DefaultMutableTreeNode node)
 	{
 		final Link junctionLink = new Link("junctionLink")
 		{
@@ -578,7 +578,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the model of the node
 	 * @return link for selection
 	 */
-	protected final Link createNodeLink(final DefaultMutableTreeNode node)
+	protected Link createNodeLink(final DefaultMutableTreeNode node)
 	{
 		final Link nodeLink = new Link("nodeLink")
 		{
