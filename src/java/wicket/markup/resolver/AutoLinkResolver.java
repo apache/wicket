@@ -177,6 +177,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		/** whether the reference is absolute. */
 		private final boolean absolute;
 
+		/** An optional anchor like #top */
+		private final String anchor;
+		
 		/**
 		 * Construct.
 		 * 
@@ -213,8 +216,21 @@ public final class AutoLinkResolver implements IComponentResolver
 				extension = infoPath.substring(pos + 1);
 				infoPath = infoPath.substring(0, pos);
 			}
+			
+			String anchor = null;
+			if (extension != null)
+			{
+				pos = extension.indexOf('#');
+				if (pos != -1)
+				{
+					anchor = extension.substring(pos);
+					extension = extension.substring(0, pos);
+				}
+			}
+			
 			this.path = infoPath;
 			this.extension = extension;
+			this.anchor = anchor;
 		}
 
 		/**
@@ -233,6 +249,15 @@ public final class AutoLinkResolver implements IComponentResolver
 		public final String getExtension()
 		{
 			return extension;
+		}
+
+		/**
+		 * Gets the anchor (e.g. #top)
+		 * @return anchor
+		 */
+		public final String getAnchor()
+		{
+			return anchor;
 		}
 
 		/**
@@ -399,7 +424,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		public Component newAutoComponent(final MarkupContainer container, final String autoId,
 				PathInfo pathInfo)
 		{
-			if (pathInfo.extension != null && supportedPageExtensions.contains(pathInfo.extension))
+			if ((pathInfo.extension != null) && supportedPageExtensions.contains(pathInfo.extension))
 			{
 				// Obviously a href like href="myPkg.MyLabel.html" will do as
 				// well. Wicket will not throw an exception. It accepts it.
@@ -426,7 +451,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				try
 				{
 					final Class clazz = defaultClassResolver.resolveClass(className);
-					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters);
+					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
 				}
 				catch (WicketRuntimeException ex)
 				{
@@ -449,7 +474,7 @@ public final class AutoLinkResolver implements IComponentResolver
 						try
 						{
 							clazz = defaultClassResolver.resolveClass(className);
-							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters());
+							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
 						}
 						catch (WicketRuntimeException ex)
 						{
@@ -502,6 +527,8 @@ public final class AutoLinkResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
+		private final String anchor;
+		
 		/**
 		 * Construct
 		 * 
@@ -511,14 +538,31 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param id
 		 * @param pageClass
 		 * @param parameters
+		 * @param anchor
 		 */
 		public AutolinkBookmarkablePageLink(final String id, final Class pageClass,
-				final PageParameters parameters)
+				final PageParameters parameters, final String anchor)
 		{
 			super(id, pageClass, parameters);
+			this.anchor = anchor;
 			setAutoEnable(true);
 		}
 
+		/**
+		 * 
+		 * @see wicket.markup.html.link.BookmarkablePageLink#getURL()
+		 */
+		protected CharSequence getURL()
+		{
+			CharSequence url = super.getURL();
+			if (anchor != null)
+			{
+				url = url + anchor;
+			}
+			
+			return url;
+		}
+		
 		/**
 		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
