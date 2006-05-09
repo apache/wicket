@@ -294,11 +294,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return The values in the request for this component
 	 */
-	public String[] getInputAsStringArray()
+	public String[] getInputAsArray()
 	{
 		return getRequest().getParameters(getInputName());
 	}
-
 
 	/**
 	 * Gets the string to be used for the <tt>name</tt> attribute of the form
@@ -595,7 +594,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		{
 			try
 			{
-				convertedInput = convertValue(getInputAsStringArray());
+				convertedInput = convertValue(getInputAsArray());
 			}
 			catch (ConversionException e)
 			{
@@ -775,7 +774,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected final int[] inputAsIntArray()
 	{
-		final String[] strings = getInputAsStringArray();
+		final String[] strings = getInputAsArray();
 		if (strings != null)
 		{
 			final int[] ints = new int[strings.length];
@@ -792,11 +791,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * Gets the request parameters for this component as strings.
 	 * 
 	 * @return The values in the request for this component
-	 * @deprecated Use {@link #getInputAsStringArray()} instead
+	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
 	protected final String[] inputAsStringArray()
 	{
-		return getInputAsStringArray();
+		return getInputAsArray();
 	}
 
 	/**
@@ -924,7 +923,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		if (isVisibleInHierarchy() && isEnabled())
 		{
 			// Get input as String array
-			final String[] input = getInputAsStringArray();
+			final String[] input = getInputAsArray();
 
 			// If there is any input
 			if (input != null)
