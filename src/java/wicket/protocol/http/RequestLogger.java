@@ -203,7 +203,18 @@ public class RequestLogger
 	 */
 	public void objectCreated(Object value)
 	{
-		SessionData sd = getSessionData();
+		SessionData sd = null;
+		// Special case, if session is created then getSessionData() 
+		// can't be called because Session.get() does fail. and there is no
+		// SessionData anyway so directly create one.
+		if(value instanceof Session)
+		{
+			sd = createSessionData((Session)value);
+		}
+		else
+		{
+			sd = getSessionData();
+		}
 		if(value instanceof Page)
 		{
 			sd.pageCreated((Page)value);
@@ -249,13 +260,23 @@ public class RequestLogger
 		SessionData sessionData = (SessionData)liveSessions.get(session.getId());
 		if(sessionData == null)
 		{
-			sessionData = new SessionData(session);
-			liveSessions.put(session.getId(), sessionData);
-			totalCreatedSessions++;
-			if(peakSessions < liveSessions.size())
-			{
-				peakSessions = liveSessions.size();
-			}
+			sessionData = createSessionData(session);
+		}
+		return sessionData;
+	}
+
+	/**
+	 * @param session
+	 * @return The SessionData object
+	 */
+	private SessionData createSessionData(Session session)
+	{
+		SessionData sessionData = new SessionData(session);
+		liveSessions.put(session.getId(), sessionData);
+		totalCreatedSessions++;
+		if(peakSessions < liveSessions.size())
+		{
+			peakSessions = liveSessions.size();
 		}
 		return sessionData;
 	}
