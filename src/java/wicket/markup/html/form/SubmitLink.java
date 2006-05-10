@@ -190,7 +190,7 @@ public class SubmitLink extends Button
 		sb.append(form.getJavascriptId());
 		sb.append("');");
 
-		if (shouldInvokeFormOnsubmit())
+		if (shouldInvokeJavascriptFormOnsubmit())
 		{
 
 			sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
@@ -220,7 +220,7 @@ public class SubmitLink extends Button
 	 * @return true if form's javascript onsubmit handler should be invoked,
 	 *         false otherwise
 	 */
-	protected boolean shouldInvokeFormOnsubmit()
+	protected boolean shouldInvokeJavascriptFormOnsubmit()
 	{
 		return true;
 	}
