@@ -9,7 +9,6 @@ import wicket.model.IModel;
 import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.converters.AbstractConverter;
-import wicket.util.convert.converters.StringConverter;
 
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object.
@@ -125,7 +124,7 @@ public class DateTextField extends TextField
 	 * @author Stefan Kanev, s.kanev@spider.bg
 	 *
 	 */
-	public final class DateTextFieldConverter extends Converter 
+	public class DateTextFieldConverter extends Converter 
 	{
 
 		private static final long serialVersionUID = 1L;
@@ -135,14 +134,11 @@ public class DateTextField extends TextField
 		 * <code>DateToStringPatternConverter</code> and
 		 * <code>StringPatternToDateConverter</code> as it is appropriate.
 		 */
-		public DateTextFieldConverter() 
+		private DateTextFieldConverter() 
 		{
 			super(getSession().getLocale());
-			
-			StringConverter stringConverter = new StringConverter();
-			stringConverter.set(Date.class, new DateToStringPatternConverter());
-			
-			set(String.class, stringConverter);
+
+			set(String.class, new DateToStringPatternConverter());
 			set(Date.class, new StringPatternToDateConverter());
 		}
 		
