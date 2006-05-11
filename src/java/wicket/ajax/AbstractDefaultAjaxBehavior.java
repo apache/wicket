@@ -110,7 +110,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript()
 	{
-		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'", null, null);
+		return getCallbackScript(true);
+	}
+
+	/**
+	 * @return javascript that will generate an ajax GET request to this
+	 *         behavior *
+	 * @param recordPageVersion
+	 *            if true the url will be encoded to execute on the current page
+	 *            version, otherwise url will be encoded to execute on the
+	 *            latest page version
+	 */
+	protected CharSequence getCallbackScript(boolean recordPageVersion)
+	{
+		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl(recordPageVersion) + "'", null,
+				null);
 	}
 
 	/**
@@ -133,8 +147,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @return script that peforms ajax callback to this behavior
 	 */
-	protected CharSequence getCallbackScript(final CharSequence partialCall, final CharSequence onSuccessScript,
-			final CharSequence onFailureScript)
+	protected CharSequence getCallbackScript(final CharSequence partialCall,
+			final CharSequence onSuccessScript, final CharSequence onFailureScript)
 	{
 		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
@@ -150,7 +164,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			String hide=";wicketHide('" + indicatorId + "');";
+			String hide = ";wicketHide('" + indicatorId + "');";
 			success = success + hide;
 			failure = failure + hide;
 		}
@@ -169,7 +183,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');").append(call);
+			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');")
+					.append(call);
 		}
 
 		if (decorator != null)
