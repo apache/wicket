@@ -21,6 +21,7 @@ package wicket.ajax;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.Page;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 import wicket.settings.IAjaxSettings;
@@ -204,10 +205,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public final void onRequest()
 	{
 		boolean isPageVersioned = true;
+		Page page = getComponent().getPage();
 		try
 		{
-			isPageVersioned = getComponent().getPage().isVersioned();
-			getComponent().getPage().setVersioned(false);
+			isPageVersioned = page.isVersioned();
+			page.setVersioned(false);
 
 			AjaxRequestTarget target = new AjaxRequestTarget();
 			RequestCycle.get().setRequestTarget(target);
@@ -215,7 +217,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		finally
 		{
-			getComponent().getPage().setVersioned(isPageVersioned);
+			page.setVersioned(isPageVersioned);
 		}
 	}
 
