@@ -77,17 +77,14 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
 		PageParameters pageParameters = target.getPageParameters();
-		if(pageMapName != null)
+		String pagemap = pageMapName != null?pageMapName: target.getPageMapName();
+		if(pagemap != null)
 		{
 			if(pageParameters == null)
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pageMapName);
-		}
-		else if(target.getPageMapName() != null)
-		{
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
 		}
 		appendParameters(url, pageParameters);
 		return url;
