@@ -545,7 +545,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Clears the user input.
 	 */
-	final void clearInput()
+	public final void clearInput()
 	{
 		rawInput = NO_RAW_INPUT;
 	}
