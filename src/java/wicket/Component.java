@@ -883,7 +883,7 @@ public abstract class Component implements Serializable
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a
 	 * container with an associated markup file (Page, Panel or Border). This
-	 * TODO this restriction will be implicitly met after implementing 1.3's
+	 * TODO post 1.2 this restriction will be implicitly met after implementing 2.0's
 	 * constructor change
 	 * 
 	 * @return markup id of this component, which is the result of the call to

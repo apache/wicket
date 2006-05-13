@@ -204,7 +204,7 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			// Create a new request cycle
-			// FIXME Instead of doing this, we should get a request cycle factory
+			// FIXME post 1.2 Instead of doing this, we should get a request cycle factory
 			// from the application settings and use that. That way we are a step
 			// closer to a session-less operation of Wicket.
 			RequestCycle cycle = session.newRequestCycle(request, response);
@@ -393,11 +393,6 @@ public class WicketServlet extends HttpServlet
 
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();
-
-					// First ask the length so the content is created/accessed
-					// TODO check this shouldn't be needed anymore with the new
-					// dynamic resource impl.
-					// stream.length();
 
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();

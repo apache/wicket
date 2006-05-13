@@ -131,7 +131,7 @@ public class ResourceLink extends Link implements IResourceListener
 	{
 		if (resourceReference != null)
 		{
-			// TODO should we have support for locale changes when the
+			// TODO post 1.2: should we have support for locale changes when the
 			// resource reference (or resource??) is set manually..
 			// We should get a new resource reference for the current locale
 			// then

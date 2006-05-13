@@ -93,7 +93,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 			Response response = requestCycle.getResponse();
 
 			// Tranform the data
-			// TODO transform also just use a CharSequence param instead of string
+			// TODO post 1.2 transform also just use a CharSequence param instead of string
 			CharSequence output = transform(component, response.toString());
 			this.webResponse.write(output);
 		}
