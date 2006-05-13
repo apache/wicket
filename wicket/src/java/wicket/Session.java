@@ -93,8 +93,10 @@ import wicket.util.string.Strings;
  * creates custom Session subclasses that have typesafe properties specific to
  * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
- * method is provided. In a clustered environment, you should take care to
- * 
+ * method is provided. In a clustered environment, you should take care to call
+ * the dirty() method when you change a property or youre own. This way the 
+ * session will be reset again in the http session so that the http session 
+ * knows the session is changed.
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver (
  * {@link IClassResolver}) implementation that is used to locate classes for
