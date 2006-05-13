@@ -107,6 +107,16 @@ public class FileUploadField extends FormComponent
 		}
 	}
 	
+	
+	/**
+	 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
+	 */
+	public String[] getInputAsArray()
+	{
+		FileUpload fu = getFileUpload();
+		if(fu != null) return new String[] {fu.getClientFileName()};
+		return null;
+	}
 	/**
 	 * @see wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
