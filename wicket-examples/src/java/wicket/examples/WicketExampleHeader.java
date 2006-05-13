@@ -18,10 +18,10 @@
 package wicket.examples;
 
 import wicket.PageMap;
+import wicket.examples.debug.InspectorBug;
 import wicket.examples.source.SourcesPage;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.debug.InspectorBug;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PopupSettings;
 import wicket.markup.html.panel.Panel;
