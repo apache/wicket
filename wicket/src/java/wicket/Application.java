@@ -34,6 +34,7 @@ import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.resolver.AutoComponentResolver;
+import wicket.markup.resolver.FragmentResolver;
 import wicket.markup.resolver.HtmlHeaderResolver;
 import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
@@ -721,13 +722,15 @@ public abstract class Application
 	protected void internalInit()
 	{
 		settingsAccessible = true;
+		IPageSettings pageSettings = getPageSettings();
 		// Install default component resolvers
-		getPageSettings().addComponentResolver(new ParentResolver());
-		getPageSettings().addComponentResolver(new AutoComponentResolver());
-		getPageSettings().addComponentResolver(new MarkupInheritanceResolver());
-		getPageSettings().addComponentResolver(new HtmlHeaderResolver());
-		getPageSettings().addComponentResolver(new WicketLinkResolver());
-		getPageSettings().addComponentResolver(new WicketMessageResolver());
+		pageSettings.addComponentResolver(new ParentResolver());
+		pageSettings.addComponentResolver(new AutoComponentResolver());
+		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
+		pageSettings.addComponentResolver(new HtmlHeaderResolver());
+		pageSettings.addComponentResolver(new WicketLinkResolver());
+		pageSettings.addComponentResolver(new WicketMessageResolver());
+		pageSettings.addComponentResolver(new FragmentResolver());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
