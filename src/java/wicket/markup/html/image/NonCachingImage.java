@@ -126,7 +126,7 @@ public class NonCachingImage extends Image
 
 		String url = tag.getAttributes().getString("src");
 		url = url + ((url.indexOf("?") >= 0) ? "&" : "?");
-		url = url + "wicket:antiCache=" + Math.random();
+		url = url + "wicket:antiCache=" + System.currentTimeMillis();
 		
 		tag.put("src", url);
 	}
