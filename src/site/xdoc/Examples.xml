@@ -37,6 +37,10 @@
 						<a href="ExampleMarkupInheritance.html">Markup Inheritance</a>
 						- A short example explaining markup inheritance
 					</li>
+					<li>
+						<a href="ExampleAjaxCounter.html">Ajax Counter</a>
+						- A short example explaining Wicket's Ajax features building a counter.
+					</li>
 				</ul>
 			</p>
 			<subsection name="Examples in Live Action">
