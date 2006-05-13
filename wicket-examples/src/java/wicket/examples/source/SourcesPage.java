@@ -18,18 +18,26 @@
 package wicket.examples.source;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.WebMarkupContainer;
@@ -43,6 +51,7 @@ import wicket.model.IDetachable;
 import wicket.model.PropertyModel;
 import wicket.util.io.IOUtils;
 import wicket.util.lang.PackageName;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -110,7 +119,7 @@ public class SourcesPage extends WebPage
 			{
 				IOUtils.closeQuietly(br);
 			}
-		}
+		}		
 	}
 
 	/**
@@ -147,31 +156,32 @@ public class SourcesPage extends WebPage
 		{
 			if (resources.isEmpty())
 			{
-				PackageName name = PackageName.forClass(page);
-				ClassLoader loader = page.getClassLoader();
-				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
-				try
-				{
-					// gives the urls for each place where the package
-					// path could be found. There could be multiple
-					// jar files containing the same package, so each
-					// jar file has its own url.
-
-					Enumeration urls = loader.getResources(path);
-					while (urls.hasMoreElements())
-					{
-						URL url = (URL)urls.nextElement();
-
-						// the url points to the directory structure
-						// embedded in the classpath.
-
-						getPackageContents(url);
-					}
-				}
-				catch (IOException e)
-				{
-					log.error("Unable to read resource for: " + path, e);
-				}
+				get(page);
+//				PackageName name = PackageName.forClass(page);
+//				ClassLoader loader = page.getClassLoader();
+//				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
+//				try
+//				{
+//					// gives the urls for each place where the package
+//					// path could be found. There could be multiple
+//					// jar files containing the same package, so each
+//					// jar file has its own url.
+//
+//					Enumeration urls = loader.getResources(path);
+//					while (urls.hasMoreElements())
+//					{
+//						URL url = (URL)urls.nextElement();
+//
+//						// the url points to the directory structure
+//						// embedded in the classpath.
+//
+//						getPackageContents(url);
+//					}
+//				}
+//				catch (IOException e)
+//				{
+//					log.error("Unable to read resource for: " + path, e);
+//				}
 			}
 			return resources;
 		}
@@ -211,6 +221,116 @@ public class SourcesPage extends WebPage
 			finally
 			{
 				IOUtils.closeQuietly(br);
+			}
+		}
+
+		private final void addResources(final Class scope, final AppendingStringBuffer relativePath, final File dir)
+		{
+			File[] files = dir.listFiles();
+			for (int i = 0; i < files.length; i++)
+			{
+				File file = files[i];
+				if (file.isDirectory())
+				{
+					addResources(scope,  new AppendingStringBuffer(relativePath).append(file.getName()).append('/'), file);
+				}
+				else
+				{
+					String name = file.getName();
+					String extension = Strings.afterLast(name, '.');
+					if (!name.endsWith("class"))
+					{
+						resources.add(relativePath + name);
+					}
+					
+				}
+			}
+		}
+
+		private void get(Class scope)
+		{
+			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/").toString();
+			ClassLoader loader = scope.getClassLoader();
+			try
+			{
+				// loop through the resources of the package
+				Enumeration packageResources = loader.getResources(packageRef);
+				while (packageResources.hasMoreElements())
+				{
+					URL resource = (URL)packageResources.nextElement();
+					URLConnection connection = resource.openConnection();
+					if (connection instanceof JarURLConnection)
+					{
+						JarFile jf = ((JarURLConnection)connection).getJarFile();
+						scanJarFile(scope, packageRef, jf);
+					}
+					else
+					{
+						String absolutePath = scope.getResource("").toExternalForm();
+						File basedir;
+						URI uri;
+						try
+						{
+							uri = new URI(absolutePath);
+						}
+						catch (URISyntaxException e)
+						{
+							throw new RuntimeException(e);
+						}
+						try
+						{
+							basedir = new File(uri);
+						}
+						catch(IllegalArgumentException e)
+						{
+							log.debug("Can't construct the uri as a file: " + absolutePath);
+							// if this is throwen then the path is not really a file. but could be a zip.
+							String jarZipPart = uri.getSchemeSpecificPart();
+							// lowercased for testing if jar/zip, but leave the real filespec unchanged
+							String lowerJarZipPart = jarZipPart.toLowerCase();
+							int index = lowerJarZipPart.indexOf(".zip");
+							if(index == -1) index = lowerJarZipPart.indexOf(".jar");
+							if(index == -1) throw e;
+							
+							String filename = jarZipPart.substring(0, index+4); // 4 = len of ".jar" or ".zip"
+							log.debug("trying the filename: " + filename + " to load as a zip/jar.");
+							JarFile jarFile = new JarFile(filename,false);
+							scanJarFile(scope, packageRef, jarFile);
+							return;
+						}
+						if (!basedir.isDirectory())
+						{
+							throw new IllegalStateException("unable to read resources from directory "
+									+ basedir);
+						}
+						addResources(scope, new AppendingStringBuffer(), basedir);
+					}
+				}
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		
+			return;
+		}
+
+		private void scanJarFile(Class scope,String packageRef, JarFile jf)
+		{
+			Enumeration enumeration = jf.entries();
+			while (enumeration.hasMoreElements())
+			{
+				JarEntry je = (JarEntry)enumeration.nextElement();
+				String name = je.getName();
+				if (name.startsWith(packageRef))
+				{
+					name = name.substring(packageRef.length() + 1);
+					String extension = Strings.afterLast(name, '.');
+					if (!name.endsWith("class"))
+					{
+						resources.add(name);
+					}
+				}
 			}
 		}
 	}
