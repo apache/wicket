@@ -604,7 +604,7 @@ public abstract class Session implements Serializable
 	 *            The response
 	 * @return The new request cycle.
 	 */
-	// FIXME Move to application. We really shouldn't need a session to make request cycles.
+	// FIXME post 1.2 Move to application. We really shouldn't need a session to make request cycles.
 	// see https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{

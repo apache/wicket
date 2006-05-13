@@ -69,13 +69,15 @@ import wicket.util.string.AppendingStringBuffer;
  * To view this information live see the {@link InspectorBug} that shows the {@link InspectorPage}
  * with the {@link LiveSessionsPage}
  * 
+ * This class is still a bit experimental for the 1.2 release. Will improve further in 2.0
+ * 
  * @author jcompagner
  * 
  * @since 1.2
  */
 public class RequestLogger
 {
-	// TODO for this class: saving to a log file, only holding a small part in mem.
+	// TODO post 1.2 for this class: saving to a log file, only holding a small part in mem.
 	
 	
 	private int totalCreatedSessions;

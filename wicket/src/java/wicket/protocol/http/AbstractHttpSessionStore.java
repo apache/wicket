@@ -220,7 +220,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	protected final HttpSession getHttpSession(WebRequest request)
 	{
-		// FIXME allow for session-less operation
+		// FIXME post 1.2 allow for session-less operation
 		HttpSession httpSession = request.getHttpServletRequest().getSession(true);
 		return httpSession;
 	}

@@ -251,7 +251,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 		else
 		{
-			// TODO should we have support for locale changes when the 
+			// TODO post 1.2: should we have support for locale changes when the 
 			// resource reference (or resource??) is set manually..
 			// We should get a new resource reference for the current locale then
 			// that points to the same resource but with another locale if it exists.

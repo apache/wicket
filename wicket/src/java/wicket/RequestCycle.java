@@ -528,7 +528,7 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// FIXME Robustness: This has to be done after the unit tests are fixed
+		// FIXME post 1.2 Robustness: This has to be done after the unit tests are fixed
 		// // if we are already responding, we can't change the request target
 		// // as that would either have no effect, or - in case we would set
 		// // the currentStep back to PROCESS_EVENTS, we would have double

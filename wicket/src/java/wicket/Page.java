@@ -1017,7 +1017,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected final void moveToPageMap(PageMap map)
 	{
-		// TODO shouldn't we remove this page from the pagemap/session if it would be in there?
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
 		setPageMap(map);
 		numericId = (short)map.nextId();
 	}

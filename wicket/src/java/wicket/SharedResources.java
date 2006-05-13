@@ -172,14 +172,6 @@ public class SharedResources
 			Resource value = (Resource)resourceMap.get(key);
 			if (value == null)
 				resourceMap.put(key, resource);
-			
-			// FIXME IF this is important at all, it really only works when all resources implement
-			// their equals contracts properly, which is currently not the case
-//			else if (!value.equals(resource))
-//			{
-//				throw new IllegalArgumentException(key + " has a different resource "
-//						+ "already associated with it: " + value);
-//			}
 		}
 	}
 

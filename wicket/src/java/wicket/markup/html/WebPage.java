@@ -424,10 +424,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 				if (accessStack.size() > initialAccessStackSize)
 				{
-					// FIXME this only works with links that open a new window
-					// and browser configurations that start with a blank home
-					// page (which is usually not the default), in which case
-					// the page count is 2 (or 1 for IE)
 					JavascriptUtils.writeOpenTag(response);
 					response.write("if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
 					response.write(url);

@@ -172,7 +172,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 			try
 			{
 				// Tranform the data
-				// TODO transform also just charsequence, is this 1.2 or 1.1??
+				// TODO post 1.2 transform also just charsequence, is this 1.2 or 1.1??
 				CharSequence output = transform(this, response.toString());
 				webResponse.write(output);
 			}
