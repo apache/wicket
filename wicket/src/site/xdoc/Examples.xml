@@ -41,6 +41,11 @@
 						<a href="ExampleAjaxCounter.html">Ajax Counter</a>
 						- A short example explaining Wicket's Ajax features building a counter.
 					</li>
+					<li>
+						<a href="ExampleUsingFragments.html">Using Fragments</a>
+						- A short example explaining Wicket's fragments feature. Fragments are a type
+						of inline panels.
+					</li>
 				</ul>
 			</p>
 			<subsection name="Examples in Live Action">
