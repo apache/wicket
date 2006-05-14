@@ -224,5 +224,14 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-spring</url>
+		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
+	</distributionManagement>
 </project>
