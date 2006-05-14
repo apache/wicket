@@ -60,17 +60,29 @@
 		</section>
 		<section name="Latest News">
 			<subsection
-				name="May 1st, 2006 - Wicket 1.2-rc3 available">
+				name="May 14th, 2006 - New examples available">
+				<p>
+					We have created two new examples giving a quick introduction
+					to new Wicket 1.2 features. Here are the links to the articles:
+				</p>
+				<ul>
+					<li><a href="ExampleAjaxCounter.html">Ajax Counter example</a></li>
+					<li><a href="ExampleUsingFragments.html">Using fragments example</a></li>
+				</ul>
+			</subsection>
+			<subsection
+				name="May 14th, 2006 - Wicket 1.2-rc4 available">
 				<p>
 					The
 					<a href="http://wicketframework.org">Wicket</a>
-					project has released the third release candidate of the
-					1.2 effort.
+					project has released the fourth release candidate of the
+					1.2 effort. We expect this to be the final candidate and
+					if no serious bugs are found we will release 1.2 final
+					later this week.
 				</p>
 				<p>
-					This is our third release candidate of the Wicket 1.2
-					version. We expect to finalize the 1.2 release very soon.
-					Major features of Wicket 1.2 include:
+					This is our fourth release candidate of the Wicket 1.2
+					version. Major features of Wicket 1.2 include:
 				</p>
 				<ul>
 					<li>
@@ -174,9 +186,12 @@
 					</a>
 				</p>
 				<p>
-					This is the third release candidate, so not considered
-					production ready. Please help us iron out the last
-					bugs by downloading and testing this release candidate!
+					This is the fourth release candidate. All our unit tests
+					work and we have fixed numerous bugs in the last weeks. We
+					expect this release to become the final release candidate,
+					and hope no big issues will surface. Please help us iron 
+					out the last bugs by downloading and testing this release 
+					candidate!
 				</p>
 			</subsection>
 			<p>
