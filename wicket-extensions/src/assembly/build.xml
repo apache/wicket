@@ -37,6 +37,7 @@
 		<mkdir dir="${build.main.classes}" />
 		<javac destdir="${build.main.classes}" 
 			target="1.4" 
+			source="1.4" 
 			debug="true"
 			deprecation="true"
 			optimize="false"
@@ -57,6 +58,7 @@
 		<mkdir dir="${build.test.classes}" />
 		<javac destdir="${build.test.classes}" 
 			target="1.4" 
+			source="1.4" 
 			debug="true"
 			deprecation="true"
 			optimize="false"

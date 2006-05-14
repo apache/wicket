@@ -33,6 +33,7 @@
 		<mkdir dir="${build.main.classes}" />
 		<javac destdir="${build.main.classes}" 
 			target="1.5" 
+			source="1.5" 
 			debug="true"
 			deprecation="true"
 			optimize="false"
@@ -52,6 +53,7 @@
 	<target name="test-compile" depends="compile" description="o Compiles the test sources">
 		<mkdir dir="${build.test.classes}" />
 		<javac destdir="${build.test.classes}" 
+			source="1.5" 
 			target="1.5" 
 			debug="true"
 			deprecation="true"

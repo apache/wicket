@@ -99,7 +99,7 @@
 	     Ant. Maven tests /do/ work. 
 	  -->
 	<target name="war" depends="compile" description="o Creates a WAR file for this package">
-		<war destfile="${final.name}.war" 
+		<war destfile="${build.dir}/${final.name}.war" 
 			webxml="${src.web.dir}/WEB-INF/web.xml"
 			excludes="**/package.html" 
 		>

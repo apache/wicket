@@ -50,11 +50,11 @@
 			</includes>
 		</fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
-			<unpack>false</unpack>
-			<scope>compile</scope>
-		</dependencySet>
-	</dependencySets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>compile</scope>
+        </dependencySet>
+    </dependencySets>
 </assembly>

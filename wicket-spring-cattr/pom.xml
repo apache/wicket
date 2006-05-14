@@ -123,6 +123,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
 					<descriptor>src/assembly/bin.xml</descriptor>
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>

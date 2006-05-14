@@ -34,6 +34,10 @@
             <includes>
                 <include>*.jar</include>
             </includes>
+            <excludes>
+                <exclude>*source*jar</exclude>
+                <exclude>*javadoc*jar</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>src</directory>
@@ -56,5 +60,10 @@
             <unpack>false</unpack>
             <scope>compile</scope>
         </dependencySet>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>test</scope>
+        </dependencySet>
     </dependencySets>
-  </assembly>
+</assembly>
