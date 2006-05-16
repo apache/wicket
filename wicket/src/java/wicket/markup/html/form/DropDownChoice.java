@@ -162,12 +162,12 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			try
 			{
 				Form form = getForm();
-				tag.put("onChange", form.getJsForInterfaceUrl(url) );
+				tag.put("onchange", form.getJsForInterfaceUrl(url) );
 			}
 			catch (WicketRuntimeException ex)
 			{
 				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onChange", "location.href='" + url + "&" + getInputName()
+				tag.put("onchange", "location.href='" + url + "&" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}
