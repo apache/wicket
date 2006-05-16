@@ -120,12 +120,12 @@ public class Check extends WebMarkupContainer
 			try
 			{
 				Form form = group.getForm();
-				tag.put("onClick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url) );
 			}
 			catch (WicketRuntimeException ex)
 			{
 				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onClick", "location.href='" + url + "&" + group.getInputName()
+				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
