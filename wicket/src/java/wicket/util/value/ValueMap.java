@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,9 +56,9 @@ public class ValueMap extends HashMap
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/** True if this value map has been made immutable. */
 	private boolean immutable = false;
 
@@ -140,8 +140,9 @@ public class ValueMap extends HashMap
 
 	/**
 	 * Gets a boolean value by key.
-	 *
-	 * @param key The key
+	 * 
+	 * @param key
+	 *            The key
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
@@ -239,6 +240,21 @@ public class ValueMap extends HashMap
 	 * 
 	 * @param key
 	 *            The get
+	 * @param defaultValue
+	 *            Default value to return if value is null
+	 * @return The string
+	 */
+	public final String getString(final String key, final String defaultValue)
+	{
+		final String value = getString(key);
+		return value != null ? value : defaultValue;
+	}
+
+	/**
+	 * Gets a string by key.
+	 * 
+	 * @param key
+	 *            The get
 	 * @return The string
 	 */
 	public final String getString(final String key)
@@ -248,11 +264,11 @@ public class ValueMap extends HashMap
 		{
 			return null;
 		}
-		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		else if (o.getClass().isArray() && Array.getLength(o) > 0)
 		{
 			// if it is an array just get the first value
 			final Object arrayValue = Array.get(o, 0);
-			if(arrayValue == null)
+			if (arrayValue == null)
 			{
 				return null;
 			}
@@ -260,7 +276,7 @@ public class ValueMap extends HashMap
 			{
 				return arrayValue.toString();
 			}
-			
+
 		}
 		else
 		{
@@ -282,40 +298,39 @@ public class ValueMap extends HashMap
 		{
 			return null;
 		}
-		else if(o.getClass().isArray() && Array.getLength(o) > 0)
+		else if (o.getClass().isArray() && Array.getLength(o) > 0)
 		{
 			// if it is an array just get the first value
 			final Object arrayValue = Array.get(o, 0);
-			if(arrayValue == null)
+			if (arrayValue == null)
 			{
 				return null;
 			}
 			else
 			{
-				if(arrayValue instanceof CharSequence)
+				if (arrayValue instanceof CharSequence)
 				{
 					return (CharSequence)arrayValue;
 				}
 				return arrayValue.toString();
 			}
-			
+
 		}
 		else
 		{
-			if(o instanceof CharSequence)
+			if (o instanceof CharSequence)
 			{
 				return (CharSequence)o;
 			}
 			return o.toString();
 		}
 	}
-	
+
 	/**
-	 * Gets a String array by key.
-	 * If the value was a String[] it will be returned directly.
-	 * If it was a String it will be converted to a String array of one.
-	 * If it was an array of another type a String array will be made and
-	 * the elements will be converted to a string.
+	 * Gets a String array by key. If the value was a String[] it will be
+	 * returned directly. If it was a String it will be converted to a String
+	 * array of one. If it was an array of another type a String array will be
+	 * made and the elements will be converted to a string.
 	 * 
 	 * @param key
 	 * @return The String array of that key
@@ -323,29 +338,29 @@ public class ValueMap extends HashMap
 	public String[] getStringArray(final String key)
 	{
 		final Object o = get(key);
-		if(o == null)
+		if (o == null)
 		{
 			return null;
 		}
-		else if(o instanceof String[])
+		else if (o instanceof String[])
 		{
 			return (String[])o;
 		}
-		else if(o.getClass().isArray())
+		else if (o.getClass().isArray())
 		{
 			int length = Array.getLength(o);
 			String[] array = new String[length];
 			for (int i = 0; i < length; i++)
 			{
 				final Object arrayValue = Array.get(o, i);
-				if(arrayValue != null)
+				if (arrayValue != null)
 				{
 					array[i] = arrayValue.toString();
 				}
 			}
 			return array;
 		}
-		return new String[] {o.toString()};
+		return new String[] { o.toString() };
 	}
 
 	/**
@@ -375,6 +390,7 @@ public class ValueMap extends HashMap
 
 	/**
 	 * Gets whether this value map is made immutable.
+	 * 
 	 * @return whether this value map is made immutable
 	 */
 	public final boolean isImmutable()
@@ -401,15 +417,18 @@ public class ValueMap extends HashMap
 		checkMutability();
 		return super.put(key, value);
 	}
-	
+
 	/**
-	 * This methods adds the value to this map under the given key
-	 * If the key already is in the map it will combine the values 
-	 * into a String array else it will just store the value itself
+	 * This methods adds the value to this map under the given key If the key
+	 * already is in the map it will combine the values into a String array else
+	 * it will just store the value itself
 	 * 
-	 * @param key The key to store the value under.
-	 * @param value The value that must be added/merged to the map
-	 * @return The value itself if there was no previous value or a string array with the combined values.
+	 * @param key
+	 *            The key to store the value under.
+	 * @param value
+	 *            The value that must be added/merged to the map
+	 * @return The value itself if there was no previous value or a string array
+	 *         with the combined values.
 	 */
 	public final Object add(final String key, final String value)
 	{
@@ -426,7 +445,7 @@ public class ValueMap extends HashMap
 			for (int i = 0; i < length; i++)
 			{
 				final Object arrayValue = Array.get(o, i);
-				if(arrayValue != null)
+				if (arrayValue != null)
 				{
 					destArray[i] = arrayValue.toString();
 				}
@@ -439,7 +458,7 @@ public class ValueMap extends HashMap
 		{
 			return put(key, new String[] { o.toString(), value });
 		}
-	}	
+	}
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
@@ -460,10 +479,10 @@ public class ValueMap extends HashMap
 	}
 
 	/**
-	 * Provided the hash key is a string and you need to access the
-	 * value ignoring ignoring the keys case (upper or lower letter),
-	 * than you may use this method to get the correct writing.
-	 *  
+	 * Provided the hash key is a string and you need to access the value
+	 * ignoring ignoring the keys case (upper or lower letter), than you may use
+	 * this method to get the correct writing.
+	 * 
 	 * @param key
 	 * @return The key with the correct writing
 	 */
@@ -475,7 +494,7 @@ public class ValueMap extends HashMap
 			Object keyValue = iter.next();
 			if (keyValue instanceof String)
 			{
-				String keyString = (String) keyValue;
+				String keyString = (String)keyValue;
 				if (key.equalsIgnoreCase(keyString))
 				{
 					return keyString;
@@ -484,8 +503,8 @@ public class ValueMap extends HashMap
 		}
 		return null;
 	}
-	
-    /**
+
+	/**
 	 * Gets a string representation of this object
 	 * 
 	 * @return String representation of map consistent with tag attribute style
@@ -521,7 +540,7 @@ public class ValueMap extends HashMap
 		}
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Throw exception if map is immutable.
 	 */
