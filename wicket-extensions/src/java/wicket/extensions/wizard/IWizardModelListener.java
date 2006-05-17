@@ -34,4 +34,14 @@ public interface IWizardModelListener extends Serializable
 	 *            The new step
 	 */
 	void onActiveStepChanged(IWizardStep newStep);
+
+	/**
+	 * Called when the wizard was cancelled.
+	 */
+	void onCancel();
+
+	/**
+	 * Called when the wizard finished succesfully.
+	 */
+	void onFinish();
 }

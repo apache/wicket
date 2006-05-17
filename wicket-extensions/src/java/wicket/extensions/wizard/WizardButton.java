@@ -22,7 +22,7 @@ import wicket.markup.html.form.Button;
 import wicket.model.ResourceModel;
 
 /**
- * Base class for buttons that work with {@link Wizard the wizard component}.
+ * Base class for buttons that work with {@link IWizard the wizard component}.
  * It uses resource bundles to display the button label.
  * <p>
  * When wizard buttons are presses (and they pass validation if that is
@@ -37,7 +37,7 @@ public abstract class WizardButton extends Button
 	/**
 	 * The enclosing wizard.
 	 */
-	private final Wizard wizard;
+	private final IWizard wizard;
 
 	/**
 	 * Construct.
@@ -49,18 +49,18 @@ public abstract class WizardButton extends Button
 	 * @param labelResourceKey
 	 *            The resource key of the button's label
 	 */
-	public WizardButton(String id, Wizard wizard, String labelResourceKey)
+	public WizardButton(String id, IWizard wizard, String labelResourceKey)
 	{
 		super(id, new ResourceModel(labelResourceKey));
 		this.wizard = wizard;
 	}
 
 	/**
-	 * Gets the {@link Wizard}.
+	 * Gets the {@link IWizard}.
 	 * 
 	 * @return The wizard
 	 */
-	protected final Wizard getWizard()
+	protected final IWizard getWizard()
 	{
 		return wizard;
 	}

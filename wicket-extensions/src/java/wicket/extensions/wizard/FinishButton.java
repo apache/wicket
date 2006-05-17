@@ -65,7 +65,7 @@ public final class FinishButton extends WizardButton
 		// if the step completed after applying the state, notify the wizard
 		if (step.isComplete())
 		{
-			getWizard().onFinish();
+			getWizardModel().finish();
 		}
 		else
 		{

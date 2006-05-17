@@ -62,6 +62,21 @@ public interface IWizardModel extends Serializable
 	void addListener(IWizardModelListener listener);
 
 	/**
+	 * Cancels further processing. Implementations may clean up and reset the
+	 * model. Implementations should notify the registered
+	 * {@link IWizardModelListener#onCancel() model listeners}.
+	 */
+	void cancel();
+
+	/**
+	 * Instructs the wizard to finish succesfully. Typically, implementations
+	 * check whether this option is available at all. Implementations may clean
+	 * up and reset the model. Implementations should notify the registered
+	 * {@link IWizardModelListener#onFinish() model listeners}.
+	 */
+	void finish();
+
+	/**
 	 * Gets the current active step the wizard should display.
 	 * 
 	 * @return the active step.
@@ -103,6 +118,7 @@ public interface IWizardModel extends Serializable
 	 */
 	boolean isLastVisible();
 
+
 	/**
 	 * Gets whether the next button should be enabled.
 	 * 
@@ -116,7 +132,6 @@ public interface IWizardModel extends Serializable
 	 * @return True if the previous button should be enabled, false otherwise.
 	 */
 	boolean isPreviousAvailable();
-
 
 	/**
 	 * Takes the model to the last step in the wizard. This method must only be

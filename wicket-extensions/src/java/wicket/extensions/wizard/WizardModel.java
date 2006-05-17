@@ -151,6 +151,32 @@ public class WizardModel implements IWizardModel
 	}
 
 	/**
+	 * This implementation just fires
+	 * {@link IWizardModelListener#onCancel() a cancel event}. Though this
+	 * isn't a very strong contract, it gives all the power to the user of this
+	 * model.
+	 * 
+	 * @see wicket.extensions.wizard.IWizardModel#cancel()
+	 */
+	public void cancel()
+	{
+		fireWizardCancelled();
+	}
+
+	/**
+	 * This implementation just fires
+	 * {@link IWizardModelListener#onFinish() a finish event}. Though this
+	 * isn't a very strong contract, it gives all the power to the user of this
+	 * model.
+	 * 
+	 * @see wicket.extensions.wizard.IWizardModel#finish()
+	 */
+	public void finish()
+	{
+		fireWizardFinished();
+	}
+
+	/**
 	 * Gets the current active step the wizard should display.
 	 * 
 	 * @return the active step.
@@ -393,12 +419,36 @@ public class WizardModel implements IWizardModel
 	 * @param step
 	 *            The new step
 	 */
-	private final void fireActiveStepChanged(IWizardStep step)
+	protected final void fireActiveStepChanged(IWizardStep step)
 	{
 		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
 		{
 			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onActiveStepChanged(step);
+		}
+	}
+
+	/**
+	 * Notify listeners that the wizard is finished.
+	 */
+	protected final void fireWizardCancelled()
+	{
+		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		{
+			IWizardModelListener listener = (IWizardModelListener)i.next();
+			listener.onCancel();
+		}
+	}
+
+	/**
+	 * Notify listeners that the wizard is finished.
+	 */
+	protected final void fireWizardFinished()
+	{
+		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		{
+			IWizardModelListener listener = (IWizardModelListener)i.next();
+			listener.onFinish();
 		}
 	}
 }
