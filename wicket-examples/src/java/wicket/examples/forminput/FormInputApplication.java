@@ -59,6 +59,14 @@ public class FormInputApplication extends WicketExampleApplication
 		imgReset.setFont(font);
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
 		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		Font fontJa = new Font("Serif", Font.BOLD, 16);
+		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
+		imgSaveJa.setFont(fontJa);
+		DefaultButtonImageResource imgResetJa = new DefaultButtonImageResource(
+				"\u30ea\u30bb\u30c3\u30c8");
+		imgResetJa.setFont(fontJa);
+		getSharedResources().add("save", Locale.JAPANESE, imgSaveJa);
+		getSharedResources().add("reset", Locale.JAPANESE, imgResetJa);
 	}
 
 	/**
