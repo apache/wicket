@@ -22,7 +22,6 @@ import java.awt.Font;
 import java.util.Locale;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
@@ -45,13 +44,19 @@ public class FormInputApplication extends WicketExampleApplication
 	}
 
 	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return FormInput.class;
+	}
+
+	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
-		getMarkupSettings().setStripWicketTags(true);
 		Font font = new Font("SimSun", Font.BOLD, 16);
 		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
 		imgSave.setFont(font);
@@ -70,18 +75,6 @@ public class FormInputApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * Special overwrite to have url compressing for this example.
-	 * 
-	 * @see URLCompressor
-	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
-	 */
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-				new WebURLCompressingTargetResolverStrategy(), null, null, null);
-	}
-
-	/**
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
 	 *      protected WebRequest newWebRequest(HttpServletRequest
 	 *      servletRequest) { return new
@@ -96,10 +89,14 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 
 	/**
-	 * @see wicket.Application#getHomePage()
+	 * Special overwrite to have url compressing for this example.
+	 * 
+	 * @see URLCompressor
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
-	public Class getHomePage()
+	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return FormInput.class;
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }
