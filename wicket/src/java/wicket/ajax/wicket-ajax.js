@@ -318,6 +318,7 @@ function wicketSerialize(e) {
             return wicketSerializeInput(e);
         }
     }
+    return "";
 }
 function wicketSerializeForm(form) {
     var result = "";
