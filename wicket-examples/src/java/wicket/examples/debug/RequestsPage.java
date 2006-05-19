@@ -36,9 +36,9 @@
  */
 package wicket.examples.debug;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 import wicket.Component;
@@ -52,6 +52,7 @@ import wicket.model.Model;
 import wicket.protocol.http.RequestLogger.RequestData;
 import wicket.protocol.http.RequestLogger.SessionData;
 import wicket.util.convert.IConverter;
+import wicket.util.convert.converters.DateConverter;
 
 /**
  * @author jcompagner
@@ -93,32 +94,21 @@ public class RequestsPage extends WebPage
 					private static final long serialVersionUID = 1L;
 
 					/**
-					 * @see wicket.Component#getConverter()
+					 * @see wicket.Component#getConverter(Class)
 					 */
-					public IConverter getConverter()
+					public IConverter getConverter(Class type)
 					{
-						final IConverter converter = super.getConverter();
-						return new IConverter()
+						
+						return new DateConverter()
 						{
 							private static final long serialVersionUID = 1L;
 
-							public Locale getLocale()
+							/**
+							 * @see wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
+							 */
+							public DateFormat getDateFormat(Locale locale)
 							{
-								return converter.getLocale();
-							}
-						
-							public void setLocale(Locale locale)
-							{
-								converter.setLocale(locale);
-							}
-						
-							public Object convert(Object value, Class c)
-							{
-								if(value instanceof Date && c == String.class)
-								{
-									return sdf.format((Date)value);
-								}
-								return converter.convert(value, c);
+								return sdf;
 							}
 						};
 					}
