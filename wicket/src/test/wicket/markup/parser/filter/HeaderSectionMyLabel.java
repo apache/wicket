@@ -20,7 +20,8 @@ package wicket.markup.parser.filter;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.Model;
 
 
@@ -29,7 +30,7 @@ import wicket.model.Model;
  *
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel extends WebMarkupContainer
+public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,4 +52,16 @@ public class HeaderSectionMyLabel extends WebMarkupContainer
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
+	
+    /**
+     * This label renders its markup the normal way, and is still able
+     * to take and render the header tag from an associated markup file.
+     * 
+     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+     */
+    public void renderHead(HtmlHeaderContainer container)
+    {
+    	this.renderHeadFromAssociatedMarkupFile(container);
+    	super.renderHead(container);
+    }
 }

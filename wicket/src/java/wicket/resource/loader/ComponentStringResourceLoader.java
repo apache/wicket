@@ -17,20 +17,13 @@
  */
 package wicket.resource.loader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Application;
 
 /**
  * @inheritDoc
  */
 public class ComponentStringResourceLoader extends AbstractStringResourceLoader 
-	implements IStringResourceLoader
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(ComponentStringResourceLoader.class);
-
 	/**
 	 * Create and initialise the resource loader.
 	 * 

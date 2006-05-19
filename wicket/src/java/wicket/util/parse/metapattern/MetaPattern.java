@@ -158,8 +158,11 @@ public class MetaPattern
 	/** Constant for digits. */
 	public static final MetaPattern DIGITS = new MetaPattern("\\d+");
 
-	/** Constant for an integer. */
+	/** Constant for an integer (of any size). */
 	public static final MetaPattern INTEGER = new MetaPattern("-?\\d+");
+
+	/** Constant for a floating point number. */
+	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern("-?\\d+\\.?\\d*|-?\\.\\d+");
 
 	/** Constant for a positive integer. */
 	public static final MetaPattern POSITIVE_INTEGER = new MetaPattern("\\d+");

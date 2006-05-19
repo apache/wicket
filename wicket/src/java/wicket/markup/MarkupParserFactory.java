@@ -3,6 +3,7 @@ package wicket.markup;
 import wicket.Application;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.filter.PrependContextPathHandler;
 
 /**
  * Default implementation of IMarkupParserFactory
@@ -12,8 +13,6 @@ import wicket.markup.parser.XmlPullParser;
 public class MarkupParserFactory implements IMarkupParserFactory
 {
 	private IMarkupFilter[] filters;
-	private Application application;
-
 	/**
 	 * Construct.
 	 * 
@@ -22,7 +21,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application)
 	{
-		this.application = application;
+		this.filters = new IMarkupFilter[] { new PrependContextPathHandler(application) };
 	}
 
 	/**
@@ -35,8 +34,9 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter[] filters)
 	{
-		this(application);
-		this.filters = filters;
+		this.filters = new IMarkupFilter[filters.length+1];
+		System.arraycopy(filters, 0, this.filters, 0, filters.length);
+		this.filters[filters.length] = new PrependContextPathHandler(application);
 	}
 
 	/**
@@ -49,8 +49,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter filter)
 	{
-		this(application);
-		this.filters = new IMarkupFilter[] { filter };
+		this.filters = new IMarkupFilter[] { filter, new PrependContextPathHandler(application) };
 	}
 
 	/**
@@ -58,8 +57,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParser newMarkupParser()
 	{
-		final MarkupParser parser = new MarkupParser(application, new XmlPullParser(application
-				.getMarkupSettings().getDefaultMarkupEncoding()))
+		final MarkupParser parser = new MarkupParser(new XmlPullParser())
 		{
 			public void initFilterChain()
 			{

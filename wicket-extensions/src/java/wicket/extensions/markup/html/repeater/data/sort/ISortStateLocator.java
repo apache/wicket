@@ -18,6 +18,8 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
+import java.io.Serializable;
+
 
 /**
  * Locator interface for ISortState implementations. OrderByLink uses this
@@ -26,7 +28,7 @@ package wicket.extensions.markup.html.repeater.data.sort;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ISortStateLocator
+public interface ISortStateLocator extends Serializable
 {
 	/**
 	 * @return ISortState object

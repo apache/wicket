@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebSession.java 5064 2006-03-21 11:30:05 -0800 (Tue, 21 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-21 11:30:05 -0800 (Tue, 21
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,24 +18,19 @@
  */
 package wicket.protocol.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IRequestCycleFactory;
+import wicket.RequestCycle;
 import wicket.Session;
 
 /**
- * Session subclass for HTTP protocol which holds an HttpSession object and
- * provides access to that object via getHttpSession(). A method which abstracts
- * session invalidation is also provided via invalidate().
+ * A session subclass for the HTTP protocol.
  * 
  * @author Jonathan Locke
  */
 public class WebSession extends Session
 {
 	/** log. careful, this log is used to trigger profiling too! */
-	private static Log log = LogFactory.getLog(WebSession.class);
-
+	// private static Log log = LogFactory.getLog(WebSession.class);
 	private static final long serialVersionUID = 1L;
 
 	/** The request cycle factory for the session */
@@ -49,7 +45,7 @@ public class WebSession extends Session
 	 * @param application
 	 *            The application
 	 */
-	protected WebSession(final WebApplication application)
+	public WebSession(final WebApplication application)
 	{
 		super(application);
 	}
@@ -72,7 +68,7 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
-		getSessionStore().invalidate();
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
 	}
 
 	/**
@@ -83,6 +79,9 @@ public class WebSession extends Session
 	}
 
 	/**
+	 * Called on the end of handling a request, when the RequestCycle is about
+	 * to be detached from the current thread.
+	 * 
 	 * @see wicket.Session#detach()
 	 */
 	protected void detach()

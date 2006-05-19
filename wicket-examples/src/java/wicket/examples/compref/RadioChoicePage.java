@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.compref;
 
@@ -30,14 +28,14 @@ import wicket.model.CompoundPropertyModel;
 
 /**
  * Page with examples on {@link wicket.markup.html.form.ListChoice}.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class RadioChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { 
-	        "The Server Side", "Java Lobby", "Java.Net" });
+	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+			"Java.Net" });
 
 	/**
 	 * Constructor
@@ -61,8 +59,10 @@ public class RadioChoicePage extends WicketExamplePage
 		};
 		add(form);
 
-		// Add a radio choice component that uses Input's 'site' property to designate the
-		// current selection, and that uses the SITES list for the available options.
+		// Add a radio choice component that uses Input's 'site' property to
+		// designate the
+		// current selection, and that uses the SITES list for the available
+		// options.
 		form.add(new RadioChoice("site", SITES));
 	}
 
@@ -81,21 +81,21 @@ public class RadioChoicePage extends WicketExamplePage
 		}
 	}
 
-    /**
-     * Override base method to provide an explanation
-     */
-    protected void explain() {
-        String html = "<span valign=\"top\" wicket:id=\"site\">\n"
-                + "  <input type=\"radio\">site 1</input>\n"
-                + "  <input type=\"radio\">site 2</input>\n"
-                + "</span>";
-        String code = "private static final List SITES = Arrays.asList(new String[] { \"The Server Side\", \"Java Lobby\", \"Java.Net\" });\n"
-                    + "...\n"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;// Add a radio choice component that uses the model object's 'site' property to designate the\n"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new RadioChoice(\"site\", SITES));";
-        add(new ExplainPanel(html, code));
+	/**
+	 * Override base method to provide an explanation
+	 */
+	protected void explain()
+	{
+		String html = "<span valign=\"top\" wicket:id=\"site\">\n"
+				+ "  <input type=\"radio\">site 1</input>\n"
+				+ "  <input type=\"radio\">site 2</input>\n" + "</span>";
+		String code = "private static final List SITES = Arrays.asList(new String[] { \"The Server Side\", \"Java Lobby\", \"Java.Net\" });\n"
+				+ "...\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Add a radio choice component that uses the model object's 'site' property to designate the\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new RadioChoice(\"site\", SITES));";
+		add(new ExplainPanel(html, code));
 
-    }
+	}
 
 }

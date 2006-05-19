@@ -20,6 +20,7 @@ package wicket.request;
 import java.io.Serializable;
 import java.util.Map;
 
+import wicket.RequestListenerInterface;
 import wicket.markup.html.link.ILinkListener;
 
 /**
@@ -145,6 +146,14 @@ public class RequestParameters implements Serializable
 	public void setComponentPath(String componentPath)
 	{
 		this.componentPath = componentPath;
+	}
+
+	/**
+	 * @return The interface named by these request parameters
+	 */
+	public RequestListenerInterface getInterface()
+	{
+		return RequestListenerInterface.forName(getInterfaceName());
 	}
 
 	/**
@@ -299,7 +308,7 @@ public class RequestParameters implements Serializable
 	 */
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer("{");
+		StringBuffer b = new StringBuffer("[RequestParameters ");
 		if (getComponentPath() != null)
 		{
 			b.append(" componentPath=").append(getComponentPath());
@@ -321,7 +330,7 @@ public class RequestParameters implements Serializable
 		{
 			b.append(" resourceKey=").append(getResourceKey());
 		}
-		b.append("}");
+		b.append("]");
 		return b.toString();
 	}
 }

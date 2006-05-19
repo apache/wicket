@@ -1,6 +1,6 @@
 /*
- * $Id: WicketTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,11 +28,14 @@ import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It assumes that WicketTagIdentifier has been
- * called first and search for a &lt;head&gt; tag (note: not wicket:head). 
- * Provided the markup contains a &lt;body&gt; tag it will
- * automatically prepend a &lt;head&gt; tag if missing.
+ * called first and search for a &lt;head&gt; tag (note: not wicket:head).
+ * Provided the markup contains a &lt;body&gt; tag it will automatically prepend
+ * a &lt;head&gt; tag if missing.
  * <p>
+ * Note: This handler is only relevant for Pages (see
+ * MarkupParser.newFilterChain())
  * 
+ * @see wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
@@ -40,7 +43,10 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
 	public static final String HEADER_ID = "_header";
 
+	/** True if <head> has been found already */
 	private boolean foundHead = false;
+
+	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
 
 	/**
@@ -100,7 +106,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		// if it is <head> or </head>
 		if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
-			// it is <head>
+			// we found <head>
 			if (tag.isClose())
 			{
 				foundHead = true;
@@ -108,7 +114,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 
 			// Usually <head> is not a wicket special tag. But because we want
 			// transparent header support we insert it automatically if missing
-			// and while rendering its content all child components are asked if 
+			// and while rendering its content all child components are asked if
 			// they want to contribute something to the header. Thus we have to
 			// handle <head> accordingly.
 			tag.setId(HEADER_ID);
@@ -117,17 +123,12 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 		else if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() != null))
 		{
+			// we found <wicket:head>
 			foundHead = true;
 		}
-		// if it is <body>
 		else if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
 		{
-			// we found no <head> . But because we found <body> we assume it 
-		    // could be a page. And because we need to auto-add <head> to 
-		    // pages only (if missing) ... Note: no one prevent a designer
-		    // to put a <body> in a panel component, for previewabilty.
-		    // Thus more markups than actually required might now have
-			// that tag. It should be a problem, but ... you never know.
+			// We found <body>
 			if (foundHead == false)
 			{
 				insertHeadTag();
@@ -142,8 +143,8 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Insert <head> open and close tag (with empty body) to the
-	 * current position.
+	 * Insert <head> open and close tag (with empty body) to the current
+	 * position.
 	 */
 	private void insertHeadTag()
 	{

@@ -41,6 +41,8 @@ public class Check extends WebMarkupContainer
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final String ATTR_DISABLED = "disabled";
 
 
 	/**
@@ -67,23 +69,26 @@ public class Check extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		// Default handling for component tag
+		super.onComponentTag(tag);
 
 		// must be attached to <input type="checkbox" .../> tag
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
+		String path = getPath();
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Check component ["
-							+ getPath()
+							+ path
 							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", getPath());
+		tag.put("value", path);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
@@ -94,13 +99,42 @@ public class Check extends WebMarkupContainer
 			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
 		}
 		
-		if (collection.contains(getModelObject()))
+		if(group.hasRawInput())
+		{
+			String rawInput = group.getRawInput();
+			if(rawInput != null && rawInput.indexOf(path) != -1)
+			{
+				tag.put("checked", "checked");
+			}
+		}
+		else if (collection.contains(getModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
+		
+		if (group.wantOnSelectionChangedNotifications())
+		{
+			// url that points to this components IOnChangeListener method
+			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-		// Default handling for component tag
-		super.onComponentTag(tag);
+			try
+			{
+				Form form = group.getForm();
+				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
+						+ "=' + this.value;");
+			}
+		}
+		
+		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+		}
+
+		
 	}
 
 

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ================================================================================
  * Copyright (c) All rechten voorbehouden.

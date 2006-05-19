@@ -23,7 +23,7 @@ import wicket.RequestCycle;
  * Targets that implement this interface announce that they can process events.
  * This interface is not meant to be used on its own, but rather to be mixed in
  * with other interfaces, like
- * {@link wicket.request.IListenerInterfaceRequestTarget}.
+ * {@link wicket.request.target.component.listener.IListenerInterfaceRequestTarget}.
  * 
  * @author Eelco Hillenius
  */

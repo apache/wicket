@@ -30,9 +30,9 @@ import wicket.util.time.Time;
 
 /**
  * This class can be used to easy make a Resource from a predefined byte array.
- * If youre data comes from a database then a DynamicByteArrayResource is a better choice.
- * Only use this class if you have to have the byte array in memory.
- * Like a pdf that is generated on the fly.
+ * If your data comes from a database then a DynamicWebResource is a
+ * better choice. Only use this class if you have to have the byte array in
+ * memory. Like a pdf that is generated on the fly.
  * 
  * @author Johan Compagner
  */
@@ -56,9 +56,9 @@ public class ByteArrayResource extends WebResource
 	 * Creates a Resource from the given byte array with its content type
 	 * 
 	 * @param contentType
-	 * 			The Content type of the array.
+	 *            The Content type of the array.
 	 * @param array
-	 * 			The binary content
+	 *            The binary content
 	 */
 	public ByteArrayResource(String contentType, byte[] array)
 	{
@@ -68,15 +68,15 @@ public class ByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Creates a Resource from the given byte array with its content type and the locale
-	 * for which it is valid.
+	 * Creates a Resource from the given byte array with its content type and
+	 * the locale for which it is valid.
 	 * 
 	 * @param contentType
-	 * 			The Content type of the array.
+	 *            The Content type of the array.
 	 * @param array
-	 * 			The binary content.
+	 *            The binary content.
 	 * @param locale
-	 * 			The locale of this resource 
+	 *            The locale of this resource
 	 */
 	public ByteArrayResource(String contentType, byte[] array, Locale locale)
 	{
@@ -96,7 +96,7 @@ public class ByteArrayResource extends WebResource
 
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
-			
+
 			/**
 			 * @see wicket.util.resource.IResourceStream#close()
 			 */
@@ -108,7 +108,7 @@ public class ByteArrayResource extends WebResource
 					inputStream = null;
 				}
 			}
-	
+
 			/**
 			 * @see wicket.util.resource.IResourceStream#getContentType()
 			 */
@@ -116,18 +116,20 @@ public class ByteArrayResource extends WebResource
 			{
 				return contentType;
 			}
-	
+
 			/**
 			 * @see wicket.util.resource.IResourceStream#getInputStream()
 			 */
 			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
 				if (inputStream == null)
+				{
 					inputStream = new ByteArrayInputStream(array);
+				}
 
 				return inputStream;
 			}
-	
+
 			/**
 			 * @see wicket.util.watch.IModifiable#lastModifiedTime()
 			 */
@@ -135,20 +137,20 @@ public class ByteArrayResource extends WebResource
 			{
 				return lastModified;
 			}
-	
+
 			public long length()
 			{
 				return array.length;
 			}
-			
+
 			public Locale getLocale()
 			{
 				return locale;
 			}
-			
+
 			public void setLocale(Locale locale)
 			{
-				// ignore  
+				// ignore
 			}
 		};
 	}

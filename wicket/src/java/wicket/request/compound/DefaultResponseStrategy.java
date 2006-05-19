@@ -18,6 +18,7 @@
  */
 package wicket.request.compound;
 
+import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
 
@@ -44,6 +45,7 @@ public final class DefaultResponseStrategy implements IResponseStrategy
 		IRequestTarget requestTarget = requestCycle.getRequestTarget();
 		if (requestTarget != null)
 		{
+			Application.get().logResponseTarget(requestTarget);
 			requestTarget.respond(requestCycle);
 		}
 	}

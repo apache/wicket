@@ -18,8 +18,6 @@
 package wicket.markup.parser;
 
 import wicket.WicketTestCase;
-import wicket.markup.MarkupParserFactory;
-import wicket.markup.parser.filter.PrependContextPathHandler;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -44,9 +42,6 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		
-		application.getMarkupSettings().setMarkupParserFactory(
-				new MarkupParserFactory(application, new PrependContextPathHandler()));
 	}
 
 	/**
@@ -57,4 +52,32 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public final void testWithRootContext() throws Exception
+	{
+		application.getApplicationSettings().setContextPath("");
+		executeTest(Page_1.class, "PageExpectedResult_rootcontext.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public final void testWithOtherContext() throws Exception
+	{
+		application.getApplicationSettings().setContextPath("/other");
+		executeTest(Page_1.class, "PageExpectedResult_othercontext.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public final void testAnchors() throws Exception
+	{
+		application.getApplicationSettings().setContextPath("/other");
+		executeTest(Page_2.class, "Page2ExpectedResult.html");
+	}
+	
 }

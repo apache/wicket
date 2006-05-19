@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4564 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,8 +19,6 @@ package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
-import wicket.markup.MarkupParserFactory;
-import wicket.markup.parser.filter.PrependContextPathHandler;
 import wicket.util.lang.PackageName;
 
 /**
@@ -36,6 +34,17 @@ public class NiceUrlApplication extends WicketExampleApplication
 	public NiceUrlApplication()
 	{
 		super();
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
+		// Disable creation of javascript which jWebUnit (test only) 
+		// doesn't handle properly
+		getPageSettings().setAutomaticMultiWindowSupport(false);
+
 		// mount single bookmarkable pages
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
@@ -49,9 +58,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
-
-		getMarkupSettings().setMarkupParserFactory(
-				new MarkupParserFactory(this, new PrependContextPathHandler()));
 	}
 
 	/**

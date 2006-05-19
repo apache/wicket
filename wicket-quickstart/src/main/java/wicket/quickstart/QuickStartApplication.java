@@ -6,10 +6,11 @@ import org.apache.commons.logging.LogFactory;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
 
 /**
- * Runs the QuickStartApplication when invoked from command line.
+ * Application object for your web application. If you want to run this application without deploying, run the Start class.
+ * 
+ * @see wicket.quickstart.Start#main(String[])
  */
 public class QuickStartApplication extends WebApplication
 {    
@@ -21,15 +22,6 @@ public class QuickStartApplication extends WebApplication
      */
 	public QuickStartApplication()
 	{
-		if (!Boolean.getBoolean("cache-markup"))
-		{
-			getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-			log.info("Markup caching is INACTIVE");
-		}
-		else
-		{
-			log.info("Markup caching is ACTIVE");
-		}
 	}
 	
 	/**
@@ -37,7 +29,6 @@ public class QuickStartApplication extends WebApplication
 	 */
 	public Class getHomePage()
 	{
-		// TODO Auto-generated method stub
 		return Index.class;
 	}
 

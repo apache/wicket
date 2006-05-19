@@ -21,9 +21,9 @@ import wicket.Component;
 import wicket.markup.ComponentTag;
 
 /**
- * Adapter implementation of {@link wicket.behavior.IBehavior}. This class just
- * implements the interface with empty methods; override this class when you
- * don't want to implement the whole interface.
+ * Adapter implementation of {@link wicket.behavior.IBehavior}. It is
+ * recommended to extend from this class instead of directly implementing
+ * {@link wicket.behavior.IBehavior} as this class has an extra clean
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius
@@ -31,16 +31,23 @@ import wicket.markup.ComponentTag;
 public abstract class AbstractBehavior implements IBehavior
 {
 	/**
-	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
+	 * Construct.
 	 */
-	public void bind(Component hostComponent)
+	public AbstractBehavior()
 	{
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#detachModel()
+	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
 	 */
-	public void detachModel()
+	public void bind(final Component component)
+	{
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#detachModel(Component)
+	 */
+	public void detachModel(Component component)
 	{
 	}
 
@@ -48,14 +55,61 @@ public abstract class AbstractBehavior implements IBehavior
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
-	public void onComponentTag(Component component, ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 	}
 
 	/**
 	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
-	public void rendered(Component hostComponent)
+	public final void rendered(final Component component)
+	{
+		onRendered(component);
+		cleanup();
+	}
+
+	/**
+	 * Called when a component that has this behavior coupled was rendered.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
+	 */
+	public void onRendered(Component component)
+	{
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#exception(wicket.Component,
+	 *      java.lang.RuntimeException)
+	 */
+	public void exception(Component component, RuntimeException exception)
+	{
+		onException(component, exception);
+		cleanup();
+	}
+
+	/**
+	 * In case an unexpected exception happened anywhere between
+	 * onComponentTag() and rendered(), onException() will be called for any
+	 * behavior.
+	 * 
+	 * @param component
+	 *            the component that has a reference to this behavior and during
+	 *            which processing the exception occured
+	 * @param exception
+	 *            the unexpected exception
+	 */
+	public void onException(Component component, RuntimeException exception)
+	{
+	}
+
+	/**
+	 * This method is called either by {@link #onRendered(Component)} or
+	 * {@link #onException(Component, RuntimeException)} AFTER they called their
+	 * respective template methods. Override this template method to do any
+	 * necesarry cleanup.
+	 */
+	public void cleanup()
 	{
 	}
 }

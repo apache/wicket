@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: TabbedPanel.java 4079 2006-02-02 10:18:54 -0800 (Thu, 02 Feb 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-02-02 10:18:54 -0800 (Thu, 02 Feb
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,8 +20,10 @@ package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
-import wicket.AttributeModifier;
 import wicket.WicketRuntimeException;
+import wicket.behavior.AttributeAppender;
+import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
@@ -34,32 +37,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *                
- *                List tabs=new ArrayList();
- *                
- *                tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *               
- *                public Panel getPanel(String panelId)
- *                {
- *                return new TabPanel1(panelId);
- *                }
- *                
- *                });
- *               
- *                tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *               
- *                public Panel getPanel(String panelId)
- *                {
- *                return new TabPanel2(panelId);
- *                }
- *                
- *                });
- *               
- *                add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *            
- *                
- *                &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *            
+ *                         
+ *                         List tabs=new ArrayList();
+ *                         
+ *                         tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ *                        
+ *                         public Panel getPanel(String panelId)
+ *                         {
+ *                         return new TabPanel1(panelId);
+ *                         }
+ *                         
+ *                         });
+ *                        
+ *                         tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ *                        
+ *                         public Panel getPanel(String panelId)
+ *                         {
+ *                         return new TabPanel2(panelId);
+ *                         }
+ *                         
+ *                         });
+ *                        
+ *                         add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                     
+ *                         
+ *                         &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *                     
  * </pre>
  * 
  * </p>
@@ -122,20 +125,12 @@ public class TabbedPanel extends Panel
 				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
 				final int selected = getSelectedTab();
 
-				final Link titleLink = new Link("link")
-				{
-					private static final long serialVersionUID = 1L;
-
-					public void onClick()
-					{
-						setSelectedTab(index);
-					}
-				};
+				final WebMarkupContainer titleLink = newLink("link", index);
 
 				titleLink.add(new Label("title", tab.getTitle()));
 				item.add(titleLink);
 
-				item.add(new AttributeModifier("class", true, new Model("selected"))
+				item.add(new SimpleAttributeModifier("class", "selected")
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -145,6 +140,11 @@ public class TabbedPanel extends Panel
 					}
 
 				});
+				if (item.getIteration() == getIterations() - 1)
+				{
+					item.add(new AttributeAppender("class", true, new Model("last"), " "));
+				}
+
 			}
 
 		});
@@ -152,6 +152,53 @@ public class TabbedPanel extends Panel
 		// select the first tab by default
 		setSelectedTab(0);
 
+	}
+
+	/**
+	 * Factory method for links used to switch between tabs.
+	 * 
+	 * The created component is attached to the following markup. Label
+	 * component with id: title will be added for you by the tabbed panel.
+	 * 
+	 * <pre>
+	 *    &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 * </pre>
+	 * 
+	 * Example implementation:
+	 * 
+	 * <pre>
+	 * protected WebMarkupContainer newLink(String linkId, final int index)
+	 * {
+	 * 	return new Link(linkId)
+	 * 	{
+	 * 		private static final long serialVersionUID = 1L;
+	 * 
+	 * 		public void onClick()
+	 * 		{
+	 * 			setSelectedTab(index);
+	 * 		}
+	 * 	};
+	 * }
+	 * </pre>
+	 * 
+	 * @param linkId
+	 *            component id with which the link should be created
+	 * @param index
+	 *            index of the tab that should be activated when this link is
+	 *            clicked. See {@link #setSelectedTab(int)}.
+	 * @return created link component
+	 */
+	protected WebMarkupContainer newLink(String linkId, final int index)
+	{
+		return new Link(linkId)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				setSelectedTab(index);
+			}
+		};
 	}
 
 	/**

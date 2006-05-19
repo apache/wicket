@@ -21,6 +21,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 
 /**
  * Some containers are transparent to the user (e.g. HtmlHeaderContainer or
@@ -35,6 +36,9 @@ public class ParentResolver implements IComponentResolver
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
+	 * <p>
+	 * Note: Special tags like &ltwicket:...&gt> and tags which id start with "_" 
+	 * are not resolved.
 	 * 
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
@@ -42,8 +46,14 @@ public class ParentResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
+		// Ignore special tags like _panel, _border, _extend etc.
+		if ((tag instanceof WicketTag) || tag.getId().startsWith("_"))
+		{
+			return false;
+		}
+		
 		MarkupContainer parent = container;
-		while ((parent != null) && (parent.isTransparent()))
+		while ((parent != null) && (parent.isTransparentResolver()))
 		{
 			// Try to find the component with the parent component.
 			parent = parent.getParent();

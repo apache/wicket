@@ -19,14 +19,11 @@ package wicket.resource.loader;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Application;
 
 /**
  * This string resource loader attempts to find a single resource bundle that
- * has the same name and location as the application. If this bundle is found
+ * has the same name and location as the clazz. If this bundle is found
  * then strings are obtained from here. This implementation is fully aware of
  * both locale and style values when trying to obtain the appropriate bundle.
  * 
@@ -34,12 +31,7 @@ import wicket.Application;
  * @author Juergen Donnerstag
  */
 public class ClassStringResourceLoader extends AbstractStringResourceLoader
-		implements
-			IStringResourceLoader
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(ClassStringResourceLoader.class);
-
 	/** The application we are loading for. */
 	private final Class clazz;
 
@@ -63,38 +55,9 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 	}
 
 	/**
-	 * If component not null, than call the default implementation (@see
-	 * AbstractStringResourceLoader#loadStringResource(Component, String,
-	 * Locale, String), else use the class provided to the constructor to load
-	 * the resource requested.
-	 * 
-	 * @param component
-	 *            The component to use to find resources to be loaded
-	 * @param key
-	 *            The key to obtain the string for
-	 * @param locale
-	 *            The locale identifying the resource set to select the strings
-	 *            from
-	 * @param style
-	 *            The (optional) style identifying the resource set to select
-	 *            the strings from (see {@link wicket.Session})
-	 * @return The string resource value or null if resource not found
-	 */
-//	public String loadStringResource(final Component component, final String key,
-//			final Locale locale, final String style)
-//	{
-//		if (component == null)
-//		{
-//			return loadStringResourceByClass(this.clazz, key, locale, style);
-//		}
-//
-//		return super.loadStringResource(component, key, locale, style);
-//	}
-
-	/**
 	 * @inheritDoc
 	 */
-	public String loadStringResource(Class clazz, final String key,
+	public String loadStringResource(final Class clazz, final String key,
 			final Locale locale, final String style)
 	{
 		 return super.loadStringResource(this.clazz, key, locale, style);

@@ -19,6 +19,8 @@ package wicket.authorization;
 
 import java.io.Serializable;
 
+import wicket.util.string.Strings;
+
 /**
  * A class for constructing singleton constants that represent a given component
  * action that needs to be authorized. The Wicket core framework defines
@@ -36,6 +38,12 @@ import java.io.Serializable;
 public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
+	
+	/** RENDER action name (for consistent name and use in annotations) */
+	public static final String RENDER = "RENDER";
+	
+	/** ENABLE action name (for consistent name and use in annotations) */
+	public static final String ENABLE = "ENABLE";
 
 	/** The name of this action. */
 	private final String name;
@@ -46,11 +54,11 @@ public class Action implements Serializable
 	 * @param name
 	 *            The name of this action for debug purposes
 	 */
-	public Action(String name)
+	public Action(final String name)
 	{
-		if (name == null)
+		if (Strings.isEmpty(name))
 		{
-			throw new IllegalArgumentException("Name argument may not be null");
+			throw new IllegalArgumentException("Name argument may not be null, whitespace or the empty string");
 		}
 
 		this.name = name;
@@ -59,14 +67,22 @@ public class Action implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof Action)
 		{
-			Action that = (Action)obj;
+			final Action that = (Action)obj;
 			return name.equals(that.name);
 		}
 		return false;
+	}
+	
+	/**
+	 * @return The name of this action
+	 */
+	public String getName()
+	{
+		return name;
 	}
 
 	/**

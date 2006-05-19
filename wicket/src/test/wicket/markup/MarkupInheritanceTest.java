@@ -137,4 +137,28 @@ public class MarkupInheritanceTest extends WicketTestCase
 	{
 	    executeTest(MarkupInheritancePage_9.class, "MarkupInheritanceExpectedResult_9.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_10() throws Exception
+	{
+	    executeTest(MarkupInheritanceExtension_10.class, "MarkupInheritanceExpectedResult_10.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_11() throws Exception
+	{
+	    executeTest(MarkupInheritanceExtension_11.class, "MarkupInheritanceExpectedResult_11.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_12() throws Exception
+	{
+	    executeTest(MarkupInheritanceExtension_12.class, "MarkupInheritanceExpectedResult_12.html");
+	}
 }

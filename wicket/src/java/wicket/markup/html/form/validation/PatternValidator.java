@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import wicket.markup.html.form.FormComponent;
@@ -38,6 +39,17 @@ import wicket.util.string.Strings;
  * regular expressions are that the patterns are easier to construct and easier
  * to combine into complex patterns. They are also more readable and more
  * reusable. See {@link wicket.util.parse.metapattern.MetaPattern}for details.
+ * <p>
+ * The error message will be generated with the
+ * key "PatternValidator" and the messages keys that can be used are:
+ * <ul>
+ * <li>${pattern}: the pattern which failed to match</li>
+ * <li>${input}: the input the user did give</li>
+ * <li>${name}: the name of the component that failed</li>
+ * <li>${label}: the label of the component - either comes from
+ * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+ * that order</li>
+ * </ul>
  * 
  * @see java.util.regex.Pattern
  * @see wicket.util.parse.metapattern.MetaPattern
@@ -99,11 +111,10 @@ public class PatternValidator extends StringValidator
 	/**
 	 * Validates the set pattern.
 	 *
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * @see StringValidator#onValidate(wicket.markup.html.form.FormComponent,String)
 	 */
 	public void onValidate(FormComponent formComponent, String value)
 	{
-		// If value is non-empty
 		if (!Strings.isEmpty(value))
 		{
 			// Check value against pattern
@@ -124,6 +135,22 @@ public class PatternValidator extends StringValidator
 		return pattern;
 	}
 
+	
+	protected Map messageModel(FormComponent formComponent)
+	{
+		final Map map = super.messageModel(formComponent);
+		map.put("pattern", pattern);
+		return map;
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
+	 */
+	protected String resourceKey(FormComponent formComponent)
+	{
+		return "PatternValidator";
+	}
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */

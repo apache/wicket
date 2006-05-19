@@ -1,0 +1,73 @@
+<!--
+   -                 Sun Public License Notice
+   - 
+   - The contents of this file are subject to the Sun Public License
+   - Version 1.0 (the "License"). You may not use this file except in
+   - compliance with the License. A copy of the License is available at
+   - http://www.sun.com/
+   - 
+   - The Original Code is NetBeans. The Initial Developer of the Original
+   - Code is Sun Microsystems, Inc. Portions Copyright 1997-2000 Sun
+   - Microsystems, Inc. All Rights Reserved.
+  -->
+
+<HTML>
+<BODY bgcolor="white">
+
+The org.netbeans.modules.classfile package supports direct
+access to a Java Virtual Machine classfile contents.  All elements and 
+attributes of a classfile are accessible from this package's API.  This
+package only supports read-only access of classfiles at this time.
+<P>
+The classfile library is not actually a NetBeans module, but is only
+packaged as one to use NetBeans' Auto Update facility.  By being
+packaged as a module, other (real) NetBeans modules may list it as
+a dependency and require a minimum version to be present on the system.
+The classfile library does not use any NetBeans API, only Java core API.
+<P>
+The classfile library has only four constructors, as the only objects that
+can be created by a client are ClassFile objects (one constructor takes
+an InputStream of classfile bytes, another takes a filename, and variants
+of these two constructors allow creation of Code objects to be suppressed).
+The ClassFile object is then queried for its elements.  A ClassFile and 
+its elements should be considered immutable, even though it may be
+possible to change one of its objects (if so, it's a bug).
+<P>
+
+<h2>Examples</h2>
+
+Here is a simple example which dumps out a classfile:
+<p>
+<pre><code>
+    static void printClass(String classname) {
+        try {
+            System.out.println(new ClassFile(classname));
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+    }
+</code></pre>
+<p>
+Here is an example which prints out any synthetic methods:
+<pre><code>
+    static void printSyntheticMethods(InputStream in) throws IOException {
+        ClassFile cf = new ClassFile(in);
+        Iterator iter = cf.getMethods();
+        while (iter.hasNext()) {
+            Method m = (Method)iter.next();
+            if (m.isSynthetic())
+                 System.out.println(m.toString());
+        }
+    }
+</code></pre>
+ 
+<h2>Related Documentation</h2>
+
+<ul>
+  <li><A HREF="http://java.sun.com/docs/books/jls/index.html">Java Virtual Machine Specification, Second Edition</a>
+</ul>
+
+<!-- Put @see and @since tags down here. -->
+  </BODY>
+</HTML>

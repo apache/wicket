@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import wicket.util.collections.ArrayListStack;
 
 /**
  * Simple class that provides a convenient programmatic way to define what an
@@ -78,8 +79,8 @@ public class HtmlDocumentValidator
     {
         HtmlDocumentParser parser = new HtmlDocumentParser(document);
         Iterator expectedElements = elements.iterator();
-        Stack iteratorStack = new Stack();
-        Stack tagNameStack = new Stack();
+        ArrayListStack iteratorStack = new ArrayListStack();
+        ArrayListStack tagNameStack = new ArrayListStack();
 
         boolean end = false;
         boolean valid = true;
@@ -97,22 +98,32 @@ public class HtmlDocumentValidator
                 case HtmlDocumentParser.COMMENT :
                     valid = validateComment(expectedElements, parser);
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
                 case HtmlDocumentParser.OPEN_TAG :
                     valid = validateTag(expectedElements, parser);
                     if (!valid)
-                        end = true;
-                    else
-                        expectedElements = saveOpenTagState(iteratorStack, expectedElements,
+					{
+						end = true;
+					}
+					else
+					{
+						expectedElements = saveOpenTagState(iteratorStack, expectedElements,
                                 tagNameStack);
+					}
                     break;
                 case HtmlDocumentParser.OPENCLOSE_TAG :
                     valid = validateTag(expectedElements, parser);
                     if (valid)
-                        valid = checkOpenCloseTag();
+					{
+						valid = checkOpenCloseTag();
+					}
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
                 case HtmlDocumentParser.CLOSE_TAG :
                     expectedElements = validateCloseTag(tagNameStack, parser, expectedElements,
@@ -126,7 +137,9 @@ public class HtmlDocumentValidator
                 case HtmlDocumentParser.TEXT :
                     valid = validateText(expectedElements, parser);
                     if (!valid)
-                        end = true;
+					{
+						end = true;
+					}
                     break;
             }
         }
@@ -176,39 +189,73 @@ public class HtmlDocumentValidator
     {
         tag = workingTag.getTag().toLowerCase();
         if (tag.equals("area"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("base"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("basefont"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("bgsound"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("br"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("col"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("frame"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("hr"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("img"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("input"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("isindex"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("keygen"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("link"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("meta"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("param"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("spacer"))
-            return true;
+		{
+			return true;
+		}
         if (tag.equals("wbr"))
-            return true;
+		{
+			return true;
+		}
         return false;
     }
 
@@ -224,8 +271,8 @@ public class HtmlDocumentValidator
      *            The stack of open tags
      * @return The iterator to continue to use
      */
-    private Iterator saveOpenTagState(Stack iteratorStack, Iterator expectedElements,
-            Stack tagNameStack)
+    private Iterator saveOpenTagState(ArrayListStack iteratorStack, Iterator expectedElements,
+            ArrayListStack tagNameStack)
     {
         if (!isNonClosedTag(workingTag.getTag()))
         {
@@ -249,8 +296,8 @@ public class HtmlDocumentValidator
      *            The stack of previous iterators
      * @return The next iterator to use, or null
      */
-    private Iterator validateCloseTag(Stack tagNameStack, HtmlDocumentParser parser,
-            Iterator expectedElements, Stack iteratorStack)
+    private Iterator validateCloseTag(ArrayListStack tagNameStack, HtmlDocumentParser parser,
+            Iterator expectedElements, ArrayListStack iteratorStack)
     {
         if (tagNameStack.isEmpty())
         {

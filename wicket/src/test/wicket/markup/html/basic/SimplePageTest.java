@@ -27,7 +27,6 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
-import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.panel.Panel;
 import wicket.util.value.ValueMap;
 
@@ -279,17 +278,13 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_4.class, "SimplePageExpectedResult_4.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException mex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-				
-				MarkupException mex = (MarkupException)ex.getCause();
-				assertNotNull(mex.getMarkupStream());
-				assertTrue(mex.getMessage().indexOf("<span>") != -1);
-				assertTrue(mex.getMessage().indexOf("SimplePage_4.html") != -1);
-			}
+			hit = true;
+			
+			assertNotNull(mex.getMarkupStream());
+			assertTrue(mex.getMessage().indexOf("<span>") != -1);
+			assertTrue(mex.getMessage().indexOf("SimplePage_4.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -324,12 +319,9 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException ex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-			}
+			hit = true;
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -339,7 +331,7 @@ public class SimplePageTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_7() throws Exception
 	{
-//		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
+		executeTest(SimplePage_7.class, "SimplePageExpectedResult_7.html");
 	}
 
 	/**
@@ -352,12 +344,9 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_8.class, "SimplePageExpectedResult_8.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupException ex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupException))
-			{
-				hit = true;
-			}
+			hit = true;
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -389,20 +378,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testAccessDeniedPage_11() throws Exception
+	public void testRenderHomePage_11() throws Exception
 	{
-	    Class pageClass = SimplePage_11.class;
-	    String filename = "SimplePageExpectedResult_11.html";
-	    
-		System.out.println("=== " + SimplePage_11.class.getName() + " ===");
-		
-		application.setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		// Response page must the access denied page
-		assertEquals(AccessDeniedPage.class, application.getLastRenderedPage().getClass());
+		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
 	}
 }

@@ -18,6 +18,7 @@
 package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
+import wicket.request.RequestParameters;
 
 /**
  * Implementations of this interface know how to encode and decode
@@ -38,19 +39,16 @@ public interface IRequestTargetUrlCodingStrategy
 	 * 
 	 * @return the encoded url
 	 */
-	String encode(IRequestTarget requestTarget);
+	CharSequence encode(IRequestTarget requestTarget);
 
 	/**
 	 * Gets the decoded request target.
 	 * 
-	 * @param urlFragment
-	 *            the url fragment still available for decoding. In a servlet
-	 *            environment, this is the part <strong>after</strong> the
-	 *            servlet name, including any pathInfo and parameters
-	 * 
+   * @param requestParameters
+	 *            the request parameters
 	 * @return the decoded request target
 	 */
-	IRequestTarget decode(String urlFragment);
+	IRequestTarget decode(RequestParameters requestParameters);
 
 	/**
 	 * Gets whether this mounter is applicable for the provided request target.

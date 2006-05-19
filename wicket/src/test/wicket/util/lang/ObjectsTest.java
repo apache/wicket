@@ -2,15 +2,29 @@ package wicket.util.lang;
 
 import java.io.Serializable;
 
-import junit.framework.TestCase;
+import wicket.WicketTestCase;
+import wicket.markup.html.form.TextField;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 /**
  * Tests the Objects class.
  * 
  * @author Martijn Dashorst
  */
-public class ObjectsTest extends TestCase
+public class ObjectsTest extends WicketTestCase
 {
+
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public ObjectsTest(String name)
+	{
+		super(name);
+	}
+
 	/**
 	 * Test method for 'wicket.util.lang.Objects.equal(Object, Object)'
 	 */
@@ -36,7 +50,7 @@ public class ObjectsTest extends TestCase
 	 */
 	public void testCloneNull()
 	{
-		Object clone = Objects.clone(null);
+		Object clone = Objects.cloneModel(null);
 		assertEquals(null, clone);
 	}
 
@@ -47,7 +61,7 @@ public class ObjectsTest extends TestCase
 	{
 		String cloneMe = "Mini-me";
 
-		Object clone = Objects.clone(cloneMe);
+		Object clone = Objects.cloneModel(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}
@@ -61,13 +75,24 @@ public class ObjectsTest extends TestCase
 
 		try
 		{
-			Objects.clone(cloneMe);
+			Objects.cloneModel(cloneMe);
 			fail("Exception expected");
 		}
 		catch (RuntimeException e)
 		{
 			assertTrue(true);
 		}
+	}
+
+	/**
+	 * Test method for component cloning
+	 */
+	public void testComponentClone()
+	{
+		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),
+				"modelObject");
+		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
+		assertTrue(pm.getObject(null) == pm2.getObject(null));
 	}
 
 	/**
@@ -78,7 +103,7 @@ public class ObjectsTest extends TestCase
 		CloneObject cloneMe = new CloneObject();
 		cloneMe.nr = 1;
 
-		Object clone = Objects.clone(cloneMe);
+		Object clone = Objects.cloneModel(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}

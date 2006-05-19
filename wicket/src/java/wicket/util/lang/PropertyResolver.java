@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PropertyResolver.java 4710 2006-03-02 00:46:15 -0800 (Thu, 02 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-02 00:46:15 -0800 (Thu, 02 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,10 +16,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-/**
- * 
- */
 package wicket.util.lang;
 
 import java.lang.reflect.Array;
@@ -28,10 +25,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -63,6 +63,8 @@ public class PropertyResolver
 {
 	private final static Map classesToGetAndSetters = new ConcurrentHashMap(64);
 
+	/** Log. */
+	private static final Log log = LogFactory.getLog(PropertyResolver.class);
 
 	/**
 	 * Looksup the value from the object with the given expression. If the
@@ -79,11 +81,15 @@ public class PropertyResolver
 	public final static Object getValue(final String expression, final Object object)
 	{
 		if (expression == null || expression.equals("") || object == null)
+		{
 			return object;
+		}
 
 		ObjectAndGetSetter getter = getObjectAndGetSetter(expression, object, false);
 		if (getter == null)
+		{
 			return null;
+		}
 		return getter.getValue();
 
 	}
@@ -127,13 +133,13 @@ public class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? new Converter() : converter);
+		setter.setValue(value, converter == null ? Session.get().getConverter() : converter);
 	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
-		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[");
+		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
 		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;
@@ -155,7 +161,8 @@ public class PropertyResolver
 				index = expressionBracketsSeperated.indexOf('.', index + 1);
 				if (index != -1)
 				{
-					String indexExpression = expressionBracketsSeperated.substring(lastIndex, index);
+					String indexExpression = expressionBracketsSeperated
+							.substring(lastIndex, index);
 					getAndSetter = getGetAndSetter(indexExpression, clz);
 				}
 				else
@@ -209,23 +216,25 @@ public class PropertyResolver
 		{
 			Method method = null;
 			Field field = null;
-			if(exp.startsWith("["))
+			if (exp.startsWith("["))
 			{
-				// if expression begins with [ skip method finding and use it as a key/index lookup on a map.
-				exp = exp.substring(1,exp.length()-1);
+				// if expression begins with [ skip method finding and use it as
+				// a key/index lookup on a map.
+				exp = exp.substring(1, exp.length() - 1);
 			}
-			else if(exp.endsWith("()"))
+			else if (exp.endsWith("()"))
 			{
-				// if expression ends with (), don't test for setters just skip directly to method finding.
+				// if expression ends with (), don't test for setters just skip
+				// directly to method finding.
 				method = findMethod(clz, exp);
 			}
-			else 
+			else
 			{
 				method = findGetter(clz, exp);
-				if(method == null)
+				if (method == null)
 				{
 					// find field.
-					field = findField(clz,exp);
+					field = findField(clz, exp);
 				}
 			}
 			if (method == null && field == null)
@@ -239,15 +248,17 @@ public class PropertyResolver
 					}
 					catch (NumberFormatException ex)
 					{
-						// can't parse the exp als a index maybe the exp was a method.
-						method = findMethod(clz, exp );
-						if(method != null)
+						// can't parse the exp als a index maybe the exp was a
+						// method.
+						method = findMethod(clz, exp);
+						if (method != null)
 						{
 							getAndSetter = new MethodGetAndSet(method);
 						}
 						else
 						{
-							throw new WicketRuntimeException("Can parse " + exp + " as an index or look it up as a method for the list " + clz);
+							throw new WicketRuntimeException("The expression '" + exp
+									+ "' is neither an index nor is it a method for the list " + clz);
 						}
 					}
 				}
@@ -264,20 +275,21 @@ public class PropertyResolver
 					}
 					catch (NumberFormatException ex)
 					{
-						if(exp.equals("length") || exp.equals("size"))
+						if (exp.equals("length") || exp.equals("size"))
 						{
 							getAndSetter = new ArrayLengthGetSet();
 						}
 						else
 						{
-							throw new WicketRuntimeException("can't parse the exp " + exp + " as an index for an array lookup");
+							throw new WicketRuntimeException("can't parse the exp " + exp
+									+ " as an index for an array lookup");
 						}
 					}
 				}
 				else
 				{
 					method = findMethod(clz, exp);
-					if(method == null)
+					if (method == null)
 					{
 						int index = exp.indexOf('.');
 						if (index != -1)
@@ -286,27 +298,31 @@ public class PropertyResolver
 							String propertyIndex = exp.substring(index + 1);
 							try
 							{
-	
+
 								int parsedIndex = Integer.parseInt(propertyIndex);
-								// if so then it could be a getPropertyIndex(int)
+								// if so then it could be a
+								// getPropertyIndex(int)
 								// and setPropertyIndex(int, object)
 								String name = Character.toUpperCase(propertyName.charAt(0))
 										+ propertyName.substring(1);
 								method = clz.getMethod("get" + name, new Class[] { int.class });
 								getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
-	
+
 							}
 							catch (Exception e)
 							{
-								throw new WicketRuntimeException("no get method defined for class: "
-										+ clz + " expression: " + propertyName);
+								throw new WicketRuntimeException(
+										"no get method defined for class: " + clz + " expression: "
+												+ propertyName);
 							}
 						}
 						else
 						{
-							// TODO Enhancement: Find a public FIELD
-							throw new WicketRuntimeException("No get method defined for class: " + clz
-									+ " expression: " + exp);
+							// We do not look for a public FIELD because that is
+							// not good
+							// programming with beans patterns
+							throw new WicketRuntimeException("No get method defined for class: "
+									+ clz + " expression: " + exp);
 						}
 					}
 					else
@@ -315,7 +331,7 @@ public class PropertyResolver
 					}
 				}
 			}
-			else if(field != null)
+			else if (field != null)
 			{
 				getAndSetter = new FieldGetAndSetter(field);
 			}
@@ -331,19 +347,19 @@ public class PropertyResolver
 
 	/**
 	 * @param clz
-	 * @param exp
+	 * @param expression
 	 * @return introspected field
 	 */
-	private static Field findField(Class clz, String exp)
+	private static Field findField(Class clz, String expression)
 	{
 		Field field = null;
 		try
 		{
-			field = clz.getField(exp);
+			field = clz.getField(expression);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			// TODO Robustness: Log exception
+			log.debug("Cannot find field " + clz + "." + expression, e);
 		}
 		return field;
 	}
@@ -361,7 +377,7 @@ public class PropertyResolver
 		{
 			method = clz.getMethod("get" + name, null);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
 		}
 		if (method == null)
@@ -370,28 +386,28 @@ public class PropertyResolver
 			{
 				method = clz.getMethod("is" + name, null);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.debug("Cannot find getter " + clz + "." + expression, e);
 			}
 		}
 		return method;
 	}
-	
+
 	private final static Method findMethod(Class clz, String expression)
 	{
-		if(expression.endsWith("()"))
+		if (expression.endsWith("()"))
 		{
-			expression = expression.substring(0,expression.length()-2);
+			expression = expression.substring(0, expression.length() - 2);
 		}
 		Method method = null;
 		try
 		{
 			method = clz.getMethod(expression, null);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			// TODO Robustness: Log exception
+			log.debug("Cannot find method " + clz + "." + expression, e);
 		}
 		return method;
 	}
@@ -594,9 +610,10 @@ public class PropertyResolver
 				value = clz.newInstance();
 				Array.set(object, index, value);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.warn("Cannot set new value " + value + " at index " + index
+						+ " for array holding elements of class " + clz, e);
 			}
 			return value;
 		}
@@ -633,7 +650,7 @@ public class PropertyResolver
 			throw new WicketRuntimeException("Cant get a new value from a length of an array");
 		}
 	}
-	
+
 	private static final class ArrayPropertyGetSet implements IGetAndSet
 	{
 		final private Integer index;
@@ -654,9 +671,9 @@ public class PropertyResolver
 			{
 				return clz.getMethod(name, new Class[] { int.class, getMethod.getReturnType() });
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.debug("Cannot find setter method corresponding to " + getMethod, e);
 			}
 			return null;
 		}
@@ -734,9 +751,11 @@ public class PropertyResolver
 				setMethod = findSetter(getMethod, object.getClass());
 			}
 
-			// TODO Robustness: Log this
 			if (setMethod == null)
+			{
+				log.warn("Null setMethod");
 				return null;
+			}
 
 			Class clz = getMethod.getReturnType();
 			Object value = null;
@@ -745,9 +764,9 @@ public class PropertyResolver
 				value = clz.newInstance();
 				setMethod.invoke(object, new Object[] { index, value });
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.warn("Cannot set new value " + value + " at index " + index, e);
 			}
 			return value;
 		}
@@ -801,10 +820,18 @@ public class PropertyResolver
 			if (setMethod != null)
 			{
 				Object converted = converter.convert(value, getMethod.getReturnType());
-				if (converted == null && value != null)
+				if ( converted == null)
 				{
-					throw new ConversionException("Can't convert value: " + value + " to class: "
-							+ getMethod.getReturnType() + " for setting it on " + object);
+					if( value != null )
+					{
+						throw new ConversionException("Can't convert value: " + value + " to class: "
+								+ getMethod.getReturnType() + " for setting it on " + object);
+					}
+					else if( getMethod.getReturnType().isPrimitive() )
+					{
+						throw new ConversionException("Can't convert null value to a primitive class: "
+								+ getMethod.getReturnType() + " for setting it on " + object);
+					}
 				}
 				try
 				{
@@ -842,12 +869,15 @@ public class PropertyResolver
 			try
 			{
 				Method method = clz.getMethod(name, new Class[] { getMethod.getReturnType() });
-				if(method != null) method.setAccessible(true);
+				if (method != null)
+				{
+					method.setAccessible(true);
+				}
 				return method;
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			return null;
 		}
@@ -861,10 +891,12 @@ public class PropertyResolver
 			{
 				setMethod = findSetter(getMethod, object.getClass());
 			}
-			
-			// TODO Robustness: Log this
+
 			if (setMethod == null)
+			{
+				log.warn("Null setMethod");
 				return null;
+			}
 
 			Class clz = getMethod.getReturnType();
 			Object value = null;
@@ -873,15 +905,15 @@ public class PropertyResolver
 				value = clz.newInstance();
 				setMethod.invoke(object, new Object[] { value });
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.warn("Cannot set new value " + value, e);
 			}
 			return value;
 		}
 
 	}
-	
+
 	/**
 	 * @author jcompagner
 	 */
@@ -889,10 +921,11 @@ public class PropertyResolver
 	{
 
 		private Field field;
-		
+
 		/**
 		 * Construct.
-		 * @param field 
+		 * 
+		 * @param field
 		 */
 		public FieldGetAndSetter(Field field)
 		{
@@ -912,7 +945,8 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				throw new WicketRuntimeException("Error getting field value of field " + field + " from object " + object ,ex);
+				throw new WicketRuntimeException("Error getting field value of field " + field
+						+ " from object " + object, ex);
 			}
 		}
 
@@ -928,15 +962,16 @@ public class PropertyResolver
 				value = clz.newInstance();
 				field.set(object, value);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				// TODO Robustness: Log exception
+				log.warn("Cannot set field " + field + " to " + value, e);
 			}
 			return value;
 		}
 
 		/**
-		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object, java.lang.Object, wicket.util.convert.IConverter)
+		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
+		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
 		public void setValue(Object object, Object value, IConverter converter)
 		{
@@ -947,9 +982,9 @@ public class PropertyResolver
 			}
 			catch (Exception ex)
 			{
-				throw new WicketRuntimeException("Error setting field value of field " + field + " on object " + object + ", value " + value,ex);
+				throw new WicketRuntimeException("Error setting field value of field " + field
+						+ " on object " + object + ", value " + value, ex);
 			}
 		}
-
 	}
 }

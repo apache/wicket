@@ -64,7 +64,7 @@ Calendar._SMN = new Array
  "Feb",
  "M\u00e4r",
  "Apr",
- "May",
+ "Mai",
  "Jun",
  "Jul",
  "Aug",

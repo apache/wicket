@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,8 +25,8 @@ import wicket.markup.html.PackageResource;
 /**
  * Initializer class for shared resources in the pub application.
  * 
- * See wicket.properties file in root of examples project to see how
- * this file gets invoked for the pub application.
+ * See wicket.properties file in root of examples project to see how this file
+ * gets invoked for the pub application.
  * 
  * @author Jonathan Locke
  */
@@ -38,11 +37,11 @@ public class Initializer implements IInitializer
 	 */
 	public void init(Application application)
 	{
-		PackageResource.bind(application,Home.class, "Beer.gif", null, null);
-		PackageResource.bind(application,Home.class, "Beer.gif", new Locale("de","DE"), null);
-		PackageResource.bind(application,Home.class, "Beer.gif", new Locale("en","CA"), null);
-		PackageResource.bind(application,Home.class, "Beer.gif", new Locale("en","US"), null);
-		PackageResource.bind(application,Home.class, "Beer.gif", new Locale("nl","NL"), null);
-		PackageResource.bind(application,Home.class, "Beer.gif", new Locale("zh","CN"), null);
+		PackageResource.bind(application, Home.class, "Beer.gif");
+		PackageResource.bind(application, Home.class, "Beer.gif", new Locale("de", "DE"));
+		PackageResource.bind(application, Home.class, "Beer.gif", new Locale("en", "CA"));
+		PackageResource.bind(application, Home.class, "Beer.gif", new Locale("en", "US"));
+		PackageResource.bind(application, Home.class, "Beer.gif", new Locale("nl", "NL"));
+		PackageResource.bind(application, Home.class, "Beer.gif", new Locale("zh", "CN"));
 	}
 }

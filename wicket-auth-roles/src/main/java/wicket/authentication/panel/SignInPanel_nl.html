@@ -1,0 +1,38 @@
+<html xmlns:wicket>
+<head>
+    <title>Wicket Examples - signin2</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+  <wicket:panel>
+    <span wicket:id="feedback"/>
+		<form wicket:id="signInForm">
+			<table>
+				<tr>
+					<td align="right">Gebruikersnaam:</td>
+					<td>
+						<input wicket:id="username" type="text" value="foo@goo.moo" size="30"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Wachtwoord:</td>
+					<td>
+						<input wicket:id="password" type="password" value="password" size="30"/>
+					</td>
+				</tr>
+				<tr wicket:id="rememberMeRow">
+					<td></td>
+					<td> <input wicket:id="rememberMe" type="checkbox" /> Onthouden </td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type="submit" name="submit" value="Aanmelden"/>
+						<input type="reset" value="Reset"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+  </wicket:panel>
+</body>
+</html>

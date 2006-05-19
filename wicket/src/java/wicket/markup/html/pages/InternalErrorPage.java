@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.pages;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.markup.html.WebPage;
 
 /**
@@ -36,6 +38,14 @@ public class InternalErrorPage extends WebPage
 		add(homePageLink("homePageLink"));
 	}
 
+	/**
+	 * @see wicket.markup.html.WebPage#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	}
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */

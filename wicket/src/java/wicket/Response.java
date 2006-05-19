@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
+import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 import wicket.util.time.Time;
 
 /**
@@ -37,13 +39,6 @@ public abstract class Response
 {
     /** Default encoding of output stream */
     private String defaultEncoding;
-
-    /**
-     * Construct.
-     */
-    public Response()
-    {
-    }
 
 	/**
 	 * Closes the response output stream
@@ -61,7 +56,7 @@ public abstract class Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(final String url)
+	public CharSequence encodeURL(final CharSequence url)
 	{
 		return url;
 	}
@@ -77,7 +72,7 @@ public abstract class Response
 	 *            The response buffer to be filtered
 	 * @return Returns the filtered string buffer.
 	 */
-	public final StringBuffer filter(StringBuffer responseBuffer)
+	public final AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		List responseFilters = Application.get().getRequestCycleSettings().getResponseFilters();
 		if (responseFilters == null)
@@ -210,5 +205,17 @@ public abstract class Response
 	 * @param string
 	 *            The string to write
 	 */
-	public abstract void write(final String string);
+	public abstract void write(final CharSequence string);
+
+	/**
+	 * Writes the given string to the Response subclass output destination and
+	 * appends a cr/nl depending on the OS
+	 * 
+	 * @param string
+	 */
+	public final void println(final CharSequence string)
+	{
+		write(string);
+		write(Strings.LINE_SEPARATOR);
+	}
 }

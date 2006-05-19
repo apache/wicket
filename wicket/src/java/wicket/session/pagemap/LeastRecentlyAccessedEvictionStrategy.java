@@ -19,6 +19,7 @@ package wicket.session.pagemap;
 
 import wicket.Page;
 import wicket.PageMap;
+import wicket.Session;
 
 /**
  * A simple eviction strategy that evicts the least recently accessed page
@@ -53,34 +54,42 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final PageMap pageMap)
 	{
-		// Do we need to evict under this strategy?
-		if (pageMap.getVersions() > maxVersions)
+		synchronized (Session.get())
 		{
-			// Remove oldest entry from access stack
-			final PageMap.Access oldestAccess = (PageMap.Access)pageMap.getAccessStack().remove(0);
-			final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
-
-			// If entry is a page (cannot be null if we're evicting)
-			if (oldestEntry instanceof Page)
+			// Do we need to evict under this strategy?
+			if (pageMap.getVersions() > maxVersions)
 			{
-				Page page = (Page)oldestEntry;
-
-				// If there is more than one version of this page
-				if (page.getVersions() > 1)
+				// Remove oldest entry from access stack
+				final PageMap.Access oldestAccess = (PageMap.Access)pageMap.getAccessStack().remove(0);
+				final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
+	
+				// If entry is a page (cannot be null if we're evicting)
+				if (oldestEntry instanceof Page)
 				{
-					// expire the oldest version
-					page.expireOldestVersion();
+					Page page = (Page)oldestEntry;
+	
+					// If there is more than one version of this page
+					if (page.getVersions() > 1)
+					{
+						// expire the oldest version
+						page.expireOldestVersion();
+					}
+					else
+					{
+						// expire whole page
+						pageMap.removeEntry(page);
+					}
 				}
 				else
 				{
-					// expire whole page
-					pageMap.remove(page);
+					// If oldestEntry is not an instance of Page, then it is some
+					// custom, user-defined IPageMapEntry class and cannot contain
+					// versioning information, so we just remove the entry.
+					if (oldestEntry != null)
+					{
+						pageMap.removeEntry(oldestEntry);
+					}
 				}
-			}
-			else
-			{
-				// Remove the entry
-				pageMap.remove(oldestEntry);
 			}
 		}
 	}

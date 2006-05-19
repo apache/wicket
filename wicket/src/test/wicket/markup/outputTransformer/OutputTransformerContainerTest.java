@@ -18,9 +18,6 @@
  */
 package wicket.markup.outputTransformer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 
 /**
@@ -29,7 +26,7 @@ import wicket.WicketTestCase;
  */
 public class OutputTransformerContainerTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(OutputTransformerContainerTest.class);
+	// private static Log log = LogFactory.getLog(OutputTransformerContainerTest.class);
 
 	/**
 	 * Create the test.

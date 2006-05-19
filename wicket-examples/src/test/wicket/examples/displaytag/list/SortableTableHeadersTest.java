@@ -17,17 +17,15 @@
  */
 package wicket.examples.displaytag.list;
 
-import junit.framework.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketTestCase;
+import wicket.examples.DiffUtil;
+import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
-import wicket.settings.Settings;
+import wicket.settings.IRequestCycleSettings;
 
 
 /**
@@ -56,7 +54,8 @@ public class SortableTableHeadersTest extends WicketTestCase
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getRequestCycleSettings().setRenderStrategy(Settings.REDIRECT_TO_BUFFER);
+		application.getRequestCycleSettings().setRenderStrategy(
+				IRequestCycleSettings.REDIRECT_TO_BUFFER);
 		application.setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
@@ -82,7 +81,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		// Check that redirect was set as expected and invoke it
 		MockHttpServletResponse redirectResponse = application.getServletResponse();
 
-		Assert.assertTrue("Response should be a redirect", redirectResponse.isRedirect());
+		assertTrue("Response should be a redirect", redirectResponse.isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
@@ -100,8 +99,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 
 		// Check that redirect was set as expected and invoke it
 		// Check that wicket:border tag gets removed
-		Assert.assertTrue("Response should be a redirect", application.getServletResponse()
-				.isRedirect());
+		assertTrue("Response should be a redirect", application.getServletResponse().isRedirect());
 		application.getMarkupSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();

@@ -1,6 +1,6 @@
 /*
- * $Id: WicketTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,9 +18,8 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
@@ -37,16 +36,15 @@ import wicket.markup.parser.XmlTag;
  * <p>
  * <ul>
  * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
- * <li>All tags with an attribute like wicket:id="myLabel"
- * </li>
+ * <li>All tags with an attribute like wicket:id="myLabel" </li>
  * </ul>
  * 
  * @author Juergen Donnerstag
  */
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(WicketTagIdentifier.class);
+	/** List of well known wicket tag namses */
+	private static List wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
 	private final Markup markup;
@@ -90,7 +88,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		}
 
 		final String namespace = this.markup.getWicketNamespace();
-		
+
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
 		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
@@ -99,7 +97,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			tag = new WicketTag(xmlTag);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setId(tag.getName());
+			tag.setId("_" + tag.getName());
+
+			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
+			{
+				throw new ParseException("Unkown tag name with Wicket namespace: '"
+						+ xmlTag.getName()
+						+ "'. Might be you haven't installed the appropriate resolver?", tag
+						.getPos());
+			}
 		}
 		else
 		{
@@ -113,12 +119,32 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		{
 			if (value.trim().length() == 0)
 			{
-				throw new ParseException("The wicket:id attribute value must not be empty. May be unmatched quotes?!?", tag.getPos());
+				throw new ParseException(
+						"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
+						tag.getPos());
 			}
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(value);
 		}
 
 		return tag;
+	}
+
+	/**
+	 * Register a new well known wicket tag name (e.g. panel)
+	 * 
+	 * @param name
+	 */
+	public final static void registerWellKnownTagName(final String name)
+	{
+		if (wellKnownTagNames == null)
+		{
+			wellKnownTagNames = new ArrayList();
+		}
+
+		if (wellKnownTagNames.contains(name) == false)
+		{
+			wellKnownTagNames.add(name);
+		}
 	}
 }

@@ -125,9 +125,9 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#cleanUp(wicket.RequestCycle)
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
-	public void cleanUp(RequestCycle requestCycle)
+	public void detach(RequestCycle requestCycle)
 	{
 	}
 
@@ -167,6 +167,6 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "WebExternalResourceRequestTarget@" + hashCode() + "{" + url + "}";
+		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + url + "]";
 	}
 }

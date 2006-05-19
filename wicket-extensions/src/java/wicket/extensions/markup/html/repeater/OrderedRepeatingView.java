@@ -1,32 +1,35 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
+ * This view has been deprecated. It is no longer needed since wicket will now
+ * guarantee that the order in which MarkupContainer.iterator() returns child
+ * components is the order in which they were added. Use {@link RepeatingView}
+ * instead.
+ * 
+ * 
  * A repeater view that renders all of its children, using its body markup, in
  * the order they were added.
  * 
@@ -34,7 +37,11 @@ import wicket.model.IModel;
  * 
  * @see RepeatingView
  * 
+ * @deprecated
+ * 
  * @author Igor Vaynberg ( ivaynberg )
+ * 
+ * TODO Post 1.2: Remove this class
  * 
  */
 public class OrderedRepeatingView extends RepeatingView
@@ -59,60 +66,4 @@ public class OrderedRepeatingView extends RepeatingView
 		super(id, model);
 	}
 
-	/**
-	 * @see RepeatingView#renderIterator()
-	 * 
-	 * @return the iterator that iterators over children in the order they were
-	 *         added
-	 */
-	protected final Iterator renderIterator()
-	{
-		final Iterator ids = order.iterator();
-		return new Iterator()
-		{
-			public boolean hasNext()
-			{
-				return ids.hasNext();
-			}
-
-			public Object next()
-			{
-				return get((String)ids.next());
-			}
-
-			public void remove()
-			{
-				throw new UnsupportedOperationException();
-			}
-
-		};
-	}
-
-	/**
-	 * @see MarkupContainer#add(Component)
-	 */
-	public MarkupContainer add(Component child)
-	{
-		super.add(child);
-		order.add(child.getId());
-		return this;
-	}
-
-	/**
-	 * @see MarkupContainer#remove(String)
-	 */
-	public void remove(String id)
-	{
-		super.remove(id);
-		order.remove(id);
-	}
-
-	/**
-	 * @see MarkupContainer#removeAll()
-	 */
-	public void removeAll()
-	{
-		super.removeAll();
-		order.clear();
-	}
 }

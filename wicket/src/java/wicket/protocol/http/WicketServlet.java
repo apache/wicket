@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.53 $ $Date$
+ * $Id: WicketServlet.java 5151 2006-03-28 03:50:28 -0800 (Tue, 28 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-28 03:50:28 -0800 (Tue, 28 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,11 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
+import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.settings.Settings;
+import wicket.session.ISessionStore;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
 
@@ -44,15 +48,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *         &lt;servlet&gt;
- *             &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *             &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *             &lt;init-param&gt;
- *                 &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                 &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *             &lt;/init-param&gt;
- *             &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *         &lt;/servlet&gt;
+ *                   &lt;servlet&gt;
+ *                       &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                       &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                       &lt;init-param&gt;
+ *                           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                           &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                       &lt;/init-param&gt;
+ *                       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                   &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -64,10 +68,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *         &lt;init-param&gt;
- *           &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *             &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *         &lt;/init-param&gt;
+ *                   &lt;init-param&gt;
+ *                     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *                   &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -84,11 +88,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *         public void init() throws ServletException
- *         {
- *             ServletConfig config = getServletConfig();
- *             String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *             ...
+ *                   public void init() throws ServletException
+ *                   {
+ *                       ServletConfig config = getServletConfig();
+ *                       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                       ...
  * </pre>
  * 
  * </p>
@@ -135,27 +139,32 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		long time = System.currentTimeMillis();
+
 		// First, set the webapplication for this thread
 		Application.set(webApplication);
 
-		// Try to see if there is a redirect stored
-		if (webApplication.getRequestCycleSettings().getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
-		{
-			String sessionId = servletRequest.getSession(true).getId();
-			String queryString = servletRequest.getQueryString();
-			String requestUri = servletRequest.getRequestURI();
-			String bufferId = requestUri;
-			if(queryString != null)
-			{
-				bufferId = new StringBuffer(requestUri.length() + queryString.length() + 1).append(requestUri).append("?").append(queryString).toString();
-			}
-			BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
-					sessionId, bufferId);
+		// Create a new webrequest
+		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
-			if (bufferedResponse != null)
+		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+		{
+			String queryString = servletRequest.getQueryString();
+			if (queryString != null)
 			{
-				bufferedResponse.writeTo(servletResponse);
-				return;
+				// Try to see if there is a redirect stored
+				ISessionStore sessionStore = webApplication.getSessionStore();
+				String sessionId = sessionStore.getSessionId(request);
+				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+						sessionId, queryString);
+
+				if (bufferedResponse != null)
+				{
+					bufferedResponse.writeTo(servletResponse);
+					// redirect responses are ignored for the request
+					// logger...
+					return;
+				}
 			}
 		}
 
@@ -183,9 +192,6 @@ public class WicketServlet extends HttpServlet
 			}
 		}
 
-		// Create a new webrequest
-		final WebRequest request = webApplication.newWebRequest(servletRequest);
-
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
 
@@ -198,18 +204,39 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			// Create a new request cycle
+			// FIXME post 1.2 Instead of doing this, we should get a request cycle factory
+			// from the application settings and use that. That way we are a step
+			// closer to a session-less operation of Wicket.
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
-			// Process request
-			cycle.request();
+			try
+			{
+				// Process request
+				cycle.request();
+			}
+			catch (AbortException e)
+			{
+				// noop
+			}
 		}
 		finally
 		{
 			// Close response
 			response.close();
 
-			// Clean up thread local
-			Application.set(null);
+			RequestLogger requestLogger = webApplication.getRequestLogger();
+
+			if (requestLogger != null)
+			{
+				requestLogger.requestTime((System.currentTimeMillis() - time));
+			}
+
+			// Clean up thread local session
+			Session.unset();
+
+			// Clean up thread local application
+			Application.unset();
+
 		}
 	}
 
@@ -244,6 +271,11 @@ public class WicketServlet extends HttpServlet
 		// Set this WicketServlet as the servlet for the web application
 		this.webApplication.setWicketServlet(this);
 
+		// Store instance of this application object in servlet context to make
+		// integration with outside world easier
+		String contextKey = "wicket:" + getServletConfig().getServletName();
+		getServletContext().setAttribute(contextKey, this.webApplication);
+
 		// Finished
 		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
 				+ factory.getClass().getName() + " factory");
@@ -252,13 +284,22 @@ public class WicketServlet extends HttpServlet
 		{
 			Application.set(webApplication);
 
-			// Call init method of web application
+			// Call internal init method of web application for default
+			// initialisation
 			this.webApplication.internalInit();
+			
+			// Call init method of web application
 			this.webApplication.init();
+			
+			// We initialize components here rather than in the constructor or
+			// in the internal init, because in the init method class aliases
+			// can be added, that would be used in installing resources in the
+			// component.
+			this.webApplication.initializeComponents();
 		}
 		finally
 		{
-			Application.set(null);
+			Application.unset();
 		}
 	}
 
@@ -334,7 +375,6 @@ public class WicketServlet extends HttpServlet
 		if ((pathInfo != null) && pathInfo.startsWith(RESOURCES_PATH_PREFIX))
 		{
 			final String resourceReferenceKey = pathInfo.substring(RESOURCES_PATH_PREFIX.length());
-			final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
@@ -346,25 +386,40 @@ public class WicketServlet extends HttpServlet
 				{
 					Application.set(webApplication);
 
+					final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
+
 					// Set parameters from servlet request
 					resource.setParameters(webRequest.getParameterMap());
 
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();
 
-					// First ask the length so the content is created/accessed
-					stream.length();
-
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();
+
+					try
+					{
+						stream.close();
+					}
+					catch (IOException e)
+					{
+						// ignore
+					}
+
 					return time != null ? time.getMilliseconds() : -1;
+				}
+				catch (AbortException e)
+				{
+					return -1;
 				}
 				finally
 				{
-					Application.set(null);
+					resource.setParameters(null);
+					Application.unset();
 				}
 			}
 		}
 		return -1;
 	}
+
 }

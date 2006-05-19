@@ -1,6 +1,7 @@
 /*
- * $Id: PagingNavigationLink.java,v 1.2 2005/02/12 22:02:48
- * jonathanlocke Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,13 +26,14 @@ import wicket.markup.html.link.Link;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Martijn Dashorst
  */
 public class PagingNavigationLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 	
 	/** The pageable list view. */
-	private final IPageable pageable;
+	protected final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
@@ -56,34 +58,15 @@ public class PagingNavigationLink extends Link
 		this.pageable = pageable;
 	}
 
-	// TODO Documentation: We need to explain this onClick method!
-
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
 	public void onClick()
 	{
-	    // We do not need to redirect
+		pageable.setCurrentPage(getPageNumber());
+
+		// We do not need to redirect
 		setRedirect(false);
-		
-		int idx = pageNumber;
-		if (idx < 0)
-		{
-			idx = pageable.getPageCount() + idx;
-		}
-		
-		if (idx > (pageable.getPageCount() - 1))
-		{
-			idx = pageable.getPageCount() - 1;
-		}
-
-		if (idx < 0)
-		{
-			idx = 0;
-		}
-	    
-		pageable.setCurrentPage(idx);
-
 		setResponsePage(getPage());
 	}
 

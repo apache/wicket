@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4703 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,14 +17,11 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -65,8 +62,7 @@ import wicket.util.lang.Classes;
  */
 public abstract class AbstractValidator implements IValidator
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(AbstractValidator.class);
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Sets an error on the component being validated using the map returned by
@@ -80,48 +76,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent)
 	{
-		error(formComponent, messageModel(formComponent));
-	}
-
-	/**
-	 * Returns a formatted validation error message for a given component. The
-	 * error message is retrieved from a message bundle associated with the page
-	 * in which this validator is contained using the given resource key. The
-	 * resourceModel is used for variable interpolation.
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @param resourceKey
-	 *            The resource key to use
-	 * @param resourceModel
-	 *            The model for variable interpolation
-	 */
-	public void error(final FormComponent formComponent, final String resourceKey,
-			final IModel resourceModel)
-	{
-		// Return formatted error message
-		Localizer localizer = formComponent.getLocalizer();
-
-		// TODO Post 1.2: I didn't find a simpler way to getString() throw a
-		// MissingResourceException without changes the application settings. I
-		// guess this is something to change in 1.2 or 1.3
-		String message = localizer.getString(resourceKey, formComponent.getParent(), resourceModel,
-				"");
-		if ((message == null) || (message.length() == 0))
-		{
-			if (formComponent.getApplication().getResourceSettings()
-					.getThrowExceptionOnMissingResource())
-			{
-				throw new MissingResourceException("Unable to find resource: " + resourceKey,
-						formComponent.getClass().getName(), resourceKey);
-			}
-			else
-			// FIXME General: Quick fix for now to get settings working again
-			{
-				message = "[Warning: String resource for '" + resourceKey + "' not found]";
-			}
-		}
-		formComponent.error(message);
+		error(formComponent, resourceKey(formComponent), messageModel(formComponent));
 	}
 
 	/**
@@ -137,7 +92,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final String resourceKey, final Map map)
 	{
-		error(formComponent, resourceKey, Model.valueOf(map));
+		error(formComponent, resourceKey, (map == null) ? new Model() : Model.valueOf(map));
 	}
 
 	/**
@@ -151,16 +106,52 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final Map map)
 	{
-		IModel model = Model.valueOf(map);
-		try
+		error(formComponent, resourceKey(formComponent), (map == null) ? new Model() : Model
+				.valueOf(map));
+	}
+
+	/**
+	 * Returns a formatted validation error message for a given component. The
+	 * error message is retrieved from a message bundle associated with the page
+	 * in which this validator is contained using the given resource key. The
+	 * resourceModel is used for variable interpolation. If that one is null
+	 * the default one is created from messageModel(formComponent)
+	 * 
+	 * @param formComponent
+	 *            form component
+	 * @param resourceKey
+	 *            The resource key to use
+	 * @param resourceModel
+	 *            The model for variable interpolation, it needs to have a map inside it.
+	 */
+	public void error(final FormComponent formComponent, final String resourceKey,
+			IModel /* <Map>*/ resourceModel)
+	{
+		if(resourceModel == null)
 		{
-			error(formComponent, resourceKey(formComponent), model);
+			resourceModel = Model.valueOf(messageModel(formComponent));
 		}
-		catch (MissingResourceException ex)
+		if (formComponent == null)
 		{
-			String key = Classes.name(getClass());
-			error(formComponent, key, model);
+			throw new IllegalArgumentException("formComponent cannot be null");
 		}
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("resourceKey cannot be null");
+		}
+
+		final List keys = new ArrayList(2);
+		keys.add(resourceKey);
+
+		final String defaultKey = Classes.simpleName(getClass());
+		if (!keys.contains(defaultKey))
+		{
+			keys.add(defaultKey);
+		}
+
+		Map args = (Map)resourceModel.getObject(formComponent);
+
+		formComponent.error(keys, args);
 	}
 
 	/**
@@ -174,8 +165,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	protected String resourceKey(final FormComponent formComponent)
 	{
-		return formComponent.getApplication().getResourceSettings()
-				.getValidatorResourceKeyFactory().newKey(this, formComponent);
+		return Classes.simpleName(getClass());
 	}
 
 	/**

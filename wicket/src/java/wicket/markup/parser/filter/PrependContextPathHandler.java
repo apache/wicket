@@ -22,14 +22,13 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
+import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.protocol.http.WebRequestCycle;
 
 /**
- * This is a markup inline filter which by default is not added to the list of
+ * This is a markup inline filter which by default is added to the list of
  * markup filters. It can be added by means of subclassing
  * Application.newMarkupParser() like
  * 
@@ -45,8 +44,7 @@ import wicket.protocol.http.WebRequestCycle;
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
  * and src attributes found in the markup which contain a relative URL like
- * "myDir/myPage.gif". It is applied to all tags (attributes) no matter whether
- * the tag is a wicket tag or not.
+ * "myDir/myPage.gif". It is applied to all non wicket component tags (attributes).
  * 
  * @author Juergen Donnerstag
  */
@@ -58,29 +56,21 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src" };
 
-	/** The application's servlet context path */
-	private String contextPath;
+	private final Application application;
 
 	/**
-	 * Construct. This constructor will automatically resolve the context path.
+	 * This constructor will get the context path from the application settings.
+	 * When it is not set the context path will be automatically resolved.
 	 * This should work in most cases, and support the following clustering
 	 * scheme
 	 * 
 	 * <pre>
-	 *    node1.mydomain.com
-	 *    node2.mydomain.com
-	 *    node3.mydomain.com
+	 *    node1.mydomain.com[/appcontext]
+	 *    node2.mydomain.com[/appcontext]
+	 *    node3.mydomain.com[/appcontext]
 	 * </pre>
 	 * 
-	 * 
-	 */
-	public PrependContextPathHandler()
-	{
-		super(null);
-	}
-
-	/**
-	 * Construct. In order to support cluster envs like
+	 * If it is set then you can map to other context like in clusters
 	 * 
 	 * <pre>
 	 *    node1.mydomain.com/mycontext1/
@@ -89,19 +79,19 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 *    mydomain.com/mycontext (load balancer)
 	 * </pre>
 	 * 
-	 * This kind of setup requires the user to specify the context path of the
-	 * load balancer so that the path is targetted for the load balancer and not
-	 * this cluster node.
+	 * or as a virtual server (app server and webserver)
 	 * 
+	 * <pre>
+	 *    appserver.com/context mapped to webserver/ (context path should be '/')
+	 * </pre>
 	 * 
-	 * @param virtualContextPath
-	 *            The path to be used instead of the real context path
+	 * @param application The application object
+	 *    
 	 */
-	public PrependContextPathHandler(final String virtualContextPath)
+	public PrependContextPathHandler(Application application)
 	{
 		super(null);
-
-		this.contextPath = virtualContextPath;
+		this.application = application;
 	}
 
 	/**
@@ -128,19 +118,15 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// A new handler is created for each markup file. Hence it is
-		// sufficient to "create" the context path just once.
+		// this call should always get the default of the application or the overriden one.
+		String contextPath = application.getApplicationSettings().getContextPath();
 		if (contextPath == null)
 		{
-			contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest().getContextPath();
-			if (contextPath == null)
-			{
-				contextPath = "";
-			}
-			else if (contextPath.endsWith("/") == false)
-			{
-				contextPath += "/";
-			}
+			contextPath = "";
+		}
+		else if (contextPath.endsWith("/") == false)
+		{
+			contextPath += "/";
 		}
 
 		if (contextPath.length() > 0)
@@ -151,7 +137,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
 				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-						&& (attrValue.indexOf(":") < 0))
+						&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
 					String url = contextPath + attrValue;
 					tag.getAttributes().put(attrName, url);

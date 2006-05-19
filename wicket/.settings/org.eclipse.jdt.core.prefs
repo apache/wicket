@@ -1,4 +1,4 @@
-#Tue Oct 18 23:01:02 PDT 2005
+#Sat Feb 18 17:33:13 CET 2006
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=clean
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -121,6 +121,7 @@ org.eclipse.jdt.core.formatter.compact_else_if=true
 org.eclipse.jdt.core.formatter.continuation_indentation=2
 org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=2
 org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line=false
+org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_constant_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_declaration_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_type_header=true
@@ -139,6 +140,7 @@ org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_ini
 org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement=insert
+org.eclipse.jdt.core.formatter.insert_new_line_in_empty_annotation_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_constant=insert
@@ -201,7 +203,7 @@ org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while=do not 
 org.eclipse.jdt.core.formatter.insert_space_after_postfix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_question_in_conditional=insert
-org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard=insert
+org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_for=insert
 org.eclipse.jdt.core.formatter.insert_space_after_unary_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_and_in_type_parameter=insert
@@ -282,10 +284,11 @@ org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_parenthesize
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch=insert
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_synchronized=insert
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_while=insert
+org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_return=insert
 org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional=insert
-org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard=insert
+org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_semicolon=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_for=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_unary_operator=do not insert

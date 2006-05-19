@@ -30,6 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.lang.Classes;
 
 /**
@@ -48,6 +49,12 @@ import wicket.util.lang.Classes;
 public final class AutoComponentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKnownTagName("component");
+	}
 
     /** 
      * Temporary storage for containers currently being rendered. Thus child
@@ -219,17 +226,6 @@ public final class AutoComponentResolver implements IComponentResolver
             {
                 continue;
             }
-
-           	Classes.invokeSetter(component, key, value, container.getLocale());
-        }
-
-        // Get all remaining attributes and invoke the component's setters
-        iter = tag.getAdditionalAttributes().entrySet().iterator();
-        while (iter.hasNext())
-        {
-            final Map.Entry entry = (Map.Entry)iter.next();
-            final String key = (String)entry.getKey();
-            final String value = (String)entry.getValue();
 
            	Classes.invokeSetter(component, key, value, container.getLocale());
         }

@@ -36,14 +36,14 @@ public class Home extends HangmanPage
 	 *            The parameters for the page (not used)
 	 */
 	public Home(final PageParameters parameters)
-	{		
+	{
 		final String word = parameters.getString("word");
 		if (word == null)
 		{
 			getGame().newGame(5, new WordGenerator());
 		}
 		else
-		{			
+		{
 			getGame().newGame(5, new WordGenerator(new String[] { word }));
 		}
 		add(new PageLink("start", Guess.class));

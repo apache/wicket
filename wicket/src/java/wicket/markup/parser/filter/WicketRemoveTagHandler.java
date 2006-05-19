@@ -37,7 +37,13 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 {
 	/** Flag value to use as component name for ignored components */
 	public static final String IGNORE = "<<Removed by WicketRemoveTagHandler>>";
-	
+
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKnownTagName("remove");
+	}
+
 	/**
 	 * Construct.
 	 * 

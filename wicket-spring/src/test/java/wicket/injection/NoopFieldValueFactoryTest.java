@@ -2,8 +2,6 @@ package wicket.injection;
 
 import java.lang.reflect.Field;
 
-import wicket.injection.NoopFieldValueFactory;
-
 import junit.framework.TestCase;
 
 /**

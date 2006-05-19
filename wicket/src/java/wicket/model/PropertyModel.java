@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.47 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,24 +48,12 @@ import wicket.util.lang.PropertyResolver;
  * given person object like this:
  * 
  * <pre>
- * 
- *  
- *   
- *    
- *     
- *      
- *                        Person person = getSomePerson();
- *                        ...
- *                        add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
- *       
- *      
- *     
- *    
- *   
- *  
+ *     Person person = getSomePerson();
+ *     ...
+ *     add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
  * </pre>
  * 
- * Where 'myLabel' is the name of the component, and 'name' is property
+ * Where 'myLabel' is the name of the component, and 'name' is the property
  * expression to get the name property.
  * </p>
  * <p>
@@ -74,19 +62,7 @@ import wicket.util.lang.PropertyResolver;
  * updates the name property of a person like this:
  * 
  * <pre>
- * 
- *  
- *   
- *    
- *     
- *      
- *                        add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
- *       
- *      
- *     
- *    
- *   
- *  
+ *     add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * </p>
@@ -130,9 +106,9 @@ public class PropertyModel extends AbstractPropertyModel
 	private final Class propertyType;
 
 	/**
-	 * Construct with an IModel object and a property expression that works on
-	 * the given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
+	 * property expression that works on the given model. Additional formatting
+	 * will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
@@ -145,9 +121,9 @@ public class PropertyModel extends AbstractPropertyModel
 	}
 
 	/**
-	 * Construct with an IModel object and a property expression that works on
-	 * the given model. Additional formatting will be used depending on the
-	 * configuration setting.
+	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
+	 * property expression that works on the given model. Additional formatting
+	 * will be used depending on the configuration setting.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel

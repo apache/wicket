@@ -1,6 +1,7 @@
 package wicket.settings;
 
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.util.crypt.ICryptFactory;
 
@@ -36,6 +37,12 @@ public interface ISecuritySettings
 	ICryptFactory getCryptFactory();
 
 	/**
+	 * @return The listener
+	 * @see IUnauthorizedComponentInstantiationListener
+	 */
+	IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener();
+
+	/**
 	 * Sets the authorization strategy.
 	 * 
 	 * @param strategy
@@ -57,4 +64,12 @@ public interface ISecuritySettings
 	 * @param cryptFactory
 	 */
 	void setCryptFactory(ICryptFactory cryptFactory);
+
+	/**
+	 * @param unauthorizedComponentInstantiationListener
+	 *            The listener to set
+	 * @see IUnauthorizedComponentInstantiationListener
+	 */
+	void setUnauthorizedComponentInstantiationListener(
+			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
 }

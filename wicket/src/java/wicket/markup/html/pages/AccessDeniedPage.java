@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.pages;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.markup.html.WebPage;
 
 /**
@@ -36,6 +38,14 @@ public class AccessDeniedPage extends WebPage
 		add(homePageLink("homePageLink"));
 	}
 
+	/**
+	 * @see wicket.markup.html.WebPage#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
+	}
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */

@@ -19,8 +19,11 @@ package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
 import wicket.PageParameters;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class.
@@ -62,30 +65,42 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
-	public final String encode(IRequestTarget requestTarget)
+	public final CharSequence encode(final IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("this encoder can only be used with instances of "
-					+ IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with " +
+        "instances of "	+ IBookmarkablePageRequestTarget.class.getName());
 		}
-		StringBuffer url = new StringBuffer();
+		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
-		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
+		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
-		// FIXME General: What to do with the page map?
-		appendPageParameters(url, target.getPageParameters());
-		return url.toString();
+		PageParameters pageParameters = target.getPageParameters();
+		String pagemap = pageMapName != null?pageMapName: target.getPageMapName();
+		if(pagemap != null)
+		{
+			if(pageParameters == null)
+			{
+				pageParameters = new PageParameters();
+			}
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
+		}
+		appendParameters(url, pageParameters);
+		return url;
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
 	 */
-	public IRequestTarget decode(String urlFragment)
+	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		String parametersFragment = urlFragment.substring(getMountPath().length());
-		PageParameters parameters = decodePageParameters(parametersFragment);
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
+		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
+		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
+		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		requestParameters.setPageMapName(pageMapName);
+
+		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
 				bookmarkablePageClass, parameters);
 		return target;
 	}
@@ -102,7 +117,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 			{
 				if (this.pageMapName == null)
 				{
-					return target.getPageMapName() == null;
+					return true;
 				}
 				else
 				{

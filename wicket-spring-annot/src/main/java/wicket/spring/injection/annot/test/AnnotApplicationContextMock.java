@@ -29,6 +29,8 @@ import wicket.spring.test.SpringContextLocatorMock;
  */
 public class AnnotApplicationContextMock extends ApplicationContextMock
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * <p>

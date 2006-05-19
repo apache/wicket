@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4802 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,11 @@
  */
 package wicket.markup.resolver;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,6 +34,7 @@ import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -55,28 +61,616 @@ import wicket.util.value.ValueMap;
  * If href is no *.html file a static reference to the resource is created.
  * 
  * @see wicket.markup.parser.filter.WicketLinkTagHandler
+ * 
  * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
 public final class AutoLinkResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Logging */
 	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Autolink resolver delegates for constructing new autolinks reference
+	 * keyed on tag name (such as &lt;script&gt; or &lt;a&gt;.
+	 */
+	private static final Map/* <String, IAutolinkResolverDelegate> */tagNameToAutolinkResolverDelegates = new HashMap();
 
-	/** List of all file name extensions which are supported by autolink */
-	private static final ValueMap supportedPageExtensions = new ValueMap();
+	/**
+	 * Resolver objects that know what attribute to read for getting the
+	 * reference keyed on tag name (such as &lt;script&gt; or &lt;a&gt;.
+	 */
+	private static final Map/* <String, ITagReferenceResolver> */tagNameToTagReferenceResolvers = new HashMap();
+
+	/**
+	 * If no specific resolver is found, always use the href attribute for
+	 * references.
+	 */
+	private static final TagReferenceResolver DEFAULT_ATTRIBUTE_RESOLVER = new TagReferenceResolver(
+			"href");
 
 	static
 	{
+		// register tag reference resolvers
+		TagReferenceResolver hrefTagReferenceResolver = new TagReferenceResolver("href");
+		TagReferenceResolver srcTagReferenceResolver = new TagReferenceResolver("src");
+		tagNameToTagReferenceResolvers.put("a", hrefTagReferenceResolver);
+		tagNameToTagReferenceResolvers.put("link", hrefTagReferenceResolver);
+		tagNameToTagReferenceResolvers.put("script", srcTagReferenceResolver);
+		tagNameToTagReferenceResolvers.put("img", srcTagReferenceResolver);
+
+		// register autolink resolver delegates
+		AnchorResolverDelegate bookmarkablePageLinkResolver = new AnchorResolverDelegate();
+		PackageResourceReferenceResolverDelegate packageResourceReferenceResolver = new PackageResourceReferenceResolverDelegate();
+		tagNameToAutolinkResolverDelegates.put("a", bookmarkablePageLinkResolver);
+		tagNameToAutolinkResolverDelegates.put("link", packageResourceReferenceResolver);
+		tagNameToAutolinkResolverDelegates.put("script", packageResourceReferenceResolver);
+		tagNameToAutolinkResolverDelegates.put("img", packageResourceReferenceResolver);
+	}
+
+	/**
+	 * Resolver that returns the proper attribute value from a component tag
+	 * reflecting a URL reference such as src or href.
+	 */
+	private static interface ITagReferenceResolver
+	{
 		/**
-		 * Initialize supported list of file name extension which'll create
-		 * bookmarkable pages
+		 * Gets the reference attribute value of the tag depending on the type
+		 * of the tag. For instance, anchors use the <code>href</code>
+		 * attribute but script and image references use the <code>src</code>
+		 * attribute.
+		 * 
+		 * @param tag
+		 *            The component tag. Not for modifcation.
+		 * @return the tag value that constitutes the reference
 		 */
-		supportedPageExtensions.put("html", null);
-		supportedPageExtensions.put("xml", null);
-		supportedPageExtensions.put("wml", null);
-		supportedPageExtensions.put("svg", null);
+		String getReference(final ComponentTag tag);
+	}
+
+	/**
+	 * Interface to delegate the actual resolving of auto components to.
+	 */
+	public static interface IAutolinkResolverDelegate
+	{
+		/**
+		 * Returns a new auto component based on the pathInfo object. The auto
+		 * component must have the autoId assigned as it's id. Should return
+		 * null in case the component could not be created as expected and the
+		 * default resolving should take place.
+		 * 
+		 * @param container
+		 *            the parent container
+		 * @param autoId
+		 *            the automatically generated id for the auto component
+		 * @param pathInfo
+		 *            the path info object that contains information about the
+		 *            link reference
+		 * @return a new auto component or null in case this method couldn't
+		 *         resolve to a proper auto component
+		 */
+		Component newAutoComponent(final MarkupContainer container, final String autoId,
+				final PathInfo pathInfo);
+	}
+
+	/**
+	 * Encapsulates different aspects of a path. For instance, the path
+	 * <code>wicket.markup.html.tree.Tree/tree.css</code> has extension
+	 * <code>css</code>, is relative (absolute == true) and has no page
+	 * parameters.
+	 */
+	public static final class PathInfo
+	{
+		/** The original reference (e.g the full value of a href attribute). */
+		private final String reference;
+
+		/** The path exluding any parameters. */
+		private final String path;
+
+		/** The optional page parameters. */
+		private final PageParameters pageParameters;
+
+		/** The extension if any. */
+		private final String extension;
+
+		/** whether the reference is absolute. */
+		private final boolean absolute;
+
+		/** An optional anchor like #top */
+		private final String anchor;
+		
+		/**
+		 * Construct.
+		 * 
+		 * @param reference
+		 *            the original reference (e.g the full value of a href
+		 *            attribute)
+		 */
+		public PathInfo(final String reference)
+		{
+			this.reference = reference;
+			// If href contains URL query parameters ..
+			String infoPath;
+			// get the query string
+			int queryStringPos = reference.indexOf("?");
+			if (queryStringPos != -1)
+			{
+				final String queryString = reference.substring(queryStringPos + 1);
+				pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+				infoPath = reference.substring(0, queryStringPos);
+			}
+			else
+			{
+				pageParameters = null;
+				infoPath = reference;
+			}
+
+			this.absolute = (infoPath.startsWith("/") || infoPath.startsWith("\\"));
+
+			// remove file extension, but remember it
+			String extension = null;
+			int pos = infoPath.lastIndexOf(".");
+			if (pos != -1)
+			{
+				extension = infoPath.substring(pos + 1);
+				infoPath = infoPath.substring(0, pos);
+			}
+			
+			String anchor = null;
+			if (extension != null)
+			{
+				pos = extension.indexOf('#');
+				if (pos != -1)
+				{
+					anchor = extension.substring(pos);
+					extension = extension.substring(0, pos);
+				}
+			}
+			
+			this.path = infoPath;
+			this.extension = extension;
+			this.anchor = anchor;
+		}
+
+		/**
+		 * Gets absolute.
+		 * @return absolute
+		 */
+		public final boolean isAbsolute()
+		{
+			return absolute;
+		}
+
+		/**
+		 * Gets extension.
+		 * @return extension
+		 */
+		public final String getExtension()
+		{
+			return extension;
+		}
+
+		/**
+		 * Gets the anchor (e.g. #top)
+		 * @return anchor
+		 */
+		public final String getAnchor()
+		{
+			return anchor;
+		}
+
+		/**
+		 * Gets pageParameters.
+		 * @return pageParameters
+		 */
+		public final PageParameters getPageParameters()
+		{
+			return pageParameters;
+		}
+
+		/**
+		 * Gets path.
+		 * @return path
+		 */
+		public final String getPath()
+		{
+			return path;
+		}
+
+		/**
+		 * Gets reference.
+		 * @return reference
+		 */
+		public final String getReference()
+		{
+			return reference;
+		}
+	}
+
+	/**
+	 * Resolver object that returns the proper attribute value from component
+	 * tags.
+	 */
+	private static final class TagReferenceResolver implements ITagReferenceResolver
+	{
+		/** the attribute to fetch. */
+		private final String attribute;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param attribute
+		 *            the attribute to fetch
+		 */
+		public TagReferenceResolver(final String attribute)
+		{
+			this.attribute = attribute;
+		}
+
+		/**
+		 * Gets the reference attribute value of the tag depending on the type
+		 * of the tag. For instance, anchors use the <code>href</code>
+		 * attribute but script and image references use the <code>src</code>
+		 * attribute.
+		 * 
+		 * @param tag
+		 *            The component tag. Not for modifcation.
+		 * @return the tag value that constitutes the reference
+		 */
+		public String getReference(final ComponentTag tag)
+		{
+			return tag.getAttributes().getString(attribute);
+		}
+	}
+
+	/**
+	 * Abstract implementation that has a helper method for creating a resource
+	 * reference.
+	 */
+	public static abstract class AbstractAutolinkResolverDelegate
+			implements
+				IAutolinkResolverDelegate
+	{
+		/**
+		 * Creates a new auto component that references a package resource.
+		 * 
+		 * @param container
+		 *            the parent container
+		 * @param autoId
+		 *            the automatically generated id for the auto component
+		 * @param pathInfo
+		 *            the path info object that contains information about the
+		 *            link reference
+		 * @return a new auto component or null if the path was absolute
+		 */
+		protected final Component newPackageResourceReferenceAutoComponent(
+				final MarkupContainer container, final String autoId, final PathInfo pathInfo)
+		{
+			if (!pathInfo.absolute)
+			{
+				// Href is relative. Create a resource reference pointing at
+				// this file
+
+				// <wicket:head> components are handled differently. We can
+				// not use the container, because it is the container the
+				// header has been added to (e.g. the Page). What we need
+				// however, is the component (e.g. a Panel) which
+				// contributed it.
+				Class clazz = container.getMarkupStream().getContainerClass();
+
+				// However if the markup stream is a merged markup stream
+				// (inheritance),
+				// than we need the class of the markup file which contained the
+				// tag.
+				if (container.getMarkupStream().getTag().getMarkupClass() != null)
+				{
+					clazz = container.getMarkupStream().getTag().getMarkupClass();
+				}
+
+				// Create the component implementing the link
+				PackageResourceReferenceAutolink autoLink = new PackageResourceReferenceAutolink(
+						autoId, clazz, pathInfo.reference);
+				if (autoLink.resourceReference != null)
+				{
+					// if the resource reference is null, it means that it the
+					// reference
+					// was not found as a pcakge resource
+					return autoLink;
+				}
+				else
+				{
+					log.info("Did not find autolink resource: " + pathInfo.reference
+							+ "; Assume it is a valid external URL");
+				}
+			}
+			// else we can't have absolute resource references, at least not at
+			// this time
+
+			// fall back on default processing
+			return null;
+		}
+	}
+
+	/**
+	 * Resolves to anchor/ link components.
+	 */
+	private static final class AnchorResolverDelegate extends AbstractAutolinkResolverDelegate
+	{
+		/**
+		 * Set of supported extensions for creating bookmarkable page links.
+		 * Anything that is not in this list will be handled as a resource
+		 * reference.
+		 */
+		private static final Set supportedPageExtensions = new HashSet(4);
+
+		static
+		{
+			/**
+			 * Initialize supported list of file name extension which'll create
+			 * bookmarkable pages
+			 */
+			supportedPageExtensions.add("html");
+			supportedPageExtensions.add("xml");
+			supportedPageExtensions.add("wml");
+			supportedPageExtensions.add("svg");
+		}
+
+		/**
+		 * @see wicket.markup.resolver.AutoLinkResolver.IAutolinkResolverDelegate#newAutoComponent(wicket.MarkupContainer,
+		 *      java.lang.String,
+		 *      wicket.markup.resolver.AutoLinkResolver.PathInfo)
+		 */
+		public Component newAutoComponent(final MarkupContainer container, final String autoId,
+				PathInfo pathInfo)
+		{
+			if ((pathInfo.extension != null) && supportedPageExtensions.contains(pathInfo.extension))
+			{
+				// Obviously a href like href="myPkg.MyLabel.html" will do as
+				// well. Wicket will not throw an exception. It accepts it.
+				String infoPath = Strings.replaceAll(pathInfo.path, "/", ".").toString();
+
+				Page page = container.getPage();
+				final IClassResolver defaultClassResolver = page.getApplication()
+						.getApplicationSettings().getClassResolver();
+
+				String className;
+				if (!infoPath.startsWith("."))
+				{
+					// Href is relative. Resolve the url given relative to the
+					// current page
+					className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
+				}
+				else
+				{
+					// Href is absolute. If class with the same absolute path
+					// exists, use it. Else don't change the href.
+					className = infoPath.substring(1);
+				}
+
+				try
+				{
+					final Class clazz = defaultClassResolver.resolveClass(className);
+					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
+				}
+				catch (WicketRuntimeException ex)
+				{
+					log.warn("Did not find corresponding java class: " + className);
+					// fall through
+				}
+
+				// Make sure base markup pages (inheritance) are handled correct
+				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
+				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
+						&& page.getMarkupStream().isMergedMarkup())
+				{
+					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
+					if (clazz != null)
+					{
+						// Href is relative. Resolve the url given relative to the
+						// current page
+						className = Packages.extractPackageName(clazz) + "." + infoPath;
+	
+						try
+						{
+							clazz = defaultClassResolver.resolveClass(className);
+							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
+						}
+						catch (WicketRuntimeException ex)
+						{
+							log.warn("Did not find corresponding java class: " + className);
+							// fall through
+						}
+					}
+				}
+			}
+			else
+			{
+				// not a registered type for bookmarkable pages; create a link
+				// to a resource instead
+				return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo);
+			}
+
+			// fallthrough
+			return null;
+		}
+	}
+
+	/**
+	 * Resolves to {@link PackageResourceReference} link components. Typcically
+	 * used for header contributions like javascript and css files.
+	 */
+	private static final class PackageResourceReferenceResolverDelegate
+			extends
+				AbstractAutolinkResolverDelegate
+	{
+		/**
+		 * @see wicket.markup.resolver.AutoLinkResolver.IAutolinkResolverDelegate#newAutoComponent(wicket.MarkupContainer,
+		 *      java.lang.String,
+		 *      wicket.markup.resolver.AutoLinkResolver.PathInfo)
+		 */
+		public Component newAutoComponent(final MarkupContainer container, final String autoId,
+				final PathInfo pathInfo)
+		{
+			return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo);
+		}
+	}
+
+	/**
+	 * Autolink components delegate component resolution to their parent
+	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
+	 * know where to add the component to.
+	 * 
+	 * @author Juergen Donnerstag
+	 */
+	public final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String anchor;
+		
+		/**
+		 * Construct
+		 * 
+		 * @see BookmarkablePageLink#BookmarkablePageLink(String, Class,
+		 *      PageParameters)
+		 * 
+		 * @param id
+		 * @param pageClass
+		 * @param parameters
+		 * @param anchor
+		 */
+		public AutolinkBookmarkablePageLink(final String id, final Class pageClass,
+				final PageParameters parameters, final String anchor)
+		{
+			super(id, pageClass, parameters);
+			this.anchor = anchor;
+			setAutoEnable(true);
+		}
+
+		/**
+		 * 
+		 * @see wicket.markup.html.link.BookmarkablePageLink#getURL()
+		 */
+		protected CharSequence getURL()
+		{
+			CharSequence url = super.getURL();
+			if (anchor != null)
+			{
+				url = url + anchor;
+			}
+			
+			return url;
+		}
+		
+		/**
+		 * @see wicket.MarkupContainer#isTransparentResolver()
+		 */
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
+	}
+
+	/**
+	 * Autolink components delegate component resolution to their parent
+	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
+	 * know where to add the component to.
+	 * 
+	 * @author Juergen Donnerstag
+	 */
+	private final static class AutolinkExternalLink extends ExternalLink
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct
+		 * 
+		 * @param id
+		 * @param href
+		 */
+		public AutolinkExternalLink(final String id, final String href)
+		{
+			super(id, href);
+		}
+
+		/**
+		 * @see wicket.MarkupContainer#isTransparentResolver()
+		 */
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
+	}
+
+	/**
+	 * Autolink component that points to a {@link PackageResourceReference}.
+	 * Autolink component delegate component resolution to their parent
+	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
+	 * know where to add the component to.
+	 */
+	private final static class PackageResourceReferenceAutolink extends WebMarkupContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** Resource reference */
+		private final ResourceReference resourceReference;
+
+		/**
+		 * @param id
+		 * @param clazz
+		 * @param href
+		 */
+		public PackageResourceReferenceAutolink(final String id, final Class clazz,
+				final String href)
+		{
+			super(id);
+
+			// Check whether it is a valid resource reference
+			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
+			{
+				// Create the component implementing the link
+				resourceReference = new PackageResourceReference(getApplication(), clazz, href,
+						getLocale(), getStyle());
+			}
+			else
+			{
+				// The resource does not exist. Set to null and ignore when
+				// rendering.
+				resourceReference = null;
+			}
+		}
+
+		/**
+		 * Handles this link's tag.
+		 * 
+		 * @param tag
+		 *            the component tag
+		 * @see wicket.Component#onComponentTag(ComponentTag)
+		 */
+		protected final void onComponentTag(final ComponentTag tag)
+		{
+			// Default handling for tag
+			super.onComponentTag(tag);
+
+			// only set the href attribute when the resource exists
+			if (resourceReference != null)
+			{
+				// Set href to link to this link's linkClicked method
+				CharSequence url = getRequestCycle().urlFor(resourceReference);
+
+				// generate the href attribute
+				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+			}
+		}
+
+		/**
+		 * @see wicket.MarkupContainer#isTransparentResolver()
+		 */
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
 	}
 
 	/**
@@ -84,6 +678,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
+	 * 
 	 * @param markupStream
 	 *            The current markupStream
 	 * @param tag
@@ -138,246 +733,82 @@ public final class AutoLinkResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		final Page page = container.getPage();
-		final String href = tag.getAttributes().getString("href");
-
-		// If href contains URL query parameters ..
-		final PageParameters pageParameters;
-		String infoPath;
-
-		// get the query string
-		int pos = href.indexOf("?");
-		if (pos != -1)
-		{
-			final String queryString = href.substring(pos + 1);
-			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
-			infoPath = href.substring(0, pos);
-		}
-		else
-		{
-			pageParameters = null;
-			infoPath = href;
-		}
 
 		// Make the id (page-)unique
 		final String autoId = id + Integer.toString(page.getAutoIndex());
+
+		// get the tag name, which is something like 'a' or 'script'
+		final String tagName = tag.getName();
 
 		// By setting the component name, the tag becomes a Wicket component
 		// tag, which must have a associated Component.
 		tag.setId(autoId);
 
-		// remove file extension, but remember it
-		String extension = null;
-		pos = infoPath.lastIndexOf(".");
-		if (pos != -1)
+		// get the reference resolver
+		ITagReferenceResolver referenceResolver = (ITagReferenceResolver)tagNameToTagReferenceResolvers
+				.get(tagName);
+		if (referenceResolver == null)
 		{
-			extension = infoPath.substring(pos + 1);
-			infoPath = infoPath.substring(0, pos);
-
-			// HTML hrefs are handled first
-			if (supportedPageExtensions.containsKey(extension.toLowerCase()))
-			{
-				// Obviously a href like href="myPkg.MyLabel.html" will do as
-				// well. Wicket will not throw an exception. It accepts it.
-				infoPath = Strings.replaceAll(infoPath, "/", ".");
-
-				final IClassResolver defaultClassResolver = page.getApplication()
-						.getApplicationSettings().getClassResolver();
-
-				final String className;
-				if (!infoPath.startsWith("."))
-				{
-					// Href is relative. Resolve the url given relative to the
-					// current page
-					className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
-				}
-				else
-				{
-					// Href is absolute. If class with the same absolute path
-					// exists, use it. Else don't change the href.
-					className = infoPath.substring(1);
-				}
-
-				try
-				{
-					final Class clazz = defaultClassResolver.resolveClass(className);
-					return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
-				}
-				catch (WicketRuntimeException ex)
-				{
-					log.info("Did not find corresponding java class: " + className);
-					// fall through
-				}
-			}
-			// It is not "*.html". Create a static resource reference
-			else
-			{
-				if (infoPath.startsWith("/") || infoPath.startsWith("\\"))
-				{
-					// href is absolute. Don't change it at all.
-				}
-				else
-				{
-					// Href is relative. Create a resource reference pointing at
-					// this file
-
-					// <wicket:head> components are handled differently. We can
-					// not
-					// use the container, because it is the container the header
-					// has been added to (e.g. the Page). What we need however,
-					// is
-					// the component (e.g. a Panel) which contributed it.
-					MarkupContainer relevantContainer = container;
-					while (((relevantContainer instanceof IComponentResolver) || relevantContainer
-							.isTransparent())
-							&& !(relevantContainer instanceof IComponentResolverMarker))
-					{
-						relevantContainer = relevantContainer.getParent();
-					}
-
-					try
-					{
-						// Create the component implementing the link
-						return new CssLink(autoId, relevantContainer.getClass(), href);
-					}
-					catch (WicketRuntimeException ex)
-					{
-						// Provided the resource does not exist, assume the user
-						// did
-						// deliberately not point it to a page or resource. The
-						// href
-						// might still point to a valid homepage outside of
-						// wicket.
-						log.info("Did not find autolink resource: " + href
-								+ "; Assume it is a valid external URL");
-					}
-				}
-			}
+			// fallback on default
+			referenceResolver = DEFAULT_ATTRIBUTE_RESOLVER;
 		}
 
-		// We have not been able to find the resource requested
-		// Don't change the href.
-		return new AutolinkExternalLink(autoId, href);
+		// get the reference, which is typically the value of e.g. a href or src
+		// attribute
+		String reference = referenceResolver.getReference(tag);
+
+		// create the path info object
+		PathInfo pathInfo = new PathInfo(reference);
+		// now get the resolver delegate
+		IAutolinkResolverDelegate autolinkResolverDelegate = (IAutolinkResolverDelegate)tagNameToAutolinkResolverDelegates
+				.get(tagName);
+		Component autoComponent = null;
+		if (autolinkResolverDelegate != null)
+		{
+			autoComponent = autolinkResolverDelegate.newAutoComponent(container, autoId, pathInfo);
+		}
+
+		if (autoComponent == null)
+		{
+			// resolving didn't have the desired result or there was no delegate
+			// found; fallback on the default resolving which is a simple
+			// component that leaves the tag unchanged
+			autoComponent = new AutolinkExternalLink(autoId, pathInfo.reference);
+		}
+
+		return autoComponent;
 	}
 
 	/**
-	 * Autolink components delegate component resolution to their parent
-	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
-	 * know where to add the component to.
+	 * Register (add or replace) a new resolver with the tagName and
+	 * attributeName. The resolver will be invoked each time an appropriate tag
+	 * and attribute is found.
 	 * 
-	 * @author Juergen Donnerstag
+	 * @param tagName
+	 *            The tag name
+	 * @param attributeName
+	 *            The attribute name
+	 * @param resolver
+	 *            Implements what to do based on the tag and the attribute
 	 */
-	private final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
+	public static final void addTagReferenceResolver(final String tagName, final String attributeName,
+			final IAutolinkResolverDelegate resolver)
 	{
-		private static final long serialVersionUID = 1L;
+		TagReferenceResolver tagReferenceResolver = new TagReferenceResolver(attributeName);
+		tagNameToTagReferenceResolvers.put(tagName, tagReferenceResolver);
 
-		/**
-		 * Construct
-		 * 
-		 * @see BookmarkablePageLink#BookmarkablePageLink(String, Class,
-		 *      PageParameters)
-		 * 
-		 * @param id
-		 * @param pageClass
-		 * @param parameters
-		 */
-		public AutolinkBookmarkablePageLink(final String id, final Class pageClass,
-				final PageParameters parameters)
-		{
-			super(id, pageClass, parameters);
-			setAutoEnable(true);
-		}
-
-		/**
-		 * @see wicket.MarkupContainer#isTransparent()
-		 */
-		public boolean isTransparent()
-		{
-			return true;
-		}
+		tagNameToAutolinkResolverDelegates.put(tagName, resolver);
 	}
 
 	/**
-	 * Autolink components delegate component resolution to their parent
-	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
-	 * know where to add the component to.
+	 * Get the resolver registered for 'tagName'
 	 * 
-	 * @author Juergen Donnerstag
+	 * @param tagName
+	 *            The tag's name
+	 * @return The resolver found. Null, if none registered
 	 */
-	private final static class AutolinkExternalLink extends ExternalLink
+	public static final IAutolinkResolverDelegate getAutolinkResolverDelegate(final String tagName)
 	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct
-		 * 
-		 * @param id
-		 * @param href
-		 */
-		public AutolinkExternalLink(final String id, final String href)
-		{
-			super(id, href);
-		}
-
-		/**
-		 * @see wicket.MarkupContainer#isTransparent()
-		 */
-		public boolean isTransparent()
-		{
-			return true;
-		}
-	}
-
-	/**
-	 * Autolink component delegate component resolution to their parent
-	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
-	 * know where to add the component to.
-	 */
-	private final static class CssLink extends WebMarkupContainer
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** Resource reference */
-		private final ResourceReference resourceReference;
-
-		/**
-		 * @param id
-		 * @param clazz
-		 * @param href
-		 */
-		public CssLink(final String id, final Class clazz, final String href)
-		{
-			super(id);
-
-			// Create the component implementing the link
-			resourceReference = new PackageResourceReference(getApplication(), clazz, href,
-					getLocale(), getStyle());
-		}
-
-		/**
-		 * Handles this link's tag.
-		 * 
-		 * @param tag
-		 *            the component tag
-		 * @see wicket.Component#onComponentTag(ComponentTag)
-		 */
-		protected final void onComponentTag(final ComponentTag tag)
-		{
-			// Default handling for tag
-			super.onComponentTag(tag);
-
-			// Set href to link to this link's linkClicked method
-			String url = getPage().urlFor(resourceReference.getPath());
-
-			// generate the href attribute
-			tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
-		}
-
-		/**
-		 * @see wicket.MarkupContainer#isTransparent()
-		 */
-		public boolean isTransparent()
-		{
-			return true;
-		}
+		return (IAutolinkResolverDelegate)tagNameToAutolinkResolverDelegates.get(tagName);
 	}
 }

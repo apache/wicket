@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcatProjectProperties>
+    <rootDir>/src/webapp</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>false</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo></extraInfo>
+    <webPath>/wicket-auth</webPath>
+    <webClassPathEntries>
+        <webClassPathEntry>/wicket-auth-roles-examples/target/classes</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/log4j/log4j/1.2.11/log4j-1.2.11.jar</webClassPathEntry>
+        <webClassPathEntry>/wicket/target/classes</webClassPathEntry>
+        <webClassPathEntry>/wicket-auth-roles/target/classes</webClassPathEntry>
+    </webClassPathEntries>
+</tomcatProjectProperties>

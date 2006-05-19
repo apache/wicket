@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4917 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,9 +36,15 @@ public class RepeaterApplication extends WebApplication
 	 */
 	public RepeaterApplication()
 	{
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
+		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+	}
 
 	/**
 	 * @return contacts database

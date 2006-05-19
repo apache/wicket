@@ -20,13 +20,17 @@ package wicket.util.lang;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import wicket.Component;
+import wicket.WicketRuntimeException;
 import wicket.util.io.ByteCountingOutputStream;
 
 /**
@@ -34,9 +38,114 @@ import wicket.util.io.ByteCountingOutputStream;
  * 
  * @author Jonathan Locke
  */
-public abstract class Objects implements NumericTypes
+public abstract class Objects
 {
+	private static final class ReplaceObjectInputStream extends ObjectInputStream
+	{
+		private HashMap replacedComponents;
+
+		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents)
+				throws IOException
+		{
+			super(in);
+			this.replacedComponents = replacedComponents;
+			enableResolveObject(true);
+		}
+
+		protected Object resolveObject(Object obj) throws IOException
+		{
+			Object replaced = replacedComponents.get(obj);
+			if (replaced != null)
+			{
+				return replaced;
+			}
+			return super.resolveObject(obj);
+		}
+	}
+
+	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
+	{
+		private HashMap replacedComponents;
+
+		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
+				throws IOException
+		{
+			super(out);
+			this.replacedComponents = replacedComponents;
+			enableReplaceObject(true);
+		}
+
+		protected Object replaceObject(Object obj) throws IOException
+		{
+			if (obj instanceof Component)
+			{
+				String name = ((Component)obj).getPath();
+				replacedComponents.put(name, obj);
+				return name;
+			}
+			return super.replaceObject(obj);
+		}
+	}
+
+	/** Type tag meaning boolean. */
+	private static final int BOOL = 0;
+
+	/** Type tag meaning byte. */
+	private static final int BYTE = 1;
+
+	/** Type tag meaning char. */
+	private static final int CHAR = 2;
+
+	/** Type tag meaning short. */
+	private static final int SHORT = 3;
+
+	/** Type tag meaning int. */
+	private static final int INT = 4;
+
+	/** Type tag meaning long. */
+	private static final int LONG = 5;
+
+	/** Type tag meaning java.math.BigInteger. */
+	private static final int BIGINT = 6;
+
+	/** Type tag meaning float. */
+	private static final int FLOAT = 7;
+
+	/** Type tag meaning double. */
+	private static final int DOUBLE = 8;
+
+	/** Type tag meaning java.math.BigDecimal. */
+	private static final int BIGDEC = 9;
+
+	/** Type tag meaning something other than a number. */
+	private static final int NONNUMERIC = 10;
+
+	/**
+	 * The smallest type tag that represents reals as opposed to integers. You
+	 * can see whether a type tag represents reals or integers by comparing the
+	 * tag to this constant: all tags less than this constant represent
+	 * integers, and all tags greater than or equal to this constant represent
+	 * reals. Of course, you must also check for NONNUMERIC, which means it is
+	 * not a number at all.
+	 */
+	private static final int MIN_REAL_TYPE = FLOAT;
+
+	/** defaults for primitives. */
 	static HashMap primitiveDefaults = new HashMap();
+
+	static
+	{
+		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
+		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
+		primitiveDefaults.put(Short.TYPE, new Short((short)0));
+		primitiveDefaults.put(Character.TYPE, new Character((char)0));
+		primitiveDefaults.put(Integer.TYPE, new Integer(0));
+		primitiveDefaults.put(Long.TYPE, new Long(0L));
+		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
+		primitiveDefaults.put(Double.TYPE, new Double(0.0));
+		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
+		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
+	}
 
 	/**
 	 * Evaluates the given object as a BigDecimal.
@@ -50,18 +159,30 @@ public abstract class Objects implements NumericTypes
 	public static BigDecimal bigDecValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return BigDecimal.valueOf(0L);
+		}
 		Class c = value.getClass();
 		if (c == BigDecimal.class)
+		{
 			return (BigDecimal)value;
+		}
 		if (c == BigInteger.class)
+		{
 			return new BigDecimal((BigInteger)value);
+		}
 		if (c.getSuperclass() == Number.class)
+		{
 			return new BigDecimal(((Number)value).doubleValue());
+		}
 		if (c == Boolean.class)
+		{
 			return BigDecimal.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		}
 		if (c == Character.class)
+		{
 			return BigDecimal.valueOf(((Character)value).charValue());
+		}
 		return new BigDecimal(stringValue(value, true));
 	}
 
@@ -77,18 +198,30 @@ public abstract class Objects implements NumericTypes
 	public static BigInteger bigIntValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return BigInteger.valueOf(0L);
+		}
 		Class c = value.getClass();
 		if (c == BigInteger.class)
+		{
 			return (BigInteger)value;
+		}
 		if (c == BigDecimal.class)
+		{
 			return ((BigDecimal)value).toBigInteger();
+		}
 		if (c.getSuperclass() == Number.class)
+		{
 			return BigInteger.valueOf(((Number)value).longValue());
+		}
 		if (c == Boolean.class)
+		{
 			return BigInteger.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+		}
 		if (c == Character.class)
+		{
 			return BigInteger.valueOf(((Character)value).charValue());
+		}
 		return new BigInteger(stringValue(value, true));
 	}
 
@@ -104,17 +237,95 @@ public abstract class Objects implements NumericTypes
 	public static boolean booleanValue(Object value)
 	{
 		if (value == null)
+		{
 			return false;
+		}
 		Class c = value.getClass();
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue();
-		// if ( c == String.class )
-		// return ((String)value).length() > 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue() != 0;
+		}
 		if (value instanceof Number)
+		{
 			return ((Number)value).doubleValue() != 0;
+		}
 		return true; // non-null
+	}
+
+	/**
+	 * De-serializes an object from a byte array.
+	 * 
+	 * @param data
+	 *            The serialized object
+	 * @return The object
+	 */
+	public static Object byteArrayToObject(final byte[] data)
+	{
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			try
+			{
+				return new ObjectInputStream(in).readObject();
+			}
+			finally
+			{
+				in.close();
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Makes a deep clone of an object by serializing and deserializing it. The
+	 * object must be fully serializable to be cloned.
+	 * This method will not clone wicket Components, it will just reuse those instances
+	 * so that the complete component tree is not copied over only the model data.
+	 * 
+	 * @param object
+	 *            The object to clone
+	 * @return A deep copy of the object
+	 */
+	public static Object cloneModel(final Object object)
+	{
+		if (object == null)
+		{
+			return null;
+		}
+		else
+		{
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
+				final HashMap replacedObjects = new HashMap();
+				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
+				oos.writeObject(object);
+				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
+						.toByteArray()), replacedObjects);
+				return ois.readObject();
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WicketRuntimeException("Internal error cloning object", e);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Internal error cloning object", e);
+			}
+		}
 	}
 
 	/**
@@ -125,7 +336,7 @@ public abstract class Objects implements NumericTypes
 	 *            The object to clone
 	 * @return A deep copy of the object
 	 */
-	public static Object clone(final Object object)
+	public static Object cloneObject(final Object object)
 	{
 		if (object == null)
 		{
@@ -135,18 +346,20 @@ public abstract class Objects implements NumericTypes
 		{
 			try
 			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(object);
-				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
-						.readObject();
+				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
+				ObjectOutputStream oos = new ObjectOutputStream(out);
+				oos.writeObject(object);
+				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
+						.toByteArray()));
+				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new RuntimeException("Internal error cloning object", e);
+				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException("Internal error cloning object", e);
+				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 		}
 	}
@@ -264,27 +477,49 @@ public abstract class Objects implements NumericTypes
 			else
 			{
 				if ((toType == Integer.class) || (toType == Integer.TYPE))
+				{
 					result = new Integer((int)longValue(value));
+				}
 				if ((toType == Double.class) || (toType == Double.TYPE))
+				{
 					result = new Double(doubleValue(value));
+				}
 				if ((toType == Boolean.class) || (toType == Boolean.TYPE))
+				{
 					result = booleanValue(value) ? Boolean.TRUE : Boolean.FALSE;
+				}
 				if ((toType == Byte.class) || (toType == Byte.TYPE))
+				{
 					result = new Byte((byte)longValue(value));
+				}
 				if ((toType == Character.class) || (toType == Character.TYPE))
+				{
 					result = new Character((char)longValue(value));
+				}
 				if ((toType == Short.class) || (toType == Short.TYPE))
+				{
 					result = new Short((short)longValue(value));
+				}
 				if ((toType == Long.class) || (toType == Long.TYPE))
+				{
 					result = new Long(longValue(value));
+				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
+				{
 					result = new Float(doubleValue(value));
+				}
 				if (toType == BigInteger.class)
+				{
 					result = bigIntValue(value);
+				}
 				if (toType == BigDecimal.class)
+				{
 					result = bigDecValue(value);
+				}
 				if (toType == String.class)
+				{
 					result = stringValue(value);
+				}
 			}
 		}
 		else
@@ -309,21 +544,25 @@ public abstract class Objects implements NumericTypes
 	public static double doubleValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return 0.0;
+		}
 		Class c = value.getClass();
 		if (c.getSuperclass() == Number.class)
+		{
 			return ((Number)value).doubleValue();
+		}
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue() ? 1 : 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue();
+		}
 		String s = stringValue(value, true);
 
 		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
-		/*
-		 * For 1.1 parseDouble() is not available
-		 */
-		// return Double.valueOf( value.toString() ).doubleValue();
 	}
 
 	/**
@@ -342,7 +581,7 @@ public abstract class Objects implements NumericTypes
 			return true;
 		}
 
-		if (a != null && b != null && a.equals(b))
+		if ((a != null) && (b != null) && a.equals(b))
 		{
 			return true;
 		}
@@ -366,36 +605,56 @@ public abstract class Objects implements NumericTypes
 	public static int getNumericType(int t1, int t2, boolean canBeNonNumeric)
 	{
 		if (t1 == t2)
+		{
 			return t1;
+		}
 
 		if (canBeNonNumeric && (t1 == NONNUMERIC || t2 == NONNUMERIC || t1 == CHAR || t2 == CHAR))
+		{
 			return NONNUMERIC;
+		}
 
 		if (t1 == NONNUMERIC)
+		{
 			t1 = DOUBLE; // Try to interpret strings as doubles...
+		}
 		if (t2 == NONNUMERIC)
+		{
 			t2 = DOUBLE; // Try to interpret strings as doubles...
+		}
 
 		if (t1 >= MIN_REAL_TYPE)
 		{
 			if (t2 >= MIN_REAL_TYPE)
+			{
 				return Math.max(t1, t2);
+			}
 			if (t2 < INT)
+			{
 				return t1;
+			}
 			if (t2 == BIGINT)
+			{
 				return BIGDEC;
+			}
 			return Math.max(DOUBLE, t1);
 		}
 		else if (t2 >= MIN_REAL_TYPE)
 		{
 			if (t1 < INT)
+			{
 				return t2;
+			}
 			if (t1 == BIGINT)
+			{
 				return BIGDEC;
+			}
 			return Math.max(DOUBLE, t2);
 		}
 		else
+		{
 			return Math.max(t1, t2);
+		}
 	}
 
 	/**
@@ -412,25 +671,45 @@ public abstract class Objects implements NumericTypes
 		{
 			Class c = value.getClass();
 			if (c == Integer.class)
+			{
 				return INT;
+			}
 			if (c == Double.class)
+			{
 				return DOUBLE;
+			}
 			if (c == Boolean.class)
+			{
 				return BOOL;
+			}
 			if (c == Byte.class)
+			{
 				return BYTE;
+			}
 			if (c == Character.class)
+			{
 				return CHAR;
+			}
 			if (c == Short.class)
+			{
 				return SHORT;
+			}
 			if (c == Long.class)
+			{
 				return LONG;
+			}
 			if (c == Float.class)
+			{
 				return FLOAT;
+			}
 			if (c == BigInteger.class)
+			{
 				return BIGINT;
+			}
 			if (c == BigDecimal.class)
+			{
 				return BIGDEC;
+			}
 		}
 		return NONNUMERIC;
 	}
@@ -449,6 +728,7 @@ public abstract class Objects implements NumericTypes
 	{
 		return getNumericType(v1, v2, false);
 	}
+
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -511,13 +791,12 @@ public abstract class Objects implements NumericTypes
 				// equivalence
 				result = (object1 != null)
 						&& (object2 != null)
-						&& ((compareWithConversion(object1, object2) == 0) || object1
-								.equals(object2));
+						&& ((compareWithConversion(object1, object2) == 0) || 
+								object1.equals(object2));
 			}
 		}
 		return result;
 	}
-
 
 	/**
 	 * Evaluates the given object as a long integer.
@@ -531,14 +810,22 @@ public abstract class Objects implements NumericTypes
 	public static long longValue(Object value) throws NumberFormatException
 	{
 		if (value == null)
+		{
 			return 0L;
+		}
 		Class c = value.getClass();
 		if (c.getSuperclass() == Number.class)
+		{
 			return ((Number)value).longValue();
+		}
 		if (c == Boolean.class)
+		{
 			return ((Boolean)value).booleanValue() ? 1 : 0;
+		}
 		if (c == Character.class)
+		{
 			return ((Character)value).charValue();
+		}
 		return Long.parseLong(stringValue(value, true));
 	}
 
@@ -565,15 +852,15 @@ public abstract class Objects implements NumericTypes
 				return new Integer((int)value);
 
 			case FLOAT :
-				if ((long)(float)value == value)
+				if (value == value)
 				{
-					return new Float((float)value);
+					return new Float(value);
 				}
 			// else fall through:
 			case DOUBLE :
-				if ((long)(double)value == value)
+				if (value == value)
 				{
-					return new Double((double)value);
+					return new Double(value);
 				}
 			// else fall through:
 			case LONG :
@@ -587,6 +874,35 @@ public abstract class Objects implements NumericTypes
 
 			default :
 				return BigInteger.valueOf(value);
+		}
+	}
+
+	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
+	 * @return The serialized object
+	 */
+	public static byte[] objectToByteArray(final Object object)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try
+			{
+				new ObjectOutputStream(out).writeObject(object);
+			}
+			finally
+			{
+				out.close();
+			}
+			return out.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -608,7 +924,6 @@ public abstract class Objects implements NumericTypes
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -661,19 +976,5 @@ public abstract class Objects implements NumericTypes
 	 */
 	private Objects()
 	{
-	}
-
-	static
-	{
-		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
-		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
-		primitiveDefaults.put(Short.TYPE, new Short((short)0));
-		primitiveDefaults.put(Character.TYPE, new Character((char)0));
-		primitiveDefaults.put(Integer.TYPE, new Integer(0));
-		primitiveDefaults.put(Long.TYPE, new Long(0L));
-		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
-		primitiveDefaults.put(Double.TYPE, new Double(0.0));
-		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
-		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
 	}
 }

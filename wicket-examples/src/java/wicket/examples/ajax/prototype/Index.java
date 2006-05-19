@@ -1,3 +1,20 @@
+/*
+ * $Id$ $Revision$ $Date:
+ * 2006-04-06 19:51:46 +0200 (Do, 06 Apr 2006) $
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.examples.ajax.prototype;
 
 import wicket.examples.WicketExamplePage;
@@ -5,13 +22,16 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
-import wicket.request.target.ComponentRequestTarget;
+import wicket.request.target.component.ComponentRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Example displaying partial page rendering using the counting link example and
  * prototype.js. Prototype.js is a javascript library that provides several
  * handy JavaScript functions, amongst others an Ajax.Updater function, which
  * updates the HTML document with the response of the Ajax call.
+ * 
+ * @author ivaynberg
  */
 public class Index extends WicketExamplePage
 {
@@ -49,8 +69,9 @@ public class Index extends WicketExamplePage
 			 */
 			protected String getOnClickScript(String url)
 			{
-				return "new Ajax.Updater('counter', '" + urlFor(ILinkListener.class)
-						+ "', {method:'get'}); return false;";
+				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
+						urlFor(ILinkListener.INTERFACE))
+						.append("', {method:'get'}); return false;").toString();
 			}
 		});
 

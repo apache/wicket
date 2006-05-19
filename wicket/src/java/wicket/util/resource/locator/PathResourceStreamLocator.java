@@ -56,7 +56,7 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
 	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(final Class clazz, final String path)
+	public IResourceStream locate(final Class clazz, final String path)
 	{
 		// Log attempt
 		if (log.isDebugEnabled())

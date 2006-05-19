@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,8 +28,8 @@ import wicket.RequestCycle;
 public interface IEventProcessorStrategy
 {
 	/**
-	 * After a page is restored, this method is responsible for calling any
-	 * event handling code based on the request.
+	 * After a request target is resolved, this method is responsible for
+	 * calling any event handling code based on that target.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle

@@ -69,7 +69,7 @@ public class CookieValuePersister implements IValuePersister
 			if (value != null)
 			{
 				// Assign the retrieved/persisted value to the component
-				component.setModelValue(value);
+				component.setModelValue(value.split(FormComponent.VALUE_SEPARATOR));
 			}
 		}
 	}
@@ -79,14 +79,31 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	public void save(final FormComponent component)
 	{
-		final String name = component.getPageRelativePath();
+		final String name = getName(component);
 		final String value = component.getValue();
 
-		final Cookie cookie = new Cookie(name, value == null ? "" : value);
+		Cookie cookie = getCookie(component);
+		if (cookie == null) 
+		{
+			cookie = new Cookie(name, value == null ? "" : value);
+		}
+		else 
+		{
+			cookie.setValue(value == null ? "" : value);
+		}
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
-
+		
 		save(cookie);
+	}
+	
+	/**
+	 * @param component Component to get name for
+	 * @return The name of the component.
+	 */
+	protected String getName(final FormComponent component)
+	{
+		return component.getPageRelativePath();
 	}
 
 	/**
@@ -103,7 +120,7 @@ public class CookieValuePersister implements IValuePersister
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
 			cookie.setValue(null);
-			cookie.setPath(getWebRequest().getContextPath());
+
 			save(cookie);
 		}
 	}
@@ -137,7 +154,7 @@ public class CookieValuePersister implements IValuePersister
 	private Cookie getCookie(final FormComponent component)
 	{
 		// Gets the cookie's name
-		final String name = component.getPageRelativePath();
+		final String name = getName(component);
 
 		// Get all cookies attached to the Request by the client browser
 		Cookie[] cookies = getCookies();
@@ -250,6 +267,8 @@ public class CookieValuePersister implements IValuePersister
     			cookie.setDomain(domain);
     		}
     
+			cookie.setPath(getWebRequest().getContextPath());
+
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().getSecure());
 

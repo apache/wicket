@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-12-11 00:38:17 +0100 (So, 11 Dez 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -17,8 +17,8 @@
  */
 package wicket.examples.displaytag;
 
+import wicket.markup.resolver.FragmentResolver;
 import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
 
 /**
  * Wicket Application class to support the
@@ -33,7 +33,6 @@ public class DisplaytagApplication extends WebApplication
 	 */
 	public DisplaytagApplication()
 	{
-		getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 	}
 
 	/**
@@ -42,5 +41,11 @@ public class DisplaytagApplication extends WebApplication
 	public Class getHomePage()
 	{
 		return DisplaytagIndex.class;
+	}
+
+	protected void init()
+	{
+		getPageSettings().addComponentResolver(new FragmentResolver());
+		super.init();
 	}
 }

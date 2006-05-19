@@ -39,18 +39,18 @@ public interface IAuthorizationStrategy
 	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
 	{
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeInstantiation(java.lang.Class)
+		 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean authorizeInstantiation(final Class c)
+		public boolean isInstantiationAuthorized(final Class c)
 		{
 			return true;
 		}
 
 		/**
-		 * @see wicket.authorization.IAuthorizationStrategy#authorizeAction(wicket.Component,
+		 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 		 *      wicket.authorization.Action)
 		 */
-		public boolean authorizeAction(Component c, Action action)
+		public boolean isActionAuthorized(Component c, Action action)
 		{
 			return true;
 		}
@@ -58,14 +58,20 @@ public interface IAuthorizationStrategy
 
 	/**
 	 * Checks whether an instance of the given component class may be created.
-	 * If this method returns false, a {@link AuthorizationException} is thrown
-	 * during construction.
+	 * If this method returns false, an
+	 * {@link UnauthorizedInstantiationException} will be thrown by the
+	 * framework.
+	 * <p>
+	 * If you wish to implement a strategy that authenticates users which cannot
+	 * access a given Page (or other Component), you can simply throw a
+	 * {@link wicket.RestartResponseAtInterceptPageException} in your
+	 * implementation of this method.
 	 * 
 	 * @param componentClass
 	 *            The component class to check
 	 * @return Whether the given component may be created
 	 */
-	boolean authorizeInstantiation(Class componentClass);
+	boolean isInstantiationAuthorized(Class componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should
@@ -80,9 +86,9 @@ public interface IAuthorizationStrategy
 	 *            The action to authorize on the component
 	 * @return Whether the given action may be taken on the given component
 	 * @throws AuthorizationException
-	 *            Can be thrown by implementation if action is unauthorized
+	 *             Can be thrown by implementation if action is unauthorized
 	 * @see Component#ENABLE
 	 * @see Component#RENDER
 	 */
-	boolean authorizeAction(Component component, Action action);
+	boolean isActionAuthorized(Component component, Action action);
 }

@@ -101,7 +101,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	{
 		final IModel rowModel = item.getModel();
 
-		// TODO General: Does this need to be a refreshing view? since the rows
+		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
 		// is a refreshing view this will be recreated anyways. maybe can se
 		// orderedrepeatingview instead to simplify.
 		item.add(new RefreshingView(CELL_REPEATER_ID)
@@ -122,16 +122,17 @@ public abstract class AbstractDataGridView extends DataViewBase
 				{
 					throw new WicketRuntimeException(populator.getClass().getName()
 							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
-							+ "] to the provided [cellItem] argument");
+							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 				}
-
-				internalPostProcessCellItem(item);
 
 			}
 
-		});
+			protected Item newItem(String id, int index, IModel model)
+			{
+				return newCellItem(id, index, model);
+			}
 
-		internalPostProcessRowItem(item);
+		});
 	}
 
 	protected final ICellPopulator[] internalGetPopulators()
@@ -139,13 +140,50 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populators;
 	}
 
-	protected void internalPostProcessCellItem(Item item)
+	protected final Item newItem(String id, int index, IModel model)
 	{
-		// noop
+		return newRowItem(id, index, model);
 	}
 
-	protected void internalPostProcessRowItem(Item item)
+
+	/**
+	 * Factory method for Item container that represents a row.
+	 * 
+	 * @see Item
+	 * @see RefreshingView#newItem(String, int, IModel)
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item.
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		// noop
+		return new Item(id, index, model);
 	}
+
+	/**
+	 * Factory method for Item container that represents a cell.
+	 * 
+	 * @see Item
+	 * @see RefreshingView#newItem(String, int, IModel)
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newCellItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
 }

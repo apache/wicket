@@ -61,6 +61,28 @@ public class PropertyResolverTest extends TestCase
 		name = (String)PropertyResolver.getValue("name", person);
 		assertEquals(name, "wicket");
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testPrimitiveValue() throws Exception
+	{
+		Integer integer = (Integer)PropertyResolver.getValue("age", person);
+		assertTrue(integer.intValue() == 0);
+		
+		PropertyResolver.setValue("age", person, new Integer(10), CONVERTER);
+		integer = (Integer)PropertyResolver.getValue("age", person);
+		assertTrue(integer.intValue() == 10);
+
+		try
+		{
+			PropertyResolver.setValue("age", person, null, CONVERTER);
+			fail("primitive type can't be set to null");
+		} catch(ConversionException ce)
+		{
+			// ignore should happen
+		}
+	}
 
 	/**
 	 * @throws Exception
@@ -222,7 +244,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressList(addresses);
 		Object size = PropertyResolver.getValue("addressList.size", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)PropertyResolver.getValue("addressList.size()", person);
+		size = PropertyResolver.getValue("addressList.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -238,7 +260,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressMap(addresses);
 		Object addressFromMap = PropertyResolver.getValue("addressMap.size", person);
 		assertEquals(addressFromMap, address);
-		Object size = (Integer)PropertyResolver.getValue("addressMap.size()", person);
+		Object size = PropertyResolver.getValue("addressMap.size()", person);
 		assertEquals(size, new Integer(2));
 	}
 	
@@ -250,7 +272,7 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressArray(new Address[] {new Address(), new Address()});
 		Object size = PropertyResolver.getValue("addressArray.length", person);
 		assertEquals(size, new Integer(2));
-		size = (Integer)PropertyResolver.getValue("addressArray.size", person);
+		size = PropertyResolver.getValue("addressArray.size", person);
 		assertEquals(size, new Integer(2));
 	}
 	

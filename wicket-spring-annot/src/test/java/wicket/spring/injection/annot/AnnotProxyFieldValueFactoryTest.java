@@ -41,6 +41,8 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 {
 	ISpringContextLocator mockCtxLocator = new ISpringContextLocator()
 	{
+		private static final long serialVersionUID = 1L;
+
 		public ApplicationContext getSpringContext()
 		{
 			return null;

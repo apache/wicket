@@ -19,26 +19,28 @@ package wicket.util.io;
 
 import java.io.Writer;
 
+import wicket.util.string.AppendingStringBuffer;
+
 /**
  * @author jcompagner
  */
 public class StringBufferWriter extends Writer
 {
 	/** The buffer which holds the chars */
-	private StringBuffer buffer;
+	private AppendingStringBuffer buffer;
 
 	/**
 	 * Constructor
 	 */
 	public StringBufferWriter()
 	{
-		buffer = new StringBuffer(4096);
+		buffer = new AppendingStringBuffer(4096);
 	}
 
 	/**
-	 * @return The StringBuffer with the written data
+	 * @return The AppendingStringBuffer with the written data
 	 */
-	public StringBuffer getStringBuffer()
+	public AppendingStringBuffer getStringBuffer()
 	{
 		return buffer;
 	}
@@ -46,7 +48,7 @@ public class StringBufferWriter extends Writer
 	/**
 	 * @param buffer
 	 */
-	public void setStringBuffer(StringBuffer buffer)
+	public void setStringBuffer(AppendingStringBuffer buffer)
 	{
 		this.buffer = buffer;
 	}

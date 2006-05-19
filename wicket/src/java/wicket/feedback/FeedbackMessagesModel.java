@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FeedbackMessagesModel.java 5101 2006-03-23 22:58:59 -0800 (Thu, 23 Mar
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-03-23 22:58:59 -0800 (Thu, 23
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +18,7 @@
  */
 package wicket.feedback;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public final class FeedbackMessagesModel extends AbstractDetachableModel
+public class FeedbackMessagesModel extends AbstractDetachableModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -65,7 +67,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @return The current message filter
 	 */
-	public IFeedbackMessageFilter getFilter()
+	public final IFeedbackMessageFilter getFilter()
 	{
 		return filter;
 	}
@@ -73,7 +75,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public IModel getNestedModel()
+	public final IModel getNestedModel()
 	{
 		return null;
 	}
@@ -81,7 +83,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @return The current sorting comparator
 	 */
-	public Comparator getSortingComparator()
+	public final Comparator getSortingComparator()
 	{
 		return sortingComparator;
 	}
@@ -89,12 +91,18 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
-	public Object onGetObject(final Component component)
+	public final Object onGetObject(final Component component)
 	{
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = component.getPage().getFeedbackMessages().messages(filter);
+			List pageMessages = component.getPage().getFeedbackMessages().messages(filter);
+
+			List sessionMessages = component.getSession().getFeedbackMessages().messages(filter);
+
+			messages = new ArrayList(pageMessages.size() + sessionMessages.size());
+			messages.addAll(pageMessages);
+			messages.addAll(sessionMessages);
 
 			// Sort the list before returning it
 			if (sortingComparator != null)
@@ -116,7 +124,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 * @param filter
 	 *            Filter to apply to model
 	 */
-	public void setFilter(IFeedbackMessageFilter filter)
+	public final void setFilter(IFeedbackMessageFilter filter)
 	{
 		this.filter = filter;
 	}
@@ -127,7 +135,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 * @param sortingComparator
 	 *            comparator used for sorting the messages
 	 */
-	public void setSortingComparator(Comparator sortingComparator)
+	public final void setSortingComparator(Comparator sortingComparator)
 	{
 		this.sortingComparator = sortingComparator;
 	}

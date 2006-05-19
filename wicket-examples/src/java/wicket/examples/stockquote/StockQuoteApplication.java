@@ -32,7 +32,7 @@ public class StockQuoteApplication extends WicketExampleApplication
 	public StockQuoteApplication()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
@@ -40,5 +40,5 @@ public class StockQuoteApplication extends WicketExampleApplication
 	{
 		return StockQuotePage.class;
 	}
-	
+
 }

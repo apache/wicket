@@ -43,11 +43,41 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>AjaxApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>EchoApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.echo.EchoApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -254,7 +284,52 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>FramesApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.frames.FramesApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
+	<servlet>
+		<servlet-name>CustomResourceLoadingApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>WizardApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>BreadCrumbApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AjaxApplication</servlet-name>
+		<url-pattern>/ajax/*</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>AjaxPrototypeApplication</servlet-name>
 		<url-pattern>/prototype/*</url-pattern>
@@ -324,6 +399,16 @@
 		<servlet-name>HelloWorldApplication</servlet-name>
 		<url-pattern>/helloworld/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>EchoApplication</servlet-name>
+		<url-pattern>/echo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>UnicodeConverterApplication</servlet-name>
+		<url-pattern>/unicodeconverter/*</url-pattern>
+	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>HelloBrowserApplication</servlet-name>
@@ -364,6 +449,30 @@
 		<servlet-name>ComponentReferenceApplication</servlet-name>
 		<url-pattern>/compref/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FramesApplication</servlet-name>
+		<url-pattern>/frames/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>CustomResourceLoadingApplication</servlet-name>
+		<url-pattern>/customresourceloading/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WizardApplication</servlet-name>
+		<url-pattern>/wizard/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>BreadCrumbApplication</servlet-name>
+		<url-pattern>/breadcrumb/*</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
 	
 	<welcome-file-list>
 	<welcome-file>index.html</welcome-file>

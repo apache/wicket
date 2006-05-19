@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,38 +36,39 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *      add(new Link(&quot;myLink&quot;)
- *      {
- *          public void onClick(RequestCycle cycle)
+ *          add(new Link(&quot;myLink&quot;)
  *          {
- *              // do something here...  
- *          }
- *      );
+ *              public void onClick(RequestCycle cycle)
+ *              {
+ *                  // do something here...  
+ *              }
+ *          );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *      &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *          &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *      &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *          &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
- * The following snippet shows how to pass a parameter from the Page creating the 
- * Page to the Page responded by the Link.
+ * The following snippet shows how to pass a parameter from the Page creating
+ * the Page to the Page responded by the Link.
+ * 
  * <pre>
- *      add(new Link("link", listItem.getModel()) 
- *      {
- *          public void onClick() 
+ *          add(new Link(&quot;link&quot;, listItem.getModel()) 
  *          {
- *              MyObject obj = (MyObject)getModelObject();
- *              setResponse(new MyPage(obj.getId(), ... ));
- *          }
+ *              public void onClick() 
+ *              {
+ *                  MyObject obj = (MyObject)getModelObject();
+ *                  setResponsePage(new MyPage(obj.getId(), ... ));
+ *              }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -75,6 +76,8 @@ import wicket.util.string.Strings;
  */
 public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
@@ -162,6 +165,20 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
+	 * @see wicket.Component#isEnabled()
+	 */
+	public boolean isEnabled()
+	{
+		// If we're auto-enabling
+		if (getAutoEnable())
+		{
+			// the link is enabled if this link doesn't link to the current page
+			return !linksTo(getPage());
+		}
+		return super.isEnabled();
+	}
+
+	/**
 	 * Called when a link is clicked.
 	 */
 	public abstract void onClick();
@@ -178,6 +195,14 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
+		// if there are popupsettings and this link is clicked.
+		// set the popup page map in the request parameters, so that pages that
+		// are created in the onClick are made in the wanted pagemap
+		if (popupSettings != null)
+		{
+			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(
+					popupSettings.getPageMap().getName());
+		}
 		// Invoke subclass handler
 		onClick();
 	}
@@ -250,6 +275,9 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * @param url
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
+	 * @deprecated this method will be removed by
+	 *             {@link #getOnClickScript(CharSequence)} shortly. Please
+	 *             override that method instead.
 	 */
 	protected String getOnClickScript(final String url)
 	{
@@ -257,13 +285,37 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
+	 * @param url
+	 *            The url for the link
+	 * @return Any onClick JavaScript that should be used
+	 */
+	protected CharSequence getOnClickScript(final CharSequence url)
+	{
+		return getOnClickScript(url.toString());
+	}
+
+	/**
 	 * Gets the url to use for this link.
 	 * 
 	 * @return The URL that this link links to
 	 */
-	protected String getURL()
+	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.class);
+		return urlFor(ILinkListener.INTERFACE);
+	}
+
+	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	protected void internalOnAttach()
+	{
+		// Set default for before/after link text
+		if (beforeDisabledLink == null)
+		{
+			final Application app = getApplication();
+			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
+			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
+		}
 	}
 
 	/**
@@ -276,20 +328,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	protected boolean linksTo(final Page page)
 	{
 		return false;
-	}
-	
-	/**
-	 * @see wicket.Component#isEnabled()
-	 */
-	public boolean isEnabled()
-	{
-		// If we're auto-enabling
-		if(getAutoEnable())
-		{
-			// the link is enabled if this link doesn't link to the current page
-			return !linksTo(getPage());
-		}
-		return super.isEnabled();
 	}
 
 	/**
@@ -305,7 +343,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		super.onComponentTag(tag);
 
 		// Set href to link to this link's linkClicked method
-		String url = getURL();
+		CharSequence url = getURL();
 
 		// If we're disabled
 		if (!isEnabled())
@@ -366,24 +404,10 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		}
 
 		// If the subclass specified javascript, use that
-		final String onClickJavaScript = getOnClickScript(url);
+		final CharSequence onClickJavaScript = getOnClickScript(url);
 		if (onClickJavaScript != null)
 		{
 			tag.put("onclick", onClickJavaScript);
-		}
-	}
-
-	/**
-	 * @see wicket.Component#internalOnBeginRequest()
-	 */
-	protected void internalOnBeginRequest()
-	{
-		// Set default for before/after link text
-		if (beforeDisabledLink == null)
-		{
-			final Application app=getApplication();
-			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
 		}
 	}
 
@@ -413,11 +437,5 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		{
 			getResponse().write(afterDisabledLink);
 		}
-	}
-
-	static
-	{
-		// Allow calls through the ILinkListener interface
-		RequestCycle.registerRequestListenerInterface(ILinkListener.class);
 	}
 }

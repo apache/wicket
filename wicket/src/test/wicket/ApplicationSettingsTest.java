@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
@@ -23,8 +22,8 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.resource.DummyApplication;
-import wicket.resource.loader.ApplicationStringResourceLoader;
 import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.Settings;
 
@@ -45,13 +44,22 @@ public class ApplicationSettingsTest extends TestCase
 	}
 
 	/**
+	 * 
+	 */
+	public void testFrameworkVersion()
+	{
+		Settings settings = new Settings(new DummyApplication());
+		assertEquals("n/a", settings.getVersion());
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(new DummyApplication());
-		Assert.assertTrue("exceptionOnMissingResource should default to true", 
-		        settings.getThrowExceptionOnMissingResource());
+		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -61,8 +69,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertFalse("exceptionOnMissingResource should have been set to false", 
-		        settings.getThrowExceptionOnMissingResource());
+		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -71,8 +79,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(new DummyApplication());
-		Assert.assertTrue("useDefaultOnMissingResource should default to true", 
-		        settings.getUseDefaultOnMissingResource());
+		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -82,8 +90,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(new DummyApplication());
 		settings.setUseDefaultOnMissingResource(false);
-		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", 
-		        settings.getUseDefaultOnMissingResource());
+		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -97,7 +105,7 @@ public class ApplicationSettingsTest extends TestCase
 		Assert.assertTrue("First loader one should be the component one",
 				loaders.get(0) instanceof ComponentStringResourceLoader);
 		Assert.assertTrue("Second loader should be the application one",
-				loaders.get(1) instanceof ApplicationStringResourceLoader);
+				loaders.get(1) instanceof ClassStringResourceLoader);
 	}
 
 	/**
@@ -124,6 +132,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testLocalizer()
 	{
 		Application dummy = new DummyApplication();
-		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings().getLocalizer());
+		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings()
+				.getLocalizer());
 	}
 }

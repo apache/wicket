@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<title>
+			Wicket Authorization Roles Example
+		</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<div>
+			The currently selected user is
+			<strong>
+				<span wicket:id="currentUser">
+					[user]
+				</span>
+			</strong>
+			<br />
+			Change user:
+			<ul>
+				<li wicket:id="users">
+					<a href="#" wicket:id="selectUserLink">
+						<span wicket:id="userId">
+							[user id]
+						</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<br />
+		<div>
+			<a href="#" wicket:id="adminBookmarkableLink">
+				go to bookmarkable admin page, protected with Wicket meta data
+			</a>
+			<br />
+			<a href="#" wicket:id="adminInternalLink">
+				go to internal admin page, protected with Wicket meta data
+			</a>
+			<br />
+			<a href="#" wicket:id="panelsPageLink">
+				go to panels page, protected with Wicket meta data
+			</a>
+		</div>
+		<br />
+		<div>
+			<a href="#" wicket:id="adminAnnotBookmarkableLink">
+				go to bookmarkable admin page, protected with annotations
+			</a>
+			<br />
+			<a href="#" wicket:id="adminAnnotInternalLink">
+				go to internal admin page, protected with annotations
+			</a>
+			<br />
+			<a href="#" wicket:id="panelsAnnotPageLink">
+				go to panels page, protected with annotations
+			</a>
+		</div>
+	</body>
+</html>

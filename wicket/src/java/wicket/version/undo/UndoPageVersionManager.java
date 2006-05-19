@@ -17,13 +17,12 @@
  */
 package wicket.version.undo;
 
-import java.util.Stack;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
+import wicket.util.collections.ArrayListStack;
 import wicket.version.IPageVersionManager;
 
 /**
@@ -44,7 +43,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private ChangeList changeList;
 
 	/** Stack of change lists for undoing */
-	private final Stack changeListStack = new Stack();
+	private final ArrayListStack changeListStack = new ArrayListStack();
 
 	/** The current version number */
 	private int currentVersionNumber = 0;
@@ -200,6 +199,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
+		}
+
+		if(changeListStack.isEmpty())
+		{
+		    return false;
 		}
 
 		// Pop off top change list

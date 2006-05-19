@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.compref;
 
@@ -23,7 +21,7 @@ import java.util.Date;
 
 /**
  * A person.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class Person implements Serializable
@@ -32,7 +30,7 @@ public class Person implements Serializable
 	private String lastName;
 	private Date dateOfBirth;
 	private Address address;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -42,8 +40,11 @@ public class Person implements Serializable
 
 	/**
 	 * Construct.
-	 * @param name name
-	 * @param lastName last name
+	 * 
+	 * @param name
+	 *            name
+	 * @param lastName
+	 *            last name
 	 */
 	public Person(String name, String lastName)
 	{
@@ -53,6 +54,7 @@ public class Person implements Serializable
 
 	/**
 	 * Gets the dateOfBirth.
+	 * 
 	 * @return dateOfBirth
 	 */
 	public Date getDateOfBirth()
@@ -62,7 +64,9 @@ public class Person implements Serializable
 
 	/**
 	 * Sets the dateOfBirth.
-	 * @param dateOfBirth dateOfBirth
+	 * 
+	 * @param dateOfBirth
+	 *            dateOfBirth
 	 */
 	public void setDateOfBirth(Date dateOfBirth)
 	{
@@ -71,6 +75,7 @@ public class Person implements Serializable
 
 	/**
 	 * Gets the lastName.
+	 * 
 	 * @return lastName
 	 */
 	public String getLastName()
@@ -80,7 +85,9 @@ public class Person implements Serializable
 
 	/**
 	 * Sets the lastName.
-	 * @param lastName lastName
+	 * 
+	 * @param lastName
+	 *            lastName
 	 */
 	public void setLastName(String lastName)
 	{
@@ -89,6 +96,7 @@ public class Person implements Serializable
 
 	/**
 	 * Gets the name.
+	 * 
 	 * @return name
 	 */
 	public String getName()
@@ -98,7 +106,9 @@ public class Person implements Serializable
 
 	/**
 	 * Sets the name.
-	 * @param name name
+	 * 
+	 * @param name
+	 *            name
 	 */
 	public void setName(String name)
 	{
@@ -107,6 +117,7 @@ public class Person implements Serializable
 
 	/**
 	 * Gets the address.
+	 * 
 	 * @return address
 	 */
 	public Address getAddress()
@@ -116,7 +127,9 @@ public class Person implements Serializable
 
 	/**
 	 * Sets the address.
-	 * @param address address
+	 * 
+	 * @param address
+	 *            address
 	 */
 	public void setAddress(Address address)
 	{
@@ -124,11 +137,19 @@ public class Person implements Serializable
 	}
 
 	/**
+	 * @return full name of the person
+	 */
+	public String getFullName()
+	{
+		return name + " " + lastName;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return "Person{name=" + name + ",lastName=" + lastName +
-			",dateOfBirth=" + dateOfBirth + "}";
+		return "[Person name=" + name + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth
+				+ "]";
 	}
 }

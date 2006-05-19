@@ -37,6 +37,7 @@ import wicket.util.lang.Objects;
  */
 public class Radio extends WebMarkupContainer
 {
+	private static final String ATTR_DISABLED = "disabled";
 	/**
 	 * 
 	 */
@@ -67,27 +68,38 @@ public class Radio extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		// Default handling for component tag
+		super.onComponentTag(tag);
 
 		// must be attached to <input type="radio" .../> tag
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "radio");
 
 		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
+		String path = getPath();
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Radio component ["
-							+ getPath()
+							+ path
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", getPath());
+		tag.put("value", path);
 
 		// compare the model objects of the group and self, if the same add the
-		// checked attribute
-		if (Objects.equal(group.getModelObject(), getModelObject()))
+		// checked attribute, first check if there was a raw input on the group.
+		if(group.hasRawInput())
+		{
+			String rawInput = group.getRawInput();
+			if(rawInput != null && rawInput.equals(path))
+			{
+				tag.put("checked", "checked");
+			}
+		}
+		else if (Objects.equal(group.getModelObject(), getModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
@@ -95,24 +107,24 @@ public class Radio extends WebMarkupContainer
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = group.urlFor(IOnChangeListener.class);
+			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
 			try
 			{
 				Form form = group.getForm();
-				tag.put("onClick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url) );
 			}
 			catch (WicketRuntimeException ex)
 			{
 				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onClick", "location.href='" + url + "&" + group.getInputName()
+				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
 		
-		// Default handling for component tag
-		super.onComponentTag(tag);
+		
+		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+		}
 	}
-
-
 }

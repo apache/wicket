@@ -1,5 +1,7 @@
 /*
  * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -97,7 +99,15 @@ public class ServletWebRequest extends WebRequest
 				.hasMoreElements();)
 		{
 			final String name = (String)enumeration.nextElement();
-			map.put(name, httpServletRequest.getParameter(name));
+			String[] parameterValues = httpServletRequest.getParameterValues(name);
+			if(parameterValues.length == 1)
+			{
+				map.put(name, parameterValues[0]);
+			}
+			else
+			{
+				map.put(name, parameterValues);
+			}
 		}
 
 		return map;
@@ -188,7 +198,7 @@ public class ServletWebRequest extends WebRequest
 		}
 		return url;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

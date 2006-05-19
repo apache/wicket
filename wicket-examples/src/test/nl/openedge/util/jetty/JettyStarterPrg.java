@@ -109,7 +109,7 @@ public class JettyStarterPrg
 
 		// get arguments from the previously build properties
 		boolean useJettyPlus = Boolean.valueOf(
-				(String)cmdArguments.getProperty(CMDARG_USE_JETTY_PLUS, "false")).booleanValue();
+				cmdArguments.getProperty(CMDARG_USE_JETTY_PLUS, "false")).booleanValue();
 		String jettyConfig = cmdArguments.getProperty(CMDARG_XML_CONFIG);
 		int port = Integer
 				.parseInt(cmdArguments.getProperty(CMDARG_PORT, DEFAULT_HTTP_LISTEN_PORT));

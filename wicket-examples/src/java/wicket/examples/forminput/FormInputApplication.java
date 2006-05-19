@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FormInputApplication.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-16 06:36:52 -0700 (Sun,
+ * 16 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,18 +18,16 @@
  */
 package wicket.examples.forminput;
 
+import java.awt.Font;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestWithCryptedUrl;
-import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.WebResponseWithCryptedUrl;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Application class for form input example.
@@ -42,28 +41,6 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 	public FormInputApplication()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
-		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
-				new DefaultButtonImageResource("\u4E4B\u5916"));
-		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE,
-				new DefaultButtonImageResource("\u91CD\u65B0\u8BBE\u7F6E"));
-	}
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
-	 */
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
-	{
-		return new WebRequestWithCryptedUrl(servletRequest);
-	}
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	 */
-	protected WebResponse newWebResponse(HttpServletResponse servletResponse)
-	{
-		return new WebResponseWithCryptedUrl(servletResponse);
 	}
 
 	/**
@@ -72,5 +49,54 @@ public class FormInputApplication extends WicketExampleApplication
 	public Class getHomePage()
 	{
 		return FormInput.class;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
+		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		Font font = new Font("SimSun", Font.BOLD, 16);
+		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
+		imgSave.setFont(font);
+		DefaultButtonImageResource imgReset = new DefaultButtonImageResource("\u91CD\u7F6E");
+		imgReset.setFont(font);
+		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
+		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		Font fontJa = new Font("Serif", Font.BOLD, 16);
+		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
+		imgSaveJa.setFont(fontJa);
+		DefaultButtonImageResource imgResetJa = new DefaultButtonImageResource(
+				"\u30ea\u30bb\u30c3\u30c8");
+		imgResetJa.setFont(fontJa);
+		getSharedResources().add("save", Locale.JAPANESE, imgSaveJa);
+		getSharedResources().add("reset", Locale.JAPANESE, imgResetJa);
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
+	 *      protected WebRequest newWebRequest(HttpServletRequest
+	 *      servletRequest) { return new
+	 *      WebRequestWithCryptedUrl(servletRequest); }
+	 */
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
+	 *      protected WebResponse newWebResponse(HttpServletResponse
+	 *      servletResponse) { return new
+	 *      WebResponseWithCryptedUrl(servletResponse); }
+	 */
+
+	/**
+	 * Special overwrite to have url compressing for this example.
+	 * 
+	 * @see URLCompressor
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }

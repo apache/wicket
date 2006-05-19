@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.debug;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 
 /**
@@ -29,7 +26,7 @@ import wicket.WicketTestCase;
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
+	// private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
 
 	/**
 	 * Create the test.

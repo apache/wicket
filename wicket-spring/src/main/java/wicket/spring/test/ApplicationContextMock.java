@@ -29,9 +29,9 @@ import org.springframework.core.io.Resource;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
+// TODO finish implementing all needed methods
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
-	// TODO finish
 	private Map beans = new HashMap();
 
 	/**

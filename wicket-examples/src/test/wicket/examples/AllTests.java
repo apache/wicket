@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,6 +16,8 @@
  * the License.
  */
 package wicket.examples;
+
+import com.meterware.httpunit.HttpUnitOptions;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -91,6 +93,11 @@ public final class AllTests extends TestSuite
 	 */
 	public static Test suite()
 	{
+		// The javascript 'history' variable is not supported by
+		// httpunit and we don't want httpunit to throw an
+		// exception just because they can not handle it.
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
+
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(HangManTest.class);
 		suite.addTestSuite(WordGeneratorTest.class);

@@ -1,33 +1,31 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.AttributeModifier;
-import wicket.Component;
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
+import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 
 /**
@@ -42,7 +40,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *      &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *           &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -81,8 +79,8 @@ public class DataTable extends Panel implements IPageable
 
 	private IColumn[] columns;
 
-	private final OrderedRepeatingView topToolbars;
-	private final OrderedRepeatingView bottomToolbars;
+	private final RepeatingView topToolbars;
+	private final RepeatingView bottomToolbars;
 
 	/**
 	 * Constructor
@@ -106,28 +104,20 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void postProcessRowItem(final Item item)
+			protected Item newRowItem(String id, int index, IModel model)
 			{
-				final IModel model = new AbstractReadOnlyModel()
-				{
+				return DataTable.this.newRowItem(id, index, model);
+			}
 
-					private static final long serialVersionUID = 1L;
-
-					public Object getObject(Component component)
-					{
-						return (item.getIndex() % 2 == 0) ? "odd" : "even";
-					}
-
-
-				};
-
-				item.add(new AttributeModifier("class", true, model));
+			protected Item newCellItem(String id, int index, IModel model)
+			{
+				return DataTable.this.newCellItem(id, index, model);
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new OrderedRepeatingView("topToolbars")
+		topToolbars = new RepeatingView("topToolbars")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -138,7 +128,7 @@ public class DataTable extends Panel implements IPageable
 
 		};
 
-		bottomToolbars = new OrderedRepeatingView("bottomToolbars")
+		bottomToolbars = new RepeatingView("bottomToolbars")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -187,7 +177,7 @@ public class DataTable extends Panel implements IPageable
 		addToolbar(toolbar, bottomToolbars);
 	}
 
-	private void addToolbar(AbstractToolbar toolbar, OrderedRepeatingView container)
+	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
 	{
 		if (toolbar == null)
 		{
@@ -246,6 +236,63 @@ public class DataTable extends Panel implements IPageable
 	public final int getRowsPerPage()
 	{
 		return datagrid.getRowsPerPage();
+	}
+
+	/**
+	 * Factory method for Item container that represents a row in the underlying
+	 * DataGridView
+	 * 
+	 * @see Item
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item.
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newRowItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
+	/**
+	 * Factory method for Item container that represents a cell in the
+	 * underlying DataGridView
+	 * 
+	 * @see Item
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newCellItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
+	/**
+	 * Sets the item reuse strategy. This strategy controls the creation of
+	 * {@link Item}s.
+	 * 
+	 * @see RefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see IItemReuseStrategy
+	 * 
+	 * @param strategy
+	 *            item reuse strategy
+	 * @return this for chaining
+	 */
+	public final DataTable setItemReuseStrategy(IItemReuseStrategy strategy)
+	{
+		datagrid.setItemReuseStrategy(strategy);
+		return this;
 	}
 
 }

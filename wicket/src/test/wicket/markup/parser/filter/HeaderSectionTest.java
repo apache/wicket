@@ -18,15 +18,12 @@
  */
 package wicket.markup.parser.filter;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketRuntimeException;
+import wicket.WicketTestCase;
 import wicket.markup.html.PackageResource;
-import wicket.markup.html.list.DiffUtil;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -35,16 +32,9 @@ import wicket.util.resource.IResourceStream;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionTest extends TestCase
+public class HeaderSectionTest extends WicketTestCase
 {
 	private static Log log = LogFactory.getLog(HeaderSectionTest.class);
-
-	private MockWebApplication application;
-
-	protected void setUp() throws Exception
-	{
-		application = new MockWebApplication(null);
-	}
 	
 	/**
 	 * Create the test.
@@ -193,33 +183,42 @@ public class HeaderSectionTest extends TestCase
 	}
 
 	/**
-	 * @param pageClass
-	 * @param filename
-	 * @throws Exception
-	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
-	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-		
-		application.setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.getWicketSession().setLocale(null);
-		application.processRequestCycle();
-		
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		//System.out.println(document);
-
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_15() throws Exception
 	{
 	    executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_16() throws Exception
+	{
+	    executeTest(HeaderSectionPage_16.class, "HeaderSectionPageExpectedResult_16.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_17() throws Exception
+	{
+	    executeTest(HeaderSectionPage_17.class, "HeaderSectionPageExpectedResult_17.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_18() throws Exception
+	{
+	    executeTest(HeaderSectionPage_18.class, "HeaderSectionPageExpectedResult_18.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_19() throws Exception
+	{
+	    executeTest(HeaderSectionPage_19.class, "HeaderSectionPageExpectedResult_19.html");
 	}
 }

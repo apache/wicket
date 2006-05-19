@@ -40,8 +40,10 @@ import wicket.util.string.Strings;
  * </ul>
  * 
  * @author Jonathan Locke
+ * 
+ * @deprecated see {@link StringValidator}
  */
-public class LengthValidator extends StringValidator
+public class LengthValidator extends AbstractValidator
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -124,10 +126,11 @@ public class LengthValidator extends StringValidator
 	/**
 	 * Validates that a form component's value is of a certain minimum and/or
 	 * maximum length.
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * @see AbstractValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public final void onValidate(FormComponent formComponent, final String value)
+	public final void validate(FormComponent formComponent)
 	{
+		String value = (String)formComponent.getConvertedInput();
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
 		{

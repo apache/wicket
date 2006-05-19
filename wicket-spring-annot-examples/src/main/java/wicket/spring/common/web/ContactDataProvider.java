@@ -20,7 +20,7 @@ package wicket.spring.common.web;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.data.sort.SortableDataProvider;
+import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import wicket.spring.common.ContactDao;
 import wicket.spring.common.QueryParam;
 

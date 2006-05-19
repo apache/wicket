@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,6 +23,7 @@ import wicket.MarkupContainer;
  * Filter for child-of relationship
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
  */
 public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
@@ -39,6 +39,10 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public ContainerFeedbackMessageFilter(MarkupContainer container)
 	{
+		if (container == null)
+		{
+			throw new IllegalArgumentException("container must be not null");
+		}
 		this.container = container;
 	}
 
@@ -47,6 +51,6 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public boolean accept(FeedbackMessage message)
 	{
-		return container.isAncestorOf(message.getReporter());
+		return container.contains(message.getReporter(), true);
 	}
 }

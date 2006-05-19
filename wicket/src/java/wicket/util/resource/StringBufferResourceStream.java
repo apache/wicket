@@ -17,6 +17,7 @@
  */
 package wicket.util.resource;
 
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.time.Time;
 
 /**
@@ -29,7 +30,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** Stylesheet information */
-	private StringBuffer buffer = new StringBuffer();
+	private AppendingStringBuffer buffer = new AppendingStringBuffer(128);
 
 	/**
 	 * Constructor.
@@ -57,7 +58,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 *            The string to add
 	 * @return this for chaining
 	 */
-	public StringBufferResourceStream append(final String s)
+	public StringBufferResourceStream append(final CharSequence s)
 	{
 		buffer.append(s);
 		setLastModified(Time.now());
@@ -71,7 +72,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 *            The string to prepend
 	 * @return this for chaining
 	 */
-	public StringBufferResourceStream prepend(final String s)
+	public StringBufferResourceStream prepend(final CharSequence s)
 	{
 		buffer.insert(0, s);
 		setLastModified(Time.now());

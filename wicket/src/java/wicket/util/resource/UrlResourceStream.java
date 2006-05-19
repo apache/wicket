@@ -39,7 +39,7 @@ import wicket.util.time.Time;
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class UrlResourceStream extends AbstractResourceStream
+public class UrlResourceStream extends AbstractResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (Exception ex)
 			{
-				log.info("cannot convert url: " + url + " to file (" + ex.getMessage()
+				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage()
 						+ "), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
@@ -166,8 +166,8 @@ public final class UrlResourceStream extends AbstractResourceStream
 			Application application = Application.get();
 			if (application instanceof WebApplication)
 			{
-				// TODO General: For non webapplication another method should be
-				// implemented (getMimeType on application?)
+				// TODO Post 1.2: General: For non webapplication another method
+				// should be implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getWicketServlet().getServletContext()
 						.getMimeType(url.getFile());
 				if (contentType == null)
@@ -232,7 +232,6 @@ public final class UrlResourceStream extends AbstractResourceStream
 			URLConnection urlConnection = null;
 			try
 			{
-
 				urlConnection = url.openConnection();
 
 				// update the last modified time.

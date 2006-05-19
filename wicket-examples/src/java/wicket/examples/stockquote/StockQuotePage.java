@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.stockquote;
 
@@ -49,10 +48,10 @@ public class StockQuotePage extends WicketExamplePage
 		// code for second example: using a form for selecting the
 		// symbol of the stock quote.
 
-		// shared model to get and set the symbol property on the 
+		// shared model to get and set the symbol property on the
 		// quote instance
 		final IModel model = new PropertyModel(quote, "symbol");
-		
+
 		// form holding the input field.
 		final Form form = new Form("form");
 		add(form);
@@ -66,8 +65,8 @@ public class StockQuotePage extends WicketExamplePage
 	}
 
 	/**
-	 * Quote instance used for communicating between the form input field
-	 * and the display labels for showing the stock quote.
+	 * Quote instance used for communicating between the form input field and
+	 * the display labels for showing the stock quote.
 	 */
 	private final Quote quote = new Quote();
 
@@ -80,6 +79,7 @@ public class StockQuotePage extends WicketExamplePage
 
 		/**
 		 * Gets the symbol.
+		 * 
 		 * @return the symbol
 		 */
 		public String getSymbol()
@@ -89,7 +89,9 @@ public class StockQuotePage extends WicketExamplePage
 
 		/**
 		 * Sets the symbol.
-		 * @param symbol the symbol
+		 * 
+		 * @param symbol
+		 *            the symbol
 		 */
 		public void setSymbol(String symbol)
 		{

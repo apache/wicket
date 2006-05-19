@@ -117,7 +117,9 @@ public final class URLHelper
 		URL url;
 		// Quick sanity check
 		if (!path.startsWith("/"))
+		{
 			path = "/" + path;
+		}
 		url = servletContext.getResource(path);
 		return url;
 	}

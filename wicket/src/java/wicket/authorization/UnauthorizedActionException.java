@@ -31,18 +31,22 @@ public class UnauthorizedActionException extends AuthorizationException
 
 	/** The action */
 	private Action action;
+
+	/** The component that caused the unauthorized exception */
+	private final Component component;
 	
 	/**
 	 * Construct.
 	 * 
 	 * @param component
-	 *            The component
+	 *            The component that caused the unauthorized exception
 	 * @param action
 	 *            The action
 	 */
 	public UnauthorizedActionException(Component component, Action action)
 	{
 		super("Component " + component + " does not permit action " + action);
+		this.component = component;
 		this.action = action;
 	}
 	
@@ -52,5 +56,13 @@ public class UnauthorizedActionException extends AuthorizationException
 	public Action getAction()
 	{
 		return action;
+	}
+	
+	/**
+	 * @return The component that caused the unauthorized exception
+	 */
+	public Component getComponent()
+	{
+		return component;
 	}
 }

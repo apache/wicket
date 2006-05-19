@@ -21,7 +21,6 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -39,16 +38,16 @@ public class TestPage extends WebPage
 	public TestPage()
 	{
 		add(new Label("label"));
-		
+
 		Form form1 = new Form("form1");
 		add(form1);
 		form1.add(new MyTextField("text1", "input-1"));
 		form1.add(new MyTextField("text2", "input-2"));
 		form1.add(new MyTextField("text7", "input-3"));
-		
+
 		Form form2 = new TestForm("form2");
 		add(form2);
-		
+
 		Panel panel1 = new Panel("panel1");
 		form2.add(panel1);
 		panel1.add(new MyTextField("text3", "input-3"));
@@ -59,80 +58,120 @@ public class TestPage extends WebPage
 		panel2.add(new MyTextField("text5", "input-5"));
 		panel2.add(new MyTextField("text6", "input-6"));
 		panel2.add(new MyTextField("text8", "input-8"));
+		panel2.add(new MyTextField("text9", "input-9"));
+		panel2.add(new MyTextField("text10", "input-10"));
+		panel2.add(new MyTextField("text11", "input-11"));
+		panel2.add(new MyTextField("text12", "input-12"));
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText1()
+	public MyTextField getText1()
 	{
-		return (TextField) get("form1:text1");
+		return (MyTextField)get("form1:text1");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText2()
+	public MyTextField getText2()
 	{
-		return (TextField) get("form1:text2");
+		return (MyTextField)get("form1:text2");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText3()
+	public MyTextField getText3()
 	{
-		return (TextField) get("form2:panel1:text3");
+		return (MyTextField)get("form2:panel1:text3");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText4()
+	public MyTextField getText4()
 	{
-		return (TextField) get("form2:panel1:text4");
+		return (MyTextField)get("form2:panel1:text4");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText5()
+	public MyTextField getText5()
 	{
-		return (TextField) get("form2:panel2:text5");
+		return (MyTextField)get("form2:panel2:text5");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText6()
+	public MyTextField getText6()
 	{
-		return (TextField) get("form2:panel2:text6");
+		return (MyTextField)get("form2:panel2:text6");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText7()
+	public MyTextField getText7()
 	{
-		return (TextField) get("form1:text7");
+		return (MyTextField)get("form1:text7");
 	}
-	
+
 	/**
 	 * 
 	 * @return xxx
 	 */
-	public TextField getText8()
+	public MyTextField getText8()
 	{
-		return (TextField) get("form2:panel2:text8");
+		return (MyTextField)get("form2:panel2:text8");
 	}
-	
+
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText9()
+	{
+		return (MyTextField)get("form2:panel2:text9");
+	}
+
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText10()
+	{
+		return (MyTextField)get("form2:panel2:text10");
+	}
+
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText11()
+	{
+		return (MyTextField)get("form2:panel2:text11");
+	}
+
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText12()
+	{
+		return (MyTextField)get("form2:panel2:text12");
+	}
+
 	/**
 	 * 
 	 */
@@ -144,6 +183,7 @@ public class TestPage extends WebPage
 
 		/**
 		 * Construct.
+		 * 
 		 * @param id
 		 * @param input
 		 */
@@ -151,16 +191,24 @@ public class TestPage extends WebPage
 		{
 			super(id);
 			this.input = input;
-			
-			add(RequiredValidator.getInstance());
+
+			setRequired(true);
 		}
-		
+
 		/**
 		 * @see wicket.markup.html.form.FormComponent#getInput()
 		 */
 		public String getInput()
 		{
 			return input;
+		}
+
+		/**
+		 * @param input
+		 */
+		public void setInput(String input)
+		{
+			this.input = input;
 		}
 	}
 }

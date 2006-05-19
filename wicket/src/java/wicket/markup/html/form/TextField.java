@@ -18,7 +18,6 @@
 package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 
 /**
@@ -47,7 +46,7 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, final Class type)
 	{
 		super(id);
-		add(new TypeValidator(type));
+		setType(type);
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, IModel model, Class type)
 	{
 		super(id, model);
-		add(new TypeValidator(type));
+		setType(type);
 	}
 
 	/**
@@ -85,11 +84,18 @@ public class TextField extends AbstractTextComponent
 		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
 
-		// If this is not a subclass (PasswordTextField)
-		if (getClass() == TextField.class)
+		// check for text type
+		String inputType = getInputType();
+		if(inputType != null)
 		{
-			// check for text type
-			checkComponentTagAttribute(tag, "type", "text");
+			checkComponentTagAttribute(tag, "type", inputType);
+		}
+		else
+		{
+			if(tag.getAttributes().containsKey("type"))
+			{
+				checkComponentTagAttribute(tag, "type", "text");
+			}
 		}
 
 		// No validation errors
@@ -100,26 +106,13 @@ public class TextField extends AbstractTextComponent
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
+	 * Subclass should override this method if this textfields mappes on a different
+	 * input type as text. Like PasswordField or HiddenField.
+	 * 
+	 * @return The input type of this textfield, default is 'text'
 	 */
-	public void updateModel()
+	protected String getInputType()
 	{
-		String input = getInput();
-		// if input was null then value was not submitted (disabled field), ignore it
-		if (input != null)
-		{
-			// Get any validation type
-			final Class type = getValidationType();
-			if (type != null)
-			{
-				// Set model to request string converted to the appropriate type
-				setModelObject(getConverter().convert(input, type));
-			}
-			else
-			{
-				// Update String model
-				super.updateModel();
-			}
-		}
+		return null;
 	}
 }

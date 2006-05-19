@@ -1,6 +1,7 @@
 /*
  * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
- * 21:28:56 eelco12 Exp $ $Revision$ $Date$
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date: 2006-04-02 14:09:16 -0700
+ * (Sun, 02 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +19,7 @@
 package wicket.request.target.coding;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.PageParameters;
+import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * Abstract class for mount encoders that uses paths and forward slashes.
@@ -42,7 +46,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	/** log. */
 	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
 
-	
+
 	/** mounted path. */
 	private final String mountPath;
 
@@ -73,12 +77,16 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Decodes PageParameters object from the provided url fragment
+	 * Decodes parameters object from the provided url fragment
 	 * 
 	 * @param urlFragment
-	 * @return PageParameters object created from the url fragment
+	 *            fragment of the url after the decoded path and before the
+	 *            query string
+	 * @param urlParameters
+	 *            query string parameters
+	 * @return Parameters created from the url fragment and query string
 	 */
-	protected PageParameters decodePageParameters(String urlFragment)
+	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
@@ -86,10 +94,11 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			urlFragment = urlFragment.substring(1);
 		}
 
-		if (urlFragment.length()==0) {
-			return new PageParameters();
+		if (urlFragment.length() == 0)
+		{
+			return new ValueMap();
 		}
-		
+
 		// Split into pairs
 		final String[] pairs = urlFragment.split("/");
 
@@ -97,49 +106,98 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (pairs.length % 2 != 0)
 		{
 			// give up
-			throw new IllegalStateException("URL fragment has unmatched key/value pair: "
+			throw new IllegalStateException("URL fragment has unmatched key/value " + "pair: "
 					+ urlFragment);
 		}
 
 		// Loop through pairs
-		PageParameters parameters = new PageParameters();
+
+		ValueMap parameters = new ValueMap();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
-			parameters.put(pairs[i], pairs[i + 1]);
+			String value = pairs[i + 1];
+			value = urlDecode(value);
+			parameters.add(pairs[i], value);
 		}
+
+
+		if (urlParameters != null)
+		{
+			parameters.putAll(urlParameters);
+		}
+
 		return parameters;
 	}
 
 	/**
-	 * Encodes PageParameters into a url fragment and append that to the
-	 * provided url buffer.
+	 * Returns a decoded value of the given value
+	 * 
+	 * @param value
+	 * @return Decodes the value
+	 */
+	protected String urlDecode(String value)
+	{
+		try
+		{
+			value = URLDecoder.decode(value, Application.get().getRequestCycleSettings()
+					.getResponseRequestEncoding());
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			log.error("error decoding parameter", ex);
+		}
+		return value;
+	}
+
+	/**
+	 * Encodes Map into a url fragment and append that to the provided url
+	 * buffer.
 	 * 
 	 * @param url
 	 *            url so far
 	 * 
 	 * @param parameters
-	 *            PageParameters object to be encoded
+	 *            Map object to be encoded
 	 */
-	protected void appendPageParameters(StringBuffer url, PageParameters parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
-		if (parameters != null)
+		if (parameters != null && parameters.size() > 0)
 		{
 			Iterator entries = parameters.entrySet().iterator();
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				String escapedValue=(String)entry.getValue();
-				try
+				if (entry.getValue() != null)
 				{
-					escapedValue=URLEncoder.encode(escapedValue, Application.get()
-							.getRequestCycleSettings().getResponseRequestEncoding());
+					String escapedValue = urlEncode(entry.getValue().toString());
+					if (!Strings.isEmpty(escapedValue))
+					{
+						url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+					}
 				}
-				catch (UnsupportedEncodingException e)
-				{
-					log.error(e.getMessage(), e);
-				}
-				url.append("/").append(entry.getKey()).append("/").append(escapedValue);
 			}
 		}
+	}
+
+	/**
+	 * Url encodes a string
+	 * 
+	 * @param string
+	 *            string to be encoded
+	 * @return encoded string
+	 */
+	protected String urlEncode(String string)
+	{
+		try
+		{
+			return URLEncoder.encode(string, Application.get().getRequestCycleSettings()
+					.getResponseRequestEncoding());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			log.error(e.getMessage(), e);
+			return string;
+		}
+
 	}
 }

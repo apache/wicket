@@ -1,4 +1,4 @@
-#Wed Jan 11 16:31:57 CET 2006
+#Wed Apr 26 18:35:38 CEST 2006
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=clean
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -50,6 +50,7 @@ org.eclipse.jdt.core.compiler.problem.possibleAccidentalBooleanAssignment=ignore
 org.eclipse.jdt.core.compiler.problem.specialParameterHidingField=disabled
 org.eclipse.jdt.core.compiler.problem.staticAccessReceiver=ignore
 org.eclipse.jdt.core.compiler.problem.syntheticAccessEmulation=ignore
+org.eclipse.jdt.core.compiler.problem.uncheckedTypeOperation=ignore
 org.eclipse.jdt.core.compiler.problem.undocumentedEmptyBlock=ignore
 org.eclipse.jdt.core.compiler.problem.unnecessaryElse=ignore
 org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck=ignore
@@ -71,6 +72,7 @@ org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant=16
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_explicit_constructor_call=16
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation=16
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_qualified_allocation_expression=16
+org.eclipse.jdt.core.formatter.alignment_for_assignment=0
 org.eclipse.jdt.core.formatter.alignment_for_binary_expression=16
 org.eclipse.jdt.core.formatter.alignment_for_compact_if=20
 org.eclipse.jdt.core.formatter.alignment_for_conditional_expression=48
@@ -120,10 +122,12 @@ org.eclipse.jdt.core.formatter.compact_else_if=true
 org.eclipse.jdt.core.formatter.continuation_indentation=2
 org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=2
 org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line=false
+org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_constant_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_declaration_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_type_header=true
 org.eclipse.jdt.core.formatter.indent_breaks_compare_to_cases=true
+org.eclipse.jdt.core.formatter.indent_empty_lines=false
 org.eclipse.jdt.core.formatter.indent_statements_compare_to_block=true
 org.eclipse.jdt.core.formatter.indent_statements_compare_to_body=true
 org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_cases=true
@@ -137,6 +141,7 @@ org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_ini
 org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement=insert
+org.eclipse.jdt.core.formatter.insert_new_line_in_empty_annotation_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_constant=insert
@@ -280,6 +285,7 @@ org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_parenthesize
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch=insert
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_synchronized=insert
 org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_while=insert
+org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_return=insert
 org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional=insert

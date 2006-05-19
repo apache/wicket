@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import wicket.WicketRuntimeException;
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -18,7 +18,7 @@ import wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class SelectOptions extends OrderedRepeatingView
+public class SelectOptions extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 	private boolean recreateChoices = false;
@@ -75,8 +75,7 @@ public class SelectOptions extends OrderedRepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					// FIXME Unknown: Unknown
-					throw new WicketRuntimeException("Model not a collection");
+					throw new WicketRuntimeException("Model object " + modelObject + " not a collection");
 				}
 
 				// iterator over model objects for SelectOption components

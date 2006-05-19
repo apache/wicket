@@ -1,6 +1,6 @@
 /*
  * $Id$ $Revision:
- * 1.21 $ $Date$
+ * 1.67 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,26 +21,47 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.IRequestCycleProcessor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 
 /**
- * THIS CLASS IS NOT PART OF THE WICKET PUBLIC API. DO NOT ATTEMPT TO USE IT.
+ * A container for pages held in the session. PageMap is a parameter to several
+ * methods in the Wicket API. You can get a PageMap by name from a Session with
+ * Session.getPageMap(String pageMapName) or more conveniently with
+ * PageMap.forName(String pageMapName). But you should not hold onto a reference
+ * to the pagemap (just as you should not hold onto a reference to your Session
+ * but should get it each time you need it instead). Instead, create a strongly
+ * typed accessor method like this:
  * 
- * A container for pages held in the session.
+ * <pre>
+ * public PageMap getMyPageMap()
+ * {
+ * 	return PageMap.forName(&quot;myPageMapName&quot;);
+ * }
+ * </pre>
+ * 
+ * If the page map with the given name is not found, one will be automatically
+ * created.
  * 
  * @author Jonathan Locke
  */
 public final class PageMap implements Serializable
 {
+	/** Name of default pagemap */
+	public static final String DEFAULT_NAME = null;
+
+	/** Log. */
+	private static final Log log = LogFactory.getLog(PageMap.class);
+
 	private static final long serialVersionUID = 1L;
 
 	/** Stack of entry accesses by id */
-	private final Stack/* <Access> */accessStack = new Stack();
+	private final ArrayListStack/* <Access> */accessStack = new ArrayListStack(8);
 
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
@@ -106,6 +127,14 @@ public final class PageMap implements Serializable
 		{
 			return id + (version << 16);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "[Access id=" + id + ", version=" + version + "]";
+		}
 	}
 
 	/**
@@ -123,6 +152,21 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * Gets a page map for a page map name, automatically creating the page map
+	 * if it does not exist. If you do not want the pagemap to be automatically
+	 * created, you can call Session.pageMapForName(pageMapName, false).
+	 * 
+	 * @param pageMapName
+	 *            The name of the page map to get
+	 * @return The PageMap with the given name from the current session
+	 */
+	public static PageMap forName(final String pageMapName)
+	{
+		Session session = Session.get();
+		return (session != null) ? session.pageMapForName(pageMapName, true) : null;
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param name
@@ -130,9 +174,13 @@ public final class PageMap implements Serializable
 	 * @param session
 	 *            The session holding this page map
 	 */
-	public PageMap(final String name, final Session session)
+	PageMap(final String name, final Session session)
 	{
 		this.name = name;
+		if (session == null)
+		{
+			throw new IllegalArgumentException("session must be not null");
+		}
 		this.session = session;
 	}
 
@@ -146,7 +194,7 @@ public final class PageMap implements Serializable
 		{
 			public void entry(IPageMapEntry entry)
 			{
-				remove(entry);
+				removeEntry(entry);
 			}
 		});
 
@@ -154,39 +202,16 @@ public final class PageMap implements Serializable
 		accessStack.clear();
 	}
 
-	// FIXME General: We should include an ISessionSettings.trackStatelessPages
-	// flag and let users track accesses to stateless pages. This would allow us
-	// to delete the long, complicated warning below and replace it with a
-	// shorter one. The stateless pages would still not go into the session.
-	// Just the Access information would be replicated through the PageMap
-	// object using a subclass like StatelessPageAccess having a class and
-	// PageParameters.
+	// TODO Post 1.2: We should encode the page id of the current page into the
+	// URL for truly stateless pages so we can adjust the stack correctly
 
 	/**
 	 * Returns a stack of PageMap.Access entries pushed in the order that the
 	 * pages and versions were accessed.
-	 * <p>
-	 * IMPORTANT NOTE: This stack will be in sync with the browser stack EXCEPT
-	 * in certain circumstances where stateless pages and the back button are
-	 * involved. The problem is this: if stateless pages are rendered to the
-	 * browser, they will not be on the access stack because they are not in the
-	 * PageMap at all. So, if the user goes back to a stateless page and
-	 * navigates forward to a stateful page, the stack will not be correctly
-	 * adjusted (unlike with stateful pages, where it will always be adjusted
-	 * correctly). Instead, the new stateful page will be on top of the access
-	 * stack and any unreachable page versions that the user may have backed up
-	 * over will still be in the session and on the access stack instead of
-	 * being eliminated. This is not a major problem, however as they will
-	 * expire in the normal way (although they will take up pagemap space until
-	 * they do). It's important to realize that this is a problem with stateless
-	 * pages and not with the implementation of PageMap, which is now actually a
-	 * better implementation than in previous versions because it at least CAN
-	 * remove unused information from the map when the back button is used on
-	 * stateful pages.
 	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
-	public final Stack getAccessStack()
+	public final ArrayListStack getAccessStack()
 	{
 		return accessStack;
 	}
@@ -200,12 +225,10 @@ public final class PageMap implements Serializable
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
-		return (IPageMapEntry)session.getAttribute(attributeForId(id));
+		return(IPageMapEntry)session.getAttribute(attributeForId(id));
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @return Returns the name.
 	 */
 	public final String getName()
@@ -252,13 +275,11 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @return True if this is the default page map
 	 */
 	public final boolean isDefault()
 	{
-		return name == null;
+		return name == PageMap.DEFAULT_NAME;
 	}
 
 	/**
@@ -273,33 +294,68 @@ public final class PageMap implements Serializable
 	 * 
 	 * @return Previous pagemap entry in terms of access
 	 */
-	public final IPageMapEntry lastAccessed()
+	public final IPageMapEntry lastAccessedEntry()
 	{
 		return getEntry(peekAccess().getId());
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * Removes this PageMap from the Session.
 	 */
 	public final void remove()
 	{
+		// First clear all pages from the session for this pagemap
+		clear();
+
+		// Then remove the pagemap itself
 		session.removePageMap(this);
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Removes the page from the pagemap
 	 * 
+	 * @param page
+	 *            page to be removed from the pagemap
+	 */
+	public final void remove(final Page page)
+	{
+		// Remove the pagemap entry from session
+		removeEntry(page.getPageMapEntry());
+	}
+
+	/**
 	 * @param entry
 	 *            The entry to remove
-	 * @return The removed entry
 	 */
-	public final IPageMapEntry remove(final IPageMapEntry entry)
+	public final void removeEntry(final IPageMapEntry entry)
 	{
 		// Remove entry from session
-		session.removeAttribute(attributeForId(entry.getNumericId()));
-		return entry;
+		synchronized (session)
+		{
+			session.removeAttribute(attributeForId(entry.getNumericId()));
+	
+			// Remove page from acccess stack
+			final Iterator stack = accessStack.iterator();
+			while (stack.hasNext())
+			{
+				final Access access = (Access)stack.next();
+				if (access.id == entry.getNumericId())
+				{
+					stack.remove();
+				}
+			}
+	
+			// Let the session know we changed the pagemap
+			session.dirtyPageMap(this);
+		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[PageMap name=" + name + ", access=" + accessStack + "]";
 	}
 
 	/**
@@ -331,7 +387,7 @@ public final class PageMap implements Serializable
 	final boolean continueToOriginalDestination()
 	{
 		// Get request cycle
-		final RequestCycle cycle = session.getRequestCycle();
+		final RequestCycle cycle = RequestCycle.get();
 
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
@@ -340,7 +396,7 @@ public final class PageMap implements Serializable
 			{
 				final String responseUrl = interceptContinuationURL;
 
-				public void cleanUp(RequestCycle requestCycle)
+				public void detach(RequestCycle requestCycle)
 				{
 				}
 
@@ -381,18 +437,27 @@ public final class PageMap implements Serializable
 		final IPageMapEntry entry = (IPageMapEntry)session.getAttribute(attributeForId(id));
 		if (entry != null)
 		{
-			// Entry has been accessed
-			access(entry, versionNumber);
-
 			// Get page as dirty
 			Page page = entry.getPage();
 
 			// TODO Performance: Is this really the case is a page always dirty
-			// even if we just render it again?
+			// even if we just render it again? POSSIBLE ANSWER: The page could
+			// mark itself as clean to prevent replication, but the reverse is
+			// probably not desirable (pages marking themselves dirty manually)
+			// We ought to think about this a bit and consider whether this
+			// could be tied in with version management. It's only when a page's
+			// version changes that it should be considered dirty, because then
+			// some kind of state changed. Right? - Jonathan
 			page.dirty();
 
 			// Get the version of the page requested from the page
 			final Page version = page.getVersion(versionNumber);
+
+			// Entry has been accessed
+			//pushAccess(entry);
+			// Entry has been accessed
+			access(entry, versionOf(entry));
+			
 
 			// Is the requested version available?
 			if (version != null)
@@ -409,8 +474,11 @@ public final class PageMap implements Serializable
 			}
 			else
 			{
-				throw new IllegalStateException("Unable to get version " + versionNumber
-						+ " of page " + page);
+				if (log.isInfoEnabled())
+				{
+					log.info("Unable to get version " + versionNumber + " of page " + page);
+				}
+				return null;
 			}
 			return page;
 		}
@@ -430,7 +498,7 @@ public final class PageMap implements Serializable
 	 * @param page
 	 *            The page to put into this map
 	 */
-	final synchronized void put(final Page page)
+	final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isStateless())
@@ -443,9 +511,18 @@ public final class PageMap implements Serializable
 
 			// Store entry in session
 			final String attribute = attributeForId(entry.getNumericId());
-
-			// Set attribute
-			session.setAttribute(attribute, entry);
+			
+			if(session.getAttribute(attribute) == null)
+			{
+				// Set attribute if it is a new page, so that it will exists
+				// already for other threads that can come on the same time.
+				session.setAttribute(attribute, entry);
+			}
+			else
+			{
+				// Else don't set it directly but add to the dirty map
+				session.dirtyPage(page);
+			}
 
 			// Evict any page(s) as need be
 			session.getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(this);
@@ -454,25 +531,27 @@ public final class PageMap implements Serializable
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's url is saved for future use by method
-	 * continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
+	 * current request's URL is saved exactly as it was requested for future use
+	 * by continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current URL at some later time; otherwise just use
+	 * setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
 	 * @param page
-	 *            The sign in page
+	 *            The page to temporarily redirect to
 	 */
 	final void redirectToInterceptPage(final Page page)
 	{
-		final RequestCycle cycle = session.getRequestCycle();
-		IRequestCycleProcessor processor = cycle.getProcessor();
-		IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
+		// Get the request cycle
+		final RequestCycle cycle = RequestCycle.get();
 
-		// FIXME General: This conflicts with the use of IRequestCodingStrategy.
-		// We should get rid of encodeURL in favor of IRequestCodingStrategy
-		interceptContinuationURL = page.getResponse().encodeURL(cycle.getRequest().getURL());
+		// The intercept continuation URL should be saved exactly as the
+		// original request specified.
+		interceptContinuationURL = cycle.getRequest().getURL();
+
+		// Page map is dirty
 		session.dirtyPageMap(this);
+
+		// Redirect to the page
 		cycle.setRedirect(true);
 		cycle.setResponsePage(page);
 	}
@@ -514,7 +593,7 @@ public final class PageMap implements Serializable
 		// See if the version being accessed is already in the stack
 		boolean add = true;
 		int id = entry.getNumericId();
-		for (int i = 0; i < accessStack.size(); i++)
+		for (int i = accessStack.size()-1; i >=0 ; i--)
 		{
 			final Access access = (Access)accessStack.get(i);
 
@@ -541,8 +620,8 @@ public final class PageMap implements Serializable
 						Page topPage = (Page)top;
 						if (topPage.getVersions() > 1)
 						{
-							// Remove versions
-							topPage.getVersion(topAccess.getVersion());
+							// Remove version the top access version (-1)
+							topPage.getVersion(topAccess.getVersion()-1);
 						}
 						else
 						{
@@ -553,9 +632,10 @@ public final class PageMap implements Serializable
 					else
 					{
 						// Remove entry
-						remove(top);
+						removeEntry(top);
 					}
 				}
+				break;
 			}
 		}
 
@@ -578,7 +658,7 @@ public final class PageMap implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				list.add((IPageMapEntry)session.getAttribute(attribute));
+				list.add(session.getAttribute(attribute));
 			}
 		}
 		return list;
@@ -613,14 +693,17 @@ public final class PageMap implements Serializable
 		final Access access = new Access();
 		access.id = entry.getNumericId();
 		access.version = versionOf(entry);
-		int index = accessStack.indexOf(access);
-		if (index == 0)
+		if(accessStack.size() > 0)
 		{
-			return;
-		}
-		else if (index > 0)
-		{
-			accessStack.remove(index);
+			if(peekAccess().equals(access))
+			{
+				return;
+			}
+			int index = accessStack.indexOf(access);
+			if (index >= 0)
+			{
+				accessStack.remove(index);
+			}
 		}
 		accessStack.push(access);
 		session.dirtyPageMap(this);

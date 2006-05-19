@@ -18,12 +18,15 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.ConversionException;
 
 /**
  * Component used to connect instances of Check components into a group.
@@ -47,14 +50,14 @@ import wicket.model.Model;
  * @see wicket.markup.html.form.Check
  * @see wicket.markup.html.form.CheckGroupSelector
  * 
+ * <p>
+ * Note: This component does not support cookie persistence
+ * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class CheckGroup extends FormComponent
+public class CheckGroup extends FormComponent implements IOnChangeListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -94,21 +97,11 @@ public class CheckGroup extends FormComponent
 	}
 
 	/**
-	 * @see FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	public void updateModel()
+	protected Object convertValue(String[] paths) throws ConversionException
 	{
-		modelChanging();
-
-		Collection collection = (Collection)getModelObject();
-		collection.clear();
-
-		/*
-		 * the input contains an array of full path of the checcked checkbox
-		 * components unless nothing was selected in which case the input
-		 * contains null
-		 */
-		String[] paths = inputAsStringArray();
+		List collection = new ArrayList();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -152,8 +145,77 @@ public class CheckGroup extends FormComponent
 				}
 			}
 		}
+		return collection;
+	}
 
-		modelChanged();
+	/**
+	 * @see FormComponent#updateModel()
+	 */
+	public void updateModel()
+	{
+		Collection collection = (Collection)getModelObject();
+		if (collection == null)
+		{
+			collection = (Collection)getConvertedInput();
+			setModelObject(collection);
+		}
+		else
+		{
+			modelChanging();
+			collection.clear();
+			collection.addAll((Collection)getConvertedInput());
+			modelChanged();
+		}
+	}
+
+	/**
+	 * Check group does not support persistence through cookies
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return false;
+	}
+
+	/**
+	 * Called when a selection changes.
+	 */
+	public final void onSelectionChanged()
+	{
+		convert();
+		updateModel();
+		onSelectionChanged((Collection)getModelObject());
+	}
+
+	/**
+	 * Template method that can be overriden by clients that implement
+	 * IOnChangeListener to be notified by onChange events of a select element.
+	 * This method does nothing by default.
+	 * <p>
+	 * Called when a {@link Check} is clicked in a {@link CheckGroup} that wants
+	 * to be notified of this event. This method is to be implemented by clients
+	 * that want to be notified of selection events.
+	 * 
+	 * @param newSelection
+	 *            The new selection of the {@link CheckGroup}. NOTE this is the
+	 *            same as you would get by calling getModelObject() if the new
+	 *            selection were current
+	 */
+	protected void onSelectionChanged(final Collection newSelection)
+	{
+	}
+
+	/**
+	 * This method should be overridden to return true if it is desirable to
+	 * have on-selection-changed notifiaction.
+	 * 
+	 * @return true if component should receive on-selection-changed
+	 *         notifications, false otherwise
+	 */
+	protected boolean wantOnSelectionChangedNotifications()
+	{
+		return false;
 	}
 
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimplePage_10.java 3749 2006-01-14 00:54:30Z ivaynberg $
+ * $Revision$ $Date: 2006-01-14 01:54:30 +0100 (Sa, 14 Jan 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -31,18 +31,18 @@ public class SimplePage_11 extends WebPage
 
 	/**
 	 * Construct.
-	 * 
 	 */
 	public SimplePage_11()
 	{
-	}
-
-	/**
-	 * 
-	 * @see wicket.Page#checkAccess()
-	 */
-	public boolean checkAccess()
-	{
-		return false;
+		add(new Label("panel", "panel"));
+		add(new Label("border", "border"));
+		add(new Label("body", "body"));
+		add(new Label("child", "child"));
+		add(new Label("extend", "extend"));
+		add(new Label("message", "message"));
+		add(new Label("component", "component"));
+		add(new Label("id", "id"));
+		add(new Label("head", "head"));
+		add(new Label("fragment", "fragment"));
 	}
 }

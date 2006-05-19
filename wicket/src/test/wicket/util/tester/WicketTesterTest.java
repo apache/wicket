@@ -102,7 +102,7 @@ public class WicketTesterTest extends TestCase
 		tester.assertInfoMessages(new String[] { "book 'xxName' created" });
 
 		// assert previous page expired.
-		// TODO General: No longer a valid test
+		// TODO Post 1.2: General: No longer a valid test
 		// tester.assertExpirePreviousPage();
 	}
 	
@@ -138,7 +138,6 @@ public class WicketTesterTest extends TestCase
 	public void testPageConstructor() throws Exception
 	{
 		MyMockApplication tester = new MyMockApplication();
-		
 		Book mockBook = new Book("xxId", "xxName");
 		Page page = new ViewBook(mockBook);
 		tester.startPage(page);

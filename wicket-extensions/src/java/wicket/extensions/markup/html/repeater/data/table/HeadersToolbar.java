@@ -17,7 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebMarkupContainer;
@@ -48,13 +48,13 @@ public class HeadersToolbar extends AbstractToolbar
 	{
 		super(table);
 
-		OrderedRepeatingView headers = new OrderedRepeatingView("headers");
+		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
 		IColumn[] cols = table.getColumns();
 
 		for (int i = 0; i < cols.length; i++)
 		{
-			// TODO General: Is this extra component really necessary? can we
+			// TODO Post 1.2: General: Is this extra component really necessary? can we
 			// not simply use the repeater's body without the need for the id in
 			// the markup?
 			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
@@ -81,6 +81,7 @@ public class HeadersToolbar extends AbstractToolbar
 				header = new WebMarkupContainer("header");
 			}
 			item.add(header);
+			item.setRenderBodyOnly(true);
 			header.add(column.getHeader("label"));
 		}
 

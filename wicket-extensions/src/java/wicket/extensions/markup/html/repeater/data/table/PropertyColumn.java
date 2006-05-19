@@ -26,7 +26,7 @@ import wicket.model.PropertyModel;
 
 /**
  * A convinience implementation of column that adds a label to the cell whose
- * model is determined by the provided woclet property expression (same as used
+ * model is determined by the provided wicket property expression (same as used
  * by {@link PropertyModel}) that is evaluated against the current row's model
  * object
  * <p>
@@ -92,6 +92,7 @@ public class PropertyColumn extends AbstractColumn
 		item.add(new Label(componentId, createLabelModel(model)));
 	}
 
+	//TODO Post 1.3: rename embeddedModel to itemModel
 	protected IModel createLabelModel(IModel embeddedModel)
 	{
 		return new PropertyModel(embeddedModel, propertyExpression);

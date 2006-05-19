@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.27 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.image;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.IResourceListener;
 import wicket.Resource;
 import wicket.ResourceReference;
@@ -29,6 +26,7 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.image.resource.LocalizedImageResource;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.value.ValueMap;
 
 /**
  * An Image component displays a localizable image resource.
@@ -41,16 +39,15 @@ import wicket.model.Model;
 public class Image extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
-	
-	private static final Log log = LogFactory.getLog(Image.class);
-	
+
 	/** The image resource this image component references */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * This constructor can be used if you have a img tag that has a src that points to a 
-	 * PackageResource  (which will be created and bind to the shared resources)
-	 * Or if you have a value attribute in youre tag for which the image factory can make an image.
+	 * This constructor can be used if you have a img tag that has a src that
+	 * points to a PackageResource (which will be created and bind to the shared
+	 * resources) Or if you have a value attribute in your tag for which the
+	 * image factory can make an image.
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
@@ -60,15 +57,15 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * Constructs an image from an image resourcereference.
-	 * That resource reference will bind its resource to the current SharedResources.
+	 * Constructs an image from an image resourcereference. That resource
+	 * reference will bind its resource to the current SharedResources.
 	 * 
 	 * If you are using non sticky session clustering and the resource reference
-     * is pointing to a Resource that isn't guaranteed to be on every server,
-     * for example a dynamic image or resources that aren't added with a IInitializer
-     * at application startup. Then if only that resource is requested from another
-     * server, without the rendering of the page, the image won't be there and will
-     * result in a broken link.
+	 * is pointing to a Resource that isn't guaranteed to be on every server,
+	 * for example a dynamic image or resources that aren't added with a
+	 * IInitializer at application startup. Then if only that resource is
+	 * requested from another server, without the rendering of the page, the
+	 * image won't be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -77,16 +74,40 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Image(final String id, final ResourceReference resourceReference)
 	{
+		this(id, resourceReference, null);
+	}
+
+	/**
+	 * Constructs an image from an image resourcereference. That resource
+	 * reference will bind its resource to the current SharedResources.
+	 * 
+	 * If you are using non sticky session clustering and the resource reference
+	 * is pointing to a Resource that isn't guaranteed to be on every server,
+	 * for example a dynamic image or resources that aren't added with a
+	 * IInitializer at application startup. Then if only that resource is
+	 * requested from another server, without the rendering of the page, the
+	 * image won't be there and will result in a broken link.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param resourceReference
+	 *            The shared image resource
+	 * @param resourceParameters
+	 *            The resource parameters
+	 */
+	public Image(final String id, final ResourceReference resourceReference,
+			ValueMap resourceParameters)
+	{
 		super(id);
-		localizedImageResource.setResourceReference(resourceReference);
+		setImageResourceReference(resourceReference,resourceParameters);
 	}
 
 	/**
 	 * Constructs an image directly from an image resource.
 	 * 
-	 * This one doesn't have the 'non sticky session clustering' problem that the 
-	 * ResourceReference constructor has.
-	 * But this will result in a non 'stable' url and the url will have request parameters. 
+	 * This one doesn't have the 'non sticky session clustering' problem that
+	 * the ResourceReference constructor has. But this will result in a non
+	 * 'stable' url and the url will have request parameters.
 	 * 
 	 * @param id
 	 *            See Component
@@ -147,6 +168,17 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * @param resourceReference
+	 *            The shared ImageResource to set.
+	 * @param parameters 
+	 * 			  Set the resource parameters for the resource.
+	 */
+	public void setImageResourceReference(final ResourceReference resourceReference, final ValueMap parameters)
+	{
+		this.localizedImageResource.setResourceReference(resourceReference,parameters);
+	}
+
+	/**
 	 * @return Resource returned from subclass
 	 */
 	protected Resource getImageResource()
@@ -156,7 +188,7 @@ public class Image extends WebComponent implements IResourceListener
 
 	/**
 	 * @return ResourceReference returned from subclass
-	 */	
+	 */
 	protected ResourceReference getImageResourceReference()
 	{
 		return null;

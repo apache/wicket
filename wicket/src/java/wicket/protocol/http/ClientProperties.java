@@ -30,14 +30,20 @@ package wicket.protocol.http;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
+
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A description of the client browser environment.
  * <p>
- * Copied from on collegue framework
- * <a href="http://www.nextapp.com/platform/echo2/echo/">Echo 2</a>'s
+ * Copied and adjusted from on collegue framework <a
+ * href="http://www.nextapp.com/platform/echo2/echo/">Echo 2</a>'s
  * <code>nextapp.echo2.webrender.ClientProperties</code>.
  * </p>
+ * 
+ * @author Echo 2
+ * @author Eelco Hillenius
  */
 public class ClientProperties implements Serializable
 {
@@ -424,6 +430,61 @@ public class ClientProperties implements Serializable
 	public void setProperty(String propertyName, Object propertyValue)
 	{
 		data.put(propertyName, propertyValue);
+	}
+
+	/**
+	 * Get the client's time zone if that could be detected.
+	 * 
+	 * @return The client's time zone
+	 */
+	public final TimeZone getTimeZone()
+	{
+		String utcOffset = (String)data.get(ClientProperties.UTC_OFFSET);
+		if (utcOffset != null)
+		{
+			// apparently it is platform dependent on whether you get the
+			// offset in a decimal form or not. This parses the decimal
+			// form of the UTC offset, taking into account several possibilities
+			// such as getting the format in +2.5 or -1.2
+
+			int dotPos = utcOffset.indexOf('.');
+			if (dotPos >= 0)
+			{
+				String hours = utcOffset.substring(0, dotPos);
+				String hourPart = utcOffset.substring(dotPos + 1);
+
+				if (hours.startsWith("+"))
+				{
+					hours = hours.substring(1);
+				}
+				int offsetHours = Integer.parseInt(hours);
+				int offsetMins = (int)(Double.parseDouble(hourPart) * 6);
+
+				// construct a GMT timezone offset string from the retrieved 
+				// offset which can be parsed by the TimeZone class.
+
+				AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
+				sb.append(offsetHours > 0 ? "+" : "-");
+				sb.append(Math.abs(offsetHours));
+				sb.append(":");
+				if (offsetMins < 10)
+				{
+					sb.append("0");
+				}
+				sb.append(offsetMins);
+				return TimeZone.getTimeZone(sb.toString());
+			}
+			int offset = Integer.parseInt(utcOffset);
+			if (offset < 0)
+			{
+				utcOffset = utcOffset.substring(1);
+			}
+			TimeZone timeZone = TimeZone
+					.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utcOffset);
+			return timeZone;
+		}
+
+		return null;
 	}
 
 	/**

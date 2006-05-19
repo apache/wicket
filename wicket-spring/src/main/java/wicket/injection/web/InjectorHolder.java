@@ -4,9 +4,8 @@ import wicket.injection.ConfigurableInjector;
 
 /**
  * Holds a reference to the injector that will be used to automatically
- * initialize {@link InjectableWebPage} and {@link InjectablePanel}. Usually
- * the application class should set the injector in the holder when it
- * initializes.
+ * initialize components that are used. Usually the application class should set
+ * the injector in the holder when it initializes.
  * <p>
  * This class can be used for unit-testing to switch the standard injector with
  * an injector that will lookup dependencies from a mock application context.
@@ -29,6 +28,7 @@ import wicket.injection.ConfigurableInjector;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * TODO shouldn't we move this class to wicket.injection ?
  */
 public class InjectorHolder
 {
@@ -47,7 +47,7 @@ public class InjectorHolder
 		{
 			throw new IllegalStateException(
 					"InjectorHolder has not been assigned an injector. "
-							+ "Use SpringInjectorHolder.setInjector() to assign an injector. "
+							+ "Use InjectorHolder.setInjector() to assign an injector. "
 							+ "In most cases this should be done once inside "
 							+ "SpringWebApplication subclass's init() method.");
 		}

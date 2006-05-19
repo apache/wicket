@@ -100,7 +100,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
-public abstract class AbstractStringResourceLoader
+public abstract class AbstractStringResourceLoader  implements IStringResourceLoader
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(AbstractStringResourceLoader.class);
@@ -145,7 +145,7 @@ public abstract class AbstractStringResourceLoader
 		}
 		
 		String value = null;
-		while (value == null)
+		while (true)
 		{
 			// Get (or load) the properties associated with clazz, locale and
 			// style
@@ -171,12 +171,13 @@ public abstract class AbstractStringResourceLoader
 				}
 			}
 			
-			// Move to the next superclass
-			clazz = clazz.getSuperclass();
 			if (isStopResourceSearch(clazz))
 			{
 				break;
 			}
+			
+			// Move to the next superclass
+			clazz = clazz.getSuperclass();
 		}
 
 		// Return the resource value (may be null if resource was not found)

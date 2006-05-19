@@ -32,11 +32,41 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>SimpleAppletApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>examples.applet.simple.SimpleAppletApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>SprocketsApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>examples.applet.sprockets.SprocketsApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>WicketSessionServlet</servlet-name>
 		<servlet-class>session.WicketSessionServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>SimpleAppletApplication</servlet-name>
+		<url-pattern>/simple/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SprocketsApplication</servlet-name>
+		<url-pattern>/sprockets/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>SessionApplication</servlet-name>
 		<url-pattern>/sessiontest/*</url-pattern>

@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -64,25 +64,11 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
-	 */
-	public final void setModelValue(String value)
-	{
-		try
-		{
-			setModelObject(Strings.toBoolean(value));
-		}
-		catch (StringValueConversionException e)
-		{
-			throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
-		}
-	}
-
-	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	public void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -154,7 +140,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		// Should a roundtrip be made (have onSelectionChanged called) when the checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			final String url = urlFor(IOnChangeListener.class);
+			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
 			try
@@ -182,27 +168,20 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		return true;
 	}
 
+	
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	public void updateModel()
+	protected Object convertValue(String[] value)
 	{
-		// TODO General: Can't test here for disabled input... null value is a valid input for checkbox
+		String tmp = value != null && value.length > 0?value[0]:null;
 		try
 		{
-			setModelObject(Strings.toBoolean(getInput()));
+			return Strings.toBoolean(tmp);
 		}
 		catch (StringValueConversionException e)
 		{
-			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+			throw new ConversionException("Invalid boolean input value posted \"" + getInput() + "\"", e).setTargetType(Boolean.class);
 		}
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }

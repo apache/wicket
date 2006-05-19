@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -23,9 +23,9 @@ import java.util.List;
 
 /**
  * Implementation of the actual hangman game model. The model holds the word
- * generator, the current word, retries remaining and the correctLetters that have been
- * guessed. It also answers questions such as whether all retries have been
- * used.
+ * generator, the current word, retries remaining and the correctLetters that
+ * have been guessed. It also answers questions such as whether all retries have
+ * been used.
  * 
  * @author Chris Turner
  * @author Jonathan Locke
@@ -34,19 +34,19 @@ public class Game implements Serializable
 {
 	/** Number of guesses allowed */
 	private int guessesAllowed;
-	
+
 	/** Number of guesses remaining */
 	private int guessesRemaining;
 
 	/** The letters */
 	private final List letters = new ArrayList();
-	
+
 	/** The word being guessed by the user */
 	private Word word;
-	
+
 	/** Word generator */
 	private WordGenerator wordGenerator;
-	
+
 	/**
 	 * Return the number of guesses remaining.
 	 * 
@@ -56,7 +56,7 @@ public class Game implements Serializable
 	{
 		return guessesRemaining;
 	}
-	
+
 	/**
 	 * @return The letters in the game
 	 */
@@ -91,7 +91,7 @@ public class Game implements Serializable
 			final boolean correct = word.guess(letter);
 			if (!correct)
 			{
-				guessesRemaining--;		
+				guessesRemaining--;
 			}
 			return correct;
 		}
@@ -109,8 +109,8 @@ public class Game implements Serializable
 	}
 
 	/**
-	 * Check whether the user has successfully guessed all of the correctLetters in the
-	 * word.
+	 * Check whether the user has successfully guessed all of the correctLetters
+	 * in the word.
 	 * 
 	 * @return Whether all of the correctLetters have been guessed or not
 	 */
@@ -141,12 +141,12 @@ public class Game implements Serializable
 		this.guessesRemaining = guessesAllowed;
 		this.word = wordGenerator.next();
 		this.wordGenerator = wordGenerator;
-		
+
 		// Add letters
 		letters.clear();
 		for (char c = 'a'; c <= 'z'; c++)
 		{
 			letters.add(new Letter(c));
-		}		
+		}
 	}
 }

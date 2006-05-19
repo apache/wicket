@@ -8,9 +8,6 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import wicket.injection.CompoundFieldValueFactory;
-import wicket.injection.IFieldValueFactory;
-
 /**
  * Test {@link CompoundFieldValueFactory}
  * 

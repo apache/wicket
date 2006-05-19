@@ -66,9 +66,9 @@ public class WicketLinkResolver implements IComponentResolver
 						private static final long serialVersionUID = 1L;
 
 						/**
-						 * @see wicket.MarkupContainer#isTransparent()
+						 * @see wicket.MarkupContainer#isTransparentResolver()
 						 */
-						public boolean isTransparent()
+						public boolean isTransparentResolver()
 						{
 							return true;
 						}

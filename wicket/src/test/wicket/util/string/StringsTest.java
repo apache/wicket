@@ -1,24 +1,25 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.12 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.string;
 
 import java.io.UnsupportedEncodingException;
+
+import wicket.WicketRuntimeException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -50,9 +51,9 @@ public final class StringsTest extends TestCase
 		Assert.assertEquals("", Strings.afterFirst("bar", '.'));
 		Assert.assertEquals("foo", Strings.afterLast("bar.baz.foo", '.'));
 		Assert.assertEquals("", Strings.afterLast("bar", '.'));
-		Assert.assertEquals("foo", Strings.replaceAll("afaooaaa", "a", ""));
+		Assert.assertEquals("foo", Strings.replaceAll("afaooaaa", "a", "").toString());
 		Assert.assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy", Strings.replaceAll("afaooaaa", "a",
-				"fuzzy"));
+				"fuzzy").toString());
 	}
 
 	/**
@@ -134,17 +135,17 @@ public final class StringsTest extends TestCase
 	public void testEscapeMarkup()
 	{
 		assertNull(Strings.escapeMarkup(null));
-		assertEquals("", Strings.escapeMarkup(""));
+		assertEquals("", Strings.escapeMarkup("").toString());
 
-		assertEquals("&amp;", Strings.escapeMarkup("&"));
-		assertEquals("&#", Strings.escapeMarkup("&#"));
-		assertEquals("&#0000;", Strings.escapeMarkup("&#0000;"));
+		assertEquals("&amp;", Strings.escapeMarkup("&").toString());
+		assertEquals("&#", Strings.escapeMarkup("&#").toString());
+		assertEquals("&#0000;", Strings.escapeMarkup("&#0000;").toString());
 
-		assertEquals("&amp;amp;", Strings.escapeMarkup("&amp;"));
+		assertEquals("&amp;amp;", Strings.escapeMarkup("&amp;").toString());
 		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings
-				.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`"));
+				.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
 		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
-				"< >&\"'?:;{}[]-_+=()*^%$#@!~`", true));
+				"< >&\"'?:;{}[]-_+=()*^%$#@!~`", true).toString());
 	}
 
 	/**
@@ -153,36 +154,39 @@ public final class StringsTest extends TestCase
 	public void testEscapeMarkupWhiteSpace()
 	{
 		assertNull(Strings.escapeMarkup(null, true));
-		assertEquals("", Strings.escapeMarkup("", true));
+		assertEquals("", Strings.escapeMarkup("", true).toString());
 
-		assertEquals("\n \t", Strings.escapeMarkup("\n \t", false));
-		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true));
-		assertEquals("  ", Strings.escapeMarkup("  ", false));
-		assertEquals("&nbsp;&nbsp;", Strings.escapeMarkup("  ", true));
+		assertEquals("\n \t", Strings.escapeMarkup("\n \t", false).toString());
+		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true).toString());
+		assertEquals("  ", Strings.escapeMarkup("  ", false).toString());
+		assertEquals("&nbsp;&nbsp;", Strings.escapeMarkup("  ", true).toString());
 	}
 
 	/**
 	 * Tests the escapeMarkup method with unicode escapes.
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	public void testEscapeMarkupUnicode() throws UnsupportedEncodingException
 	{
 		assertNull(Strings.escapeMarkup(null, true, true));
-		assertEquals("", Strings.escapeMarkup("", true, true));
+		assertEquals("", Strings.escapeMarkup("", true, true).toString());
 
 		// The escaped unicode is Çüיגהאוחךכ"
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
-				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb", false, true));
+				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
+						false, true).toString());
 
-		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"), false,
-				true));
+		assertEquals("\n \t&#233;", Strings.escapeMarkup(convertNonASCIIString("\n \t&#233;"),
+				false, true).toString());
 		assertEquals(convertNonASCIIString("\n \t&#233;"), Strings.escapeMarkup(
-				convertNonASCIIString("\n \t&#233;"), false, false));
+				convertNonASCIIString("\n \t&#233;"), false, false).toString());
 	}
 
 	/**
 	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	public void testReplaceHtmlEscapeNumber() throws UnsupportedEncodingException
 	{
@@ -192,8 +196,8 @@ public final class StringsTest extends TestCase
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
 				"\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
-				Strings.replaceHtmlEscapeNumber(
-						"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+				Strings
+						.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
 
 	private String convertNonASCIIString(String str) throws UnsupportedEncodingException
@@ -282,18 +286,18 @@ public final class StringsTest extends TestCase
 		assertEquals("", Strings.replaceAll("", "", ""));
 		assertEquals("", Strings.replaceAll("", "", "abc"));
 		assertEquals("", Strings.replaceAll("", "abc", "def"));
-		assertEquals("", Strings.replaceAll("abc", "abc", ""));
+		assertEquals("", Strings.replaceAll("abc", "abc", "").toString());
 
 		assertEquals("abc", Strings.replaceAll("abc", "", ""));
-		assertEquals("abc", Strings.replaceAll("abc", "abc", "abc"));
-		assertEquals("def", Strings.replaceAll("abc", "abc", "def"));
-		assertEquals("abc", Strings.replaceAll("abc", "ABC", ""));
+		assertEquals("abc", Strings.replaceAll("abc", "abc", "abc").toString());
+		assertEquals("def", Strings.replaceAll("abc", "abc", "def").toString());
+		assertEquals("abc", Strings.replaceAll("abc", "ABC", "").toString());
 
 		assertEquals("abc", Strings.replaceAll("abc", "d", null));
-		assertEquals("ab", Strings.replaceAll("abc", "c", null));
-		assertEquals("bc", Strings.replaceAll("abc", "a", null));
+		assertEquals("ab", Strings.replaceAll("abc", "c", null).toString());
+		assertEquals("bc", Strings.replaceAll("abc", "a", null).toString());
 
-		assertEquals("aaaa", Strings.replaceAll("aa", "a", "aa"));
+		assertEquals("aaaa", Strings.replaceAll("aa", "a", "aa").toString());
 	}
 
 	/**
@@ -398,21 +402,24 @@ public final class StringsTest extends TestCase
 	public void testToMultilineMarkup()
 	{
 		assertNull(Strings.toMultilineMarkup(null));
-		assertEquals("<p></p>", Strings.toMultilineMarkup(""));
-		assertEquals("<p></p><p></p>", Strings.toMultilineMarkup("\n\n"));
-		assertEquals("<p><br /></p>", Strings.toMultilineMarkup("\n"));
-		assertEquals("<p>abc</p>", Strings.toMultilineMarkup("abc"));
-		assertEquals("<p>abc<br /></p>", Strings.toMultilineMarkup("abc\n"));
-		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\ndef"));
-		assertEquals("<p>abc<br />def</p>", Strings.toMultilineMarkup("abc\r\ndef"));
-		assertEquals("<p>abc<br />def<br />ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi"));
+		assertEquals("<p></p>", Strings.toMultilineMarkup("").toString());
+		assertEquals("<p></p><p></p>", Strings.toMultilineMarkup("\n\n").toString());
+		assertEquals("<p><br/></p>", Strings.toMultilineMarkup("\n").toString());
+		assertEquals("<p>abc</p>", Strings.toMultilineMarkup("abc").toString());
+		assertEquals("<p>abc<br/></p>", Strings.toMultilineMarkup("abc\n").toString());
+		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\ndef").toString());
+		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef").toString());
+		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi").toString());
 
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\n\ndef\n\nghi"));
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi"));
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n"));
-		
-		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n"));
-		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc"));
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
+				.toMultilineMarkup("abc\n\ndef\n\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
+				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings
+				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n").toString());
+
+		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n").toString());
+		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc").toString());
 	}
 
 	/**
@@ -431,9 +438,21 @@ public final class StringsTest extends TestCase
 		catch (IllegalArgumentException e)
 		{
 			final String toString = Strings.toString((Object)e);
-			assertEquals("java.lang.IllegalArgumentException: Foo", Strings.beforeFirst(toString,
-					'\n').trim());
+			String before = Strings.beforeFirst(toString, '\n').trim();
+			assertEquals("Root cause:", before);
 		}
+	}
+	
+	/**
+	 * Test the toString(throwable)
+	 */
+	public void testToStringThrowable()
+	{
+		NullPointerException np = new NullPointerException("null test");
+		WicketRuntimeException wre = new WicketRuntimeException("null test", np);
+		String exceptionString = Strings.toString(wre);
+		assertTrue(exceptionString.length() > 1);
+		assertTrue(exceptionString.indexOf("WicketRuntimeException") != -1);
 	}
 
 	/**
@@ -454,7 +473,7 @@ public final class StringsTest extends TestCase
 	}
 
 	/**
-	 * Converts an array of strings to a String. {"a", "b"} becomes: "{a,b}"
+	 * Converts an array of strings to a String. ["a", "b"] becomes: "[a,b]"
 	 * 
 	 * @param arrayOfStrings
 	 *            the array to convert
@@ -462,7 +481,7 @@ public final class StringsTest extends TestCase
 	 */
 	private String stringValue(String[] arrayOfStrings)
 	{
-		StringBuffer sb = new StringBuffer("{");
+		AppendingStringBuffer sb = new AppendingStringBuffer("[");
 		String komma = "";
 		for (int i = 0; i < arrayOfStrings.length; i++)
 		{
@@ -470,7 +489,7 @@ public final class StringsTest extends TestCase
 			sb.append(arrayOfStrings[i]);
 			komma = ",";
 		}
-		sb.append("}");
+		sb.append("]");
 		return sb.toString();
 	}
 }

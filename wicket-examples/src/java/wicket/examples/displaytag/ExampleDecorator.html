@@ -15,7 +15,20 @@
     <a href="DisplaytagIndex.html">Example</a>
   </wicket:link> &gt; Standard, using decorators to transform/process data</h2>
   <br />
-  Different means of formatting cell content
+  Different means of formatting cell content (explicit conversion):
+  <div style="border-style:solid"><pre>
+    add(new SimpleListView("rows", data)
+    {
+        public void populateItem(final ListItem listItem)
+        {
+            final ListObject value = (ListObject) listItem.getModelObject();
+
+            listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
+
+            final DecimalFormat format = new DecimalFormat("$ #,##0.00");
+            listItem.add(new Label("money", format.format(value.getMoney())));
+        });</pre>
+  </div>
   <table>
     <thead>
       <tr>
@@ -37,6 +50,14 @@
     </tbody>
   </table>
   <br />
+  Different means of formatting cell content (implicit conversion):
+  <br />
+  <span wicket:id="localeSelector"/>
+  <br />
+  <br />
+  <div style="border-style:solid"><pre>
+  add(new SimpleListView("rows", data);</pre>
+  </div>
   <table>
     <thead>
       <tr>
@@ -44,6 +65,7 @@
         <th>Email</th>
         <th>Status</th>
         <th>Date</th>
+        <th>Number</th>
       </tr>
     </thead>
     <tbody>
@@ -52,6 +74,7 @@
         <td><span wicket:id="email">Test EMail</span></td>
         <td><span wicket:id="status">Test Status</span></td>
         <td><span wicket:id="date">Test Date</span></td>
+        <td><span wicket:id="money">Test Money</span></td>
       </tr>
     </tbody>
   </table>

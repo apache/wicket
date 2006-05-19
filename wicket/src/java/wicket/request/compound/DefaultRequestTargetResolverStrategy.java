@@ -1,6 +1,7 @@
 /*
  * $Id: DefaultRequestTargetResolverStrategy.java,v 1.4 2005/12/30 21:47:05
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-03-21 02:33:42 +0100 (di,
+ * 21 mrt 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,32 +18,33 @@
  */
 package wicket.request.compound;
 
-import java.lang.reflect.Method;
-
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.IPageFactory;
+import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.authorization.UnauthorizedActionException;
+import wicket.markup.MarkupException;
+import wicket.markup.html.INewBrowserWindowListener;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ComponentResourceRequestTarget;
-import wicket.request.target.ExpiredPageClassRequestTarget;
-import wicket.request.target.ListenerInterfaceRequestTarget;
-import wicket.request.target.PageRequestTarget;
-import wicket.request.target.RedirectPageRequestTarget;
-import wicket.request.target.SharedResourceRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.ExpiredPageClassRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.RedirectPageRequestTarget;
+import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
@@ -52,9 +54,14 @@ import wicket.util.string.Strings;
  * default resolving.
  * 
  * @author Eelco Hillenius
+ * @author Igor Vaynberg
+ * @author Jonathan Locke
  */
 public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
+
 	/**
 	 * Construct.
 	 */
@@ -64,23 +71,22 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 	/**
 	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
-	 *      RequestParameters)
+	 *      wicket.request.RequestParameters)
 	 */
-	public final IRequestTarget resolve(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	public final IRequestTarget resolve(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
-		String path = requestCycle.getRequest().getPath();
-
 		// first, see whether we can find any mount
 		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
-				.targetForPath(path);
+				.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
 			// the path was mounted, so return that directly
 			return mounted;
-		} // else try different methods
+		}
 
 		// See whether this request points to a rendered page
+		final String path = requestParameters.getPath();
 		if (requestParameters.getComponentPath() != null)
 		{
 			return resolveRenderedPage(requestCycle, requestParameters);
@@ -117,10 +123,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 * @return the shared resource as a request target
 	 */
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-			RequestParameters requestParameters)
+			final RequestParameters requestParameters)
 	{
 		String resourceKey = requestParameters.getResourceKey();
-		return new SharedResourceRequestTarget(resourceKey);
+		return new SharedResourceRequestTarget(requestParameters);
 	}
 
 	/**
@@ -135,23 +141,26 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the previously rendered page as a request target
 	 */
-	protected IRequestTarget resolveRenderedPage(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
-		String componentPath = requestParameters.getComponentPath();
-		Session session = requestCycle.getSession();
-		Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+		final String componentPath = requestParameters.getComponentPath();
+		final Session session = requestCycle.getSession();
+		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
 				requestParameters.getVersionNumber());
 
 		// Does page exist?
 		if (page != null)
 		{
+			// Set page on request
+			requestCycle.getRequest().setPage(page);
+
 			// see whether this resolves to a component call or just the page
-			String interfaceName = requestParameters.getInterfaceName();
+			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
 			{
 				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName);
+						interfaceName, requestParameters);
 			}
 			else
 			{
@@ -179,43 +188,59 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            The component path for looking up the component in the page.
 	 * @param interfaceName
 	 *            The interface to resolve.
+	 * @param requestParameters
 	 * @return The RequestTarget that was resolved
 	 */
-	protected IRequestTarget resolveListenerInterfaceTarget(RequestCycle requestCycle,
-			final Page page, final String componentPath, final String interfaceName)
+	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
+			final Page page, final String componentPath, final String interfaceName,
+			final RequestParameters requestParameters)
 	{
-		if (interfaceName.equals("IRedirectListener"))
+		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
 		}
+		else if (interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
+		{
+			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,
+					INewBrowserWindowListener.INTERFACE, requestParameters);
+		}
 		else
 		{
-			Method listenerMethod = requestCycle.getRequestInterfaceMethod(interfaceName);
-			if (listenerMethod == null)
-			{
-				throw new WicketRuntimeException("Attempt to access unknown interface "
-						+ interfaceName);
-			}
-			String componentPart = Strings.afterFirstPathComponent(componentPath,
-					Component.PATH_SEPARATOR);
-			if (Strings.isEmpty(componentPart))
-			{
-				// we have an interface that is not redirect, but no
-				// component... that must be wrong
-				throw new WicketRuntimeException("when trying to call " + listenerMethod
-						+ ", a component must be provided");
-			}
-			Component component = page.get(componentPart);
-			if (!component.isVisible())
+			// Get the listener interface we need to call
+			final RequestListenerInterface listener = RequestListenerInterface
+					.forName(interfaceName);
+			if (listener == null)
 			{
 				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed");
+						"Attempt to access unknown request listener interface " + interfaceName);
 			}
-			if (interfaceName.equals("IResourceListener"))
+
+			// Get component
+			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
+					Component.PATH_SEPARATOR);
+			if (Strings.isEmpty(pageRelativeComponentPath))
 			{
-				return new ComponentResourceRequestTarget(page, component, listenerMethod);
+				// We have an interface that is not a redirect, but no
+				// component... that must be wrong
+				throw new WicketRuntimeException("When trying to call " + listener
+						+ ", a component must be provided");
 			}
-			return new ListenerInterfaceRequestTarget(page, component, listenerMethod);
+			final Component component = page.get(pageRelativeComponentPath);
+			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
+			{
+				log
+						.info("component not enabled or visible, redirecting to calling page, component: "
+								+ component);
+				return new RedirectPageRequestTarget(page);
+			}
+			if (!component.isEnableAllowed())
+			{
+				throw new UnauthorizedActionException(component, Component.ENABLE);
+			}
+
+			// Ask the request listener interface object to create a request
+			// target
+			return listener.newRequestTarget(page, component, listener, requestParameters);
 		}
 	}
 
@@ -228,8 +253,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
-	protected IRequestTarget resolveBookmarkablePage(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
@@ -247,37 +272,9 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 		try
 		{
-			Page newPage = null;
-
-			IPageFactory pageFactory = session.getPageFactory();
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			// FIXME Robustness: Need to take a second look on synchronizing in
-			// the resolve/render phase at this time, the session isn't accessed
-			// in a atomic, isolated manner during the request.
-			synchronized (session)
-			{
-				if (params.size() == 0)
-				{
-					newPage = pageFactory.newPage(pageClass);
-				}
-				else
-				{
-					newPage = pageFactory.newPage(pageClass, params);
-				}
-
-			}
-			// the response might have been set in the constructor of
-			// the bookmarkable page
-			IRequestTarget requestTarget = requestCycle.getRequestTarget();
-
-			// is it possible that there is already another request target at
-			// this point then the 2 below?
-			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
-			{
-				requestTarget = new PageRequestTarget(newPage);
-			}
-
-			return requestTarget;
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
+					params);
 		}
 		catch (RuntimeException e)
 		{
@@ -295,8 +292,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
-	protected IRequestTarget resolveHomePageTarget(RequestCycle requestCycle,
-			RequestParameters requestParameters)
+	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
 	{
 		Session session = requestCycle.getSession();
 		Application application = session.getApplication();
@@ -305,47 +302,31 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// Get the home page class
 			Class homePageClass = application.getHomePage();
 
+			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			// and create a dummy target for looking up whether the home page is
 			// mounted
-			BookmarkablePageRequestTarget pokeTarget = new BookmarkablePageRequestTarget(
-					homePageClass);
+			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
+					homePageClass, parameters);
 			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 					.getRequestCodingStrategy();
-			String path = requestCodingStrategy.pathForTarget(pokeTarget);
+			CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
 
 			if (path != null)
 			{
 				// The home page was mounted at the given path.
 				// Issue a redirect to that path
 				requestCycle.setRedirect(true);
-				// our poke target is good enough
-				return pokeTarget;
 			}
 
 			// else the home page was not mounted; render it now so
 			// that we will keep a clean path
-			PageParameters parameters = new PageParameters(requestParameters.getParameters());
-			Page newPage = null;
-			if (parameters.size() == 0)
-			{
-				newPage = session.getPageFactory().newPage(homePageClass);
-			}
-			else
-			{
-				newPage = session.getPageFactory().newPage(homePageClass, parameters);
-			}
-
-			// The response might have been set in the home page constructor
-			IRequestTarget requestTarget = requestCycle.getRequestTarget();
-
-			// Is it possible that there is already another request target at
-			// this point then the 2 below?
-			if (!(requestTarget instanceof IPageRequestTarget || requestTarget instanceof IBookmarkablePageRequestTarget))
-			{
-				requestTarget = new PageRequestTarget(newPage);
-			}
-
-			return requestTarget;
+			return homepageTarget;
+		}
+		catch (MarkupException e)
+		{
+			// Markup exception should pass without modification. They show
+			// a nice error page
+			throw e;
 		}
 		catch (WicketRuntimeException e)
 		{

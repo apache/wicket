@@ -20,7 +20,7 @@ package wicket.extensions.markup.html.repeater.data;
 import java.util.Iterator;
 
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.version.undo.Change;
 
@@ -168,7 +168,7 @@ public abstract class GridView extends DataViewBase
 			this.rows = rows;
 		}
 
-		// TODO Performance: Can this be moved into the this.rows != rows if
+		// TODO Post 1.2: Performance: Can this be moved into the this.rows != rows if
 		// block for optimization?
 		updateItemsPerPage();
 		return this;
@@ -202,19 +202,16 @@ public abstract class GridView extends DataViewBase
 
 			int row = 0;
 
-			// TODO General: Do we really need this index?
-			int index = 0;
-
 			do
 			{
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
-				OrderedRepeatingView rowView = new OrderedRepeatingView("cols");
+				RepeatingView rowView = new RepeatingView("cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
 				// Populate the row
-				for (int i = 0; i < cols; i++)
+				for (int index = 0; index < cols; index++)
 				{
 					final Item cellItem;
 					if (items.hasNext())
@@ -227,7 +224,6 @@ public abstract class GridView extends DataViewBase
 						populateEmptyItem(cellItem);
 					}
 					rowView.add(cellItem);
-					index++;
 				}
 
 				// increase row

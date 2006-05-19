@@ -353,7 +353,7 @@ public final class ImageMap extends WebMarkupContainer
 		// Write out the image map
 		final StringBuffer imageMap = new StringBuffer();
 
-		imageMap.append("\n<map name=\"" + getPath() + "\"> ");
+		imageMap.append("\n<map name=\"").append(getPath()).append("\"> ");
 
 		for (Iterator iterator = shapeLinks.iterator(); iterator.hasNext();)
 		{

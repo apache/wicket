@@ -44,6 +44,8 @@ public class Person
 	private List addressList;
 
 	private Address[] addressArray;
+	
+	private int age;
 
 	/**
 	 * @return The name
@@ -100,7 +102,9 @@ public class Person
 	public void setAddressAt(int index, Address address)
 	{
 		if (addressList == null)
+		{
 			addressList = new ArrayList();
+		}
 		while (addressList.size() < index)
 		{
 			addressList.add(null);
@@ -163,5 +167,21 @@ public class Person
 	public void setAddressArray(Address[] addressArray)
 	{
 		this.addressArray = addressArray;
+	}
+
+	/**
+	 * @return The age of the person
+	 */
+	public int getAge()
+	{
+		return age;
+	}
+
+	/**
+	 * @param age
+	 */
+	public void setAge(int age)
+	{
+		this.age = age;
 	}
 }

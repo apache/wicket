@@ -108,8 +108,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 						String.class);
 				PackageResourceReference ref = new PackageResourceReference(Application.get(),
 						referer, f);
-				String url = getPage().urlFor(ref.getPath());
-				return url;
+				return getRequestCycle().urlFor(ref);
 			}
 		};
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));
@@ -176,8 +175,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				}
 
 				ResourceReference ref = (ResourceReference)o;
-				String url = getPage().urlFor(ref.getPath());
-				return url;
+				return urlFor(ref);
 			}
 		};
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));

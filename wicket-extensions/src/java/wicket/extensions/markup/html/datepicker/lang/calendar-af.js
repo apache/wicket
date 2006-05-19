@@ -35,16 +35,16 @@ Calendar._TT["GO_TODAY"] = "Gaan na vandag";
 Calendar._TT["NEXT_MONTH"] = "Volgende maand (hou vir keuselys)";
 Calendar._TT["NEXT_YEAR"] = "Volgende jaar (hou vir keuselys)";
 Calendar._TT["SEL_DATE"] = "Kies datum";
-Calendar._TT["DRAG_TO_MOVE"] = "Sleep om te skuif";
+Calendar._TT["DRAG_TO_MOVE"] = "Kliek en skuif";
 Calendar._TT["PART_TODAY"] = " (vandag)";
 Calendar._TT["MON_FIRST"] = "Vertoon Maandag eerste";
-Calendar._TT["SUN_FIRST"] = "Display Sunday first";
-Calendar._TT["CLOSE"] = "Sluiten";
-Calendar._TT["TODAY"] = "Vandaag";
+Calendar._TT["SUN_FIRST"] = "Vertoon Sondag eerste";
+Calendar._TT["CLOSE"] = "Maak toe";
+Calendar._TT["TODAY"] = "Vandag";
 
 // the following is to inform that "%s" is to be the first day of week
 // %s will be replaced with the day name.
-Calendar._TT["DAY_FIRST"] = "Display %s first";
+Calendar._TT["DAY_FIRST"] = "Vertoon %s eerste";
 
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1

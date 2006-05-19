@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -49,7 +48,7 @@ public class StartExamples
 	 */
 	public static void main(String[] args)
 	{
-        Server jettyServer = null;
+		Server jettyServer = null;
 		try
 		{
 			URL jettyConfig = new URL("file:src/etc/jetty-config.xml");

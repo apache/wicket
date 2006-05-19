@@ -181,7 +181,9 @@ class ParsedHTML
 		for (int i = 0; i < blocks.length; i++)
 		{
 			if (predicate.matchesCriteria(blocks[i], criteria))
+			{
 				return blocks[i];
+			}
 		}
 		return null;
 	}
@@ -195,7 +197,9 @@ class ParsedHTML
 	{
 		int index = _blocksList.indexOf(block);
 		if (index < 0 || index == _blocksList.size() - 1)
+		{
 			return null;
+		}
 		return (TextBlock)_blocksList.get(index + 1);
 	}
 
@@ -260,7 +264,9 @@ class ParsedHTML
 		{
 			HTMLElement element = (HTMLElement)i.next();
 			if (value.equals(element.getAttribute(name)))
+			{
 				elements.add(element);
+			}
 		}
 		return (HTMLElement[])elements.toArray(new HTMLElement[elements.size()]);
 	}
@@ -360,7 +366,9 @@ class ParsedHTML
 		for (int i = 0; i < forms.length; i++)
 		{
 			if (predicate.matchesCriteria(forms[i], criteria))
+			{
 				return forms[i];
+			}
 		}
 		return null;
 	}
@@ -380,7 +388,9 @@ class ParsedHTML
 		for (int i = 0; i < forms.length; i++)
 		{
 			if (predicate.matchesCriteria(forms[i], criteria))
+			{
 				matches.add(forms[i]);
+			}
 		}
 		return (WebForm[])matches.toArray(new WebForm[matches.size()]);
 	}
@@ -408,7 +418,9 @@ class ParsedHTML
 				_updateElements = false;
 				String language = NodeUtils.getNodeAttribute(element, "language", null);
 				if (!getResponse().getScriptableObject().supportsScript(language))
+				{
 					_enableNoScriptNodes = true;
+				}
 				getResponse().getScriptableObject().runScript(language, script);
 			}
 			finally
@@ -453,8 +465,10 @@ class ParsedHTML
 		WebRequest req = new GetMethodWebRequest(getBaseURL(), srcAttribute);
 		WebWindow window = getResponse().getWindow();
 		if (window == null)
+		{
 			throw new IllegalStateException(
 					"Unable to retrieve script included by this response, since it was loaded by getResource(). Use getResponse() instead.");
+		}
 		return window.getResource(req).getText();
 	}
 
@@ -488,7 +502,9 @@ class ParsedHTML
 			{
 				Object o = i.next();
 				if (o instanceof ParsedHTML)
+				{
 					((ParsedHTML)o).addToList(htmlElement);
+				}
 			}
 		}
 
@@ -498,7 +514,9 @@ class ParsedHTML
 			{
 				Object o = i.next();
 				if (o instanceof ParsedHTML)
+				{
 					((ParsedHTML)o).addToMaps(node, htmlElement);
+				}
 			}
 		}
 
@@ -550,7 +568,9 @@ class ParsedHTML
 				Element element)
 		{
 			if (element.getAttribute("id").equals(""))
+			{
 				return null;
+			}
 			return parsedHTML.toDefaultElement(element);
 		}
 
@@ -625,7 +645,9 @@ class ParsedHTML
 			{
 				Object o = i.next();
 				if (!(o instanceof ParsedHTML))
+				{
 					continue;
+				}
 				((ParsedHTML)o).addToList(htmlElement);
 				break;
 			}
@@ -750,7 +772,9 @@ class ParsedHTML
 		{
 			WebTable wt = getWebTable(pot);
 			if (wt == null)
+			{
 				return null;
+			}
 			return wt.newTableRow(element);
 		}
 
@@ -778,7 +802,9 @@ class ParsedHTML
 		{
 			WebTable.TableRow tr = getTableRow(pot);
 			if (tr == null)
+			{
 				return null;
+			}
 			return tr.newTableCell(element);
 		}
 
@@ -838,7 +864,9 @@ class ParsedHTML
 		{
 			WebForm form = getForm(pot);
 			if (form != null)
+			{
 				form.addFormControl((FormControl)htmlElement);
+			}
 		}
 	}
 
@@ -860,7 +888,9 @@ class ParsedHTML
 		{
 			TextBlock textBlock = getTextBlock(pot);
 			if (textBlock != null)
+			{
 				textBlock.addList((WebList)htmlElement);
+			}
 		}
 
 		private TextBlock getTextBlock(NodeUtils.PreOrderTraversal pot)
@@ -877,7 +907,9 @@ class ParsedHTML
 		{
 			WebList webList = getWebList(pot);
 			if (webList == null)
+			{
 				return null;
+			}
 			return webList.addNewItem(element);
 		}
 
@@ -941,7 +973,9 @@ class ParsedHTML
 	private void loadElements()
 	{
 		if (!_updateElements)
+		{
 			return;
+		}
 
 		NodeUtils.NodeAction action = new NodeUtils.NodeAction()
 		{
@@ -950,14 +984,22 @@ class ParsedHTML
 				HTMLElementFactory factory = getHTMLElementFactory(element.getNodeName()
 						.toLowerCase());
 				if (factory == null || !factory.isRecognized(getClientProperties()))
+				{
 					return true;
+				}
 				if (pot.getClosestContext(ContentConcealer.class) != null)
+				{
 					return true;
+				}
 
 				if (!_elements.containsKey(element))
+				{
 					factory.recordElement(pot, element, ParsedHTML.this);
+				}
 				if (factory.addToContext())
+				{
 					pot.pushContext(_elements.get(element));
+				}
 
 				return true;
 			}
@@ -965,13 +1007,19 @@ class ParsedHTML
 			public void processTextNode(NodeUtils.PreOrderTraversal pot, Node textNode)
 			{
 				if (textNode.getNodeValue().trim().length() == 0)
+				{
 					return;
+				}
 
 				Node parent = textNode.getParentNode();
 				if (!parent.getNodeName().equalsIgnoreCase("body"))
+				{
 					return;
+				}
 				if (pot.getClosestContext(ContentConcealer.class) != null)
+				{
 					return;
+				}
 				new HtmlElementRecorder().recordHtmlElement(pot, textNode, newTextBlock(textNode));
 			}
 		};
@@ -1068,9 +1116,13 @@ class ParsedHTML
 	{
 		_elements.put(node, htmlElement);
 		if (htmlElement.getID() != null)
+		{
 			_elementsByID.put(htmlElement.getID(), htmlElement);
+		}
 		if (htmlElement.getName() != null)
+		{
 			addNamedElement(htmlElement.getName(), htmlElement);
+		}
 	}
 
 
@@ -1078,7 +1130,9 @@ class ParsedHTML
 	{
 		List list = (List)_elementsByName.get(name);
 		if (list == null)
+		{
 			_elementsByName.put(name, list = new ArrayList());
+		}
 		list.add(htmlElement);
 	}
 
@@ -1087,26 +1141,42 @@ class ParsedHTML
 	{
 		ArrayList list = getListForElement(htmlElement);
 		if (list != null)
+		{
 			list.add(htmlElement);
+		}
 	}
 
 
 	private ArrayList getListForElement(HTMLElement element)
 	{
 		if (element instanceof WebLink)
+		{
 			return _linkList;
+		}
 		if (element instanceof WebForm)
+		{
 			return _formsList;
+		}
 		if (element instanceof WebImage)
+		{
 			return _imagesList;
+		}
 		if (element instanceof WebApplet)
+		{
 			return _appletList;
+		}
 		if (element instanceof WebTable)
+		{
 			return _tableList;
+		}
 		if (element instanceof WebFrame)
+		{
 			return _frameList;
+		}
 		if (element instanceof BlockElement)
+		{
 			return _blocksList;
+		}
 		return null;
 	}
 
@@ -1162,7 +1232,9 @@ class ParsedHTML
 		for (int i = 0; i < links.length; i++)
 		{
 			if (predicate.matchesCriteria(links[i], criteria))
+			{
 				return links[i];
+			}
 		}
 		return null;
 	}
@@ -1182,7 +1254,9 @@ class ParsedHTML
 		for (int i = 0; i < links.length; i++)
 		{
 			if (predicate.matchesCriteria(links[i], criteria))
+			{
 				matches.add(links[i]);
+			}
 		}
 		return (WebLink[])matches.toArray(new WebLink[matches.size()]);
 	}
@@ -1200,7 +1274,9 @@ class ParsedHTML
 		for (int i = 0; i < images.length; i++)
 		{
 			if (HttpUnitUtils.matches(name, images[i].getName()))
+			{
 				return images[i];
+			}
 		}
 		return null;
 	}
@@ -1219,7 +1295,9 @@ class ParsedHTML
 		for (int i = 0; i < images.length; i++)
 		{
 			if (HttpUnitUtils.matches(source, images[i].getSource()))
+			{
 				return images[i];
+			}
 		}
 		return null;
 	}
@@ -1238,7 +1316,9 @@ class ParsedHTML
 		for (int i = 0; i < images.length; i++)
 		{
 			if (HttpUnitUtils.matches(altText, images[i].getAltText()))
+			{
 				return images[i];
+			}
 		}
 		return null;
 	}
@@ -1360,8 +1440,10 @@ class ParsedHTML
 	void setRootNode(Node rootNode)
 	{
 		if (_rootNode != null && rootNode != _rootNode)
+		{
 			throw new IllegalStateException("The root node has already been defined as "
 					+ _rootNode + " and cannot be redefined as " + rootNode);
+		}
 		_rootNode = rootNode;
 		_links = null;
 		_forms = null;
@@ -1422,7 +1504,9 @@ class ParsedHTML
 	Node getRootNode()
 	{
 		if (_rootNode == null)
+		{
 			throw new IllegalStateException("The root node has not been specified");
+		}
 		return _rootNode;
 	}
 
@@ -1454,7 +1538,9 @@ class ParsedHTML
 								WebTable result = getTableSatisfyingPredicate(innerTables,
 										predicate, value);
 								if (result != null)
+								{
 									return result;
+								}
 							}
 						}
 					}

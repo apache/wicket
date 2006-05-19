@@ -22,12 +22,13 @@ import wicket.IPageFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.authorization.AuthorizationException;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.request.IPageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
-import wicket.settings.Settings;
 
 /**
  * Default implementation of
@@ -37,6 +38,8 @@ import wicket.settings.Settings;
  * {@link wicket.RequestCycle#onRuntimeException(Page, RuntimeException)}.
  * 
  * @author Eelco Hillenius
+ * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class DefaultExceptionResponseStrategy implements IExceptionResponseStrategy
 {
@@ -52,7 +55,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 	 * @see wicket.request.compound.IExceptionResponseStrategy#respond(wicket.RequestCycle,
 	 *      java.lang.RuntimeException)
 	 */
-	public final void respond(RequestCycle requestCycle, RuntimeException e)
+	public final void respond(final RequestCycle requestCycle, final RuntimeException e)
 	{
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
@@ -64,15 +67,22 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		if (override != null)
 		{
 			requestCycle.setResponsePage(override);
-			requestCycle.setRedirect(true);
 		}
-		else if (settings.getUnexpectedExceptionDisplay() != Settings.SHOW_NO_EXCEPTION_PAGE)
+		else if(e instanceof AuthorizationException)
+		{
+			// are authorization exceptions always thrown before the real render?
+			// else we need to make a page (see below) or set it hard to a redirect.
+			Class accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+
+			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
+		}
+		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
 			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == Settings.SHOW_INTERNAL_ERROR_PAGE)
+					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
 				final IPageFactory pageFactory;
@@ -91,8 +101,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			else if (responseClass != ExceptionErrorPage.class)
 			{
 				// Show full details
-				requestCycle.setResponsePage(new ExceptionErrorPage(e, requestCycle
-						.getResponsePage()));
+				requestCycle.setResponsePage(new ExceptionErrorPage(e, responsePage));
 			}
 			else
 			{
@@ -100,10 +109,16 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 				throw new WicketRuntimeException("Internal Error: Could not render error page "
 						+ internalErrorPageClass, e);
 			}
+		}
 
-			// We generally want to redirect the response because we
-			// were in the middle of rendering and the page may end up
-			// looking like spaghetti otherwise
+		// We generally want to redirect the response because we
+		// were in the middle of rendering and the page may end up
+		// looking like spaghetti otherwise. If responsePage == null,
+		// than the Page constructor failed and we don't need to
+		// redirect and this allows to reload the page when the
+		// bug has been fixed.
+		if (responsePage != null)
+		{
 			requestCycle.setRedirect(true);
 		}
 	}
@@ -124,7 +139,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 	 *            The exception
 	 * @return Any error page to redirect to
 	 */
-	protected Page onRuntimeException(Page page, RuntimeException e)
+	protected Page onRuntimeException(final Page page, final RuntimeException e)
 	{
 		return RequestCycle.get().onRuntimeException(page, e);
 	}

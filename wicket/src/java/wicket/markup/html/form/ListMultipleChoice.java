@@ -25,6 +25,8 @@ import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -37,7 +39,7 @@ import wicket.util.string.Strings;
 public class ListMultipleChoice extends AbstractChoice
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
 
@@ -64,6 +66,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		ListMultipleChoice.defaultMaxRows = defaultMaxRows;
 	}
+
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
@@ -183,7 +186,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer buffer = new StringBuffer();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
 			final List choices = getChoices();
@@ -193,60 +196,23 @@ public class ListMultipleChoice extends AbstractChoice
 
 				int index = choices.indexOf(object);
 				buffer.append(getChoiceRenderer().getIdValue(object, index));
-				buffer.append(";");
+				buffer.append(VALUE_SEPARATOR);
 			}
 		}
 		return buffer.toString();
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
+	 *      String)
 	 */
-	public final void setModelValue(final String value)
+	protected final boolean isSelected(Object choice, int index, String selected)
 	{
-		Collection selectedValues = (Collection)getModelObject();
-		if (selectedValues == null)
-		{
-			selectedValues = new ArrayList();
-			setModelObject(selectedValues);
-		}
-		else
-		{
-			selectedValues.clear();
-		}
-		final List choices = getChoices();
-		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
-				.hasMoreTokens();)
-		{
-			String selected = tokenizer.nextToken();
-
-			for (int index = 0; index < choices.size(); index++)
-			{
-				// Get next choice
-				final Object choice = choices.get(index);
-				if (getChoiceRenderer().getIdValue(choice, index).equals(selected))
-				{
-					selectedValues.add(choice);
-					break;
-				}
-			}
-
-		}
-	}
-
-	/**
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int)
-	 */
-	protected final boolean isSelected(Object choice, int index)
-	{
-		// Get value of the form "id1;id2;id3"
-		final String value = getValue();
-
 		// Have a value at all?
-		if (value != null)
+		if (selected != null)
 		{
 			// Loop through ids
-			for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer
 					.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
@@ -265,56 +231,61 @@ public class ListMultipleChoice extends AbstractChoice
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put("multiple", true);
-		tag.put("size", Math.min(maxRows, getChoices().size()));
+		tag.put("multiple", "multiple");
+		
+		if (!tag.getAttributes().containsKey("size"))
+		{
+			tag.put("size", Math.min(maxRows, getChoices().size()));
+		}
 	}
 
+	/**
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
+	 */
+	protected Object convertValue(String[] ids) throws ConversionException
+	{
+		ArrayList selectedValues = new ArrayList();
+
+		// If one or more ids is selected
+		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+		{
+			// Get values that could be selected
+			final List choices = getChoices();
+
+			// Loop through selected indices
+			for (int i = 0; i < ids.length; i++)
+			{
+				for (int index = 0; index < choices.size(); index++)
+				{
+					// Get next choice
+					final Object choice = choices.get(index);
+					if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+					{
+						selectedValues.add(choice);
+						break;
+					}
+				}
+			}
+		}
+		return selectedValues;
+	}
+	
 	/**
 	 * @see FormComponent#updateModel()
 	 */
 	public final void updateModel()
 	{
-		final String[] ids = inputAsStringArray();
-
-		// if input was null then value was not submitted (disabled field), ignore it
-		// FIXME General: This can't be done! null is nothing selected! we need check for isEnabled for this.
-//		if (ids != null)
+		Collection selectedValues = (Collection)getModelObject();
+		if (selectedValues != null)
 		{
-			// Get the list of selected values
-			Collection selectedValues = (Collection)getModelObject();
-	
-			if (selectedValues != null)
-			{
-				selectedValues.clear();
-			}
-	
-			// Get indices selected from request
-	
-			// If one or more ids is selected
-			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
-			{
-				if(selectedValues == null)
-				{
-					selectedValues = new ArrayList();
-				}
-				// Get values that could be selected
-				final List choices = getChoices();
-	
-				// Loop through selected indices
-				for (int i = 0; i < ids.length; i++)
-				{
-					for (int index = 0; index < choices.size(); index++)
-					{
-						// Get next choice
-						final Object choice = choices.get(index);
-						if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
-						{
-							selectedValues.add(choice);
-							break;
-						}
-					}
-				}
-			}
+			modelChanging();
+			selectedValues.clear();
+			selectedValues.addAll((Collection)getConvertedInput());
+			modelChanged();
+		}
+		else
+		{
+			selectedValues = (Collection)getConvertedInput();
 			setModelObject(selectedValues);
 		}
 	}

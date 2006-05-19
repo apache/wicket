@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 4812 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,8 +17,13 @@
  */
 package wicket.examples;
 
+import wicket.PageMap;
+import wicket.examples.debug.InspectorBug;
+import wicket.examples.source.SourcesPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.debug.InspectorBug;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.link.PopupSettings;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -38,10 +43,24 @@ public final class WicketExampleHeader extends Panel
 	 * @param page
 	 *            The example page
 	 */
-	public WicketExampleHeader(String id, String exampleTitle, WicketExamplePage page)
+	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
 	{
 		super(id);
 		add(new InspectorBug("inspector", page));
 		add(new Label("exampleTitle", exampleTitle));
+		Link link = new Link("sources")
+		{
+			public void onClick()
+			{
+				setResponsePage(new SourcesPage(getPage().getClass()));
+			}
+		};
+		add(link);
+
+		PopupSettings settings = new PopupSettings(PageMap.forName("sources"));
+		settings.setWidth(800);
+		settings.setHeight(600);
+		settings.setWindowName("sources");
+		link.setPopupSettings(settings);
 	}
 }

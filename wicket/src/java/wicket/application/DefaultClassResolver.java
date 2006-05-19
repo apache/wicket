@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5260 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,11 +18,12 @@
 package wicket.application;
 
 import wicket.WicketRuntimeException;
+import wicket.util.concurrent.ConcurrentReaderHashMap;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
  * 
- * @see wicket.settings.Settings#getClassResolver()
+ * @see wicket.settings.IApplicationSettings#getClassResolver()
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -30,13 +31,35 @@ import wicket.WicketRuntimeException;
 public final class DefaultClassResolver implements IClassResolver
 {
 	/**
+	 * Usually class loaders implement more efficent caching strategies than we
+	 * could possibly do, but we experienced synchronization issue resulting in
+	 * stack traces like: java.lang.LinkageError: duplicate class definition:
+	 * 
+	 * <pre>
+	 *   wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
+	 * </pre>
+	 * 
+	 * This problem has gone since we synchronize the access.
+	 */
+	private ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
+
+	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public final Class resolveClass(String classname)
+	public final Class resolveClass(final String classname)
 	{
 		try
 		{
-			return DefaultClassResolver.class.getClassLoader().loadClass(classname);
+			Class clz = (Class)classes.get(classname);
+			if (clz == null)
+			{
+				synchronized (classes)
+				{
+					clz = DefaultClassResolver.class.getClassLoader().loadClass(classname);
+					classes.put(classname, clz);
+				}
+			}
+			return clz;
 		}
 		catch (ClassNotFoundException ex)
 		{
@@ -44,4 +67,3 @@ public final class DefaultClassResolver implements IClassResolver
 		}
 	}
 }
-

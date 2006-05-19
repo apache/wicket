@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Locale;
 
+import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 
 /**
@@ -34,12 +36,39 @@ import wicket.util.io.Streams;
  */
 public abstract class BlobImageResource extends DynamicImageResource
 {
-	/**
-	 * Construct.
-	 */
-	public BlobImageResource()
+  /**
+   * Construct.
+   * @param locale
+   */
+  public BlobImageResource(Locale locale)
+  {
+    super(locale);
+  }
+  
+  /**
+   * Construct.
+   * @param format
+   * @param locale
+   */
+  public BlobImageResource(String format, Locale locale)
+  {
+    super(format, locale);
+  }
+  
+  /**
+   * Construct.
+   * @param format
+   */
+  public BlobImageResource(String format)
+  {
+    super(format);
+  }
+  
+  /**
+   * Construct.
+   */
+  public BlobImageResource()
 	{
-		super();
 	}
 
 	/**
@@ -57,22 +86,22 @@ public abstract class BlobImageResource extends DynamicImageResource
 				Streams.copy(in, out);
 				return out.toByteArray();
 			}
-			return new byte[] {};
+			return new byte[0];
 		}
 		catch (SQLException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 	}
-
-	/**
-	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
-	 * 
-	 * @return the BLOB
-	 */
-	protected abstract Blob getBlob();
+    
+  /**
+   * Gets the BLOB (Binary Large OBject) that holds the raw image data.
+   *
+   * @return the BLOB
+   */
+  protected abstract Blob getBlob();
 }

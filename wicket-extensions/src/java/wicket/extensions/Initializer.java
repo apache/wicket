@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: Initializer.java 5081 2006-03-22 00:40:55 -0800 (Wed, 22 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-22 00:40:55 -0800 (Wed, 22 Mar
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,7 +20,11 @@ package wicket.extensions;
 
 import wicket.Application;
 import wicket.IInitializer;
+import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import wicket.extensions.breadcrumb.BreadCrumbBar;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
+import wicket.extensions.markup.html.form.palette.PaletteInitializer;
+import wicket.extensions.wizard.Wizard;
 
 /**
  * Initializer for the extensions package.
@@ -33,5 +39,9 @@ public class Initializer implements IInitializer
 	public void init(Application application)
 	{
 		new DatePickerComponentInitializer().init(application);
+		new PaletteInitializer().init(application);
+		new UploadProgressBar.ComponentInitializer().init(application);
+		new Wizard.WizardInitializer().init(application);
+		new BreadCrumbBar.BreadCrumbBarInitializer().init(application);
 	}
 }

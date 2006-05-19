@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.170 $ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-03-16 11:34:01 -0800 (Thu, 16 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.behavior.IBehaviorListener;
+import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
@@ -35,10 +33,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ListenerInterfaceRequestTarget;
-import wicket.request.target.SharedResourceRequestTarget;
+import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
@@ -122,8 +117,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
  * the page. Besides returning true or false, an implementation of checkAccess()
  * may also choose to send the user to another page with
- * Component.setResponsePage() or Page.redirectToInterceptPage(). This can be
- * used to allow a user to authenticate themselves if they were denied access.
+ * Component.setResponsePage() or Component.redirectToInterceptPage(). This can
+ * be used to allow a user to authenticate themselves if they were denied
+ * access.
  * 
  * @see wicket.markup.html.WebPage
  * @see wicket.MarkupContainer
@@ -141,12 +137,12 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** Access allowed flag (value == true). */
-	protected static final boolean ACCESS_ALLOWED = true;
 
-	/** Access denied flag (value == false). */
-	protected static final boolean ACCESS_DENIED = false;
+	/**
+	 * When passed to {@link Page#getVersion(int)} the latest page version is
+	 * returned.
+	 */
+	public static final int LATEST_VERSION = -1;
 
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
@@ -165,12 +161,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
-
-	/**
-	 * MetaDataEntry array for efficient representation of metadata associated
-	 * with child components
-	 */
-	private MetaDataEntry[] metaData;
 
 	/** Numeric version of this page's id */
 	private short numericId;
@@ -194,18 +184,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private IPageVersionManager versionManager;
 
 	/**
-	 * Class used for holding meta data entries for components on this Page.
-	 * Since most Components are not expected to have metadata, this saves space
-	 * over having each component hold its own metadata list
-	 */
-	private static class MetaDataEntry
-	{
-		Component component;
-		MetaDataKey key;
-		Serializable object;
-	}
-
-	/**
 	 * Constructor.
 	 */
 	protected Page()
@@ -217,6 +195,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param model
 	 *            See Component
 	 * @see Component#Component(String, IModel)
@@ -230,18 +210,50 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Constructor.
+	 * 
+	 * @param pageMap
+	 *            The page map to put this page in
+	 */
+	protected Page(final PageMap pageMap)
+	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null);
+		init(pageMap);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param pageMap
+	 *            the name of the page map to put this page in
+	 * @param model
+	 *            See Component
+	 * @see Component#Component(String, IModel)
+	 */
+	protected Page(final PageMap pageMap, final IModel model)
+	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null, model);
+		init(pageMap);
+	}
+
+	/**
 	 * Called right after a component's listener method (the provided method
 	 * argument) was called. This method may be used to clean up dependencies,
 	 * do logging, etc. NOTE: this method will also be called when
-	 * {@link WebPage#beforeCallComponent(Component, Method)} or the method
-	 * invocation itself failed.
+	 * {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
+	 * or the method invocation itself failed.
 	 * 
 	 * @param component
 	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
 	 */
-	public void afterCallComponent(final Component component, final Method method)
+	public void afterCallComponent(final Component component,
+			final RequestListenerInterface listener)
 	{
 	}
 
@@ -250,53 +262,52 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * argument) is called. This method may be used to set up dependencies,
 	 * enforce authorization, etc. NOTE: if this method fails, the method will
 	 * not be excuted. Method
-	 * {@link WebPage#afterCallComponent(Component, Method)} will always be
-	 * called.
+	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)}
+	 * will always be called.
 	 * 
 	 * @param component
 	 *            the component that is to be called
-	 * @param method
-	 *            the method of that component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
 	 */
-	public void beforeCallComponent(final Component component, final Method method)
+	public void beforeCallComponent(final Component component,
+			final RequestListenerInterface listener)
 	{
 	}
 
 	/**
-	 * <p>
-	 * Whether access is allowed to this page. If the page is not allowed you
-	 * must redirect to a another page, else you will get a blank page.
-	 * Redirecting to another page can be done in a few ways:
-	 * <li>Use redirectToInterceptPage(Page page), You will be redirected to
-	 * that page when it is done you will be returned to this one</li>
-	 * <li>Use redirectTo(Page page), You will be redirected to that page when
-	 * it is done you will have to specify where you will go next</li>
-	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered
-	 * directly, no redirect will happen</li>
-	 * </p>
-	 * <p>
-	 * NOTE: this method is not meant to be called by framework clients.
-	 * </p>
+	 * @return fixed true;
 	 * 
-	 * @return true if access is allowed, false otherwise
+	 * @deprecated this method is to be removed in future version in favor of
+	 *             instances of
+	 *             {@link wicket.authorization.IAuthorizationStrategy} such as
+	 *             {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
+	 *             It isn't called anymore and made final so that people see
+	 *             what must be changed.
 	 */
-	public boolean checkAccess()
+	public final boolean checkAccess()
 	{
-		return ACCESS_ALLOWED;
+		return true;
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
-	 * 
-	 * @return True if an original destination was redirected to
-	 * @see Page#redirectToInterceptPage(Page)
+	 * @see wicket.MarkupContainer#internalDetach()
 	 */
-	public final boolean continueToOriginalDestination()
+	public void internalDetach()
 	{
-		return getPageMap().continueToOriginalDestination();
+		try
+		{
+			super.internalDetach();
+		} 
+		catch (RuntimeException re)
+		{
+			throw re;
+		}
+		finally
+		{
+			getSession().pageDetached(this);
+		}
 	}
-
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
@@ -324,54 +335,91 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Mark this page as dirty in the session
+	 */
+	public final void dirty()
+	{
+		Session.get().dirtyPage(this);
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
-	public final void doRender()
+	public final void renderPage()
 	{
+		// first try to check if the page can be rendered:
+		if (!isActionAuthorized(RENDER))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Page not allowed to render: " + this);
+			}
+			throw new UnauthorizedActionException(this, Component.RENDER);
+		}
+
 		// Make sure it is really empty
 		renderedComponents = null;
 
-		// Reset it to stateless is false so that
+		// Reset it to stateless so that it can be tested again
 		this.stateless = true;
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
 
+		// First, give priority to IFeedback instances, as they have to
+		// collect their messages before components like ListViews
+		// remove any child components
+		visitChildren(IFeedback.class, new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				((IFeedback)component).updateFeedback();
+				component.internalAttach();
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		if (this instanceof IFeedback) {
+			((IFeedback)this).updateFeedback();
+		}
+		
+		// Now, do the initialization for the other components
+		internalAttach();
+
+		// Visit all this page's children to reset markup streams and check
+		// rendering authorization, as appropriate. We set any result; positive
+		// or negative as a temporary boolean in the components, and when a
+		// authorization exception is thrown it will block the rendering of this
+		// page
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Find out if this component can be rendered
+				final boolean renderAllowed = component.isActionAuthorized(RENDER);
+
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		// Handle request by rendering page
+		onBeforeRender();
 		try
 		{
-			// We have to initialize the page's request now
-
-			// First, give priority to IFeedback instances, as they have to
-			// collect their messages before components like ListViews
-			// remove any child components
-			visitChildren(IFeedback.class, new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					((IFeedback)component).updateFeedback();
-					component.internalBeginRequest();
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-
-			// Now, do the initialization for the other components
-			internalBeginRequest();
-
-			// Handle request by rendering page
 			render(null);
-
-			// Check rendering if it happened fully
-			checkRendering(this);
-
-			// Add/touch the response page in the session (its pagemap).
-			getSession().touch(this);
-
 		}
 		finally
 		{
-			// The request is over
-			internalEndRequest();
+			onAfterRender();
 		}
+
+		// Check rendering if it happened fully
+		checkRendering(this);
+
+		// Add/touch the response page in the session (its pagemap).
+		getSession().touch(this);
 	}
 
 	/**
@@ -394,7 +442,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			renderedComponents = null;
 		}
 	}
-	
+
 	/**
 	 * Expire the oldest version of this page
 	 */
@@ -428,7 +476,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return versionManager == null ? 0 : versionManager.getCurrentVersionNumber();
 	}
-	
+
 	/**
 	 * @return Returns the feedbackMessages.
 	 */
@@ -470,9 +518,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final PageMap getPageMap()
 	{
+		// If the transient needs to be restored
 		if (pageMap == null)
 		{
-			setPageMap(pageMapName);
+			// Look the page map up in the session
+			pageMap = PageMap.forName(pageMapName);
 		}
 		return pageMap;
 	}
@@ -512,21 +562,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// If we're still the original Page and that's what's desired
 		if (versionManager == null)
 		{
-			if (versionNumber == 0)
+			if (versionNumber == 0 || versionNumber == LATEST_VERSION)
 			{
 				return this;
 			}
 			else
 			{
-				throw new IllegalStateException(
-						"No version manager available to retrieve requested versionNumber "
-								+ versionNumber);
+				log.info("No version manager available to retrieve requested versionNumber "
+						+ versionNumber);
+				return null;
 			}
 		}
 		else
 		{
 			// Save original change tracking state
 			final boolean originalTrackChanges = getFlag(FLAG_TRACK_CHANGES);
+
 			try
 			{
 				// While the version manager is potentially playing around with
@@ -535,7 +586,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page page = versionManager.getVersion(versionNumber);
+				final Page page;
+				if (versionNumber != LATEST_VERSION)
+				{
+					page = versionManager.getVersion(versionNumber);
+				}
+				else
+				{
+					page = versionManager.getVersion(getCurrentVersionNumber());
+				}
 
 				// If we went all the way back to the original page
 				if (page != null && page.getCurrentVersionNumber() == 0)
@@ -579,7 +638,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath()
-						+ ":" + Classes.name(component.getClass()));
+						+ ":" + Classes.simpleName(component.getClass()));
 				return null;
 			}
 		});
@@ -606,22 +665,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void onRedirect()
 	{
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's url is saved for future use by method
-	 * continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
-	 * 
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		getPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -664,13 +707,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 */
-	public final void dirty()
-	{
-		Session.get().dirtyPage(this);
-	}
-
-	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
 	 * Set the id for this Page. This method is called by PageMap when a Page is
 	 * added because the id, which is assigned by PageMap, is not known until
 	 * this time.
@@ -704,92 +742,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public String toString()
 	{
 		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
-	}
-
-	/**
-	 * Returns a URL that references a given interface on a component. When the
-	 * URL is requested from the server at a later time, the interface will be
-	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
-	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param listenerInterface
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component and interface to call
-	 */
-	public final String urlFor(final Component component, final Class listenerInterface)
-	{
-		// The page is not stateless if it is not an IRedirectListener
-		// if (!IRedirectListener.class.isAssignableFrom(listenerInterface))
-		{
-			stateless = false;
-		}
-
-		String interfaceName = Classes.name(listenerInterface);
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestTarget target = new ListenerInterfaceRequestTarget(this, component, requestCycle
-				.getRequestInterfaceMethod(interfaceName));
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, target);
-	}
-
-	/**
-	 * Returns a URL that references the given request target.
-	 * 
-	 * @param requestTarget
-	 *            the request target to reference
-	 * @return a URL that references the given request target
-	 */
-	public final String urlFor(final IRequestTarget requestTarget)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, requestTarget);
-	}
-
-
-	/**
-	 * Returns a URL that references a shared resource through the provided
-	 * resource key.
-	 * 
-	 * @param resourceKey
-	 *            The application global key of the shared resource
-	 * @return The url for the shared resource
-	 */
-	public final String urlFor(final String resourceKey)
-	{
-		RequestCycle requestCycle = getRequestCycle();
-		String url = requestCycle.getProcessor().getRequestCodingStrategy().encode(requestCycle,
-				new SharedResourceRequestTarget(resourceKey));
-		return url;
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageMapName
-	 *            Name of pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters)
-	{
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
-				parameters);
-		RequestCycle requestCycle = getRequestCycle();
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(requestCycle, target);
 	}
 
 	/**
@@ -827,7 +779,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
 				&& (application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='" + encoding + "'?>");
+			response.write("<?xml version='1.0' encoding='");
+			response.write(encoding);
+			response.write("'?>");
 		}
 
 		// Set response locale from session locale
@@ -838,9 +792,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
-	 * @see wicket.Component#internalOnEndRequest()
+	 * @see wicket.Component#internalOnDetach()
 	 */
-	protected final void internalOnEndRequest()
+	protected final void internalOnDetach()
 	{
 		if (log.isDebugEnabled())
 		{
@@ -897,28 +851,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param markupStream
 	 */
-	protected final void onRender(final MarkupStream markupStream)
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Visit all this page's children to reset markup streams and check
-		// rendering authorization, as appropriate. We set any result; positive
-		// or negative as a temporary boolean in the components, and when a
-		// authorization exception is thrown it will block the rendering of this
-		// page
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Find out if this component can be rendered
-				final boolean renderAllowed = component.authorize(RENDER);
-
-				// Authorize rendering
-				component.setRenderAllowed(renderAllowed);
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
 		// Set page's associated markup stream
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
 		setMarkupStream(associatedMarkupStream);
 
 		// Configure response object with locale and content type
@@ -1005,8 +941,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException(
-						"The markup file must not contain the same wicket:id at the same level: "
-								+ component.getId());
+						"The component "
+								+ component
+								+ " has the same wicket:id as another component already added at the same level");
 			}
 			if (log.isDebugEnabled())
 			{
@@ -1027,37 +964,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Gets metadata for key on the given component
-	 * 
-	 * @param component
-	 *            The component
-	 * @param key
-	 *            The key
-	 * @return The object
-	 */
-	Serializable getMetaData(final Component component, final MetaDataKey key)
-	{
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					return m.object;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * @return Return true from this method if you want to keep a page out of
 	 *         the session.
 	 */
 	final boolean isStateless()
 	{
 		return stateless;
+	}
+
+	final void setStateless(boolean stateless)
+	{
+		this.stateless = stateless;
 	}
 
 	/**
@@ -1079,72 +996,34 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Sets metadata on a given component using a given key
-	 * 
-	 * @param component
-	 *            The component
-	 * @param key
-	 *            The key
-	 * @param object
-	 *            The object
-	 * @throws IllegalArgumentException
-	 *             Thrown if the object is not of the correct type for the key
-	 */
-	void setMetaData(final Component component, final MetaDataKey key, final Serializable object)
-	{
-		key.checkType(object);
-		boolean set = false;
-		if (metaData != null)
-		{
-			for (int i = 0; i < metaData.length; i++)
-			{
-				MetaDataEntry m = metaData[i];
-				if (component == m.component && key.equals(m.key))
-				{
-					m.object = object;
-					set = true;
-				}
-			}
-		}
-		if (!set)
-		{
-			MetaDataEntry m = new MetaDataEntry();
-			m.component = component;
-			m.key = key;
-			m.object = object;
-			if (metaData == null)
-			{
-				metaData = new MetaDataEntry[1];
-				metaData[0] = m;
-			}
-			else
-			{
-				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
-				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
-				newMetaData[metaData.length] = m;
-				metaData = newMetaData;
-			}
-		}
-	}
-
-	/**
-	 * @param pageMapName
+	 * @param pageMap
 	 *            Sets this page into the page map with the given name. If the
 	 *            page map does not yet exist, it is automatically created.
 	 */
-	final void setPageMap(final String pageMapName)
+	final void setPageMap(final PageMap pageMap)
 	{
-		// Save name for restoring transient
-		this.pageMapName = pageMapName;
+		// Save transient reference to pagemap
+		this.pageMap = pageMap;
 
-		// Get or create page map
-		final Session session = getSession();
-		this.pageMap = session.getPageMap(pageMapName);
-		if (this.pageMap == null)
-		{
-			this.pageMap = session.newPageMap(pageMapName);
-		}
+		// Save name for restoring transient
+		this.pageMapName = pageMap.getName();
 	}
+	
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * @param map
+	 */
+	protected final void moveToPageMap(PageMap map)
+	{
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
+		setPageMap(map);
+		numericId = (short)map.nextId();
+	}
+
+	
 
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an
@@ -1203,6 +1082,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
 									+ component + "\n");
 						}
+						else
+						{
+							// if the component is not visible in hierarchy we
+							// should not visit its children since they are also
+							// not visible
+							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+						}
 					}
 					return CONTINUE_TRAVERSAL;
 				}
@@ -1223,8 +1109,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				renderedComponents = null;
 
 				// Throw exception
-				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
-						+ buffer.toString());
+				throw new WicketRuntimeException(
+						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
+								+ buffer.toString());
 			}
 		}
 
@@ -1261,9 +1148,34 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init()
 	{
-		// Set the pagemap
-		setPageMap(getRequestCycle() != null ? getRequestCycle().getRequest().getParameter(
-				"pagemap") : null);
+		final RequestCycle cycle = getRequestCycle();
+		String pageMapName = null;
+		if (cycle != null)
+		{
+			RequestParameters parameters = getRequest().getRequestParameters();
+			pageMapName = parameters.getPageMapName();
+		}
+		final PageMap pageMap = PageMap.forName(pageMapName);
+		init(pageMap);
+	}
+
+	/**
+	 * Initializes Page by adding it to the Session and initializing it.
+	 * 
+	 * @param pageMap
+	 *            The page map to put this page in.
+	 */
+	private final void init(final PageMap pageMap)
+	{
+		// Set the page map
+		if (pageMap != null)
+		{
+			setPageMap(pageMap);
+		}
+		else
+		{
+			throw new IllegalStateException("PageMap cannot be null");
+		}
 
 		// Set the numeric id on this page
 		setNumericId(getPageMap().nextId());
@@ -1273,7 +1185,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// All Pages are born dirty so they get clustered right away
 		dirty();
-
 	}
 
 	/**
@@ -1318,15 +1229,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			// we are not tracking changes or the component not versioned
 			return false;
 		}
-	}
-
-	static
-	{
-		// Allow calls through the IRedirectListener interface
-		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
-
-		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(IBehaviorListener.class);
 	}
 
 }

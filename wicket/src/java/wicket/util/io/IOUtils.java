@@ -67,7 +67,7 @@ import java.io.Writer;
  * @author Gareth Davis
  * @version CVS $Revision$ $Date$
  */
-public class IOUtils
+public final class IOUtils
 {
 	// NOTE: This class is focussed on InputStream, OutputStream, Reader and
 	// Writer. Each method should take at least one of these as a parameter.
@@ -97,16 +97,16 @@ public class IOUtils
 	 */
 	public static void closeQuietly(Reader input)
 	{
-		try
+		if (input != null)
 		{
-			if (input != null)
+			try
 			{
 				input.close();
 			}
-		}
-		catch (IOException ioe)
-		{
-			// ignore
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 	}
 
@@ -121,16 +121,16 @@ public class IOUtils
 	 */
 	public static void closeQuietly(Writer output)
 	{
-		try
+		if (output != null)
 		{
-			if (output != null)
+			try
 			{
 				output.close();
 			}
-		}
-		catch (IOException ioe)
-		{
-			// ignore
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 	}
 
@@ -145,16 +145,16 @@ public class IOUtils
 	 */
 	public static void closeQuietly(InputStream input)
 	{
-		try
+		if (input != null)
 		{
-			if (input != null)
+			try
 			{
 				input.close();
 			}
-		}
-		catch (IOException ioe)
-		{
-			// ignore
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 	}
 
@@ -169,16 +169,16 @@ public class IOUtils
 	 */
 	public static void closeQuietly(OutputStream output)
 	{
-		try
+		if (output != null)
 		{
-			if (output != null)
+			try
 			{
 				output.close();
 			}
-		}
-		catch (IOException ioe)
-		{
-			// ignore
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 	}
 
@@ -660,13 +660,15 @@ public class IOUtils
 		}
 	}
 
-	// write StringBuffer
+	// write AppendingStringBuffer
 	// -----------------------------------------------------------------------
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to a <code>Writer</code>.
+	 * Writes chars from a <code>AppendingStringBuffer</code> to a
+	 * <code>Writer</code>.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null
+	 *            ignored
 	 * @param output
 	 *            the <code>Writer</code> to write to
 	 * @throws NullPointerException
@@ -684,14 +686,15 @@ public class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to bytes on an
+	 * Writes chars from a <code>AppendingStringBuffer</code> to bytes on an
 	 * <code>OutputStream</code> using the default character encoding of the
 	 * platform.
 	 * <p>
 	 * This method uses {@link String#getBytes()}.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null
+	 *            ignored
 	 * @param output
 	 *            the <code>OutputStream</code> to write to
 	 * @throws NullPointerException
@@ -709,7 +712,7 @@ public class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>StringBuffer</code> to bytes on an
+	 * Writes chars from a <code>AppendingStringBuffer</code> to bytes on an
 	 * <code>OutputStream</code> using the specified character encoding.
 	 * <p>
 	 * Character encoding names can be found at <a
@@ -718,7 +721,8 @@ public class IOUtils
 	 * This method uses {@link String#getBytes(String)}.
 	 * 
 	 * @param data
-	 *            the <code>StringBuffer</code> to write, null ignored
+	 *            the <code>AppendingStringBuffer</code> to write, null
+	 *            ignored
 	 * @param output
 	 *            the <code>OutputStream</code> to write to
 	 * @param encoding

@@ -32,9 +32,6 @@ import wicket.response.StringResponse;
  * @see wicket.markup.transformer.AbstractOutputTransformerContainer
  * 
  * @author Juergen Donnerstag
- * 
- * TODO Robustness: IBehavior does not have an event which gets called in case
- * of an exception. Hence the response object might not be restored.
  */
 public abstract class AbstractTransformerBehavior extends AbstractBehavior implements ITransformer
 {
@@ -85,9 +82,9 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
+	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
-	public void rendered(final Component component)
+	public void onRendered(final Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
@@ -96,18 +93,41 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 			Response response = requestCycle.getResponse();
 
 			// Tranform the data
+			// TODO post 1.2 transform also just use a CharSequence param instead of string
 			CharSequence output = transform(component, response.toString());
-			this.webResponse.write(output.toString());
+			this.webResponse.write(output);
 		}
 		catch (Exception ex)
 		{
 			throw new WicketRuntimeException("Error while transforming the output: " + this, ex);
 		}
-
-		// Restore the original response object
-		requestCycle.setResponse(this.webResponse);
+		finally
+		{
+			// Restore the original response object
+			requestCycle.setResponse(this.webResponse);
+		}
 	}
 
+	/**
+	 * @see wicket.behavior.AbstractBehavior#cleanup()
+	 */
+	public void cleanup()
+	{
+		this.webResponse = null;
+	}
+
+	/**
+	 * @see wicket.behavior.AbstractBehavior#onException(wicket.Component, java.lang.RuntimeException)
+	 */
+	public void onException(Component component, RuntimeException exception)
+	{
+		if (this.webResponse != null)
+		{
+			final RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.setResponse(this.webResponse);
+		}
+	}
+	
 	/**
 	 * 
 	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,

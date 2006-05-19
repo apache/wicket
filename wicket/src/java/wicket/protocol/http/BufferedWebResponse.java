@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.WicketRuntimeException;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Subclass of WebResponse which buffers output and any redirection.
@@ -32,7 +33,7 @@ public class BufferedWebResponse extends WebResponse
 	private String redirectURL;
 
 	/** Buffer to hold page */
-	private StringBuffer buffer = new StringBuffer(4096);
+	private AppendingStringBuffer buffer = new AppendingStringBuffer(4096);
 
 	/**
 	 * Constructor for testing harness.
@@ -47,7 +48,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param httpServletResponse
 	 *            The servlet response object
 	 */
-	BufferedWebResponse(final HttpServletResponse httpServletResponse)
+	public BufferedWebResponse(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
@@ -69,7 +70,7 @@ public class BufferedWebResponse extends WebResponse
             // Write the buffer to the response stream
             if (buffer.length() != 0)
             {
-                super.write(buffer.toString());
+                super.write(buffer);
             }
         }
 	}
@@ -95,7 +96,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param string
 	 *            The string to write
 	 */
-	public void write(final String string)
+	public void write(final CharSequence string)
 	{
 		buffer.append(string);
 	}

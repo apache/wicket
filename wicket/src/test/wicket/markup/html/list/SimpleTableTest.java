@@ -18,27 +18,15 @@
  */
 package wicket.markup.html.list;
 
-import junit.framework.TestCase;
-import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
-import wicket.protocol.http.documentvalidation.Tag;
-import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.WicketTestCase;
+import wicket.markup.html.basic.Label;
 
 
 /**
  * Test for simple table behavior.
  */
-public class SimpleTableTest extends TestCase
+public class SimpleTableTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 */
-	public SimpleTableTest()
-	{
-		super();
-	}
-
 	/**
 	 * Construct.
 	 * @param arg0
@@ -52,53 +40,62 @@ public class SimpleTableTest extends TestCase
 	 * Test simple table behavior.
 	 * @throws Exception
 	 */
-	public void testSimpleTable() throws Exception
+	public void testSimpleTable_1() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.setHomePage(SimpleTablePage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-		SimpleTablePage page = (SimpleTablePage)application.getLastRenderedPage();
-		String document = application.getServletResponse().getDocument();
-		assertTrue(validateDocument(document));
+		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 
 		// Does re-render do as well ??
 	    ListView view = (ListView)application.getLastRenderedPage().get("table");
+	    assertNotNull(view);
+		application.processRequestCycle(view);
+		String document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+
+		// Does re-render do as well ??
+	    ListItem item = (ListItem)application.getLastRenderedPage().get("table:0");
+	    assertNotNull(item);
+		application.processRequestCycle(item);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li>", document);
+
+		// Does re-render do as well ??
+	    Label label = (Label)application.getLastRenderedPage().get("table:1:txt");
+	    assertNotNull(label);
+		application.processRequestCycle(label);
+		document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<span wicket:id=\"txt\">two</span>", document);
+	}
+
+	/**
+	 * Test simple table behavior.
+	 * @throws Exception
+	 */
+	public void testSimpleTable_2() throws Exception
+	{
+		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
+
+		// Does re-render do as well ??
+	    ListView view = (ListView)application.getLastRenderedPage().get("table");
+	    assertNotNull(view);
+		application.processRequestCycle(view);
+		String document = application.getServletResponse().getDocument();
+		assertNotNull(document);
+		assertFalse("".equals(document));
+		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+
+		// Does re-render do as well ??
+	    view = (ListView)application.getLastRenderedPage().get("table");
 	    assertNotNull(view);
 		application.processRequestCycle(view);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
-
-	}
-
-	/**
-	 * Helper method to validate the returned XML document.
-	 * @param document The document
-	 * @return The validation result
-	 */
-	private boolean validateDocument(String document)
-	{
-		HtmlDocumentValidator validator = new HtmlDocumentValidator();
-		Tag html = new Tag("html");
-		Tag head = new Tag("head");
-		html.addExpectedChild(head);
-		Tag title = new Tag("title");
-		head.addExpectedChild(title);
-		title.addExpectedChild(new TextContent("Simple Table Page"));
-		Tag body = new Tag("body");
-		html.addExpectedChild(body);
-		Tag ul = new Tag("ul");
-		ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new TextContent("one"))));
-		ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new TextContent("two"))));
-		ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new TextContent("three"))));
-		body.addExpectedChild(ul);
-		validator.addRootElement(html);
-
-		return validator.isDocumentValid(document);
 	}
 }

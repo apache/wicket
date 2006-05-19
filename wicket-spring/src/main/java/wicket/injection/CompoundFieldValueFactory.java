@@ -66,7 +66,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 		}
 		if (f2 == null)
 		{
-			throw new IllegalArgumentException("argument [f1] cannot be null");
+			throw new IllegalArgumentException("argument [f2] cannot be null");
 		}
 		delegates.add(f1);
 		delegates.add(f2);

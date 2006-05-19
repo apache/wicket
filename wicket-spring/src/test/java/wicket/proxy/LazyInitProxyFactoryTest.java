@@ -21,9 +21,6 @@ package wicket.proxy;
 import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
-import wicket.proxy.ILazyInitProxy;
-import wicket.proxy.IProxyTargetLocator;
-import wicket.proxy.LazyInitProxyFactory;
 import wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import wicket.proxy.util.ConcreteObject;
 import wicket.proxy.util.IInterface;
@@ -80,7 +77,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "interface");
 
 		// test serialization
-		IInterface proxy2 = (IInterface) Objects.clone(proxy);
+		IInterface proxy2 = (IInterface) Objects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "interface");
 
@@ -123,7 +120,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "concrete");
 
 		// test serialization
-		ConcreteObject proxy2 = (ConcreteObject) Objects.clone(proxy);
+		ConcreteObject proxy2 = (ConcreteObject) Objects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "concrete");
 
@@ -155,7 +152,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		ProxyReplacement ser = new ProxyReplacement(
 				ConcreteObject.class.getName(), concreteObjectLocator);
 
-		ConcreteObject proxy2 = (ConcreteObject) Objects.clone(ser);
+		ConcreteObject proxy2 = (ConcreteObject) Objects.cloneObject(ser);
 		assertEquals(proxy2.getMessage(), "concrete");
 	}
 

@@ -1,19 +1,19 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 4619 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.repeater;
 
@@ -63,7 +63,9 @@ public class ContactsDatabase
 	{
 		Contact c = (Contact)map.get(new Long(id));
 		if (c == null)
+		{
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
+		}
 		return c;
 	}
 
@@ -94,7 +96,9 @@ public class ContactsDatabase
 	protected List getIndex(String prop, boolean asc)
 	{
 		if (prop == null)
+		{
 			return fnameIdx;
+		}
 		if (prop.equals("firstName"))
 		{
 			return (asc) ? fnameIdx : fnameDescIdx;

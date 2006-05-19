@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.111 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,17 +17,20 @@
  */
 package wicket.markup.html.form;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.Request;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -36,13 +39,19 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.target.FormSubmitInterfaceRequestTarget;
+import wicket.protocol.http.request.WebClientInfo;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.RequestParameters;
+import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
+import wicket.util.string.interpolator.MapVariableInterpolator;
 import wicket.util.upload.FileUploadException;
 import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 
@@ -56,21 +65,22 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * By default, the processing of a form works like this:
  * <li> The submitting button is looked up. A submitting button is a button that
  * is nested in this form (is a child component) and that was clicked by the
- * user. If a submitting button was found, and it has the immediate field true
- * (default is false), it's onSubmit method will be called right away, thus no
- * validition is done, and things like updating form component models that would
- * normally be done are skipped. In that respect, nesting a button with the
- * immediate field set to true has the same effect as nesting a normal link. If
- * you want you can call validate() to execute form validation, hasError() to
- * find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components.
- * </li>
- * <li> When no immediate submitting button was found, this form is validated
- * (method validate()). Now, two possible paths exist:
+ * user. If a submitting button was found, and it has the defaultFormProcessing
+ * field set to false (default is true), it's onSubmit method will be called
+ * right away, thus no validition is done, and things like updating form
+ * component models that would normally be done are skipped. In that respect,
+ * nesting a button with the defaultFormProcessing field set to false has the
+ * same effect as nesting a normal link. If you want you can call validate() to
+ * execute form validation, hasError() to find out whether validate() resulted
+ * in validation errors, and updateFormComponentModels() to update the models of
+ * nested form components. </li>
+ * <li> When no submitting button with defaultFormProcessing set to false was
+ * found, this form is processed (method process()). Now, two possible paths
+ * exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked valid,
- * and onError() is called to allow clients to provide custom error handling
- * code. </li>
+ * <li> Form validation failed. All nested form components will be marked
+ * invalid, and onError() is called to allow clients to provide custom error
+ * handling code. </li>
  * <li> Form validation succeeded. The nested components will be asked to update
  * their models and persist their data is applicable. After that, method
  * delegateSubmit with optionally the submitting button is called. The default
@@ -83,15 +93,18 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * </p>
  * 
  * Form for handling (file) uploads with multipart requests is supported by
- * callign setMultiPart(true). Use this with
+ * callign setMultiPart(true) ( although wicket will try to automatically detect
+ * this for you ). Use this with
  * {@link wicket.markup.html.form.upload.FileUploadField} components. You can
- * attach mutliple FileInput fields for muliple file uploads.
+ * attach mutliple FileUploadField components for muliple file uploads.
  * <p>
- * Using multipart forms causes a runtime dependency on <a
- * href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>,
- * version 1.0.
- * </p>
+ * In case of an upload error two resource keys are available to specify error
+ * messages: uploadTooLarge and uploadFailed
  * 
+ * ie in [page].properties
+ * 
+ * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed
+ * limit of 2Mb
  * 
  * <p>
  * If you want to have multiple buttons which submit the same form, simply put
@@ -108,9 +121,46 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * @author Eelco Hillenius
  * @author Cameron Braid
  * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
+	/**
+	 * Visitor used for validation
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static abstract class ValidationVisitor implements FormComponent.IVisitor
+	{
+
+		/**
+		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.FormComponent)
+		 */
+		public void formComponent(FormComponent formComponent)
+		{
+			if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
+					&& formComponent.isEnabled() && formComponent.isEnableAllowed())
+			{
+				validate(formComponent);
+			}
+		}
+
+		/**
+		 * Callback that should be used to validate form component
+		 * 
+		 * @param formComponent
+		 */
+		public abstract void validate(FormComponent formComponent);
+
+	}
+
+	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+
+	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
+
+	/** Flag that indicates this form has been submitted during this request */
+	private static final short FLAG_SUBMITTED = FLAG_RESERVED1;
+
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
@@ -123,6 +173,22 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private boolean multiPart = false;
 
 	private String javascriptId;
+
+	/** multi-validators assigned to this form */
+	private Object formValidators = null;
+
+	/**
+	 * Any default button. If set, a hidden submit button will be rendered right
+	 * after the form tag, so that when users press enter in a textfield, this
+	 * button's action will be selected. If no default button is set, nothing
+	 * additional is rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 */
+	private Button defaultButton;
 
 	/**
 	 * Constructs a form with no validation.
@@ -145,6 +211,25 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public Form(final String id, IModel model)
 	{
 		super(id, model);
+	}
+
+	/**
+	 * Gets the default button. If set (not null), a hidden submit button will
+	 * be rendered right after the form tag, so that when users press enter in a
+	 * textfield, this button's action will be selected. If no default button is
+	 * set (it is null), nothing additional is rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 * 
+	 * @return The button to set as the default button, or null when you want to
+	 *         'unset' any previously set default button
+	 */
+	public final Button getDefaultButton()
+	{
+		return defaultButton;
 	}
 
 	/**
@@ -198,10 +283,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void onFormSubmitted()
 	{
+		setFlag(FLAG_SUBMITTED, true);
+
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
-			registerNewUserInput();
+			inputChanged();
 
 			String url = getRequest().getParameter(getHiddenFieldId());
 			if (!Strings.isEmpty(url))
@@ -214,10 +301,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				final Button submittingButton = findSubmittingButton();
 
 				// When processing was triggered by a Wicket button and that
-				// button
-				// indicates it wants to be called immediately (without
-				// processing),
-				// call Button.onSubmit() right away.
+				// button indicates it wants to be called immediately
+				// (without processing), call Button.onSubmit() right away.
 				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
 				{
 					submittingButton.onSubmit();
@@ -233,6 +318,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
+	}
+
+	/**
+	 * Checks if this form has been submitted during the current request
+	 * 
+	 * @return true if the form has been submitted during this request, false
+	 *         otherwise
+	 */
+	public final boolean isSubmitted()
+	{
+		return getFlag(FLAG_SUBMITTED);
+	}
+
+	/**
+	 * @see wicket.Component#internalOnDetach()
+	 */
+	protected void internalOnDetach()
+	{
+		super.internalOnDetach();
+		setFlag(FLAG_SUBMITTED, false);
 	}
 
 	/**
@@ -270,6 +375,27 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		});
+	}
+
+	/**
+	 * Sets the default button. If set (not null), a hidden submit button will
+	 * be rendered right after the form tag, so that when users press enter in a
+	 * textfield, this button's action will be selected. If no default button is
+	 * set (so unset by calling this method with null), nothing additional is
+	 * rendered.
+	 * <p>
+	 * WARNING: note that this is a best effort only. Unfortunately having a
+	 * 'default' button in a form is ill defined in the standards, and of course
+	 * IE has it's own way of doing things.
+	 * </p>
+	 * 
+	 * @param button
+	 *            The button to set as the default button, or null when you want
+	 *            to 'unset' any previously set default button
+	 */
+	public final void setDefaultButton(Button button)
+	{
+		this.defaultButton = button;
 	}
 
 	/**
@@ -339,13 +465,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * TODO General: Maybe we should re-think how Borders are implemented,
-		 * because there are just too many exceptions in the code base because
-		 * of borders. This time it is to solve the problem tested in
-		 * BoxBorderTestPage_3 where the Form is defined in the box border and
-		 * the FormComponents are in the "body". Thus, the formComponents are
-		 * not childs of the form. They are rather childs of the border, as the
-		 * Form itself.
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
+		 * implemented, because there are just too many exceptions in the code
+		 * base because of borders. This time it is to solve the problem tested
+		 * in BoxBorderTestPage_3 where the Form is defined in the box border
+		 * and the FormComponents are in the "body". Thus, the formComponents
+		 * are not childs of the form. They are rather childs of the border, as
+		 * the Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -360,6 +486,51 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
+	}
+
+	/**
+	 * If a default button was set on this form, this method will be called to
+	 * render an extra field with an invisible style so that pressing enter in
+	 * one of the textfields will do a form submit using this button. This
+	 * method is overridable as what we do is best effort only, and may not what
+	 * you want in specific situations. So if you have specific usability
+	 * concerns, or want to follow another strategy, you may override this
+	 * method.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void appendDefaultButtonField(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		String nameAndId = getHiddenFieldId();
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		// get the value, first seeing whether the value attribute is set
+		// by a model
+		String value = defaultButton.getModelObjectAsString();
+		if (value == null || "".equals(value))
+		{
+			// nope it isn't; try to read from the attributes
+			// note that we're only trying lower case here
+			value = defaultButton.getMarkupAttributes().getString("value");
+		}
+
+		// append the button
+		String userAgent = ((WebClientInfo)getSession().getClientInfo()).getUserAgent();
+		buffer.append("<input type=\"submit\" value=\"").append(value).append("\" name=\"").append(
+				defaultButton.getInputName()).append("\"");
+		if (userAgent != null && userAgent.indexOf("MSIE") != -1)
+		{
+			buffer.append("style=\"width: 0px\"");
+		}
+		else
+		{
+			buffer.append(" style=\"display: none\"");
+		}
+		buffer.append("\" />");
+		getResponse().write(buffer);
 	}
 
 	/**
@@ -443,7 +614,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					final SubmitLink button = (SubmitLink)component;
 
 					// Check for button-name or button-name.x request string
-					if (button.getSubmitLinkForm() == Form.this
+					if (button.getForm() == Form.this
 							&& (getRequest().getParameter(button.getInputName()) != null || getRequest()
 									.getParameter(button.getInputName() + ".x") != null))
 					{
@@ -527,7 +698,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Mark each form component on this form invalid.
+	 * Mark each form component on this form valid.
 	 */
 	protected final void markFormComponentsValid()
 	{
@@ -574,7 +745,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Append an additional hidden input tag to support anchor tags that can
-	 * submit a form
+	 * submit a form.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -583,9 +754,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+		// get the hidden field id
 		String nameAndId = getHiddenFieldId();
-		getResponse().write(
-				"<input type=\"hidden\" name=\"" + nameAndId + "\" id=\"" + nameAndId + "\"/>");
+
+		
+		// render the hidden field
+		AppendingStringBuffer buffer = new AppendingStringBuffer("<div style=\"display:none\"><input type=\"hidden\" name=\"")
+				.append(nameAndId).append("\" id=\"").append(nameAndId).append("\" /></div>");
+		getResponse().write(buffer);
+
+		// if a default button was set, handle the rendering of that
+		if (defaultButton != null && defaultButton.isVisibleInHierarchy()
+				&& defaultButton.isEnabled())
+		{
+			appendDefaultButtonField(markupStream, openTag);
+		}
+
+		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
@@ -596,12 +781,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
+
 		// If the javascriptid is already generated then use that on even it was
-		// before the first render.
-		// because there could be a component which already uses it to submit
-		// the forum.
-		// This should be fixed when we pre parse the markup so that we know the
-		// id is at front.
+		// before the first render. Bbecause there could be a component which
+		// already uses it to submit the forum. This should be fixed when we
+		// pre parse the markup so that we know the id is at front.
 		if (!Strings.isEmpty(javascriptId))
 		{
 			tag.put("id", javascriptId);
@@ -616,7 +800,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		}
 		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
 		if (multiPart)
 		{
 			tag.put("enctype", "multipart/form-data");
@@ -668,6 +852,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 	}
 
+
 	/**
 	 * Process the form. Though you can override this method to provide your
 	 * whole own algorithm, it is not recommended to do so.
@@ -677,9 +862,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @return False if the form had an error
 	 */
-	protected boolean process()
+	public boolean process()
 	{
-		// Execute validation now before anything else
+		// run validation
 		validate();
 
 		// If a validation error occurred
@@ -726,7 +911,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			public void formComponent(final FormComponent formComponent)
 			{
 				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isValid())
+				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
+						&& formComponent.isValid() && formComponent.isEnableAllowed())
 				{
 					// Potentially update the model
 					formComponent.updateModel();
@@ -735,25 +921,116 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 	}
 
+
 	/**
-	 * Validates the form's nested children of type {@link FormComponent}. This
-	 * method is typically called before updating any models.
+	 * Clears the input from the form's nested children of type
+	 * {@link FormComponent}. This method is typically called when a form needs
+	 * to be reset.
 	 */
-	protected void validate()
+	public final void clearInput()
 	{
-		// Validate model using validation strategy
-		// Visit all the form components and validate each
+		// Visit all the (visible) form components and clear the input on each.
 		visitFormComponents(new FormComponent.IVisitor()
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
-					// Validate form component
-					formComponent.validate();
+					// Clear input from form component
+					formComponent.clearInput();
 				}
 			}
 		});
+	}
+
+	/**
+	 * Validates the form. This method is typically called before updating any
+	 * models.
+	 */
+	protected void validate()
+	{
+		validateRequired();
+
+		validateConversion();
+
+		validateValidators();
+
+		validateFormValidators();
+	}
+
+	/**
+	 * Triggers input required attribute validation on all form components
+	 */
+	private void validateRequired()
+	{
+		visitFormComponents(new ValidationVisitor()
+		{
+			public void validate(final FormComponent formComponent)
+			{
+				formComponent.validateRequired();
+			}
+		});
+	}
+
+	/**
+	 * Triggers type conversion on form components
+	 */
+	private void validateConversion()
+	{
+		visitFormComponents(new ValidationVisitor()
+		{
+			public void validate(final FormComponent formComponent)
+			{
+				formComponent.convert();
+			}
+		});
+	}
+
+	/**
+	 * Triggers all IValidator validators added to the form components
+	 */
+	private void validateValidators()
+	{
+		visitFormComponents(new ValidationVisitor()
+		{
+			public void validate(final FormComponent formComponent)
+			{
+				formComponent.validateValidators();
+			}
+		});
+	}
+
+	/**
+	 * Triggers any added {@link IFormValidator}s.
+	 */
+	private void validateFormValidators()
+	{
+		final int multiCount = formValidators_size();
+		for (int i = 0; i < multiCount; i++)
+		{
+			final IFormValidator validator = formValidators_get(i);
+			final FormComponent[] dependents = validator.getDependentFormComponents();
+
+			boolean validate = true;
+
+			if (dependents != null)
+			{
+				for (int j = 0; j < dependents.length; j++)
+				{
+					final FormComponent dependent = dependents[j];
+					if (!dependent.isValid())
+					{
+						validate = false;
+						break;
+					}
+				}
+			}
+
+			if (validate)
+			{
+				validator.validate(this);
+			}
+		}
 	}
 
 	/**
@@ -813,8 +1090,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					// Resource key should be <form-id>.uploadTooLarge to
 					// override default message
 					final String defaultValue = "Upload must be less than " + maxSize;
-					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
-							defaultValue);
+					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY, Model
+							.valueOf(model), defaultValue);
 					error(msg);
 
 					if (log.isDebugEnabled())
@@ -831,8 +1108,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					// Resource key should be <form-id>.uploadFailed to override
 					// default message
 					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
-							defaultValue);
+					String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY, Model
+							.valueOf(model), defaultValue);
 					error(msg);
 
 					log.error(msg, e);
@@ -897,52 +1174,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @param url
 	 *            The url which describes the component path and the interface
 	 *            to be called.
-	 * @deprecated refactor this to use the
-	 *             {@link wicket.request.IRequestCodingStrategy}
 	 */
-	// TODO Post 1.2: Remove this method?
 	private void dispatchEvent(final Page page, final String url)
 	{
-		RequestCycle requestCycle = RequestCycle.get();
-		String decodedUrl = requestCycle.getRequest().decodeURL(url);
-		int indexOfPath = decodedUrl.indexOf("path=");
-		int indexOfInterface = decodedUrl.indexOf("interface=");
-		if (indexOfPath != -1 && indexOfInterface != -1)
+		RequestCycle rc = RequestCycle.get();
+		IRequestCycleProcessor processor = rc.getProcessor();
+		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
+				new FormDispatchRequest(rc.getRequest(), url));
+		IRequestTarget rt = processor.resolve(rc, requestParameters);
+		if (rt instanceof ListenerInterfaceRequestTarget)
 		{
-			indexOfPath += "path=".length();
-			indexOfInterface += "interface=".length();
-			int indexOfPathEnd = decodedUrl.indexOf("&", indexOfPath);
-			if (indexOfPathEnd == -1)
-			{
-				indexOfPathEnd = decodedUrl.length();
-			}
-			int indexOfInterfaceEnd = decodedUrl.indexOf("&", indexOfInterface);
-			if (indexOfInterfaceEnd == -1)
-			{
-				indexOfInterfaceEnd = decodedUrl.length();
-			}
-
-			String path = decodedUrl.substring(indexOfPath, indexOfPathEnd);
-			String interfaceName = decodedUrl.substring(indexOfInterface, indexOfInterfaceEnd);
-
-			final Component component = page.get(Strings.afterFirstPathComponent(path,
-					Component.PATH_SEPARATOR));
-
-			if (!component.isVisible())
-			{
-				throw new WicketRuntimeException(
-						"Calling listener methods on components that are not visible is not allowed");
-			}
-			Method method = requestCycle.getRequestInterfaceMethod(interfaceName);
-			if (method != null)
-			{
-				new FormSubmitInterfaceRequestTarget(page, component, method)
-						.processEvents(requestCycle);
-			}
+			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
+			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
 		}
 		else
 		{
-			// log warning??
+			throw new WicketRuntimeException(
+					"Attempt to access unknown request listener interface "
+							+ requestParameters.getInterfaceName());
 		}
 	}
 
@@ -950,7 +1199,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * Visits the form's children FormComponents and inform them that a new user
 	 * input is available in the Request
 	 */
-	private void registerNewUserInput()
+	private void inputChanged()
 	{
 		visitFormComponents(new FormComponent.IVisitor()
 		{
@@ -958,7 +1207,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
-					formComponent.registerNewUserInput();
+					formComponent.inputChanged();
 				}
 			}
 		});
@@ -977,15 +1226,243 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 *            and submitted
 	 * @return The javascript code that submits the form.
 	 */
-	public final String getJsForInterfaceUrl(String url)
+	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
-		return "document.getElementById('" + getHiddenFieldId() + "').value='" + url
-				+ "';document.getElementById('" + getJavascriptId() + "').submit();";
+		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId())
+				.append("').value='").append(url).append("';document.getElementById('").append(
+						getJavascriptId()).append("').submit();");
 	}
 
-	static
+	/**
+	 * 
+	 */
+	class FormDispatchRequest extends Request
 	{
-		// Allow use of IFormSubmitListener interface
-		RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
+		private final Request realRequest;
+
+		private final String url;
+
+		private final Map params = new HashMap(4);
+
+		/**
+		 * Construct.
+		 * 
+		 * @param realRequest
+		 * @param url
+		 */
+		public FormDispatchRequest(final Request realRequest, final String url)
+		{
+			this.realRequest = realRequest;
+			this.url = realRequest.decodeURL(url);
+
+			String queryPart = this.url.substring(this.url.indexOf("?") + 1);
+			StringTokenizer paramsSt = new StringTokenizer(queryPart, "&");
+			while (paramsSt.hasMoreTokens())
+			{
+				String param = paramsSt.nextToken();
+				int equalsSign = param.indexOf("=");
+				if (equalsSign >= 0)
+				{
+					String paramName = param.substring(0, equalsSign);
+					String value = param.substring(equalsSign + 1);
+					params.put(paramName, value);
+				}
+				else
+				{
+					params.put(param, "");
+				}
+			}
+		}
+
+		/**
+		 * @see wicket.Request#getLocale()
+		 */
+		public Locale getLocale()
+		{
+			return realRequest.getLocale();
+		}
+
+		/**
+		 * @see wicket.Request#getParameter(java.lang.String)
+		 */
+		public String getParameter(String key)
+		{
+			return (String)params.get(key);
+		}
+
+		/**
+		 * @see wicket.Request#getParameterMap()
+		 */
+		public Map getParameterMap()
+		{
+			return params;
+		}
+
+		/**
+		 * @see wicket.Request#getParameters(java.lang.String)
+		 */
+		public String[] getParameters(String key)
+		{
+			String param = (String)params.get(key);
+			if (param != null)
+			{
+				return new String[] { param };
+			}
+			return new String[0];
+		}
+
+		/**
+		 * @see wicket.Request#getPath()
+		 */
+		public String getPath()
+		{
+			return realRequest.getPath();
+		}
+
+		/**
+		 * @see wicket.Request#getRelativeURL()
+		 */
+		public String getRelativeURL()
+		{
+			return url.substring(url.indexOf("/", 1));
+		}
+
+		/**
+		 * @see wicket.Request#getURL()
+		 */
+		public String getURL()
+		{
+			return url;
+		}
 	}
+
+	/**
+	 * Returns the prefix used when building validator keys. This allows a form
+	 * to use a separate "set" of keys. For example if prefix "short" is
+	 * returned, validator key short.RequiredValidator will be tried instead of
+	 * RequiredValidator key.
+	 * <p>
+	 * This can be useful when different designs are used for a form. In a form
+	 * where error messages are displayed next to their respective form
+	 * components as opposed to at the top of the form, the ${label} attribute
+	 * is of little use and only causes redundant information to appear in the
+	 * message. Forms like these can return the "short" (or any other string)
+	 * validator prefix and declare key: short.RequiredValidator=required to
+	 * override the longer message which is usually declared like this:
+	 * RequiredValidator=${label} is a required field
+	 * <p>
+	 * Returned prefix will be used for all form components. The prefix can also
+	 * be overridden on form component level by overriding
+	 * {@link FormComponent#getValidatorKeyPrefix()}
+	 * 
+	 * @return prefix prepended to validator keys
+	 */
+	public String getValidatorKeyPrefix()
+	{
+		return null;
+	}
+
+	/**
+	 * Adds a form validator to the form.
+	 * 
+	 * @see IFormValidator
+	 * @param validator
+	 *            validator
+	 */
+	public void add(IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+		formValidators_add(validator);
+	}
+
+	/**
+	 * @param validator
+	 *            The form validator to add to the formValidators Object (which
+	 *            may be an array of IFormValidators or a single instance, for
+	 *            efficiency)
+	 */
+	private void formValidators_add(final IFormValidator validator)
+	{
+		if (this.formValidators == null)
+		{
+			this.formValidators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = formValidators_size();
+
+			// Create array that holds size + 1 elements
+			final IFormValidator[] validators = new IFormValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
+			{
+				validators[i] = formValidators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.formValidators = validators;
+		}
+	}
+
+	/**
+	 * Gets form validator from formValidators Object (which may be an array of
+	 * IFormValidators or a single instance, for efficiency) at the given index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The form validator
+	 */
+	private IFormValidator formValidators_get(int index)
+	{
+		if (this.formValidators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators)[index];
+		}
+		return (IFormValidator)formValidators;
+	}
+
+	/**
+	 * @return The number of form validators in the formValidators Object (which
+	 *         may be an array of IFormValidators or a single instance, for
+	 *         efficiency)
+	 */
+	private int formValidators_size()
+	{
+		if (this.formValidators == null)
+		{
+			return 0;
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators).length;
+		}
+		return 1;
+	}
+
+	/**
+	 * /** Registers an error feedback message for this component
+	 * 
+	 * @param error
+	 *            error message
+	 * @param args
+	 *            argument replacement map for ${key} variables
+	 */
+	public final void error(String error, Map args)
+	{
+		error(new MapVariableInterpolator(error, args).toString());
+	}
+
+
 }

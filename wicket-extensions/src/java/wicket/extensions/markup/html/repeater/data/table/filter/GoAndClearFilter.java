@@ -71,7 +71,7 @@ public class GoAndClearFilter extends GoFilter
 	{
 		super(id, goModel);
 
-		originalState = Objects.clone(form.getModelObject());
+		originalState = Objects.cloneModel(form.getModelObject());
 
 		clear = new Button("clear", clearModel)
 		{
@@ -105,7 +105,7 @@ public class GoAndClearFilter extends GoFilter
 	 * 
 	 */
 	protected void onClearSubmit(Button button) {
-		button.getForm().setModelObject(Objects.clone(originalState));
+		button.getForm().setModelObject(Objects.cloneModel(originalState));
 	}
 
 }

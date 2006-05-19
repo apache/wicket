@@ -55,21 +55,21 @@ import org.mortbay.jetty.Server;
  * Usage:
  * 
  * <pre>
- *   
- *    ...
- *      public static Test suite() 
- *      {
- *   	    TestSuite suite = new TestSuite();
- *   	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
- *   	    JettyDecorator deco = new JettyDecorator(suite);
- *   	    deco.setPort(8098);
- *   	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
- *   	    deco.setContextPath(&quot;/test&quot;);
- *   	    deco.setUseJettyPlus(false);
- *   	    return deco;
- *      }
- *    ...
  *    
+ *     ...
+ *       public static Test suite() 
+ *       {
+ *    	    TestSuite suite = new TestSuite();
+ *    	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
+ *    	    JettyDecorator deco = new JettyDecorator(suite);
+ *    	    deco.setPort(8098);
+ *    	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
+ *    	    deco.setContextPath(&quot;/test&quot;);
+ *    	    deco.setUseJettyPlus(false);
+ *    	    return deco;
+ *       }
+ *     ...
+ *     
  * </pre>
  * 
  * Jetty will be started before the tests are actually run, and will be stopped

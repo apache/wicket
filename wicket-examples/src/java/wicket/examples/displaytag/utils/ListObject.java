@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.displaytag.utils;
 
@@ -28,336 +27,335 @@ import wicket.util.string.Strings;
 
 
 /**
- * Just a test class that returns columns of data that are useful for 
- * testing out the ListTag class and ListColumn class.
+ * Just a test class that returns columns of data that are useful for testing
+ * out the ListTag class and ListColumn class.
  * 
  * @author epesh (wicket.examples.wicket.examples.displaytag)
  */
 public class ListObject implements Serializable
 {
-    /**
-     * random number generator.
-     */
-    private static Random random = new Random();
+	/**
+	 * random number generator.
+	 */
+	private static Random random = new Random();
 
-    /**
-     * id.
-     */
-    private int id = -1;
+	/**
+	 * id.
+	 */
+	private int id = -1;
 
-    /**
-     * name.
-     */
-    private String name;
+	/**
+	 * name.
+	 */
+	private String name;
 
-    /**
-     * email.
-     */
-    private String email;
+	/**
+	 * email.
+	 */
+	private String email;
 
-    /**
-     * date.
-     */
-    private Date date;
+	/**
+	 * date.
+	 */
+	private Date date;
 
-    /**
-     * money.
-     */
-    private double money;
+	/**
+	 * money.
+	 */
+	private double money;
 
-    /**
-     * description.
-     */
-    private String description;
+	/**
+	 * description.
+	 */
+	private String description;
 
-    /**
-     * long description.
-     */
-    private String longDescription;
+	/**
+	 * long description.
+	 */
+	private String longDescription;
 
-    /**
-     * status.
-     */
-    private String status;
+	/**
+	 * status.
+	 */
+	private String status;
 
-    /**
-     * url.
-     */
-    private String url;
+	/**
+	 * url.
+	 */
+	private String url;
 
-    /**
-     * sub list used to test nested tables.
-     */
-    private List subList;
-    
-    /**
-     * Checkbox example
-     */
-    private boolean active;
+	/**
+	 * sub list used to test nested tables.
+	 */
+	private List subList;
 
-    /**
-     * Constructor for ListObject.
-     */
-    public ListObject()
-    {
-        this.id = random.nextInt(99998) + 1;
-        this.money = (random.nextInt(999998) + 1) / 100;
+	/**
+	 * Checkbox example
+	 */
+	private boolean active;
 
-        String firstName = RandomSampleUtil.getRandomWord();
-        String lastName = RandomSampleUtil.getRandomWord();
+	/**
+	 * Constructor for ListObject.
+	 */
+	public ListObject()
+	{
+		this.id = random.nextInt(99998) + 1;
+		this.money = (random.nextInt(999998) + 1) / 100;
 
-        this.name = Strings.capitalize(firstName) + " " + Strings.capitalize(lastName);
+		String firstName = RandomSampleUtil.getRandomWord();
+		String lastName = RandomSampleUtil.getRandomWord();
 
-        this.email = firstName + "-" + lastName + "@" + RandomSampleUtil.getRandomWord() + ".com";
+		this.name = Strings.capitalize(firstName) + " " + Strings.capitalize(lastName);
 
-        this.date = RandomSampleUtil.getRandomDate();
+		this.email = firstName + "-" + lastName + "@" + RandomSampleUtil.getRandomWord() + ".com";
 
-        this.description = RandomSampleUtil.getRandomWord() + " " + RandomSampleUtil.getRandomWord() + "...";
+		this.date = RandomSampleUtil.getRandomDate();
 
-        this.longDescription = RandomSampleUtil.getRandomSentence(10);
+		this.description = RandomSampleUtil.getRandomWord() + " "
+				+ RandomSampleUtil.getRandomWord() + "...";
 
-        this.status = RandomSampleUtil.getRandomWord().toUpperCase();
+		this.longDescription = RandomSampleUtil.getRandomSentence(10);
 
-        // added sublist for testing of nested tables
-        this.subList = new ArrayList();
-        this.subList.add(new SubListItem());
-        this.subList.add(new SubListItem());
-        this.subList.add(new SubListItem());
+		this.status = RandomSampleUtil.getRandomWord().toUpperCase();
 
-        this.url = "http://www." + lastName + ".org/";
-        
-        this.active = RandomSampleUtil.getRandomBoolean();
-    }
+		// added sublist for testing of nested tables
+		this.subList = new ArrayList();
+		this.subList.add(new SubListItem());
+		this.subList.add(new SubListItem());
+		this.subList.add(new SubListItem());
 
-    /**
-     * getter for id.
-     * @return int id
-     */
-    public int getId()
-    {
-        return this.id;
-    }
+		this.url = "http://www." + lastName + ".org/";
 
-    /**
-     * setter for id.
-     * @param value int id
-     */
-    public void setId(int value)
-    {
-        this.id = value;
-    }
+		this.active = RandomSampleUtil.getRandomBoolean();
+	}
 
-    /**
-     * getter for name.
-     * @return String name
-     */
-    public String getName()
-    {
-        return this.name;
-    }
+	/**
+	 * getter for id.
+	 * 
+	 * @return int id
+	 */
+	public int getId()
+	{
+		return this.id;
+	}
 
-    /**
-     * getter for email.
-     * @return String email
-     */
-    public String getEmail()
-    {
-        return this.email;
-    }
+	/**
+	 * setter for id.
+	 * 
+	 * @param value
+	 *            int id
+	 */
+	public void setId(int value)
+	{
+		this.id = value;
+	}
 
-    /**
-     * setter for email.
-     * @param value String email
-     */
-    public void setEmail(String value)
-    {
-        this.email = value;
-    }
+	/**
+	 * getter for name.
+	 * 
+	 * @return String name
+	 */
+	public String getName()
+	{
+		return this.name;
+	}
 
-    /**
-     * getter for date.
-     * @return Date
-     */
-    public Date getDate()
-    {
-        return this.date;
-    }
+	/**
+	 * getter for email.
+	 * 
+	 * @return String email
+	 */
+	public String getEmail()
+	{
+		return this.email;
+	}
 
-    /**
-     * getter for money.
-     * @return double money
-     */
-    public double getMoney()
-    {
-        return this.money;
-    }
+	/**
+	 * setter for email.
+	 * 
+	 * @param value
+	 *            String email
+	 */
+	public void setEmail(String value)
+	{
+		this.email = value;
+	}
 
-    /**
-     * getter for description.
-     * @return String description
-     */
-    public String getDescription()
-    {
-        return this.description;
-    }
+	/**
+	 * getter for date.
+	 * 
+	 * @return Date
+	 */
+	public Date getDate()
+	{
+		return this.date;
+	}
 
-    /**
-     * getter for long description.
-     * @return String long description
-     */
-    public String getLongDescription()
-    {
-        return this.longDescription;
-    }
+	/**
+	 * getter for money.
+	 * 
+	 * @return double money
+	 */
+	public double getMoney()
+	{
+		return this.money;
+	}
 
-    /**
-     * getter for status.
-     * @return String status
-     */
-    public String getStatus()
-    {
-        return this.status;
-    }
+	/**
+	 * getter for description.
+	 * 
+	 * @return String description
+	 */
+	public String getDescription()
+	{
+		return this.description;
+	}
 
-    /**
-     * getter for url.
-     * @return String url
-     */
-    public String getUrl()
-    {
-        return this.url;
-    }
+	/**
+	 * getter for long description.
+	 * 
+	 * @return String long description
+	 */
+	public String getLongDescription()
+	{
+		return this.longDescription;
+	}
 
-    /**
-     * test for null values.
-     * @return null
-     */
-    public String getNullValue()
-    {
-        return null;
-    }
+	/**
+	 * getter for status.
+	 * 
+	 * @return String status
+	 */
+	public String getStatus()
+	{
+		return this.status;
+	}
 
-    /**
-     * Returns a simple string representation of the object.
-     * @return String simple representation of the object
-     */
-    public String toString()
-    {
-        return "ListObject(" + this.id + ")";
-    }
+	/**
+	 * getter for url.
+	 * 
+	 * @return String url
+	 */
+	public String getUrl()
+	{
+		return this.url;
+	}
 
-    /**
-     * Returns a detailed string representation of the object.
-     * @return String detailed representation of the object
-     */
-    public String toDetailedString()
-    {
-        return "ID:          "
-            + this.id
-            + "\n"
-            + "Name:        "
-            + this.name
-            + "\n"
-            + "Email:       "
-            + this.email
-            + "\n"
-            + "Date:        "
-            + this.date
-            + "\n"
-            + "Money:       "
-            + this.money
-            + "\n"
-            + "Description: "
-            + this.description
-            + "\n"
-            + "Status:      "
-            + this.status
-            + "\n"
-            + "URL:         "
-            + this.url
-            + "\n"
-            + "Activ:         "
-            + String.valueOf(this.active)
-            + "\n";
-    }
+	/**
+	 * test for null values.
+	 * 
+	 * @return null
+	 */
+	public String getNullValue()
+	{
+		return null;
+	}
 
-    /**
-     * Returns the subList.
-     * @return List
-     */
-    public List getSubList()
-    {
-        return this.subList;
-    }
+	/**
+	 * Returns a simple string representation of the object.
+	 * 
+	 * @return String simple representation of the object
+	 */
+	public String toString()
+	{
+		return "ListObject(" + this.id + ")";
+	}
 
-    /**
-     * Inner class used in testing nested tables.
-     * @author fgiust
-     */
-    public class SubListItem implements Serializable
-    {
+	/**
+	 * Returns a detailed string representation of the object.
+	 * 
+	 * @return String detailed representation of the object
+	 */
+	public String toDetailedString()
+	{
+		return "ID:          " + this.id + "\n" + "Name:        " + this.name + "\n"
+				+ "Email:       " + this.email + "\n" + "Date:        " + this.date + "\n"
+				+ "Money:       " + this.money + "\n" + "Description: " + this.description + "\n"
+				+ "Status:      " + this.status + "\n" + "URL:         " + this.url + "\n"
+				+ "Activ:         " + String.valueOf(this.active) + "\n";
+	}
 
-        /**
-         * name.
-         */
-        private String itemName;
+	/**
+	 * Returns the subList.
+	 * 
+	 * @return List
+	 */
+	public List getSubList()
+	{
+		return this.subList;
+	}
 
-        /**
-         * email.
-         */
-        private String itemEmail;
+	/**
+	 * Inner class used in testing nested tables.
+	 * 
+	 * @author fgiust
+	 */
+	public class SubListItem implements Serializable
+	{
 
-        /**
-         * Constructor for SubListItem.
-         */
-        public SubListItem()
-        {
-            this.itemName = RandomSampleUtil.getRandomWord();
-            this.itemEmail = RandomSampleUtil.getRandomEmail();
-        }
+		/**
+		 * name.
+		 */
+		private String itemName;
 
-        /**
-         * getter for name.
-         * @return String name
-         */
-        public String getName()
-        {
-            return this.itemName;
-        }
+		/**
+		 * email.
+		 */
+		private String itemEmail;
 
-        /**
-         * getter for email.
-         * @return String
-         */
-        public String getEmail()
-        {
-            return this.itemEmail;
-        }
+		/**
+		 * Constructor for SubListItem.
+		 */
+		public SubListItem()
+		{
+			this.itemName = RandomSampleUtil.getRandomWord();
+			this.itemEmail = RandomSampleUtil.getRandomEmail();
+		}
 
-        /**
-         * @see java.lang.Object#toString()
-         */
-        public String toString()
-        {
-            return "name=" + this.itemName + "; email=" + this.itemEmail;
-        }
-    }
+		/**
+		 * getter for name.
+		 * 
+		 * @return String name
+		 */
+		public String getName()
+		{
+			return this.itemName;
+		}
 
-    /**
-     * 
-     * @return True if active
-     */
-    public boolean isActive()
-    {
-        return active;
-    }
+		/**
+		 * getter for email.
+		 * 
+		 * @return String
+		 */
+		public String getEmail()
+		{
+			return this.itemEmail;
+		}
 
-    /**
-     * 
-     * @param active
-     */
-    public void setActive(boolean active)
-    {
-        this.active = active;
-    }
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "name=" + this.itemName + "; email=" + this.itemEmail;
+		}
+	}
+
+	/**
+	 * 
+	 * @return True if active
+	 */
+	public boolean isActive()
+	{
+		return active;
+	}
+
+	/**
+	 * 
+	 * @param active
+	 */
+	public void setActive(boolean active)
+	{
+		this.active = active;
+	}
 }

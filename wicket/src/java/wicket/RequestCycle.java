@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.133 $ $Date$
+ * $Id: RequestCycle.java 4930 2006-03-14 12:45:59 -0800 (Tue, 14 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-14 12:45:59 -0800 (Tue, 14 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,28 +18,25 @@
  */
 package wicket;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
-import wicket.request.target.BookmarkablePageRequestTarget;
-import wicket.request.target.ComponentRequestTarget;
-import wicket.request.target.IAccessCheck;
-import wicket.request.target.PageRequestTarget;
-import wicket.util.lang.Classes;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.ComponentRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
+import wicket.request.target.resource.SharedResourceRequestTarget;
+import wicket.util.collections.ArrayListStack;
+import wicket.util.value.ValueMap;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -94,7 +92,7 @@ import wicket.util.lang.Classes;
  * session-relative number:
  * <p>
  * <ul>
- * /[Application]?path=[pageId]
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]: ...
  * </ul>
  * <p>
  * Often, the reason to access an existing session page is due to some kind of
@@ -103,13 +101,13 @@ import wicket.util.lang.Classes;
  * registered listener is dispatched like so:
  * <p>
  * <ul>
- * /[Application]?path=[pageId.componentPath]&interface=[interface]
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]:[componentPath]:[version]:[interfaceName]
  * </ul>
  * <p>
  * For example:
  * <p>
  * <ul>
- * /[Application]?path=3.signInForm.submit&interface=IFormSubmitListener
+ * /[Application]?wicket:interface=:3:signInForm:submit::IFormSubmitListener
  * </ul>
  * </td>
  * </tr>
@@ -173,65 +171,35 @@ import wicket.util.lang.Classes;
  */
 public abstract class RequestCycle
 {
-	/**
-	 * Checking access after resolving.
-	 */
-	private static final int CHECK_ACCESS = 4;
-
-	/**
-	 * Cleaning up after responding to a request.
-	 */
-	private static final int CLEANUP_REQUEST = 8;
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
 
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
-	/**
-	 * Decoding request parameters into a strongly typed
-	 * {@link RequestParameters} object.
-	 */
-	private static final int DECODE_PARAMETERS = 2;
-
-	/**
-	 * Request cycle processing is done.
-	 */
-	private static final int DONE = 9;
-
-	/**
-	 * Responding to an uncaught exception.
-	 */
-	private static final int HANDLE_EXCEPTION = 7;
-
-	/** Map from request interface Class to Method. */
-	private static final Map listenerRequestInterfaceMethods = new HashMap();
-
-	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
-
-	/**
-	 * No processing has been done.
-	 */
+	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;
 
-	/**
-	 * Starting the actual request processing.
-	 */
+	/** Starting the actual request processing. */
 	private static final int PREPARE_REQUEST = 1;
 
-	/**
-	 * Dispatching and handling of events.
-	 */
-	private static final int PROCESS_EVENTS = 5;
+	/** Resolving the {@link RequestParameters} object to a request target. */
+	private static final int RESOLVE_TARGET = 2;
 
-	/**
-	 * Resolving the {@link RequestParameters} object to a request target.
-	 */
-	private static final int RESOLVE_TARGET = 3;
+	/** Dispatching and handling of events. */
+	private static final int PROCESS_EVENTS = 3;
 
-	/**
-	 * Responding using the currently set {@link IRequestTarget}.
-	 */
-	private static final int RESPOND = 6;
+	/** Responding using the currently set {@link IRequestTarget}. */
+	private static final int RESPOND = 4;
+
+	/** Responding to an uncaught exception. */
+	private static final int HANDLE_EXCEPTION = 5;
+
+	/** Cleaning up after responding to a request. */
+	private static final int DETACH_REQUEST = 6;
+
+	/** Request cycle processing is done. */
+	private static final int DONE = 7;
 
 	/** The application object. */
 	protected final Application application;;
@@ -245,6 +213,9 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
+	/** The processor for this request. */
+	protected final IRequestCycleProcessor processor;
+
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
 
@@ -257,13 +228,8 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** the current request parameters (if any). */
-	private transient RequestParameters requestParameters;
-
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	// TODO Performance: Use a more efficient implementation, maybe with a
-	// default size of 3
-	private transient Stack/* <IRequestTarget> */requestTargets = new Stack();
+	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
@@ -279,47 +245,6 @@ public abstract class RequestCycle
 	public final static RequestCycle get()
 	{
 		return (RequestCycle)current.get();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Adds an interface to the map of interfaces that can be invoked by
-	 * outsiders. The interface must extend IRequestListener
-	 * 
-	 * @param i
-	 *            The interface class, which must extend IRequestListener.
-	 */
-	public static void registerRequestListenerInterface(final Class i)
-	{
-		// Ensure that i extends IRequestListener
-		if (!IRequestListener.class.isAssignableFrom(i))
-		{
-			throw new IllegalArgumentException("Class " + i + " must extend IRequestListener");
-		}
-
-		// Get interface methods
-		final Method[] methods = i.getMethods();
-
-		// If there is only one method
-		if (methods.length == 1)
-		{
-			// and that method takes no parameters
-			if (methods[0].getParameterTypes().length == 0)
-			{
-				// Save this interface method by the non-qualified class name
-				listenerRequestInterfaceMethods.put(Classes.name(i), methods[0]);
-			}
-			else
-			{
-				throw new IllegalArgumentException("Method in interface " + i
-						+ " cannot have parameters");
-			}
-		}
-		else
-		{
-			throw new IllegalArgumentException("Interface " + i + " can have only one method");
-		}
 	}
 
 	/**
@@ -339,6 +264,7 @@ public abstract class RequestCycle
 		this.request = request;
 		this.response = response;
 		this.originalResponse = response;
+		this.processor = safeGetRequestProcessor();
 
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
@@ -408,19 +334,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Looks up an request interface method by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The method, null of nothing is found
-	 * 
-	 */
-	public final Method getRequestInterfaceMethod(final String interfaceName)
-	{
-		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
-	}
-
-	/**
 	 * Gets the current request target. May be null.
 	 * 
 	 * @return the current request target, null if none was set yet.
@@ -448,10 +361,14 @@ public abstract class RequestCycle
 	 */
 	public final Page getResponsePage()
 	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
-		if (target != null && (target instanceof PageRequestTarget))
+		IRequestTarget target = getRequestTarget();
+		if (target instanceof PageRequestTarget)
 		{
 			return ((IPageRequestTarget)target).getPage();
+		}
+		else if (target instanceof BookmarkablePageRequestTarget)
+		{
+			return ((BookmarkablePageRequestTarget)target).getPage();
 		}
 		return null;
 	}
@@ -465,7 +382,7 @@ public abstract class RequestCycle
 	 */
 	public final Class getResponsePageClass()
 	{
-		IRequestTarget target = (IRequestTarget)getRequestTarget();
+		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
 		{
 			return ((IBookmarkablePageRequestTarget)target).getPageClass();
@@ -506,15 +423,6 @@ public abstract class RequestCycle
 	 */
 	public Page onRuntimeException(Page page, RuntimeException e)
 	{
-		if (e instanceof UnauthorizedInstantiationException)
-		{
-			final Class componentClass = ((UnauthorizedInstantiationException)e)
-					.getComponentClass();
-			if (componentClass.isAssignableFrom(Page.class))
-			{
-				getSession().onUnauthorizedPageAccess();
-			}
-		}
 		return null;
 	}
 
@@ -620,7 +528,7 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// FIXME Robustness: This has to be done after the unit tests are fixed
+		// FIXME post 1.2 Robustness: This has to be done after the unit tests are fixed
 		// // if we are already responding, we can't change the request target
 		// // as that would either have no effect, or - in case we would set
 		// // the currentStep back to PROCESS_EVENTS, we would have double
@@ -670,10 +578,13 @@ public abstract class RequestCycle
 	 * 
 	 * @param response
 	 *            The response
+	 * @return the original response
 	 */
-	public final void setResponse(final Response response)
+	public final Response setResponse(final Response response)
 	{
+		final Response orig = this.response;
 		this.response = response;
+		return orig;
 	}
 
 	/**
@@ -732,8 +643,105 @@ public abstract class RequestCycle
 	 */
 	public String toString()
 	{
-		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
-				+ Thread.currentThread().getName() + "}";
+		return "[RequestCycle" + "@" + Integer.toHexString(hashCode()) + " thread="
+				+ Thread.currentThread().getName() + "]";
+	}
+
+	/**
+	 * Returns a URL that references a given interface on a component. When the
+	 * URL is requested from the server at a later time, the interface will be
+	 * called. A URL returned by this method will not be stable across sessions
+	 * and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param listener
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public final CharSequence urlFor(final Component component,
+			final RequestListenerInterface listener)
+	{
+		// Get Page holding component and mark it as stateful.
+		final Page page = component.getPage();
+		page.setStateless(false);
+
+		// Get the listener interface name
+		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, listener);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
+	}
+
+	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * @return a URL that references the given request target
+	 */
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	{
+		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, requestTarget);
+	}
+
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource reference.
+	 * 
+	 * @param resourceReference
+	 *            The resource reference where a url must be generated for.
+	 * @return The url for the shared resource
+	 */
+	public final CharSequence urlFor(final ResourceReference resourceReference)
+	{
+		return urlFor(resourceReference, null);
+	}
+
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource reference.
+	 * 
+	 * @param resourceReference
+	 *            The resource reference where a url must be generated for.
+	 * @param parameters
+	 *            The parameters to pass to the resource.
+	 * @return The url for the shared resource
+	 */
+	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap parameters)
+	{
+		RequestParameters requestParameters = new RequestParameters();
+		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
+		requestParameters.setParameters(parameters);
+		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
+				new SharedResourceRequestTarget(requestParameters));
+		return url;
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageMap
+	 *            Pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
+	{
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
+				? PageMap.DEFAULT_NAME
+				: pageMap.getName(), pageClass, parameters);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**
@@ -761,8 +769,6 @@ public abstract class RequestCycle
 	{
 	}
 
-	// internal ints for processing status; keep here to be out of sight a bit
-
 	/**
 	 * Checks whether no processing has been done yet and throws an exception
 	 * when a client tries to reuse this instance.
@@ -780,9 +786,9 @@ public abstract class RequestCycle
 	/**
 	 * Clean up the request cycle.
 	 */
-	private void cleanUp()
+	private void detach()
 	{
-		// clean up target stack; calling cleanUp has effects like
+		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
 		// furthermore, the targets will be cg-ed with this cycle too
 		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
@@ -792,7 +798,7 @@ public abstract class RequestCycle
 			{
 				try
 				{
-					target.cleanUp(this);
+					target.detach(this);
 				}
 				catch (RuntimeException e)
 				{
@@ -800,6 +806,10 @@ public abstract class RequestCycle
 				}
 			}
 		}
+
+		// remove any rendered feedback messages from the session
+		session.cleanupFeedbackMessages();
+
 
 		if (updateSession)
 		{
@@ -843,35 +853,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the request parameters object using the instance of
-	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
-	 * 
-	 * @param processor
-	 *            the request cycle processor
-	 * @return the request parameters object
-	 */
-	private final RequestParameters getRequestParameters(IRequestCycleProcessor processor)
-	{
-		// get the request encoder to decode the request parameters
-		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
-		if (encoder == null)
-		{
-			throw new WicketRuntimeException("request encoder must be not-null (provided by "
-					+ processor + ")");
-		}
-
-		// decode the request parameters into a strongly typed parameters
-		// object that is to be used by the target resolving
-		final RequestParameters requestParameters = encoder.decode(getRequest());
-		if (requestParameters == null)
-		{
-			throw new WicketRuntimeException("request parameters must be not-null (provided by "
-					+ encoder + ")");
-		}
-		return requestParameters;
-	}
-
-	/**
 	 * Prepare the request cycle.
 	 */
 	private void prepare()
@@ -886,11 +867,8 @@ public abstract class RequestCycle
 	/**
 	 * Call the event processing and and respond methods on the request
 	 * processor and apply synchronization if needed.
-	 * 
-	 * @param processor
-	 *            the request processor
 	 */
-	private final void processEventsAndRespond(IRequestCycleProcessor processor)
+	private final void processEventsAndRespond()
 	{
 		// Use any synchronization lock provided by the target
 		Object lock = getRequestTarget().getLock(this);
@@ -908,12 +886,33 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Call the event processing and and respond methods on the request
+	 * processor and apply synchronization if needed.
+	 */
+	private final void respond()
+	{
+		// Use any synchronization lock provided by the target
+		Object lock = getRequestTarget().getLock(this);
+		if (lock != null)
+		{
+			synchronized (lock)
+			{
+				processor.respond(this);
+			}
+		}
+		else
+		{
+			processor.respond(this);
+		}
+	}
+
+	/**
 	 * Safe version of {@link #getProcessor()} that throws an exception when the
 	 * processor is null.
 	 * 
 	 * @return the request processor
 	 */
-	private IRequestCycleProcessor safeGetRequestProcessor()
+	private final IRequestCycleProcessor safeGetRequestProcessor()
 	{
 		IRequestCycleProcessor processor = getProcessor();
 		if (processor == null)
@@ -925,11 +924,8 @@ public abstract class RequestCycle
 
 	/**
 	 * handle the current step in the request processing.
-	 * 
-	 * @param processor
-	 *            the cycle processor that can be used
 	 */
-	private final void step(IRequestCycleProcessor processor)
+	private final void step()
 	{
 		try
 		{
@@ -940,16 +936,11 @@ public abstract class RequestCycle
 					prepare();
 					break;
 				}
-				case DECODE_PARAMETERS : {
-					// get the request parameters object using the request
-					// encoder of the processor
-					requestParameters = getRequestParameters(processor);
-					break;
-				}
 				case RESOLVE_TARGET : {
 					// resolve the target of the request using the request
 					// parameters
-					final IRequestTarget target = processor.resolve(this, requestParameters);
+					final IRequestTarget target = processor.resolve(this, request
+							.getRequestParameters());
 
 					// has to result in a request target
 					if (target == null)
@@ -960,56 +951,28 @@ public abstract class RequestCycle
 					requestTargets.push(target);
 					break;
 				}
-				case CHECK_ACCESS : {
-					// manually set step to check access
-					IRequestTarget target = getRequestTarget();
-
-					boolean access = true;
-					if (target instanceof IAccessCheck)
-					{
-						access = ((IAccessCheck)target).checkAccess(this);
-					}
-
-					// check access or earlier (like in a component constructor)
-					// might have called setRequestTarget. If that is the case,
-					// put that one on top; otherwise put our resolved target
-					// on top
-					IRequestTarget otherTarget = getRequestTarget();
-					if (otherTarget != target)
-					{
-						// The new target has to be checked again set the
-						// current step back one.
-						currentStep = CHECK_ACCESS - 1;
-						// swap targets
-						requestTargets.pop();
-						requestTargets.push(target);
-						requestTargets.push(otherTarget);
-					}
-					else if (!access)
-					{
-						setResponsePage(getApplication().getApplicationSettings()
-								.getAccessDeniedPage());
-					}
-					break;
-				}
 				case PROCESS_EVENTS : {
 					// determine what kind of synchronization is to be used, and
 					// handle any events with that and generate a response in
 					// that same block
 					// NOTE: because of synchronization, we need to take the
 					// steps PROCESS_EVENS and RESPOND together
-					processEventsAndRespond(processor);
+					processEventsAndRespond();
 					break;
 				}
 				case RESPOND : {
 					// generate a response
-					// NOTE: we reach this block when during event processing
-					// and response generation the request target was changed,
-					// causing the request processing to go BACK to RESPOND.
-					// Note that we could still be in a session-synchronized
-					// block here, so be very careful not to do other
-					// synchronization (possibly introducing a deadlock)
-					processor.respond(this);
+					// NOTE: We have to do sync here because the
+					// processEventsAndRespond step will be unrolled by a
+					// RestartXX Exception. And if this is not the case
+					// then still it is not a problem to have 2 locks on
+					// the same session this will not cause a deadlock.
+					// So only if the request targets are different and the
+					// getLock() doesn't return 2 times the same object a
+					// deadlock could maybe occur. But we use the session
+					// as the lock at all times maybe use a variable inside
+					// RequestCycle to know that a lock is still in place?
+					respond();
 					break;
 				}
 				default : {
@@ -1017,16 +980,12 @@ public abstract class RequestCycle
 				}
 			}
 		}
+		catch (AbortException e)
+		{
+			throw e;
+		}
 		catch (RuntimeException e)
 		{
-			// this exception is handled higher in the stack. we let it bubble
-			// up to unroll the stack as far as possible
-			if (e instanceof AbortAndRespondException)
-			{
-				throw e;
-			}
-
-
 			// set step manually to handle exception
 			currentStep = HANDLE_EXCEPTION;
 
@@ -1053,31 +1012,44 @@ public abstract class RequestCycle
 			// get the processor
 			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
-			// FIXME Robustness: Catch infinite loops
-			while (currentStep < DONE)
+			// Arbitrary maximum number of steps
+			final int maxSteps = Short.MAX_VALUE;
+
+			// Loop through steps
+			for (int totalSteps = 0; currentStep < DONE; totalSteps++)
 			{
+				// There is no way to catch infinite loops since the response
+				// step can always throw an AbstractRestartResponseException and
+				// start the process over at the RESPOND step. So we do a sanity
+				// check here and limit the total number of steps to an
+				// arbitrary maximum that we consider unreasonable for working
+				// code.
+				if (totalSteps >= maxSteps)
+				{
+					throw new IllegalStateException("Request processing executed " + maxSteps
+							+ " steps, which means it is probably in an infinite loop.");
+				}
 				try
 				{
-					step(processor);
+					step();
 					currentStep++;
 				}
-				catch (AbortAndRespondException e)
+				catch (AbstractRestartResponseException e)
 				{
 					// if a redirect exception has been issued we abort what we
 					// were doing and begin responding to the top target on the
 					// stack
 					currentStep = RESPOND;
 				}
-
 			}
 		}
 		finally
 		{
 			// set step manually to clean up
-			currentStep = CLEANUP_REQUEST;
+			currentStep = DETACH_REQUEST;
 
 			// clean up the request
-			cleanUp();
+			detach();
 
 			// set step manually to done
 			currentStep = DONE;

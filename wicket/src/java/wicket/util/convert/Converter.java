@@ -67,7 +67,7 @@ import wicket.util.lang.Objects;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class Converter implements IConverter
+public class Converter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,10 @@ public final class Converter implements IConverter
 		 */
 		public Object convert(Object value, Class c)
 		{
-			if(value == null || "".equals(value)) return null;
+			if(value == null || "".equals(value))
+			{
+				return null;
+			}
 			
 			return Objects.convertValue(value, c);
 		}
@@ -147,7 +150,7 @@ public final class Converter implements IConverter
 	/**
 	 * Removes all registered converters.
 	 */
-	public void clear()
+	public final void clear()
 	{
 		classToConverter.clear();
 	}
@@ -164,7 +167,7 @@ public final class Converter implements IConverter
 	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 	 *      java.lang.Class)
 	 */
-	public Object convert(Object value, Class c)
+	public final Object convert(Object value, Class c)
 	{
 		// Null is always converted to null
 		if (value == null)
@@ -210,7 +213,7 @@ public final class Converter implements IConverter
 	 * @return The type converter that is registered for class c or null if no
 	 *         type converter was registered for class c
 	 */
-	public ITypeConverter get(Class c)
+	public final ITypeConverter get(Class c)
 	{
 		return (ITypeConverter)classToConverter.get(c);
 	}
@@ -230,7 +233,7 @@ public final class Converter implements IConverter
 	/**
 	 * @see wicket.util.convert.ILocalizable#getLocale()
 	 */
-	public Locale getLocale()
+	public final Locale getLocale()
 	{
 		return locale;
 	}
@@ -244,7 +247,7 @@ public final class Converter implements IConverter
 	 * @return The converter that was registered for class c before removal or
 	 *         null if none was registered
 	 */
-	public ITypeConverter remove(Class c)
+	public final ITypeConverter remove(Class c)
 	{
 		return (ITypeConverter)classToConverter.remove(c);
 	}
@@ -259,7 +262,7 @@ public final class Converter implements IConverter
 	 * @return The previous registered converter for class c or null if none was
 	 *         registered yet for class c
 	 */
-	public ITypeConverter set(final Class c, final ITypeConverter converter)
+	public final ITypeConverter set(final Class c, final ITypeConverter converter)
 	{
 		if (converter == null)
 		{

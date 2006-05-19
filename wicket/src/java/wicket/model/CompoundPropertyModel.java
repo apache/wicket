@@ -65,7 +65,7 @@ public class CompoundPropertyModel extends AbstractPropertyModel implements ICom
 	{
 		if (component instanceof FormComponent)
 		{
-			return ((FormComponent)component).getValidationType();
+			return ((FormComponent)component).getType();
 		}
 		return null;
 	}

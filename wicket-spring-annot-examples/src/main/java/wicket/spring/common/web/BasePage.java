@@ -18,7 +18,7 @@
  */
 package wicket.spring.common.web;
 
-import wicket.injection.web.InjectableWebPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.link.BookmarkablePageLink;
 
 /**
@@ -30,7 +30,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BasePage extends InjectableWebPage {
+public class BasePage extends WebPage {
 	public BasePage() {
 		add(new BookmarkablePageLink("home-link", HomePage.class));
 	}

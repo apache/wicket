@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
-import wicket.util.time.Duration;
 import wicket.util.time.Time;
 import wicket.util.value.ValueMap;
 
@@ -58,20 +57,23 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
+ * @author Igor Vaynberg
  */
 public abstract class Resource implements IResourceListener
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Logger */
 	private static Log log = LogFactory.getLog(Resource.class);
 
 	/** True if this resource can be cached */
 	private boolean cacheable;
 
-	/** The maximum duration a resource may be idle before it is removed */
-	private Duration idleTimeout = Duration.NONE;
-
-	/** Any parameters associated with the request for this resource */
-	private ValueMap parameters;
+	/**
+	 * ThreadLocal to keep any parameters associated with the request for this
+	 * resource
+	 */
+	private static final ThreadLocal parameters = new ThreadLocal();
 
 	/**
 	 * Constructor
@@ -81,17 +83,7 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
-
-	/**
-	 * Returns the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @return The idle duration timeout
-	 */
-	public Duration getIdleTimeout()
-	{
-		return idleTimeout;
-	}
-
+	
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
@@ -112,36 +104,42 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final void onResourceRequested()
 	{
-		// Get request cycle
-		final RequestCycle cycle = RequestCycle.get();
-
-		// Reset parameters
-		parameters = null;
-
-		// Fetch resource from subclass if necessary
-		IResourceStream resourceStream = init();
-
-		// Get servlet response to use when responding with resource
-		final Response response = cycle.getResponse();
-
-		// Configure response with content type of resource
-		response.setContentType(resourceStream.getContentType());
-		response.setContentLength((int)resourceStream.length());
-
-		if (isCacheable())
+		try
 		{
-			// Don't set this above setContentLength call above.
-			// The call above could create and set the last modified time.
-			response.setLastModifiedTime(resourceStream.lastModifiedTime());
-		}
-		else
-		{
-			response.setLastModifiedTime(Time.valueOf(-1));
-		}
-		configureResponse(response);
+			// Get request cycle
+			final RequestCycle cycle = RequestCycle.get();
 
-		// Respond with resource
-		respond(resourceStream, response);
+			// Fetch resource from subclass if necessary
+			IResourceStream resourceStream = init();
+
+			// Get servlet response to use when responding with resource
+			final Response response = cycle.getResponse();
+
+			// Configure response with content type of resource
+			response.setContentType(resourceStream.getContentType());
+			response.setContentLength((int)resourceStream.length());
+
+			if (isCacheable())
+			{
+				// Don't set this above setContentLength call above.
+				// The call above could create and set the last modified time.
+				response.setLastModifiedTime(resourceStream.lastModifiedTime());
+			}
+			else
+			{
+				response.setLastModifiedTime(Time.valueOf(-1));
+			}
+			configureResponse(response);
+
+			// Respond with resource
+			respond(resourceStream, response);
+		}
+		finally
+		{
+			// Really really really make sure parameters are cleared to appease
+			// Johan
+			parameters.set(null);
+		}
 	}
 
 	/**
@@ -159,27 +157,21 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Sets the maximum time the resource may be idle before it is removed.
-	 * 
-	 * @param value
-	 *            The idle duration timeout
-	 * @return this
-	 */
-	public Resource setIdleTimeout(Duration value)
-	{
-		idleTimeout = value;
-		return this;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
-	public void setParameters(final Map parameters)
+	public final void setParameters(final Map parameters)
 	{
-		this.parameters = new ValueMap(parameters);
+		if (parameters == null)
+		{
+			Resource.parameters.set(null);
+		}
+		else
+		{
+			Resource.parameters.set(new ValueMap(parameters));
+		}
 	}
 
 	/**
@@ -199,11 +191,11 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected ValueMap getParameters()
 	{
-		if (parameters == null)
+		if (parameters.get() == null)
 		{
 			setParameters(RequestCycle.get().getRequest().getParameterMap());
 		}
-		return parameters;
+		return (ValueMap)parameters.get();
 	}
 
 	/**
@@ -269,16 +261,16 @@ public abstract class Resource implements IResourceListener
 				else
 				{
 					ignoreException = throwable.getClass().getName()
-							.indexOf("ClientAbortException") != 0;
-				}
-				if (ignoreException)
-				{
-					if (log.isDebugEnabled())
+							.indexOf("ClientAbortException") >= 0;
+					if (ignoreException)
 					{
-						log.debug("Socket exception ignored for sending Resource "
-								+ "response to client (ClientAbort)", e);
+						if (log.isDebugEnabled())
+						{
+							log.debug("Socket exception ignored for sending Resource "
+									+ "response to client (ClientAbort)", e);
+						}
+						break;
 					}
-					break;
 				}
 				throwable = throwable.getCause();
 			}
@@ -288,10 +280,5 @@ public abstract class Resource implements IResourceListener
 						+ resourceStream, e);
 			}
 		}
-	}
-
-	static
-	{
-		RequestCycle.registerRequestListenerInterface(IResourceListener.class);
 	}
 }

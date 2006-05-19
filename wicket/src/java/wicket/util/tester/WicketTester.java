@@ -375,7 +375,8 @@ public class WicketTester extends MockWebApplication
 		if (component == null)
 		{
 			Assert.fail("path: '" + path + "' does no exist for page: "
-					+ Classes.name(getLastRenderedPage().getClass()));
+					+ Classes.simpleName(getLastRenderedPage().getClass()));
+			return component;
 		}
 		if (component.isVisibleInHierarchy())
 		{
@@ -441,8 +442,8 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("componet '" + Classes.name(component.getClass()) + "' is not type:"
-				+ Classes.name(expectedComponentClass), expectedComponentClass
+		Assert.assertTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:"
+				+ Classes.simpleName(expectedComponentClass), expectedComponentClass
 				.isAssignableFrom(component.getClass()));
 	}
 
@@ -454,8 +455,15 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertVisible(String path)
 	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			Assert.fail("path: '" + path + "' does no exist for page: "
+					+ Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+		
 		Assert.assertTrue("component '" + path + "' is not visible",
-				getComponentFromLastRenderedPage(path).isVisible());
+				component.isVisible());
 	}
 
 	/**
@@ -570,10 +578,11 @@ public class WicketTester extends MockWebApplication
 			Assert.fail("before using this method, at least one page has to be rendered");
 		}
 
-		Component c = (Component)getComponentFromLastRenderedPage(componentPath);
+		Component c = getComponentFromLastRenderedPage(componentPath);
 		if (c == null)
 		{
 			Assert.fail("component " + componentPath + " was not found");
+			return;
 		}
 
 		if (c instanceof FormComponent)
@@ -597,8 +606,8 @@ public class WicketTester extends MockWebApplication
 	{
 		if (!getLastRenderedPage().getClass().isAssignableFrom(expectedReneredPageClass))
 		{
-			Assert.assertEquals(Classes.name(expectedReneredPageClass), Classes
-					.name(getLastRenderedPage().getClass()));
+			Assert.assertEquals(Classes.simpleName(expectedReneredPageClass), Classes
+					.simpleName(getLastRenderedPage().getClass()));
 		}
 	}
 
@@ -678,7 +687,7 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert previous rendered page expired
 	 * 
-	 * TODO General: This test is no longer valid because it depends on an
+	 * TODO Post 1.2: General: This test is no longer valid because it depends on an
 	 * implementation detail that just changed!
 	 * 
 	 * public void assertExpirePreviousPage() { PageMap pageMap =

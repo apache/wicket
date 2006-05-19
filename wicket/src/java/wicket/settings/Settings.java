@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.19 $ $Date$
+ * $Id: Settings.java 4858 2006-03-12 00:26:31 -0800 (Sun, 12 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-12 00:26:31 -0800 (Sun, 12 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,28 +26,29 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.IPageFactory;
 import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.application.DefaultClassResolver;
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
+import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
-import wicket.markup.html.form.validation.DefaultValidatorResourceKeyFactory;
-import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.protocol.http.HttpSessionStoreFactory;
+import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
-import wicket.resource.loader.ApplicationStringResourceLoader;
+import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
-import wicket.session.ISessionStoreFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.convert.ConverterFactory;
@@ -56,15 +58,15 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.lang.EnumeratedType;
-import wicket.util.resource.locator.DefaultResourceStreamLocator;
+import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Contains settings exposed via IXXXSettings interfaces.
+ * Contains settings exposed via IXXXSettings interfaces. It is not a good idea
+ * to use this class directly, instead use the provided IXXXSettings interfaces.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -72,6 +74,7 @@ import wicket.util.watch.ModificationWatcher;
  * @author Juergen Donnerstag
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @author Martijn Dashorst
  */
 public final class Settings
 		implements
@@ -83,16 +86,21 @@ public final class Settings
 			IRequestCycleSettings,
 			IResourceSettings,
 			ISecuritySettings,
-			ISessionSettings
+			ISessionSettings,
+			IAjaxSettings,
+			IFrameworkSettings
 {
+	/** ajax debug mode status */
+	private boolean ajaxDebugModeEnabled = false;
+
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
 	 */
-	boolean stripWicketTags = false;
+	private boolean stripWicketTags = false;
 
 	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	boolean stripXmlDeclarationFromOutput;
+	private boolean stripXmlDeclarationFromOutput;
 
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
@@ -100,7 +108,7 @@ public final class Settings
 	/** The application */
 	private Application application;
 
-	/** the authorization strategy. */
+	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** Application default for automatically resolving hrefs */
@@ -155,7 +163,7 @@ public final class Settings
 	private IMarkupParserFactory markupParserFactory;
 
 	/** To help prevent denial of service attacks */
-	private int maxPageMaps = 20;
+	private int maxPageMaps = 5;
 
 	/** The maximum number of versions of a page to track */
 	private int maxPageVersions = Integer.MAX_VALUE;
@@ -177,7 +185,7 @@ public final class Settings
 			5);
 
 	/** The factory to be used for the property files */
-	private PropertiesFactory propertiesFactory;
+	private wicket.resource.IPropertiesFactory propertiesFactory;
 
 	/**
 	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property
@@ -185,7 +193,7 @@ public final class Settings
 	 * 'action' and a 'render' part is handled, and is mainly used to have a
 	 * means to circumvent the 'refresh' problem.
 	 */
-	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
+	private IRequestCycleSettings.RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = new Path();
@@ -194,19 +202,12 @@ public final class Settings
 	private Duration resourcePollFrequency = null;
 
 	/** resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
+	private IResourceStreamLocator resourceStreamLocator;
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
 
-	/**
-	 * List of {@link IResponseFilter}s.
-	 */
-	// TODO General: Revisit... I don't think everyone agrees with
-	// this (e.g. why not use servlet filters to acchieve the same)
-	// and if we want to support this, it could more elegantly
-	// be made part of e.g. request targets or a request processing
-	// strategy
+	/** List of {@link IResponseFilter}s. */
 	private List responseFilters;
 
 	/**
@@ -216,12 +217,6 @@ public final class Settings
 	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
-
-	/** The session store factory. */
-	private ISessionStoreFactory sessionStoreFactory = new HttpSessionStoreFactory();
-
-	/** Page class to use for user sign-ins */
-	private Class signInPage;
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
@@ -238,26 +233,31 @@ public final class Settings
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
 
-	/** Factory for producing validator error message resource keys */
-	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
-
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
-	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
-	 */
-	public static class RenderStrategy extends EnumeratedType
+	/** The context path that should be used for url prefixing */
+	private String contextPath;
+
+	/** Whether Wicket should try to support multiple windows transparently, true by default. */
+	private boolean automaticMultiWindowSupport = true;
+
+	/** Authorizer for component instantiations */
+	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
 	{
-		private static final long serialVersionUID = 1L;
-
-		RenderStrategy(final String name)
+		/**
+		 * Called when an unauthorized component instantiation is about to take
+		 * place (but before it happens).
+		 * 
+		 * @param component
+		 *            The partially constructed component (only the id is
+		 *            guaranteed to be valid).
+		 */
+		public void onUnauthorizedInstantiation(final Component component)
 		{
-			super(name);
+			throw new UnauthorizedInstantiationException(component.getClass());
 		}
-	}
-
+	};
 
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -271,7 +271,7 @@ public final class Settings
 		this.application = application;
 		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application.getClass()));
 	}
 
 	/**
@@ -401,6 +401,22 @@ public final class Settings
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#getContextPath()
+	 */
+	public String getContextPath()
+	{
+		// Set the default context path if the context path is not already
+		// set (previous time or by the developer itself)
+		// This all to do missing api in the servlet spec.. You can't get a
+		// context path from the servlet context, which is just stupid.
+		if (contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
+		{
+			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
+		}
+		return contextPath;
 	}
 
 	/**
@@ -534,7 +550,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getPropertiesFactory()
 	 */
-	public PropertiesFactory getPropertiesFactory()
+	public wicket.resource.IPropertiesFactory getPropertiesFactory()
 	{
 		if (propertiesFactory == null)
 		{
@@ -546,7 +562,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getRenderStrategy()
 	 */
-	public RenderStrategy getRenderStrategy()
+	public IRequestCycleSettings.RenderStrategy getRenderStrategy()
 	{
 		return renderStrategy;
 	}
@@ -584,7 +600,7 @@ public final class Settings
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getResourceFinder());
+			resourceStreamLocator = new CompoundResourceStreamLocator(getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}
@@ -629,22 +645,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISessionSettings#getSessionStoreFactory()
-	 */
-	public ISessionStoreFactory getSessionStoreFactory()
-	{
-		return sessionStoreFactory;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#getSignInPage()
-	 */
-	public Class getSignInPage()
-	{
-		return signInPage;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -685,6 +685,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
+	 */
+	public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener()
+	{
+		return unauthorizedComponentInstantiationListener;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
 	 */
 	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
@@ -698,14 +706,6 @@ public final class Settings
 	public boolean getUseDefaultOnMissingResource()
 	{
 		return useDefaultOnMissingResource;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#getValidatorResourceKeyFactory()
-	 */
-	public IValidatorResourceKeyFactory getValidatorResourceKeyFactory()
-	{
-		return validatorResourceKeyFactory;
 	}
 
 	/**
@@ -730,7 +730,6 @@ public final class Settings
 
 		this.accessDeniedPage = accessDeniedPage;
 	}
-
 
 	/**
 	 * @see wicket.settings.ISecuritySettings#setAuthorizationStrategy(wicket.authorization.IAuthorizationStrategy)
@@ -782,6 +781,25 @@ public final class Settings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
+	}
+
+	/**
+	 * @see wicket.settings.IApplicationSettings#setContextPath(java.lang.String)
+	 */
+	public void setContextPath(String contextPath)
+	{
+		if (contextPath != null)
+		{
+			if (!contextPath.startsWith("/") && !contextPath.startsWith("http:")
+					&& !contextPath.startsWith("https:"))
+			{
+				this.contextPath = "/" + contextPath;
+			}
+			else
+			{
+				this.contextPath = contextPath;
+			}
+		}
 	}
 
 	/**
@@ -929,7 +947,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#setPropertiesFactory(wicket.resource.PropertiesFactory)
 	 */
-	public void setPropertiesFactory(PropertiesFactory factory)
+	public void setPropertiesFactory(wicket.resource.IPropertiesFactory factory)
 	{
 		this.propertiesFactory = factory;
 	}
@@ -937,7 +955,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#setRenderStrategy(wicket.settings.Settings.RenderStrategy)
 	 */
-	public void setRenderStrategy(RenderStrategy renderStrategy)
+	public void setRenderStrategy(IRequestCycleSettings.RenderStrategy renderStrategy)
 	{
 		this.renderStrategy = renderStrategy;
 	}
@@ -962,9 +980,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.ResourceStreamLocator)
+	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamLocator)
 	 */
-	public void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator)
+	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
 	{
 		this.resourceStreamLocator = resourceStreamLocator;
 	}
@@ -975,22 +993,6 @@ public final class Settings
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
-	}
-
-	/**
-	 * @see wicket.settings.ISessionSettings#setSessionStoreFactory(wicket.session.ISessionStoreFactory)
-	 */
-	public void setSessionStoreFactory(ISessionStoreFactory sessionStoreFactory)
-	{
-		this.sessionStoreFactory = sessionStoreFactory;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#setSignInPage(java.lang.Class)
-	 */
-	public void setSignInPage(Class signInPage)
-	{
-		this.signInPage = signInPage;
 	}
 
 	/**
@@ -1026,6 +1028,15 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#setUnauthorizedComponentInstantiationListener(wicket.authorization.IUnauthorizedComponentInstantiationListener)
+	 */
+	public void setUnauthorizedComponentInstantiationListener(
+			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
+	{
+		this.unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListener;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
 	 */
 	public void setUnexpectedExceptionDisplay(
@@ -1040,18 +1051,6 @@ public final class Settings
 	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
-	}
-
-	/**
-	 * @see wicket.settings.IResourceSettings#setValidatorResourceKeyFactory(wicket.markup.html.form.validation.IValidatorResourceKeyFactory)
-	 */
-	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
-		}
-		this.validatorResourceKeyFactory = factory;
 	}
 
 	/**
@@ -1081,5 +1080,51 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * @see wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
+	 */
+	public void setAjaxDebugModeEnabled(boolean enable)
+	{
+		ajaxDebugModeEnabled = enable;
+	}
+
+	/**
+	 * @see wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
+	 */
+	public boolean isAjaxDebugModeEnabled()
+	{
+		return ajaxDebugModeEnabled;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#getAutomaticMultiWindowSupport()
+	 */
+	public boolean getAutomaticMultiWindowSupport()
+	{
+		return automaticMultiWindowSupport;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#setAutomaticMultiWindowSupport(boolean)
+	 */
+	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
+	{
+		this.automaticMultiWindowSupport = automaticMultiWindowSupport;
+	}
+
+	/**
+	 * @see wicket.settings.IFrameworkSettings#getVersion()
+	 */
+	public String getVersion()
+	{
+		String implVersion = null;
+		Package pkg = this.getClass().getPackage();
+		if (pkg != null)
+		{
+			implVersion = pkg.getImplementationVersion();
+		}
+		return Strings.isEmpty(implVersion)?"n/a":implVersion;
 	}
 }

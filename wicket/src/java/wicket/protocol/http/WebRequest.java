@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebRequest.java 4194 2006-02-08 10:39:03 -0800 (Wed, 08 Feb 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-02-08 10:39:03 -0800 (Wed, 08
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,19 +29,14 @@ import wicket.util.lang.Bytes;
 
 /**
  * Subclass of Request for HTTP protocol requests which holds an underlying
- * HttpServletRequest object. A NULL request object implementing all methods as
- * NOPs is available via WebRequest#NULL. A variety of convenience methods are
- * available that operate on the HttpServletRequest object. These methods do
- * things such as providing access to parameters, cookies, URLs and path
- * information.
+ * HttpServletRequest object. A variety of convenience methods are available
+ * that operate on the HttpServletRequest object. These methods do things such
+ * as providing access to parameters, cookies, URLs and path information.
  * 
  * @author Jonathan Locke
  */
 public abstract class WebRequest extends Request
 {
-	/** Null WebRequest object that does nothing */
-	public static final WebRequest NULL = new NullWebRequest();
-
 	/**
 	 * Gets the application context path.
 	 * 
@@ -57,23 +53,20 @@ public abstract class WebRequest extends Request
 	{
 		return getHttpServletRequest().getCookies();
 	}
-	
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	public abstract String getServletPath();
 
 	/**
-	 * Create a runtime context type specific (e.g. Servlet or Portlet)
-	 * MultipartWebRequest wrapper for handling multipart content uploads.
+	 * Gets the wrapped http servlet request object.
+	 * <p>
+	 * WARNING: it is usually a bad idea to depend on the http servlet request
+	 * directly. Please use the classes and methods that are exposed by Wicket
+	 * (such as {@link wicket.Session} instead. Send an email to the mailing
+	 * list in case it is not clear how to do things or you think you miss
+	 * functionality which causes you to depend on this directly.
+	 * </p>
 	 * 
-	 * @param maxSize
-	 *            the maximum size this request may be
-	 * @return new WebRequest wrapper implementing MultipartWebRequest
+	 * @return the wrapped http serlvet request object.
 	 */
-	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
+	public abstract HttpServletRequest getHttpServletRequest();
 
 	/**
 	 * Returns the preferred <code>Locale</code> that the client will accept
@@ -111,6 +104,13 @@ public abstract class WebRequest extends Request
 	public abstract String[] getParameters(final String key);
 
 	/**
+	 * Gets the servlet path.
+	 * 
+	 * @return Servlet path
+	 */
+	public abstract String getServletPath();
+
+	/**
 	 * Retrieves the URL of this request for local use.
 	 * 
 	 * @return The request URL for local use, which is the context path + the
@@ -130,16 +130,12 @@ public abstract class WebRequest extends Request
 	}
 
 	/**
-	 * Gets the wrapped http servlet request object.
-	 * <p>
-	 * WARNING: it is a bad idea to depend on the http servlet request directly.
-	 * Please use the classes and methods that are exposed by Wicket (such as
-	 * {@link wicket.Session} instead. Send an email to the mailing list in case
-	 * it is not clear how to do things or you think you miss funcionality which
-	 * causes you to depend on this directly.
-	 * </p>
+	 * Create a runtime context type specific (e.g. Servlet or Portlet)
+	 * MultipartWebRequest wrapper for handling multipart content uploads.
 	 * 
-	 * @return the wrapped http serlvet request object.
+	 * @param maxSize
+	 *            the maximum size this request may be
+	 * @return new WebRequest wrapper implementing MultipartWebRequest
 	 */
-	public abstract HttpServletRequest getHttpServletRequest();
+	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
 }

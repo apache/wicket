@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.28 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,9 +30,15 @@ import wicket.version.undo.Change;
  * idea to use Buttons.
  * </p>
  * <p>
+ * The model property is used to set the &quot;value&quot; attribute. It will
+ * thus be the label of the button that shows up for end users. If you want the
+ * attribute to keep it's markup attribute value, don't provide a model, or let
+ * it return an empty string.
+ * </p>
+ * <p>
  * When you add a Wicket Button to a form, and that button is clicked, by
  * default the button's onSubmit method is called first, and after that the
- * form's onSubmit button is called. If you want to change this (e.g. you don't
+ * form's onSubmit method is called. If you want to change this (e.g. you don't
  * want to call the form's onSubmit method, or you want it called before the
  * button's onSubmit method), you can override Form.delegateSubmit.
  * </p>
@@ -58,6 +64,10 @@ public class Button extends FormComponent
 	private boolean defaultFormProcessing = true;
 
 	/**
+	 * Constructor without a model. Buttons without models leave the markup
+	 * attribute &quot;value&quot;. Provide a model if you want to set the
+	 * button's label dynamically.
+	 * 
 	 * @see wicket.Component#Component(String)
 	 */
 	public Button(String id)
@@ -66,20 +76,35 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * Constructor taking an model for rendering the 'label' of the button
-	 * (the value attribute of the input/button tag). Use a 
+	 * Constructor taking an model for rendering the 'label' of the button (the
+	 * value attribute of the input/button tag). Use a
 	 * {@link wicket.model.StringResourceModel} for a localized value.
 	 * 
 	 * @param id
-	 *            component id
-	 * @param object
-	 *            model for the 'value' of the button
+	 *            Component id
+	 * @param model
+	 *            The model property is used to set the &quot;value&quot;
+	 *            attribute. It will thus be the label of the button that shows
+	 *            up for end users. If you want the attribute to keep it's
+	 *            markup attribute value, don't provide a model, or let it
+	 *            return an empty string.
 	 */
-	public Button(final String id, final IModel object)
+	public Button(final String id, final IModel model)
 	{
-		super(id, object);
+		super(id, model);
 	}
 
+	/**
+	 * Override of the default initModel behaviour. This component <strong>will
+	 * not</strong> use any compound model a parent, but only a model that is
+	 * explicitly set.
+	 * 
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return null;
+	}
 
 	/**
 	 * Gets the defaultFormProcessing property. When false (default is true),
@@ -132,6 +157,10 @@ public class Button extends FormComponent
 	}
 
 	/**
+	 * This method does nothing, as any model of a button is only used to
+	 * display the button's label (by setting it's markup attribute
+	 * &quot;value&quot;).
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public void updateModel()
@@ -139,7 +168,12 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * @return Any onClick JavaScript that should be used
+	 * Gets any script that should rendered as the &quot;onclick&quot; attribute
+	 * of the button. Returns null by default, override this method to provide
+	 * any script.
+	 * 
+	 * @return Any onClick JavaScript that should be used, returns null by
+	 *         default
 	 */
 	protected String getOnClickScript()
 	{
@@ -181,7 +215,7 @@ public class Button extends FormComponent
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button
-	 * form
+	 * form. It is called whenever the user clicks this particular button.
 	 */
 	protected void onSubmit()
 	{

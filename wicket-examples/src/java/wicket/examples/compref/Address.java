@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.compref;
 
@@ -39,6 +37,7 @@ public class Address implements Serializable
 
 	/**
 	 * Gets the address.
+	 * 
 	 * @return address
 	 */
 	public String getAddress()
@@ -48,7 +47,9 @@ public class Address implements Serializable
 
 	/**
 	 * Sets the address.
-	 * @param address address
+	 * 
+	 * @param address
+	 *            address
 	 */
 	public void setAddress(String address)
 	{
@@ -57,6 +58,7 @@ public class Address implements Serializable
 
 	/**
 	 * Gets the city.
+	 * 
 	 * @return city
 	 */
 	public String getCity()
@@ -66,7 +68,9 @@ public class Address implements Serializable
 
 	/**
 	 * Sets the city.
-	 * @param city city
+	 * 
+	 * @param city
+	 *            city
 	 */
 	public void setCity(String city)
 	{
@@ -75,6 +79,7 @@ public class Address implements Serializable
 
 	/**
 	 * Gets the country.
+	 * 
 	 * @return country
 	 */
 	public String getCountry()
@@ -84,7 +89,9 @@ public class Address implements Serializable
 
 	/**
 	 * Sets the country.
-	 * @param country country
+	 * 
+	 * @param country
+	 *            country
 	 */
 	public void setCountry(String country)
 	{
@@ -93,6 +100,7 @@ public class Address implements Serializable
 
 	/**
 	 * Gets the postcode.
+	 * 
 	 * @return postcode
 	 */
 	public String getPostcode()
@@ -102,7 +110,9 @@ public class Address implements Serializable
 
 	/**
 	 * Sets the postcode.
-	 * @param postcode postcode
+	 * 
+	 * @param postcode
+	 *            postcode
 	 */
 	public void setPostcode(String postcode)
 	{
@@ -114,7 +124,7 @@ public class Address implements Serializable
 	 */
 	public String toString()
 	{
-		return "Address{address=" + address + ",postcode=" + postcode +
-			",city=" + city + ",country=" + country + "}";
+		return "[Address address=" + address + ", postcode=" + postcode + ", city=" + city
+				+ ", country=" + country + "]";
 	}
 }

@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 
 /**
  * Component used to connect instances of Radio components into a group.
@@ -46,9 +46,6 @@ import wicket.model.IModel;
  */
 public class RadioGroup extends FormComponent implements IOnChangeListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -75,24 +72,18 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	}
 	
 	/**
-	 * @see FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	public void updateModel()
+	protected Object convertValue(String[] input) throws ConversionException
 	{
-		/*
-		 * the input value contains the full path of the radio unless no choice
-		 * was selected in which case the input contains null
-		 */
-		String path = getInput();
-
-		if (path != null)
+		if (input != null && input.length > 0)
 		{
 			/*
 			 * single radio choice component path sans group path = relative
 			 * path from group to choice since we know the choice is child of
 			 * group
 			 */
-			path = path.substring(getPath().length() + 1);
+			String path = input[0].substring(getPath().length() + 1);
 
 			// retrieve the selected single radio choice component
 			Radio choice = (Radio)get(path);
@@ -110,20 +101,18 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 
 			
 			// assign the value of the group's model
-			setModelObject(choice.getModelObject());
-		} 
-		else 
-		{
-			// no choice selected - set model object to null
-			setModelObject(null);
+			return choice.getModelObject();
 		}
+		return null;
 	}
-
+	
+	
 	/**
 	 * Called when a selection changes.
 	 */
 	public final void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -146,9 +135,12 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	{
 	}
 	
-	static
+	/**
+	 * Radio group does not support persistence through cookies
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
 	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
+		return false;
 	}
 }

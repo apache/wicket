@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MarkupContainer.java 4965 2006-03-16 11:21:07 -0800 (Thu, 16 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-16 11:21:07 -0800 (Thu, 16 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,14 +30,19 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
+import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.ICompoundModel;
 import wicket.model.IModel;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -88,7 +94,7 @@ import wicket.version.undo.Change;
 public abstract class MarkupContainer extends Component
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log for reporting. */
 	private static final Log log = LogFactory.getLog(MarkupContainer.class);
 
@@ -120,6 +126,10 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Adds a child component to this container.
+	 * <p>
+	 * Be careful when overriding this method, if not implemented properly it
+	 * may lead to a java component hierarchy which no longer matches the
+	 * template hierarchy, which in turn will lead to an error.
 	 * 
 	 * @param child
 	 *            The child
@@ -128,8 +138,13 @@ public abstract class MarkupContainer extends Component
 	 *             operation.
 	 * @return This
 	 */
-	public MarkupContainer add(final Component child)
+	public final MarkupContainer add(final Component child)
 	{
+		if (child == null)
+		{
+			throw new IllegalArgumentException("argument child may not be null");
+		}
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("Add " + child.getId() + " to " + this);
@@ -164,8 +179,13 @@ public abstract class MarkupContainer extends Component
 	 *            The component to add
 	 * @return True, if component has been added
 	 */
-	public boolean autoAdd(final Component component)
+	public final boolean autoAdd(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		/* Replace strategy */
 		if (get(component.getId()) != null)
 		{
@@ -173,7 +193,7 @@ public abstract class MarkupContainer extends Component
 		}
 		component.setAuto(true);
 		add(component);
-		component.internalBeginRequest();
+		component.internalAttach();
 		component.render();
 		return true;
 	}
@@ -187,6 +207,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final boolean contains(final Component component, final boolean recurse)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		if (recurse)
 		{
 			// Start at component and continue while we're not out of parents
@@ -236,17 +261,32 @@ public abstract class MarkupContainer extends Component
 		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		// Get child by id
-		final Component child = children_get(id);
+		Component child = children_get(id);
+
+		// If the container is transparent, than ask its parent.
+		// ParentResolver does something quite similar, but because of <head>,
+		// <body>, <wicket:panel> etc. it is quite common to have transparent
+		// components. Hence, this is little short cut for a tiny performance
+		// optimization.
+		if ((child == null) && isTransparentResolver() && (getParent() != null))
+		{
+			// Special tags like "_body", "_panel" must implement IComponentResolver
+			// if they want to be transparent.
+			if (path.startsWith("_") == false)
+			{
+				child = getParent().get(path);
+			}
+		}
 
 		// Found child?
+		final String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
 		if (child != null)
 		{
 			// Recurse on latter part of path
-			return child.get(Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR));
+			return child.get(path2);
 		}
 
-		// No child with the given id
-		return null;
+		return child;
 	}
 
 	/**
@@ -294,24 +334,32 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * Called when a request begins.
 	 */
-	public void internalBeginRequest()
+	public void internalAttach()
 	{
 		// Handle begin request for the container itself
-		super.internalBeginRequest();
-
-		// Loop through child components
-		final int size = children_size();
-		for (int i = 0; i < size; i++)
+		try
 		{
-			// Get next child
-			final Component child = children_get(i);
+			super.internalAttach();
 
-			// Ignore feedback as that was done in Page
-			if (!(child instanceof IFeedback))
+			// Loop through child components
+			final int size = children_size();
+			for (int i = 0; i < size; i++)
 			{
-				// Call begin request on the child
-				child.internalBeginRequest();
+				// Get next child
+				final Component child = children_get(i);
+
+				// Ignore feedback as that was done in Page
+				if (!(child instanceof IFeedback))
+				{
+					// Call begin request on the child
+					child.internalAttach();
+				}
 			}
+		}
+		catch (RuntimeException ex)
+		{
+			if(ex instanceof WicketRuntimeException) throw ex;
+			else throw new WicketRuntimeException("Error attaching this container for rendering: " + this,ex);
 		}
 	}
 
@@ -321,20 +369,20 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * Called when a request ends.
 	 */
-	public void internalEndRequest()
+	public void internalDetach()
 	{
 		// Handle end request for the container itself
-		super.internalEndRequest();
+		super.internalDetach();
 
 		// Loop through child components
-		final int size = children_size();
-		for (int i = 0; i < size; i++)
+		final Iterator iter = iterator();
+		while (iter.hasNext())
 		{
 			// Get next child
-			final Component child = children_get(i);
+			final Component child = (Component)iter.next();
 
 			// Call end request on the child
-			child.internalEndRequest();
+			child.internalDetach();
 		}
 	}
 
@@ -400,6 +448,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void remove(final Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("argument component may not be null");
+		}
+
 		children_remove(component);
 		removedComponent(component);
 	}
@@ -410,8 +463,13 @@ public abstract class MarkupContainer extends Component
 	 * @param id
 	 *            The id of the component to remove
 	 */
-	public void remove(final String id)
+	public final void remove(final String id)
 	{
+		if (id == null)
+		{
+			throw new IllegalArgumentException("argument id may not be null");
+		}
+
 		final Component component = get(id);
 		if (component != null)
 		{
@@ -430,7 +488,7 @@ public abstract class MarkupContainer extends Component
 	 * Note: implementation does not call
 	 * {@link MarkupContainer#remove(Component) } for each component.
 	 */
-	public void removeAll()
+	public final void removeAll()
 	{
 		if (children != null)
 		{
@@ -443,6 +501,13 @@ public abstract class MarkupContainer extends Component
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
+					int size = children_size();
+					for (int i = 0; i < size; i++)
+					{
+						// Get next child
+						final Component child = children_get(i);
+						child.setParent(MarkupContainer.this);
+					}
 				}
 
 				public String toString()
@@ -483,7 +548,7 @@ public abstract class MarkupContainer extends Component
 	{
 		// Get markup associated with Border or Panel component
 		final MarkupStream originalMarkupStream = getMarkupStream();
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
 
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
@@ -493,7 +558,8 @@ public abstract class MarkupContainer extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && 
+				(associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -522,8 +588,13 @@ public abstract class MarkupContainer extends Component
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public MarkupContainer replace(final Component child)
+	public final MarkupContainer replace(final Component child)
 	{
+		if (child == null)
+		{
+			throw new IllegalArgumentException("argument child must be not null");
+		}
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("Replacing " + child.getId() + " in " + this);
@@ -540,10 +611,13 @@ public abstract class MarkupContainer extends Component
 			{
 				throw new WicketRuntimeException(
 						exceptionMessage("Cannot replace a component which has not been added: id='"
-								+ child.getId() + "'"));
+								+ child.getId() + "', component=" + child));
 			}
 
 			removedComponent(replaced);
+
+			// The position of the associated markup remains the same
+			child.markupIndex = replaced.markupIndex;
 		}
 
 		return this;
@@ -556,7 +630,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final IModel previous = getModel();
 		super.setModel(model);
-		if (previous instanceof CompoundPropertyModel)
+		if (previous instanceof ICompoundModel)
 		{
 			visitChildren(new IVisitor()
 			{
@@ -641,42 +715,51 @@ public abstract class MarkupContainer extends Component
 	 * Traverses all child components of the given class in this container,
 	 * calling the visitor's visit method at each one.
 	 * 
-	 * @param c
+	 * @param clazz
 	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
 	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final Class c, final IVisitor visitor)
+	public final Object visitChildren(final Class clazz, final IVisitor visitor)
 	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("argument visitor may not be null");
+		}
+
 		// Iterate through children of this container
 		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
-			final Component child = (Component)children_get(i);
+			final Component child = children_get(i);
+			Object value = null;
 
 			// Is the child of the correct class (or was no class specified)?
-			if (c == null || c.isInstance(child))
+			if (clazz == null || clazz.isInstance(child))
 			{
 				// Call visitor
-				final Object value = visitor.component(child);
+				value = visitor.component(child);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
 			}
 
 			// If child is a container
-			if (child instanceof MarkupContainer)
+			if ((child instanceof MarkupContainer)
+					&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
-				final Object value = ((MarkupContainer)child).visitChildren(c, visitor);
+				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
@@ -732,13 +815,15 @@ public abstract class MarkupContainer extends Component
 	 * Gets a fresh markup stream that contains the (immutable) markup resource
 	 * for this class.
 	 * 
+	 * @param throwException
+	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	protected final MarkupStream getAssociatedMarkupStream()
+	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
 	{
 		try
 		{
-			return getApplication().getMarkupCache().getMarkupStream(this);
+			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -755,17 +840,63 @@ public abstract class MarkupContainer extends Component
 							+ "' for component '"
 							+ getClass().getName()
 							+ "' not found."
-							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried"),
+							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
 	}
 
 	/**
+	 * Create a new markup resource stream for the container.
+	 * <p>
+	 * Note: it will only called once, the IResourceStream will be cached by
+	 * MarkupCache.
+	 * <p>
+	 * Note: IResourceStreamLocators should be used in case the strategy to find
+	 * a markup resource should be extended for ALL components of your
+	 * application.
+	 * 
+	 * @see wicket.util.resource.locator.IResourceStreamLocator
+	 * @see wicket.markup.MarkupCache
+	 * 
+	 * @param containerClass
+	 *            The container the markup should be associated with
+	 * @return A IResourceStream if the resource was found
+	 */
+	public IResourceStream newMarkupResourceStream(Class containerClass)
+	{
+		// Get locator to search for the resource
+		final IResourceStreamLocator locator = getApplication().getResourceSettings()
+				.getResourceStreamLocator();
+
+		// Markup is associated with the containers class. Walk up the class
+		// hierarchy up to MarkupContainer to find the containers markup
+		// resource.
+		while (containerClass != MarkupContainer.class)
+		{
+			final IResourceStream resourceStream = locator.locate(containerClass, containerClass
+					.getName().replace('.', '/'), getStyle(), getLocale(), getMarkupType());
+
+			// Did we find it already?
+			if (resourceStream != null)
+			{
+				return new MarkupResourceStream(resourceStream, new ContainerInfo(this),
+						containerClass);
+			}
+
+			// Walk up the class hierarchy one level, if markup has not
+			// yet been found
+			containerClass = containerClass.getSuperclass();
+		}
+
+		return null;
+	}
+	
+	/**
 	 * Get the markup stream set on this container.
 	 * 
 	 * @return Returns the markup stream set on this container.
 	 */
-	protected MarkupStream getMarkupStream()
+	public final MarkupStream getMarkupStream()
 	{
 		return markupStream;
 	}
@@ -837,22 +968,7 @@ public abstract class MarkupContainer extends Component
 		if (render == false)
 		{
 			// Tags like <p> do not require a close tag, but they may have.
-			// Because ComponentTag does not have the information, we analyze
-			// the remaining of the streams to find the close tag.
-			int pos = markupStream.getCurrentIndex();
-			while (markupStream.hasMore())
-			{
-				MarkupElement elem = markupStream.next();
-				if (elem instanceof ComponentTag)
-				{
-					if (elem.closes(openTag))
-					{
-						render = true;
-						break;
-					}
-				}
-			}
-			markupStream.setCurrentIndex(pos);
+			render = !openTag.hasNoCloseTag();
 		}
 		if (render == true)
 		{
@@ -1160,9 +1276,30 @@ public abstract class MarkupContainer extends Component
 			page.componentRemoved(component);
 		}
 
-		// Detach model
-		component.detachModel();
+		// detach children models
+		if (component instanceof MarkupContainer)
+		{
+			((MarkupContainer)component).visitChildren(new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					try
+					{
+						// detach any models of the component
+						component.detachModels();
+					}
+					catch (Exception e) // catch anything; we MUST detach all
+					// models
+					{
+						log.error("detaching models of component " + component + " failed:", e);
+					}
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+		}
 
+		// Detach model
+		component.detachModels();
 		// Component is removed
 		component.setParent(null);
 	}
@@ -1226,14 +1363,17 @@ public abstract class MarkupContainer extends Component
 					}
 				}
 
-				if ("child".equals(tag.getName()) && (tag.getNamespace() != null))
+				if (tag instanceof WicketTag)
 				{
-					// You can not render the base page of inherited markup as
-					// the <wicket:child/> tag will not be found. You must use
-					// the page (class) with the derived markup instead.
-					markupStream.throwMarkupException("Classes of base pages which "
-							+ "require inherited markup may not be used directly. "
-							+ "You must instantiate the child pages instead: " + this);
+					if (((WicketTag)tag).isChildTag())
+					{
+						markupStream.throwMarkupException("Found " + tag.toString()
+								+ " but no <wicket:extend>");
+					}
+					else
+					{
+						markupStream.throwMarkupException("Failed to handle: " + tag.toString());
+					}
 				}
 
 				// No one was able to handle the component id
@@ -1250,7 +1390,7 @@ public abstract class MarkupContainer extends Component
 			{
 				log.debug("Rendering raw markup");
 			}
-			getResponse().write(element.toString());
+			getResponse().write(element.toCharSequence());
 			markupStream.next();
 		}
 	}
@@ -1265,7 +1405,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @return false. By default a MarkupContainer is not transparent.
 	 */
-	public boolean isTransparent()
+	public boolean isTransparentResolver()
 	{
 		return false;
 	}

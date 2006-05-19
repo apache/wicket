@@ -77,6 +77,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
+			message.markRendered();
 			final IModel replacementModel = new Model()
 			{
 				private static final long serialVersionUID = 1L;
@@ -108,6 +109,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public FeedbackPanel(final String id)
 	{
+		this(id, null);
+	}
+
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
+	{
 		super(id);
 		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
 		{
@@ -122,8 +131,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
+		
+		if (filter!=null) {
+			setFilter(filter);
+		}
 	}
 
+	
+	
 	/**
 	 * Gets whether model messages should be HTML escaped. Default is true.
 	 * 
@@ -226,7 +241,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return whether there is any message for this panel of level ERROR or up
 	 */
-	protected final boolean anyErrorMessage()
+	public final boolean anyErrorMessage()
 	{
 		return anyMessage(FeedbackMessage.ERROR);
 	}
@@ -237,7 +252,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return whether there is any message for this panel
 	 */
-	protected final boolean anyMessage()
+	public final boolean anyMessage()
 	{
 		return anyMessage(FeedbackMessage.UNDEFINED);
 	}
@@ -250,7 +265,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 *            the level, see FeedbackMessage
 	 * @return whether there is any message for this panel of the given level
 	 */
-	protected final boolean anyMessage(int level)
+	public final boolean anyMessage(int level)
 	{
 		List msgs = getCurrentMessages();
 
@@ -300,4 +315,5 @@ public class FeedbackPanel extends Panel implements IFeedback
 	{
 		return new FeedbackMessagesModel();
 	}
+	
 }

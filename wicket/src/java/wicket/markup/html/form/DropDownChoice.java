@@ -19,7 +19,6 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -138,6 +137,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 */
 	public final void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -157,17 +157,17 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		if (wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final String url = urlFor(IOnChangeListener.class);
+			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 			try
 			{
 				Form form = getForm();
-				tag.put("onChange", form.getJsForInterfaceUrl(url) );
+				tag.put("onchange", form.getJsForInterfaceUrl(url) );
 			}
 			catch (WicketRuntimeException ex)
 			{
 				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onChange", "location.href='" + url + "&" + getInputName()
+				tag.put("onchange", "location.href='" + url + "&" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}
@@ -204,11 +204,5 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }

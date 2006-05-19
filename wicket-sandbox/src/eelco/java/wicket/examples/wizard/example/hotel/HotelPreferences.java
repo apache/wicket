@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.wizard.example.hotel;
 
@@ -26,7 +24,7 @@ import java.util.List;
 
 /**
  * Hotel Preferences POJO.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class HotelPreferences implements Serializable
@@ -41,20 +39,18 @@ public class HotelPreferences implements Serializable
 	private Room room;
 
 	/**
-	 * List of rooms. For the example this is super-simple, but in the realworld you would
-	 * need to track which rooms have been reserved etc.
+	 * List of rooms. For the example this is super-simple, but in the realworld
+	 * you would need to track which rooms have been reserved etc.
 	 */
-	private static Room[] availableRooms = new Room[]
-	{
-		new Room("1", Room.ROOM_CLASS_ECONOMY, false),
-		new Room("2", Room.ROOM_CLASS_ECONOMY, false),
-		new Room("3", Room.ROOM_CLASS_ECONOMY, true),
-		new Room("4", Room.ROOM_CLASS_ECONOMY, true),
-		new Room("5", Room.ROOM_CLASS_EXECUTIVE, false),
-		new Room("6", Room.ROOM_CLASS_EXECUTIVE, false),
-		new Room("7", Room.ROOM_CLASS_EXECUTIVE, true),
-		new Room("8", Room.ROOM_CLASS_EXECUTIVE, true)
-	};
+	private static Room[] availableRooms = new Room[] {
+			new Room("1", Room.ROOM_CLASS_ECONOMY, false),
+			new Room("2", Room.ROOM_CLASS_ECONOMY, false),
+			new Room("3", Room.ROOM_CLASS_ECONOMY, true),
+			new Room("4", Room.ROOM_CLASS_ECONOMY, true),
+			new Room("5", Room.ROOM_CLASS_EXECUTIVE, false),
+			new Room("6", Room.ROOM_CLASS_EXECUTIVE, false),
+			new Room("7", Room.ROOM_CLASS_EXECUTIVE, true),
+			new Room("8", Room.ROOM_CLASS_EXECUTIVE, true) };
 
 	private boolean wantsWakeUpCall = false;
 	private Integer wakeUpCallHours;
@@ -70,27 +66,31 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the available room classes.
+	 * 
 	 * @return the available room classes
 	 */
 	public final List roomClasses()
 	{
-		return Arrays.asList(new String[] {Room.ROOM_CLASS_ECONOMY, Room.ROOM_CLASS_EXECUTIVE});
+		return Arrays.asList(new String[] { Room.ROOM_CLASS_ECONOMY, Room.ROOM_CLASS_EXECUTIVE });
 	}
 
 	/**
 	 * Gets the available rooms for the given parameters.
-	 * @param roomClass class of the room
-	 * @param withBalcony whether the room should have a balcony
+	 * 
+	 * @param roomClass
+	 *            class of the room
+	 * @param withBalcony
+	 *            whether the room should have a balcony
 	 * @return the available rooms for the given parameters
 	 */
-	public final List/*<Room>*/ getAvailableRooms(String roomClass, boolean withBalcony)
+	public final List/* <Room> */getAvailableRooms(String roomClass, boolean withBalcony)
 	{
 		List l = new ArrayList();
 		int len = availableRooms.length;
-		for(int i = 0; i < len; i++)
+		for (int i = 0; i < len; i++)
 		{
-			if(availableRooms[i].getRoomClass().equals(roomClass) &&
-					availableRooms[i].getHasBalcony() == withBalcony)
+			if (availableRooms[i].getRoomClass().equals(roomClass)
+					&& availableRooms[i].getHasBalcony() == withBalcony)
 			{
 				l.add(availableRooms[i]);
 			}
@@ -100,6 +100,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the dateOfBirth.
+	 * 
 	 * @return dateOfBirth
 	 */
 	public Date getDateOfBirth()
@@ -109,7 +110,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the dateOfBirth.
-	 * @param dateOfBirth dateOfBirth
+	 * 
+	 * @param dateOfBirth
+	 *            dateOfBirth
 	 */
 	public void setDateOfBirth(Date dateOfBirth)
 	{
@@ -118,6 +121,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the firstName.
+	 * 
 	 * @return firstName
 	 */
 	public String getFirstName()
@@ -127,7 +131,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the firstName.
-	 * @param firstName firstName
+	 * 
+	 * @param firstName
+	 *            firstName
 	 */
 	public void setFirstName(String firstName)
 	{
@@ -136,6 +142,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the lastName.
+	 * 
 	 * @return lastName
 	 */
 	public String getLastName()
@@ -145,7 +152,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the lastName.
-	 * @param lastName lastName
+	 * 
+	 * @param lastName
+	 *            lastName
 	 */
 	public void setLastName(String lastName)
 	{
@@ -154,6 +163,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the passportNumber.
+	 * 
 	 * @return passportNumber
 	 */
 	public String getPassportNumber()
@@ -163,7 +173,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the passportNumber.
-	 * @param passportNumber passportNumber
+	 * 
+	 * @param passportNumber
+	 *            passportNumber
 	 */
 	public void setPassportNumber(String passportNumber)
 	{
@@ -172,6 +184,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the room.
+	 * 
 	 * @return room
 	 */
 	public Room getRoom()
@@ -181,7 +194,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the room.
-	 * @param room room
+	 * 
+	 * @param room
+	 *            room
 	 */
 	public void setRoom(Room room)
 	{
@@ -190,6 +205,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the wantsWakeUpCall.
+	 * 
 	 * @return wantsWakeUpCall
 	 */
 	public boolean getWantsWakeUpCall()
@@ -199,7 +215,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the wantsWakeUpCall.
-	 * @param wantsWakeUpCall wantsWakeUpCall
+	 * 
+	 * @param wantsWakeUpCall
+	 *            wantsWakeUpCall
 	 */
 	public void setWantsWakeUpCall(boolean wantsWakeUpCall)
 	{
@@ -208,6 +226,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the wakeUpCallHours.
+	 * 
 	 * @return wakeUpCallHours
 	 */
 	public Integer getWakeUpCallHours()
@@ -217,7 +236,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the wakeUpCallHours.
-	 * @param wakeUpCallHours wakeUpCallHours
+	 * 
+	 * @param wakeUpCallHours
+	 *            wakeUpCallHours
 	 */
 	public void setWakeUpCallHours(Integer wakeUpCallHours)
 	{
@@ -226,6 +247,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the wakeUpCallMinutes.
+	 * 
 	 * @return wakeUpCallMinutes
 	 */
 	public Integer getWakeUpCallMinutes()
@@ -235,7 +257,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the wakeUpCallMinutes.
-	 * @param wakeUpCallMinutes wakeUpCallMinutes
+	 * 
+	 * @param wakeUpCallMinutes
+	 *            wakeUpCallMinutes
 	 */
 	public void setWakeUpCallMinutes(Integer wakeUpCallMinutes)
 	{
@@ -244,6 +268,7 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Gets the wantsBreakFast.
+	 * 
 	 * @return wantsBreakFast
 	 */
 	public boolean getWantsBreakFast()
@@ -253,7 +278,9 @@ public class HotelPreferences implements Serializable
 
 	/**
 	 * Sets the wantsBreakFast.
-	 * @param wantsBreakFast wantsBreakFast
+	 * 
+	 * @param wantsBreakFast
+	 *            wantsBreakFast
 	 */
 	public void setWantsBreakFast(boolean wantsBreakFast)
 	{

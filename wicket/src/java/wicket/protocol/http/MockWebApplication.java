@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MockWebApplication.java 4920 2006-03-14 09:29:09 -0800 (Tue, 14 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-14 09:29:09 -0800 (Tue, 14
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,12 +32,12 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.protocol.http.servlet.ServletWebRequest;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IPageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
 import wicket.session.DefaultPageFactory;
+import wicket.session.ISessionStore;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.file.WebApplicationPath;
 
@@ -129,22 +130,60 @@ public class MockWebApplication extends WebApplication
 		Application.set(this);
 
 		context = new MockServletContext(this, path);
+
+		setWicketServlet(new WicketServlet()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public ServletContext getServletContext()
+			{
+				return context;
+			};
+
+			/**
+			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
+			 */
+			public String getInitParameter(String name)
+			{
+				return null;
+			}
+
+			/**
+			 * @see javax.servlet.GenericServlet#getServletName()
+			 */
+			public String getServletName()
+			{
+				return "WicketMockServlet";
+			}
+		});
+
+		// Call internal init method of web application for default
+		// initialisation
+		this.internalInit();
+		
+		// Call init method of web application
+		this.init();
+		
+		// We initialize components here rather than in the constructor or
+		// in the internal init, because in the init method class aliases
+		// can be added, that would be used in installing resources in the
+		// component.
+		this.initializeComponents();
+
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
 		servletResponse = new MockHttpServletResponse();
 		wicketRequest = newWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
 
+		// set the default context path
+		getApplicationSettings().setContextPath(context.getServletContextName());
+
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
-	}
-
-	/**
-	 * 
-	 * @see wicket.Application#init()
-	 */
-	protected void init()
-	{
+		getPageSettings().setAutomaticMultiWindowSupport(false);
+		
+		createRequestCycle();
 	}
 
 	/**
@@ -263,7 +302,17 @@ public class MockWebApplication extends WebApplication
 	 */
 	public void processRequestCycle()
 	{
-		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		processRequestCycle(createRequestCycle());
+	}
+
+	/**
+	 * Create and process the request cycle using the current request and
+	 * response information.
+	 * 
+	 * @param cycle
+	 */
+	public void processRequestCycle(WebRequestCycle cycle)
+	{
 		cycle.request();
 
 		previousRenderedPage = lastRenderedPage;
@@ -277,12 +326,17 @@ public class MockWebApplication extends WebApplication
 		{
 			generateLastRenderedPage(cycle);
 
-			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)((WebRequest)cycle
-					.getWebRequest()).getHttpServletRequest();
+			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)cycle
+					.getWebRequest().getHttpServletRequest();
 
-			httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this,
+					servletSession, context);
+			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+			wicketRequest = newWebRequest(newHttpRequest);
 			wicketSession = getSession(wicketRequest);
-			new WebRequestCycle(wicketSession, wicketRequest, wicketResponse).request();
+
+			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+			cycle.request();
 		}
 		generateLastRenderedPage(cycle);
 
@@ -290,8 +344,7 @@ public class MockWebApplication extends WebApplication
 
 		if (getLastRenderedPage() instanceof ExceptionErrorPage)
 		{
-			throw new WicketRuntimeException(((ExceptionErrorPage)getLastRenderedPage())
-					.getThrowable());
+			throw (RuntimeException)((ExceptionErrorPage)getLastRenderedPage()).getThrowable();
 		}
 	}
 
@@ -314,7 +367,7 @@ public class MockWebApplication extends WebApplication
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
 					Class pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
-					if (parameters==null||parameters.size() == 0)
+					if (parameters == null || parameters.size() == 0)
 					{
 						lastRenderedPage = new DefaultPageFactory().newPage(pageClass);
 					}
@@ -351,6 +404,7 @@ public class MockWebApplication extends WebApplication
 		parametersForNextRequest.clear();
 		wicketRequest = new ServletWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
+		getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse = new WebResponse(servletResponse);
 	}
 
@@ -391,5 +445,13 @@ public class MockWebApplication extends WebApplication
 	public void setHomePage(Class clazz)
 	{
 		homePage = clazz;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#newSessionStore()
+	 */
+	protected ISessionStore newSessionStore()
+	{
+		return new HttpSessionStore();
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id: WicketTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,17 +25,29 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
 /**
- * This is a markup inline filter. It detects &t;body&gt; tags with onload
- * attribute. The onload attribute must be copied from the component's markup to
- * the Page's markup. In case onload loads and runs a javascript, it must either
- * be referenced by file or included in &lt;wicket:head&gt;.
+ * If you want to package and share ready-made components and if you want this
+ * components to be easily pluggable than this component must have all the
+ * relevant information. That includes javascript (inline or referenced file) as
+ * well as CSS. With HTML these information have to be in the header of the
+ * markup return to the browser. This is true for body onLoad attributes as
+ * well. This markup inline filter detects &t;body&gt; tags with an 'onLoad'
+ * attribute and which have <b>no</b> wicket:id attribute. The onLoad attribute
+ * will be copied from the component's markup to the Page's markup to allow for
+ * completely self-contained components. No changes to the Pages will be
+ * necessary to use the component.
+ * <p>
+ * Note: The markup must contain a &lt;wicket:head&gt; tag which contains the
+ * javascript and/or CSS to be copied to the Page's header.
+ * <p>
+ * Note: this handler is not relevant for Pages
  * 
+ * @see wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
 public final class BodyOnLoadHandler extends AbstractMarkupFilter
 {
-    /** The automatically assigned wicket:id to &gt;body&lt; tag */
-	public static final String BODY_ID = "_body";
+	/** The automatically assigned wicket:id to &gt;body&lt; tag */
+	public static final String BODY_ID = "_<body>";
 
 	/**
 	 * Construct.

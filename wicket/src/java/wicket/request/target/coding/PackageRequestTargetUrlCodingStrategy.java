@@ -20,10 +20,13 @@ package wicket.request.target.coding;
 import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.target.BookmarkablePageRequestTarget;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Classes;
 import wicket.util.lang.PackageName;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Encodes and decodes mounts for a whole package.
@@ -51,11 +54,11 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	}
 
 	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(java.lang.String)
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
 	 */
-	public IRequestTarget decode(String urlFragment)
+	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		String remainder = urlFragment.substring(getMountPath().length());
+		String remainder = requestParameters.getPath().substring(getMountPath().length());
 		final String parametersFragment;
 		int ix = remainder.indexOf('/', 1);
 		if (ix == -1)
@@ -67,11 +70,21 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(1, ix);
+		
+		if (remainder.startsWith("/")) {
+			remainder=remainder.substring(1);
+			ix--;
+		}
+		
+		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
-		PageParameters parameters = decodePageParameters(parametersFragment);
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(
+		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
+
+		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		requestParameters.setPageMapName(pageMapName);
+
+		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
 				bookmarkablePageClass, parameters);
 		return target;
 	}
@@ -79,19 +92,26 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
-	public final String encode(IRequestTarget requestTarget)
+	public final CharSequence encode(IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
 			throw new IllegalArgumentException("this encoder can only be used with instances of "
 					+ IBookmarkablePageRequestTarget.class.getName());
 		}
-		StringBuffer url = new StringBuffer();
+		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		url.append("/").append(Classes.name(target.getPageClass()));
-		appendPageParameters(url, target.getPageParameters());
-		return url.toString();
+		url.append("/").append(Classes.simpleName(target.getPageClass()));
+		
+		PageParameters pageParameters = target.getPageParameters();
+		if(target.getPageMapName() != null)
+		{
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
+		}
+		
+		appendParameters(url, pageParameters);
+		return url;
 	}
 
 	/**

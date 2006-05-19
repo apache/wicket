@@ -35,7 +35,10 @@ import wicket.model.Model;
  * A simple "guest book" example that allows visitors to the page to add a
  * comment and see the comments others have added.
  * 
+ * For unit testing, added a parameter to clear the commentList.
+ * 
  * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public final class GuestBook extends WicketExamplePage
 {
@@ -82,7 +85,7 @@ public final class GuestBook extends WicketExamplePage
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel(new Comment()));
-			
+
 			// Add text entry widget
 			add(new TextArea("text"));
 		}
@@ -107,5 +110,13 @@ public final class GuestBook extends WicketExamplePage
 			// Clear out the text component
 			comment.setText("");
 		}
+	}
+
+	/**
+	 * Clears the comments.
+	 */
+	public static void clear()
+	{
+		commentList.clear();
 	}
 }

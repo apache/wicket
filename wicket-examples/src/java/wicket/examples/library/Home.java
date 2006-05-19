@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2005-08-21 17:11:33 +0200 (So, 21 Aug 2005) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -60,23 +60,23 @@ public final class Home extends AuthenticatedWebPage
 		});
 		add(new PagingNavigator("navigator", listView));
 	}
-	
+
 	/**
 	 * 
 	 * @return List of books
 	 */
 	public List getBooks()
 	{
-	    // Note: checkAccess() (and thus login etc.) happen after the Page
-	    // has been instantiated. Thus, you can not realy on user != null.
-	    // Note2: In any case, all components must be associated with a 
-	    // wicket tag. 
+		// Note: checkAccess() (and thus login etc.) happen after the Page
+		// has been instantiated. Thus, you can not realy on user != null.
+		// Note2: In any case, all components must be associated with a
+		// wicket tag.
 		User user = getLibrarySession().getUser();
 		if (user == null)
 		{
-		    return new ArrayList();
+			return new ArrayList();
 		}
-		
+
 		return user.getBooks();
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Component.java 5023 2006-03-18 18:58:40 -0800 (Sat, 18 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-18 18:58:40 -0800 (Sat, 18 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,15 +30,18 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedActionException;
-import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.behavior.IBehavior;
-import wicket.behavior.IBehaviorListener;
 import wicket.feedback.FeedbackMessage;
+import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -47,6 +51,7 @@ import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
@@ -219,145 +224,10 @@ import wicket.version.undo.Change;
  * @author Eelco Hillenius
  * @author Johan Compagner
  * @author Juergen Donnerstag
+ * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements Serializable, IBehaviorListener
+public abstract class Component implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * Action used with IAuthorizationStrategy to determine whether a component
-	 * is allowed to be enabled.
-	 * <p>
-	 * If enabling is authorized, a component may decide by itself (typically
-	 * using it's enabled property) whether it is enabled or not. If enabling is
-	 * not authorized, the given component is marked disabled, regardless its
-	 * enabled property.
-	 * <p>
-	 * When a component is not allowed to be enabled (in effect disabled through
-	 * the implementation of this interface), Wicket will try to prevent model
-	 * updates too. This is not completely fail safe, as constructs like:
-	 * 
-	 * <pre>
-	 * User u = (User)getModelObject();
-	 * u.setName(&quot;got you there!&quot;);
-	 * </pre>
-	 * 
-	 * can't be prevented. Indeed it can be argued that any model protection is
-	 * best dealt with in your model objects to be completely secured. Wicket
-	 * will catch all normal framework-directed use though.
-	 */
-	public static final Action ENABLE = new Action("ENABLE");
-	
-	/** Separator for component paths */
-	public static final char PATH_SEPARATOR = ':';
-
-	/**
-	 * Action used with IAuthorizationStrategy to determine whether a component
-	 * and its children are allowed to be rendered.
-	 * <p>
-	 * There are two uses for this method:
-	 * <ul>
-	 * <li>The 'normal' use is for controlling whether a component is rendered
-	 * without having any effect on the rest of the processing. If a strategy
-	 * lets this method return 'false', then the target component and its
-	 * children will not be rendered, in the same fashion as if that component
-	 * had visibility property 'false'.</li>
-	 * <li>The other use is when a component should block the rendering of the
-	 * whole page. So instead of 'hiding' a component, what we generally want to
-	 * achieve here is that we force the user to logon/give-credentials for a
-	 * higher level of authorization. For this functionality, the strategy
-	 * implementation should throw a {@link AuthorizationException}, which will
-	 * then be handled further by the framework.</li>
-	 * </ul>
-	 * </p>
-	 */
-	public static final Action RENDER = new Action("RENDER");
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
-
-	/** Basic model IModelComparator implementation for normal object models */
-	private static final IModelComparator defaultModelComparator = new IModelComparator()
-	{
-		public boolean compare(Component component, Object b)
-		{
-			final Object a = component.getModelObject();
-			if (a == null && b == null)
-			{
-				return true;
-			}
-			if (a == null || b == null)
-			{
-				return false;
-			}
-			return a.equals(b);
-		}
-	};
-
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** Log. */
-	private static Log log = LogFactory.getLog(Component.class);
-
-	/** List of behaviors to be applied for this Component */
-	private List behaviors = null;
-
-	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED;
-
-	/** Component id. */
-	private String id;
-
-	/** The model for this component. */
-	private IModel model;
-
-	/** Any parent container. */
-	private MarkupContainer parent;
-
-	/**
-	 * Internal indicator of whether this component may be rendered given the
-	 * current context's authorization. It overrides the visible flag in case
-	 * this is false. Authorization is done before trying to render any
-	 * component (otherwise we would end up with a half rendered page in the
-	 * buffer), and as an optimization, the result for the current request is
-	 * stored in this variable.
-	 */
-	private transient boolean renderAllowed = true;
-
 	/**
 	 * Change record of a model.
 	 */
@@ -405,6 +275,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 		 * Value to return to continue a traversal.
 		 */
 		public static final Object CONTINUE_TRAVERSAL = null;
+
+		/**
+		 * A generic value to return to contiue a traversal, but if the
+		 * component is a container, don't visit its children.
+		 */
+		public static final Object CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER = new Object();
 
 		/**
 		 * A generic value to return to stop a traversal.
@@ -508,6 +384,166 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * Action used with IAuthorizationStrategy to determine whether a component
+	 * is allowed to be enabled.
+	 * <p>
+	 * If enabling is authorized, a component may decide by itself (typically
+	 * using it's enabled property) whether it is enabled or not. If enabling is
+	 * not authorized, the given component is marked disabled, regardless its
+	 * enabled property.
+	 * <p>
+	 * When a component is not allowed to be enabled (in effect disabled through
+	 * the implementation of this interface), Wicket will try to prevent model
+	 * updates too. This is not completely fail safe, as constructs like:
+	 * 
+	 * <pre>
+	 * User u = (User)getModelObject();
+	 * u.setName(&quot;got you there!&quot;);
+	 * </pre>
+	 * 
+	 * can't be prevented. Indeed it can be argued that any model protection is
+	 * best dealt with in your model objects to be completely secured. Wicket
+	 * will catch all normal framework-directed use though.
+	 */
+	public static final Action ENABLE = new Action(Action.ENABLE);
+
+	/** Separator for component paths */
+	public static final char PATH_SEPARATOR = ':';
+
+	/**
+	 * Action used with IAuthorizationStrategy to determine whether a component
+	 * and its children are allowed to be rendered.
+	 * <p>
+	 * There are two uses for this method:
+	 * <ul>
+	 * <li>The 'normal' use is for controlling whether a component is rendered
+	 * without having any effect on the rest of the processing. If a strategy
+	 * lets this method return 'false', then the target component and its
+	 * children will not be rendered, in the same fashion as if that component
+	 * had visibility property 'false'.</li>
+	 * <li>The other use is when a component should block the rendering of the
+	 * whole page. So instead of 'hiding' a component, what we generally want to
+	 * achieve here is that we force the user to logon/give-credentials for a
+	 * higher level of authorization. For this functionality, the strategy
+	 * implementation should throw a {@link AuthorizationException}, which will
+	 * then be handled further by the framework.</li>
+	 * </ul>
+	 * </p>
+	 */
+	public static final Action RENDER = new Action(Action.RENDER);
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** Basic model IModelComparator implementation for normal object models */
+	private static final IModelComparator defaultModelComparator = new IModelComparator()
+	{
+		public boolean compare(Component component, Object b)
+		{
+			final Object a = component.getModelObject();
+			if (a == null && b == null)
+			{
+				return true;
+			}
+			if (a == null || b == null)
+			{
+				return false;
+			}
+			return a.equals(b);
+		}
+	};
+
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final short FLAG_ENABLED = 0x0080;
+
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Ignore attribute modifiers */
+	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer)
+	 */
+	private static final short FLAG_IS_RENDER_ALLOWED = 0x2000;
+
+	/** Boolean whether this component was rendered once for tracking changes. */
+	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	private static final short FLAG_OUTPUT_MARKUP_ID = 0x4000;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(Component.class);
+
+	/**
+	 * The name of attribute that will hold markup id
+	 */
+	private static final String MARKUP_ID_ATTR_NAME = "id";
+
+	private static final long serialVersionUID = 1L;
+
+	/** List of behaviors to be applied for this Component */
+	private List behaviors = null;
+
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
+			| FLAG_IS_RENDER_ALLOWED;
+
+	/** Component id. */
+	private String id;
+
+	/**
+	 * MetaDataEntry array.
+	 */
+	private MetaDataEntry[] metaData;
+
+	/** The model for this component. */
+	private IModel model;
+
+	/** Any parent container. */
+	private MarkupContainer parent;
+
+	/**
+	 * I really dislike it, but for now we need it. Reason: due to transparent
+	 * containers and IComponentResolver there is guaranteed 1:1 mapping between
+	 * component and markup
+	 */
+	int markupIndex = -1;
+
+	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
 	 * model.
@@ -519,8 +555,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public Component(final String id)
 	{
-		authorizeInstantiation();
 		setId(id);
+		getApplication().notifyComponentInstantiationListeners(this);
 	}
 
 	/**
@@ -537,8 +573,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public Component(final String id, final IModel model)
 	{
-		authorizeInstantiation();
 		setId(id);
+		getApplication().notifyComponentInstantiationListeners(this);
 		setModel(model);
 	}
 
@@ -567,21 +603,18 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Give handler the opportunity to bind this component
 		behavior.bind(this);
 		return this;
-
 	}
 
 	/**
-	 * Authorizes an action for a component.
+	 * Redirects to any intercept page previously specified by a call to
+	 * redirectToInterceptPage.
 	 * 
-	 * @param action
-	 *            The action to authorize
-	 * @return True if the action is allowed
-	 * @throws AuthorizationException
-	 *             Can be thrown by implementation if action is unauthorized
+	 * @return True if an original destination was redirected to
+	 * @see Component#redirectToInterceptPage(Page)
 	 */
-	public final boolean authorize(Action action)
+	public final boolean continueToOriginalDestination()
 	{
-		return getSession().getAuthorizationStrategy().authorizeAction(this, action);
+		return getPage().getPageMap().continueToOriginalDestination();
 	}
 
 	/**
@@ -609,87 +642,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
 				IBehavior behavior = (IBehavior)i.next();
-				behavior.detachModel();
+				behavior.detachModel(this);
 			}
-		}
-	}
-
-	/**
-	 * Get the ComponentTag from the Markup which is associated with the
-	 * component.
-	 * 
-	 * @return An unmutable map with the attributes of the components tag
-	 */
-	private final MarkupStream initializeMarkupStream()
-	{
-		// Save the parent's markup stream to re-assign it at the end
-		MarkupContainer parent = getParent();
-
-		// Get the parent's associated markup stream.
-		MarkupContainer parentWithAssociatedMarkup = findParentWithAssociatedMarkup();
-		MarkupStream markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream();
-
-		// Make sure the markup stream is positioned at the correct element
-		String componentPath = parent.getPageRelativePath();
-		String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
-		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-		
-		int index = markupStream.findComponentIndex(relativePath, getId());
-		if (index == -1)
-		{
-			throw new WicketRuntimeException("Unable to determine markup for component: " + this.toString());
-		}
-		markupStream.setCurrentIndex(index);
-		return markupStream;
-	}
-
-	/**
-	 * Get a copy of the markup's attributes which are associated with the 
-	 * component.
-	 * <p>
-	 * Modifications to the map returned don't change the tags attributes. 
-     * It is just a copy.
-	 * <p>
-	 * Note: The component must have been added (directly or indirectly)
-	 * to a container with an associated markup file (Page, Panel or Border).   
-	 * 
-	 * @return markup attributes
-	 */
-	public final ValueMap getMarkupAttributes()
-	{
-		return new ValueMap(initializeMarkupStream().getTag().getAttributes());
-	}
-	
-	/**
-	 * Page.doRender() is used to render a whole page. With AJAX however it must
-	 * be possible to render any one component contained in a page. That is
-	 * what Component.doRender() is for. 
-	 * <p>
-	 * Note: it is not necessary that the page has previously been rendered.
-     * But the component must have been added (directly or indirectly)
-	 * to a container with an associated markup file (Page, Panel or Border).   
-	 */
-	public void doRender()
-	{
-		// Save the parent's markup stream to re-assign it at the end
-		MarkupContainer parent = getParent();
-		MarkupStream originalMarkupStream = parent.getMarkupStream();
-
-		MarkupStream markupStream = initializeMarkupStream();
-
-		try
-		{
-			// Make sure that while rendering the markup stream is found
-			parent.setMarkupStream(markupStream);
-
-			// Render the component and all its children
-			internalBeginRequest();
-			render(markupStream);
-		}
-		finally
-		{
-			// Make sure the original markup stream is back in place
-			parent.setMarkupStream(originalMarkupStream);
 		}
 	}
 
@@ -804,12 +758,29 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * @return The application settings from the application that this component
 	 *         belongs to
 	 * @see Settings
-	 * @deprecated
+	 * @deprecated will be removed after 1.2
 	 */
 	// TODO Post 1.2: Remove this method
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
+	}
+
+	/**
+	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
+	 * Returns an empty list rather than null if there are no behaviors coupled
+	 * to this component.
+	 * 
+	 * @return The currently coupled behaviors as a unmodifiable list
+	 */
+	public final List/* <IBehavior> */getBehaviors()
+	{
+		if (behaviors == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		return Collections.unmodifiableList(behaviors);
 	}
 
 	/**
@@ -882,16 +853,79 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * 
+	 * Get a copy of the markup's attributes which are associated with the
+	 * component.
+	 * <p>
+	 * Modifications to the map returned don't change the tags attributes. It is
+	 * just a copy.
+	 * <p>
+	 * Note: The component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border).
+	 * 
+	 * @return markup attributes
+	 */
+	public final ValueMap getMarkupAttributes()
+	{
+		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
+		attrs.makeImmutable();
+		return attrs;
+	}
+
+	/**
+	 * Retrieves id by which this component is represented within the markup.
+	 * <p>
+	 * The point of this function is to generate a unique id to make it easy to
+	 * locate this component in the generated markup for post-wicket processing
+	 * such as javascript or an xslt transform.
+	 * <p>
+	 * Note: The component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border). This
+	 * TODO post 1.2 this restriction will be implicitly met after implementing 2.0's
+	 * constructor change
+	 * 
+	 * @return markup id of this component, which is the result of the call to
+	 *         {@link #getPageRelativePath()} where the ':' character (the
+	 *         internal path seperator of Wicket) are replaced by the '_'
+	 *         character.
+	 */
+	public String getMarkupId()
+	{
+		/*
+		 * TODO Post 1.2: Restore the code below after the constructor refactor,
+		 * right now its causing too much pain for components inside listviews
+		 * and borders.
+		 * 
+		 * CODE:
+		 * 
+		 * String id = getMarkupAttributes().getString("id"); if (id == null) {
+		 * id = getPageRelativePath(); } return id;
+		 * 
+		 * JAVADOC:
+		 * 
+		 * If the id attribute is present in the markup attributes of this
+		 * component it will be used, otherwise the page-relative path of this
+		 * component will be used. <p>
+		 * 
+		 * 
+		 */
+
+		return getPageRelativePath().replace(':', '_');
+	}
+
+	/**
 	 * Gets metadata for this component using the given key.
 	 * 
 	 * @param key
 	 *            The key for the data
-	 * @return The metadata
+	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return getPage().getMetaData(this, key);
+		return key.get(metaData);
 	}
 
 	/**
@@ -955,13 +989,16 @@ public abstract class Component implements Serializable, IBehaviorListener
 			// Model string from property
 			final String modelString = (String)converter.convert(modelObject, String.class);
 
-			// If we should escape the markup
-			if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+			if (modelString != null)
 			{
-				// Escape it
-				return Strings.escapeMarkup(modelString);
+				// If we should escape the markup
+				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+				{
+					// Escape it
+					return Strings.escapeMarkup(modelString).toString();
+				}
+				return modelString;
 			}
-			return modelString;
 		}
 		return "";
 	}
@@ -1023,14 +1060,14 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final String getPath()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final PrependingStringBuffer buffer = new PrependingStringBuffer(32);
 		for (Component c = this; c != null; c = c.getParent())
 		{
 			if (buffer.length() > 0)
 			{
-				buffer.insert(0, PATH_SEPARATOR);
+				buffer.prepend(PATH_SEPARATOR);
 			}
-			buffer.insert(0, c.getId());
+			buffer.prepend(c.getId());
 		}
 		return buffer.toString();
 	}
@@ -1066,15 +1103,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * @return The shared resource for this component
-	 */
-	public final Resource getResource()
-	{
-		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(),
-				getStyle(), false);
-	}
-
-	/**
 	 * @return The response for this component's active request cycle
 	 */
 	public final Response getResponse()
@@ -1099,7 +1127,15 @@ public abstract class Component implements Serializable, IBehaviorListener
 	{
 		final MarkupContainer originalParent = this.parent;
 		this.parent = null;
-		final long size = Objects.sizeof(this);
+		long size = -1;
+		try
+		{
+			size = Objects.sizeof(this);
+		}
+		catch (Exception e)
+		{
+			log.error("Exception getting size for component " + this, e);
+		}
 		this.parent = originalParent;
 		return size;
 	}
@@ -1210,27 +1246,58 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * Authorizes an action for a component.
+	 * 
+	 * @param action
+	 *            The action to authorize
+	 * @return True if the action is allowed
+	 * @throws AuthorizationException
+	 *             Can be thrown by implementation if action is unauthorized
+	 */
+	public final boolean isActionAuthorized(Action action)
+	{
+		IAuthorizationStrategy authorizationStrategy = getSession().getAuthorizationStrategy();
+		if (authorizationStrategy != null)
+		{
+			return authorizationStrategy.isActionAuthorized(this, action);
+		}
+		return true;
+	}
+
+	/**
 	 * Returns true if this component is an ancestor of the given component
 	 * 
 	 * @param component
 	 *            The component to check
 	 * @return True if the given component has this component as an ancestor
+	 * @deprecated use getParent().contains(component, false)
 	 */
 	public final boolean isAncestorOf(final Component component)
 	{
-		// Walk up containment hierarchy
-		for (MarkupContainer current = component.parent; current != null; current = current
-				.getParent())
-		{
-			// Is this an ancestor?
-			if (current == this)
-			{
-				return true;
-			}
-		}
+		return getParent().contains(component, false);
+		// // Walk up containment hierarchy
+		// for (MarkupContainer current = component.parent; current != null;
+		// current = current
+		// .getParent())
+		// {
+		// // Is this an ancestor?
+		// if (current == this)
+		// {
+		// return true;
+		// }
+		// }
+		//
+		// // This component is not an ancestor of the given component
+		// return false;
+	}
 
-		// This component is not an ancestor of the given component
-		return false;
+	/**
+	 * @return true if this component is authorized to be enabled, false
+	 *         otherwise
+	 */
+	public final boolean isEnableAllowed()
+	{
+		return isActionAuthorized(ENABLE);
 	}
 
 	/**
@@ -1292,7 +1359,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		Component component = this;
 		while (component != null)
 		{
-			if (renderAllowed && component.isVisible())
+			if (component.isRenderAllowed() && component.isVisible())
 			{
 				component = component.getParent();
 			}
@@ -1359,33 +1426,21 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Component has to implement {@link IBehaviorListener} to be able to pass
-	 * through events to behaviors without ending up with many if/else blocks.
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's url is saved for future use by method
+	 * continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current url at some later time; otherwise just use
+	 * setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
 	 * 
-	 * @see wicket.behavior.IBehaviorListener#onRequest()
-	 * @throws IllegalStateException
-	 *             Thrown if no behavior listener can be found using request
-	 *             parameter behaviorId
+	 * @param page
+	 *            The sign in page
+	 * 
+	 * @see Component#continueToOriginalDestination()
 	 */
-	public void onRequest()
+	public final void redirectToInterceptPage(final Page page)
 	{
-		final String id = getRequest().getParameter("behaviorId");
-
-		if (id == null)
-		{
-			throw new IllegalStateException(
-					"Parameter behaviorId was not provided: unable to locate listener");
-		}
-
-		final int idAsInt = Integer.parseInt(id);
-		final IBehaviorListener behaviorListener = (IBehaviorListener)behaviors.get(idAsInt);
-
-		if (behaviorListener == null)
-		{
-			throw new IllegalStateException("No behavior listener found with behaviorId " + id);
-		}
-
-		behaviorListener.onRequest();
+		getPage().getPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -1407,8 +1462,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * process.
 	 * <p>
 	 * For component level re-render (e.g. AJAX) please call
-	 * Component.doRender(). Though render() does seem to work, it will fail for
-	 * panel children.
+	 * {@link #renderComponent()}. Though render() does seem to work, it will
+	 * fail for panel children.
 	 */
 	public final void render()
 	{
@@ -1423,27 +1478,12 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * The markup stream will be assigned to the component at the beginning
-	 * of the component render phase. It is temporary working variable only.
-	 * 
-	 * @see #findMarkupStream()
-	 * @see MarkupContainer#getMarkupStream()
-	 * 
-	 * @param markupStream 
-	 *           The current markup stream which should be applied
-	 *           by the component to render itself
-	 */
-	protected void setMarkupStream(final MarkupStream markupStream)
-	{
-	}
-	
-	/**
 	 * Performs a render of this component as part of a Page level render
 	 * process.
 	 * <p>
 	 * For component level re-render (e.g. AJAX) please call
-	 * Component.doRender(). Though render() does seem to work, it will fail for
-	 * panel children.
+	 * {@link #renderComponent(MarkupStream)}. Though render() does seem to
+	 * work, it will fail for panel children.
 	 * 
 	 * @param markupStream
 	 */
@@ -1454,19 +1494,53 @@ public abstract class Component implements Serializable, IBehaviorListener
 
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
-		if (renderAllowed && isVisible())
+		if (isRenderAllowed() && isVisible())
 		{
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
 				log.debug("Begin render " + this);
 			}
-			
-			// Call implementation to render component
-			onRender(markupStream);
-			
-			// Component has been rendered
-			rendered();
+
+			try
+			{
+				// Call implementation to render component
+				onBeforeRender();
+				try
+				{
+					onRender(markupStream);
+				}
+				finally
+				{
+					onAfterRender();
+				}
+
+				// Component has been rendered
+				rendered();
+			}
+			catch (RuntimeException ex)
+			{
+				// Call each behaviors onException() to allow the
+				// behavior to clean up
+				if (behaviors != null)
+				{
+					for (Iterator i = behaviors.iterator(); i.hasNext();)
+					{
+						IBehavior behavior = (IBehavior)i.next();
+						try
+						{
+							behavior.exception(this, ex);
+						}
+						catch (Throwable ex2)
+						{
+							log.error("Error while cleaning up after exception", ex2);
+						}
+					}
+				}
+
+				// Re-thtow the exception
+				throw ex;
+			}
 
 			if (log.isDebugEnabled())
 			{
@@ -1475,7 +1549,74 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 		else
 		{
-			findMarkupStream().skipComponent();
+			markupStream.skipComponent();
+		}
+	}
+
+	/**
+	 * Page.renderPage() is used to render a whole page. With AJAX however it
+	 * must be possible to render any one component contained in a page. That is
+	 * what this method is for.
+	 * <p>
+	 * Note: it is not necessary that the page has previously been rendered. But
+	 * the component must have been added (directly or indirectly) to a
+	 * container with an associated markup file (Page, Panel or Border).
+	 */
+	public final void renderComponent()
+	{
+		// If this Component is a Page
+		if (this instanceof Page)
+		{
+			// Render as Page, with all the special logic that entails
+			((Page)this).renderPage();
+		}
+		else
+		{
+			// Save the parent's markup stream to re-assign it at the end
+			MarkupContainer parent = getParent();
+			MarkupStream originalMarkupStream = parent.getMarkupStream();
+			MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+
+			try
+			{
+				// Make sure that while rendering the markup stream is found
+				parent.setMarkupStream(markupStream);
+
+				if (this instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)this;
+
+					// First, give priority to IFeedback instances, as they have
+					// to
+					// collect their messages before components like ListViews
+					// remove any child components
+					container.visitChildren(IFeedback.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							((IFeedback)component).updateFeedback();
+							component.internalAttach();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+				
+				if (this instanceof IFeedback) {
+					((IFeedback)this).updateFeedback();
+				}
+
+				// Render the component and all its children
+				internalAttach();
+				onBeforeRender();
+
+				render(markupStream);
+			}
+			finally
+			{
+				// Make sure the original markup stream is back in place
+				parent.setMarkupStream(originalMarkupStream);
+				onAfterRender();
+			}
 		}
 	}
 
@@ -1492,6 +1633,8 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
+		this.markupIndex = markupStream.getCurrentIndex();
+
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
 		final ComponentTag tag = openTag.mutable();
@@ -1514,37 +1657,48 @@ public abstract class Component implements Serializable, IBehaviorListener
 					.throwMarkupException("You can not modify a open tag to open-close: " + tag);
 		}
 
-		// Render open tag
-		if (getRenderBodyOnly() == false)
+		try
 		{
-			renderComponentTag(tag);
-		}
-		markupStream.next();
-
-		// Render the body only if open-body-close. Do not render if open-close.
-		if (tag.isOpen())
-		{
-			// Render the body
-			onComponentTagBody(markupStream, tag);
-		}
-
-		// Render close tag
-		if (tag.isOpen())
-		{
-			if (openTag.isOpen())
+			// Render open tag
+			if (getRenderBodyOnly() == false)
 			{
-				renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+				renderComponentTag(tag);
 			}
-			else
+			markupStream.next();
+
+			// Render the body only if open-body-close. Do not render if
+			// open-close.
+			if (tag.isOpen())
 			{
-				// If a open-close tag has been to modified to be
-				// open-body-close than a synthetic close tag must be rendered.
-				if (getRenderBodyOnly() == false)
+				// Render the body
+				onComponentTagBody(markupStream, tag);
+			}
+
+			// Render close tag
+			if (tag.isOpen())
+			{
+				if (openTag.isOpen())
 				{
-					// Close the manually opened panel tag.
-					getResponse().write(openTag.syntheticCloseTagString());
+					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+				}
+				else
+				{
+					// If a open-close tag has been to modified to be
+					// open-body-close than a synthetic close tag must be
+					// rendered.
+					if (getRenderBodyOnly() == false)
+					{
+						// Close the manually opened panel tag.
+						getResponse().write(openTag.syntheticCloseTagString());
+					}
 				}
 			}
+		}
+		catch (RuntimeException re)
+		{
+			if (re instanceof WicketRuntimeException || re instanceof AbortException)
+				throw re;
+			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
 	}
 
@@ -1568,6 +1722,34 @@ public abstract class Component implements Serializable, IBehaviorListener
 			{
 				IBehavior behavior = (IBehavior)i.next();
 				behavior.rendered(this);
+			}
+		}
+	}
+
+	/**
+	 * Print to the web response what ever the component wants to contribute to
+	 * the head section. Make sure that all attached behaviors are asked as
+	 * well.
+	 * 
+	 * @param container
+	 *            The HtmlHeaderContainer
+	 */
+	public void renderHead(final HtmlHeaderContainer container)
+	{
+		// Ask all behaviors if they have something to contribute to the
+		// header or body onLoad tag.
+		if (this.behaviors != null)
+		{
+			final WebPage webPage = (WebPage)getPage();
+
+			final Iterator iter = this.behaviors.iterator();
+			while (iter.hasNext())
+			{
+				IBehavior behavior = (IBehavior)iter.next();
+				if (behavior instanceof IHeaderContributor)
+				{
+					((IHeaderContributor)behavior).renderHead(container.getResponse());
+				}
 			}
 		}
 	}
@@ -1621,11 +1803,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Is new enabled state a change?
 		if (enabled != getFlag(FLAG_ENABLED))
 		{
-			// FIXME General: We can't record any state change as Link.onComponentTag
-			// potentially sets this property we probably don't need to support
-			// this, but I'll keep this commented so that we can think about it
-			// I (johan) changed the way Link.onComponentTag works. It will
-			// disable versioning for a the setEnabled call.
 			// Tell the page that this component's enabled was changed
 			if (isVersioned())
 			{
@@ -1635,6 +1812,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 					addStateChange(new EnabledChange(this));
 				}
 			}
+
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
 		}
@@ -1669,7 +1847,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		getPage().setMetaData(this, key, object);
+		metaData = key.set(metaData, object);
 	}
 
 	/**
@@ -1731,7 +1909,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		}
 
 		// Check authorization
-		if (!authorize(ENABLE))
+		if (!isActionAuthorized(ENABLE))
 		{
 			throw new UnauthorizedActionException(this, ENABLE);
 		}
@@ -1752,6 +1930,20 @@ public abstract class Component implements Serializable, IBehaviorListener
 			modelChanged();
 		}
 
+		return this;
+	}
+
+	/**
+	 * Sets whether or not component will output id attribute into the markup.
+	 * id attribute will be set to the value returned from
+	 * {@link Component#getMarkupId()}.
+	 * 
+	 * @param output
+	 * @return this for chaining
+	 */
+	public final Component setOutputMarkupId(final boolean output)
+	{
+		setFlag(FLAG_OUTPUT_MARKUP_ID, output);
 		return this;
 	}
 
@@ -1842,17 +2034,47 @@ public abstract class Component implements Serializable, IBehaviorListener
 		// Is new visibility state a change?
 		if (visible != getFlag(FLAG_VISIBLE))
 		{
-			// Tell the page that this component's visibility was changed
-			final Page page = findPage();
-			if (page != null)
-			{
-				addStateChange(new VisibilityChange(this));
-			}
+			// record component's visibility change
+			addStateChange(new VisibilityChange(this));
 
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
 		}
 		return this;
+	}
+
+	/**
+	 * Traverses all parent components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param c
+	 *            Class
+	 * @param visitor
+	 *            The visitor to call at each parent of the given type
+	 * @return First non-null value returned by visitor callback
+	 */
+	public final Object visitParents(final Class c, final IVisitor visitor)
+	{
+		// Start here
+		Component current = this;
+
+		// Walk up containment hierarchy
+		while (current != null)
+		{
+			// Is current an instance of this class?
+			if (c.isInstance(current))
+			{
+				final Object object = visitor.component(current);
+				if (object != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return object;
+				}
+			}
+
+			// Check parent
+			current = current.getParent();
+		}
+		return null;
 	}
 
 	/**
@@ -1879,15 +2101,15 @@ public abstract class Component implements Serializable, IBehaviorListener
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(
 						", page = <No Page>, path = ").append(getPath()).append(".").append(
-						Classes.name(getClass())).append("]").toString();
+						Classes.simpleName(getClass())).append("]").toString();
 			}
 			else
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
 						.append(getPage().getClass().getName()).append(", path = ").append(
-								getPath()).append(".").append(Classes.name(getClass())).append(
-								", isVisible = ").append((renderAllowed && isVisible())).append(
-								", isVersioned = ").append(isVersioned()).append("]").toString();
+								getPath()).append(".").append(Classes.simpleName(getClass()))
+						.append(", isVisible = ").append((isRenderAllowed() && isVisible()))
+						.append(", isVersioned = ").append(isVersioned()).append("]").toString();
 			}
 		}
 		else
@@ -1897,47 +2119,88 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
 	 * 
-	 * @param listenerInterface
-	 *            The listener interface that the URL should call
-	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
+	 * @see RequestCycle#urlFor(PageMap, Class, PageParameters)
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
 	 */
-	public final String urlFor(final Class listenerInterface)
+	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
 	{
-		return getPage().urlFor(this, listenerInterface);
+		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
 	}
 
 	/**
-	 * Gets a url for the provided behavior listener.
+	 * Returns a URL that references the given request target.
 	 * 
-	 * @param behaviorListener
-	 *            The behavior listener to get a url for
-	 * @return The URL
-	 * @see Page#urlFor(Component, Class)
+	 * @see RequestCycle#urlFor(IRequestTarget)
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * 
+	 * @return a URL that references the given request target
 	 */
-	public final String urlFor(final IBehaviorListener behaviorListener)
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
-		if (behaviorListener == null)
-		{
-			throw new IllegalArgumentException("Argument behaviorListener must be not null");
-		}
+		return getRequestCycle().urlFor(requestTarget);
+	}
 
-		if (behaviors == null)
-		{
-			throw new IllegalArgumentException("Behavior listener " + behaviorListener
-					+ " was not registered with this component");
-		}
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @see RequestCycle#urlFor(PageMap, Class, PageParameters)
+	 * 
+	 * @param pageMap
+	 *            Page map to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * 
+	 * 
+	 * @return Bookmarkable URL to page
+	 */
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
+	{
+		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
+	}
 
-		int index = behaviors.indexOf(behaviorListener);
-		if (index == -1)
-		{
-			throw new IllegalArgumentException("Behavior listener " + behaviorListener
-					+ " was not registered with this component");
-		}
+	/**
+	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * 
+	 * @param listener
+	 *            The listener interface that the URL should call
+	 * @return The URL
+	 */
+	public final CharSequence urlFor(final RequestListenerInterface listener)
+	{
+		return getRequestCycle().urlFor(this, listener);
+	}
 
-		return urlFor(IBehaviorListener.class) + "&behaviorId=" + index;
+	/**
+	 * Returns a URL that references a shared resource through the provided
+	 * resource reference.
+	 * 
+	 * @see RequestCycle#urlFor(ResourceReference)
+	 * 
+	 * @param resourceReference
+	 *            The resource reference
+	 * @return The url for the shared resource
+	 */
+	public final CharSequence urlFor(final ResourceReference resourceReference)
+	{
+		return getRequestCycle().urlFor(resourceReference);
 	}
 
 	/**
@@ -2080,23 +2343,6 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list.
-	 * Returns an empty list rather than null if there are no behaviors coupled
-	 * to this component.
-	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
-	 */
-	protected final List/* <IBehavior> */getBehaviors()
-	{
-		if (behaviors == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		return Collections.unmodifiableList(behaviors);
-	}
-
-	/**
 	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
 	 * the provided type as a unmodifiable list or null if there are no
 	 * behaviors attached. Returns an empty list rather than null if there are
@@ -2188,10 +2434,11 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * Called when a request begins.
 	 */
-	protected void internalBeginRequest()
+	protected void internalAttach()
 	{
 		onBeginRequest();
-		internalOnBeginRequest();
+		onAttach();
+		internalOnAttach();
 	}
 
 	/**
@@ -2200,9 +2447,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * Called when a request ends.
 	 */
-	protected void internalEndRequest()
+	protected void internalDetach()
 	{
-		internalOnEndRequest();
+		internalOnDetach();
+		onDetach();
 		onEndRequest();
 	}
 
@@ -2212,7 +2460,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * Called when a request begins.
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 	}
 
@@ -2222,7 +2470,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 * 
 	 * Called when a request ends.
 	 */
-	protected void internalOnEndRequest()
+	protected void internalOnDetach()
 	{
 	}
 
@@ -2265,7 +2513,33 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * Called just after a component is rendered.
+	 */
+	protected void onAfterRender()
+	{
+	}
+
+	/**
+	 * Called to allow a component to attach resources for use. The semantics of
+	 * this will be tightened in Wicket 1.3 when we will add the guarantee that
+	 * onAttach() be called before any framework use of a Component (in the
+	 * implementation of request targets).
+	 */
+	protected void onAttach()
+	{
+	}
+
+	/**
+	 * Called just before a component is rendered.
+	 */
+	protected void onBeforeRender()
+	{
+	}
+
+	/**
 	 * Called when a request begins.
+	 * 
+	 * @deprecated use onAttach() instead. This method will be removed in 1.3
 	 */
 	protected void onBeginRequest()
 	{
@@ -2279,6 +2553,10 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+		{
+			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
+		}
 	}
 
 	/**
@@ -2294,7 +2572,25 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
+	 * Called to allow a component to detach resources after use. The semantics
+	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
+	 * that onDetach() be called after all framework use of a Component (in the
+	 * implementation of request targets).
+	 */
+	protected void onDetach()
+	{
+	}
+
+	/**
 	 * Called when a request ends.
+	 * 
+	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
+	 *             be replaced by onEndRender or afterRender with different
+	 *             semantics. Instead of calling it after a request is done like
+	 *             is currently the case, that new method will be called after
+	 *             this component is rendered, which is a more precise scope.
+	 *             This semantical change shouldn't have a noticable impact on
+	 *             it's use I believe.
 	 */
 	protected void onEndRequest()
 	{
@@ -2355,7 +2651,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 				for (Iterator i = behaviors.iterator(); i.hasNext();)
 				{
 					IBehavior behavior = (IBehavior)i.next();
-					
+
 					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
 					{
@@ -2381,29 +2677,48 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 *            The new markup
 	 */
 	protected final void replaceComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag tag, final String body)
+			final ComponentTag tag, final CharSequence body)
 	{
-		// If tag has body
+		// The tag might have been changed from open-close to open. Hence
+		// we'll need what was in the markup itself
+		ComponentTag markupOpenTag = null;
+
+		// If tag has a body
 		if (tag.isOpen())
 		{
-			// skip any raw markup in the body
-			markupStream.skipRawMarkup();
+			// Get what tag was in the markup; not what the user it might
+			// have changed it to.
+			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
+			markupOpenTag = markupStream.getTag();
+			markupStream.next();
+
+			// If it was an open tag in the markup as well, than ...
+			if (markupOpenTag.isOpen())
+			{
+				// skip any raw markup in the body
+				markupStream.skipRawMarkup();
+			}
 		}
 
-		// Write the new body
-		getResponse().write(body);
+		if (body != null)
+		{
+			// Write the new body
+			getResponse().write(body);
+		}
 
 		// If we had an open tag (and not an openclose tag) and we found a
 		// close tag, we're good
 		if (tag.isOpen())
 		{
-			// Open tag must have close tag
-			if (!markupStream.atCloseTag())
+			// If it was an open tag in the markup, than there must be
+			// a close tag as well.
+			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
 				// There must be a component in this discarded body
 				markupStream
-						.throwMarkupException("Expected close tag.	Possible attempt to embed component(s) "
-								+ "in the body of a component which discards its body");
+						.throwMarkupException("Expected close tag for '" + markupOpenTag + "' Possible attempt to embed component(s) '" + 
+								markupStream.get() + 
+								"' in the body of this component which discards its body");
 			}
 		}
 	}
@@ -2442,36 +2757,18 @@ public abstract class Component implements Serializable, IBehaviorListener
 	}
 
 	/**
-	 * Visits the parents of this component.
+	 * The markup stream will be assigned to the component at the beginning of
+	 * the component render phase. It is temporary working variable only.
 	 * 
-	 * @param c
-	 *            Class
-	 * @param visitor
-	 *            The visitor to call at each parent of the given type
-	 * @return First non-null value returned by visitor callback
+	 * @see #findMarkupStream()
+	 * @see MarkupContainer#getMarkupStream()
+	 * 
+	 * @param markupStream
+	 *            The current markup stream which should be applied by the
+	 *            component to render itself
 	 */
-	protected final Object visitParents(final Class c, final IVisitor visitor)
+	protected void setMarkupStream(final MarkupStream markupStream)
 	{
-		// Start here
-		Component current = this;
-
-		// Walk up containment hierarchy
-		while (current != null)
-		{
-			// Is current an instance of this class?
-			if (c.isInstance(current))
-			{
-				final Object object = visitor.component(current);
-				if (object != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return object;
-				}
-			}
-
-			// Check parent
-			current = current.getParent();
-		}
-		return null;
 	}
 
 	/**
@@ -2507,6 +2804,11 @@ public abstract class Component implements Serializable, IBehaviorListener
 			}
 		}
 		return false;
+	}
+
+	final boolean isRenderAllowed()
+	{
+		return getFlag(FLAG_IS_RENDER_ALLOWED);
 	}
 
 	/**
@@ -2604,19 +2906,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 	 */
 	final void setRenderAllowed(boolean renderAllowed)
 	{
-		this.renderAllowed = renderAllowed;
-	}
-
-	/**
-	 * Check whether this component may be created at all. Throws a
-	 * {@link AuthorizationException} when it may not be created
-	 */
-	private final void authorizeInstantiation()
-	{
-		if (!getSession().getAuthorizationStrategy().authorizeInstantiation(getClass()))
-		{
-			throw new UnauthorizedInstantiationException(getClass());
-		}
+		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
 	}
 
 	/**
@@ -2631,7 +2921,7 @@ public abstract class Component implements Serializable, IBehaviorListener
 		IModel nestedModelObject = model;
 		while (true)
 		{
-			final IModel next = ((IModel)nestedModelObject).getNestedModel();
+			final IModel next = nestedModelObject.getNestedModel();
 			if (next == null)
 			{
 				break;

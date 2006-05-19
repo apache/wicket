@@ -25,12 +25,12 @@ import wicket.Component;
 import wicket.IResourceFactory;
 import wicket.IResourceListener;
 import wicket.MarkupContainer;
+import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.PackageResource;
-import wicket.markup.html.WebResource;
 import wicket.markup.html.border.Border;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
@@ -38,6 +38,7 @@ import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.OptionalMetaPattern;
 import wicket.util.parse.metapattern.parsers.MetaPatternParser;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * THIS CLASS IS INTENDED FOR INTERNAL USE IN IMPLEMENTING LOCALE SENSITIVE
@@ -85,6 +86,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 
 	/** The resource reference */
 	private ResourceReference resourceReference;
+
+  /** The resource parameters */
+  private ValueMap resourceParameters;
 
 	/** The locale of the image resource */
 	private transient Locale locale;
@@ -205,8 +209,19 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
+		setResourceReference(resourceReference, null);
+	}
+	/**
+	 * @param resourceReference
+	 *            The resource to set.
+	 * @param resourceParameters 
+	 * 			  The resource parameters for the shared resource
+	 */
+	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap resourceParameters)
+	{
 		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
+	    this.resourceParameters = resourceParameters;
 		bind();
 	}
 
@@ -234,21 +249,29 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			this.resourceReference = null;
 			this.resource = null;
 		}
+		else
+		{
+			// TODO post 1.2: should we have support for locale changes when the 
+			// resource reference (or resource??) is set manually..
+			// We should get a new resource reference for the current locale then
+			// that points to the same resource but with another locale if it exists.
+			// something like SharedResource.getResourceReferenceForLocale(resourceReference);
+		}
 
 		// Need to load image resource for this component?
 		if (resource == null && resourceReference == null)
 		{
 			// Get SRC attribute of tag
-			final String src = tag.getString("src");
+			final CharSequence src = tag.getString("src");
 			if (src != null)
 			{
 				// Try to load static image
-				loadStaticImage(src);
+				loadStaticImage(src.toString());
 			}
 			else
 			{
 				// Get VALUE attribute of tag
-				final String value = tag.getString("value");
+				final CharSequence value = tag.getString("value");
 				if (value != null)
 				{
 					// Try to generate an image using an image factory
@@ -263,20 +286,20 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 
 		// Get URL for resource
-		final String url;
+		final CharSequence url;
 		if (this.resourceReference != null)
 		{
 			// Create URL to shared resource
-			url = component.getPage().urlFor(resourceReference.getPath());
+			url = RequestCycle.get().urlFor(resourceReference, resourceParameters);
 		}
 		else
 		{
 			// Create URL to component
-			url = component.urlFor(IResourceListener.class);
+			url = component.urlFor(IResourceListener.INTERFACE);
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", Strings.replaceAll(component.getResponse().encodeURL(url), "&", "&amp;"));
+		tag.put("src", Strings.replaceAll(RequestCycle.get().getOriginalResponse().encodeURL(url), "&", "&amp;"));
 	}
 
 	/**
@@ -313,6 +336,13 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	private void loadStaticImage(final String path)
 	{
+		if ((path.indexOf("..") != -1) || (path.indexOf("./") != -1) || (path.indexOf("/.") != -1))
+		{
+			throw new WicketRuntimeException(
+					"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path=" 
+					+ path);
+		}
+		
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();
 		if (parent instanceof Border)
 		{
@@ -344,7 +374,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 * @param value
 	 *            The value to parse
 	 */
-	private void newImage(final String value)
+	private void newImage(final CharSequence value)
 	{
 		// Parse value
 		final ImageValueParser valueParser = new ImageValueParser(value);
@@ -379,7 +409,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			}
 			else
 			{
-				this.resource = (WebResource)getResourceFactory(application, factoryName)
+				this.resource = getResourceFactory(application, factoryName)
 						.newResource(specification, locale, style);
 			}
 		}
@@ -391,5 +421,4 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 							+ "'.  Was expecting a value attribute of the form \"[resourceFactoryName]:[resourceReferenceName]?:[factorySpecification]\".");
 		}
 	}
-
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,7 +19,10 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
+import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import wicket.model.IModel;
 
 /**
  * An implementation of the DataTable that aims to solve the 90% usecase by
@@ -81,5 +84,9 @@ public class DefaultDataTable extends DataTable
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
+	protected Item newRowItem(String id, int index, IModel model)
+	{
+		return new OddEvenItem(id, index, model);
+	}
 
 }

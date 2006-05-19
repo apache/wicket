@@ -35,9 +35,7 @@ public class ExternalPageViewer
 {
 	private static final List browserPaths = new ArrayList();
 
-	// TODO General: I'm sure we can be smarter on this. Maybe throw in some
-	// JNI? Let's see whether Jonathan can help here.
-	// TODO General: Where is this class used/ how is it supposed to be used?
+	// TODO Post 1.2: General: We could use JNLP to launch browser (see http://www.croftsoft.com/library/tutorials/browser/), but why not use Swing HTMLArea??
 	static
 	{
 		registerBrowserPath("C:/Program Files/Mozilla Firefox/firefox.exe");

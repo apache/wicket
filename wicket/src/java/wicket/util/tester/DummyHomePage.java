@@ -29,10 +29,8 @@ public class DummyHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/** FIXME Unknown: ?? */
 	private ITestPageSource testPageSource;
 
-	/** FIXME Unknown: ?? */
 	private Link testPageLink;
 
 	/**

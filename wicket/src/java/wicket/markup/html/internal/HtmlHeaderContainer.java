@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5046 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,29 +17,35 @@
  */
 package wicket.markup.html.internal;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.border.Border;
 import wicket.response.StringResponse;
 
 /**
  * The HtmlHeaderContainer is automatically created and added to the component
- * hierarchie by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
+ * hierarchy by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
  * handle/render the &gt;head&gt; tag and its body. However depending on the
- * parent component, the behavior must be different. E.g. if parent component
- * is a Page all components of the page's hierarchy must be asked if they have
+ * parent component, the behavior must be different. E.g. if parent component is
+ * a Page all components of the page's hierarchy must be asked if they have
  * something to contribute to the &lt;head&gt; section of the html response. If
- * yes, it must <b>immediately </b> be rendered.
+ * yes, it must <b>immediately</b> be rendered.
  * <p>
- * &lt;head&gt; regions may contain additional wicket components, which must 
- * be added by means of add(Component) as usual.
+ * &lt;head&gt; regions may contain additional wicket components, which can be
+ * added by means of add(Component) as usual.
  * <p>
- * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
+ * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.
  * <p>
  * <ul>
@@ -55,8 +61,8 @@ import wicket.response.StringResponse;
  * (of Panels, Borders and Pages)</li>
  * <li> components within &lt;wicket:head&gt; must be added by means of add(),
  * like allways with Wicket. No difference.</li>
- * <li> &lt;wicket:head&gt; and it's content is copied into the output.
- * Component contained in &lt;wicket.head&gt; are rendered as usual</li>
+ * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components
+ * contained in &lt;wicket.head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -64,7 +70,16 @@ import wicket.response.StringResponse;
 public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * wicket:head tags (components) must only be added once. To allow for a
+	 * little bit more control, each wicket:head has an associated scope which
+	 * by default is equal to the java class name directly associated with the
+	 * markup which contains the wicket:head. It can be modified by means of the
+	 * scope attribute.
+	 */
+	private Map renderedComponentsPerScope;
+
 	/**
 	 * Construct
 	 * 
@@ -114,11 +129,16 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// component hierarchie.
 			MarkupContainer parent = getParent();
 
-			// Usually only Page and Border implement IHeaderRenderer. Border
-			// does in order to support bordered pages.
-			if (parent instanceof IHeaderRenderer)
+			// If bordered page ...
+			while ((parent instanceof Border))
 			{
-				((IHeaderRenderer)parent).renderHeaderSections(this);
+				parent = parent.getParent();
+			}
+
+			// must be a Page
+			if (parent instanceof WebPage)
+			{
+				renderHeaderSections((WebPage)parent, this);
 			}
 			else
 			{
@@ -127,7 +147,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			}
 
 			// Automatically add <head> if necessary
-			String output = response.toString();
+			CharSequence output = response.getBuffer();
 			if (output.length() > 0)
 			{
 				if (output.charAt(0) == '\r')
@@ -137,7 +157,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\r')
 						{
-							output = output.substring(i - 2);
+							output = output.subSequence(i - 2, output.length());
 							break;
 						}
 					}
@@ -149,7 +169,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\n')
 						{
-							output = output.substring(i - 1);
+							output = output.subSequence(i - 1,output.length());
 							break;
 						}
 					}
@@ -171,10 +191,94 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isTransparent()
+	 * Ask all child components of the Page if they have something to contribute
+	 * to the &lt;head&gt; section of the HTML output. Every component
+	 * interested must implement IHeaderContributor.
+	 * <p>
+	 * Note: HtmlHeaderContainer will be removed from the component hierachie at
+	 * the end of the request (@see #onEndRequest()) and thus can not transport
+	 * status from one request to the next. This is true for all components
+	 * added to the header.
+	 * 
+	 * @param page
+	 *            The page object
+	 * @param container
+	 *            The header component container
 	 */
-	public boolean isTransparent()
+	private final void renderHeaderSections(final WebPage page, final HtmlHeaderContainer container)
+	{
+		// Make sure all Components interested in contributing to the header
+		// and there attached behaviors are asked.
+		page.visitChildren(new IVisitor()
+		{
+			/**
+			 * @see wicket.Component.IVisitor#component(wicket.Component)
+			 */
+			public Object component(Component component)
+			{
+				if (component.isVisible())
+				{
+					component.renderHead(container);
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+				else
+				{
+					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				}
+			}
+		});
+		
+		page.renderHead(container);
+	}
+
+	/**
+	 * @see wicket.MarkupContainer#isTransparentResolver()
+	 */
+	public boolean isTransparentResolver()
 	{
 		return true;
+	}
+
+	/**
+	 * Check if the header component is ok to render within the scope given.
+	 * 
+	 * @param scope
+	 *            The scope of the header component
+	 * @param id
+	 *            The component's id
+	 * @return true, if the component ok to render
+	 */
+	public final boolean okToRenderComponent(final String scope, final String id)
+	{
+		if (this.renderedComponentsPerScope == null)
+		{
+			this.renderedComponentsPerScope = new HashMap();
+		}
+
+//		if (scope == null)
+//		{
+//			scope = header.getMarkupStream().getContainerClass().getName();
+//		}
+		
+		List componentScope = (List)this.renderedComponentsPerScope.get(scope);
+		if (componentScope == null)
+		{
+			componentScope = new ArrayList();
+			this.renderedComponentsPerScope.put(scope, componentScope);
+		}
+
+		if (componentScope.contains(id))
+		{
+			return false;
+		}
+		componentScope.add(id);
+		return true;
+	}
+
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		this.renderedComponentsPerScope = null;
 	}
 }

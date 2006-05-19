@@ -18,15 +18,15 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Stack;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
-import wicket.settings.IMarkupSettings;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -51,31 +51,28 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
+	static
+	{
+		// register "wicket:fragement"
+		WicketTagIdentifier.registerWellKnownTagName("link");
+	}
+
 	/** Allow to have link regions within link regions */
-	private Stack autolinkStatus;
+	private ArrayListStack autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
-
-	/** 
-	 * The application settings required.
-	 * Note: you can rely on Application.get().getMarkupSettings() as reading
-	 * the markup happens in another thread due to ModificationWatcher. 
-	 */
-	private IMarkupSettings settings;
 	
 	/**
 	 * Construct.
 	 * 
 	 * @param parent
 	 *            The next element in the chain.
-	 * @param settings
-	 *            The application settings
 	 */
-	public WicketLinkTagHandler(final IMarkupFilter parent, final IMarkupSettings settings)
+	public WicketLinkTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
-		setAutomaticLinking(settings.getAutomaticLinking());
+		setAutomaticLinking(Application.get().getMarkupSettings().getAutomaticLinking());
 	}
 
 	/**
@@ -138,7 +135,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new Stack();
+							autolinkStatus = new ArrayListStack();
 						}
 
 						// remember the current setting to be reset after the

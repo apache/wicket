@@ -120,7 +120,10 @@ public class ThumbnailImageResource extends DynamicImageResource
 		}
 		finally
 		{
-			if (is != null) try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			if (is != null)
+			{
+				try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+			}
 		}
 
 		int originalWidth = originalImage.getWidth();
@@ -159,9 +162,17 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * Sets hint(s) for the scale operation.
 	 * @param scaleHints hint(s) for the scale operation
 	 */
-	public final void setScaleHints(int scaleHints)
+	public synchronized final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
+		invalidate();
+	}
+	
+	/**
+	 * @see wicket.markup.html.DynamicWebResource#invalidate()
+	 */
+	public synchronized void invalidate()
+	{
 		thumbnail = null;
 	}
 }

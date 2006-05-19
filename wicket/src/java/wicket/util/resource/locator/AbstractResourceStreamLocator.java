@@ -74,9 +74,22 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	 * 
 	 * @return The Resource, or null if not found.
 	 */
-	public IResourceStream locate(final Class clazz, final String path, final String style,
-			final Locale locale, final String extension)
+	public IResourceStream locate(final Class clazz, String path, final String style,
+			final Locale locale, String extension)
 	{
+		if (extension == null)
+		{
+			extension = "." + Strings.lastPathComponent(path, '.');
+			path = Strings.beforeLastPathComponent(path, '.');
+		}
+		else
+		{
+			if (!extension.startsWith("."))
+			{
+				extension = "." + extension;
+			}
+		}
+		
 		// 1. Try style, locale and extension
 		if (style != null && locale != null)
 		{

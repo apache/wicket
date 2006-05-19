@@ -22,7 +22,7 @@ package wicket.util.value;
  * 
  * @author Jonathan Locke
  */
-public class Count
+public final class Count
 {
 	/** The count */
 	private int count = 0;

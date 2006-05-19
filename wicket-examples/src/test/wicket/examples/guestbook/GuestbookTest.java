@@ -52,6 +52,17 @@ public class GuestbookTest extends WicketWebTestCase
 	}
 
 	/**
+	 * Sets up the test.
+	 * 
+	 * @throws Exception
+	 */
+	public void setUp() throws Exception
+	{
+		super.setUp();
+		GuestBook.clear();
+	}
+
+	/**
 	 * Test page.
 	 * 
 	 * @throws Exception
@@ -70,7 +81,7 @@ public class GuestbookTest extends WicketWebTestCase
 		this.setFormElement("text", "test-1");
 		this.submit();
 
-		this.dumpResponse(System.err);
+		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - guestbook");
 		assertFormPresent("commentForm");
 		this.assertFormElementPresent("text");
@@ -81,6 +92,7 @@ public class GuestbookTest extends WicketWebTestCase
 		this.setFormElement("text", "test-2");
 		this.submit();
 
+		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - guestbook");
 		this.assertElementPresent("comments");
 		// assertTextInElement() seems to be buggy

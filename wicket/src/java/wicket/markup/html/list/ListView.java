@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.50 $ $Date$
+ * $Id: ListView.java 5343 2006-04-12 00:58:25 -0700 (Wed, 12 Apr 2006)
+ * gwynevans $ $Revision$ $Date: 2006-04-12 00:58:25 -0700 (Wed, 12 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.Component;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
@@ -36,17 +38,17 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *           &lt;tbody&gt;
- *             &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                 &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *             ...    
+ *            &lt;tbody&gt;
+ *              &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                  &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *              ...    
  * </pre>
  * 
  * <p>
  * Though this example is about a HTML table, ListView is not at all limited to
  * HTML tables. Any kind of list can be rendered using ListView.
  * <p>
- * And the related Java code:
+ * The related Java code:
  * 
  * <pre>
  * add(new ListView(&quot;rows&quot;, listData)
@@ -63,16 +65,16 @@ import wicket.version.undo.Change;
  * WARNING: though you can nest ListViews within Forms, you HAVE to set the
  * optimizeItemRemoval property to true in order to have validation work
  * properly. By default, optimizeItemRemoval is false, which has the effect that
- * ListView replaces all child components by new instances. The idea behind
- * this, is that you allways render the fresh data, and as people usually use
- * ListViews for displaying read-only lists (at least, that's what we think),
- * this is good default behavior. <br />
+ * ListView replaces all child components by new instances. The idea behind this
+ * is that you always render the fresh data, and as people usually use ListViews
+ * for displaying read-only lists (at least, that's what we think), this is good
+ * default behavior. <br />
  * However, as the components are replaced before the rendering starts, the
- * search for specific messages for these components fail as they are replace
+ * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
- * (temporary) instance data of the components. And as these components are
- * replaced by new ones, your user will never see the wrong data when
- * optimizeItemRemoval is false.
+ * (temporary) instance data of the components. As these components are replaced
+ * by new ones, your user will never see the wrong data when optimizeItemRemoval
+ * is false.
  * </p>
  * 
  * @author Jonathan Locke
@@ -90,7 +92,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
+	 * ListView in a Form, ALWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 */
 	private boolean optimizeItemRemoval = false;
@@ -162,8 +164,25 @@ public abstract class ListView extends WebMarkupContainer
 	 * validation will not work properly.
 	 * 
 	 * @return Returns the optimizeItemRemoval.
+	 * @deprecated Use {@link #getReuseItems()} instead
 	 */
+	//TODO Post 1.2: Remove
 	public boolean getOptimizeItemRemoval()
+	{
+		return getReuseItems();
+	}
+
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
+	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
+	 * validation will not work properly.
+	 * 
+	 * @return Returns the optimizeItemRemoval.
+	 */
+	public boolean getReuseItems()
 	{
 		return optimizeItemRemoval;
 	}
@@ -235,9 +254,9 @@ public abstract class ListView extends WebMarkupContainer
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see wicket.Component#onBeginRequest()
+			 * @see wicket.Component#onAttach()
 			 */
-			protected void onBeginRequest()
+			protected void onAttach()
 			{
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
@@ -290,9 +309,9 @@ public abstract class ListView extends WebMarkupContainer
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see wicket.Component#onBeginRequest()
+			 * @see wicket.Component#onAttach()
 			 */
-			protected void onBeginRequest()
+			protected void onAttach()
 			{
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == 0)
@@ -385,10 +404,29 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param optimizeItemRemoval
 	 *            The optimizeItemRemoval to set.
 	 * @return this
+	 * @deprecated Use {@link #setReuseItems(boolean)} instead
 	 */
+	//TODO Post 1.2: Remove
 	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
-		this.optimizeItemRemoval = optimizeItemRemoval;
+		return setReuseItems(optimizeItemRemoval);
+	}
+
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
+	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
+	 * validation will not work properly.
+	 * 
+	 * @param reuseItems
+	 *            Whether to reuse the child items.
+	 * @return this
+	 */
+	public ListView setReuseItems(boolean reuseItems)
+	{
+		this.optimizeItemRemoval = reuseItems;
 		return this;
 	}
 
@@ -435,6 +473,39 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
+	 * Sets the model as the provided list and removes all children, so that the
+	 * next render will be using the contents of the model.
+	 * 
+	 * @param list
+	 *            The list for the new model. The list must implement
+	 *            {@link Serializable}.
+	 * @return This for chaining
+	 */
+	public Component setList(List list)
+	{
+		return setModel(new Model((Serializable)list));
+	}
+
+	/**
+	 * Sets the model and removes all current children, so that the next render
+	 * will be using the contents of the model.
+	 * 
+	 * @param model
+	 *            The new model
+	 * @return This for chaining
+	 * 
+	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		// remove all children; this has no effect when the list
+		// didn't render before, as in that case the list view
+		// does not yet have any children
+		removeAll();
+		return super.setModel(model);
+	}
+
+	/**
 	 * Subclasses may provide their own ListItemModel with extended
 	 * functionality. The default ListItemModel works fine with mostly static
 	 * lists where index remains valid. In cases where the underlying list
@@ -455,15 +526,15 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#internalOnBeginRequest()
+	 * @see wicket.MarkupContainer#internalOnAttach()
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
 		// Get number of items to be displayed
 		final int size = getViewSize();
 		if (size > 0)
 		{
-			if (getOptimizeItemRemoval())
+			if (getReuseItems())
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;

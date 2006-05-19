@@ -31,7 +31,7 @@ public class HelloWorldApplication extends WicketExampleApplication
 	 */
 	public HelloWorldApplication()
 	{
-		
+
 	}
 
 	/**

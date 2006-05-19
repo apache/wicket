@@ -22,6 +22,7 @@ import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -285,7 +286,6 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		super(id, model, choices, renderer);
 	}
 
-
 	/**
 	 * @return Prefix to use before choice
 	 */
@@ -345,12 +345,15 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		// Buffer to hold generated body
-		final StringBuffer buffer = new StringBuffer();
-
 		// Iterate through choices
 		final List choices = getChoices();
 
+		// Buffer to hold generated body
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(70*(choices.size()+1));
+
+		// Value of this choice
+		final String selected = getValue();
+		
 		// Loop through choices
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -373,15 +376,21 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add checkbox element
-				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"checkbox\""
-						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
-						+ id + "\" id=\"" + idAttr + "\"/>");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"checkbox\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
+						id).append("\" id=\"").append(idAttr).append("\"/>");
 
 				// Add label for checkbox
-				String display = getLocalizer().getString(label, this, label);
-				String escaped = Strings.escapeMarkup(display, false, true);
+				String display = label;
+				if(localizeDisplayValues())
+				{
+					display = getLocalizer().getString(label, this, label);
+				}
+				CharSequence escaped = Strings.escapeMarkup(display, false, true);
 
-				buffer.append("<label for=\"" + idAttr + "\">").append(escaped).append("</label>");
+				buffer.append("<label for=\"");
+				buffer.append(idAttr);
+				buffer.append("\">").append(escaped).append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
@@ -389,7 +398,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		}
 
 		// Replace body
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
 

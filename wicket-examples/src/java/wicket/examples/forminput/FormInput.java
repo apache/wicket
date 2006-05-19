@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.20 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.examples.forminput;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,17 +27,21 @@ import java.util.Locale;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Check;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IntegerValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.NumberValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -46,7 +51,10 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.WebRequest;
+import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
+import wicket.util.convert.MaskConverter;
+import wicket.util.convert.SimpleConverterAdapter;
 
 /**
  * Example for form input.
@@ -57,23 +65,22 @@ import wicket.util.convert.IConverter;
 public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.ENGLISH, new Locale("nl"), Locale.GERMAN , Locale.SIMPLIFIED_CHINESE });
+	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
+			new Locale("pt", "BR") });
 
 	/** available numbers for the radio selection. */
-	private static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { 
-	        "The Server Side", "Java Lobby", "Java.Net" });
+	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+			"Java.Net" });
 
 	/**
 	 * Constructor
 	 */
 	public FormInput()
 	{
-		Locale locale = getLocale();
-
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
@@ -89,7 +96,10 @@ public class FormInput extends WicketExamplePage
 	 */
 	public void setLocale(Locale locale)
 	{
-		getSession().setLocale(locale);
+		if (locale != null)
+		{
+			getSession().setLocale(locale);
+		}
 	}
 
 	/**
@@ -119,37 +129,92 @@ public class FormInput extends WicketExamplePage
 					setLocale(request.getLocale());
 				}
 			});
-			
+
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			stringTextField.setLabel(new Model("String"));
 			add(stringTextField);
-			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
-			add(integerTextField);
+			RequiredTextField integerTextField = new RequiredTextField("integerProperty",
+					Integer.class);
+			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty", Double.class));
-			// we have a component attached to the label here, as we want to synchronize the
-			// id's of the label, textfield and datepicker. Note that you can perfectly
+			// we have a component attached to the label here, as we want to
+			// synchronize the
+			// id's of the label, textfield and datepicker. Note that you can
+			// perfectly
 			// do without labels
 			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
 			add(dateLabel);
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
 			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
-			        IntegerValidator.range(0, 100)));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
+					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
-			rc.add(RequiredValidator.getInstance());
+			rc.setRequired(true);
 			add(rc);
-			
+
+			RadioGroup group = new RadioGroup("numbersGroup");
+			add(group);
+			ListView persons = new ListView("numbers", NUMBERS)
+			{
+				protected void populateItem(ListItem item)
+				{
+					item.add(new Radio("radio", item.getModel()));
+					item.add(new Label("number", item.getModelObjectAsString()));
+				};
+			};
+			group.add(persons);
+
+			CheckGroup checks = new CheckGroup("numbersCheckGroup");
+			add(checks);
+			ListView checksList = new ListView("numbers", NUMBERS)
+			{
+				protected void populateItem(ListItem item)
+				{
+					item.add(new Check("check", item.getModel()));
+					item.add(new Label("number", item.getModelObjectAsString()));
+				};
+			};
+			checks.add(checksList);
+
 			add(new ListMultipleChoice("siteSelection", SITES));
 
-			// as an example, we use a custom converter here.
+			// TextField using a custom converter.
 			add(new TextField("urlProperty", URL.class)
 			{
 				public IConverter getConverter()
 				{
-					return new URLConverter();
+					return new SimpleConverterAdapter()
+					{
+						public String toString(Object value)
+						{
+							return value != null ? value.toString() : null;
+						}
+
+						public Object toObject(String value)
+						{
+							try
+							{
+								return new URL(value.toString());
+							}
+							catch (MalformedURLException e)
+							{
+								throw new ConversionException("'" + value + "' is not a valid URL");
+							}
+						}
+					};
+				}
+			});
+
+			// TextField using a mask converter
+			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
+			{
+				public IConverter getConverter()
+				{
+					// US telephone number mask
+					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 
@@ -214,7 +279,8 @@ public class FormInput extends WicketExamplePage
 		public void onSelectionChanged(Object newSelection)
 		{
 			// note that we don't have to do anything here, as our property
-			// model allready calls FormInput.setLocale when the model is updated
+			// model allready calls FormInput.setLocale when the model is
+			// updated
 			// setLocale((Locale)newSelection); // so we don't need to do this
 		}
 	}
@@ -237,7 +303,7 @@ public class FormInput extends WicketExamplePage
 		public Object getDisplayValue(Object object)
 		{
 			Locale locale = (Locale)object;
-			String display = locale.getDisplayName(getLocale()); 
+			String display = locale.getDisplayName(getLocale());
 			return display;
 		}
 	}
@@ -254,11 +320,14 @@ public class FormInput extends WicketExamplePage
 		public LinesListView(String id)
 		{
 			super(id);
+			// always do this in forms!
+			setReuseItems(true);
 		}
 
 		protected void populateItem(ListItem item)
 		{
-			// add a text field that works on each list item model (returns objects of
+			// add a text field that works on each list item model (returns
+			// objects of
 			// type FormInputModel.Line) using property text.
 			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
 		}

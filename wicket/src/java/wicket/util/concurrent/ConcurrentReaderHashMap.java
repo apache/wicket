@@ -216,7 +216,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	 * The default initial number of table slots for this table (32). Used when
 	 * not otherwise specified in constructor.
 	 */
-	public static int DEFAULT_INITIAL_CAPACITY = 32;
+	public static final int DEFAULT_INITIAL_CAPACITY = 32;
 
 	/**
 	 * The minimum capacity, used if a lower value is implicitly specified by
@@ -281,7 +281,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		{
 			result = MINIMUM_CAPACITY;
 			while (result < cap)
+			{
 				result <<= 1;
+			}
 		}
 		return result;
 	}
@@ -329,7 +331,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	public ConcurrentReaderHashMap(int initialCapacity, float loadFactor)
 	{
 		if (loadFactor <= 0)
+		{
 			throw new IllegalArgumentException("Illegal Load factor: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int cap = p2capacity(initialCapacity);
@@ -432,7 +436,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 				Entry[] reread = getTableForReading();
 				if (tab == reread && first == tab[index])
+				{
 					return null;
+				}
 				else
 				{
 					// Wrong list -- must restart traversal at new first
@@ -444,7 +450,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 			{
 				Object value = e.value;
 				if (value != null)
+				{
 					return value;
+				}
 
 				// Entry was invalidated during deletion. But it could
 				// have been re-inserted, so we must retraverse.
@@ -459,7 +467,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 				e = first = tab[index = hash & (tab.length - 1)];
 			}
 			else
+			{
 				e = e.next;
+			}
 		}
 	}
 
@@ -512,8 +522,12 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		Entry e;
 
 		for (e = first; e != null; e = e.next)
+		{
 			if (e.hash == hash && eq(key, e.key))
+			{
 				break;
+			}
+		}
 
 		synchronized (this)
 		{
@@ -528,9 +542,13 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 						Entry newEntry = new Entry(hash, key, value, first);
 						tab[index] = newEntry;
 						if (++count >= threshold)
+						{
 							rehash();
+						}
 						else
+						{
 							recordModification(newEntry);
+						}
 						return null;
 					}
 				}
@@ -572,9 +590,13 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 				Entry newEntry = new Entry(hash, key, value, first);
 				tab[index] = newEntry;
 				if (++count >= threshold)
+				{
 					rehash();
+				}
 				else
+				{
 					recordModification(newEntry);
+				}
 				return null;
 			}
 			else if (e.hash == hash && eq(key, e.key))
@@ -584,7 +606,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 				return oldValue;
 			}
 			else
+			{
 				e = e.next;
+			}
 		}
 	}
 
@@ -633,8 +657,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 				// Single node on list
 				if (next == null)
+				{
 					newTable[idx] = e;
-
+				}
 				else
 				{
 					// Reuse trailing consecutive sequence of all same bit
@@ -693,8 +718,12 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		Entry e = first;
 
 		for (e = first; e != null; e = e.next)
+		{
 			if (e.hash == hash && eq(key, e.key))
+			{
 				break;
+			}
+		}
 
 		synchronized (this)
 		{
@@ -703,7 +732,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 				if (e == null)
 				{
 					if (first == tab[index])
+					{
 						return null;
+					}
 				}
 				else
 				{
@@ -715,7 +746,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 
 						Entry head = e.next;
 						for (Entry p = first; p != e; p = p.next)
+						{
 							head = new Entry(p.hash, p.key, p.value, head);
+						}
 
 						tab[index] = head;
 						recordModification(head);
@@ -751,7 +784,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 				count--;
 				Entry head = e.next;
 				for (Entry p = first; p != e; p = p.next)
+				{
 					head = new Entry(p.hash, p.key, p.value, head);
+				}
 
 				tab[index] = head;
 				recordModification(head);
@@ -785,8 +820,12 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		for (int i = 0; i < tab.length; ++i)
 		{
 			for (Entry e = tab[i]; e != null; e = e.next)
+			{
 				if (value.equals(e.value))
+				{
 					return true;
+				}
+			}
 		}
 
 		return false;
@@ -829,13 +868,17 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	{
 		int n = t.size();
 		if (n == 0)
+		{
 			return;
+		}
 
 		// Expand enough to hold at least n elements without resizing.
 		// We can only resize table by factor of two at a time.
 		// It is faster to rehash with fewer elements, so do it now.
 		while (n >= threshold)
+		{
 			rehash();
+		}
 
 		for (Iterator it = t.entrySet().iterator(); it.hasNext();)
 		{
@@ -857,7 +900,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 			// must invalidate all to force concurrent get's to wait and then
 			// retry
 			for (Entry e = tab[i]; e != null; e = e.next)
+			{
 				e.value = null;
+			}
 
 			tab[i] = null;
 		}
@@ -889,7 +934,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 			{
 				Entry first = null;
 				for (Entry e = tab[i]; e != null; e = e.next)
+				{
 					first = new Entry(e.hash, e.key, e.value, first);
+				}
 				ttab[i] = first;
 			}
 
@@ -1055,7 +1102,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			Map.Entry entry = (Map.Entry)o;
 			Object v = ConcurrentReaderHashMap.this.get(entry.getKey());
 			return v != null && v.equals(entry.getValue());
@@ -1067,7 +1116,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public boolean remove(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			return ConcurrentReaderHashMap.this.findAndRemoveEntry((Map.Entry)o);
 		}
 
@@ -1105,7 +1156,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -1228,7 +1281,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Map.Entry))
+			{
 				return false;
+			}
 			Map.Entry e = (Map.Entry)o;
 			return (key.equals(e.getKey()) && value.equals(e.getValue()));
 		}
@@ -1305,11 +1360,15 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 						return true;
 					}
 					else
+					{
 						entry = entry.next;
+					}
 				}
 
 				while (entry == null && index >= 0)
+				{
 					entry = tab[index--];
+				}
 
 				if (entry == null)
 				{
@@ -1330,7 +1389,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public Object next()
 		{
 			if (currentKey == null && !hasNext())
+			{
 				throw new NoSuchElementException();
+			}
 
 			Object result = returnValueOfNext();
 			lastReturned = entry;
@@ -1345,7 +1406,9 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 		public void remove()
 		{
 			if (lastReturned == null)
+			{
 				throw new IllegalStateException();
+			}
 			ConcurrentReaderHashMap.this.remove(lastReturned.key);
 			lastReturned = null;
 		}

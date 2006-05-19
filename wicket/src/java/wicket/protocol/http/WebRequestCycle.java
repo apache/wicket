@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.RequestCycle;
@@ -28,7 +29,6 @@ import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.settings.IRequestCycleSettings;
-import wicket.settings.Settings;
 
 /**
  * RequestCycle implementation for HTTP protocol. Holds the application,
@@ -69,7 +69,7 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * By default returns the WebApplication's default request cycle processor.
 	 * Typically, you don't override this method but instead override
-	 * {@link WebApplication#getDefaultRequestCycleProcessor()}.
+	 * {@link WebApplication#getRequestCycleProcessor()}.
 	 * <p>
 	 * <strong>if you decide to override this method to provide a custom
 	 * processor per request cycle, any mounts done via WebApplication will not
@@ -81,7 +81,7 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	public IRequestCycleProcessor getProcessor()
 	{
-		return ((WebApplication)getApplication()).getDefaultRequestCycleProcessor();
+		return ((WebApplication)getApplication()).getRequestCycleProcessor();
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Check if use serverside response for client side redirects
 		IRequestCycleSettings settings = application.getRequestCycleSettings();
-		if ((settings.getRenderStrategy() == Settings.REDIRECT_TO_BUFFER)
+		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 				&& (application instanceof WebApplication))
 		{
 			// remember the current response
@@ -133,14 +133,20 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
-				final WebResponse redirectResponse = new WebResponse(servletResponse);
+				final WebResponse redirectResponse = new WebResponse(servletResponse)
+				{
+					public CharSequence encodeURL(CharSequence url) 
+					{
+						return currentResponse.encodeURL(url);
+					};
+				};
 				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
 				// redirect the response to the buffer
 				setResponse(redirectResponse);
 
 				// render the page into the buffer
-				page.doRender();
+				page.renderPage();
 
 				// re-assign the original response
 				setResponse(currentResponse);
@@ -164,15 +170,17 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					servletResponse.close();
 
-					redirectUrl = page.urlFor(page, IRedirectListener.class);
+					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
+					int index = redirectUrl.indexOf("?");
 					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
-					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl, servletResponse);
+					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl.substring(index+1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
 			{
 				// re-assign the original response
 				setResponse(currentResponse);
+				if(ex instanceof AbortException) throw ex;
 				log.error(ex.getMessage(), ex);
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
@@ -181,17 +189,21 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
-			redirectUrl = page.urlFor(page, IRedirectListener.class);
-			session.touch(page);
-			// redirect page can touch its models already (via for example the
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
+			
+			// Redirect page can touch its models already (via for example the
 			// constructors)
-			page.internalEndRequest();
+			page.internalDetach();
 		}
 
 		if (redirectUrl == null)
 		{
-			redirectUrl = page.urlFor(page, IRedirectListener.class);
+			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 		}
+		
+		// Always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
+		session.touch(page);
+		
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}

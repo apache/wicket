@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,20 +39,24 @@ public final class Streams
 	 *            The input stream
 	 * @param out
 	 *            The output stream
+	 * @return Number of bytes copied from one stream to the other
 	 * @throws IOException
 	 */
-	public static void copy(final InputStream in, final OutputStream out) throws IOException
+	public static int copy(final InputStream in, final OutputStream out) throws IOException
 	{
 		final byte[] buffer = new byte[4096];
+		int bytesCopied = 0;
 		while (true)
 		{
-		    int byteCount = in.read(buffer, 0, buffer.length);
-		    if (byteCount <= 0)
-		    {
-		        break;
-		    }
+			int byteCount = in.read(buffer, 0, buffer.length);
+			if (byteCount <= 0)
+			{
+				break;
+			}
 			out.write(buffer, 0, byteCount);
+			bytesCopied += byteCount;
 		}
+		return bytesCopied;
 	}
 
 	/**
@@ -78,7 +82,8 @@ public final class Streams
 	 * @return The string
 	 * @throws IOException
 	 */
-	public static String readString(final InputStream in, final CharSequence encoding) throws IOException
+	public static String readString(final InputStream in, final CharSequence encoding)
+			throws IOException
 	{
 		return readString(new BufferedReader(new InputStreamReader(in, encoding.toString())));
 	}
@@ -103,7 +108,7 @@ public final class Streams
 
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Private to prevent instantiation.
 	 */

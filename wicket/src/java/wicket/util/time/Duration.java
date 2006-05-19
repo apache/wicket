@@ -87,9 +87,12 @@ import wicket.util.thread.ICode;
  * 
  * @author Jonathan Locke
  */
-public final class Duration extends AbstractTimeValue
+public class Duration extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
+
+	/** Constant for maximum duration */
+	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE); 
 
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
@@ -180,10 +183,11 @@ public final class Duration extends AbstractTimeValue
 	 * @param start
 	 *            The start time
 	 * @return The elapsed period
+	 * @throws IllegalStateException Thrown if start is in the future
 	 */
 	public static Duration elapsed(final Time start)
 	{
-		return Time.now().subtract(start);
+		return start.elapsedSince();
 	}
 
 	/**
@@ -362,7 +366,7 @@ public final class Duration extends AbstractTimeValue
 	 * @param milliseconds
 	 *            Number of milliseconds in this duration
 	 */
-	private Duration(final long milliseconds)
+	protected Duration(final long milliseconds)
 	{
 		super(milliseconds);
 	}

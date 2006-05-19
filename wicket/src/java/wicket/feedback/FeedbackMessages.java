@@ -40,17 +40,20 @@ public final class FeedbackMessages implements Serializable
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Holds a list of {@link wicket.feedback.FeedbackMessage}s.
 	 */
-	private List messages = null;
+	private ArrayList messages = null;
 
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
 	 * this class is managed by the framework.
+	 * 
+	 * @param sessionStored
+	 *            whether or not this object is stored in session
 	 */
 	public FeedbackMessages()
 	{
@@ -64,6 +67,39 @@ public final class FeedbackMessages implements Serializable
 		if (messages != null)
 		{
 			messages.clear();
+		}
+	}
+
+	/**
+	 * Gets the number of messages
+	 * 
+	 * @return the number of messages
+	 */
+	public final int size()
+	{
+		if (messages == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return messages.size();
+		}
+	}
+
+	/**
+	 * Removes messages that have been rendered
+	 */
+	public final void clearRendered()
+	{
+		Iterator msgs = iterator();
+		while (msgs.hasNext())
+		{
+			final FeedbackMessage msg = (FeedbackMessage)msgs.next();
+			if (msg.isRendered())
+			{
+				msgs.remove();
+			}
 		}
 	}
 
@@ -256,6 +292,16 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
+	 * Adds a message
+	 * @param reporter
+	 * @param message
+	 * @param level
+	 */
+	public final void add(Component reporter, String message, int level) {
+		add(new FeedbackMessage(reporter, message, level));
+	}
+	
+	/**
 	 * Adds a message.
 	 * 
 	 * @param message
@@ -272,5 +318,32 @@ public final class FeedbackMessages implements Serializable
 			messages = new ArrayList();
 		}
 		messages.add(message);
+	}
+
+	/**
+	 * Gets an iterator over stored messages
+	 * 
+	 * @return iterator over stored messages
+	 */
+	public final Iterator iterator()
+	{
+		if (messages == null)
+		{
+			return Collections.EMPTY_LIST.iterator();
+		}
+		else
+		{
+			return messages.iterator();
+		}
+	}
+
+	/**
+	 * Frees any unnecessary internal storage
+	 */
+	public final void trimToSize()
+	{
+		if (messages!=null) {
+			messages.trimToSize();
+		}
 	}
 }

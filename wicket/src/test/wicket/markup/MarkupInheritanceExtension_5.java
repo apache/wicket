@@ -33,7 +33,6 @@ public class MarkupInheritanceExtension_5 extends MarkupInheritanceBase_5
 	 */
 	public MarkupInheritanceExtension_5() 
 	{
-	    
 	    add(new Label("label3", "extension label"));
     }
 }

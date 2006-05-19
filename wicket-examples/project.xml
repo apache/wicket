@@ -88,6 +88,11 @@
       <name>1.1</name>
       <tag>WICKET_R_1_1</tag>
     </version>
+    <version>
+      <id>1.2-20060127-0105</id>
+      <name>1.2-20060127-0105</name>
+      <tag>WICKET_1_2_SNAPSHOT_2006_01_27</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
@@ -207,7 +212,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.12</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>
@@ -362,7 +367,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>wicket/examples/AllTests.java</include>
+        <include>**/*Test.java</include>
       </includes>
       <resources>
         <resource>

@@ -34,6 +34,7 @@ import wicket.Component;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 import wicket.util.watch.ModificationWatcher;
 
@@ -45,11 +46,11 @@ import wicket.util.watch.ModificationWatcher;
  * loaded just once.
  * <p>
  * 
- * @see wicket.settings.Settings#getPropertiesFactory()
+ * @see wicket.settings.IResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */
-public class PropertiesFactory
+public class PropertiesFactory implements IPropertiesFactory
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
@@ -68,9 +69,7 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Add a listener
-	 * 
-	 * @param listener
+	 * @see wicket.resource.IPropertiesFactory#addListener(wicket.resource.IPropertiesReloadListener)
 	 */
 	public void addListener(final IPropertiesReloadListener listener)
 	{
@@ -82,27 +81,18 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Get the properties for ...
-	 * 
-	 * @param application
-	 *            The application object
-	 * @param clazz
-	 *            The class that resources are bring loaded for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
-	 * @return The properties
+	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application, java.lang.Class, java.lang.String, java.util.Locale)
 	 */
-	public final Properties get(final Application application, final Class clazz,
+	public Properties get(final Application application, final Class clazz,
 			final String style, final Locale locale)
 	{
 		final String key = createResourceKey(clazz, locale, style);
 		Properties props = (Properties)propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
-			final IResourceStream resource = application.getResourceSettings().getResourceStreamLocator().locate(clazz,
-					clazz.getName().replace('.', '/'), style, locale, "properties");
+			final IResourceStream resource = application.getResourceSettings()
+					.getResourceStreamLocator().locate(clazz, clazz.getName().replace('.', '/'),
+							style, locale, "properties");
 
 			if (resource != null)
 			{
@@ -120,8 +110,17 @@ public class PropertiesFactory
 	}
 
 	/**
-	 * Remove all cached properties
+	 * For subclasses to get access to the cache
 	 * 
+	 * @return Map
+	 */
+	protected final Map getCache()
+	{
+		return this.propertiesCache;
+	}
+	
+	/**
+	 * @see wicket.resource.IPropertiesFactory#clearCache()
 	 */
 	public final void clearCache()
 	{
@@ -142,7 +141,7 @@ public class PropertiesFactory
 	public final String createResourceKey(final Class componentClass, final Locale locale,
 			final String style)
 	{
-		final StringBuffer buffer = new StringBuffer(80);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(80);
 		if (componentClass != null)
 		{
 			buffer.append(componentClass.getName());
@@ -155,7 +154,19 @@ public class PropertiesFactory
 		if (locale != null)
 		{
 			buffer.append(Component.PATH_SEPARATOR);
-			buffer.append(locale.toString());
+			boolean l = locale.getLanguage().length() != 0;
+			boolean c = locale.getCountry().length() != 0;
+			boolean v = locale.getVariant().length() != 0;
+			buffer.append(locale.getLanguage());
+			if (c || (l && v))
+			{
+				// This may just append '_' 
+				buffer.append('_').append(locale.getCountry());
+			}
+			if (v && (l || c))
+			{
+				buffer.append('_').append(locale.getVariant());
+			}
 		}
 
 		final String id = buffer.toString();
@@ -250,16 +261,22 @@ public class PropertiesFactory
 			final IResourceStream resourceStream, final Class componentClass, final String style,
 			final Locale locale)
 	{
-		// Watch file in the future
-		final ModificationWatcher watcher = Application.get().getResourceSettings().getResourceWatcher();
+		// Watch file modifications
+		final ModificationWatcher watcher = Application.get().getResourceSettings()
+				.getResourceWatcher();
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()
 			{
 				public void onChange()
 				{
-					log.info("Reloading properties files from " + resourceStream);
-					loadPropertiesFile(key, resourceStream, componentClass, style, locale);
+					log.info("A properties files has changed. Remove all entries from the cache. Resource: "
+									+ resourceStream);
+
+					// Clear the whole cache as associated localized files may
+					// be affected and may need reloading as well. We make it 
+					// easy. Usually the watcher is activ in dev mode only anyway.
+					clearCache();
 
 					// Inform all listeners
 					for (Iterator iter = afterReloadListeners.iterator(); iter.hasNext();)

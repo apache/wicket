@@ -20,12 +20,14 @@ package wicket.markup.html.image.resource;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
-import wicket.resource.DynamicByteArrayResource;
+import wicket.markup.html.DynamicWebResource;
+import wicket.util.time.Time;
 
 /**
  * An ImageResource subclass for dynamic images (images created
@@ -53,93 +55,157 @@ import wicket.resource.DynamicByteArrayResource;
  *
  * @author Jonathan Locke
  * @author Gili Tzabari
+ * @author Johan Compagner
  */
-public abstract class DynamicImageResource extends DynamicByteArrayResource
+public abstract class DynamicImageResource extends DynamicWebResource
 {
-	/** The image type */
-	private String format = "png";
-
-
-	/**
-	 * default constructor
-	 */
-	public DynamicImageResource()
-	{
-		super();
-	}
-
-	
-	/**
-	 * @return Returns the image format.
-	 */
-	public final String getFormat()
-	{
-		return format;
-	}
-
-	
-	/**
-	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
-	 *
-	 * @param format
-	 *            The image format to set.
-	 */
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
-	
-	/**
-	 * @see wicket.resource.DynamicByteArrayResource#getData()
-	 */
-	protected byte[] getData()
-	{
-		return getImageData();
-	}
-	
-	/**
-	 * @see wicket.resource.DynamicByteArrayResource#getContentType()
-	 */
-	public String getContentType()
-	{
-		return "image/" + format;
-	}
-
-	/**
-	 * Get image data for our dynamic image resource. If the subclass
-	 * regenerates the data, it should set the lastModifiedTime when it does so.
-	 * This ensures that image caching works correctly.
-	 *
-	 * @return The image data for this dynamic image
-	 */
-	protected abstract byte[] getImageData();
-	
-	/**
-	 * @param image
-	 *            The image to turn into data
-	 * @return The image data for this dynamic image
-	 */
-	protected byte[] toImageData(final BufferedImage image)
-	{
-		try
-		{
-			// Create output stream
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			// Get image writer for format
-			final ImageWriter writer = (ImageWriter)ImageIO.getImageWritersByFormatName(format)
-					.next();
-
-			// Write out image
-			writer.setOutput(ImageIO.createImageOutputStream(out));
-			writer.write(image);
-
-			// Return the image data
-			return out.toByteArray();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Unable to convert dynamic image to stream", e);
-		}
-	}
+  /** The image type */
+  private String format = "png";
+  
+  /** The last modified time of this resource */
+  private Time lastModifiedTime;
+  
+  /**
+   * Creates a dynamic image resource.
+   */
+  public DynamicImageResource()
+  {}
+  
+  /**
+   * Creates a dynamic resource from for the given locale
+   *
+   * @param locale
+   *            The locale of this resource
+   */
+  public DynamicImageResource(Locale locale)
+  {
+    super(locale);
+  }
+  
+  /**
+   * Creates a dynamic resource from for the given locale
+   *
+   * @param format
+   *            The image format ("png", "jpeg", etc)
+   */
+  public DynamicImageResource(String format)
+  {
+    setFormat(format);
+  }
+  
+  /**
+   * Creates a dynamic resource from for the given locale
+   *
+   * @param format
+   *            The image format ("png", "jpeg", etc)
+   * @param locale
+   *            The locale of this resource
+   */
+  public DynamicImageResource(String format, Locale locale)
+  {
+    super(locale);
+    setFormat(format);
+  }
+  
+  /**
+   * @return Returns the image format.
+   */
+  public synchronized final String getFormat()
+  {
+    return format;
+  }
+  
+  /**
+   *  Sets the format of this resource
+   *
+   * @param format
+   *  			The format (jpg, png or gif..)
+   */
+  public synchronized final void setFormat(String format)
+  {
+    this.format = format;
+  }
+  
+  /**
+   * set the last modified time for this resource.
+   *
+   * @param time
+   */
+  protected synchronized void setLastModifiedTime(Time time)
+  {
+    lastModifiedTime = time;
+  }
+  
+  /**
+   * @param image
+   *            The image to turn into data
+   * @return The image data for this dynamic image
+   */
+  protected byte[] toImageData(final BufferedImage image)
+  {
+    try
+    {
+      // Create output stream
+      final ByteArrayOutputStream out = new ByteArrayOutputStream();
+      
+      // Get image writer for format
+      final ImageWriter writer = (ImageWriter) ImageIO.
+        getImageWritersByFormatName(format).next();
+      
+      // Write out image
+      writer.setOutput(ImageIO.createImageOutputStream(out));
+      writer.write(image);
+      
+      // Return the image data
+      return out.toByteArray();
+    }
+    catch (IOException e)
+    {
+      throw new WicketRuntimeException("Unable to convert dynamic image to stream", e);
+    }
+  }
+  
+  /**
+   * @see DynamicWebResource#getResourceState()
+   */
+  protected synchronized ResourceState getResourceState()
+  {
+    return new ResourceState()
+    {
+      private byte[] imageData;
+      private final String contentType = "image/" + format;
+      
+      public Time lastModifiedTime()
+      {
+        if (lastModifiedTime == null)
+        {
+          lastModifiedTime = DynamicImageResource.this.lastModifiedTime;
+          if (lastModifiedTime == null)
+            lastModifiedTime = Time.now();
+        }
+        return lastModifiedTime;
+      }
+      
+      public byte[] getData()
+      {
+        if (imageData==null)
+          imageData = getImageData();
+        return imageData;
+      }
+      
+      public String getContentType()
+      {
+        return contentType;
+      }
+    };
+  }
+  
+  /**
+   * Get image data for our dynamic image resource. If the subclass
+   * regenerates the data, it should set the lastModifiedTime when it does so.
+   * This ensures that image caching works correctly.
+   *
+   * @return The image data for this dynamic image
+   */
+  protected abstract byte[] getImageData();
 }

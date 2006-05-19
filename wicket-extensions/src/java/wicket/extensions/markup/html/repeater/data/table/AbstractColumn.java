@@ -21,7 +21,6 @@ package wicket.extensions.markup.html.repeater.data.table;
 import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * A helper implementation for the IColumn interface
@@ -49,7 +48,7 @@ public abstract class AbstractColumn implements IColumn
 	 * @param displayModel
 	 *            model used to generate header text
 	 */
-	public AbstractColumn(Model displayModel)
+	public AbstractColumn(IModel displayModel)
 	{
 		this(displayModel, null);
 	}

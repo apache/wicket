@@ -20,10 +20,7 @@ package wicket.extensions.markup.html.repeater.data.grid;
 
 import java.util.List;
 
-import wicket.AttributeModifier;
-import wicket.behavior.SimpleAttributeModifier;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 
 /**
  * Simple concrete implementation of {@link AbstractDataGridView}
@@ -102,68 +99,6 @@ public class DataGridView extends AbstractDataGridView
 	public DataGridView(String id, ICellPopulator[] populators, IDataProvider dataProvider)
 	{
 		super(id, populators, dataProvider);
-	}
-
-	/**
-	 * Forwards the post process cell item call to a template method
-	 * 
-	 * @param item
-	 *            Item container representing the cell
-	 * @see Item
-	 */
-	protected final void internalPostProcessCellItem(Item item)
-	{
-		postProcessCellItem(item);
-	}
-
-	/**
-	 * Forwards the post process row item call to a template method
-	 * 
-	 * @param item
-	 *            Item container representing the row
-	 * @see Item
-	 */
-	protected final void internalPostProcessRowItem(Item item)
-	{
-		postProcessRowItem(item);
-	}
-
-	/**
-	 * Hook to post process a row item. Users should override this to modify the
-	 * generated row item.
-	 * 
-	 * This is a good place to add an attribute modifier or behavior if needed.
-	 * 
-	 * @param item
-	 *            Item container representing the row
-	 * 
-	 * @see Item
-	 * @see wicket.behavior.IBehavior
-	 * @see AttributeModifier
-	 * @see SimpleAttributeModifier
-	 */
-	protected void postProcessRowItem(Item item)
-	{
-		// noop
-	}
-
-	/**
-	 * Hook to post process a cell item. Users should override this to modify
-	 * the generated cell item.
-	 * 
-	 * This is a good place to add an attribute modifier or behavior if needed.
-	 * 
-	 * @param item
-	 *            Item container representing the cell
-	 * 
-	 * @see Item
-	 * @see wicket.behavior.IBehavior
-	 * @see AttributeModifier
-	 * @see SimpleAttributeModifier
-	 */
-	protected void postProcessCellItem(Item item)
-	{
-		// noop
 	}
 
 	/**

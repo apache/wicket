@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -82,7 +82,7 @@ public class Comment implements Serializable
 	{
 		this.date = date;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -91,5 +91,3 @@ public class Comment implements Serializable
 		return "[Comment date = " + date + ", text = " + text + "]";
 	}
 }
-
-

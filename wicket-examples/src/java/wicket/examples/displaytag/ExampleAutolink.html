@@ -15,7 +15,20 @@
     <a href="DisplaytagIndex.html">Example</a>
   </wicket:link> &gt; Standard, smart linking of column data</h2>
   <br />
-  Use of <b>automatically</b> generated hyperlinks
+  Use of <b>automatically</b> generated hyperlinks (the standard way):
+  <div style="border-style:solid"><pre>
+    add(new SimpleListView("rows", data)
+    {
+        public void populateItem(final ListItem listItem)
+        {
+            final ListObject value = (ListObject) listItem.getModelObject();
+
+            listItem.add(new Label("id", Integer.toString(value.getId())));
+            listItem.add(new SmartLinkLabel("email", value.getEmail()));
+            listItem.add(new SmartLinkLabel("url", value.getUrl()));
+        }
+    });</pre>
+  </div>
   <table>
     <thead>
       <tr>
@@ -26,6 +39,40 @@
     </thead>
     <tbody>
       <tr wicket:id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="url">Test url</span></td>
+      </tr>
+      <wicket:remove>
+        <tr class="odd">
+          <td>Test ID</td>
+          <td>Test Email</td>
+          <td>Test Url</td>
+        </tr>
+      </wicket:remove>
+    </tbody>
+  </table>
+  <br/>
+  Use of <b>automatically</b> generated hyperlinks (using SimpleListView's newLabel()):
+  <div style="border-style:solid"><pre>
+    add(new SimpleListView("rows", data)
+    {
+        protected Component newLabel(String id)
+        {
+            return new SmartLinkLabel(id);
+        }
+    });</pre>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Url</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows2" class="even">
         <td><span wicket:id="id">Test ID</span></td>
         <td><span wicket:id="email">Test EMail</span></td>
         <td><span wicket:id="url">Test url</span></td>

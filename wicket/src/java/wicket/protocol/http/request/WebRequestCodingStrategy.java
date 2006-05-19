@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WebRequestCodingStrategy.java,v 1.24 2006/02/15 02:00:30 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,23 +31,26 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.request.IBookmarkablePageRequestTarget;
-import wicket.request.IListenerInterfaceRequestTarget;
-import wicket.request.IPageRequestTarget;
 import wicket.request.IRequestCodingStrategy;
-import wicket.request.ISharedResourceRequestTarget;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
-import wicket.util.lang.Classes;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
+import wicket.request.target.resource.ISharedResourceRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -55,9 +58,25 @@ import wicket.util.string.Strings;
  * and path info to construct the request parameters object.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class WebRequestCodingStrategy implements IRequestCodingStrategy
 {
+	/** Name of interface target query parameter */
+	public static final String NAME_SPACE = "wicket:";
+
+	/** Name of interface target query parameter */
+	public static final String INTERFACE_PARAMETER_NAME = NAME_SPACE + "interface";
+
+	/** AJAX query parameter name */
+	public static final String BEHAVIOR_ID_PARAMETER_NAME = NAME_SPACE + "behaviorId";
+
+	/** Parameter name used all over the place */
+	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = NAME_SPACE + "bookmarkablePage";
+
+	/** Pagemap parameter constant */
+	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
+
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
 	{
@@ -83,7 +102,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				return 0 - lhs.compareTo(rhs);
 			}
 		}
-
 	};
 
 	/** log. */
@@ -97,7 +115,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
 	 * now suppose we want to access Page1 with a single paramter param="test".
-	 * we have a url collission since both pages can be access with /page/test
+	 * we have a url collision since both pages can be access with /page/test
 	 * <br />
 	 * the sorting by longest path first guarantees that the iterator will
 	 * return the mount /page/test before it returns mount /page therefore
@@ -105,11 +123,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private SortedMap/* <String,IRequestTargetUrlCodingStrategy> */mountsOnPath = new TreeMap(
+	private final SortedMap/* <String,IRequestTargetUrlCodingStrategy> */mountsOnPath = new TreeMap(
 			lengthComparator);
 
 	/** cached url prefix. */
-	private String urlPrefix;
+	private CharSequence urlPrefix;
 
 	/**
 	 * Construct.
@@ -121,14 +139,26 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#decode(wicket.Request)
 	 */
-	public final RequestParameters decode(Request request)
+	public final RequestParameters decode(final Request request)
 	{
-		RequestParameters parameters = new RequestParameters();
-		String pathInfo = getRequestPath(request);
+		final RequestParameters parameters = new RequestParameters();
+		final String pathInfo = getRequestPath(request);
 		parameters.setPath(pathInfo);
-		addPageParameters(request, parameters);
+		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
+		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
+		Map map = request.getParameterMap();
+		Iterator iterator = map.keySet().iterator();
+		while (iterator.hasNext())
+		{
+			String key = (String)iterator.next();
+			if (key.startsWith(NAME_SPACE))
+			{
+				iterator.remove();
+			}
+		}
+		parameters.setParameters(map);
 		return parameters;
 	}
 
@@ -145,14 +175,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * @see wicket.request.IRequestCodingStrategy#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
-	public final String encode(RequestCycle requestCycle, IRequestTarget requestTarget)
+	public final CharSequence encode(final RequestCycle requestCycle,
+			final IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
-		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
-		if (encoder != null)
+		CharSequence path = pathForTarget(requestTarget);
+		if (path != null)
 		{
-			final StringBuffer prefix = new StringBuffer(urlPrefix(requestCycle));
-			return prefix.append(pathForTarget(requestTarget)).toString();
+			CharSequence prefix = urlPrefix(requestCycle);
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
+					+ path.length());
+			buffer.append(prefix);
+			buffer.append(path);
+			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
 
 		// no mount found; go on with default processing
@@ -160,13 +195,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
 		}
+		else if (requestTarget instanceof ISharedResourceRequestTarget)
+		{
+			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
 			return encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
 		}
-		else if (requestTarget instanceof ISharedResourceRequestTarget)
+		else if (requestTarget instanceof IPageRequestTarget)
 		{
-			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+			return encode(requestCycle, (IPageRequestTarget)requestTarget);
 		}
 
 		// fallthough for non-default request targets
@@ -183,21 +222,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
+	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(final String path)
 	{
 		if (path == null)
 		{
 			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
 		}
-
-		Iterator it = mountsOnPath.entrySet().iterator();
-		while (it.hasNext())
+		else if (!path.equals("/")) // ignore root paths.. is this the right
+		// path?
 		{
-			Map.Entry entry = (Entry)it.next();
-			String key = (String)entry.getKey();
-			if (path.startsWith(key))
+			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
 			{
-				return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				final Map.Entry entry = (Entry)it.next();
+				final String key = (String)entry.getKey();
+				if (path.startsWith(key))
+				{
+					return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				}
 			}
 		}
 		return null;
@@ -213,7 +254,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			throw new IllegalArgumentException("Argument path must be not-null");
 		}
-
+		if (path.equals("/"))
+		{
+			throw new IllegalArgumentException(
+					"The mount path '/' is reserved for the application home page");
+		}
 		if (encoder == null)
 		{
 			throw new IllegalArgumentException("Argument encoder must be not-null");
@@ -236,7 +281,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
 	 */
-	public final String pathForTarget(IRequestTarget requestTarget)
+	public final CharSequence pathForTarget(IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
@@ -248,12 +293,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.IRequestCodingStrategy#targetForPath(java.lang.String)
+	 * @see wicket.request.IRequestCodingStrategy#targetForRequest(wicket.request.RequestParameters)
 	 */
-	public final IRequestTarget targetForPath(String path)
+	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
 	{
-		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(path);
-		return (encoder != null) ? encoder.decode(path) : null;
+		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters
+				.getPath());
+		return (encoder != null) ? encoder.decode(requestParameters) : null;
 	}
 
 	/**
@@ -280,45 +326,94 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * parameters). Any bookmarkable page alias mount will override this method;
 	 * hence if a mount is found, this method will not be called.
 	 * 
+	 * If you override this method to behave different then also
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param request
-	 *            the incomming request
+	 *            the incoming request
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
-	protected void addBookmarkablePageParameters(Request request, RequestParameters parameters)
+	protected void addBookmarkablePageParameters(final Request request,
+			final RequestParameters parameters)
 	{
-		String pageClass = request.getParameter(PageParameters.BOOKMARKABLE_PAGE);
-		parameters.setBookmarkablePageClass(pageClass);
-		parameters.setParameters(request.getParameterMap());
+		final String requestString = request
+				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		if (requestString != null)
+		{
+			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
+			if (components.length != 2)
+			{
+				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " + requestString + ", expected: 'pageMapName:pageClassName'");
+			}
+
+			// Extract any pagemap name
+			final String pageMapName = components[0];
+			parameters.setPageMapName(pageMapName.length() == 0
+					? PageMap.DEFAULT_NAME
+					: pageMapName);
+
+			// Extract bookmarkable page class name
+			final String pageClassName = components[1];
+			parameters.setBookmarkablePageClass(pageClassName);
+		}
 	}
 
 	/**
-	 * Adds page related parameters (path and optionally pagemap, version and
+	 * Adds page related parameters (path and pagemap and optionally version and
 	 * interface).
 	 * 
+	 * If you override this method to behave different then also
+	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param request
-	 *            the incomming request
+	 *            the incoming request
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
-	protected void addPageParameters(Request request, RequestParameters parameters)
+	protected void addInterfaceParameters(final Request request, final RequestParameters parameters)
 	{
-		String componentPath = request.getParameter("path");
-		if (componentPath != null)
+		// Format of interface target parameter is
+		// <page-map-name>:<path>:<version>:<interface>
+		final String requestString = request.getParameter(INTERFACE_PARAMETER_NAME);
+		if (requestString != null)
 		{
-			parameters.setComponentPath(componentPath);
-			parameters.setPageMapName(request.getParameter("pagemap"));
-			final String versionNumberString = request.getParameter("version");
+			// Split into array of strings
+			String[] pathComponents = Strings.split(requestString, Component.PATH_SEPARATOR);
+
+			// There must be at least 4 components
+			if (pathComponents.length < 4)
+			{
+				throw new WicketRuntimeException("Internal error parsing "
+						+ INTERFACE_PARAMETER_NAME + " = " + requestString);
+			}
+
+			// Set pagemap name
+			final String pageMapName = pathComponents[0];
+			parameters.setPageMapName(pageMapName.length() == 0
+					? PageMap.DEFAULT_NAME
+					: pageMapName);
+
+			// Extract interface name after last colon
+			final String interfaceName = pathComponents[pathComponents.length - 1];
+			parameters.setInterfaceName(interfaceName.length() != 0
+					? interfaceName
+					: IRedirectListener.INTERFACE.getName());
+
+			// Extract version
+			final String versionNumberString = pathComponents[pathComponents.length - 2];
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
 					.parseInt(versionNumberString);
 			parameters.setVersionNumber(versionNumber);
-			String interfaceName = request.getParameter("interface");
-			if (interfaceName == null)
-			{
-				interfaceName = "IRedirectListener";
-			}
-			parameters.setInterfaceName(interfaceName);
-			parameters.setBehaviorId(request.getParameter("behaviorId"));
+
+			// Component path is everything after pageMapName and before version
+			final int start = pageMapName.length() + 1;
+			final int end = requestString.length() - interfaceName.length()
+					- versionNumberString.length() - 2;
+			final String componentPath = requestString.substring(start, end);
+			parameters.setComponentPath(componentPath);
 		}
 	}
 
@@ -326,6 +421,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * Adds (shared) resource related parameters (resource key). Any shared
 	 * resource key mount will override this method; hence if a mount is found,
 	 * this method will not be called.
+	 * 
+	 * If you override this method to behave different then also
+	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incomming request
@@ -363,24 +462,28 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * Encode a page class target.
 	 * 
+	 * If you override this method to behave different then also
+	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should
+	 * be overridden to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle,
+	protected CharSequence encode(RequestCycle requestCycle,
 			IBookmarkablePageRequestTarget requestTarget)
 	{
-		final Class pageClass = requestTarget.getPageClass();
-		final Class homePageClass = requestCycle.getApplication().getHomePage();
-
-		final PageParameters parameters = requestTarget.getPageParameters();
-		final StringBuffer url = new StringBuffer(64);
+		// Begin encoding URL
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 		url.append(urlPrefix(requestCycle));
-		url.append("?bookmarkablePage=");
-		url.append(pageClass.getName());
 
+		// Get page Class
+		final Class pageClass = requestTarget.getPageClass();
+		final Application application = Application.get();
+
+		// Find pagemap name
 		String pageMapName = requestTarget.getPageMapName();
 		if (pageMapName == null)
 		{
@@ -389,19 +492,36 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			{
 				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
 				final PageMap pageMap = currentPage.getPageMap();
-				if (!pageMap.isDefault())
+				if (pageMap.isDefault())
 				{
-					url.append("&pagemap=");
-					url.append(pageMap.getName());
+					pageMapName = "";
+				}
+				else
+				{
+					pageMapName = pageMap.getName();
 				}
 			}
-		}
-		else
-		{
-			url.append("&pagemap=");
-			url.append(pageMapName);
+			else
+			{
+				pageMapName = "";
+			}
 		}
 
+		boolean firstParameter = true;
+		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
+		{
+			firstParameter = false;
+			url.append('?');
+			url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+			url.append('=');
+
+
+			// Add <page-map-name>:<bookmarkable-page-class>
+			url.append(pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+		}
+
+		// Get page parameters
+		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
@@ -413,93 +533,157 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					String escapedValue = value;
 					try
 					{
-						escapedValue = URLEncoder.encode(escapedValue, Application.get()
+						escapedValue = URLEncoder.encode(escapedValue, application
 								.getRequestCycleSettings().getResponseRequestEncoding());
 					}
 					catch (UnsupportedEncodingException ex)
 					{
 						log.error(ex.getMessage(), ex);
 					}
-					url.append('&');
+					if (!firstParameter)
+					{
+						url.append('&');
+					}
+					else
+					{
+						firstParameter = false;
+						url.append('?');
+					}
 					url.append(key);
 					url.append('=');
 					url.append(escapedValue);
 				}
 			}
 		}
-
-		return requestCycle.getResponse().encodeURL(url.toString());
-	}
-
-	/**
-	 * Encode a listener interface target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * @param requestTarget
-	 *            the target to encode
-	 * @return the encoded url
-	 */
-	protected final String encode(RequestCycle requestCycle,
-			IListenerInterfaceRequestTarget requestTarget)
-	{
-		final StringBuffer url = new StringBuffer(64);
-		url.append(urlPrefix(requestCycle));
-		url.append("?path=");
-		Component component = requestTarget.getTarget();
-		url.append(component.getPath());
-		Page currentPage = component.getPage();
-		final PageMap pageMap = currentPage.getPageMap();
-		if (!pageMap.isDefault())
-		{
-			url.append("&pagemap=");
-			url.append(pageMap.getName());
-		}
-		int versionNumber = component.getPage().getCurrentVersionNumber();
-		if (versionNumber > 0)
-		{
-			url.append("&version=");
-			url.append(versionNumber);
-		}
-
-		String listenerName = Classes.name(requestTarget.getListenerMethod().getDeclaringClass());
-		if (!"IRedirectListener".equals(listenerName))
-		{
-			url.append("&interface=");
-			url.append(listenerName);
-		}
-
-		return requestCycle.getResponse().encodeURL(url.toString());
-
+		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 
 	/**
 	 * Encode a shared resource target.
 	 * 
+	 * If you override this method to behave different then also
+	 * {@link #addResourceParameters(Request, RequestParameters)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestTarget
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected final String encode(RequestCycle requestCycle,
+	protected CharSequence encode(RequestCycle requestCycle,
 			ISharedResourceRequestTarget requestTarget)
 	{
-		String prefix = urlPrefix(requestCycle);
-		String resourceKey = requestTarget.getResourceKey();
-		if ((resourceKey == null) || (resourceKey.trim().length() == 0))
+		final CharSequence prefix = urlPrefix(requestCycle);
+		final String sharedResourceKey = requestTarget.getResourceKey();
+		if ((sharedResourceKey == null) || (sharedResourceKey.trim().length() == 0))
 		{
 			return prefix;
 		}
 		else
 		{
-			if (prefix.endsWith("/") || resourceKey.startsWith("/"))
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
+					.length()
+					+ prefix.length() + 11);
+			buffer.append(prefix);
+			if ((buffer.length() > 0) && buffer.charAt(buffer.length() - 1) == '/')
 			{
-				return prefix + resourceKey;
+				buffer.append("resources/");
 			}
-
-			return prefix + "/" + resourceKey;
+			else
+			{
+				buffer.append("/resources/");
+			}
+			buffer.append(sharedResourceKey);
+			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
+	}
+
+	/**
+	 * Encode a listener interface target.
+	 * 
+	 * If you override this method to behave different then also
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected CharSequence encode(RequestCycle requestCycle,
+			IListenerInterfaceRequestTarget requestTarget)
+	{
+		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
+
+		// Start string buffer for url
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
+		url.append(urlPrefix(requestCycle));
+		url.append('?');
+		url.append(INTERFACE_PARAMETER_NAME);
+		url.append('=');
+
+		// Get component and page for request target
+		final Component component = requestTarget.getTarget();
+		final Page page = component.getPage();
+
+		// Add pagemap
+		final PageMap pageMap = page.getPageMap();
+		if (!pageMap.isDefault())
+		{
+			url.append(pageMap.getName());
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add path to component
+		url.append(component.getPath());
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add version
+		final int versionNumber = component.getPage().getCurrentVersionNumber();
+		if (!rli.getRecordsPageVersion())
+		{
+			url.append(Page.LATEST_VERSION);
+		}
+		else if (versionNumber > 0)
+		{
+			url.append(versionNumber);
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add listener interface
+		final String listenerName = rli.getName();
+		if (!IRedirectListener.INTERFACE.getName().equals(listenerName))
+		{
+			url.append(listenerName);
+		}
+
+		return requestCycle.getOriginalResponse().encodeURL(url);
+	}
+
+	/**
+	 * Encode a page target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected CharSequence encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
+	{
+		// Get the page we want a url from:
+		Page page = requestTarget.getPage();
+
+		// A url to a page is the IRedirectListener interface:
+		CharSequence urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
+
+		// Touch the page once because it could be that it did go from stateless
+		// to statefull or it was a internally made page where just a url must
+		// be made for (frames)
+		Session.get().touch(page);
+		return urlRedirect;
 	}
 
 	/**
@@ -511,7 +695,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		// TODO Performance: Optimize algoritm if possible and/ or cache lookup results
+		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
+		// cache lookup results
 		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
 			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
@@ -546,24 +731,36 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * 
 	 * @return prefix
 	 */
-	protected final String urlPrefix(RequestCycle requestCycle)
+	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
 	{
 		if (urlPrefix == null)
 		{
-			final StringBuffer buffer = new StringBuffer();
+			final AppendingStringBuffer buffer = new AppendingStringBuffer();
 			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
 			if (request != null)
 			{
-				final String contextPath = request.getContextPath();
-				buffer.append(contextPath);
-				String path = request.getServletPath();
-				if (path == null || "".equals(path))
+				String contextPath = Application.get().getApplicationSettings().getContextPath();
+				if (contextPath == null)
 				{
-					path = "/";
+					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+							.getContextPath();
+					if (contextPath == null)
+					{
+						contextPath = "";
+					}
 				}
-				buffer.append(path);
+				if (!contextPath.equals("/"))
+				{
+					buffer.append(contextPath);
+				}
+				String path = request.getServletPath();
+				if (path != null && !path.equals(""))
+				{
+					if(!buffer.endsWith("/") && !path.startsWith("/")) buffer.append("/");
+					buffer.append(path);
+				}
 			}
-			urlPrefix = buffer.toString();
+			urlPrefix = buffer;
 		}
 		return urlPrefix;
 	}

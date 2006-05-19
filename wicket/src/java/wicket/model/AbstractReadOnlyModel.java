@@ -30,16 +30,6 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 {
 
 	/**
-	 * This default implementation of getNestedModel unconditionally returns null.
-	 *
-	 * @return null
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
 	 * @see IModel#getObject(Component)
 	 */
 	public abstract Object getObject(Component component);

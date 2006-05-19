@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.datepicker;
 
@@ -31,102 +29,100 @@ import wicket.markup.html.PackageResourceReference;
 
 /**
  * Initializer for the datepicker component.
- *
+ * 
  * @author jcompagner
  * @author Eelco Hillenius
  */
 public class DatePickerComponentInitializer implements IInitializer
 {
-	private static String LANGUAGE_AF = "lang/calendar-af.js";
-	private static String LANGUAGE_AL = "lang/calendar-al.js";
-	private static String LANGUAGE_BR = "lang/calendar-br.js";
-	private static String LANGUAGE_CS = "lang/calendar-cs-utf8.js";
-	private static String LANGUAGE_DA = "lang/calendar-da.js";
-	private static String LANGUAGE_DE = "lang/calendar-de.js";
-	private static String LANGUAGE_EL = "lang/calendar-el.js";
-	private static String LANGUAGE_EN = "lang/calendar-en.js";
-	private static String LANGUAGE_ES = "lang/calendar-es.js";
-	private static String LANGUAGE_EU = "lang/calendar-eu.js";
-	private static String LANGUAGE_FI = "lang/calendar-fi.js";
-	private static String LANGUAGE_FR = "lang/calendar-fr.js";
-	private static String LANGUAGE_HE = "lang/calendar-he-utf8.js";
-	private static String LANGUAGE_HR = "lang/calendar-hr-utf8.js";
-	private static String LANGUAGE_HU = "lang/calendar-hu.js";
-	private static String LANGUAGE_IT = "lang/calendar-it-utf8.js";
-	private static String LANGUAGE_KO = "lang/calendar-ko-utf8.js";
-	private static String LANGUAGE_LT = "lang/calendar-lt-utf8.js";
-	private static String LANGUAGE_LV = "lang/calendar-lv.js";
-	private static String LANGUAGE_NL = "lang/calendar-nl.js";
-	private static String LANGUAGE_NO = "lang/calendar-no.js";
-	private static String LANGUAGE_PL = "lang/calendar-pl-utf8.js";
-	private static String LANGUAGE_PT = "lang/calendar-pt.js";
-	private static String LANGUAGE_RO = "lang/calendar-ro-utf8.js";
-	private static String LANGUAGE_RU = "lang/calendar-ru-utf8.js";
-	private static String LANGUAGE_SI = "lang/calendar-si-utf8.js";
-	private static String LANGUAGE_SK = "lang/calendar-sk-utf8.js";
-	private static String LANGUAGE_SR = "lang/calendar-sr-utf8.js";
-	private static String LANGUAGE_SV = "lang/calendar-sv-utf8.js";
-	private static String LANGUAGE_TR = "lang/calendar-tr.js";
-	private static String LANGUAGE_ZH = "lang/calendar-zh-utf8.js";
-
 	/** locale to language map. */
 	private static final Map localeToLanguageReference = new HashMap();
 
 	static
 	{
-		// fill our default map. Note that new Locale("en", "", "").getLanguage() is to avoid
-		// future breaks because of the instable standard (read about this in Locale.getLanguage()
-		localeToLanguageReference.put(new Locale("af", "", "").getLanguage(), LANGUAGE_AF);
-		localeToLanguageReference.put(new Locale("al", "", "").getLanguage(), LANGUAGE_AL);
-		localeToLanguageReference.put(new Locale("br", "", "").getLanguage(), LANGUAGE_BR);
-		localeToLanguageReference.put(new Locale("cs", "", "").getLanguage(), LANGUAGE_CS);
-		localeToLanguageReference.put(new Locale("da", "", "").getLanguage(), LANGUAGE_DA);
-		localeToLanguageReference.put(new Locale("de", "", "").getLanguage(), LANGUAGE_DE);
-		localeToLanguageReference.put(new Locale("el", "", "").getLanguage(), LANGUAGE_EL);
-		localeToLanguageReference.put(new Locale("en", "", "").getLanguage(), LANGUAGE_EN);
-		localeToLanguageReference.put(new Locale("es", "", "").getLanguage(), LANGUAGE_ES);
-		localeToLanguageReference.put(new Locale("eu", "", "").getLanguage(), LANGUAGE_EU);
-		localeToLanguageReference.put(new Locale("fi", "", "").getLanguage(), LANGUAGE_FI);
-		localeToLanguageReference.put(new Locale("fr", "", "").getLanguage(), LANGUAGE_FR);
-		localeToLanguageReference.put(new Locale("he", "", "").getLanguage(), LANGUAGE_HE);
-		localeToLanguageReference.put(new Locale("hr", "", "").getLanguage(), LANGUAGE_HR);
-		localeToLanguageReference.put(new Locale("hu", "", "").getLanguage(), LANGUAGE_HU);
-		localeToLanguageReference.put(new Locale("it", "", "").getLanguage(), LANGUAGE_IT);
-		localeToLanguageReference.put(new Locale("ko", "", "").getLanguage(), LANGUAGE_KO);
-		localeToLanguageReference.put(new Locale("lt", "", "").getLanguage(), LANGUAGE_LT);
-		localeToLanguageReference.put(new Locale("lv", "", "").getLanguage(), LANGUAGE_LV);
-		localeToLanguageReference.put(new Locale("nl", "", "").getLanguage(), LANGUAGE_NL);
-		localeToLanguageReference.put(new Locale("no", "", "").getLanguage(), LANGUAGE_NO);
-		localeToLanguageReference.put(new Locale("pl", "", "").getLanguage(), LANGUAGE_PL);
-		localeToLanguageReference.put(new Locale("pt", "", "").getLanguage(), LANGUAGE_PT);
-		localeToLanguageReference.put(new Locale("ro", "", "").getLanguage(), LANGUAGE_RO);
-		localeToLanguageReference.put(new Locale("ru", "", "").getLanguage(), LANGUAGE_RU);
-		localeToLanguageReference.put(new Locale("si", "", "").getLanguage(), LANGUAGE_SI);
-		localeToLanguageReference.put(new Locale("sk", "", "").getLanguage(), LANGUAGE_SK);
-		localeToLanguageReference.put(new Locale("sr", "", "").getLanguage(), LANGUAGE_SR);
-		localeToLanguageReference.put(new Locale("sv", "", "").getLanguage(), LANGUAGE_SV);
-		localeToLanguageReference.put(new Locale("tr", "", "").getLanguage(), LANGUAGE_TR);
-		localeToLanguageReference.put(new Locale("zh", "", "").getLanguage(), LANGUAGE_ZH);
+		// fill our default map. Note that new Locale("en", "",
+		// "").getLanguage() is to avoid
+		// future breaks because of the instable standard (read about this in
+		// Locale.getLanguage()
+		localeToLanguageReference.put(new Locale("af", "", "").toString(), "lang/calendar-af.js");
+		localeToLanguageReference.put(new Locale("al", "", "").toString(), "lang/calendar-al.js");
+		localeToLanguageReference.put(new Locale("br", "", "").toString(), "lang/calendar-br.js");
+		localeToLanguageReference.put(new Locale("cs", "", "").toString(),
+				"lang/calendar-cs-utf8.js");
+		localeToLanguageReference.put(new Locale("da", "", "").toString(), "lang/calendar-da.js");
+		localeToLanguageReference.put(new Locale("de", "", "").toString(), "lang/calendar-de.js");
+		localeToLanguageReference.put(new Locale("el", "", "").toString(), "lang/calendar-el.js");
+		localeToLanguageReference.put(new Locale("en", "", "").toString(), "lang/calendar-en.js");
+		localeToLanguageReference.put(new Locale("en", "ZA", "").toString(),
+				"lang/calendar-en_ZA.js");
+		localeToLanguageReference.put(new Locale("es", "", "").toString(), "lang/calendar-es.js");
+		localeToLanguageReference.put(new Locale("eu", "", "").toString(), "lang/calendar-eu.js");
+		localeToLanguageReference.put(new Locale("fi", "", "").toString(), "lang/calendar-fi.js");
+		localeToLanguageReference.put(new Locale("fr", "", "").toString(), "lang/calendar-fr.js");
+		localeToLanguageReference.put(new Locale("he", "", "").toString(),
+				"lang/calendar-he-utf8.js");
+		localeToLanguageReference.put(new Locale("hr", "", "").toString(),
+				"lang/calendar-hr-utf8.js");
+		localeToLanguageReference.put(new Locale("hu", "", "").toString(), "lang/calendar-hu.js");
+		localeToLanguageReference.put(new Locale("it", "", "").toString(),
+				"lang/calendar-it-utf8.js");
+		localeToLanguageReference.put(new Locale("ko", "", "").toString(),
+				"lang/calendar-ko-utf8.js");
+		localeToLanguageReference.put(new Locale("lt", "", "").toString(),
+				"lang/calendar-lt-utf8.js");
+		localeToLanguageReference.put(new Locale("lv", "", "").toString(), "lang/calendar-lv.js");
+		localeToLanguageReference.put(new Locale("nl", "", "").toString(), "lang/calendar-nl.js");
+		localeToLanguageReference.put(new Locale("no", "", "").toString(), "lang/calendar-no.js");
+		localeToLanguageReference.put(new Locale("pl", "", "").toString(),
+				"lang/calendar-pl-utf8.js");
+		localeToLanguageReference.put(new Locale("pt", "", "").toString(), "lang/calendar-pt.js");
+		localeToLanguageReference.put(new Locale("ro", "", "").toString(),
+				"lang/calendar-ro-utf8.js");
+		localeToLanguageReference.put(new Locale("ru", "", "").toString(),
+				"lang/calendar-ru-utf8.js");
+		localeToLanguageReference.put(new Locale("si", "", "").toString(),
+				"lang/calendar-si-utf8.js");
+		localeToLanguageReference.put(new Locale("sk", "", "").toString(),
+				"lang/calendar-sk-utf8.js");
+		localeToLanguageReference.put(new Locale("sr", "", "").toString(),
+				"lang/calendar-sr-utf8.js");
+		localeToLanguageReference.put(new Locale("sv", "", "").toString(),
+				"lang/calendar-sv-utf8.js");
+		localeToLanguageReference.put(new Locale("tr", "", "").toString(), "lang/calendar-tr.js");
+		localeToLanguageReference.put(new Locale("zh", "", "").toString(),
+				"lang/calendar-zh-utf8.js");
+		localeToLanguageReference.put(new Locale("zh", "TW", "").toString(),
+				"lang/calendar-zh_TW-utf8.js");
 	}
-	
+
 	/**
 	 * Gets the language.
-	 * @param currentLocale the current locale
+	 * 
+	 * @param currentLocale
+	 *            the current locale
 	 * @return language
 	 */
 	public static ResourceReference getLanguage(Locale currentLocale)
 	{
 		// try to get the reference from our default mapping
-		String ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
+		// first try the language and country
+		String ref = (String)localeToLanguageReference.get(currentLocale.toString());
+		if (ref != null)
+		{
+			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
+		}
+		// now try only the language
+		ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
 		if (ref != null)
 		{
 			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
 		}
 
 		// we didn't find a mapping; just return English
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, LANGUAGE_EN);
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
+				"lang/calendar-en.js");
 	}
-	
+
 	/**
 	 * @see wicket.IInitializer#init(wicket.Application)
 	 */
@@ -160,12 +156,14 @@ public class DatePickerComponentInitializer implements IInitializer
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-1.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-2.css");
 		PackageResource.bind(application, DatePickerSettings.class, "style/aqua/theme.css");
-		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
-		PackageResource.bind(application, DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
+		PackageResource.bind(application, DatePickerSettings.class,
+				"style/calendar-win2k-cold-1.css");
+		PackageResource.bind(application, DatePickerSettings.class,
+				"style/calendar-win2k-cold-2.css");
 
 		PackageResource.bind(application, DatePicker.class, "calendar.js");
 		PackageResource.bind(application, DatePicker.class, "calendar-setup.js");
-		
+
 		Iterator it = localeToLanguageReference.values().iterator();
 		while (it.hasNext())
 		{
@@ -173,5 +171,4 @@ public class DatePickerComponentInitializer implements IInitializer
 			PackageResource.bind(application, DatePickerSettings.class, path);
 		}
 	}
-
 }

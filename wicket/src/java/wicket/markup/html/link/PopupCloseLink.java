@@ -33,7 +33,7 @@ public class PopupCloseLink extends Link
 	/**
 	 * ClosePopupPage closes the popup window.
 	 */
-	private static final class ClosePopupPage extends WebPage
+	public static final class ClosePopupPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 	}

@@ -20,11 +20,11 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -297,6 +297,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -392,15 +393,16 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		// Buffer to hold generated body
-		final StringBuffer buffer = new StringBuffer();
-
 		// Iterate through choices
 		final List choices = getChoices();
+		
+		// Buffer to hold generated body
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size()+1) * 70);
+
+		// The selected value
+		final String selected = getValue();
 
 		// Loop through choices
-
-
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
@@ -422,36 +424,40 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add radio tag
-				buffer.append("<input name=\"" + getInputName() + "\"" + " type=\"radio\""
-						+ (isSelected(choice, index) ? " checked=\"checked\"" : "") + " value=\""
-						+ id + "\" id=\"" + idAttr + "\"");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"radio\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
+						id).append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
 				{
-					final String url = urlFor(IOnChangeListener.class);
+					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 					try
 					{
 						Form form = getForm();
-						buffer.append(" onclick=\"" +  form.getJsForInterfaceUrl(url)  + ";\"");
+						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(";\"");
 					}
 					catch (WicketRuntimeException ex)
 					{
 						// NOTE: do not encode the url as that would give invalid
 						// JavaScript
-						buffer.append(" onclick=\"" + url + "&" + getInputName() + "="
-								+ id + "';\"");
+						buffer.append(" onclick=\"").append(url).append("&" + getInputName()).append("=").append(
+								id).append("';\"");
 					}
 				}
 
 				buffer.append("/>");
 
 				// Add label for radio button
-				String display = getLocalizer().getString(label, this, label);
-				String escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append("<label for=\"" + idAttr + "\">" + escaped + "</label>");
+				String display = label;
+				if(localizeDisplayValues())
+				{
+					display = getLocalizer().getString(label, this, label);
+				}
+				CharSequence escaped = Strings.escapeMarkup(display, false, true);
+				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
@@ -459,12 +465,6 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		}
 
 		// Replace body
-		replaceComponentTagBody(markupStream, openTag, buffer.toString());
-	}
-	
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
+		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 }

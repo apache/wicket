@@ -1,26 +1,26 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: RefreshingView.java 5564 2006-04-28 16:05:28 -0700 (Fri, 28 Apr 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-04-28 16:05:28 -0700 (Fri, 28 Apr
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.OrderedRepeatingView;
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -45,13 +45,13 @@ import wicket.version.undo.Change;
  * item objects.
  * </p>
  * 
- * @see OrderedRepeatingView
+ * @see RepeatingView
  * @see ModelIteratorAdapter
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class RefreshingView extends OrderedRepeatingView
+public abstract class RefreshingView extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 
@@ -91,9 +91,9 @@ public abstract class RefreshingView extends OrderedRepeatingView
 	 * Refresh the items in the view. Delegates the creation of items to the
 	 * selected item reuse strategy
 	 */
-	protected void internalOnBeginRequest()
+	protected void internalOnAttach()
 	{
-		super.internalOnBeginRequest();
+		super.internalOnAttach();
 
 		if (isVisibleInHierarchy())
 		{
@@ -212,12 +212,16 @@ public abstract class RefreshingView extends OrderedRepeatingView
 	}
 
 	/**
-	 * Sets the item reuse strategy.
+	 * Sets the item reuse strategy. This strategy controls the creation of
+	 * {@link Item}s.
+	 * 
+	 * @see IItemReuseStrategy
 	 * 
 	 * @param strategy
 	 *            item reuse strategy
+	 * @return this for chaining
 	 */
-	public void setItemReuseStrategy(IItemReuseStrategy strategy)
+	public RefreshingView setItemReuseStrategy(IItemReuseStrategy strategy)
 	{
 		if (strategy == null)
 		{
@@ -248,6 +252,7 @@ public abstract class RefreshingView extends OrderedRepeatingView
 			}
 			itemReuseStrategy = strategy;
 		}
+		return this;
 	}
 
 

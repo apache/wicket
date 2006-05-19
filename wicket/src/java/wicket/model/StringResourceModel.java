@@ -410,7 +410,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 * 
 	 * @return The substitution parameters
 	 */
-	protected final Object[] getParameters()
+	protected Object[] getParameters()
 	{
 		return parameters;
 	}

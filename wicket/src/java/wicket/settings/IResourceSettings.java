@@ -5,13 +5,11 @@ import java.util.Locale;
 
 import wicket.IResourceFactory;
 import wicket.Localizer;
-import wicket.markup.html.form.validation.IValidatorResourceKeyFactory;
 import wicket.model.IModel;
-import wicket.resource.PropertiesFactory;
+import wicket.resource.IPropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.util.file.IResourceFinder;
 import wicket.util.resource.locator.IResourceStreamLocator;
-import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -102,7 +100,7 @@ public interface IResourceSettings
 	/**
 	 * Get the application's localizer.
 	 * 
-	 * @see wicket.settings.Settings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
+	 * @see IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
 	 *      for means of extending the way Wicket resolves keys to localized
 	 *      messages.
 	 * 
@@ -115,7 +113,7 @@ public interface IResourceSettings
 	 * 
 	 * @return PropertiesFactory
 	 */
-	PropertiesFactory getPropertiesFactory();
+	IPropertiesFactory getPropertiesFactory();
 	
 	/**
 	 * @param name
@@ -128,13 +126,13 @@ public interface IResourceSettings
 	 * Gets the resource finder to use when searching for resources.
 	 * 
 	 * @return Returns the resourceFinder.
-	 * @see Settings#setResourceFinder(IResourceFinder)
+	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	IResourceFinder getResourceFinder();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
-	 * @see Settings#setResourcePollFrequency(Duration)
+	 * @see IResourceSettings#setResourcePollFrequency(Duration)
 	 */
 	Duration getResourcePollFrequency();
 
@@ -168,11 +166,6 @@ public interface IResourceSettings
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * @return factory used to generate resource keys for validator messages
-	 */
-	IValidatorResourceKeyFactory getValidatorResourceKeyFactory();
-
-	/**
 	 * @param defaultLocale
 	 *            The defaultLocale to set.
 	 */
@@ -183,7 +176,7 @@ public interface IResourceSettings
 	 * 
 	 * @param factory
 	 */
-	void setPropertiesFactory(PropertiesFactory factory);
+	void setPropertiesFactory(IPropertiesFactory factory);
 
 	/**
 	 * Sets the finder to use when searching for resources. By default, the
@@ -203,7 +196,7 @@ public interface IResourceSettings
 	 * 
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
-	 * @see Settings#setResourceFinder(IResourceFinder)
+	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
 
@@ -213,7 +206,7 @@ public interface IResourceSettings
 	 * @param resourceStreamLocator
 	 *            new resource stream locator
 	 */
-	void setResourceStreamLocator(ResourceStreamLocator resourceStreamLocator);
+	void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator);
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
@@ -229,11 +222,4 @@ public interface IResourceSettings
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
-	/**
-	 * Sets the factory that will be used to generate resource keys for
-	 * validator messages
-	 * 
-	 * @param factory
-	 */
-	void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory);
 }

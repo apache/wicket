@@ -60,14 +60,14 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
       <properties><war.bundle>true</war.bundle></properties>
     </dependency>
 
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
       <properties><war.bundle>true</war.bundle></properties>
     </dependency>
 
