@@ -455,8 +455,15 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertVisible(String path)
 	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			Assert.fail("path: '" + path + "' does no exist for page: "
+					+ Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+		
 		Assert.assertTrue("component '" + path + "' is not visible",
-				getComponentFromLastRenderedPage(path).isVisible());
+				component.isVisible());
 	}
 
 	/**
